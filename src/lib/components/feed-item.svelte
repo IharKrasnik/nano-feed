@@ -1,4 +1,6 @@
 <script>
+  import { onMount } from 'svelte';
+  
   export let feedItem = {
 		user: {
 			username: 'Igor Krasnik',
@@ -13,9 +15,14 @@ But there's a better way to decide.
 		url: 'https://nanohq.co/solve-problems',
 	}
 
-  const openUrl = () => {
-    document.ope
-  }
+  let videoEl;
+
+  onMount(() => {
+    if (videoEl) {
+      videoEl.play();
+    }
+  });
+
 </script>
 
 <a class="_item mb-8 inline-block w-full" href="{feedItem.url}" target="_blank">
@@ -42,16 +49,9 @@ But there's a better way to decide.
       {/if}
       {#if attachment.type === 'video'}
       
-      <video>
+      <video width="320" height="240" muted loop bind:this={videoEl}>
         <source id="mp4video" src="{attachment.url}" type="video/mp4" />
       </video>
-        <iframe
-          src="https://customer-<CODE>.cloudflarestream.com/<VIDEO_UID>/iframe"
-          title="Example Stream video"
-          frameBorder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen>
-        </iframe>
       {/if}
     {/each}
   {/if}
