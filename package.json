@@ -28,6 +28,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@tailwindcss/line-clamp": "^0.4.2"
+		"@tailwindcss/line-clamp": "^0.4.2",
+		"axios": "^1.2.1",
+		"date-fns": "^2.29.3",
+		"svelte-select": "^5.0.1"
 	}
 }

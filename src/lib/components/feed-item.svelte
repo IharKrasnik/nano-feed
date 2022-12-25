@@ -1,18 +1,9 @@
 <script>
   import { onMount } from 'svelte';
-  
+  import { format as formatDate } from 'date-fns'
+  import { slide } from 'svelte/transition';
+
   export let feedItem = {
-		user: {
-			username: 'Igor Krasnik',
-			avatarUrl: 'https://twitter.com/that_igor_/photo'
-		},
-		title: 'The 3 approaches to solve any problem',
-		content: `We face new issues daily.
-You can't postpone decisions forever so you forced to take action.
-Some actions are based just on your emotions and the gut feeling. It's rather hit or miss.
-But there's a better way to decide. 
-`,
-		url: 'https://nanohq.co/solve-problems',
 	}
 
   let videoEl;
@@ -62,10 +53,14 @@ But there's a better way to decide.
       <img src="{feedItem.user.avatarUrl}" class="rounded-full max-w-[40px]" /> 
       <div class="ml-2 text-sm">
         {feedItem.user.username}
+
+        <div class="text-gray-400">
+          {formatDate(new Date(feedItem.createdOn), 'MMM dd')}
+        </div>
       </div>
     </div>
     <div>
-    {#if feedItem.source === 'rebel'}
+    {#if feedItem.source === 'therebel'}
       <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
     {/if}
     {#if feedItem.source === 'twitter'}
