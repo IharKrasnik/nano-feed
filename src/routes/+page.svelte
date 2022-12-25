@@ -19,7 +19,7 @@
 		value: 'linkedin',
 		label: 'LinkedIn'
 	}, {
-		value: 'growingProducts',
+		value: 'growingproducts',
 		label: 'Growing Products',
 	},{
 		value: 'therebel',

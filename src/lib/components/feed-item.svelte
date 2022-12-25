@@ -63,6 +63,9 @@
     {#if feedItem.source === 'therebel'}
       <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
     {/if}
+    {#if feedItem.source === 'growingproducts'}
+      <span class="text-[#53bf00]">Growing 🌱 Products</span>
+    {/if}
     {#if feedItem.source === 'twitter'}
       <div class="font-bold w-[25px]">
         <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 248 204"><script xmlns=""/>
@@ -90,7 +93,7 @@
   ._item {
     cursor: pointer;
     transition: all 0.08s linear;
-    border: 2px rgba(255,255,255, .1) solid;
+    outline: 2px rgba(255,255,255, .1) solid;
     border-radius: 15px;
     padding: 16px;
   }
@@ -98,6 +101,6 @@
   ._item:hover {
     transform: scale(1.05);
     background: rgba(255,255,255, 0.03);
-    border: 1px rgba(255,255,255, .3) solid;
+    outline: 1px rgba(255,255,255, .3) solid;
   }
 </style>
