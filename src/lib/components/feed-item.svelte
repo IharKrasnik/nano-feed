@@ -40,6 +40,19 @@ But there's a better way to decide.
       {#if attachment.type === 'image'}
         <img src={attachment.url} class="w-full" />
       {/if}
+      {#if attachment.type === 'video'}
+      
+      <video>
+        <source id="mp4video" src="{attachment.url}" type="video/mp4" />
+      </video>
+        <iframe
+          src="https://customer-<CODE>.cloudflarestream.com/<VIDEO_UID>/iframe"
+          title="Example Stream video"
+          frameBorder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen>
+        </iframe>
+      {/if}
     {/each}
   {/if}
 

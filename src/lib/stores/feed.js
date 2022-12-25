@@ -34,6 +34,12 @@ Here's what I do every Thursday at 6 PM:
 `,
 		url: 'https://twitter.com/dmschetnikovich/status/1606081025032933376',
 		source: 'twitter',
+		attachments: [
+			{
+				type: 'video',
+				url: 'https://customer-z6wmpidy3em7y8he.cloudflarestream.com/94b1f1f46a3b40fbb283a1ec3fa902cc/downloads/default.mp4'
+			}
+		],
 		createdOn: new Date()
 	},
 	{
