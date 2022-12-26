@@ -19,6 +19,12 @@
 		value: 'linkedin',
 		label: 'LinkedIn'
 	}, {
+		value: 'youtube',
+		label: 'YouTube',
+	}, {
+		value: 'shipitsiptit',
+		label: 'Ship it and Sip it',
+	}, {
 		value: 'growingproducts',
 		label: 'Growing Products',
 	},{
