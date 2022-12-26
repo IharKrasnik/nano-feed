@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import { format as formatDate } from 'date-fns'
-  import { slide } from 'svelte/transition';
 
   export let feedItem = {
 	}
@@ -109,16 +108,25 @@ let project;
     </div>
 
     
-    <div>
+    <div class="shrink-0">
       {#if project}
         {#if project.name === 'therebel'}
           <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
         {/if}
         {#if project.name === 'growingproducts'}
-          <span class="text-[#53bf00]">Growing 🌱 Products</span>
+          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #53bf00 solid;">
+            Growing 🌱 Products
+          </div>
         {/if}
         {#if project.name === 'shipitsipit'}
-          <span class="text-[#d090ff] font-bold">Ship it 🍸 Sip It</span>
+          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #d090ff solid;">
+            Ship it 🍸 Sip It
+          </div>
+        {/if}
+        {#if project.name === 'altos'}
+          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
+            Altos 📸
+          </div>
         {/if}
       {/if}
     </div>

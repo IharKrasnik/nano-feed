@@ -22,14 +22,8 @@
 		value: 'youtube',
 		label: 'YouTube',
 	}, {
-		value: 'shipitsiptit',
-		label: 'Ship it and Sip it',
-	}, {
-		value: 'growingproducts',
-		label: 'Growing Products',
-	},{
-		value: 'therebel',
-		label: 'The✊🏽Rebel'
+		value: 'medium',
+		label: 'Medium'
 	}];
 
 
@@ -78,13 +72,15 @@
 		<h1 class="text-xl font-bold mb-4">Paralect Feed</h1>
 	</section>
 
-	{#if $feed.length > 0}
-	<div in:fly={{  y: 50, duration: 150, delay: 150 }}>
-		{#each $feed as feedItem}
-			<FeedItem feedItem={feedItem}></FeedItem>
-		{/each}
-	</div>
-	{/if}
+	{#key $feed}
+		{#if $feed.length > 0}
+		<div in:fly={{  y: 50, duration: 150, delay: 150 }}>
+			{#each $feed as feedItem}
+				<FeedItem feedItem={feedItem}></FeedItem>
+			{/each}
+		</div>
+		{/if}
+	{/key}
 </div>
 
 
