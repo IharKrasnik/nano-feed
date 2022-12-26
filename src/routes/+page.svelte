@@ -33,32 +33,39 @@
 		color: 'rgba(255, 255, 255, .3)'
 	}, {
 		value: 'growingproducts',
-		label: 'Growing 🌱 Products',
+		label: 'Growing Products',
+		emoji: '🌱',
 		color: '#53bf01',
 	}, {
 		value: 'shipitsipit',
-		label: 'Ship it 🍸 Sip it',
+		label: 'Ship it & Sip it',
 		color: '#d091ff',
+		emoji: '🍸'
 	}, {
 		value: 'rnd',
-		label: 'R🐝D',
+		label: 'R&D',
 		color: '#f59e0c',
+		emoji: '🐝'
 	}, {
 		value: 'particles',
-		label: '✨ Particles',
+		label: 'Particles',
 		color: '#d5ff09',
+		emoji: '✨'
 	}, {
 		value: 'therebel',
 		label: 'THE✊🏽REBEL',
-		color: '#f59e0c'
+		color: '#f59e0c',
+		emoji: '✊🏽'
 	}, {
 		value: 'momentum',
-		label: 'Momentum 🌀',
+		label: 'Momentum',
 		color: '#00b8ff',
+		emoji: '🌀'
 	},{
 		value: 'altos',
-		label: 'Altos 🤳',
-		color: '#fff291'
+		label: 'Altos',
+		color: '#fff291',
+		emoji: '🤳'
 	}];
 
 
@@ -74,14 +81,17 @@
 		<div class="left-0 mt-16" >
 			{#each projects as project}
 				<div 
-					class="_menu_item px-4 py-2" 
+					class="_menu_item flex items-center px-4 py-2" 
 					class:_selected="{selectedProject === project.value}"
 					on:click={() => { 
 						selectedProject = project.value; 
 						updateFeed({ source: selectedSource, project: selectedProject}) 
 					}} 
-					style="outline-color: {project.color}"
+					style="border-color: {project.color}"
 				>
+					<div class="_emoji p-2 rounded-full">
+						{project.emoji||''}
+					</div>
 					{project.label}
 				</div>
 			{/each}
@@ -160,14 +170,16 @@
 	._menu_item {
 		cursor: pointer;
 		transition: all linear 0.1s;
+		/* border-bottom: 1px rgba(255, 255, 255, 0) solid; */
 	}
 
 	._menu_item:hover {
 		background: rgba(255, 255, 255, .1);
-		outline: 1px rgba(255, 255, 255, .3) solid;
+		/* border: 1px rgba(255, 255, 255, .3) solid; */
+		border-bottom: 1px rgba(255, 255, 255, 0.3) solid;
 	}
 
 	._menu_item._selected {
-		outline: 1px solid;
+		border-bottom: 1px solid;
 	}
 </style>
