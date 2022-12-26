@@ -95,33 +95,33 @@ let project;
   <hr class="my-4 opacity-20"/>
   
   <div class="flex justify-between items-center">
-    <div>
-      <div class="flex items-center">
-        {#if feedItem?.creators}
-          {#each feedItem.creators as creator}
-          <img src="{creator.avatarUrl}" class="rounded-full max-w-[40px]" /> 
-          
-          {/each}
+    <div class="flex items-center">
+      {#if feedItem?.creators}
+        {#each feedItem.creators as creator}
+        <img src="{creator.avatarUrl}" class="rounded-full max-w-[40px]" /> 
+        
+        {/each}
 
-          <div class="ml-2 mr-2 text-sm">
-            {feedItem.creators.map(c=> c.username).join(', ')}
-          </div>
-        {/if}
-      </div>
+        <div class="ml-2 mr-2 text-sm">
+          {feedItem.creators.map(c=> c.username).join(', ')}
+        </div>
+      {/if}
     </div>
 
-    {#if project}
-      {#if project.name === 'therebel'}
-        <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
+    
+    <div>
+      {#if project}
+        {#if project.name === 'therebel'}
+          <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
+        {/if}
+        {#if project.name === 'growingproducts'}
+          <span class="text-[#53bf00]">Growing 🌱 Products</span>
+        {/if}
+        {#if project.name === 'shipitsipit'}
+          <span class="text-[#d090ff] font-bold">Ship it 🍸 Sip It</span>
+        {/if}
       {/if}
-      {#if project.name === 'growingproducts'}
-        <span class="text-[#53bf00]">Growing 🌱 Products</span>
-      {/if}
-      {#if project.name === 'shipitsipit'}
-        <span class="text-[#d090ff] font-bold">Ship it 🍸 Sip It</span>
-      {/if}
-    {/if}
-
+    </div>
   </div>
 </a>
 
