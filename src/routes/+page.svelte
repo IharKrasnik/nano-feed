@@ -29,28 +29,36 @@
 
 	const projects = [{
 		value: null,
-		label: 'All'
+		label: 'All',
+		color: 'rgba(255, 255, 255, .3)'
 	}, {
 		value: 'growingproducts',
 		label: 'Growing 🌱 Products',
+		color: '#53bf01',
 	}, {
 		value: 'shipitsipit',
-		label: 'Ship it 🍸 Sip it'
+		label: 'Ship it 🍸 Sip it',
+		color: '#d091ff',
 	}, {
 		value: 'rnd',
 		label: 'R🐝D',
+		color: '#f59e0c',
 	}, {
 		value: 'particles',
-		label: '✨ Particles'
+		label: '✨ Particles',
+		color: '#d5ff09',
 	}, {
 		value: 'therebel',
-		label: 'THE✊🏽REBEL'
+		label: 'THE✊🏽REBEL',
+		color: '#f59e0c'
 	}, {
 		value: 'momentum',
-		label: 'Momentum 🌀'
+		label: 'Momentum 🌀',
+		color: '#00b8ff',
 	},{
 		value: 'altos',
-		label: 'Altos 🤳'
+		label: 'Altos 🤳',
+		color: '#fff291'
 	}];
 
 
@@ -62,24 +70,37 @@
 </svelte:head>
 
 <div class="container relative mx-auto p-8 max-w-[600px]">
+	<div class="absolute w-[250px] ml-[-300px]">
+		<div class="left-0 mt-16" >
+			{#each projects as project}
+				<div 
+					class="_menu_item px-4 py-2" 
+					class:_selected="{selectedProject === project.value}"
+					on:click={() => { 
+						selectedProject = project.value; 
+						updateFeed({ source: selectedSource, project: selectedProject}) 
+					}} 
+					style="outline-color: {project.color}"
+				>
+					{project.label}
+				</div>
+			{/each}
+
+			<!-- <div>
+				<select class="_select" bind:value={selectedProject} on:change={() => updateFeed({ source: selectedSource, project: selectedProject })}>
+					{#each projects as project}
+					<option value={project.value}>{project.label}</option>
+					{/each}
+				</select>
+			</div> -->
+		</div>
+	</div>
 	<div class="absolute w-full">
 		<div class="right-0 translate-x-full">
 			<div class="flex w-full">
 				{#each $creators as creator}
 					<img class="_author rounded-full max-w-[25px]" src="{creator.avatarUrl}"/>
 				{/each}
-			</div>
-
-			<div class="mt-4">
-				<label class="font-bold block mb-2">Project</label>
-				
-				<div>
-					<select class="_select" bind:value={selectedProject} on:change={() => updateFeed({ source: selectedSource, project: selectedProject })}>
-						{#each projects as project}
-						<option value={project.value}>{project.label}</option>
-						{/each}
-					</select>
-				</div>
 			</div>
 
 			<div class="mt-4">
@@ -108,7 +129,7 @@
 
 
 	<section>
-		<h1 class="text-xl font-bold mb-4">Paralect Feed</h1>
+		<h1 class="text-xl font-bold mb-8">Paralect Feed</h1>
 	</section>
 
 	{#key $feed}
@@ -134,5 +155,19 @@
 
 	._author:hover {
 		outline: 3px green solid;
+	}
+
+	._menu_item {
+		cursor: pointer;
+		transition: all linear 0.1s;
+	}
+
+	._menu_item:hover {
+		background: rgba(255, 255, 255, .1);
+		outline: 1px rgba(255, 255, 255, .3) solid;
+	}
+
+	._menu_item._selected {
+		outline: 1px solid;
 	}
 </style>
