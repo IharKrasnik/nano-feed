@@ -8,6 +8,7 @@
 	import Select from 'svelte-select';
 
 	let selectedSource = null;
+	let selectedProject = null;
 
 	const sources = [{
 		value: null,
@@ -24,6 +25,32 @@
 	}, {
 		value: 'medium',
 		label: 'Medium'
+	}];
+
+	const projects = [{
+		value: null,
+		label: 'All'
+	}, {
+		value: 'growingproducts',
+		label: 'Growing 🌱 Products',
+	}, {
+		value: 'shipitsipit',
+		label: 'Ship it 🍸 Sip it'
+	}, {
+		value: 'rnd',
+		label: 'R🐝D',
+	}, {
+		value: 'particles',
+		label: '✨ Particles'
+	}, {
+		value: 'therebel',
+		label: 'THE✊🏽REBEL'
+	}, {
+		value: 'momentum',
+		label: 'Momentum 🌀'
+	},{
+		value: 'altos',
+		label: 'Altos 🤳'
 	}];
 
 
@@ -44,10 +71,22 @@
 			</div>
 
 			<div class="mt-4">
+				<label class="font-bold block mb-2">Project</label>
+				
+				<div>
+					<select class="_select" bind:value={selectedProject} on:change={() => updateFeed({ source: selectedSource, project: selectedProject })}>
+						{#each projects as project}
+						<option value={project.value}>{project.label}</option>
+						{/each}
+					</select>
+				</div>
+			</div>
+
+			<div class="mt-4">
 				<label class="font-bold block mb-2">Source</label>
 				
 				<div>
-					<select class="_select" bind:value={selectedSource} on:change={() => updateFeed({ source: selectedSource })}>
+					<select class="_select" bind:value={selectedSource} on:change={() => updateFeed({ source: selectedSource, project: selectedProject })}>
 						{#each sources as source}
 						<option value={source.value}>{source.label}</option>
 						{/each}

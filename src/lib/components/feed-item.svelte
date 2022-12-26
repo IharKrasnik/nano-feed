@@ -113,6 +113,9 @@ let project;
         {#if project.name === 'therebel'}
           <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
         {/if}
+        {#if project.name === 'rnd'}
+          <span class="text-[#f59e0c] font-bold">R🐝D</span>
+        {/if}
         {#if project.name === 'growingproducts'}
           <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #53bf00 solid;">
             Growing 🌱 Products
