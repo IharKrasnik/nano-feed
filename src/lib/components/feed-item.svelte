@@ -37,7 +37,7 @@ let project;
     {/if}
     {#if ['youtube', 'shipitsipit'].includes(feedItem.source)}
       <iframe
-        class="w-full min-h-[300px] pointer-events-none"
+        class="w-full mt-2 min-h-[300px] pointer-events-none"
         src="https://www.youtube.com/embed/{new URL(feedItem.url).searchParams.get('v')}" 
         title="YouTube video player" frameborder="0" 
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
