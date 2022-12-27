@@ -106,7 +106,7 @@ let project;
     <div class="flex items-center">
       {#if feedItem?.creators}
         {#each feedItem.creators as creator}
-        <img src="{creator.avatarUrl}" class="rounded-full max-w-[40px]" /> 
+        <img src="{creator.avatarUrl}" class="rounded-full w-[40px] h-[40px]" /> 
         
         {/each}
 
