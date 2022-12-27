@@ -141,8 +141,8 @@ let project;
           </div>
         {/if}
         {#if project.name === 'igor'}
-          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #75c425 solid;">
-            Igor <img src="/static/igor-favicon.png"/>
+          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #75c425 solid;">
+            <img src="/igor-favicon.png" class="mr-2" style="width: 20px; border-radius: 50%; display: inline;"/> Igor
           </div>
         {/if}
       {/if}
@@ -161,11 +161,11 @@ let project;
   }
 
   ._item._release {
-    outline-color: #3c004c;
+    outline-color: #d87712 !important;
+    outline-width: 1px;
   }
 
   ._item._release:hover {
-    outline-color: #3c004c !important;
   }
 
   ._item:hover {
