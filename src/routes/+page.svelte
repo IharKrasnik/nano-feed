@@ -144,7 +144,7 @@
 				</div>
 			</div>
 			<div class="mt-8 w-[180px]">
-				<label class="font-bold block mb-2">Creator</label>
+				<label class="font-bold block mb-2">Creators</label>
 
 				<a class="_creators mt-4 flex justify-between" href="/creators">
 					<div>
