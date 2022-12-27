@@ -32,7 +32,7 @@
 <div class="mt-4" in:fly={{  y: 50, duration: 150, delay: 150 }}>
   {#each $creators.filter(c=> search ? c.username.toLowerCase().includes(search ): true) as creator}
   <a href="/creators/{creator.username}" class="_item flex items-center p-4" style="border-bottom: 1px rgba(255, 255, 255, .3) solid;">
-    <img src={creator.avatarUrl} class="w-[40px] rounded-full mr-2"/>
+    <img src={creator.avatarUrl} class="w-[40px] h-[40px] rounded-full mr-2"/>
     <div class="ml-2 text-lg">
       {creator.username}
     </div>
