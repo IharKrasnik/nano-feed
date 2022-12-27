@@ -43,7 +43,7 @@ let project;
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
       </iframe>
     {/if}
-    {#if !(['twitter', 'youtube'].includes(feedItem.source))}
+    {#if !(['twitter', 'youtube'].includes(feedItem.source)) && !feedItem.isRelease}
     <div class="flex justify-between opacity-50">
     <div>...</div>
     <div class="text-right">...see more</div>
@@ -145,6 +145,30 @@ let project;
             <img src="/igor-favicon.png" class="mr-2" style="width: 20px; border-radius: 50%; display: inline;"/> Igor
           </div>
         {/if}
+        {#if project.name === 'accelerator'}
+          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(126 0 231) solid;">
+            🚠 Accelerator
+          </div>
+        {/if}
+        {#if project.name === 'particles'}
+          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(213, 255, 9) solid;">
+            ✨ Particles
+          </div>
+        {/if}
+        
+
+        {#if project.name === 'alongtheroadmap'}
+          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
+            🛣 Along The Roadmap
+          </div>
+        {/if}
+
+        {#if project.name === 'momentum'}
+          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #00b8ff solid;">
+            🌀 Momentum
+          </div>
+        {/if}
+
       {/if}
     </div>
   </div>
