@@ -142,7 +142,7 @@ let project;
         {/if}
         {#if project.name === 'altos'}
           <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
-            Igor 📸
+            Igor <img src="/static/igor-favicon.png"/>
           </div>
         {/if}
       {/if}
