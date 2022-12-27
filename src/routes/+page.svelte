@@ -61,7 +61,12 @@
 		label: 'Momentum',
 		color: '#00b8ff',
 		emoji: '🌀'
-	},{
+	}, {
+		value: 'igor',
+		label: 'Igor',
+		color: '#75c425',
+		emoji: '🤓'
+	}, {
 		value: 'altos',
 		label: 'Altos',
 		color: '#fff291',

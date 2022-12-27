@@ -20,7 +20,11 @@ let project;
  }
 </script>
 
-<a class="_item mb-8 inline-block w-full relative" href="{feedItem.url}" target="_blank">
+<a class="_item mb-8 inline-block w-full relative"
+  class:_release="{feedItem.isRelease}"
+  href="{feedItem.url}" 
+  target="_blank"
+>
   <div class="mb-4">
     {#if feedItem.title}
       <div class="font-bold" href="{feedItem.url}">{feedItem.title}</div>
@@ -84,6 +88,11 @@ let project;
             </svg>
           </div>
        {/if}
+       {#if feedItem.isRelease}
+          <div>
+            🔥
+          </div>
+       {/if}
     </div>
     
 
@@ -131,6 +140,11 @@ let project;
             Altos 📸
           </div>
         {/if}
+        {#if project.name === 'altos'}
+          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
+            Igor 📸
+          </div>
+        {/if}
       {/if}
     </div>
   </div>
@@ -144,6 +158,14 @@ let project;
     border-radius: 15px;
     padding: 16px;
     z-index: 1000;
+  }
+
+  ._item._release {
+    outline-color: #3c004c;
+  }
+
+  ._item._release:hover {
+    outline-color: #3c004c !important;
   }
 
   ._item:hover {
