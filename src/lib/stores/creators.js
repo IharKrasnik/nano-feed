@@ -12,4 +12,6 @@ export const update = ({ sort = 'createdOn', sortDirection = 'descending' } = {}
 	});
 };
 
+update();
+
 export default creatorsStore;

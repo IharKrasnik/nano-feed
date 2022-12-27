@@ -10,6 +10,9 @@
 	let selectedSource = null;
 	let selectedProject = null;
 
+	let refreshFeed = () => updateFeed({ source: selectedSource, project: selectedProject});
+	refreshFeed();
+
 	const sources = [{
 		value: null,
 		label: 'All'
@@ -92,16 +95,16 @@
 	<meta name="description" content="Paralect feed" />
 </svelte:head>
 
-<div class="container relative mx-auto p-8 max-w-[600px]">
+<div>
 	<div class="absolute w-[250px] ml-[-300px]">
-		<div class="left-0 mt-16" >
+		<div class="left-0" >
 			{#each projects as project}
 				<div 
 					class="_menu_item flex items-center px-4 py-2" 
 					class:_selected="{selectedProject === project.value}"
 					on:click={() => { 
 						selectedProject = project.value; 
-						updateFeed({ source: selectedSource, project: selectedProject}) 
+						refreshFeed();
 					}} 
 					style="border-color: {project.color}"
 				>
@@ -123,22 +126,37 @@
 	</div>
 	<div class="absolute w-full">
 		<div class="right-0 translate-x-full">
-			<div class="flex w-full">
+			<!-- <div class="flex w-full">
 				{#each $creators as creator}
 					<img class="_author rounded-full max-w-[25px]" src="{creator.avatarUrl}"/>
 				{/each}
-			</div>
+			</div> -->
 
-			<div class="mt-4">
+			<div class="mb-4">
 				<label class="font-bold block mb-2">Source</label>
 				
 				<div>
-					<select class="_select" bind:value={selectedSource} on:change={() => updateFeed({ source: selectedSource, project: selectedProject })}>
+					<select class="_select" bind:value={selectedSource} on:change={refreshFeed}>
 						{#each sources as source}
 						<option value={source.value}>{source.label}</option>
 						{/each}
 					</select>
 				</div>
+			</div>
+			<div class="mt-8 w-[180px]">
+				<label class="font-bold block mb-2">Creator</label>
+
+				<a class="_creators mt-4 flex justify-between" href="/creators">
+					<div>
+						{#each $creators.slice(0, 5) as creator}
+						<img src={creator.avatarUrl} class="w-[30px] h-[30px] inline rounded-full mr-[-10px]" />
+						{/each}
+					</div>
+
+					<div class="font-bold">
+						{$creators.length}
+					</div>
+				</a>
 			</div>
 		</div>
 
@@ -153,10 +171,6 @@
 		</div>
 	</div> -->
 
-
-	<section>
-		<h1 class="text-xl font-bold mb-8">Paralect Feed</h1>
-	</section>
 
 	{#key $feed}
 		{#if $feed.length > 0}
@@ -185,7 +199,7 @@
 
 	._menu_item {
 		cursor: pointer;
-		transition: all linear 0.1s;
+		transition: all linear 0.05s;
 	}
 
 	._menu_item:hover {
@@ -197,5 +211,15 @@
 	._menu_item._selected {
 		border-bottom: 1px solid;
 		margin-bottom: -1px;
+	}
+
+	._creators {
+		transition: all linear 0.1s;
+		border-radius: 8px;
+	}
+
+	._creators:hover {
+		background: rgba(255, 255, 255, .1);
+		padding: 16px;
 	}
 </style>

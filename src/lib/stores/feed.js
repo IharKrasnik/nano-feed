@@ -7,17 +7,17 @@ export const update = ({
 	sort = 'createdOn',
 	sortDirection = 'descending',
 	source,
-	project
+	project,
+	creatorUserName
 } = {}) => {
+	feedStore.update(() => []);
 	axios({
 		url: 'https://igor.npkn.net/get-nano-feed',
-		params: { sort, sortDirection, source, project }
+		params: { sort, sortDirection, source, project, creatorUserName }
 	}).then(({ data: creators }) => {
 		feedStore.update(() => creators);
 	});
 };
-
-update();
 
 export default feedStore;
 
