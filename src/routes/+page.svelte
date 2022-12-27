@@ -30,12 +30,18 @@
 	const projects = [{
 		value: null,
 		label: 'All',
-		color: 'rgba(255, 255, 255, .3)'
+		color: 'rgba(255, 255, 255, .3)',
+		emoji: '🎇'
 	}, {
 		value: 'growingproducts',
 		label: 'Growing Products',
 		emoji: '🌱',
 		color: '#53bf01',
+	}, {
+		value: 'particles',
+		label: 'Particles',
+		color: '#d5ff09',
+		emoji: '✨'
 	}, {
 		value: 'shipitsipit',
 		label: 'Ship it & Sip it',
@@ -47,11 +53,6 @@
 		color: '#f59e0c',
 		emoji: '🐝'
 	}, {
-		value: 'particles',
-		label: 'Particles',
-		color: '#d5ff09',
-		emoji: '✨'
-	}, {
 		value: 'therebel',
 		label: 'THE✊🏽REBEL',
 		color: '#f59e0c',
@@ -61,6 +62,11 @@
 		label: 'Momentum',
 		color: '#00b8ff',
 		emoji: '🌀'
+	}, {
+		value: 'accelerator',
+		label: 'Accelerator',
+		color: '#d091ff',
+		emoji: '🚠'
 	}, {
 		value: 'igor',
 		label: 'Igor',
@@ -94,7 +100,7 @@
 					}} 
 					style="border-color: {project.color}"
 				>
-					<div class="_emoji p-2 rounded-full">
+					<div class="_emoji p-2 mr-2 rounded-full">
 						{project.emoji||''}
 					</div>
 					{project.label}
@@ -175,16 +181,16 @@
 	._menu_item {
 		cursor: pointer;
 		transition: all linear 0.1s;
-		/* border-bottom: 1px rgba(255, 255, 255, 0) solid; */
 	}
 
 	._menu_item:hover {
 		background: rgba(255, 255, 255, .1);
-		/* border: 1px rgba(255, 255, 255, .3) solid; */
 		border-bottom: 1px rgba(255, 255, 255, 0.3) solid;
+		margin-bottom: -1px;
 	}
 
 	._menu_item._selected {
 		border-bottom: 1px solid;
+		margin-bottom: -1px;
 	}
 </style>
