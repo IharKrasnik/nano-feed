@@ -48,6 +48,11 @@
 		color: '#d091ff',
 		emoji: '🍸'
 	}, {
+		value: 'alongtheroadmap',
+		label: 'Along The Roadmap',
+		color: '#fff291',
+		emoji: '🛣'
+	}, {
 		value: 'rnd',
 		label: 'R&D',
 		color: '#f59e0c',
