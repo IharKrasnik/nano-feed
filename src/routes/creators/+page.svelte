@@ -8,7 +8,9 @@
   let search = '';
 
   onMount(() => {
-    inputEl.focus();
+    setTimeout(() => {
+      inputEl.focus();
+    }, 500);
   });
 
   const refresh = () => {
@@ -18,7 +20,13 @@
 
 <h1 class="text-lg font-bold"> Creators </h1>
 
-<input class="_input w-full mb-4 mt-2" bind:value={search} on:updated={refresh} placeholder="Search..." autofocus bind:this={inputEl}/>
+<input class="_input w-full mb-4 mt-2" 
+  bind:value={search} 
+  on:updated={refresh} 
+  placeholder="Search..." 
+  bind:this={inputEl}
+/>
+
 
 {#if $creators.length > 0}
 <div class="mt-4" in:fly={{  y: 50, duration: 150, delay: 150 }}>

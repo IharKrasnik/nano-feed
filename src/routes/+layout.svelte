@@ -1,5 +1,6 @@
 <script>
   import "../app.css";
+	import { page } from '$app/stores';
 </script>
 
 <svelte:head>
@@ -11,9 +12,19 @@
 	<main>
 	
 	<main class="container relative mx-auto p-8 max-w-[600px]">
-		<section>
+		<section class="flex items-center">
 			<a href="/">
-				<h1 class="text-xl font-bold mb-8">Paralect Feed</h1>
+				<h1 class="text-xl font-bold mb-8">Paralect Feed
+				</h1>
+			</a>
+			<a class="ml-2" href="/creators">
+				<h1 class="text-xl font-bold mb-8">
+					<span class="hover:text-[#00ff85] text-[#fff]">
+						{#if $page.url.href.includes('/creators')}
+						Creators
+						{/if}
+					</span>
+				</h1>
 			</a>
 		</section>
 
