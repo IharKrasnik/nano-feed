@@ -22,10 +22,10 @@
   </div>
 
   {:else}
-  <div class="flex flex-col items-center justify-center mb-8">
+  <div class="flex flex-col items-center justify-center mb-16 mt-8" >
     <img class="w-[300px] h-[400px] mr-4" style="border: 1px #ffffff45 solid; object-fit: cover;" src={creator.avatarUrl} />
 
-    <div class="mt-4 text-xl font-bold">
+    <div class="text-[32px] mt-4 text-xl font-bold" style="font-family: 'UnifrakturCook', cursive;">
       {creator.username}
     </div>
   </div>
