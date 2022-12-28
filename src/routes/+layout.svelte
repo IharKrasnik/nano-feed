@@ -12,20 +12,27 @@
 	<main>
 	
 	<main class="container relative mx-auto p-8 max-w-[600px]">
-		<section class="flex items-center">
-			<a class="flex items-center mb-8" href="/">
-				<h1 class="text-xl font-bold">Paralect Stream
-				</h1>
-			</a>
-			<a class="ml-2" href="/creators">
-				<h1 class="text-xl font-bold mb-8">
-					<span class="hover:text-[#00ff85] text-[#fff]">
-						{#if $page.url.href.includes('/creators')}
-						Creators
-						{/if}
-					</span>
-				</h1>
-			</a>
+		<section class="flex justify-between">
+			<div class="flex items-center">
+				<a class="flex mb-8" href="/">
+					<h1 class="text-xl font-bold">Paralect Stream
+					</h1>
+				</a>
+				<a class="ml-2" href="/creators">
+					<h1 class="text-xl font-bold mb-8">
+						<span class="hover:text-[#00ff85] text-[#fff]">
+							{#if $page.url.href.includes('/creators')}
+							Creators
+							{/if}
+						</span>
+					</h1>
+				</a>
+			</div>
+			<div>
+				<a class="_follow_button" href="https://ship-prod-627ed08f489a970013572f5d.paralect.net/auth/google/url">
+					Follow Stream
+				</a>
+			</div>
 		</section>
 
 		<slot />
@@ -37,6 +44,12 @@
 </div>
 
 <style>
+	._follow_button {
+		border: 1px rgba(255, 255, 255, .3) solid;
+		border-radius: 4px;
+		padding: 4px 16px;
+	}
+
 	.app {
 		display: flex;
 		flex-direction: column;
