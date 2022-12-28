@@ -135,6 +135,13 @@ let project;
             Ship it 🍸 Sip It
           </div>
         {/if}
+
+        {#if project.name === 'startupsummer'}
+          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #ffd967 solid;">
+            🌞 Startup Summer
+          </div>
+        {/if}
+        
         {#if project.name === 'altos'}
           <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
             Altos 📸

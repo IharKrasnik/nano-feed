@@ -61,6 +61,11 @@
 		color: '#f59e0c',
 		emoji: '🐝'
 	}, {
+		value: 'startupsummer',
+		label: 'Startup Summer',
+		color: '#ffd967',
+		emoji: '🌞'
+	}, {
 		value: 'therebel',
 		label: 'THE✊🏽REBEL',
 		color: '#f59e0c',
