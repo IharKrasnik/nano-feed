@@ -11,13 +11,26 @@
 </script>
 
 {#if creator}
-<div class="flex items-center mb-8">
-  <img class="w-[50px] h-[50px] rounded-full mr-4" src={creator.avatarUrl} />
+  {#if creator.username !== 'Bachrimchuk'}
 
-  <div>
-    {creator.username}
+  <div class="flex items-center mb-8">
+    <img class="w-[50px] h-[50px] rounded-full mr-4" src={creator.avatarUrl} />
+
+    <div>
+      {creator.username}
+    </div>
   </div>
-</div>
+
+  {:else}
+  <div class="flex flex-col items-center justify-center mb-8">
+    <img class="w-[300px] h-[400px] mr-4" style="border: 1px #ffffff45 solid; object-fit: cover;" src={creator.avatarUrl} />
+
+    <div class="mt-4 text-xl font-bold">
+      {creator.username}
+    </div>
+  </div>
+  {/if}
+
 {/if}
 
 {#key $feed}
