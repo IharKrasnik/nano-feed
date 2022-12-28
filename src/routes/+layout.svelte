@@ -29,7 +29,7 @@
 				</a>
 			</div>
 			<div>
-				<a class="_follow_button" href="https://ship-prod-627ed08f489a970013572f5d.paralect.net/auth/google/url">
+				<a class="_follow_button" href="https://ship-prod-627ed08f489a970013572f5d.paralect.net/auth/google/url?redirect_to={$page.url.href}">
 					Follow Stream
 				</a>
 			</div>
