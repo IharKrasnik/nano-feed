@@ -96,8 +96,8 @@
 </script>
 
 <svelte:head>
-	<title>Paralect Feed</title>
-	<meta name="description" content="Paralect feed" />
+	<title>Paralect Stream</title>
+	<meta name="description" content="Paralect Stream" />
 </svelte:head>
 
 <div>

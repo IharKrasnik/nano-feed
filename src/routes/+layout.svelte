@@ -4,8 +4,8 @@
 </script>
 
 <svelte:head>
-	<title>Paralect Feed</title>
-	<meta name="description" content="Paralect feed" />
+	<title>Paralect Stream</title>
+	<meta name="description" content="Paralect Stream" />
 </svelte:head>
 
 <div class="app" class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>
@@ -13,8 +13,8 @@
 	
 	<main class="container relative mx-auto p-8 max-w-[600px]">
 		<section class="flex items-center">
-			<a href="/">
-				<h1 class="text-xl font-bold mb-8">Paralect Feed
+			<a class="flex items-center mb-8" href="/">
+				<h1 class="text-xl font-bold">Paralect Stream
 				</h1>
 			</a>
 			<a class="ml-2" href="/creators">
