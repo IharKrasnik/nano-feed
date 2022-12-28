@@ -7,12 +7,6 @@
 	
 	import Select from 'svelte-select';
 
-	let selectedSource = null;
-	let selectedProject = null;
-
-	let refreshFeed = () => updateFeed({ source: selectedSource, project: selectedProject});
-	refreshFeed();
-
 	const sources = [{
 		value: null,
 		label: 'All'
@@ -34,65 +28,81 @@
 		value: null,
 		label: 'All',
 		color: 'rgba(255, 255, 255, .3)',
-		emoji: '🎇'
+		emoji: '🎇',
+		description: 'The feed from Paralect creators.'
 	}, {
 		value: 'growingproducts',
 		label: 'Growing Products',
 		emoji: '🌱',
 		color: '#53bf01',
+		description: 'Practical essays on how to build and grow your product.',
 	}, {
 		value: 'particles',
 		label: 'Particles',
 		color: '#d5ff09',
-		emoji: '✨'
+		emoji: '✨',
+		description: 'Knowledge that shapes the digital product universe',
 	}, {
 		value: 'shipitsipit',
 		label: 'Ship it & Sip it',
 		color: '#d091ff',
-		emoji: '🍸'
+		emoji: '🍸',
+		description: 'Shipping shit and drinking beers.',
 	}, {
 		value: 'alongtheroadmap',
 		label: 'Along The Roadmap',
 		color: '#fff291',
-		emoji: '🛣'
+		emoji: '🛣',
+		description: 'Stories from Startups, Founders and their Teams.',
 	}, {
 		value: 'rnd',
 		label: 'R&D',
 		color: '#f59e0c',
-		emoji: '🐝'
+		emoji: '🐝',
+		description: 'Solving problems that no NPM package can solve.',
 	}, {
 		value: 'startupsummer',
 		label: 'Startup Summer',
 		color: '#ffd967',
-		emoji: '🌞'
+		emoji: '🌞',
+		description: 'Intense 2-month practical full-stack product bootcamp.',
 	}, {
 		value: 'therebel',
 		label: 'THE✊🏽REBEL',
 		color: '#f59e0c',
-		emoji: '✊🏽'
+		emoji: '✊🏽',
+		description: 'Manifests from the Nano Riot.',
 	}, {
 		value: 'momentum',
 		label: 'Momentum',
 		color: '#00b8ff',
-		emoji: '🌀'
+		emoji: '🌀',
+		description: 'A tool to build in public and grow audience early.',
 	}, {
 		value: 'accelerator',
 		label: 'Accelerator',
 		color: '#d091ff',
-		emoji: '🚠'
+		emoji: '🚠',
+		description: 'Get $125k to build, launch and grow your product.',
 	}, {
 		value: 'igor',
 		label: 'Igor',
 		color: '#75c425',
-		emoji: '🤓'
+		emoji: '🤓',
+		description: 'Igor Krasnik\'s website.',
 	}, {
 		value: 'altos',
 		label: 'Altos',
 		color: '#fff291',
-		emoji: '🤳'
+		emoji: '🤳',
+		description: 'Share videos, explore events, meet new people and have fun.',
 	}];
 
+	let selectedSource = null;
+	let selectedProject = projects[0];
 
+	let refreshFeed = () => updateFeed({ source: selectedSource, project: selectedProject?.value });
+	refreshFeed();
 </script>
 
 <svelte:head>
@@ -100,15 +110,21 @@
 	<meta name="description" content="Paralect Stream" />
 </svelte:head>
 
+
+<div class="text-lg mb-8" style="margin-top: -16px; opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
+	{selectedProject?.description || ''}
+</div>
+
+
 <div>
 	<div class="absolute w-[250px] ml-[-300px]">
 		<div class="left-0" >
 			{#each projects as project}
 				<div 
 					class="_menu_item flex items-center px-4 py-2" 
-					class:_selected="{selectedProject === project.value}"
+					class:_selected="{selectedProject.value === project.value}"
 					on:click={() => { 
-						selectedProject = project.value; 
+						selectedProject = project; 
 						refreshFeed();
 					}} 
 					style="border-color: {project.color}"
