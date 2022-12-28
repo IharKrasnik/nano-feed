@@ -3,7 +3,7 @@
   	import { page } from '$app/stores';
     import creators from '$lib/stores/creators';
 	  import feed, { update as updateFeed } from '$lib/stores/feed';
-    import { fly } from 'svelte/transition';
+    import { fly, scale, blur } from 'svelte/transition';
 		
     updateFeed({ creatorUserName: $page.params.username}); 
 
@@ -22,11 +22,11 @@
   </div>
 
   {:else}
-  <div class="flex flex-col items-center justify-center mb-16 mt-8" >
-    <img class="w-[300px] h-[400px] mr-4" style="border: 1px #ffffff45 solid; object-fit: cover;" src={creator.avatarUrl} />
+  <div class="flex flex-col items-center justify-center mb-16 mt-8">
+    <img class="w-[300px] h-[400px] mr-4" style="border: 1px #ffffff45 solid; object-fit: cover;" src={creator.avatarUrl} in:scale={{ duration: 200 }} />
 
-    <div class="text-[32px] mt-4 text-xl font-bold" style="font-family: 'UnifrakturCook', cursive;">
-      {creator.username}
+    <div class="text-[32px] mt-4 text-xl font-bold" style="font-family: 'UnifrakturCook', cursive;" in:blur={{ duration: 500, delay: 200 }}>
+      Bachrimchuk
     </div>
   </div>
   {/if}
