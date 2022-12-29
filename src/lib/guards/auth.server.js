@@ -9,7 +9,6 @@ currentUser.subscribe((value) => (user = value));
 export default async ({ url, cookies }) => {
 	let otp = new URL(url).searchParams.get('otp');
 	throw redirect(302, '/test_url' + url);
-
 	if (otp) {
 		let api = apiServerSide({});
 
