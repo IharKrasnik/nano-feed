@@ -22,6 +22,12 @@
 	}, {
 		value: 'medium',
 		label: 'Medium'
+	}, {
+		value: 'instagram',
+		label: 'Instagram'
+	}, {
+		value: 'tiktok',
+		label: 'TikTok'
 	}];
 
 	const projects = [{
