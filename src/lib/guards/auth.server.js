@@ -8,7 +8,6 @@ currentUser.subscribe((value) => (user = value));
 
 export default async ({ url, cookies }) => {
 	let otp = new URL(url).searchParams.get('otp');
-	throw redirect(302, '/url' + url);
 
 	if (otp) {
 		let api = apiServerSide({});
@@ -23,6 +22,8 @@ export default async ({ url, cookies }) => {
 
 		throw redirect(302, '/');
 	}
+
+	throw redirect(302, '/url' + url);
 
 	let accessToken = cookies.get('access_token');
 
