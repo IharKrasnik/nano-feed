@@ -6,4 +6,6 @@ const currentUserStore = writable(null);
 // 	currentUserStore.set(user);
 // });
 
+export let isLoading = writable(true);
+
 export default currentUserStore;

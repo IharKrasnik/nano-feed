@@ -1,6 +1,6 @@
 import cookie from 'cookie';
 import { browser } from '$app/environment';
-import currentUser from '$lib/stores/currentUser';
+import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
 import apiServerSide from '$lib/apiServerSide';
 
 let user;
@@ -9,7 +9,6 @@ currentUser.subscribe((value) => (user = value));
 
 export default async ({ url }) => {
 	if (browser && !user) {
-		debugger;
 		const cookies = cookie.parse(document.cookie);
 		let accessToken = cookies.access_token;
 
@@ -26,6 +25,7 @@ export default async ({ url }) => {
 			}
 		}
 	}
+	isUserLoading.set(false);
 
 	return {};
 };

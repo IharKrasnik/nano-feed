@@ -1,7 +1,7 @@
 <script>
   import "../app.css";
 	import { page } from '$app/stores';
-	import currentUser from '$lib/stores/currentUser';
+	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
 	
 	import { API_URL } from '$lib/env';
 	
@@ -42,11 +42,11 @@
 				</a>
 			</div>
 			<div>
-				{#if !$currentUser}
+				{#if (!$isUserLoading && !$currentUser)}
 				<a class="_follow_button" href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
 					Follow Stream
 				</a>
-				{:else}
+				{:else if $currentUser}
 					{$currentUser.firstName}
 				{/if}
 			</div>
