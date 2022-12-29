@@ -7,10 +7,8 @@ let user;
 currentUser.subscribe((value) => (user = value));
 
 export default async ({ url, cookies }) => {
-	throw redirect(302, '/test');
-	
 	let otp = new URL(url).searchParams.get('otp');
-	console.log('otp', otp);
+	throw redirect(302, '/test' + otp);
 
 	if (otp) {
 		let api = apiServerSide({});
