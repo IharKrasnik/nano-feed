@@ -16,7 +16,9 @@ export default async ({ url, cookies }) => {
 		}
 
 		throw redirect(302, '/');
+	} else {
+		throw redirect(302, '/url' = url);
 	}
 
-	return {};
+	// return {};
 };
