@@ -17,8 +17,10 @@ export default async ({ url, cookies }) => {
 
 		throw redirect(302, '/');
 	} else {
-		throw redirect(302, '/url' + url);
-	}
+		if (!url.includes('url_')) {
+			throw redirect(302, '/url_' + url);
+		}
 
-	// return {};
+		return {};
+	}
 };
