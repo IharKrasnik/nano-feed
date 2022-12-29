@@ -2,7 +2,7 @@ import apiServerSide from '$lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
 
 export default async ({ url, cookies }) => {
-	if (!url.href.includes('_redirect')) {
+	if (!url.href.includes('_redirect') && !url.href.includes('sveltekit-prerender')) {
 		let otp = new URL(url.href).searchParams.get('otp');
 
 		if (otp) {
