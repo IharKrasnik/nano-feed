@@ -1,6 +1,19 @@
 <script>
   import "../app.css";
 	import { page } from '$app/stores';
+	import currentUser from '$lib/stores/currentUser';
+	
+	import { API_URL } from '$lib/env';
+	
+	// import authGuard from '$lib/guards/auth';
+
+	// export function load({ url, params, session }) {
+	// 	console.log('load 12323 12321')
+	// 	// return authGuard({ url, params, session });
+	// }
+
+
+// }
 </script>
 
 <svelte:head>
@@ -29,9 +42,13 @@
 				</a>
 			</div>
 			<div>
-				<a class="_follow_button" href="https://ship-prod-627ed08f489a970013572f5d.paralect.net/auth/google/url?redirect_to={$page.url.href}">
+				{#if !$currentUser}
+				<a class="_follow_button" href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
 					Follow Stream
 				</a>
+				{:else}
+					{$currentUser.firstName}
+				{/if}
 			</div>
 		</section>
 
