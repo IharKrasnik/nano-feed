@@ -1,14 +1,14 @@
-import { browser } from '$app/environment';
 import currentUser from '$lib/stores/currentUser';
 import apiServerSide from '$lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
-import cookie from 'cookie';
 
 let user;
 
 currentUser.subscribe((value) => (user = value));
 
 export default async ({ url, cookies }) => {
+	throw redirect(302, '/test');
+	
 	let otp = new URL(url).searchParams.get('otp');
 	console.log('otp', otp);
 
