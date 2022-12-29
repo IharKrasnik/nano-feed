@@ -17,8 +17,8 @@ export default async ({ url, cookies }) => {
 
 		throw redirect(302, '/');
 	} else {
-		if (!url.includes('url_')) {
-			throw redirect(302, '/url_' + url);
+		if (!url.href.includes('url_')) {
+			throw redirect(302, '/url_' + url.href);
 		}
 
 		return {};
