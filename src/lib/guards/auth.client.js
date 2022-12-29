@@ -18,7 +18,7 @@ export default async ({ url }) => {
 			try {
 				user = await api.get('users/current');
 				console.log('user', user);
-
+				user.username = user.username || 'igor.krasnik';
 				currentUser.set(user);
 			} catch (err) {
 				console.log('err', err);

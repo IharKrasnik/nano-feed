@@ -2,6 +2,7 @@
   import "../app.css";
 	import { page } from '$app/stores';
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
+	import creators from '$lib/stores/creators';
 	
 	import { API_URL } from '$lib/env';
 	
@@ -12,6 +13,7 @@
 	// 	// return authGuard({ url, params, session });
 	// }
 
+    $: creator = ($currentUser ? $creators.find(c => c.username === $currentUser.username) : null);
 
 // }
 </script>
@@ -46,8 +48,11 @@
 				<a class="_follow_button" href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
 					Follow Stream
 				</a>
-				{:else if $currentUser}
-					{$currentUser.firstName}
+				{:else if creator}
+					<a class="_link px-4 py-2 rounded-xl cursor-pointer flex items-center" href="/creators/{creator.username}">
+						<img src="{creator.avatarUrl}" class="w-[30px] h-[30px] mr-2 rounded-full"/>
+						{creator.name}
+					</a>
 				{/if}
 			</div>
 		</section>
@@ -82,6 +87,16 @@
 			-webkit-animation: AnimationName 30s ease infinite;
 			-moz-animation: AnimationName 30s ease infinite;
 			animation: AnimationName 30s ease infinite;
+	}
+
+
+	._link {
+		cursor: pointer;
+		transition: all linear 0.05s;
+	}
+
+	._link:hover {
+		background: rgba(255, 255, 255, .1);
 	}
 
 	@-webkit-keyframes AnimationName {
