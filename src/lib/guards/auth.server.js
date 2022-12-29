@@ -10,6 +10,7 @@ currentUser.subscribe((value) => (user = value));
 
 export default async ({ url, cookies }) => {
 	let otp = new URL(url).searchParams.get('otp');
+	console.log('otp', otp);
 
 	if (otp) {
 		let api = apiServerSide({});
