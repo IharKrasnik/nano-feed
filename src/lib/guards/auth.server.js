@@ -1,8 +1,8 @@
 import apiServerSide from '$lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
 
-export default async ({ url, cookies, params }) => {
-	if (!url.href.includes('_redirect') && !url.href.includes('sveltekit-prerender')) {
+export default async ({ url, cookies }) => {
+	if (!url.href.includes('_redirect')) {
 		let otp = url.searchParams.get('otp');
 
 		if (otp) {
@@ -16,7 +16,8 @@ export default async ({ url, cookies, params }) => {
 			} catch (err) {
 				console.log('err', err);
 			}
-			throw redirect(302, '/');
+
+			throw redirect(302, '/?url', JSON.stringify(url));
 		}
 
 		// throw redirect(302, '/_redirect?url=' + url.searchParams.get('otp'));
