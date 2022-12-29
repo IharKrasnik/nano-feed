@@ -14,7 +14,6 @@
 
 
 // }
-	export const prerender = false;
 </script>
 
 <svelte:head>
