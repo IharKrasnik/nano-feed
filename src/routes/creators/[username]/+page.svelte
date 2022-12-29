@@ -17,7 +17,7 @@
     <img class="w-[50px] h-[50px] rounded-full mr-4" src={creator.avatarUrl} />
 
     <div>
-      {creator.username}
+      {creator.name}
     </div>
   </div>
 
