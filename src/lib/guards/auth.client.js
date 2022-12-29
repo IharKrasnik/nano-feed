@@ -9,6 +9,7 @@ currentUser.subscribe((value) => (user = value));
 
 export default async ({ url }) => {
 	if (browser && !user) {
+		debugger;
 		const cookies = cookie.parse(document.cookie);
 		let accessToken = cookies.access_token;
 
