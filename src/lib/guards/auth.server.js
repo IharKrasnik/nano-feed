@@ -1,9 +1,9 @@
 import apiServerSide from '$lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
 
-export default async ({ url, cookies }) => {
+export default async ({ url, cookies, params }) => {
 	if (!url.href.includes('_redirect') && !url.href.includes('sveltekit-prerender')) {
-		let otp = new URL(url.href).searchParams.get('otp');
+		let otp = url.searchParams.get('otp');
 
 		if (otp) {
 			let api = apiServerSide({});
@@ -15,8 +15,10 @@ export default async ({ url, cookies }) => {
 			} catch (err) {
 				console.log('err', err);
 			}
+			// throw redirect(302, '/');
 		}
-		throw redirect(302, '/_redirect?url=' + url.href);
+
+		throw redirect(302, '/_redirect?url=' + url.searchParams.get('otp'));
 	}
 
 	return {};
