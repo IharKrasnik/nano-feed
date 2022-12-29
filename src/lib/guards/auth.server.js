@@ -11,14 +11,15 @@ export default async ({ url, cookies, params }) => {
 			try {
 				const authData = await api.get('users/current-by-otp', { otp });
 				const { accessToken } = authData;
+
 				cookies.set('access_token', accessToken);
 			} catch (err) {
 				console.log('err', err);
 			}
-			// throw redirect(302, '/');
+			throw redirect(302, '/');
 		}
 
-		throw redirect(302, '/_redirect?url=' + url.searchParams.get('otp'));
+		// throw redirect(302, '/_redirect?url=' + url.searchParams.get('otp'));
 	}
 
 	return {};
