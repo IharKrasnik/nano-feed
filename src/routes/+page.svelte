@@ -12,6 +12,8 @@
 	import sources from '$lib/stores/sources'; 
 	import currentUser from '$lib/stores/currentUser'; 
 	
+	import { page } from '$app/stores'
+
 	import Select from 'svelte-select';
 
 	let shuffledCreators = [];
@@ -22,8 +24,8 @@
 	}
 
 	let selectedSource = null;
-	let selectedProject = $projects[0];
-
+	
+	let selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.value === $page.url.searchParams.get('project')) : $projects[0];
 	let refreshFeed = () =>{
 		updateFeed({ source: selectedSource, project: selectedProject?.value });
 	}
@@ -52,9 +54,10 @@
 	<div class="absolute w-[250px] ml-[-300px]">
 		<div class="left-0" >
 			{#each $projects as project}
-				<div 
-					class="_menu_item flex items-center px-4 py-2" 
+				<a 
+					class="cursor-pointer _menu_item flex items-center px-4 py-2" 
 					class:_selected="{selectedProject.value === project.value}"
+					href= "{ project.value ? `/?project=${project.value}` : '/'}"
 					on:click={() => { 
 						selectedProject = project; 
 						refreshFeed();
@@ -66,7 +69,7 @@
 						#
 					</div>
 					{project.label}
-				</div>
+				</a>
 			{/each}
 		</div>
 	</div>
