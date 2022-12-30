@@ -27,7 +27,7 @@
 					</h1>
 				</a>
 				<a class="ml-2" href="/creators">
-					<h1 class="text-xl font-bold mb-8">
+					<h1 class="text-xl font-bold">
 						<span class="hover:text-[#00ff85] text-[#fff]">
 							{#if $page.url.href.includes('/creators')}
 							Creators

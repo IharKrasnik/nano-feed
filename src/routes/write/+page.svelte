@@ -250,7 +250,7 @@
 
 
     <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
-      Post
+      Post Update
     </button>
   {/if}
 </form>
