@@ -72,7 +72,7 @@ let project;
 
     <div class="mt-4 flex items-center justify-between">
       <div class="text-sm py-2 opacity-80">
-        <!-- {formatDate(new Date(feedItem.createdOn), 'MMM dd')} -->
+        {formatDate(new Date(feedItem.createdOn), 'MMM dd')}
       </div>
        {#if feedItem.source === 'momentum'}
         <div class="font-bold w-[20px]">

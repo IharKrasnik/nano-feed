@@ -158,7 +158,7 @@
     </div>
     <div class="mb-8">
       <label> Description </label>
-      <textarea rows="3" class="block" bind:value={feedItem.content} />
+      <textarea rows="5" class="block" bind:value={feedItem.content} />
     </div>
 
     {#if currentPage !== 'update'}
