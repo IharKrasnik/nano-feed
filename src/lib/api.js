@@ -1,5 +1,6 @@
 import { browser } from '$app/environment';
 import { get as getStoreValue } from 'svelte/store';
+import cookie from 'cookie';
 
 // import notify from '$lib/services/notify';
 
@@ -38,6 +39,8 @@ const ftch = async (method, url, params, options = {}) => {
 
 	const absoluteUrl = url.startsWith('http') ? url : `${API_URL}/${url}`;
 
+	debugger;
+
 	let body = null;
 	let headers = {};
 	headers['Content-Type'] = 'application/json';
@@ -49,6 +52,11 @@ const ftch = async (method, url, params, options = {}) => {
 		} else {
 			body = JSON.stringify(params);
 		}
+	}
+
+	const cookies = cookie.parse(document.cookie);
+	if (cookies.access_token) {
+		headers['Authorization'] = `Bearer ${cookies.access_token}`;
 	}
 
 	try {

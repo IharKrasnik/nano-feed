@@ -1,5 +1,5 @@
 <script>
-	  import FeedItem from '$lib/components/feed-item.svelte';
+	  import FeedItem from '$lib/components/FeedItem.svelte';
   	import { page } from '$app/stores';
     import creators from '$lib/stores/creators';
 	  import feed, { update as updateFeed } from '$lib/stores/feed';

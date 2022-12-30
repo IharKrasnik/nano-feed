@@ -17,6 +17,8 @@ let project;
 
  $: if(feedItem && feedItem.projects && feedItem.projects.length > 0) {
    project = feedItem.projects[0];
+ } else {
+   project = null;
  }
 </script>
 
@@ -35,7 +37,7 @@ let project;
         {feedItem.content}
       </div>
     {/if}
-    {#if ['youtube', 'shipitsipit'].includes(feedItem.source)}
+    {#if ['youtube', 'shipitsipit'].includes(feedItem.source) && feedItem.url}
       <iframe
         class="w-full mt-2 min-h-[300px] pointer-events-none"
         src="https://www.youtube.com/embed/{new URL(feedItem.url).searchParams.get('v')}" 
@@ -69,7 +71,7 @@ let project;
 
     <div class="mt-4 flex items-center justify-between">
       <div class="text-sm py-2 opacity-80">
-        {formatDate(new Date(feedItem.createdOn), 'MMM dd')}
+        <!-- {formatDate(new Date(feedItem.createdOn), 'MMM dd')} -->
       </div>
        {#if feedItem.source === 'twitter'}
         <div class="font-bold w-[20px]">
@@ -117,12 +119,11 @@ let project;
     <div class="flex items-center">
       {#if feedItem?.creators}
         {#each feedItem.creators as creator}
-        <img src="{creator.avatarUrl}" class="rounded-full w-[40px] h-[40px]" /> 
-        
+         <img src="{creator.avatarUrl}" class="rounded-full w-[40px] h-[40px]" /> 
         {/each}
 
         <div class="ml-2 mr-2 text-sm">
-          {feedItem.creators.map(c=> c.username).join(', ')}
+          {feedItem.creators.map(c=> c.name).join(', ')}
         </div>
       {/if}
     </div>

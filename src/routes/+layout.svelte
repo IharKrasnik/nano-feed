@@ -1,6 +1,8 @@
 <script>
   import "../app.css";
 	import { page } from '$app/stores';
+	import { fade } from 'svelte/transition';
+
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
 	import creators from '$lib/stores/creators';
 	
@@ -49,7 +51,7 @@
 					Follow Stream
 				</a>
 				{:else if creator}
-					<a class="_link px-4 py-2 rounded-xl cursor-pointer flex items-center" href="/creators/{creator.username}">
+					<a class="_link px-4 py-2 rounded-xl cursor-pointer flex items-center" href="/creators/{creator.username}" in:fade={{ duration: 100 }}>
 						<img src="{creator.avatarUrl}" class="w-[30px] h-[30px] mr-2 rounded-full"/>
 						{creator.name}
 					</a>

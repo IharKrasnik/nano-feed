@@ -6,3 +6,43 @@ body {
 	background: black;
 	color: rgba(255, 255, 255, 0.8);
 }
+
+label {
+	display: block;
+	font-size: 18px;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+
+input[type='text'] {
+	width: 100%;
+	background: none;
+	padding: 16px;
+	border: 1px rgba(255, 255, 255, 0.3) solid;
+	outline: none;
+}
+
+textarea {
+	width: 100%;
+	background: none;
+	padding: 16px;
+	border: 1px rgba(255, 255, 255, 0.3) solid;
+}
+
+select {
+	width: 100%;
+	background: none;
+	padding: 16px;
+	border: 1px rgba(255, 255, 255, 0.3) solid;
+}
+
+button {
+	cursor: pointer;
+	transition: all linear 0.1s;
+	padding: 16px 32px;
+	border: 1px rgba(255, 255, 255, 0.3) solid;
+}
+
+button:hover {
+	background: rgba(255, 255, 255, 0.1);
+}

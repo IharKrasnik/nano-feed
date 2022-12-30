@@ -1,66 +1,30 @@
 <script>
-	import creators from '$lib/stores/creators';
-  import { fly } from 'svelte/transition';
+	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
+  import creators from '$lib/stores/creators'; 
 
-  import { onMount } from 'svelte';
-
-  let inputEl;
-  let search = '';
-
-  onMount(() => {
-    setTimeout(() => {
-      inputEl.focus();
-    }, 500);
-  });
-
-  const refresh = () => {
-
-  };
 </script>
 
-<h1 class="text-lg font-bold"> Creators </h1>
+<div class="mb-8">
+  <label>Creators</label>
 
-<input class="_input w-full mb-4 mt-2" 
-  bind:value={search} 
-  on:updated={refresh} 
-  placeholder="Search..." 
-  bind:this={inputEl}
-/>
-
-
-{#if $creators.length > 0}
-<div class="mt-4" in:fly={{  y: 50, duration: 150, delay: 150 }}>
-  {#each $creators.filter(c=> search ? c.username.includes(search ): true) as creator}
-  <a href="/creators/{creator.username}" class="_item flex items-center p-4" style="border-bottom: 1px rgba(255, 255, 255, .3) solid;">
-    <img src={creator.avatarUrl} class="w-[40px] h-[40px] rounded-full mr-2"/>
-    <div class="ml-2 text-lg">
-      {creator.name}
-    </div>
-  </a>
-  {/each}
+  {#if $creators.length}
+    <AutoCompleteInput
+      searchField="name"
+      placeholder="Search creators.."
+      limitItemsCount={0}
+      isMulti
+      isAlwaysShown
+      allSuggestions={$creators.map(c => ({ ...c, href: `/creators/${c.username}`}))}
+      autofocus
+      class="mb-4"
+    >
+      <div slot="item" let:item={item}>
+        <div class="flex items-center">
+          <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
+          {item.name}
+        </div>
+      </div>
+    </AutoCompleteInput>
+  {/if}
 </div>
-{/if}
 
-<style>
-  ._input {
-    background: none;
-    padding: 16px;
-    border: 1px rgba(255, 255, 255, .3) solid;
-  }
-
-  ._item {
-		cursor: pointer;
-		transition: all linear 0.1s;
-	}
-
-	._item:hover {
-		background: rgba(255, 255, 255, .1);
-		border-bottom: 1px rgba(255, 255, 255, 0.3) solid;
-		margin-bottom: -1px;
-	}
-
-	._item._selected {
-		border-bottom: 1px solid;
-		margin-bottom: -1px;
-	}
-</style>
