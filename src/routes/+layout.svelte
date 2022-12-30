@@ -8,16 +8,7 @@
 	
 	import { API_URL } from '$lib/env';
 	
-	// import authGuard from '$lib/guards/auth';
-
-	// export function load({ url, params, session }) {
-	// 	console.log('load 12323 12321')
-	// 	// return authGuard({ url, params, session });
-	// }
-
-    $: creator = ($currentUser ? $creators.find(c => c.username === $currentUser.username) : null);
-
-// }
+  $: creator = ($currentUser ? $creators.find(c => c.username === $currentUser.username) : null);
 </script>
 
 <svelte:head>
@@ -29,10 +20,10 @@
 	<main>
 	
 	<main class="container relative mx-auto p-8 max-w-[600px]">
-		<section class="flex justify-between">
+		<section class="flex justify-between mb-8">
 			<div class="flex items-center">
-				<a class="flex mb-8" href="/">
-					<h1 class="text-xl font-bold">Paralect Stream
+				<a class="flex" href="/">
+					<h1 class="text-xl font-bold" style="z-index: 100;">Paralect Stream
 					</h1>
 				</a>
 				<a class="ml-2" href="/creators">
@@ -47,15 +38,22 @@
 			</div>
 			<div>
 				{#if (!$isUserLoading && !$currentUser)}
-				<a class="_follow_button" href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
-					Follow Stream
+				<a href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
+					<button class="small">
+						Follow Stream
+					</button>
 				</a>
-				{:else if creator}
+				{:else if creator && !$page.url.href.includes('/write')}
+					<a href="/write">
+						<button class="small">Start Writing</button>
+					</a>
+				{/if}
+				<!-- {:else if creator}
 					<a class="_link px-4 py-2 rounded-xl cursor-pointer flex items-center" href="/creators/{creator.username}" in:fade={{ duration: 100 }}>
 						<img src="{creator.avatarUrl}" class="w-[30px] h-[30px] mr-2 rounded-full"/>
 						{creator.name}
 					</a>
-				{/if}
+				{/if} -->
 			</div>
 		</section>
 
@@ -68,12 +66,6 @@
 </div>
 
 <style>
-	._follow_button {
-		border: 1px rgba(255, 255, 255, .3) solid;
-		border-radius: 4px;
-		padding: 4px 16px;
-	}
-
 	.app {
 		display: flex;
 		flex-direction: column;

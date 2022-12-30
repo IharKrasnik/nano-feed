@@ -28,6 +28,10 @@ const sourcesStore = writable([
 	{
 		value: 'tiktok',
 		label: 'TikTok'
+	},
+	{
+		value: 'momentum',
+		label: 'Momentum'
 	}
 ]);
 

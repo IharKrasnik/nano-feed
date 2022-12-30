@@ -9,6 +9,7 @@ const projectsStore = writable([
 		description: 'The feed from Paralect creators.'
 	},
 	{
+		id: 'recW8TqWrQH7Le7ef',
 		value: 'growingproducts',
 		label: 'Growing Products',
 		emoji: '🌱',
@@ -16,6 +17,7 @@ const projectsStore = writable([
 		description: 'Practical essays on how to build and grow your product.'
 	},
 	{
+		id: 'rec5f10C3w51tjPcG',
 		value: 'particles',
 		label: 'Particles',
 		color: '#d5ff09',
@@ -23,6 +25,7 @@ const projectsStore = writable([
 		description: 'Knowledge that shapes the digital product universe'
 	},
 	{
+		id: 'recgjfbyVZl9tU9ZA',
 		value: 'shipitsipit',
 		label: 'Ship it & Sip it',
 		color: '#d091ff',
@@ -30,6 +33,7 @@ const projectsStore = writable([
 		description: 'Shipping shit and drinking beers.'
 	},
 	{
+		id: 'recVZ1BXBHNPKAYlp',
 		value: 'alongtheroadmap',
 		label: 'Along The Roadmap',
 		color: '#fff291',
@@ -37,6 +41,7 @@ const projectsStore = writable([
 		description: 'Stories from Startups, Founders and their Teams.'
 	},
 	{
+		id: 'recfpnXDmaXctW1NW',
 		value: 'rnd',
 		label: 'R&D',
 		color: '#f59e0c',
@@ -44,6 +49,7 @@ const projectsStore = writable([
 		description: 'Solving problems that no NPM package can solve.'
 	},
 	{
+		id: 'recBBeGCZSZcNMzbg',
 		value: 'startupsummer',
 		label: 'Startup Summer',
 		color: '#ffd967',
@@ -51,6 +57,7 @@ const projectsStore = writable([
 		description: 'Intense 2-month practical full-stack product bootcamp.'
 	},
 	{
+		id: 'rectXa3gdiXJDpAfA',
 		value: 'therebel',
 		label: 'THE✊🏽REBEL',
 		color: '#f59e0c',
@@ -58,6 +65,7 @@ const projectsStore = writable([
 		description: 'Manifests from the Nano Riot.'
 	},
 	{
+		id: 'recnDNrsVQFb7aszv',
 		value: 'momentum',
 		label: 'Momentum',
 		color: '#00b8ff',
@@ -65,6 +73,7 @@ const projectsStore = writable([
 		description: 'A tool to build in public and grow audience early.'
 	},
 	{
+		id: 'receWlPgQgJ6NTo9R',
 		value: 'accelerator',
 		label: 'Accelerator',
 		color: '#d091ff',
@@ -72,6 +81,7 @@ const projectsStore = writable([
 		description: 'Get $125k to build, launch and grow your product.'
 	},
 	{
+		id: 'recuuRpLWN0Qdfodf',
 		value: 'igor',
 		label: 'Igor',
 		color: '#75c425',
@@ -79,6 +89,7 @@ const projectsStore = writable([
 		description: "Igor Krasnik's website."
 	},
 	{
+		id: 'recgkM9QpDgY50bAs',
 		value: 'altos',
 		label: 'Altos',
 		color: '#fff291',

@@ -39,8 +39,6 @@ const ftch = async (method, url, params, options = {}) => {
 
 	const absoluteUrl = url.startsWith('http') ? url : `${API_URL}/${url}`;
 
-	debugger;
-
 	let body = null;
 	let headers = {};
 	headers['Content-Type'] = 'application/json';
@@ -54,9 +52,11 @@ const ftch = async (method, url, params, options = {}) => {
 		}
 	}
 
-	const cookies = cookie.parse(document.cookie);
-	if (cookies.access_token) {
-		headers['Authorization'] = `Bearer ${cookies.access_token}`;
+	if (browser) {
+		const cookies = cookie.parse(document.cookie);
+		if (cookies.access_token) {
+			headers['Authorization'] = `Bearer ${cookies.access_token}`;
+		}
 	}
 
 	try {

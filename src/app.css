@@ -14,7 +14,8 @@ label {
 	margin-bottom: 8px;
 }
 
-input[type='text'] {
+input[type='text'],
+input[type='datetime-local'] {
 	width: 100%;
 	background: none;
 	padding: 16px;
@@ -43,6 +44,26 @@ button {
 	border: 1px rgba(255, 255, 255, 0.3) solid;
 }
 
+button.small {
+	padding: 8px 32px;
+	background: rgba(255, 255, 255, 0.1);
+}
+
+button.tab {
+	border: none;
+	border-bottom: 1px rgba(255, 255, 255, 0.3) solid;
+}
+
+button.tab.selected {
+	border: none;
+	border-bottom: 1px rgba(255, 255, 255, 0.9) solid;
+	/* background-color: rgba(255, 255, 255, 0.3); */
+}
+
 button:hover {
 	background: rgba(255, 255, 255, 0.1);
+}
+
+button.small:hover {
+	background: rgba(255, 255, 255, 0.3);
 }

@@ -28,7 +28,6 @@
   };
 
   const onBlur = (e) => {
-    debugger;
     if (showOnFocus) {
       showCreators = false;
     }

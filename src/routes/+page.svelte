@@ -10,7 +10,7 @@
 	import creators, { update as updateCreators } from '$lib/stores/creators';
 	import projects from '$lib/stores/projects'; 
 	import sources from '$lib/stores/sources'; 
-
+	import currentUser from '$lib/stores/currentUser'; 
 	
 	import Select from 'svelte-select';
 
