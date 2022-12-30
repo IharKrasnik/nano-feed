@@ -47,6 +47,10 @@
     const newFile = await postFile('files', file);
 		files = [...files, newFile];
 
+    if (!(newFile.url.startsWith('http'))) {
+      newFile.url = `https://${newFile.url}`;
+    }
+
     feedItem.attachments.push({ type: (newFile.url.includes('.mp4') || newFile.url.includes('.mov')) ? 'video' : 'image' , url: newFile.url });
 
     feedItem.attachments = [...feedItem.attachments];
@@ -214,7 +218,7 @@
       {#if feedItem.attachments.length}
         {#each feedItem.attachments as attachment}
           {#if attachment.type === 'video'  }
-            <video class="max-w-[400px]" src={attachment.url} />
+            <video class="max-w-[400px]" src={attachment.url} muted autoplay/>
           {:else}
             <img class="max-w-[400px]" src={attachment.url} />
           {/if}

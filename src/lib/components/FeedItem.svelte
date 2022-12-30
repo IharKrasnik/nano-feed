@@ -61,9 +61,10 @@ let project;
           {/if}
           {#if attachment.type === 'video'}
           
-          <video width="320" height="240" muted loop bind:this={videoEl}>
-            <source id="mp4video" src="{attachment.url}" type="video/mp4" />
+          <video width="320" height="240" muted loop autoplay bind:this={videoEl}>
+            <source src={attachment.url} type="video/mp4">
           </video>
+
           {/if}
         {/each}
       </div>
