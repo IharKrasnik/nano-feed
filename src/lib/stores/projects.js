@@ -49,6 +49,14 @@ const projectsStore = writable([
 		description: 'Solving problems that no NPM package can solve.'
 	},
 	{
+		id: 'recPrYVl9pVIhgFUj',
+		value: 'productlab',
+		label: 'Product Lab',
+		color: '#53bf01',
+		emoji: '🧪',
+		description: 'Validate your product idea cost and time effectively'
+	},
+	{
 		id: 'recBBeGCZSZcNMzbg',
 		value: 'startupsummer',
 		label: 'Startup Summer',

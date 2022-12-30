@@ -135,6 +135,10 @@
       }
     });
 	};
+
+  const removeAttachments = () => {
+    feedItem.attachments = [];
+  }
 </script>
 
 <form class="mb-16">
@@ -217,11 +221,13 @@
 
       {#if feedItem.attachments.length}
         {#each feedItem.attachments as attachment}
-          {#if attachment.type === 'video'  }
-            <video class="max-w-[400px]" src={attachment.url} muted autoplay/>
-          {:else}
-            <img class="max-w-[400px]" src={attachment.url} />
-          {/if}
+          <div on:click={removeAttachments}>
+            {#if attachment.type === 'video'  }
+              <video class="max-w-[400px]" src={attachment.url} muted autoplay/>
+            {:else}
+              <img class="max-w-[400px]" src={attachment.url} />
+            {/if}
+          </div>
         {/each}
       {:else}
         {#if addAttachmentClicked}

@@ -183,7 +183,12 @@ let project;
           </div>
         {/if}
         
-
+        {#if project.name === 'productlab'}
+          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(213, 255, 9) solid;">
+            🧪 Product Lab
+          </div>
+        {/if}
+        
         {#if project.name === 'alongtheroadmap'}
           <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
             🛣 Along The Roadmap
