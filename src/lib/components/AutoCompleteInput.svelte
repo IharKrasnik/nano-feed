@@ -12,6 +12,7 @@
   export let isMulti = false;
   export let placeholder;
   export let searchField = 'label';
+  export let valueField = 'name';
   export let limitItemsCount = 10;
 	export let allSuggestions;
   export let onChange;
@@ -200,7 +201,7 @@
         <slot name="item" item={selectedItem}/>
 
         {#if !$$slots.item}
-        { allSuggestions.find(s => s.value === selectedItem.value)?.label }
+        { allSuggestions.find(s => s[valueField] === selectedItem[valueField])?.label }
         {/if}
 
         <button class="_cross" on:click|preventDefault={() => removeSelectedItem(selectedItem)}>

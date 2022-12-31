@@ -9,11 +9,16 @@
 	
 	import { API_URL } from '$lib/env';
 	
-	let selectedProject;
 	let creator;	
+		
+	let selectedProject;
 
-	$: { 
-		selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.value === $page.url.searchParams.get('project')) : $projects[0];
+	$: if ($projects.length) {
+		if ($page.url.searchParams.get('project')) {
+			selectedProject = $projects.find(p => p.name === $page.url.searchParams.get('project'));
+		} else {
+			selectedProject = $projects[0];
+		}
 	}
 
   $: creator = ($currentUser ? $creators.find(c => c.username === $currentUser.username) : null);
@@ -28,13 +33,13 @@
 	<main>
 	
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'}">
-		{#if !$page.url.href.includes('/embed')}
+		{#if selectedProject && !$page.url.href.includes('/embed')}
 		<section class="flex justify-between mb-8">
 			<div class="flex items-center">
 				<a class="flex" href="/">
 					<h1 class="text-xl font-bold" style="z-index: 100;">
-						{#if selectedProject.value}
-						{selectedProject.label}
+						{#if selectedProject.name}
+						{selectedProject.title}
 						{:else}
 						Paralect
 						{/if}
@@ -58,7 +63,7 @@
 						Follow Stream
 					</button>
 				</a>
-				{:else if creator && !$page.url.href.includes('/write')}
+				{:else if creator && !$page.url.href.includes('/write') && !$page.url.href.includes('/launch')}
 					<a href="/write">
 						<button class="small">Start Writing</button>
 					</a>

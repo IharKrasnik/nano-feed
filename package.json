@@ -33,6 +33,7 @@
 		"date-fns": "^2.29.3",
 		"hotkeys-js": "^3.10.1",
 		"lodash": "^4.17.21",
+		"slug": "^8.2.2",
 		"svelte-select": "^5.0.1"
 	}
 }

@@ -206,8 +206,9 @@
       <AutoCompleteInput
         onChange={onProjectsSelected}
         placeholder="Search Tags"
+        valueField="name"
         isMulti
-        allSuggestions={$projects.filter(s => s.value)}
+        allSuggestions={$projects.filter(s => s.name)}
         initialSelectedItems={feedItem.projects}
       >
         <!-- <div slot="item" let:item={item}>

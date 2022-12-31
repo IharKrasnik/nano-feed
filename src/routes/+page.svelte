@@ -25,9 +25,20 @@
 
 	let selectedSource = null;
 	
-	let selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.value === $page.url.searchParams.get('project')) : $projects[0];
+	let selectedProject;
+
 	let refreshFeed = () =>{
-		updateFeed({ source: selectedSource, project: selectedProject?.value });
+		updateFeed({ source: selectedSource, project: selectedProject?.name });
+	}
+
+	$: if ($projects.length) {
+		if ($page.url.searchParams.get('project')) {
+			selectedProject = $projects.find(p => p.name === $page.url.searchParams.get('project'));
+		} else {
+			selectedProject = featuredProjects[0];
+		}
+
+		refreshFeed();
 	}
 
 	const shuffleInterval = setInterval(() => {
@@ -36,7 +47,20 @@
 
 	onDestroy(() => clearInterval(shuffleInterval));
 	
-	refreshFeed();
+
+	let featuredProjects = [];
+
+	$: if ($projects) {
+		$projects = [{ 
+			name: null,
+			title: 'All',
+			description: 'A feed from Paralect creators.',
+			isFeatured: true,
+			color: 'rgba(255, 255, 255, .8)'
+		}, ...$projects];
+
+		featuredProjects = $projects.filter(p => p.isFeatured);
+	}
 </script>
 
 <svelte:head>
@@ -49,15 +73,14 @@
 	{selectedProject?.description || ''}
 </div>
 
-
 <div>
 	<div class="absolute w-[250px] ml-[-300px]">
 		<div class="left-0" >
-			{#each $projects as project}
+			{#each featuredProjects as project}
 				<a 
 					class="cursor-pointer _menu_item flex items-center px-4 py-2" 
-					class:_selected="{selectedProject.value === project.value}"
-					href= "{ project.value ? `/?project=${project.value}` : '/'}"
+					class:_selected="{selectedProject?.name === project.name}"
+					href= "{ project.name ? `/?project=${project.name}` : '/'}"
 					on:click={() => { 
 						selectedProject = project; 
 						refreshFeed();
@@ -65,12 +88,19 @@
 					style="border-color: {project.color}"
 				>
 					<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
-						<!-- {project.emoji||''} -->
 						#
 					</div>
-					{project.label}
+					{project.title}
 				</a>
 			{/each}
+
+			<div class="mt-8 w-full">
+				<a href="/launch" class="w-full">
+					<button class="w-full">
+						Launch Your #Project
+					</button>
+				</a>
+			</div>
 		</div>
 	</div>
 	<div class="absolute w-[250px]" style="left: 620px;">
