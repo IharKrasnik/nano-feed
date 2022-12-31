@@ -11,7 +11,7 @@
 </script>
 
 {#if creator}
-  {#if creator.username !== 'Bachrimchuk'}
+  {#if creator.username !== 'bachrimchuk'}
 
   <div class="flex items-center mb-8">
     <img class="w-[50px] h-[50px] rounded-full mr-4" src={creator.avatarUrl} />
