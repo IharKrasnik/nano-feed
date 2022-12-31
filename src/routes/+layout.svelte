@@ -4,10 +4,18 @@
 	import { fade } from 'svelte/transition';
 
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
+	import projects from '$lib/stores/projects';
 	import creators from '$lib/stores/creators';
 	
 	import { API_URL } from '$lib/env';
 	
+	let selectedProject;
+	let creator;	
+
+	$: { 
+		selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.value === $page.url.searchParams.get('project')) : $projects[0];
+	}
+
   $: creator = ($currentUser ? $creators.find(c => c.username === $currentUser.username) : null);
 </script>
 
@@ -24,7 +32,13 @@
 		<section class="flex justify-between mb-8">
 			<div class="flex items-center">
 				<a class="flex" href="/">
-					<h1 class="text-xl font-bold" style="z-index: 100;">Paralect Stream
+					<h1 class="text-xl font-bold" style="z-index: 100;">
+						{#if selectedProject.value}
+						{selectedProject.label}
+						{:else}
+						Paralect
+						{/if}
+					 Stream 
 					</h1>
 				</a>
 				<a class="ml-2" href="/creators">
