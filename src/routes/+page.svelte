@@ -51,14 +51,6 @@
 	let featuredProjects = [];
 
 	$: if ($projects) {
-		$projects = [{ 
-			name: null,
-			title: 'All',
-			description: 'A feed from Paralect creators.',
-			isFeatured: true,
-			color: 'rgba(255, 255, 255, .8)'
-		}, ...$projects];
-
 		featuredProjects = $projects.filter(p => p.isFeatured);
 	}
 </script>
@@ -83,7 +75,6 @@
 					href= "{ project.name ? `/?project=${project.name}` : '/'}"
 					on:click={() => { 
 						selectedProject = project; 
-						refreshFeed();
 					}} 
 					style="border-color: {project.color}"
 				>

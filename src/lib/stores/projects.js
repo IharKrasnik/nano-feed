@@ -8,7 +8,16 @@ export const update = ({ sort = 'createdOn', sortDirection = 'descending' } = {}
 		url: 'https://igor.npkn.net/get-projects',
 		params: { sort, sortDirection }
 	}).then(({ data: projects }) => {
-		projectsStore.update(() => projects);
+		projectsStore.update(() => [
+			{
+				name: null,
+				title: 'All',
+				description: 'A feed from Paralect creators.',
+				isFeatured: true,
+				color: 'rgba(255, 255, 255, .8)'
+			},
+			...projects
+		]);
 	});
 };
 

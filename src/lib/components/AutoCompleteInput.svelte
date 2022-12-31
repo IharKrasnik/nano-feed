@@ -169,7 +169,7 @@
           >
             <slot name="item" item={suggestion} />
             {#if !$$slots.item}
-            {suggestion.label}
+            {suggestion[searchField]}
             {/if}
           </a>
         {/each}
@@ -184,7 +184,7 @@
           <slot name="item" item={selectedItem}/>
 
           {#if !$$slots.item}
-          {selectedItem.label}
+          {selectedItem[searchField]}
           {/if}
 
           <button class="_cross" on:click|preventDefault={() => removeSelectedItem(selectedItem)}>
@@ -201,7 +201,7 @@
         <slot name="item" item={selectedItem}/>
 
         {#if !$$slots.item}
-        { allSuggestions.find(s => s[valueField] === selectedItem[valueField])?.label }
+        { allSuggestions.find(s => s[valueField] === selectedItem[valueField])[searchField] }
         {/if}
 
         <button class="_cross" on:click|preventDefault={() => removeSelectedItem(selectedItem)}>

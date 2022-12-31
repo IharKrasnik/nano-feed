@@ -78,6 +78,8 @@ let project;
       <div class="text-sm py-2 opacity-80">
         {formatDate(new Date(feedItem.createdOn), 'MMM dd')}
       </div>
+      <div class="flex">
+
        {#if feedItem.source === 'momentum'}
         <div class="font-bold w-[20px]">
        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 155 155" fill="none">
@@ -114,10 +116,11 @@ let project;
           </div>
        {/if}
        {#if feedItem.isRelease}
-          <div>
+          <div class="ml-2">
             🚀
           </div>
        {/if}
+       </div>
     </div>
     
 

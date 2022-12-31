@@ -3,7 +3,9 @@
   import slug from 'slug';
   import { post } from '$lib/api';
   import { goto } from '$app/navigation';
+  import creators from '$lib/stores/creators';
   import projects from '$lib/stores/projects';
+  import currentUser from '$lib/stores/currentUser';
 
   let project = {
     name: '',
@@ -25,13 +27,37 @@
 
     project.url = `https://page.mmntm.build/p/${project.slug}`;
 
-    const { data } = await axios({
+    const { data  :  { created: createdProjects } } = await axios({
       method: 'post',
       url: 'https://igor.npkn.net/create-project',
       data: project,
     });
 
-    $projects = [project, ...$projects];
+    let feedItem = {
+      createdOn: new Date(),
+
+      title: `I've just launched ${project.name} 🎉`,
+      content: 'See my website with build in public updates here:',
+      url: project.url,
+      isRelease: true,
+      source: 'momentum',
+      creators: [$creators.find(c => c.username === $currentUser.username)],
+      projects: [{ id: createdProjects[0].id }],
+      attachments: [],
+    };
+
+    const { data } = await axios({
+      method: 'post',
+      url: 'https://igor.npkn.net/post-feed',
+      data: feedItem,
+    });
+
+    $projects = [{
+      name: project.slug,
+      title: project.name,
+      description: project.tagline,
+      url: project.url,
+    }, ...$projects];
 
     goto('/?project=' + project.slug);
   }
