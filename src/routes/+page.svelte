@@ -73,7 +73,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="absolute w-[250px]" style="left: 600px;">
+	<div class="absolute w-[250px]" style="left: 620px;">
 		<div>
 			<div class="mb-8">
 				<label>Source</label>

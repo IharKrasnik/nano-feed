@@ -19,7 +19,8 @@
 <div class="app" class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>
 	<main>
 	
-	<main class="container relative mx-auto p-8 max-w-[600px]">
+	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'}">
+		{#if !$page.url.href.includes('/embed')}
 		<section class="flex justify-between mb-8">
 			<div class="flex items-center">
 				<a class="flex" href="/">
@@ -56,7 +57,7 @@
 				{/if} -->
 			</div>
 		</section>
-
+		{/if}
 		<slot />
 	</main>
 

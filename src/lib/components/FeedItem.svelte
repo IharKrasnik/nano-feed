@@ -5,6 +5,9 @@
   export let feedItem = {
 	}
 
+  let clazz = '';
+  export { clazz as class };
+
   let videoEl;
 
   onMount(() => {
@@ -22,8 +25,9 @@ let project;
  }
 </script>
 
-<a class="_item mb-8 inline-block w-full relative"
+<a class="_item mb-8 inline-block w-full relative {clazz}"
   class:_release="{feedItem.isRelease}"
+  class:_link="{!!feedItem.url}"
   href="{feedItem.url}" 
   target="_blank"
 >
@@ -208,12 +212,15 @@ let project;
 
 <style>
   ._item {
-    cursor: pointer;
     transition: all 0.08s linear;
     outline: 2px rgba(255,255,255, .1) solid;
     border-radius: 15px;
     padding: 16px;
     z-index: 1000;
+  }
+
+  ._item._link {
+    cursor: pointer;
   }
 
   ._item._release {
@@ -224,7 +231,7 @@ let project;
   ._item._release:hover {
   }
 
-  ._item:hover {
+  ._item._link:hover {
     transform: scale(1.05);
     background: rgba(255,255,255, 0.03);
     outline: 1px rgba(255,255,255, .3) solid;
