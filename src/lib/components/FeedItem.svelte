@@ -115,7 +115,7 @@ let project;
        {/if}
        {#if feedItem.isRelease}
           <div>
-            🔥
+            🚀
           </div>
        {/if}
     </div>
