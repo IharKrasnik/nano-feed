@@ -17,8 +17,8 @@
 </script>
 
 <div class="container mx-auto">
-  <div class="text-[32px] font-bold w-full text-center p-4">
-    Paralect builds the momentum
+  <div class="text-[32px] font-bold w-full text-center p-4 mt-8">
+    Paralect builds momentum in public:
   </div>
   <div class="mt-8" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto auto 1fr; gap: 10px;">
     {#key $feed}
