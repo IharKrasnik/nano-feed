@@ -4,6 +4,8 @@ import axios from 'axios';
 const projectsStore = writable([]);
 
 export const update = ({ sort = 'createdOn', sortDirection = 'descending' } = {}) => {
+	console.log('update');
+
 	axios({
 		url: 'https://igor.npkn.net/get-projects',
 		params: { sort, sortDirection }

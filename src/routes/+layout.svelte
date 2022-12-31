@@ -29,7 +29,7 @@
 	<meta name="description" content="Paralect Stream" />
 </svelte:head>
 
-<div class="app" class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>
+<div class="app" class:bg-black={ !$page.url.href.includes('embed-live') } class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>
 	<main>
 	
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'}">
@@ -91,7 +91,7 @@
 		flex-direction: column;
 		min-height: 100vh;
 		transition: all 0.2s linear;
-		background: black;
+		/* background: black; */
 	}
 
 	._gradient {

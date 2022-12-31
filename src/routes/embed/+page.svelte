@@ -4,15 +4,18 @@
   import FeedItem from '$lib/components/FeedItem.svelte';
 
 	import feed, { update as updateFeed } from '$lib/stores/feed';
-	import projects from '$lib/stores/feed';
+	import projects from '$lib/stores/projects';
 
-	let selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.value === $page.url.searchParams.get('project')) : $projects[0];
+  $: if ($projects.length) {
+    debugger;
+  	let selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.name === $page.url.searchParams.get('project')) : $projects[0];
 
-	let refreshFeed = () =>{
-		updateFeed({ project: selectedProject?.value });
-	}
-	
-	refreshFeed();
+    let refreshFeed = () =>{
+      updateFeed({ project: selectedProject?.name });
+    }
+
+  	refreshFeed();
+  }
 
 </script>
 

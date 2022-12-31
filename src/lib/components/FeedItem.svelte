@@ -220,6 +220,8 @@ let project;
     border-radius: 15px;
     padding: 16px;
     z-index: 1000;
+    color: white;
+    background: black;
   }
 
   ._item._link {
