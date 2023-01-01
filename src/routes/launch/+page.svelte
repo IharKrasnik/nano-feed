@@ -8,9 +8,9 @@
   import currentUser from '$lib/stores/currentUser';
 
   let project = {
-    name: '',
     slug: '',
-    tagline: '',
+    title: '',
+    description: '',
   }
 
   const onNameChange = () => {
@@ -19,15 +19,15 @@
 
   const launchProject = async () => {
     const result = await post('pages', {
-      name: project.name,
       slug: project.slug,
-      title: project.tagline,
+      name: project.title,
+      title: project.description,
       callToAction: 'Join Waitlist'
     });
 
     project.url = `https://page.mmntm.build/p/${project.slug}`;
 
-    const { data  :  { created: createdProjects } } = await axios({
+    const { data  :  createdProjects } = await axios({
       method: 'post',
       url: 'https://igor.npkn.net/create-project',
       data: project,
@@ -42,7 +42,7 @@
       isRelease: true,
       source: 'momentum',
       creators: [$creators.find(c => c.username === $currentUser.username)],
-      projects: [{ id: createdProjects[0].id }],
+      projects: [{ _id: createdProject._id }],
       attachments: [],
     };
 
@@ -53,9 +53,9 @@
     });
 
     $projects = [{
-      name: project.slug,
-      title: project.name,
-      description: project.tagline,
+      slug: project.slug,
+      title: project.title,
+      description: project.description,
       url: project.url,
     }, ...$projects];
 

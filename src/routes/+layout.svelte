@@ -34,7 +34,7 @@
 	
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'}">
 		{#if selectedProject && !$page.url.href.includes('/embed')}
-		<section class="flex justify-between mb-8">
+		<section class="relative flex justify-between mb-8">
 			<div class="flex items-center">
 				<a class="flex" href="/">
 					<h1 class="text-xl font-bold" style="z-index: 100;">
@@ -59,13 +59,13 @@
 			<div>
 				{#if (!$isUserLoading && !$currentUser)}
 				<a href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
-					<button class="small">
+					<button class="absolute right-0 small">
 						Follow Stream
 					</button>
 				</a>
 				{:else if creator && !$page.url.href.includes('/write') && !$page.url.href.includes('/launch')}
 					<a href="/write">
-						<button class="small">Start Writing</button>
+						<button class="absolute right-0 small">Start Writing</button>
 					</a>
 				{/if}
 			</div>

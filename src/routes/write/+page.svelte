@@ -15,11 +15,6 @@
   import projects from '$lib/stores/projects';
   import currentUser from '$lib/stores/currentUser';
 
-  let currentCreator;
-
-  debugger;
-  $: currentCreator = ($currentUser ? $creators.find(c => c.username === $currentUser.username) : null);
-  
   import CreatorsSearch from '$lib/components/CreatorsSearch.svelte';
 
   let url;
@@ -83,16 +78,8 @@
       params: { url, }
     });
 
-    // feedItem.title = data.title;
-
     feedItem.url = url;
     feedItem.content = data.description;
-
-    // const foundCreator = $creators.find(c => c.username === data.meta.author.toLowerCase().split(' ').join('.'));
-    
-    // if (foundCreator) {
-    //   feedItem.creators = [foundCreator];
-    // }
 
     if (feedItem.url.includes('linkedin.com')) {
       feedItem.source = 'linkedin';
@@ -106,6 +93,7 @@
   }
 
   const postToFeed = async () => {
+    debugger;
     const { data } = await post('feed', feedItem);
 
     goto('/');
@@ -115,7 +103,7 @@
 
   const setPage = page => {
     if (page === 'update') {
-      feedItem.creators = [currentCreator];
+      feedItem.creators = [$currentUser];
       feedItem.source = 'momentum';
     }
     currentPage = page;

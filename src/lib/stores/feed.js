@@ -3,7 +3,7 @@ import { get } from '$lib/api';
 
 const feedStore = writable([]);
 
-export const update = ({ sort = '-createdOn', source, project, creatorId } = {}) => {
+export const update = ({ sort = '-createdOn', source, project, creatorUsername } = {}) => {
 	feedStore.update(() => []);
 
 	const query = {
@@ -14,8 +14,8 @@ export const update = ({ sort = '-createdOn', source, project, creatorId } = {})
 		query.projectSlug = project;
 	}
 
-	if (creatorId) {
-		query.creatorId = creatorId;
+	if (creatorUsername) {
+		query.creatorUsername = creatorUsername;
 	}
 
 	if (source) {

@@ -64,6 +64,8 @@ const ftch = async (method, url, params, options = {}) => {
 		options.mode = 'cors';
 	}
 
+	debugger;
+
 	try {
 		res = await fetch(`${absoluteUrl}${method === 'get' ? `?${serialize(params)}` : ''}`, {
 			method,
