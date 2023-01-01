@@ -5,8 +5,6 @@ export default (node) => {
 
 		Object.keys(items).forEach((key) => {
 			let item = items[key];
-			debugger;
-
 			if (item.kind === 'file') {
 				var blob = item.getAsFile();
 				var reader = new FileReader();

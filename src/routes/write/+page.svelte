@@ -23,7 +23,7 @@
   let addAttachmentClicked = false;
 
   let feedItem = {
-    createdOn: formatDate(new Date(), 'yyyy-MM-dd') + 'T' + formatDate(new Date(), 'HH:MM'),
+    createdOn: new Date().toISOString(),
 
     title: '',
     content: '',
@@ -69,7 +69,7 @@
   }
 
   const onProjectsSelected = (selectedProjects) => {
-    feedItem.projects = selectedProjects.map(p => ({ name: p.value, id: p.id }));
+    feedItem.projects = selectedProjects.map(p => ({ slug: p.slug, id: p.id, _id: p._id }));
   }
 
   const addUrl = async () => {
@@ -93,13 +93,12 @@
   }
 
   const postToFeed = async () => {
-    debugger;
     const { data } = await post('feed', feedItem);
 
     goto('/');
   }
 
-  let currentPage = 'url';
+  let currentPage;
 
   const setPage = page => {
     if (page === 'update') {
@@ -108,6 +107,10 @@
     }
     currentPage = page;
   } 
+
+  $: if ($currentUser) {
+    setPage('update')
+  }
 
   const pasteImage = (e) => {
     Array.from(e.clipboardData.files).forEach(async (file) => {
@@ -129,8 +132,8 @@
 <form class="mb-16">
   <div class="mb-4">
     
-    <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Post Url</button>
     <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
+    <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Post Url</button>
   
     {#if currentPage === 'url'}
       <label class="mt-4 mb-4"> URL </label>
@@ -146,7 +149,7 @@
       <input type="text" class="block" bind:value={feedItem.title} autofocus/>
     </div>
     <div class="mb-8">
-      <label> Description </label>
+      <label> Content </label>
       <textarea rows="5" class="block" bind:value={feedItem.content} />
     </div>
 
@@ -192,6 +195,7 @@
         onChange={onProjectsSelected}
         placeholder="Search Tags"
         valueField="slug"
+        searchField="title"
         isMulti
         allSuggestions={$projects.filter(s => s.slug)}
         initialSelectedItems={feedItem.projects}
@@ -251,8 +255,10 @@
   {/if}
 </form>
 
-{#if feedItem.url || feedItem.title || feedItem.content }
+{#if feedItem }
+  
   <div style="position: fixed; right: 150px; top: 130px; width: 400px;">
+    <h3 class="mb-4">Post Preview</h3>
     <FeedItem bind:feedItem />
   </div>
 {/if}

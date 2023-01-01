@@ -12,7 +12,7 @@
   export let isMulti = false;
   export let placeholder;
   export let searchField = 'label';
-  export let valueField = 'name';
+  export let valueField = 'value';
   export let limitItemsCount = 10;
 	export let allSuggestions;
   export let onChange;
@@ -62,6 +62,7 @@
 	};
 
 	const setValue = (newValue) => {
+    
     if (newValue.href) {
       return goto(newValue.href);
     }

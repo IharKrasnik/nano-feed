@@ -60,7 +60,7 @@
       style="border-bottom: 1px rgba(255, 255, 255, .3) solid;"
     > -->
     <a
-      on:click={() => { debugger; onSelect(creator) }} 
+      on:click={() => { onSelect(creator) }} 
       class="_item flex items-center p-4"
       style="border-bottom: 1px rgba(255, 255, 255, .3) solid;"
     >

@@ -7,7 +7,6 @@
 	import projects from '$lib/stores/projects';
 
   $: if ($projects.length) {
-    debugger;
   	let selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.slug === $page.url.searchParams.get('project')) : $projects[0];
 
     let refreshFeed = () =>{
