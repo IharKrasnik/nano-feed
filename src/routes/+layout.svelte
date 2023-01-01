@@ -35,6 +35,13 @@
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'}">
 		{#if selectedProject && !$page.url.href.includes('/embed')}
 		<section class="relative flex justify-between mb-8">
+			<div class="absolute" style="margin-left: -300px; text-transform: uppercase; opacity: .95">
+				<a href="/">
+					<h1 class="text-xl font-bold mr-4" style="z-index: 100;">
+						Stream://
+					</h1>
+				</a>
+			</div>
 			<div class="flex items-center">
 				<a class="flex" href="/">
 					<h1 class="text-xl font-bold" style="z-index: 100;">
@@ -43,7 +50,6 @@
 						{:else}
 						Paralect
 						{/if}
-					 Stream 
 					</h1>
 				</a>
 				<a class="ml-2" href="/creators">
