@@ -8,10 +8,10 @@
 
   $: if ($projects.length) {
     debugger;
-  	let selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.name === $page.url.searchParams.get('project')) : $projects[0];
+  	let selectedProject = $page.url.searchParams.get('project') ? $projects.find(p => p.slug === $page.url.searchParams.get('project')) : $projects[0];
 
     let refreshFeed = () =>{
-      updateFeed({ project: selectedProject?.name });
+      updateFeed({ project: selectedProject?.slug });
     }
 
   	refreshFeed();

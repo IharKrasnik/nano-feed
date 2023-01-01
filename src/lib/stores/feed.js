@@ -1,21 +1,29 @@
 import { writable } from 'svelte/store';
-import axios from 'axios';
+import { get } from '$lib/api';
 
 const feedStore = writable([]);
 
-export const update = ({
-	sort = 'createdOn',
-	sortDirection = 'descending',
-	source,
-	project,
-	creatorUserName
-} = {}) => {
+export const update = ({ sort = '-createdOn', source, project, creatorId } = {}) => {
 	feedStore.update(() => []);
-	axios({
-		url: 'https://igor.npkn.net/get-nano-feed',
-		params: { sort, sortDirection, source, project, creatorUserName }
-	}).then(({ data: creators }) => {
-		feedStore.update(() => creators);
+
+	const query = {
+		sort
+	};
+
+	if (project) {
+		query.projectSlug = project;
+	}
+
+	if (creatorId) {
+		query.creatorId = creatorId;
+	}
+
+	if (source) {
+		query.source = source;
+	}
+
+	get('feed', query).then(({ results: feed }) => {
+		feedStore.update(() => feed);
 	});
 };
 

@@ -28,12 +28,12 @@
 	let selectedProject;
 
 	let refreshFeed = () =>{
-		updateFeed({ source: selectedSource, project: selectedProject?.name });
+		updateFeed({ source: selectedSource, project: selectedProject?.slug });
 	}
 
 	$: if ($projects.length) {
 		if ($page.url.searchParams.get('project')) {
-			selectedProject = $projects.find(p => p.name === $page.url.searchParams.get('project'));
+			selectedProject = $projects.find(p => p.slug === $page.url.searchParams.get('project'));
 		} else {
 			selectedProject = featuredProjects[0];
 		}
@@ -71,8 +71,8 @@
 			{#each featuredProjects as project}
 				<a 
 					class="cursor-pointer _menu_item flex items-center px-4 py-2" 
-					class:_selected="{selectedProject?.name === project.name}"
-					href= "{ project.name ? `/?project=${project.name}` : '/'}"
+					class:_selected="{selectedProject?.slug === project.slug}"
+					href= "{ project.slug ? `/?project=${project.slug}` : '/'}"
 					on:click={() => { 
 						selectedProject = project; 
 					}} 

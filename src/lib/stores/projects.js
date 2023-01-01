@@ -1,18 +1,15 @@
 import { writable } from 'svelte/store';
-import axios from 'axios';
+import { get } from '$lib/api';
 
 const projectsStore = writable([]);
 
 export const update = ({ sort = 'createdOn', sortDirection = 'descending' } = {}) => {
 	console.log('update');
 
-	axios({
-		url: 'https://igor.npkn.net/get-projects',
-		params: { sort, sortDirection }
-	}).then(({ data: projects }) => {
+	get('projects').then(({ results: projects }) => {
 		projectsStore.update(() => [
 			{
-				name: null,
+				slug: null,
 				title: 'All',
 				description: 'A feed from Paralect creators.',
 				isFeatured: true,

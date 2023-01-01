@@ -4,7 +4,7 @@
 
   import { goto } from '$app/navigation';
   
-  import { get, postFile } from '$lib/api';
+  import { get, post, postFile } from '$lib/api';
   import autofocus from '$lib/use/autofocus';
 
   import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
@@ -17,6 +17,7 @@
 
   let currentCreator;
 
+  debugger;
   $: currentCreator = ($currentUser ? $creators.find(c => c.username === $currentUser.username) : null);
   
   import CreatorsSearch from '$lib/components/CreatorsSearch.svelte';
@@ -105,11 +106,7 @@
   }
 
   const postToFeed = async () => {
-    const { data } = await axios({
-      method: 'post',
-      url: 'https://igor.npkn.net/post-feed',
-      data: feedItem,
-    });
+    const { data } = await post('feed', feedItem);
 
     goto('/');
   }
@@ -181,7 +178,7 @@
         <div slot="item" let:item={item}>
           <div class="flex items-center">
             <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
-            {item.name}
+            {item.fullName}
           </div>
         </div>
       </AutoCompleteInput>
@@ -206,9 +203,9 @@
       <AutoCompleteInput
         onChange={onProjectsSelected}
         placeholder="Search Tags"
-        valueField="name"
+        valueField="slug"
         isMulti
-        allSuggestions={$projects.filter(s => s.name)}
+        allSuggestions={$projects.filter(s => s.slug)}
         initialSelectedItems={feedItem.projects}
       >
         <!-- <div slot="item" let:item={item}>

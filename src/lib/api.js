@@ -59,12 +59,15 @@ const ftch = async (method, url, params, options = {}) => {
 		}
 	}
 
+	if (absoluteUrl.startsWith(API_URL)) {
+		options.credentials = 'include';
+		options.mode = 'cors';
+	}
+
 	try {
 		res = await fetch(`${absoluteUrl}${method === 'get' ? `?${serialize(params)}` : ''}`, {
 			method,
 			body,
-			credentials: 'include',
-			mode: 'cors',
 			...options,
 			headers: {
 				...headers,

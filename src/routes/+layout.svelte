@@ -15,7 +15,7 @@
 
 	$: if ($projects.length) {
 		if ($page.url.searchParams.get('project')) {
-			selectedProject = $projects.find(p => p.name === $page.url.searchParams.get('project'));
+			selectedProject = $projects.find(p => p.slug === $page.url.searchParams.get('project'));
 		} else {
 			selectedProject = $projects[0];
 		}
@@ -38,7 +38,7 @@
 			<div class="flex items-center">
 				<a class="flex" href="/">
 					<h1 class="text-xl font-bold" style="z-index: 100;">
-						{#if selectedProject.name}
+						{#if selectedProject.slug}
 						{selectedProject.title}
 						{:else}
 						Paralect
@@ -68,12 +68,6 @@
 						<button class="small">Start Writing</button>
 					</a>
 				{/if}
-				<!-- {:else if creator}
-					<a class="_link px-4 py-2 rounded-xl cursor-pointer flex items-center" href="/creators/{creator.username}" in:fade={{ duration: 100 }}>
-						<img src="{creator.avatarUrl}" class="w-[30px] h-[30px] mr-2 rounded-full"/>
-						{creator.name}
-					</a>
-				{/if} -->
 			</div>
 		</section>
 		{/if}

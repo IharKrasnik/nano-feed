@@ -66,7 +66,7 @@
     >
       <img src={creator.avatarUrl} class="w-[40px] h-[40px] rounded-full mr-2"/>
       <div class="ml-2 text-lg">
-        {creator.name}
+        {creator.fullName}
       </div>
     </a>
     

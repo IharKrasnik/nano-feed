@@ -138,7 +138,7 @@ let project;
         {/each}
 
         <div class="ml-2 mr-2 text-sm">
-          {feedItem.creators.map(c=> c.name).join(', ')}
+          {feedItem.creators.map(c=> c.fullName).join(', ')}
         </div>
       {/if}
     </div>
@@ -146,63 +146,63 @@ let project;
     
     <div class="shrink-0">
       {#if project}
-        {#if project.name === 'therebel'}
+        {#if project.slug === 'therebel'}
           <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
         {/if}
-        {#if project.name === 'rnd'}
+        {#if project.slug === 'rnd'}
           <span class="text-[#f59e0c] font-bold">R🐝D</span>
         {/if}
-        {#if project.name === 'growingproducts'}
+        {#if project.slug === 'growingproducts'}
           <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #53bf00 solid;">
             Growing 🌱 Products
           </div>
         {/if}
-        {#if project.name === 'shipitsipit'}
+        {#if project.slug === 'shipitsipit'}
           <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #d090ff solid;">
             Ship it 🍸 Sip It
           </div>
         {/if}
 
-        {#if project.name === 'startupsummer'}
+        {#if project.slug === 'startupsummer'}
           <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #ffd967 solid;">
             🌞 Startup Summer
           </div>
         {/if}
         
-        {#if project.name === 'altos'}
+        {#if project.slug === 'altos'}
           <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
             Altos 📸
           </div>
         {/if}
-        {#if project.name === 'igor'}
+        {#if project.slug === 'igor'}
           <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #75c425 solid;">
             <img src="/igor-favicon.png" class="mr-2" style="width: 20px; border-radius: 50%; display: inline;"/> Igor
           </div>
         {/if}
-        {#if project.name === 'accelerator'}
+        {#if project.slug === 'accelerator'}
           <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(126 0 231) solid;">
             🚠 Accelerator
           </div>
         {/if}
-        {#if project.name === 'particles'}
+        {#if project.slug === 'particles'}
           <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(213, 255, 9) solid;">
             ✨ Particles
           </div>
         {/if}
         
-        {#if project.name === 'productlab'}
+        {#if project.slug === 'productlab'}
           <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(213, 255, 9) solid;">
             🧪 Product Lab
           </div>
         {/if}
         
-        {#if project.name === 'alongtheroadmap'}
+        {#if project.slug === 'alongtheroadmap'}
           <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
             🛣 Along The Roadmap
           </div>
         {/if}
 
-        {#if project.name === 'momentum'}
+        {#if project.slug === 'momentum'}
           <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #00b8ff solid;">
             🌀 Momentum
           </div>

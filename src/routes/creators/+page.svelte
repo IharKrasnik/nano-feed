@@ -9,7 +9,7 @@
 
   {#if $creators.length}
     <AutoCompleteInput
-      searchField="name"
+      searchField="fullName"
       placeholder="Search creators.."
       limitItemsCount={0}
       isMulti
@@ -21,7 +21,7 @@
       <div slot="item" let:item={item}>
         <div class="flex items-center">
           <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
-          {item.name}
+          {item.fullName}
         </div>
       </div>
     </AutoCompleteInput>
