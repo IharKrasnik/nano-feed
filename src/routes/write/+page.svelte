@@ -23,7 +23,7 @@
   let addAttachmentClicked = false;
 
   let feedItem = {
-    createdOn: new Date().toISOString(),
+    createdOn: formatDate(new Date(), 'yyyy-MM-dd') + 'T' + formatDate(new Date(), 'HH:MM'),
 
     title: '',
     content: '',
@@ -104,7 +104,11 @@
     if (page === 'update') {
       feedItem.creators = [$currentUser];
       feedItem.source = 'momentum';
+      feedItem.createdOn = new Date().toISOString();
+    } else if (page === 'url') {
+      feedItem.createdOn = formatDate(new Date(), 'yyyy-MM-dd') + 'T' + formatDate(new Date(), 'HH:MM');
     }
+
     currentPage = page;
   } 
 
