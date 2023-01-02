@@ -262,7 +262,7 @@
 {#if feedItem }
   
   <div style="position: fixed; right: 150px; top: 130px; width: 400px;">
-    <h3 class="mb-4">Post Preview</h3>
+    <h3 class="mb-4">Moment Preview</h3>
     <FeedItem bind:feedItem />
   </div>
 {/if}

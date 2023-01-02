@@ -30,7 +30,17 @@
 	}
 
 	let selectedSource = null;
-	
+
+  const defaultProject = creator ? {
+    slug: null,
+    title: creator.fullName,
+    description: creator.tagline || `A feed from ${creator.fullName}`
+  }: {
+    slug: null,
+    title: 'Paralect',
+    description: 'A feed from Paralect creators'
+  }
+
 	let selectedProject;
 
   updateProjects({ creatorUsername: creator?.username });
@@ -42,15 +52,16 @@
 		updateCreators({ projectSlug: selectedProject?.slug });
 	}
 
-  const setProject = (newProject) => {
-    if (selectedProject?.slug !== newProject?.slug) {
+  const setProject = (newProject = defaultProject) => {
+    if (!selectedProject || selectedProject?.slug !== newProject?.slug) {
+      debugger;
 		  refreshFeed();
       selectedProject = newProject;
     }
   }
 
 	$: if ($projects.length) {
-    setProject(projectSlug ? $projects.find(p => p.slug === projectSlug): featuredProjects[0]);
+    setProject(projectSlug ? $projects.find(p => p.slug === projectSlug) : defaultProject);
 	}
 
 	const shuffleInterval = setInterval(() => {
@@ -59,15 +70,35 @@
 
 	onDestroy(() => clearInterval(shuffleInterval));
 	
-
 	let featuredProjects = [];
 
 	$: if ($projects) {
 		featuredProjects = $projects.filter(p => p.isFeatured);
 	}
+          
 </script>
 
 <div>
+  <div class="min-h-[100px]">
+    {#if selectedProject && !$page.url.href.includes('/embed')}
+    <section class="relative flex justify-between mb-8">
+      <div class="flex items-center">
+        <div>
+          <a class="flex items-center" href="/">				
+            <h1 class="text-xl font-bold" style="z-index: 100;">
+              {selectedProject.title}
+            </h1>
+          </a>
+
+          <div class="text-lg mt-2" style="opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
+            {selectedProject.description || ''}
+          </div>
+        </div>
+      </div>
+    </section>
+    {/if}
+  </div>
+
 	<div class="absolute w-[250px] ml-[-300px]">
     {#if creator}
       <div class="flex items-center mb-8 font-bold">
@@ -75,6 +106,7 @@
         {creator.fullName}
       </div>
     {/if}
+
 		<div class="left-0" >
 			<label class="font-bold block mb-2">
 				Streams
@@ -82,6 +114,54 @@
 				<span class="text-gray-500">({featuredProjects.length})</span>
 				{/if}
 			</label>
+
+      {#if !creator}
+        <a 
+          class="cursor-pointer _menu_item flex items-center px-4 py-2"
+					class:_selected="{!selectedProject?.slug}"
+          href="/"
+          on:click={() => { 
+            setProject();
+          }} 
+        >
+          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
+            #
+          </div>
+          All
+        </a>
+      {/if}
+
+      {#if $currentUser && !creator}
+        <a 
+          class="cursor-pointer _menu_item flex items-center px-4 py-2"
+					class:_selected="{!selectedProject?.slug && creator}"
+          href="/@{$currentUser.username}"
+          on:click={() => { 
+            setProject(null);
+          }} 
+        >
+          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+            @
+          </div>
+          {$currentUser.fullName}
+        </a>
+      {/if}
+
+      {#if creator}
+        <a 
+          class="cursor-pointer _menu_item flex items-center px-4 py-2"
+					class:_selected="{!selectedProject?.slug && creator}"
+          href="/@{creator.username}"
+          on:click={() => { 
+            setProject(null);
+          }} 
+        >
+          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+            @
+          </div>
+          {creator.fullName}
+        </a>
+      {/if}
 
 			{#each featuredProjects as project}
 				<a 
@@ -101,39 +181,6 @@
 				</a>
 			{/each}
 
-      {#if $currentUser && !creator}
-        <a 
-          class="cursor-pointer _menu_item flex items-center px-4 py-2"
-          href="@{$currentUser.username}"
-          on:click={() => { 
-            // selectedProject = project; 
-          }} 
-        >
-          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
-            @
-          </div>
-          {$currentUser.fullName}
-        </a>
-      {:else}
-        <!-- <a 
-          class="cursor-pointer _menu_item flex items-center px-4 py-2"
-          href="/"
-          on:click={() => { 
-            selectedProject = {
-              slug: null,
-              title: 'Paralect',
-              description: 'A feed from Paralect creators'
-            }; 
-          }} 
-        >
-          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
-            #
-          </div>
-          Paralect
-        </a> -->
-      {/if}
-
-
 			<div class="mt-8 w-full">
 				<a href="/launch" class="w-full">
 					<button class="w-full">
@@ -143,6 +190,7 @@
 			</div>
 		</div>
 	</div>
+
 	<div class="absolute w-[250px]" style="left: 620px;">
 		<div>
     	<div class="mb-8">
@@ -150,7 +198,7 @@
 					<a href="/write">
 						<button class="w-full flex items-center justify-center">
 						<img src="{$currentUser.avatarUrl}" class="w-[20px] h-[20px] rounded-full mr-4" style="margin-left: -20px;">
-						Publish</button>
+						Post a Moment</button>
 					</a>
 				{:else}
 					<a href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
@@ -203,6 +251,9 @@
 		</div>
 	
 	</div>
+
+  <div>
+</div>
 
 	{#key feed}
 		{#if feed.length > 0}

@@ -19,13 +19,13 @@ export const update = ({
 
 	get('projects', query).then(({ results: projects }) => {
 		projectsStore.set([
-			{
-				slug: null,
-				title: 'All',
-				description: 'A feed from Paralect creators.',
-				isFeatured: true,
-				color: 'rgba(255, 255, 255, .8)'
-			},
+			// {
+			// 	slug: null,
+			// 	title: 'All',
+			// 	description: 'A feed from Paralect creators.',
+			// 	isFeatured: true,
+			// 	color: 'rgba(255, 255, 255, .8)'
+			// },
 			...projects
 		]);
 	});
