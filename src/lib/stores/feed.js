@@ -3,7 +3,12 @@ import { get } from '$lib/api';
 
 const feedStore = writable([]);
 
-export const fetch = async ({ sort = '-createdOn', source, project, creatorUsername } = {}) => {
+export const fetch = async ({
+	sort = { publishedOn: -1, createdOn: -1 },
+	source,
+	project,
+	creatorUsername
+} = {}) => {
 	feedStore.set([]);
 
 	const query = {

@@ -31,6 +31,7 @@
 		"@tailwindcss/line-clamp": "^0.4.2",
 		"axios": "^1.2.1",
 		"date-fns": "^2.29.3",
+		"dayjs": "^1.11.7",
 		"hotkeys-js": "^3.10.1",
 		"lodash": "^4.17.21",
 		"slug": "^8.2.2",

@@ -1,10 +1,9 @@
 <script>
-  import dayjs from 'dayjs'
   import axios from 'axios';
-
+  import dayjs from 'dayjs';
   import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-  import { get, post, put, postFile } from '$lib/api';
+  
+  import { get, post, postFile } from '$lib/api';
   import autofocus from '$lib/use/autofocus';
 
   import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
@@ -22,8 +21,8 @@
   let files = [];
   let addAttachmentClicked = false;
 
-  let feedItem = {
-    publishedOn: new Date(),
+  export let feedItem = {
+    publishedOn: formatDate(new Date(), 'yyyy-MM-dd') + 'T' + formatDate(new Date(), 'HH:MM'),
 
     title: '',
     content: '',
@@ -32,44 +31,6 @@
     creators: [],
     attachments: [],
   };
-
-  let currentPage;
-
-  const setPage = page => {
-    if (page === 'update') {
-      feedItem.creators = [$currentUser];
-      feedItem.source = 'momentum';
-      feedItem.publishedOn = new Date();
-    } else if (page === 'url') {
-      feedItem.publishedOn = new Date();
-    }
-
-    currentPage = page;
-  } 
-
-  let feedId = $page.url.searchParams.get('feedId');
-
-  $: if ($currentUser && !feedId) {
-    setPage('update')
-  }
-
-  if (feedId) {
-    setPage('url');
-    get(`feed/${$page.url.searchParams.get('feedId')}`).then(item => { 
-      feedItem = item;
-      url = feedItem.url;
-    });
-  }
-
-  let format = 'YYYY-MM-DDThh:mm';
-	
-  let internalDate;
-
-  const input = (x) => (internalDate = dayjs(x).format(format))
-  const output = (x) => (feedItem.date = dayjs(x, format).toDate())
-
-  $: input(feedItem.date);
-  $: output(internalDate);
 
   let selectedUsername;
 
@@ -134,7 +95,6 @@
       feedItem.attachments = [{ type: 'image', url: data.image}];
     }
 
-    debugger;
     if (data.creatorUsernames) {
       feedItem.creators = data.creatorUsernames.map(username => $creators.find(c => c.username === username));
     }
@@ -145,13 +105,27 @@
   }
 
   const postToFeed = async () => {
-    if (feedId) {
-      const { data } = await put(`feed/${feedId}`, feedItem);
-    } else {
-      const { data } = await post('feed', feedItem);
-    }
+    const { data } = await post('feed', feedItem);
 
     goto('/');
+  }
+
+  let currentPage;
+
+  const setPage = page => {
+    if (page === 'update') {
+      feedItem.creators = [$currentUser];
+      feedItem.source = 'momentum';
+      feedItem.publishedOn = new Date(feedItem.publishedOn).toISOString();
+    } else if (page === 'url') {
+      feedItem.publishedOn = formatDate(new Date(feedItem.publishedOn), 'yyyy-MM-dd') + 'T' + formatDate(new Date(feedItem.publishedOn), 'HH:MM');
+    }
+
+    currentPage = page;
+  } 
+
+  $: if ($currentUser) {
+    setPage('update')
   }
 
   const pasteImage = (e) => {
@@ -176,7 +150,6 @@
 <h3 class="mb-4">
   Moments are tiny yet important actions that you do daily. <br /> <br/>
   What you've created today?
-  {internalDate}
 </h3>
 <div>
 </div>
@@ -295,28 +268,21 @@
     <div class="mb-8">
       <label>Posted On</label>
 
-      <input type="datetime-local" bind:value="{internalDate}">
+      <input type="datetime-local" bind:value="{feedItem.publishedOn}">
     </div>
     {/if}
 
     <!-- <hr class="my-8" style="border-color: rgba(255, 255, 255, 0.3)"/> -->
 
     <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
-      {feedId ? 'Update' : 'Publish'} Moment
+      Post Moment
     </button>
   {/if}
 </form>
 
 {#if feedItem }
   
-  <div style="display: flex;
-    position: fixed;
-    right: 150px;
-    top: 0;
-    width: 400px;
-    height: 100vh;
-    flex-direction: column;
-    justify-content: center;">
+  <div style="position: fixed; right: 150px; top: 130px; width: 400px;">
     <h3 class="mb-4">Moment Preview</h3>
     <FeedItem bind:feedItem />
   </div>

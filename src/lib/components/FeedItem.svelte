@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { format as formatDate } from 'date-fns'
+  import dayjs from 'dayjs';
 
   export let feedItem = {
 	}
@@ -76,7 +76,7 @@ let project;
 
     <div class="mt-4 flex items-center justify-between">
       <div class="text-sm py-2 opacity-80">
-        {formatDate(new Date(feedItem.publishedOn || feedItem.createdOn), 'MMM dd')}
+        {dayjs(new Date(feedItem.publishedOn || feedItem.createdOn)).format('MMM DD, YYYY')}
       </div>
       <div class="flex">
 
