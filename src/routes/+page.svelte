@@ -1,57 +1,21 @@
 <script>
 	import _ from 'lodash';
-	import { fly, fade } from 'svelte/transition'; 
-	import { onDestroy } from 'svelte';
+	import { fly } from 'svelte/transition';
+	
+	import Feed from '$lib/components/Feed.svelte';
 
-	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
-	import FeedItem from '$lib/components/FeedItem.svelte';
-
-	import feed, { update as updateFeed } from '$lib/stores/feed';
-	import creators, { update as updateCreators } from '$lib/stores/creators';
 	import projects from '$lib/stores/projects'; 
-	import sources from '$lib/stores/sources'; 
 	import currentUser from '$lib/stores/currentUser'; 
 	
 	import { page } from '$app/stores'
-
-	import Select from 'svelte-select';
-
-	let shuffledCreators = [];
-	let shuffleCreators = () => shuffledCreators = _.shuffle($creators);
-
-	$: if ($creators.length) {
-		shuffleCreators();
-	}
-
-	let selectedSource = null;
-	
 	let selectedProject;
-
-	let refreshFeed = () =>{
-		updateFeed({ source: selectedSource, project: selectedProject?.slug });
-	}
-
-	$: if ($projects.length) {
-		if ($page.url.searchParams.get('project')) {
-			selectedProject = $projects.find(p => p.slug === $page.url.searchParams.get('project'));
-		} else {
-			selectedProject = featuredProjects[0];
-		}
-
-		refreshFeed();
-	}
-
-	const shuffleInterval = setInterval(() => {
-		shuffleCreators();
-	}, 10000);
-
-	onDestroy(() => clearInterval(shuffleInterval));
 	
-
-	let featuredProjects = [];
-
-	$: if ($projects) {
-		featuredProjects = $projects.filter(p => p.isFeatured);
+	$: if ($projects.length) {
+		if ($page.url.hash) {
+			selectedProject = $projects.find(p => p.slug === $page.url.hash.replace('#', ''));
+		} else {
+			selectedProject = $projects.find(p => p.slug === null);
+		}
 	}
 </script>
 
@@ -60,129 +24,26 @@
 	<meta name="description" content="Paralect Stream" />
 </svelte:head>
 
+<div>
+	{#if selectedProject && !$page.url.href.includes('/embed')}
+	<section class="relative flex justify-between mb-8">
+		<div class="flex items-center">
+			<a class="flex" href="/">
+				<h1 class="text-xl font-bold" style="z-index: 100;">
+					{#if selectedProject.slug}
+					{selectedProject.title}
+					{:else}
+					Paralect
+					{/if}
+				</h1>
+			</a>
+		</div>
+	</section>
+	{/if}
+</div>
 
 <div class="text-lg mb-8" style="margin-top: -16px; opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
 	{selectedProject?.description || ''}
 </div>
 
-<div>
-	<div class="absolute w-[250px] ml-[-300px]">
-		<div class="left-0" >
-			{#each featuredProjects as project}
-				<a 
-					class="cursor-pointer _menu_item flex items-center px-4 py-2" 
-					class:_selected="{selectedProject?.slug === project.slug}"
-					href= "{ project.slug ? `/?project=${project.slug}` : '/'}"
-					on:click={() => { 
-						selectedProject = project; 
-					}} 
-					style="border-color: {project.color}"
-				>
-					<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
-						#
-					</div>
-					{project.title}
-				</a>
-			{/each}
-
-			<div class="mt-8 w-full">
-				<a href="/launch" class="w-full">
-					<button class="w-full">
-						Launch Your #Project
-					</button>
-				</a>
-			</div>
-		</div>
-	</div>
-	<div class="absolute w-[250px]" style="left: 620px;">
-		<div>
-			<div class="mb-8">
-				<label>Source</label>
-				
-				<AutoCompleteInput
-					onChange={(selectedItem) => { 
-						console.log('onchange')
-						selectedSource = selectedItem?.value || null; 
-						refreshFeed();
-					}}
-					placeholder="Select source.."
-					limitItemsCount={20}
-					allSuggestions={$sources.filter(s => s.value)}
-					initialSelectedItem={ null }
-				>
-				</AutoCompleteInput>
-			</div>
-			<div class="mt-8 w-full">
-				<label class="font-bold block mb-2">
-					Creators
-					{#if $creators.length}
-					<span class="text-gray-500">({$creators.length})</span>
-					{/if}
-				</label>
-
-				{#key shuffledCreators}
-					{#if shuffledCreators.length}
-						<a class="_creators w-full mt-4 flex justify-between" href="/creators" in:fade={{ duration: 200 }}>
-							{#each shuffledCreators.slice(0, 7) as creator}
-							<img src={creator.avatarUrl} class="w-[35px] h-[35px] inline rounded-full mr-[-10px]" />
-							{/each}
-						</a>
-					{/if}
-				{/key}
-			</div>
-		</div>
-
-	
-	</div>
-
-	{#key $feed}
-		{#if $feed.length > 0}
-		<div in:fly={{  y: 50, duration: 150, delay: 150 }}>
-			{#each $feed as feedItem}
-				<FeedItem feedItem={feedItem}></FeedItem>
-			{/each}
-		</div>
-		{/if}
-	{/key}
-</div>
-
-
-<style>
-	._select {
-		background: none;
-		padding: 8px;
-		border: 1px rgba(255, 255, 255, .3) solid;
-		border-radius: 8px;
-		min-width: 200px;
-	}
-
-	._author:hover {
-		outline: 3px green solid;
-	}
-
-	._menu_item {
-		cursor: pointer;
-		transition: all linear 0.05s;
-	}
-
-	._menu_item:hover {
-		background: rgba(255, 255, 255, .1);
-		border-bottom: 1px rgba(255, 255, 255, 0.3) solid;
-		margin-bottom: -1px;
-	}
-
-	._menu_item._selected {
-		border-bottom: 1px solid;
-		margin-bottom: -1px;
-	}
-
-	._creators {
-		transition: all linear 0.1s;
-		border-radius: 8px;
-	}
-
-	._creators:hover {
-		background: rgba(255, 255, 255, .1);
-		padding: 16px;
-	}
-</style>
+<Feed projectSlug={selectedProject?.slug} />

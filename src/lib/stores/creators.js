@@ -3,9 +3,19 @@ import { get } from '$lib/api';
 
 const creatorsStore = writable([]);
 
-export const update = ({ sort = 'createdOn', sortDirection = 'descending' } = {}) => {
-	get('creators', { sort, sortDirection }).then(({ results: creators }) => {
-		creatorsStore.update(() => creators);
+export const update = ({
+	projectSlug = null,
+	sort = 'createdOn',
+	sortDirection = 'descending'
+} = {}) => {
+	let query = { sort, sortDirection };
+
+	if (projectSlug) {
+		query.projectSlug = projectSlug;
+	}
+
+	get('creators', query).then(({ results: creators }) => {
+		creatorsStore.set(creators);
 	});
 };
 

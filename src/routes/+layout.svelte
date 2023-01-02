@@ -5,23 +5,8 @@
 
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
 	import projects from '$lib/stores/projects';
-	import creators from '$lib/stores/creators';
 	
 	import { API_URL } from '$lib/env';
-	
-	let creator;	
-		
-	let selectedProject;
-
-	$: if ($projects.length) {
-		if ($page.url.searchParams.get('project')) {
-			selectedProject = $projects.find(p => p.slug === $page.url.searchParams.get('project'));
-		} else {
-			selectedProject = $projects[0];
-		}
-	}
-
-  $: creator = ($currentUser ? $creators.find(c => c.username === $currentUser.username) : null);
 </script>
 
 <svelte:head>
@@ -33,8 +18,6 @@
 	<main>
 	
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'}">
-		{#if selectedProject && !$page.url.href.includes('/embed')}
-		<section class="relative flex justify-between mb-8">
 			<div class="absolute" style="margin-left: -300px; text-transform: uppercase; opacity: .95">
 				<a href="/">
 					<h1 class="text-xl font-bold mr-4" style="z-index: 100;">
@@ -42,41 +25,6 @@
 					</h1>
 				</a>
 			</div>
-			<div class="flex items-center">
-				<a class="flex" href="/">
-					<h1 class="text-xl font-bold" style="z-index: 100;">
-						{#if selectedProject.slug}
-						{selectedProject.title}
-						{:else}
-						Paralect
-						{/if}
-					</h1>
-				</a>
-				<a class="ml-2" href="/creators">
-					<h1 class="text-xl font-bold">
-						<span class="hover:text-[#00ff85] text-[#fff]">
-							{#if $page.url.href.includes('/creators')}
-							Creators
-							{/if}
-						</span>
-					</h1>
-				</a>
-			</div>
-			<div>
-				{#if (!$isUserLoading && !$currentUser)}
-				<a href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
-					<button class="absolute right-0 small">
-						Follow Stream
-					</button>
-				</a>
-				{:else if creator && !$page.url.href.includes('/write') && !$page.url.href.includes('/launch')}
-					<a href="/write">
-						<button class="absolute right-0 small">Start Writing</button>
-					</a>
-				{/if}
-			</div>
-		</section>
-		{/if}
 		<slot />
 	</main>
 

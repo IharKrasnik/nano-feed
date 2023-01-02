@@ -3,10 +3,19 @@ import { get } from '$lib/api';
 
 const projectsStore = writable([]);
 
-export const update = ({ sort = 'createdOn', sortDirection = 'descending' } = {}) => {
-	console.log('update');
+export const update = ({
+	creatorUsername,
+	perPage = 6,
+	sort = 'createdOn',
+	sortDirection = 'descending'
+} = {}) => {
+	let query = { perPage, sort, sortDirection };
 
-	get('projects').then(({ results: projects }) => {
+	if (creatorUsername) {
+		query.creatorUsername = creatorUsername;
+	}
+
+	get('projects', query).then(({ results: projects }) => {
 		projectsStore.update(() => [
 			{
 				slug: null,

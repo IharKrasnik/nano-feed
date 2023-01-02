@@ -14,7 +14,7 @@
       limitItemsCount={0}
       isMulti
       isAlwaysShown
-      allSuggestions={$creators.map(c => ({ ...c, href: `/creators/${c.username}`}))}
+      allSuggestions={$creators.map(c => ({ ...c, href: `/@${c.username}`}))}
       autofocus
       class="mb-4"
     >

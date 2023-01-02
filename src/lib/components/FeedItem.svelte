@@ -138,7 +138,10 @@ let project;
         {/each}
 
         <div class="ml-2 mr-2 text-sm">
-          {feedItem.creators.map(c=> c.fullName).join(', ')}
+          {#each feedItem.creators as creator}
+            <a href="/@{creator.username}" class="hover:underline">{creator.fullName}</a>
+          {/each}
+          <!-- {feedItem.creators.map(c=> c.fullName).join(', ')} -->
         </div>
       {/if}
     </div>
@@ -146,6 +149,11 @@ let project;
     
     <div class="shrink-0">
       {#if project}
+
+        <a class="hover:underline" href="/#{project.slug}" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px {project.color} solid;">
+          {project.emoji} {project.title}
+        </a>
+<!--         
         {#if project.slug === 'therebel'}
           <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
         {/if}
@@ -206,7 +214,7 @@ let project;
           <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #00b8ff solid;">
             🌀 Momentum
           </div>
-        {/if}
+        {/if} -->
 
       {/if}
     </div>
@@ -237,7 +245,7 @@ let project;
   }
 
   ._item._link:hover {
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
     background: rgba(255,255,255, 0.03);
     outline: 1px rgba(255,255,255, .3) solid;
   }

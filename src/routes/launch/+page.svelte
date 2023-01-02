@@ -50,16 +50,16 @@
       url: project.url,
     }, ...$projects];
 
-    goto('/?project=' + project.slug);
+    goto('/#' + project.slug);
   }
 
 </script>
 
-<h2 class="mb-2">Launch a new project</h2>
+<h2 class="mb-2">Launch a new stream</h2>
 
 <h3 class="mb-8">
   Promote the work that you do daily. <br />
-  Project is a page for your updates, social media and links.
+  Stream is a public page for your updates, releases and links.
 </h3>
 
 <div>
