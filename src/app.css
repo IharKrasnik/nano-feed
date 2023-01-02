@@ -93,3 +93,7 @@ button:hover {
 button.small:hover {
 	background: rgba(255, 255, 255, 0.3);
 }
+
+button.danger {
+	border-color: #f44747;
+}

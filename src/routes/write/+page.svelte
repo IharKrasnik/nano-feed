@@ -4,7 +4,7 @@
 
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { get, post, put, postFile } from '$lib/api';
+  import { get, post, put, del, postFile } from '$lib/api';
   import autofocus from '$lib/use/autofocus';
 
   import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
@@ -24,12 +24,11 @@
 
   let feedItem = {
     publishedOn: new Date(),
-
+    creators: [$currentUser],
     title: '',
     content: '',
     url: '',
     source: null,
-    creators: [],
     attachments: [],
   };
 
@@ -37,11 +36,7 @@
 
   const setPage = page => {
     if (page === 'update') {
-      feedItem.creators = [$currentUser];
       feedItem.source = 'momentum';
-      feedItem.publishedOn = new Date();
-    } else if (page === 'url') {
-      feedItem.publishedOn = new Date();
     }
 
     currentPage = page;
@@ -55,6 +50,7 @@
 
   if (feedId) {
     get(`feed/${$page.url.searchParams.get('feedId')}`).then(item => { 
+      debugger;
       feedItem = item;
       url = feedItem.url;
       
@@ -70,10 +66,10 @@
 	
   let internalDate;
 
-  const input = (x) => (internalDate = dayjs(x).format(format))
-  const output = (x) => (feedItem.date = dayjs(x, format).toDate())
+  const input = (x) => { debugger; internalDate = dayjs(x).format(format) }
+  const output = (x) => { debugger; feedItem.publishedOn = dayjs(x, format).toDate() }
 
-  $: input(feedItem.date);
+  $: input(feedItem.publishedOn);
   $: output(internalDate);
 
   let selectedUsername;
@@ -159,6 +155,11 @@
     goto('/');
   }
 
+  const deleteFeed = async () => {
+    await del(`feed/${feedId}`);
+    goto('/');
+  }
+
   const pasteImage = (e) => {
     Array.from(e.clipboardData.files).forEach(async (file) => {
       if (file.type.startsWith('image/')) {
@@ -181,7 +182,6 @@
 <h3 class="mb-4">
   Moments are tiny yet important actions that you do daily. <br /> <br/>
   What you've created today?
-  {internalDate}
 </h3>
 <div>
 </div>
@@ -189,10 +189,10 @@
 
 <form class="mb-16" style="height: 100vh; padding: 2px; padding-bottom: 200px; overflow-y: scroll;">
   <div class="mb-4">
-    
+    {#if !feedId}
     <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
     <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Post Url</button>
-  
+    {/if}
     {#if currentPage === 'url'}
       <label class="mt-4 mb-4"> URL </label>
       <input type="text" class="block" bind:value={url} use:autofocus />
@@ -309,6 +309,12 @@
     <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
       {feedId ? 'Update' : 'Publish'} Moment
     </button>
+
+    {#if feedId}
+    <button class="danger ml-8 p-4 mt-8" type="submit" on:click={deleteFeed}>
+      Delete Moment
+    </button>
+    {/if}
   {/if}
 </form>
 
