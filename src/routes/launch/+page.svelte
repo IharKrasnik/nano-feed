@@ -29,7 +29,7 @@
     const createdProject = await post('projects', project);
 
     let feedItem = {
-      createdOn: new Date(),
+      publishedOn: new Date(),
 
       title: `I've just launched ${project.title} 🎉`,
       content: 'See my website with build in public updates here:',

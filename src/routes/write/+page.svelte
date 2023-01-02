@@ -23,7 +23,7 @@
   let addAttachmentClicked = false;
 
   let feedItem = {
-    createdOn: formatDate(new Date(), 'yyyy-MM-dd') + 'T' + formatDate(new Date(), 'HH:MM'),
+    publishedOn: formatDate(new Date(), 'yyyy-MM-dd') + 'T' + formatDate(new Date(), 'HH:MM'),
 
     title: '',
     content: '',
@@ -87,6 +87,8 @@
       feedItem.source = 'twitter';
     } else if (feedItem.url.includes('indiehackers')) {
       feedItem.source = 'indiehackers';
+    } else if (feedItem.url.includes('youtube.com')) {
+      feedItem.source = 'youtube';
     }
 
     if (data.image) {
@@ -106,9 +108,9 @@
     if (page === 'update') {
       feedItem.creators = [$currentUser];
       feedItem.source = 'momentum';
-      feedItem.createdOn = new Date().toISOString();
+      feedItem.publishedOn = new Date().toISOString();
     } else if (page === 'url') {
-      feedItem.createdOn = formatDate(new Date(), 'yyyy-MM-dd') + 'T' + formatDate(new Date(), 'HH:MM');
+      feedItem.publishedOn = formatDate(new Date(), 'yyyy-MM-dd') + 'T' + formatDate(new Date(), 'HH:MM');
     }
 
     currentPage = page;
@@ -258,7 +260,7 @@
     <div class="mb-8">
       <label>Posted On</label>
 
-      <input type="datetime-local" bind:value="{feedItem.createdOn}">
+      <input type="datetime-local" bind:value="{feedItem.publishedOn}">
     </div>
     {/if}
 

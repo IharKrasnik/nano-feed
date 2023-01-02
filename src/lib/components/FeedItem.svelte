@@ -41,7 +41,7 @@ let project;
         {feedItem.content}
       </div>
     {/if}
-    {#if ['youtube', 'shipitsipit'].includes(feedItem.source) && feedItem.url}
+    {#if ['youtube'].includes(feedItem.source) && feedItem.url && !feedItem.attachments?.length}
       <iframe
         class="w-full mt-2 min-h-[300px] pointer-events-none"
         src="https://www.youtube.com/embed/{new URL(feedItem.url).searchParams.get('v')}" 
@@ -76,7 +76,7 @@ let project;
 
     <div class="mt-4 flex items-center justify-between">
       <div class="text-sm py-2 opacity-80">
-        {formatDate(new Date(feedItem.createdOn), 'MMM dd')}
+        {formatDate(new Date(feedItem.publishedOn || feedItem.createdOn), 'MMM dd')}
       </div>
       <div class="flex">
 
@@ -126,6 +126,12 @@ let project;
             </svg>
           </div>
        {/if}
+       {#if feedItem.source === 'youtube'}
+          <svg style="width: 20px; height: 20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+          <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+          <g><path fill="white" d="M438.8,622.5L622.5,500L438.8,377.5V622.5z M806.3,10H193.8C92.3,10,10,92.3,10,193.8v612.5C10,907.7,92.3,990,193.8,990h612.5C907.7,990,990,907.7,990,806.3V193.8C990,92.3,907.7,10,806.3,10z M801,609.7c-3.3,40.8-34.2,92.9-77.6,100.4c-138.6,10.7-303.1,9.4-446.8,0c-44.8-5.6-74.3-59.7-77.6-100.4c-7-85.6-7-134.4,0-220c3.3-40.7,33.5-94.4,77.6-99.3c142-11.9,307.4-9.4,446.8,0c50,1.8,74.3,53.2,77.6,94C808,470,808,524.1,801,609.7z"/></g>
+          </svg>
+       {/if}
        {#if feedItem.isRelease}
           <div class="ml-2">
             🚀
@@ -145,12 +151,12 @@ let project;
     <div class="flex items-center">
       {#if feedItem?.creators}
         {#each feedItem.creators as creator}
-         <img src="{creator.avatarUrl}" class="rounded-full w-[40px] h-[40px]" /> 
+         <img src="{creator.avatarUrl}" class="rounded-full w-[40px] h-[40px] shrink-0" /> 
         {/each}
 
-        <div class="ml-2 mr-2 text-sm">
+        <div class="ml-4 text-sm">
           {#each feedItem.creators as creator}
-            <a href="/@{creator.username}" class="hover:underline">{creator.fullName}</a>
+            <a href="/@{creator.username}" class="mr-3 hover:underline">{creator.fullName}</a>
           {/each}
           <!-- {feedItem.creators.map(c=> c.fullName).join(', ')} -->
         </div>
