@@ -47,16 +47,15 @@
 
 	let refreshFeed = async () => {
     feed = [];
-    feed = await fetchFeed({ source: selectedSource, project: projectSlug, creatorUsername: creator?.username });
+    feed = await fetchFeed({ source: selectedSource, project: selectedProject.slug, creatorUsername: creator?.username });
 
 		updateCreators({ projectSlug: selectedProject?.slug });
 	}
 
   const setProject = (newProject = defaultProject) => {
     if (!selectedProject || selectedProject?.slug !== newProject?.slug) {
-      debugger;
-		  refreshFeed();
       selectedProject = newProject;
+		  refreshFeed();
     }
   }
 
@@ -121,7 +120,7 @@
 					class:_selected="{!selectedProject?.slug}"
           href="/"
           on:click={() => { 
-            setProject();
+            setProject(null);
           }} 
         >
           <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
@@ -163,23 +162,27 @@
         </a>
       {/if}
 
-			{#each featuredProjects as project}
-				<a 
-					class="cursor-pointer _menu_item flex items-center px-4 py-2" 
-					class:_selected="{selectedProject?.slug === project.slug}"
-					href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
-					style="border-color: {project.color}"
-          
-          on:click={() => { 
-            setProject(project);
-          }} 
-				>
-					<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
-						#
-					</div>
-					{project.title}
-				</a>
-			{/each}
+      {#if featuredProjects.length}
+        <div in:fade>
+          {#each featuredProjects as project}
+            <a 
+              class="cursor-pointer _menu_item flex items-center px-4 py-2" 
+              class:_selected="{selectedProject?.slug === project.slug}"
+              href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
+              style="border-color: {project.color}"
+              
+              on:click={() => { 
+                setProject(project);
+              }} 
+            >
+              <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
+                #
+              </div>
+              {project.title}
+            </a>
+          {/each}
+        </div>
+			{/if}
 
 			<div class="mt-8 w-full">
 				<a href="/launch" class="w-full">
