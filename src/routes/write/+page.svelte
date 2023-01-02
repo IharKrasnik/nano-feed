@@ -50,7 +50,6 @@
 
   if (feedId) {
     get(`feed/${$page.url.searchParams.get('feedId')}`).then(item => { 
-      debugger;
       feedItem = item;
       url = feedItem.url;
       
@@ -135,7 +134,6 @@
       feedItem.attachments = [{ type: 'image', url: data.image}];
     }
 
-    debugger;
     if (data.creatorUsernames) {
       feedItem.creators = data.creatorUsernames.map(username => $creators.find(c => c.username === username));
     }

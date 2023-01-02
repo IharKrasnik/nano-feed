@@ -59,9 +59,7 @@
     }
   }
 
-	$: if ($projects.length) {
-    setProject(projectSlug ? $projects.find(p => p.slug === projectSlug) : defaultProject);
-	}
+	$: setProject(projectSlug ? $projects.find(p => p.slug === projectSlug) : defaultProject);
 
 	const shuffleInterval = setInterval(() => {
 		shuffleCreators();

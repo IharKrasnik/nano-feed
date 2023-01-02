@@ -9,7 +9,11 @@
 
     import { fly, scale, blur } from 'svelte/transition';
 		
-    $: creator = $creators.find(c => c.username === $page.params.username);
+    let creator;
+
+    $: if ($creators.length) {
+      creator = $creators.find(c => c.username === $page.params.username);
+    }
 
     let selectedProject;
 
@@ -44,6 +48,6 @@
   {/if} -->
 
   {#if creator}
-    <Feed creator={creator} projectSlug={selectedProject?.slug} />
+    <Feed bind:creator={creator} projectSlug={selectedProject?.slug} />
   {/if}
 {/if}
