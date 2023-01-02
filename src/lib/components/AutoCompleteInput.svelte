@@ -51,7 +51,7 @@
 			filteredSuggestions = allSuggestions;
 		} else {
 			filteredSuggestions = allSuggestions.filter((s) =>
-				s[searchField].toLowerCase().includes(searchValue.toLowerCase())
+				s[searchField]?.toLowerCase().includes(searchValue?.toLowerCase())
 			);
 		}
 

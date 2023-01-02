@@ -87,6 +87,17 @@ let project;
         </svg>
         </div>
        {/if}
+       {#if feedItem.source === 'indiehackers'}
+       <svg style="width: 20px; height: 20px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><script xmlns=""/>
+          <rect class="background" x="0" y="0" height="120" width="120" fill="white"/>
+          <g class="text" fill="hsl(210, 60%, 14%)">
+            <rect class="text__i" x="27" y="34" height="52" width="12"/>
+            <rect class="text__h" x="51" y="34" height="52" width="12"/>
+            <rect class="text__h" x="61" y="54" height="12" width="22"/>
+            <rect class="text__h" x="81" y="34" height="52" width="12"/>
+          </g>
+        </svg>
+       {/if}
        {#if feedItem.source === 'twitter'}
         <div class="font-bold w-[20px]">
           <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 248 204"><script xmlns=""/>

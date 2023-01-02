@@ -85,6 +85,8 @@
       feedItem.source = 'linkedin';
     } else if (feedItem.url.includes('twitter.com')) {
       feedItem.source = 'twitter';
+    } else if (feedItem.url.includes('indiehackers')) {
+      feedItem.source = 'indiehackers';
     }
 
     if (data.image) {
@@ -133,7 +135,17 @@
   }
 </script>
 
-<form class="mb-16">
+<h2 class="mb-2">Post a Moment</h2>
+
+<h3 class="mb-4">
+  Moments are tiny yet important actions that you do daily. <br /> <br/>
+  What you've created today?
+</h3>
+<div>
+</div>
+
+
+<form class="mb-16" style="height: 100vh; padding: 2px; padding-bottom: 200px; overflow-y: scroll;">
   <div class="mb-4">
     
     <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
@@ -163,7 +175,7 @@
 
       <AutoCompleteInput
         onChange={onCreatorSelected}
-        searchField="name"
+        searchField="fullName"
         placeholder="Search creators.."
         limitItemsCount={5}
         isMulti
@@ -197,7 +209,7 @@
       <label>Streams</label>
       <AutoCompleteInput
         onChange={onProjectsSelected}
-        placeholder="Search Tags"
+        placeholder="Search Streams"
         valueField="slug"
         searchField="title"
         isMulti
@@ -252,9 +264,8 @@
 
     <!-- <hr class="my-8" style="border-color: rgba(255, 255, 255, 0.3)"/> -->
 
-
     <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
-      Post Update
+      Post Moment
     </button>
   {/if}
 </form>

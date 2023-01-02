@@ -32,6 +32,14 @@ const sourcesStore = writable([
 	{
 		value: 'momentum',
 		label: 'Momentum'
+	},
+	{
+		value: 'reddit',
+		label: 'Reddit'
+	},
+	{
+		value: 'indiehackers',
+		label: 'IndieHackers'
 	}
 ]);
 
