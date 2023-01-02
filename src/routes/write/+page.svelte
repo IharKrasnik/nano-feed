@@ -69,7 +69,7 @@
   }
 
   const onProjectsSelected = (selectedProjects) => {
-    feedItem.projects = selectedProjects.map(p => ({ slug: p.slug, id: p.id, _id: p._id }));
+    feedItem.projects = selectedProjects;
   }
 
   const addUrl = async () => {
