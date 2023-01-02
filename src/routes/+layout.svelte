@@ -10,8 +10,8 @@
 </script>
 
 <svelte:head>
-	<title>Paralect Stream</title>
-	<meta name="description" content="Paralect Stream" />
+	<title>Paralect's Momentum</title>
+	<meta name="description" content="Paralect's Momentum" />
 </svelte:head>
 
 <div class="app" class:bg-black={ !$page.url.href.includes('embed-live') } class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>

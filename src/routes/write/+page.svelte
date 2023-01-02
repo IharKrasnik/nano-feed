@@ -194,7 +194,7 @@
     {/if}
 
     <div class="mb-8">
-      <label>Tags</label>
+      <label>Streams</label>
       <AutoCompleteInput
         onChange={onProjectsSelected}
         placeholder="Search Tags"

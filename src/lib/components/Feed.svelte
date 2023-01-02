@@ -79,6 +79,21 @@
 				{/if}
 			</label>
 
+      {#if $currentUser}
+        <a 
+          class="cursor-pointer _menu_item flex items-center px-4 py-2"
+          href="@{$currentUser.username}"
+          on:click={() => { 
+            // selectedProject = project; 
+          }} 
+        >
+          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+            @
+          </div>
+          {$currentUser.fullName}
+        </a>
+      {/if}
+
 			{#each featuredProjects as project}
 				<a 
 					class="cursor-pointer _menu_item flex items-center px-4 py-2" 

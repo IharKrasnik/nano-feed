@@ -1,7 +1,7 @@
 <script>
 	import _ from 'lodash';
 	import { fly } from 'svelte/transition';
-	
+
 	import Feed from '$lib/components/Feed.svelte';
 
 	import projects from '$lib/stores/projects'; 
@@ -20,8 +20,8 @@
 </script>
 
 <svelte:head>
-	<title>Paralect Stream</title>
-	<meta name="description" content="Paralect Stream" />
+	<title>Paralect's Momentum</title>
+	<meta name="description" content="Paralect's Momentum" />
 </svelte:head>
 
 <div>
