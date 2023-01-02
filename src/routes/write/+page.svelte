@@ -54,10 +54,15 @@
   }
 
   if (feedId) {
-    setPage('url');
     get(`feed/${$page.url.searchParams.get('feedId')}`).then(item => { 
       feedItem = item;
       url = feedItem.url;
+      
+      if (url) {
+        setPage('url');
+      } else {
+        setPage('update')
+      }
     });
   }
 

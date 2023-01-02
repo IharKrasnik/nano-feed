@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import dayjs from 'dayjs';
+  import currentUser from '$lib/stores/currentUser';
 
   export let feedItem = {
 	}
@@ -75,11 +76,14 @@ let project;
     {/if}
 
     <div class="mt-4 flex items-center justify-between">
-      <div class="text-sm py-2 opacity-80">
+      <div class="flex items-center text-sm py-2 opacity-80">
         {dayjs(new Date(feedItem.publishedOn || feedItem.createdOn)).format('MMM DD, YYYY')}
+
+        {#if $currentUser?.email === 'igor@paralect.com'}
+          <a class="hover:underline ml-2 text-blue-300" href="/write?feedId={feedItem._id}">Edit</a>
+        {/if}
       </div>
       <div class="flex">
-
        {#if feedItem.source === 'momentum'}
         <div class="font-bold w-[20px]">
        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 155 155" fill="none">
