@@ -3,8 +3,8 @@ import { get } from '$lib/api';
 
 const feedStore = writable([]);
 
-export const update = ({ sort = '-createdOn', source, project, creatorUsername } = {}) => {
-	feedStore.update(() => []);
+export const fetch = async ({ sort = '-createdOn', source, project, creatorUsername } = {}) => {
+	feedStore.set([]);
 
 	const query = {
 		sort
@@ -22,9 +22,17 @@ export const update = ({ sort = '-createdOn', source, project, creatorUsername }
 		query.source = source;
 	}
 
-	get('feed', query).then(({ results: feed }) => {
-		feedStore.update(() => feed);
-	});
+	const { results: feed } = await get('feed', query);
+
+	return feed;
+};
+
+export const update = async ({ sort = '-createdOn', source, project, creatorUsername } = {}) => {
+	feedStore.set([]);
+
+	const feed = await get({ sort, source, project, creatorUsername });
+
+	feedStore.set(feed);
 };
 
 export default feedStore;

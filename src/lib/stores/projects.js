@@ -15,8 +15,10 @@ export const update = ({
 		query.creatorUsername = creatorUsername;
 	}
 
+	projectsStore.set([]);
+
 	get('projects', query).then(({ results: projects }) => {
-		projectsStore.update(() => [
+		projectsStore.set([
 			{
 				slug: null,
 				title: 'All',

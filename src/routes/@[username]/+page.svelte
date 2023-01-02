@@ -7,11 +7,8 @@
     import creators from '$lib/stores/creators';
     import projects from '$lib/stores/projects';
 
-	  import feed, { update as updateFeed } from '$lib/stores/feed';
     import { fly, scale, blur } from 'svelte/transition';
 		
-    updateFeed({ creatorUsername: $page.params.username}); 
-
     $: creator = $creators.find(c => c.username === $page.params.username);
 
     let selectedProject;

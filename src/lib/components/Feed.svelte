@@ -8,18 +8,20 @@
   export let projectSlug;
   export let creator;
 
+  let feed = [];
+
 	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
 
 	import currentUser from '$lib/stores/currentUser'; 
-	import feed, { update as updateFeed } from '$lib/stores/feed';
+	import { fetch as fetchFeed } from '$lib/stores/feed';
 	import creators, { update as updateCreators } from '$lib/stores/creators';
 	import projects, { update as updateProjects } from '$lib/stores/projects'; 
 	import sources from '$lib/stores/sources'; 
 	
 	import Select from 'svelte-select';
 
-	let shuffledCreators = [];
+  let shuffledCreators = [];
 
 	let shuffleCreators = () => shuffledCreators = _.shuffle($creators);
 
@@ -33,19 +35,22 @@
 
   updateProjects({ creatorUsername: creator?.username });
 
-	let refreshFeed = () =>{
-		updateFeed({ source: selectedSource, project: projectSlug, creatorUsername: creator?.username });
+	let refreshFeed = async () => {
+    feed = [];
+    feed = await fetchFeed({ source: selectedSource, project: projectSlug, creatorUsername: creator?.username });
+
 		updateCreators({ projectSlug: selectedProject?.slug });
 	}
 
-	$: if ($projects.length) {
-		if (projectSlug) {
-			selectedProject = $projects.find(p => p.slug === projectSlug);
-		} else {
-			selectedProject = featuredProjects[0];
-		}
+  const setProject = (newProject) => {
+    if (selectedProject?.slug !== newProject?.slug) {
+		  refreshFeed();
+      selectedProject = newProject;
+    }
+  }
 
-		refreshFeed();
+	$: if ($projects.length) {
+    setProject(projectSlug ? $projects.find(p => p.slug === projectSlug): featuredProjects[0]);
 	}
 
 	const shuffleInterval = setInterval(() => {
@@ -71,7 +76,6 @@
       </div>
     {/if}
 		<div class="left-0" >
-
 			<label class="font-bold block mb-2">
 				Streams
 				{#if featuredProjects.length}
@@ -79,7 +83,25 @@
 				{/if}
 			</label>
 
-      {#if $currentUser}
+			{#each featuredProjects as project}
+				<a 
+					class="cursor-pointer _menu_item flex items-center px-4 py-2" 
+					class:_selected="{selectedProject?.slug === project.slug}"
+					href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
+					style="border-color: {project.color}"
+          
+          on:click={() => { 
+            setProject(project);
+          }} 
+				>
+					<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
+						#
+					</div>
+					{project.title}
+				</a>
+			{/each}
+
+      {#if $currentUser && !creator}
         <a 
           class="cursor-pointer _menu_item flex items-center px-4 py-2"
           href="@{$currentUser.username}"
@@ -92,24 +114,25 @@
           </div>
           {$currentUser.fullName}
         </a>
+      {:else}
+        <!-- <a 
+          class="cursor-pointer _menu_item flex items-center px-4 py-2"
+          href="/"
+          on:click={() => { 
+            selectedProject = {
+              slug: null,
+              title: 'Paralect',
+              description: 'A feed from Paralect creators'
+            }; 
+          }} 
+        >
+          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+            #
+          </div>
+          Paralect
+        </a> -->
       {/if}
 
-			{#each featuredProjects as project}
-				<a 
-					class="cursor-pointer _menu_item flex items-center px-4 py-2" 
-					class:_selected="{selectedProject?.slug === project.slug}"
-					href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
-					on:click={() => { 
-						selectedProject = project; 
-					}} 
-					style="border-color: {project.color}"
-				>
-					<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
-						#
-					</div>
-					{project.title}
-				</a>
-			{/each}
 
 			<div class="mt-8 w-full">
 				<a href="/launch" class="w-full">
@@ -125,20 +148,22 @@
     	<div class="mb-8">
 				{#if $currentUser}
 					<a href="/write">
-						<button class="w-full flex items-center">
-						<img src="{$currentUser.avatarUrl}" class="w-[35px] h-[35px] rounded-full mr-4">
-						Start Writing</button>
+						<button class="w-full flex items-center justify-center">
+						<img src="{$currentUser.avatarUrl}" class="w-[20px] h-[20px] rounded-full mr-4" style="margin-left: -20px;">
+						Publish</button>
 					</a>
 				{:else}
 					<a href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
-						<button class="w-full">
-							Follow Stream
+						<button class="flex items-center justify-center w-full">
+
+            <svg class="mr-4" style="width: 20px; height: 20px; margin-left: -20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48"><defs><path id="a" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></defs><clipPath id="b"><use xlink:href="#a" overflow="visible"/></clipPath><path clip-path="url(#b)" fill="#FBBC05" d="M0 37V11l17 13z"/><path clip-path="url(#b)" fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"/><path clip-path="url(#b)" fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"/><path clip-path="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"/></svg>
+							Sign In
 						</button>
 					</a>
 				{/if}
 			</div>
 
-			<div class="mb-8">
+			<!-- <div class="mb-8">
 				<label>Source</label>
 				
 				<AutoCompleteInput
@@ -153,8 +178,9 @@
 					initialSelectedItem={ null }
 				>
 				</AutoCompleteInput>
-			</div>
+			</div> -->
 
+      {#if !creator}
 			<div class="mt-8 w-full">
 				<label class="font-bold block mb-2">
 					Creators
@@ -173,14 +199,15 @@
 					{/if}
 				{/key}
 			</div>
+      {/if}
 		</div>
 	
 	</div>
 
-	{#key $feed}
-		{#if $feed.length > 0}
+	{#key feed}
+		{#if feed.length > 0}
 		<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="height: 100vh; padding: 2px; overflow-y: scroll;">
-			{#each $feed as feedItem}
+			{#each feed as feedItem}
 				<FeedItem feedItem={feedItem}></FeedItem>
 			{/each}
 		</div>
