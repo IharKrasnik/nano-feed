@@ -79,6 +79,7 @@
     });
 
     feedItem.url = url;
+    feedItem.title = data.title;
     feedItem.content = data.description;
 
     if (feedItem.url.includes('linkedin.com')) {
@@ -93,6 +94,15 @@
 
     if (data.image) {
       feedItem.attachments = [{ type: 'image', url: data.image}];
+    }
+
+    debugger;
+    if (data.creatorUsernames) {
+      feedItem.creators = data.creatorUsernames.map(username => $creators.find(c => c.username === username));
+    }
+
+    if (data.projectSlugs) {
+      feedItem.projects = data.projectSlugs.map(projectSlug => $projects.find(c => c.slug === projectSlug));
     }
   }
 

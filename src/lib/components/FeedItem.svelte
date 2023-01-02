@@ -168,7 +168,7 @@ let project;
       {#if project}
 
         <a class="hover:underline" href="/#{project.slug}" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px {project.color} solid;">
-          {project.emoji} {project.title}
+          {project.emoji ? `${project.emoji} ` : '' }{project.title}
         </a>
 <!--         
         {#if project.slug === 'therebel'}
