@@ -220,7 +220,7 @@
         <textarea rows="5" class="block" bind:value={feedItem.content} />
       </div>
 
-      {#if currentPage !== 'update'}
+      {#if $currentUser?.isAdmin }
         <div class="mb-8">
           <label>Creators</label>
 
@@ -241,7 +241,9 @@
             </div>
           </AutoCompleteInput>
         </div>
+      {/if}
 
+      {#if currentPage !== 'update'}
         <div class="mb-8">
           <label>Source</label>
           
