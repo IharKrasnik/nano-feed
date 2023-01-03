@@ -22,7 +22,7 @@
 	<meta name="description" content="Paralect's Momentum" />
 </svelte:head>
 
-<div class="app" class:bg-black={ !$page.url.href.includes('embed-live') } class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>
+<div class="app overflow-y-scroll" class:bg-black={ !$page.url.href.includes('embed-live') } class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'}">
 			<div class="md:absolute md:ml-[-315px] relative mb-8" style="opacity: .95">
 				<a href="/" class="mb-8">

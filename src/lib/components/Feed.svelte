@@ -24,6 +24,7 @@
 	let projects;
 	let featuredProjects = [];
 	let isProjectsLoading = false;
+	let isCreatorLoading = false;
 
 	const updateProjects = async ({ creatorUsername }) => {
 		let query = {};
@@ -46,12 +47,14 @@
 	const checkAndUpdateProjects = async (usernameCopy) => {
 		if (usernameCopy) {
 			if (usernameCopy !== prevCreator?.username) {
+				isCreatorLoading = true;
 				updateProjects({ creatorUsername: usernameCopy });
 
 				creator = await get(`creators/${usernameCopy}`)
 
-				refreshFeed();
 				prevCreator = _.clone(creator);
+
+				isCreatorLoading = false;
 			}
 		} else {
 			creator = null;
@@ -76,16 +79,18 @@
 
 	let selectedSource = null;
 
-  const defaultProject = creator ? {
-    slug: null,
-    title: creator.fullName,
-    description: creator.tagline || `A feed from ${creator.fullName}`
-  }: {
-    slug: null,
-    title: 'Paralect',
-    description: 'A feed from Paralect creators'
-  }
-
+	const getDefaultProject = () => {
+		return creator ? {
+			slug: null,
+			title: creator.fullName,
+			description: creator.tagline || `A feed from ${creator.fullName}`
+		} : {
+			slug: null,
+			title: 'Paralect',
+			description: 'A feed from Paralect creators'
+		}
+	}
+ 
 	let selectedProject;
 
 	let refreshFeed = async () => {
@@ -100,18 +105,18 @@
 		}
 	}
 
-  const setProject = (newProject = defaultProject) => {
+  const setProject = (newProject = getDefaultProject()) => {
     if (!selectedProject || selectedProject?.slug !== newProject?.slug) {
       selectedProject = newProject;
 		  refreshFeed();
     }
   }
 
-	$: if (!isProjectsLoading) {
+	$: if (projects && !isCreatorLoading) {
 		if ($page.url.hash) {
 			setProject(projects.find(p => p.slug === $page.url.hash.replace('#', '')));
 		} else {
-			setProject(defaultProject);
+			setProject(getDefaultProject());
 		}
 	}
 
@@ -166,9 +171,6 @@
           class="cursor-pointer _menu_item flex items-center px-4 py-2"
 					class:_selected="{!selectedProject?.slug}"
           href="/"
-          on:click={() => { 
-            setProject(null);
-          }} 
         >
           <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
             #
@@ -182,9 +184,6 @@
           class="cursor-pointer _menu_item flex items-center px-4 py-2"
 					class:_selected="{!selectedProject?.slug && creator}"
           href="/@{$currentUser.username}"
-          on:click={() => { 
-            setProject(null);
-          }} 
         >
           <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
             @
@@ -198,9 +197,6 @@
           class="cursor-pointer _menu_item flex items-center px-4 py-2"
 					class:_selected="{!selectedProject?.slug && creator}"
           href="/@{creator.username}"
-          on:click={() => { 
-            setProject(null);
-          }} 
         >
           <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
             @
@@ -217,10 +213,6 @@
               class:_selected="{selectedProject?.slug === project.slug}"
               href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
               style="border-color: {project.color}"
-              
-              on:click={() => { 
-                setProject(project);
-              }} 
             >
               <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
                 #
