@@ -24,7 +24,7 @@
 
 <div class="app overflow-y-scroll" class:bg-black={ !$page.url.href.includes('embed-live') } class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'}">
-			<div class="md:absolute md:ml-[-315px] relative mb-8" style="opacity: .95">
+			<div class="md:absolute md:ml-[-300px] relative mb-8" style="opacity: .95">
 				<a href="/" class="mb-8">
 					<h1 class="text-xl font-bold mr-4" style="z-index: 100;">
 						<svg style="width: 150px; height: 30px; margin-left: -15px;" width="659" height="155" viewBox="0 0 659 155" fill="none" xmlns="http://www.w3.org/2000/svg">

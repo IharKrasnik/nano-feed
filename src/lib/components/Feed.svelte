@@ -130,7 +130,7 @@
 
 {#if !isProjectsLoading}
 <div>
-  <div class="min-h-[100px]">
+  <div>
     {#if selectedProject && !$page.url.href.includes('/embed')}
     <section class="relative flex justify-between mb-8">
       <div class="flex items-center">
