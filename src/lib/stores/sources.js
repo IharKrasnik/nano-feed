@@ -40,6 +40,10 @@ const sourcesStore = writable([
 	{
 		value: 'indiehackers',
 		label: 'IndieHackers'
+	},
+	{
+		value: 'dribbble',
+		label: 'Dribbble'
 	}
 ]);
 

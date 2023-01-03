@@ -118,6 +118,21 @@
     });
 
     feedItem.url = url;
+
+    $: if (feedItem.url) {
+      if (feedItem.url.includes('linkedin.com')) {
+        feedItem.source = 'linkedin';
+      } else if (feedItem.url.includes('twitter.com')) {
+        feedItem.source = 'twitter';
+      } else if (feedItem.url.includes('indiehackers')) {
+        feedItem.source = 'indiehackers';
+      } else if (feedItem.url.includes('youtube.com')) {
+        feedItem.source = 'youtube';
+      } else if (feedItem.url.includes('dribbble.com')) {
+        feedItem.source = 'dribbble';
+      }
+    }
+
     feedItem.title = data.title;
     feedItem.content = data.description;
 
@@ -134,17 +149,7 @@
     }
   }
 
-  // $: if (feedItem.url) {
-  //   if (feedItem.url.includes('linkedin.com')) {
-  //     feedItem.source = 'linkedin';
-  //   } else if (feedItem.url.includes('twitter.com')) {
-  //     feedItem.source = 'twitter';
-  //   } else if (feedItem.url.includes('indiehackers')) {
-  //     feedItem.source = 'indiehackers';
-  //   } else if (feedItem.url.includes('youtube.com')) {
-  //     feedItem.source = 'youtube';
-  //   }
-  // }
+
 
   const postToFeed = async () => {
     let updatedFeedItem;
