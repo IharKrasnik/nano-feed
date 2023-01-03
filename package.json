@@ -28,6 +28,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-static": "^1.0.0",
 		"@tailwindcss/line-clamp": "^0.4.2",
 		"axios": "^1.2.1",
 		"date-fns": "^2.29.3",
