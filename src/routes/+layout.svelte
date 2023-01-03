@@ -55,17 +55,17 @@
 		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch')}
 		<a href="/write" class="md:hidden flex items-center justify-center" style="
 			position: fixed;
-			bottom: 50px;
-			width: 70px;
-			height: 70px;
+			bottom: 40px;
+			width: 60px;
+			height: 60px;
 			border: 1px solid rgba(255, 255, 255, 0.8);
 			border-radius: 50%;
 			z-index: 1001;
 			background-color: black;
 			box-shadow: 0px 0px 6px #c2daba;
 			font-size: 30px;
-			left: 50%;
-			transform: translateX(-50%);
+			right: 20px;
+    	opacity: .95;
 			">
 			+
 		</a>
