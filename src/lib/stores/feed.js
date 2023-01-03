@@ -12,7 +12,9 @@ export const fetch = async ({
 	feedStore.set([]);
 
 	const query = {
-		sort
+		sort,
+		perPage: 20,
+		page: 1
 	};
 
 	if (project) {

@@ -5,11 +5,12 @@ const projectsStore = writable([]);
 
 export const update = ({
 	creatorUsername,
+	page = 1,
 	perPage = 6,
 	sort = 'createdOn',
 	sortDirection = 'descending'
 } = {}) => {
-	let query = { perPage, sort, sortDirection };
+	let query = { perPage, page, sort, sortDirection };
 
 	if (creatorUsername) {
 		query.creatorUsername = creatorUsername;
