@@ -77,7 +77,8 @@ const ftch = async (method, url, params, options = {}) => {
 		});
 	} catch (err) {
 		console.log('error GET', absoluteUrl, method, err);
-		throw err;
+		// throw err;
+		return null;
 	}
 
 	if (res.ok || res.status === 302) {
