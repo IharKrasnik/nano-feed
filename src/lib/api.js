@@ -58,7 +58,7 @@ const ftch = async (method, url, params, options = {}) => {
 			headers['Authorization'] = `Bearer ${cookies.access_token}`;
 		}
 	}
-	debugger;
+
 	if (absoluteUrl.startsWith(API_URL)) {
 		options.credentials = 'include';
 		options.mode = 'cors';
@@ -76,7 +76,7 @@ const ftch = async (method, url, params, options = {}) => {
 			}
 		});
 	} catch (err) {
-		console.log('error GET', err);
+		console.log('error GET', absoluteUrl, method, err);
 		throw err;
 	}
 
