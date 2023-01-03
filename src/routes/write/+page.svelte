@@ -221,7 +221,7 @@
 </div>
 
 {#if $currentUser}
-  <form class="mb-16" style="height: 100vh; padding: 2px; padding-bottom: 300px; overflow-y: scroll;">
+  <form class="mb-16" style="height: 100vh; padding: 2px;">
     <div class="mb-4">
       {#if !feedId}
       <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>

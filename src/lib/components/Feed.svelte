@@ -150,7 +150,7 @@
     {/if}
   </div>
 
-	<div class="absolute w-[250px] ml-[-300px]">
+	<div class="fixed w-[250px] ml-[-300px]">
     {#if creator}
       <div class="flex items-center mb-8 font-bold">
         <img class="w-[40px] h-40[px] rounded-full mr-4" src={creator.avatarUrl}/>
@@ -233,7 +233,7 @@
 		</div>
 	</div>
 
-	<div class="hidden md:block absolute w-[250px]" style="left: 620px;">
+	<div class="hidden md:block fixed w-[250px]" style="margin-left: 590px;">
 		<div>
     	<div class="mb-8">
 				{#if $currentUser}
@@ -299,7 +299,7 @@
 
 	{#key feed}
 		{#if feed.length > 0}
-		<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="height: 100vh; padding: 2px; padding-bottom: 300px; overflow-y: scroll;">
+		<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
 			{#each feed as feedItem}
 				<FeedItem feedItem={feedItem}></FeedItem>
 			{/each}
