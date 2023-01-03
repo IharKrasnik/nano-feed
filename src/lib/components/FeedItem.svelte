@@ -84,7 +84,7 @@
         {/if}
 
         <div class="shrink-0">
-          {#if $currentUser && $currentUser.isAdmin || feedItem.creators.find( c => c._id === $currentUser._id)}
+          {#if $currentUser && ($currentUser.isAdmin || feedItem.creators.find( c => c._id === $currentUser._id))}
             <a class="hover:underline opacity-90" href="/write?feedId={feedItem._id}">
               {dayjs(new Date(feedItem.publishedOn || feedItem.createdOn)).format('MMM DD, YYYY')}
             </a>
