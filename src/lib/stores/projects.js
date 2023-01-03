@@ -6,7 +6,7 @@ const projectsStore = writable([]);
 export const update = ({
 	creatorUsername,
 	page = 1,
-	perPage = 6,
+	perPage = 20,
 	sort = 'createdOn',
 	sortDirection = 'descending'
 } = {}) => {
