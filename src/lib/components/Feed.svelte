@@ -314,7 +314,7 @@
 	{/key}
 </div>
 
-<a href="" class="md:hidden flex items-center justify-center" style="
+<div class="md:hidden flex items-center justify-center" style="
 	position: fixed;
 	bottom: 120px;
 	width: 60px;
@@ -329,7 +329,7 @@
 	opacity: .95;
 	" on:click={toggleExplore}>
 	#
-</a>
+</div>
 
 {#if exploreModeOn}
 	<div class="fixed overflow-y-scroll w-full h-screen left-0 top-0 p-8 bg-black" style="z-index: 1001;" in:fade={{ duration: 100 }}>
