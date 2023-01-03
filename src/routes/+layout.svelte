@@ -55,7 +55,7 @@
 		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch')}
 		<a href="/write" class="md:hidden flex items-center justify-center" style="
 			position: fixed;
-			bottom: 100px;
+			bottom: 50px;
 			width: 70px;
 			height: 70px;
 			border: 1px solid rgba(255, 255, 255, 0.8);
