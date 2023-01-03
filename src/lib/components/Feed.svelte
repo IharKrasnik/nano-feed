@@ -307,7 +307,7 @@
 
 	{#key feed}
 		{#if feed.length > 0}
-		<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="height: 100vh; padding: 2px; padding-bottom: 200px; overflow-y: scroll;">
+		<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="height: 100vh; padding: 2px; padding-bottom: 300px; overflow-y: scroll;">
 			{#each feed as feedItem}
 				<FeedItem feedItem={feedItem}></FeedItem>
 			{/each}

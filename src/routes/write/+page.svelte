@@ -219,7 +219,7 @@
 </div>
 
 {#if $currentUser}
-  <form class="mb-16" style="height: 100vh; padding: 2px; padding-bottom: 200px; overflow-y: scroll;">
+  <form class="mb-16" style="height: 100vh; padding: 2px; padding-bottom: 300px; overflow-y: scroll;">
     <div class="mb-4">
       {#if !feedId}
       <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
@@ -357,7 +357,8 @@
   </form>
 
   {#if feedItem }
-    <div style="display: flex;
+    <div class="hidden md:flex" 
+      style="
       position: fixed;
       right: 150px;
       top: 0;
