@@ -1,4 +1,6 @@
 <script>
+	export const prerender = false;
+
   import "../app.css";
 	import { page } from '$app/stores';
 	import { fade } from 'svelte/transition';
