@@ -234,7 +234,7 @@
     {/if}
   </div>
 
-  <form class="mb-16" style="height: 100vh; padding: 2px;">
+  <form class="mb-16" style="padding: 2px;">
     {#if feedItem.url || currentPage === 'update'}
       <div class="mb-8">
         <label> Title </label>
