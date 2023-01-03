@@ -17,18 +17,20 @@ export const update = ({
 
 	projectsStore.set([]);
 
-	get('projects', query).then(({ results: projects }) => {
-		projectsStore.set([
-			// {
-			// 	slug: null,
-			// 	title: 'All',
-			// 	description: 'A feed from Paralect creators.',
-			// 	isFeatured: true,
-			// 	color: 'rgba(255, 255, 255, .8)'
-			// },
-			...projects
-		]);
-	});
+	get('projects', query)
+		.then(({ results: projects }) => {
+			projectsStore.set([
+				// {
+				// 	slug: null,
+				// 	title: 'All',
+				// 	description: 'A feed from Paralect creators.',
+				// 	isFeatured: true,
+				// 	color: 'rgba(255, 255, 255, .8)'
+				// },
+				...projects
+			]);
+		})
+		.catch(async (err) => await update({ creatorUsername, perPage, sort, sortDirection }));
 };
 
 update();
