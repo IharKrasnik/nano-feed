@@ -15,6 +15,8 @@
   }
 </script>
 
+<h2 class="mb-4">Momentum Creators</h2>
+
 {#if $projects.length}
   <div class="mb-8">
     <label>Stream</label>
@@ -37,7 +39,6 @@
 
 <div class="mb-8">
   <label>Creators</label>
-
 
   {#if $creators.length}
     {#key selectedProject?.slug}

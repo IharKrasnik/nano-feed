@@ -95,6 +95,7 @@
 
 	let refreshFeed = async () => {
     feed = [];
+		exploreModeOn = false;
 
 		feed = await fetchFeed({ source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username });
 
@@ -126,6 +127,11 @@
 
 	onDestroy(() => clearInterval(shuffleInterval));
     
+	let exploreModeOn = false;
+	
+	const toggleExplore = () => {
+		exploreModeOn = !exploreModeOn;
+	}
 </script>
 
 {#if !isProjectsLoading}
@@ -168,7 +174,7 @@
 
       {#if !creator}
         <a 
-          class="cursor-pointer _menu_item flex items-center px-4 py-2"
+          class="cursor-pointer _menu_item flex items-center py-2"
 					class:_selected="{!selectedProject?.slug}"
           href="/"
         >
@@ -181,7 +187,7 @@
 
       {#if $currentUser && !creator}
         <a 
-          class="cursor-pointer _menu_item flex items-center px-4 py-2"
+          class="cursor-pointer _menu_item flex items-center py-2"
 					class:_selected="{!selectedProject?.slug && creator}"
           href="/@{$currentUser.username}"
         >
@@ -194,7 +200,7 @@
 
       {#if creator}
         <a 
-          class="cursor-pointer _menu_item flex items-center px-4 py-2"
+          class="cursor-pointer _menu_item flex items-center py-2"
 					class:_selected="{!selectedProject?.slug && creator}"
           href="/@{creator.username}"
         >
@@ -209,7 +215,7 @@
         <div in:fade>
           {#each featuredProjects as project}
             <a 
-              class="cursor-pointer _menu_item flex items-center px-4 py-2" 
+              class="cursor-pointer _menu_item flex items-center py-2" 
               class:_selected="{selectedProject?.slug === project.slug}"
               href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
               style="border-color: {project.color}"
@@ -281,7 +287,7 @@
 
 				{#key shuffledCreators}
 					{#if shuffledCreators.length}
-						<a class="_creators w-full mt-4 flex" class:justify-between={shuffledCreators.length > 7} href="/creators" in:fade={{ duration: 200 }}>
+						<a class="_creators w-full mt-4 flex" class:justify-between={shuffledCreators.length > 7} href="/creators" transition:fade={{ duration: 200 }}>
 							{#each shuffledCreators.slice(0, 7) as creator}
 							<img src={creator.avatarUrl} class="w-[35px] h-[35px] inline rounded-full mr-[-10px]" />
 							{/each}
@@ -307,6 +313,133 @@
 		{/if}
 	{/key}
 </div>
+
+<a href="" class="md:hidden flex items-center justify-center" style="
+	position: fixed;
+	bottom: 120px;
+	width: 60px;
+	height: 60px;
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	border-radius: 50%;
+	z-index: 1001;
+	background-color: black;
+	box-shadow: 0px 0px 6px #c2daba;
+	font-size: 30px;
+	right: 20px;
+	opacity: .95;
+	" on:click={toggleExplore}>
+	#
+</a>
+
+{#if exploreModeOn}
+	<div class="fixed overflow-y-scroll w-full h-screen left-0 top-0 p-8 bg-black" style="z-index: 1001;" in:fade={{ duration: 100 }}>
+		<button class="w-[60px] h-[60px] text-[30px] rounded-full flex items-center justify-center border-none fixed bg-black right-4 top-4 font-xl" on:click|preventDefault={toggleExplore}>
+			⤬
+		</button>
+		{#if !creator}
+		<div class="w-full">
+			<label class="font-bold block mb-2">
+				Creators
+				{#if $creators?.length}
+				<span class="text-gray-500">({$creators.length})</span>
+				{/if}
+			</label>
+
+			{#key shuffledCreators}
+				{#if shuffledCreators.length}
+					<a class="_creators w-full mt-4 flex" class:justify-between={shuffledCreators.length > 7} href="/creators" in:fade={{ duration: 200 }}>
+						{#each shuffledCreators.slice(0, 10) as creator, i }
+						<img src={creator.avatarUrl} class="w-[35px] h-[35px] inline rounded-full { i !== 9 && 'mr-[-10px]' }" />
+						{/each}
+					</a>
+				{/if}
+			{/key}
+		</div>
+		{/if}
+		
+		{#if creator}
+      <div class="flex items-center mb-8 font-bold">
+        <img class="w-[40px] h-40[px] rounded-full mr-4" src={creator.avatarUrl}/>
+        {creator.fullName}
+      </div>
+    {/if}
+
+		<div class="left-0 mt-8" >
+			<label class="font-bold block mb-2">
+				Streams
+				{#if featuredProjects.length}
+				<span class="text-gray-500">({featuredProjects.length})</span>
+				{/if}
+			</label>
+
+      {#if !creator}
+        <a 
+          class="cursor-pointer _menu_item flex items-center py-2"
+					class:_selected="{!selectedProject?.slug}"
+          href="/"
+        >
+          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
+            #
+          </div>
+          All
+        </a>
+      {/if}
+
+      {#if $currentUser && !creator}
+        <a 
+          class="cursor-pointer _menu_item flex items-center py-2"
+					class:_selected="{!selectedProject?.slug && creator}"
+          href="/@{$currentUser.username}"
+        >
+          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+            @
+          </div>
+          {$currentUser.fullName}
+        </a>
+      {/if}
+
+      {#if creator}
+        <a 
+          class="cursor-pointer _menu_item flex items-center py-2"
+					class:_selected="{!selectedProject?.slug && creator}"
+          href="/@{creator.username}"
+        >
+          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+            @
+          </div>
+          {creator.fullName}
+        </a>
+      {/if}
+
+      {#if featuredProjects.length}
+        <div in:fade>
+          {#each featuredProjects as project}
+            <a 
+              class="cursor-pointer _menu_item flex items-center py-2" 
+              class:_selected="{selectedProject?.slug === project.slug}"
+              href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
+              style="border-color: {project.color}"
+            >
+              <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
+                #
+              </div>
+              {project.title}
+            </a>
+          {/each}
+        </div>
+			{/if}
+
+			<div class="mt-8 w-full">
+				<a href="/launch" class="w-full">
+					<button class="w-full">
+						Launch Your #Stream
+					</button>
+				</a>
+			</div>
+		</div>
+	</div>
+{/if}
+
 {/if}
 
 <style>
