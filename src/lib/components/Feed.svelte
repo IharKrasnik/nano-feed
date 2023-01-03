@@ -192,7 +192,7 @@
 		</div>
 	</div>
 
-	<div class="absolute w-[250px]" style="left: 620px;">
+	<div class="hidden md:block absolute w-[250px]" style="left: 620px;">
 		<div>
     	<div class="mb-8">
 				{#if $currentUser}
