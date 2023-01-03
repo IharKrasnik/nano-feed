@@ -3,6 +3,7 @@
   import axios from 'axios';
 
   import { goto } from '$app/navigation';
+	import { fade } from 'svelte/transition'; 
   import { page } from '$app/stores';
   import { get, post, put, del, postFile } from '$lib/api';
   import { API_URL } from '$lib/env';
@@ -211,31 +212,29 @@
   }
 </script>
 
-<h2 class="mb-2">Post a Moment</h2>
-
-<h3 class="mb-4">
-  Moments are tiny yet important actions that you do daily. <br /> <br/>
-  What you've created today?
-</h3>
-<div>
-</div>
-
 {#if $currentUser}
+  <h2 class="mb-2">Post a Moment</h2>
+
+  <h3 class="mb-4">
+    Moments are tiny yet important actions that you do daily. <br /> <br/>
+    What you've created today?
+  </h3>
+
+  <div class="mb-4" in:fade={{ duration: 100 }}>
+    {#if !feedId}
+    <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
+    <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Submit Url</button>
+    {/if}
+
+    {#if currentPage === 'url'}
+      <label class="mt-4 mb-4"> URL </label>
+      <input type="text" class="block" bind:value={url} use:autofocus />
+
+      <button class="mt-4" on:click={addUrl}>Set Url</button>
+    {/if}
+  </div>
+
   <form class="mb-16" style="height: 100vh; padding: 2px;">
-    <div class="mb-4">
-      {#if !feedId}
-      <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
-      <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Submit Url</button>
-      {/if}
-
-      {#if currentPage === 'url'}
-        <label class="mt-4 mb-4"> URL </label>
-        <input type="text" class="block" bind:value={url} use:autofocus />
-
-        <button class="mt-4" on:click={addUrl}>Set Url</button>
-      {/if}
-    </div>
-
     {#if feedItem.url || currentPage === 'update'}
       <div class="mb-8">
         <label> Title </label>

@@ -1,7 +1,9 @@
 <script>
   import slug from 'slug';
+	import { fade } from 'svelte/transition'; 
   import { post } from '$lib/api';
   import { goto } from '$app/navigation';
+  
   import creators from '$lib/stores/creators';
   import projects from '$lib/stores/projects';
   import currentUser from '$lib/stores/currentUser';
@@ -63,7 +65,7 @@
 </h3>
 
 <div>
-  <div class="mb-8">
+  <div class="mb-8" in:fade>
     <label>Name</label>
     <div class="_hint mb-4">The name should be short and catchy. It's your brand name.</div>
 
@@ -71,7 +73,7 @@
   </div>
 
   {#if project.title}
-  <div class="mb-8">
+  <div class="mb-8" in:fade={{ duration: 100 }}>
     <label>Tagline</label>
     <div class="_hint mb-4">One-liner about your brand. Explain what you to with {project.name}. Make a random reader want to follow your journey.</div>
 
