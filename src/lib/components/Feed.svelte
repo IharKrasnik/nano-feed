@@ -4,9 +4,7 @@
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores'
 	import { API_URL } from '$lib/env';
-
-  export let projectSlug;
-  export let creator;
+	import { get } from '$lib/api';
 
   let feed = [];
 
@@ -16,10 +14,57 @@
 	import currentUser from '$lib/stores/currentUser'; 
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 	import creators, { update as updateCreators } from '$lib/stores/creators';
-	import projects, { update as updateProjects } from '$lib/stores/projects'; 
+
 	import sources from '$lib/stores/sources'; 
 	
 	import Select from 'svelte-select';
+
+	let creator;
+	let prevCreator;
+	let projects;
+	let featuredProjects = [];
+	let isProjectsLoading = false;
+
+	const updateProjects = async ({ creatorUsername }) => {
+		let query = {};
+
+		if (creatorUsername) {
+			query.creatorUsername = creatorUsername;
+		}
+		
+		isProjectsLoading = true;
+		
+		try {
+			const { results } = await get('projects', query);
+			projects = results;
+			featuredProjects = projects.filter(p => p.isFeatured);
+		} finally {
+			isProjectsLoading = false;
+		}
+	}
+
+	const checkAndUpdateProjects = async (usernameCopy) => {
+		if (usernameCopy) {
+			if (usernameCopy !== prevCreator?.username) {
+				updateProjects({ creatorUsername: usernameCopy });
+
+				creator = await get(`creators/${usernameCopy}`)
+
+				refreshFeed();
+				prevCreator = _.clone(creator);
+			}
+		} else {
+			creator = null;
+
+			if (prevCreator !== null ) {
+				updateProjects({ });
+			}
+
+			prevCreator = null;
+		}
+	}
+
+	$: checkAndUpdateProjects($page.params.username)
 
   let shuffledCreators = [];
 
@@ -43,13 +88,16 @@
 
 	let selectedProject;
 
-  updateProjects({ creatorUsername: creator?.username });
-
 	let refreshFeed = async () => {
     feed = [];
-    feed = await fetchFeed({ source: selectedSource, project: selectedProject.slug, creatorUsername: creator?.username });
 
-		updateCreators({ projectSlug: selectedProject?.slug });
+		feed = await fetchFeed({ source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username });
+
+		if (!creator) {
+			updateCreators({ projectSlug: selectedProject?.slug });
+		} else {
+			$creators = [];
+		}
 	}
 
   const setProject = (newProject = defaultProject) => {
@@ -59,22 +107,23 @@
     }
   }
 
-	$: setProject(projectSlug ? $projects.find(p => p.slug === projectSlug) : defaultProject);
+	$: if (!isProjectsLoading) {
+		if ($page.url.hash) {
+			setProject(projects.find(p => p.slug === $page.url.hash.replace('#', '')));
+		} else {
+			setProject(defaultProject);
+		}
+	}
 
 	const shuffleInterval = setInterval(() => {
 		shuffleCreators();
 	}, 10000);
 
 	onDestroy(() => clearInterval(shuffleInterval));
-	
-	let featuredProjects = [];
-
-	$: if ($projects) {
-		featuredProjects = $projects.filter(p => p.isFeatured);
-	}
-          
+    
 </script>
 
+{#if !isProjectsLoading}
 <div>
   <div class="min-h-[100px]">
     {#if selectedProject && !$page.url.href.includes('/embed')}
@@ -266,6 +315,7 @@
 		{/if}
 	{/key}
 </div>
+{/if}
 
 <style>
 	._select {

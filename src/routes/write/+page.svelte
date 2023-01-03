@@ -11,11 +11,31 @@
   import FeedItem from '$lib/components/FeedItem.svelte';
   
   import sources from '$lib/stores/sources';
-  import creators from '$lib/stores/creators';
-  import projects from '$lib/stores/projects';
   import currentUser from '$lib/stores/currentUser';
 
-  import CreatorsSearch from '$lib/components/CreatorsSearch.svelte';
+  let projects;
+	let isProjectsLoading = false;
+  let creators;
+
+	const fetchProjects = async () => {
+		isProjectsLoading = true;
+		
+		try {
+			const { results } = await get('projects');
+			projects = results;
+		} finally {
+			isProjectsLoading = false;
+		}
+	};
+
+  fetchProjects();
+
+  const fetchCreators = async () => {
+		const { results } = await get('creators');
+    creators = results;
+  }
+
+  fetchCreators();
 
   let url;
   let attachmentUrl;
@@ -62,12 +82,12 @@
     });
   }
 
-  let format = 'YYYY-MM-DDThh:mm';
+  let format = 'YYYY-MM-DDTHH:mm';
 	
   let internalDate;
 
   const input = (x) => { internalDate = dayjs(x).format(format) }
-  const output = (x) => { feedItem.publishedOn = dayjs(x, format).toDate() }
+  const output = (x) => { feedItem.publishedOn = dayjs(x, format).toDate(); console.log('feedItem.publishedOn', feedItem.publishedOn) }
 
   $: input(feedItem.publishedOn);
   $: output(internalDate);
@@ -75,7 +95,7 @@
   let selectedUsername;
 
   const setCreator = () => {
-    feedItem.creators = [$creators.find(c => c.username === selectedUsername)];
+    feedItem.creators = [creators.find(c => c.username === selectedUsername)];
   }
 
   const uploadFile = async file => {
@@ -141,15 +161,13 @@
     }
 
     if (data.creatorUsernames) {
-      feedItem.creators = data.creatorUsernames.map(username => $creators.find(c => c.username === username));
+      feedItem.creators = data.creatorUsernames.map(username => creators.find(c => c.username === username));
     }
 
     if (data.projectSlugs) {
-      feedItem.projects = data.projectSlugs.map(projectSlug => $projects.find(c => c.slug === projectSlug));
+      feedItem.projects = data.projectSlugs.map(projectSlug => projects.find(c => c.slug === projectSlug));
     }
   }
-
-
 
   const postToFeed = async () => {
     let updatedFeedItem;
@@ -205,79 +223,25 @@
     <div class="mb-4">
       {#if !feedId}
       <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
-      <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Post Url</button>
+      <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Submit Url</button>
       {/if}
+
       {#if currentPage === 'url'}
         <label class="mt-4 mb-4"> URL </label>
         <input type="text" class="block" bind:value={url} use:autofocus />
 
-        <button class="mt-4" on:click={addUrl}>Submit Link</button>
+        <button class="mt-4" on:click={addUrl}>Set Url</button>
       {/if}
     </div>
 
     {#if feedItem.url || currentPage === 'update'}
       <div class="mb-8">
         <label> Title </label>
-        <input type="text" class="block" bind:value={feedItem.title} autofocus/>
+        <input type="text" class="block" bind:value={feedItem.title} use:autofocus/>
       </div>
       <div class="mb-8">
         <label> Content </label>
         <textarea rows="5" class="block" bind:value={feedItem.content} />
-      </div>
-
-      {#if $currentUser?.isAdmin }
-        <div class="mb-8">
-          <label>Creators</label>
-
-          <AutoCompleteInput
-            onChange={onCreatorSelected}
-            searchField="fullName"
-            placeholder="Search creators.."
-            limitItemsCount={5}
-            isMulti
-            bind:allSuggestions={$creators}
-            initialSelectedItems={feedItem.creators}
-          >
-            <div slot="item" let:item={item}>
-              <div class="flex items-center">
-                <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
-                {item.fullName}
-              </div>
-            </div>
-          </AutoCompleteInput>
-        </div>
-      {/if}
-
-      {#if currentPage !== 'update'}
-        <div class="mb-8">
-          <label>Source</label>
-          
-          <AutoCompleteInput
-            onChange={onSourceSelected}
-            placeholder="Select source.."
-            limitItemsCount={5}
-            allSuggestions={$sources.filter(s => s.value)}
-            initialSelectedItem={ feedItem.source ? { value: feedItem.source } : null }
-          >
-          </AutoCompleteInput>
-        </div>
-      {/if}
-
-      <div class="mb-8">
-        <label>Streams</label>
-        <AutoCompleteInput
-          onChange={onProjectsSelected}
-          placeholder="Search Streams"
-          valueField="slug"
-          searchField="title"
-          isMulti
-          allSuggestions={$projects.filter(s => s.slug)}
-          initialSelectedItems={feedItem.projects}
-        >
-          <!-- <div slot="item" let:item={item}>
-            hey {item.label}
-          </div> -->
-        </AutoCompleteInput>
       </div>
 
       <div class="mb-8">
@@ -311,13 +275,71 @@
           {/if}
         {/if}
       </div>
+
+      {#if currentPage !== 'update'}
+        <div class="mb-8">
+          <label>Source</label>
+          
+          <AutoCompleteInput
+            onChange={onSourceSelected}
+            placeholder="Select source.."
+            limitItemsCount={5}
+            allSuggestions={$sources.filter(s => s.value)}
+            initialSelectedItem={ feedItem.source ? { value: feedItem.source } : null }
+          >
+          </AutoCompleteInput>
+        </div>
+      {/if}
+
+      {#if projects}
+        <div class="mb-8">
+          <label>Streams</label>
+          <AutoCompleteInput
+            onChange={onProjectsSelected}
+            placeholder="Search Streams"
+            valueField="slug"
+            searchField="title"
+            isMulti
+            allSuggestions={projects.filter(s => s.slug)}
+            initialSelectedItems={feedItem.projects}
+          >
+            <!-- <div slot="item" let:item={item}>
+              hey {item.label}
+            </div> -->
+          </AutoCompleteInput>
+        </div>
+      {/if}
+
       
       {#if currentPage !== 'update'}
       <div class="mb-8">
-        <label>Posted On</label>
+        <label>Published On</label>
 
         <input type="datetime-local" bind:value="{internalDate}">
       </div>
+      {/if}
+
+      {#if $currentUser?.isAdmin && creators}
+        <div class="mb-8">
+          <label>Creators</label>
+
+          <AutoCompleteInput
+            onChange={onCreatorSelected}
+            searchField="fullName"
+            placeholder="Search creators.."
+            limitItemsCount={5}
+            isMulti
+            bind:allSuggestions={creators}
+            initialSelectedItems={feedItem.creators}
+          >
+            <div slot="item" let:item={item}>
+              <div class="flex items-center">
+                <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
+                {item.fullName}
+              </div>
+            </div>
+          </AutoCompleteInput>
+        </div>
       {/if}
 
       <!-- <hr class="my-8" style="border-color: rgba(255, 255, 255, 0.3)"/> -->

@@ -3,6 +3,18 @@ import { get } from '$lib/api';
 
 const projectsStore = writable([]);
 
+export let isLoading = writable(false);
+
+export const getProjects = ({
+	creatorUsername,
+	page = 1,
+	perPage = 20,
+	sort = 'createdOn',
+	sortDirection = 'descending'
+} = {}) => {
+
+}
+
 export const update = ({
 	creatorUsername,
 	page = 1,
@@ -11,6 +23,7 @@ export const update = ({
 	sortDirection = 'descending'
 } = {}) => {
 	let query = { perPage, page, sort, sortDirection };
+	isLoading.set(true);
 
 	if (creatorUsername) {
 		query.creatorUsername = creatorUsername;
@@ -31,7 +44,8 @@ export const update = ({
 				...projects
 			]);
 		})
-		.catch(async (err) => await update({ creatorUsername, perPage, sort, sortDirection }));
+		.catch(async (err) => await update({ creatorUsername, perPage, sort, sortDirection }))
+		.finally(() => isLoading.set(false));
 };
 
 update();

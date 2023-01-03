@@ -18,6 +18,7 @@
   export let onChange;
   export let isAlwaysShown = false;
   export let autofocus = false;
+  export let autofocusOnRemove = true;
 	
   export let initialSelectedItems = [];
   export let initialSelectedItem = null;
@@ -88,7 +89,7 @@
       onChange(selectedItem);
     }
 
-    if (!isMulti && selectedItems.length === 0) {
+    if (autofocusOnRemove && !isMulti && selectedItems.length === 0) {
       setTimeout(() => {
         inputEl.focus();
       }, 0);
@@ -218,7 +219,8 @@
     background: black;
 		cursor: pointer;
 		padding: 16px;
-    border-bottom: 1px rgba(255, 255, 255, .3) solid;
+    border: 1px rgba(255, 255, 255, .3) solid;
+    margin-top: -1px;
 	}
 
   ._option:hover, ._option._hover {

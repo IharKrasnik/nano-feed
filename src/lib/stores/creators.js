@@ -3,7 +3,9 @@ import { get } from '$lib/api';
 
 const creatorsStore = writable([]);
 
-export const update = ({
+export let filterQuery = writable(null);
+
+export const update = async ({
 	projectSlug = null,
 	sort = 'createdOn',
 	sortDirection = 'descending'
@@ -14,7 +16,8 @@ export const update = ({
 		query.projectSlug = projectSlug;
 	}
 
-	get('creators', query).then(({ results: creators }) => {
+	await get('creators', query).then(({ results: creators }) => {
+		filterQuery.set(query);
 		creatorsStore.set(creators);
 	});
 };

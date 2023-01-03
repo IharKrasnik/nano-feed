@@ -16,14 +16,6 @@
       videoEl.play();
     }
   });
-
-let project;
-
- $: if(feedItem && feedItem.projects && feedItem.projects.length > 0) {
-   project = feedItem.projects[0];
- } else {
-   project = null;
- }
 </script>
 
 <a class="_item mb-8 inline-block w-full relative {clazz}"
@@ -32,11 +24,12 @@ let project;
   href="{feedItem.url}" 
   target="_blank"
 >
-  <div class="relative mb-4">
+  <div class="relative">
     {#if feedItem.title}
       <div class="font-bold" href="{feedItem.url}">{feedItem.title}</div>
       <hr class="my-4 opacity-20"/>
     {/if}
+
     {#if feedItem.content}
       <div class="whitespace-pre-wrap">
         {feedItem.content}
@@ -81,16 +74,37 @@ let project;
         {/each}
       </div>
     {/if}
-
-    <div class="mt-4 flex items-center justify-between">
-      <div class="flex items-center text-sm py-2 opacity-80">
-        {dayjs(new Date(feedItem.publishedOn || feedItem.createdOn)).format('MMM DD, YYYY')}
-
-        {#if $currentUser}
-          {#if $currentUser.isAdmin || feedItem.creators.find( c => c._id === $currentUser._id)}
-            <a class="hover:underline ml-2 text-blue-300" href="/write?feedId={feedItem._id}">Edit</a>
-          {/if}
+   
+    <div class="my-4 flex items-center justify-between">
+      <div class="flex items-center text-sm opacity-80">
+        {#if feedItem.isRelease}
+            <div class="mr-2">
+              🚀
+            </div>
         {/if}
+
+        <div class="shrink-0">
+          {#if $currentUser && $currentUser.isAdmin || feedItem.creators.find( c => c._id === $currentUser._id)}
+            <a class="hover:underline opacity-90" href="/write?feedId={feedItem._id}">
+              {dayjs(new Date(feedItem.publishedOn || feedItem.createdOn)).format('MMM DD, YYYY')}
+            </a>
+          {:else}
+            {dayjs(new Date(feedItem.publishedOn || feedItem.createdOn)).format('MMM DD, YYYY')}
+          {/if}
+        </div>
+ 
+         <div class="overflow-x-scroll mx-4">
+          {#each (feedItem.projects || []) as project}
+            <a class="hover:underline mr-4 opacity-90" href="/#{project.slug}">
+              <!-- {#if project.emoji} -->
+              <!-- {:else} -->
+                <span style="color: {project.color};">#</span>
+              <!-- {/if} -->
+              {project.title} 
+                <!-- {project.emoji||''} -->
+            </a>
+          {/each}
+        </div>
       </div>
       <div class="flex">
        {#if feedItem.source === 'momentum'}
@@ -145,109 +159,29 @@ let project;
           <g><path fill="white" d="M438.8,622.5L622.5,500L438.8,377.5V622.5z M806.3,10H193.8C92.3,10,10,92.3,10,193.8v612.5C10,907.7,92.3,990,193.8,990h612.5C907.7,990,990,907.7,990,806.3V193.8C990,92.3,907.7,10,806.3,10z M801,609.7c-3.3,40.8-34.2,92.9-77.6,100.4c-138.6,10.7-303.1,9.4-446.8,0c-44.8-5.6-74.3-59.7-77.6-100.4c-7-85.6-7-134.4,0-220c3.3-40.7,33.5-94.4,77.6-99.3c142-11.9,307.4-9.4,446.8,0c50,1.8,74.3,53.2,77.6,94C808,470,808,524.1,801,609.7z"/></g>
           </svg>
        {/if}
-       {#if feedItem.isRelease}
-          <div class="ml-2">
-            🚀
-          </div>
-       {/if}
        </div>
     </div>
+
+    <hr class="my-4 opacity-20"/>
     
-
-  </div>
-  
-  
-
-  <hr class="my-4 opacity-20"/>
-  
-  <div class="flex justify-between items-center">
-    <div class="flex items-center">
-      {#if feedItem?.creators}
-        {#each feedItem.creators as creator}
-         <img src="{creator.avatarUrl}" class="rounded-full w-[40px] h-[40px] shrink-0" /> 
-        {/each}
-
-        <div class="ml-4 text-sm">
-          {#each feedItem.creators as creator}
-            <a href="/@{creator.username}" class="mr-3 hover:underline">{creator.fullName}</a>
+    <div class="flex justify-between items-center">
+      <div class="flex items-center">
+        {#if feedItem?.creators}
+          {#each feedItem.creators as creator, i}
+          <a href="/@{creator.username}" class="shrink-0 w-[40px] mr-[-20px]" style="z-index: {100-i};">
+            <img src="{creator.avatarUrl}" class="rounded-full w-[40px] h-[40px]" /> 
+          </a>
           {/each}
-          <!-- {feedItem.creators.map(c=> c.fullName).join(', ')} -->
-        </div>
-      {/if}
+
+          <div class="pl-4 text-sm ml-[20px]">
+            {#each feedItem.creators as creator, i}
+              <a href="/@{creator.username}" class="hover:underline">{creator.fullName}</a>{i !== feedItem.creators.length - 1 ? ', ' : ''}
+            {/each}
+          </div>
+        {/if}
+      </div>
     </div>
 
-    
-    <div class="shrink-0">
-      {#if project}
-
-        <a class="hover:underline" href="/#{project.slug}" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px {project.color} solid;">
-          {project.emoji ? `${project.emoji} ` : '' }{project.title}
-        </a>
-<!--         
-        {#if project.slug === 'therebel'}
-          <span class="text-[#f87316] font-bold">THE</span>✊🏽<span class="text-[#f59e0c] font-bold">REBEL</span>
-        {/if}
-        {#if project.slug === 'rnd'}
-          <span class="text-[#f59e0c] font-bold">R🐝D</span>
-        {/if}
-        {#if project.slug === 'growingproducts'}
-          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #53bf00 solid;">
-            Growing 🌱 Products
-          </div>
-        {/if}
-        {#if project.slug === 'shipitsipit'}
-          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #d090ff solid;">
-            Ship it 🍸 Sip It
-          </div>
-        {/if}
-
-        {#if project.slug === 'startupsummer'}
-          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #ffd967 solid;">
-            🌞 Startup Summer
-          </div>
-        {/if}
-        
-        {#if project.slug === 'altos'}
-          <div style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
-            Altos 📸
-          </div>
-        {/if}
-        {#if project.slug === 'igor'}
-          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #75c425 solid;">
-            <img src="/igor-favicon.png" class="mr-2" style="width: 20px; border-radius: 50%; display: inline;"/> Igor
-          </div>
-        {/if}
-        {#if project.slug === 'accelerator'}
-          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(126 0 231) solid;">
-            🚠 Accelerator
-          </div>
-        {/if}
-        {#if project.slug === 'particles'}
-          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(213, 255, 9) solid;">
-            ✨ Particles
-          </div>
-        {/if}
-        
-        {#if project.slug === 'productlab'}
-          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px rgb(213, 255, 9) solid;">
-            🧪 Product Lab
-          </div>
-        {/if}
-        
-        {#if project.slug === 'alongtheroadmap'}
-          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #fff291 solid;">
-            🛣 Along The Roadmap
-          </div>
-        {/if}
-
-        {#if project.slug === 'momentum'}
-          <div class="flex items-center" style="color: white; padding: 4px 12px; border-radius: 4px; border: 1px #00b8ff solid;">
-            🌀 Momentum
-          </div>
-        {/if} -->
-
-      {/if}
-    </div>
   </div>
 </a>
 
