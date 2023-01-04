@@ -306,7 +306,7 @@
   <div>
 </div>
 
-{#if !creator || creator._id === $currentUser._id}
+{#if $currentUser && (!creator || creator._id === $currentUser._id)}
 <div class="relative">
 	<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
 
