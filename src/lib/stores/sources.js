@@ -44,6 +44,14 @@ const sourcesStore = writable([
 	{
 		value: 'dribbble',
 		label: 'Dribbble'
+	},
+	{
+		value: 'loom',
+		label: 'Loom'
+	},
+	{
+		value: 'notion',
+		label: 'Notion'
 	}
 ]);
 

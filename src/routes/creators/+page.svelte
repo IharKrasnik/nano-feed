@@ -9,9 +9,13 @@
     selectedProject = $projects.find(c => c.slug === $creatorsFilterQuery?.projectSlug);
   }
 
+  let isCreatorsLoading = false;
+
   let onProjectSelected = async (newProject) => {
     selectedProject = newProject;
+    isCreatorsLoading = true;
     await updateCreators({ projectSlug: selectedProject?.slug });
+    isCreatorsLoading = false;
   }
 </script>
 
@@ -38,9 +42,11 @@
 {/if}
 
 <div class="mb-8">
-  <label>Creators</label>
-
-  {#if $creators.length}
+  <label>Creators
+    <div class="inline number-tag">{$creators.length}</div>
+  </label>
+  
+  {#if $creators.length && !isCreatorsLoading}
     {#key selectedProject?.slug}
     <AutoCompleteInput
       searchField="fullName"

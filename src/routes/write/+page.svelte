@@ -325,7 +325,7 @@
             <AutoCompleteInput
               onChange={onSourceSelected}
               placeholder="Select source.."
-              limitItemsCount={5}
+              limitItemsCount={20}
               allSuggestions={$sources.filter(s => s.value)}
               initialSelectedItem={ feedItem.source ? { value: feedItem.source } : null }
             >

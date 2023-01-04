@@ -171,7 +171,7 @@
 			<label class="font-bold block mb-2">
 				Streams
 				{#if featuredProjects.length}
-				<span class="text-gray-500">({featuredProjects.length})</span>
+				<span class="number-tag">{featuredProjects.length}</span>
 				{/if}
 			</label>
 
@@ -284,7 +284,10 @@
 				<label class="font-bold block mb-2">
 					Creators
 					{#if $creators?.length}
-					<span class="text-gray-500">({$creators.length})</span>
+					
+					<span class="number-tag">
+						{$creators.length}
+					</span>
 					{/if}
 				</label>
 
@@ -352,7 +355,7 @@
 			<label class="font-bold block mb-2">
 				Creators
 				{#if $creators?.length}
-				<span class="text-gray-500">({$creators.length})</span>
+				<span class="number-tag">{$creators.length}</span>
 				{/if}
 			</label>
 
@@ -379,7 +382,7 @@
 			<label class="font-bold block mb-2">
 				Streams
 				{#if featuredProjects.length}
-				<span class="text-gray-500">({featuredProjects.length})</span>
+				<span class="number-tag">{featuredProjects.length}</span>
 				{/if}
 			</label>
 

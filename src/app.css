@@ -97,3 +97,15 @@ button.small:hover {
 button.danger {
 	border-color: #f44747;
 }
+
+.number-tag {
+	background-color: #aaaaaa;
+	color: black;
+	position: relative;
+	top: -1px;
+	left: 2px;
+	padding: 1px 6px 1px 6px;
+	border-radius: 9px;
+	font-size: 13px;
+	opacity: 0.9;
+}
