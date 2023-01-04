@@ -5,7 +5,7 @@
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores'
 	import { API_URL } from '$lib/env';
-	import { get } from '$lib/api';
+	import { get, post, del } from '$lib/api';
 
   let feed = [];
 
@@ -13,6 +13,7 @@
 	import FeedItem from '$lib/components/FeedItem.svelte';
 
 	import currentUser from '$lib/stores/currentUser'; 
+	import follows from '$lib/stores/follows';
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 	import creators, { update as updateCreators } from '$lib/stores/creators';
 
@@ -23,23 +24,35 @@
 	let creator;
 	let prevCreator;
 	let projects;
-	let featuredProjects = [];
+
 	let isProjectsLoading = false;
 	let isCreatorLoading = false;
 
-	const updateProjects = async ({ creatorUsername }) => {
+	const updateProjects = async ({ projectSlug, creatorUsername, isExplore = false }) => {
+		if (!creatorUsername && !isExplore && !projectSlug) {
+			projects = $follows.filter(f => f.followType === 'project');
+			return;
+		}
+
 		let query = {};
 
 		if (creatorUsername) {
 			query.creatorUsername = creatorUsername;
 		}
+
+		if (isExplore) {
+			query.isExplore = true;
+		}
 		
+		if (projectSlug) {
+			query.projectSlug = projectSlug;
+		}
+
 		isProjectsLoading = true;
 		
 		try {
 			const { results } = await get('projects', query);
 			projects = results;
-			featuredProjects = projects.filter(p => p.isFeatured);
 		} finally {
 			isProjectsLoading = false;
 		}
@@ -82,6 +95,7 @@
 
 	const getDefaultProject = () => {
 		return creator ? {
+			_id: creator._id,
 			slug: null,
 			title: creator.fullName,
 			description: creator.tagline || `A feed from ${creator.fullName}`
@@ -98,7 +112,7 @@
     feed = [];
 		exploreModeOn = false;
 
-		feed = await fetchFeed({ source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username });
+		feed = await fetchFeed({ source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username, isExplore: isExploreProjectsModeOn });
 
 		if (!creator) {
 			updateCreators({ projectSlug: selectedProject?.slug });
@@ -116,7 +130,15 @@
 
 	$: if (projects && !isCreatorLoading) {
 		if ($page.url.hash) {
-			setProject(projects.find(p => p.slug === $page.url.hash.replace('#', '')));
+			debugger;
+			let project = projects.find(p => p.slug === $page.url.hash.replace('#', ''));
+			
+			if (project) {
+				setProject(project);
+			} else {
+				updateProjects({ projectSlug: $page.url.hash.replace('#', '') })
+					.then(() => setProject(projects.find(p => p.slug === $page.url.hash.replace('#', ''))))
+			}
 		} else {
 			setProject(getDefaultProject());
 		}
@@ -133,6 +155,47 @@
 	const toggleExplore = () => {
 		exploreModeOn = !exploreModeOn;
 	}
+
+	const followStream = async () => {
+		let follow = {};
+
+		if (creator) {
+			follow.creatorId = creator._id;
+		}
+		
+		if (selectedProject?.slug) {
+			follow.projectId = selectedProject._id
+		}
+		
+		$follows = [{ ...selectedProject, followType: 'project' }, ...$follows];
+		
+		await post('follows', follow);
+	}
+
+	const unfollowStream = async () => {
+		let query = {};
+
+		if (selectedProject?.slug) {
+			query.projectId = selectedProject._id
+		}
+
+		if (creator) {
+			query.creatorId = creator._id;
+		} 
+		
+		await del('follows', query);
+
+		$follows = $follows.filter(f => f._id !== (query.projectId || query.creatorId));
+	}
+
+	let isExploreProjectsModeOn = false;
+
+	const toggleProjectsExploreMode = () => {
+		isExploreProjectsModeOn = !isExploreProjectsModeOn;
+		updateProjects({ isExplore: isExploreProjectsModeOn });
+		refreshFeed();
+	}
+
 </script>
 
 {#if !isProjectsLoading}
@@ -140,16 +203,24 @@
   <div>
     {#if selectedProject && !$page.url.href.includes('/embed')}
     <section class="relative flex justify-between mb-8">
-      <div class="flex items-center">
+      <div class="flex w-full items-center">
         <div>
-          <a class="flex items-center" href="/">				
-            <h1 class="text-xl font-bold" style="z-index: 100;">
-              {selectedProject.title}
-            </h1>
+					<div class="flex items-center w-full">
+						<h1 class="flex items-center text-xl font-bold" style="z-index: 100;">
+							{selectedProject.title}
+						</h1>
 
-						<!-- <button class="small ml-4"> Follow </button> -->
-          </a>
-
+						{#if $currentUser}
+							<div class="absolute right-0">
+								{#if selectedProject && $follows.find(f => f._id === selectedProject._id)}
+									<div class="font-bold text-sm cursor-pointer hover:underline ml-4" on:click={unfollowStream}>Following</div>
+								{:else}
+									<button class="small ml-4" on:click={followStream}> Follow </button>
+								{/if}
+							</div>
+						{/if}
+						
+					</div>
           <div class="text-lg mt-2" style="opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
             {selectedProject.description || ''}
           </div>
@@ -168,76 +239,86 @@
     {/if}
 
 		<div class="left-0" >
-			<label class="font-bold block mb-2">
-				Streams
-				{#if featuredProjects.length}
-				<span class="number-tag">{featuredProjects.length}</span>
+			<label class="flex justify-between items-center font-bold block mb-2">
+				<div>
+					{isExploreProjectsModeOn ? 'Explore' : ($currentUser && !creator ? 'My': '')} Streams
+					{#if projects?.length}
+					<span class="number-tag">{projects.length}</span>
+					{/if}
+				</div>
+
+				{#if $currentUser}
+				<a href="" class="font-bold text-sm hover:underline cursor-pointer" on:click={toggleProjectsExploreMode}>
+					{ isExploreProjectsModeOn ? 'See My' : 'Explore' }
+				</a>
 				{/if}
 			</label>
 
-      {#if !creator}
-        <a 
-          class="cursor-pointer _menu_item flex items-center py-2"
-					class:_selected="{!selectedProject?.slug}"
-          href="/"
-        >
-          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
-            #
-          </div>
-          All
-        </a>
-      {/if}
+			<div class="ml-[-9px]">
+				{#if !creator}
+					<a 
+						class="cursor-pointer _menu_item flex items-center py-2"
+						class:_selected="{!selectedProject?.slug}"
+						href="/"
+					>
+						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
+							#
+						</div>
+						All
+					</a>
+				{/if}
 
-      {#if $currentUser && !creator}
-        <a 
-          class="cursor-pointer _menu_item flex items-center py-2"
-					class:_selected="{!selectedProject?.slug && creator}"
-          href="/@{$currentUser.username}"
-        >
-          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
-            @
-          </div>
-          {$currentUser.fullName}
-        </a>
-      {/if}
+				{#if !isExploreProjectsModeOn && $currentUser && !creator}
+					<a 
+						class="cursor-pointer _menu_item flex items-center py-2"
+						class:_selected="{!selectedProject?.slug && creator}"
+						href="/@{$currentUser.username}"
+					>
+						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+							@
+						</div>
+						{$currentUser.fullName}
+					</a>
+				{/if}
 
-      {#if creator}
-        <a 
-          class="cursor-pointer _menu_item flex items-center py-2"
-					class:_selected="{!selectedProject?.slug && creator}"
-          href="/@{creator.username}"
-        >
-          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
-            @
-          </div>
-          {creator.fullName}
-        </a>
-      {/if}
+				{#if creator}
+					<a 
+						class="cursor-pointer _menu_item flex items-center py-2 "
+						class:_selected="{!selectedProject?.slug && creator}"
+						href="/@{creator.username}"
+					>
+						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+							@
+						</div>
+						{creator.fullName}
+					</a>
+				{/if}
 
-      {#if featuredProjects.length}
-        <div in:fade>
-          {#each featuredProjects as project}
-            <a 
-              class="cursor-pointer _menu_item flex items-center py-2" 
-              class:_selected="{selectedProject?.slug === project.slug}"
-              href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
-              style="border-color: {project.color}"
-            >
-              <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
-                #
-              </div>
-              {project.title}
-            </a>
-          {/each}
-        </div>
-			{/if}
+				{#if projects?.length}
+					<div in:fade>
+						{#each projects as project}
+							<a 
+								class="cursor-pointer _menu_item flex items-center py-2" 
+								class:_selected="{selectedProject?.slug === project.slug}"
+								href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
+								style="border-color: {project.color}"
+							>
+								<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
+									#
+								</div>
+								{project.title}
+							</a>
+						{/each}
+					</div>
+				{/if}
 
-			<div class="mt-8 w-full">
-				<a href="/launch" class="w-full">
-					<button class="w-full">
-						Launch Your #Stream
-					</button>
-				</a>
+				<div class="mt-8 w-full">
+					<a href="/launch" class="w-full">
+						<button class="w-full">
+							Launch Your #Stream
+						</button>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -384,11 +465,15 @@
     {/if}
 
 		<div class="left-0 mt-8" >
-			<label class="font-bold block mb-2">
-				Streams
-				{#if featuredProjects.length}
-				<span class="number-tag">{featuredProjects.length}</span>
+			<label class="flex justify-between font-bold block mb-2">
+				{$currentUser && !creator ? 'My': ''} Streams
+				{#if projects.length}
+				<span class="number-tag">{projects.length}</span>
 				{/if}
+
+				<div class="font-bold text-sm hover:underline">
+					Explore
+				</div>
 			</label>
 
       {#if !creator}
@@ -430,9 +515,9 @@
         </a>
       {/if}
 
-      {#if featuredProjects.length}
+      {#if projects.length}
         <div in:fade>
-          {#each featuredProjects as project}
+          {#each projects as project}
             <a 
               class="cursor-pointer _menu_item flex items-center py-2" 
               class:_selected="{selectedProject?.slug === project.slug}"
