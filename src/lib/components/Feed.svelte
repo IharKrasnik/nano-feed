@@ -313,7 +313,12 @@
 <div class="relative">
 	<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
 
-	<textarea class="pl-16 mb-4" placeholder="What have you created today?" rows="1" on:input={(e) => goto(`/write?title=${e.target.value}`)} />
+	<textarea class="pl-16 mb-4" placeholder="What have you created today?" rows="1" on:input={(e) => goto('/write', {
+		state: {
+			title: e.target.value,
+			projectSlug: selectedProject?.slug || ''
+		}
+	})} />
 </div>
 {/if}
 

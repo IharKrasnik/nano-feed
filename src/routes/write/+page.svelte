@@ -16,6 +16,7 @@
   
   import sources from '$lib/stores/sources';
   import currentUser from '$lib/stores/currentUser';
+  import { browser } from '$app/environment';
 
   let projects;
 	let isProjectsLoading = false;
@@ -28,6 +29,10 @@
 		try {
 			const { results } = await get('projects');
 			projects = results;
+      
+      if (browser && window.history.state.projectSlug) {
+        feedItem.projects = [projects.find(p => p.slug === history.state.projectSlug)];
+      }
 		} finally {
 			isProjectsLoading = false;
 		}
@@ -47,7 +52,7 @@
   let files = [];
   let addAttachmentClicked = false;
 
-  let startTitle = $page.url.searchParams.get('title');
+  let startTitle = browser ? window.history.state.title : null;
 
   function isValidHttpUrl(string) {
     let url;
