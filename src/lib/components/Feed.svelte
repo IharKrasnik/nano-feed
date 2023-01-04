@@ -1,6 +1,7 @@
 <script>
   import _ from 'lodash';
 	import { fly, fade } from 'svelte/transition'; 
+  import { goto } from '$app/navigation';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores'
 	import { API_URL } from '$lib/env';
@@ -145,6 +146,8 @@
             <h1 class="text-xl font-bold" style="z-index: 100;">
               {selectedProject.title}
             </h1>
+
+						<!-- <button class="small ml-4"> Follow </button> -->
           </a>
 
           <div class="text-lg mt-2" style="opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
@@ -241,15 +244,15 @@
 
 	<div class="hidden md:block fixed w-[250px]" style="margin-left: 590px;">
 		<div>
-    	<div class="mb-8">
+    	<div>
 				{#if $currentUser}
-					<a href="/write">
-						<button class="w-full flex items-center justify-center">
+					<!-- <a href="/write">
+						<button class="w-full mb-8 flex items-center justify-center">
 						<img src="{$currentUser.avatarUrl}" class="w-[20px] h-[20px] rounded-full mr-4" style="margin-left: -20px;">
 						Post a Moment</button>
-					</a>
+					</a> -->
 				{:else}
-					<a href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
+					<a class="mb-8" href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
 						<button class="flex items-center justify-center w-full">
 
             <svg class="mr-4" style="width: 20px; height: 20px; margin-left: -20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48"><defs><path id="a" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></defs><clipPath id="b"><use xlink:href="#a" overflow="visible"/></clipPath><path clip-path="url(#b)" fill="#FBBC05" d="M0 37V11l17 13z"/><path clip-path="url(#b)" fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"/><path clip-path="url(#b)" fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"/><path clip-path="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"/></svg>
@@ -277,7 +280,7 @@
 			</div> -->
 
       {#if !creator}
-			<div class="mt-8 w-full">
+			<div class="mt-[80px] w-full">
 				<label class="font-bold block mb-2">
 					Creators
 					{#if $creators?.length}
@@ -303,15 +306,23 @@
   <div>
 </div>
 
-	{#key feed}
-		{#if feed.length > 0}
-		<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
-			{#each feed as feedItem}
-				<FeedItem feedItem={feedItem}></FeedItem>
-			{/each}
-		</div>
-		{/if}
-	{/key}
+{#if !creator || creator._id === $currentUser._id}
+<div class="relative">
+	<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
+
+	<textarea class="pl-16 mb-4" placeholder="What have you created today?" rows="1" on:input={(e) => goto(`/write?title=${e.target.value}`)} />
+</div>
+{/if}
+
+{#key feed}
+	{#if feed.length > 0}
+	<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
+		{#each feed as feedItem}
+			<FeedItem feedItem={feedItem}></FeedItem>
+		{/each}
+	</div>
+	{/if}
+{/key}
 </div>
 
 <div class="md:hidden flex items-center justify-center" style="
