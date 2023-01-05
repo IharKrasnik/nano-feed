@@ -58,7 +58,7 @@
 			}
 		}
 
-if (!prevProjects) {
+		if (!prevProjects) {
 			let projectSlugFromUrl = $page.url.hash && $page.url.hash.replace('#', '');
 
 			if (projectSlugFromUrl) {
@@ -69,31 +69,22 @@ if (!prevProjects) {
 				} else {
 					projects = null;
 					toggleProjectsExploreMode();
-					// updateProjects({ projectSlug: projectSlugFromUrl })
-						// .then(() => setProject(projects.find(p => p.slug === projectSlugFromUrl)))
 				}
 			} else {
 				setProject(getDefaultProject());
 			}
-		}
+		} 
 	}
 
-	// $: if ($page.url.hash && projects) {
-	// 	let project = projects.find(p => p.slug === $page.url.hash.replace('#', ''));
-		
-	// 	if (project) {
-	// 		setProject(project);
-	// 	} else {
-	// 		updateProjects({ projectSlug: $page.url.hash.replace('#', '') })
-	// 			.then(() => setProject(projects.find(p => p.slug === $page.url.hash.replace('#', ''))))
-	// 	}
-	// } 
-	
-	// $: if (!$page.url.hash) {
-	// 	if ($page.url.pathname === '/' || $page.url.pathname.startsWith('/@')) {
-	// 		setProject(getDefaultProject());
-	// 	}
-	// }
+	let prevHash = $page.url.hash;
+
+	$: if (!$page.url.hash) {
+		setTimeout(() => {
+			if (!$page.url.hash && selectedProject?.slug) {
+				setProject();
+			}
+		}, 0);
+	}
 
 	const checkAndUpdateProjects = async (usernameCopy) => {
 		if (usernameCopy) {
@@ -140,8 +131,8 @@ if (!prevProjects) {
 			description: creator.tagline || `A feed from ${creator.fullName}`
 		} : {
 			slug: null,
-			title: $currentUser ? 'My Feed': 'Momentum Feed',
-			description: $currentUser ? 'Latest updates from my Momentum streams' : 'Latest updates from Momentum streams'
+			title: isExploreProjectsModeOn ? 'Explore Momentum' : ($currentUser ? 'My Feed': 'Momentum Feed'),
+			description: isExploreProjectsModeOn ? `Updates from streams that you don't follow yet.` : ($currentUser ? 'Latest updates from my Momentum streams' : 'Latest updates from Momentum streams'),
 		}
 	}
  
@@ -218,7 +209,6 @@ if (!prevProjects) {
 	let isExploreProjectsModeOn = false;
 
 	const toggleProjectsExploreMode = () => {
-		debugger;
 		isExploreProjectsModeOn = !isExploreProjectsModeOn;
 		updateProjects({ isExplore: isExploreProjectsModeOn });
 		refreshFeed();
@@ -361,6 +351,7 @@ if (!prevProjects) {
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 						class:_selected="{!selectedProject?.slug && !creator }"
 						href="/"
+						on:click={() => setProject()}
 					>
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
 							#
@@ -463,7 +454,6 @@ if (!prevProjects) {
 </div>
 
 {#if !isProjectsLoading}
-
 	{#if $currentUser && (!creator || creator._id === $currentUser._id)}
 		<div class="relative">
 			<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
