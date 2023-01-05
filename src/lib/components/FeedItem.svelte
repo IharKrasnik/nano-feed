@@ -95,14 +95,10 @@
         </div>
  
          <div class="overflow-x-scroll mx-4">
-          {#each (feedItem.projects || []) as project}
+          {#each (feedItem.projects || []).filter(p => !p.isHub) as project}
             <a class="hover:underline mr-4 opacity-90" href="/#{project.slug}">
-              <!-- {#if project.emoji} -->
-              <!-- {:else} -->
-                <span style="color: {project.color};">#</span>
-              <!-- {/if} -->
+              <span style="color: {project.color};">#</span>
               {project.title} 
-                <!-- {project.emoji||''} -->
             </a>
           {/each}
         </div>

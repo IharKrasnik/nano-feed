@@ -210,8 +210,10 @@
       updatedFeedItem = await post('feed', feedItem);
     }
 
-    if (updatedFeedItem.projects[0]){
-      goto(`/#${updatedFeedItem.projects[0].slug}`);
+    let projects = (updatedFeedItem.projects || []).filter(p => !p.isHub);
+    
+    if (projects[0]){
+      goto(`/#${projects[0].slug}`);
     } else if (updatedFeedItem.creators[0]) {
       goto(`/@${updatedFeedItem.creators[0].username}`);
     } else {
