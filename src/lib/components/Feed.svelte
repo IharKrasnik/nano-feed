@@ -229,11 +229,19 @@
 		</div>
 
 	<div 
-		class="fixed top-0 left-0 md:left-auto md:ml-[-325px] w-full md:w-[300px] {isExploreModeOn ? '' : 'hidden md:block'} bg-black" 
-		style="height: 100vh; overflow-y: scroll; padding-left: 5px; z-index: 1002;"
+		class="fixed top-0 left-0 md:left-auto md:ml-[-325px] w-full md:w-[250px] bg-black { isExploreModeOn ? 'visible opacity-100': 'invisible md:visible opacity-0 md:opacity-100' }" 
+		style="height: 100vh; overflow-y: scroll; padding-left: 5px; z-index: {isExploreModeOn ? 1200: 0}; transition: all 0.1s linear;"
 	>
-		<div class="relative left-0 p-8 md:p-auto" >
-			<div class="relative">
+		{#if isExploreModeOn}
+			<button
+				class="w-[60px] h-[60px] text-[30px] rounded-full flex items-center justify-center border-none fixed bg-black right-4 top-4 font-xl z-10"
+				on:click|preventDefault={toggleExplore}>
+				⤬
+			</button>
+		{/if}
+
+		<div class="relative left-0 p-8 md:p-0" >
+			<div class="relative pt-16 md:pt-32">
 				<div>
 					<a 
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"

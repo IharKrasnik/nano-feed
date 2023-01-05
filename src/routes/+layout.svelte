@@ -26,7 +26,7 @@
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative mx-auto p-8 max-w-[600px]'} mt-[45px] md:mt-0" >
 			<div class="fixed md:ml-[-320px] px-8 py-4 md:px-0 md:py-8 top-0 left-0 md:left-auto w-full md:w-auto mb-8 bg-black md:bg-transparent" 
 				style="opacity: .95;
-							z-index: 1001;">
+							z-index: 1111;">
 				<a href="/" class="mb-8">
 					<h1 class="flex justify-between items-center text-xl font-bold" style="z-index: 100;">
 						<svg style="width: 150px; height: 30px; margin-left: -15px;" width="659" height="155" viewBox="0 0 659 155" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +63,7 @@
 			height: 60px;
 			border: 1px solid rgba(255, 255, 255, 0.8);
 			border-radius: 50%;
-			z-index: 1001;
+			z-index: 1111;
 			background-color: black;
 			box-shadow: 0px 0px 6px #c2daba;
 			font-size: 30px;
