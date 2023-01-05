@@ -29,6 +29,8 @@
 	let isCreatorLoading = false;
 
 	const updateProjects = async ({ projectSlug, creatorUsername, isExplore = false }) => {
+		let prevProjects = projects;
+
 		if (!creatorUsername && !isExplore && !projectSlug) {
 			projects = $follows.filter(f => f.followType === 'project');
 		} else {
@@ -55,22 +57,43 @@
 				isProjectsLoading = false;
 			}
 		}
+
+if (!prevProjects) {
+			let projectSlugFromUrl = $page.url.hash && $page.url.hash.replace('#', '');
+
+			if (projectSlugFromUrl) {
+				let project = projects.find(p => p.slug === projectSlugFromUrl);
+				
+				if (project) {
+					setProject(project);
+				} else {
+					projects = null;
+					toggleProjectsExploreMode();
+					// updateProjects({ projectSlug: projectSlugFromUrl })
+						// .then(() => setProject(projects.find(p => p.slug === projectSlugFromUrl)))
+				}
+			} else {
+				setProject(getDefaultProject());
+			}
+		}
 	}
 
-	$: if ($page.url.hash && projects) {
-		let project = projects.find(p => p.slug === $page.url.hash.replace('#', ''));
+	// $: if ($page.url.hash && projects) {
+	// 	let project = projects.find(p => p.slug === $page.url.hash.replace('#', ''));
 		
-		if (project) {
-			setProject(project);
-		} else {
-			updateProjects({ projectSlug: $page.url.hash.replace('#', '') })
-				.then(() => setProject(projects.find(p => p.slug === $page.url.hash.replace('#', ''))))
-		}
-	} else {
-		if ($page.url.pathname === '/' || $page.url.pathname.startsWith('/@')) {
-			setProject(getDefaultProject());
-		}
-	}
+	// 	if (project) {
+	// 		setProject(project);
+	// 	} else {
+	// 		updateProjects({ projectSlug: $page.url.hash.replace('#', '') })
+	// 			.then(() => setProject(projects.find(p => p.slug === $page.url.hash.replace('#', ''))))
+	// 	}
+	// } 
+	
+	// $: if (!$page.url.hash) {
+	// 	if ($page.url.pathname === '/' || $page.url.pathname.startsWith('/@')) {
+	// 		setProject(getDefaultProject());
+	// 	}
+	// }
 
 	const checkAndUpdateProjects = async (usernameCopy) => {
 		if (usernameCopy) {
@@ -117,8 +140,8 @@
 			description: creator.tagline || `A feed from ${creator.fullName}`
 		} : {
 			slug: null,
-			title: 'Paralect',
-			description: 'A feed from Paralect creators'
+			title: $currentUser ? 'My Feed': 'Momentum Feed',
+			description: $currentUser ? 'Latest updates from my Momentum streams' : 'Latest updates from Momentum streams'
 		}
 	}
  
@@ -195,6 +218,7 @@
 	let isExploreProjectsModeOn = false;
 
 	const toggleProjectsExploreMode = () => {
+		debugger;
 		isExploreProjectsModeOn = !isExploreProjectsModeOn;
 		updateProjects({ isExplore: isExploreProjectsModeOn });
 		refreshFeed();
@@ -216,7 +240,7 @@
 								<div class="absolute right-0">
 									{#if selectedProject && $follows.find(f => f._id === selectedProject._id)}
 										<div class="font-bold text-sm cursor-pointer hover:underline ml-4" on:click={unfollowStream}>Following</div>
-									{:else}
+									{:else if selectedProject?.slug}
 										<button class="small ml-4" on:click={followStream}> Follow </button>
 									{/if}
 								</div>
@@ -248,9 +272,15 @@
 				<div>
 					<a 
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
-						class:_selected="{!selectedProject?.slug && !isExploreProjectsModeOn && (!creator || (creator?._id !== selectedProject?._id)) }"
+						class:_selected="{!selectedProject?.slug && !isExploreProjectsModeOn && !isCreatorLoading && (!creator || (creator?._id !== selectedProject?._id)) }"
 						href="/"
-						on:click={isExploreProjectsModeOn && toggleProjectsExploreMode}
+						on:click={() => {
+							setProject();
+
+							if (isExploreProjectsModeOn) {
+								toggleProjectsExploreMode();
+							}
+						}}
 					>
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
 							🌀
@@ -262,6 +292,7 @@
 						<a 
 							class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 							class:_selected="{selectedProject?._id === $currentUser._id}"
+							on:click={() => setProject()}
 							href="/@{$currentUser.username}"
 						>
 							<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
@@ -294,14 +325,17 @@
 						<div>
 							{isExploreProjectsModeOn ? 'Explore Streams' : ($currentUser && !creator ? 'My Streams': '')}
 							{creator ? `Contributions` :''}
-							{(!$currentUser && 'Explore Streams') || ''}
+							{(!$currentUser && !creator && 'Explore Streams') || ''}
 							{#if projects?.length}
 							<span class="number-tag">{projects.length}</span>
 							{/if}
 						</div>
 
 						{#if !creator && $currentUser}
-						<a href="" class="font-bold text-sm hover:underline cursor-pointer" on:click={toggleProjectsExploreMode}>
+						<a href="/" class="font-bold text-sm hover:underline cursor-pointer" on:click={() => {
+							 toggleProjectsExploreMode();
+							 setProject();
+						}}>
 							{ isExploreProjectsModeOn ? 'Show my' : '👀  Explore' }
 						</a>
 						{/if}
@@ -313,6 +347,7 @@
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 						class:_selected={selectedProject?._id === creator._id}
 						href="/@{creator.username}"
+						on:click={() => setProject()}
 					>
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: rgb(208, 145, 255); opacity: .7;">
 							@
@@ -344,6 +379,7 @@
 										class:_selected="{selectedProject?.slug === project.slug}"
 										href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
 										style="border-color: {project.color}"
+										on:click={() => setProject(project)}
 									>
 										<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
 											#
