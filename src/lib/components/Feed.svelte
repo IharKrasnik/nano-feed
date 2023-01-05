@@ -230,13 +230,13 @@
 			</section>
 		</div>
 
-	<div class="fixed w-[250px] ml-[-300px]">
+	<div class="fixed top-0 mt-32 w-[250px] ml-[-325px]" style="height: 100vh; overflow-y: scroll; padding-left: 5px;">
 		<div class="relative left-0" >
-			<div class="relative ml-[-9px]">
+			<div class="relative">
 				<div>
 					<a 
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
-						class:_selected="{!selectedProject?.slug && (!creator || (creator?._id !== selectedProject?._id)) }"
+						class:_selected="{!selectedProject?.slug && !isExploreProjectsModeOn && (!creator || (creator?._id !== selectedProject?._id)) }"
 						href="/"
 						on:click={isExploreProjectsModeOn && toggleProjectsExploreMode}
 					>
@@ -268,7 +268,7 @@
 					</a>
 				</div> -->
 
-				<div class="mt-8">
+				<div class="mt-16">
 					{#if creator}
 						<h2 
 							class="flex items-center py-2 mt-16 text-lg"
@@ -288,7 +288,7 @@
 
 						{#if !creator && $currentUser}
 						<a href="" class="font-bold text-sm hover:underline cursor-pointer" on:click={toggleProjectsExploreMode}>
-							{ isExploreProjectsModeOn ? 'See My' : 'Explore' }
+							{ isExploreProjectsModeOn ? 'Show my' : '👀  Explore' }
 						</a>
 						{/if}
 					</div>
@@ -306,9 +306,22 @@
 						{creator.fullName}
 					</a>
 				{/if}
+
+				{#if isExploreProjectsModeOn}
+				<a 
+						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
+						class:_selected="{!selectedProject?.slug && !creator }"
+						href="/"
+					>
+						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
+							#
+						</div>
+						All Streams
+				</a>
+				{/if}
 				
 	      {#if !isProjectsLoading && projects.length}
-					<div>
+					<div class="pb-[200px]">
 						{#if projects?.length}
 							<div in:fade>
 								{#each projects as project}
@@ -336,7 +349,7 @@
 	</div>
 </div>
 
-	<div class="hidden md:block fixed w-[250px] mt-6 top-0" style="margin-left: 590px;">
+	<div class="hidden md:block fixed w-[250px] mt-6 top-0" style="margin-left: 605px;">
 			<!-- {#if creator}
 				<div class="flex items-center mb-8 font-bold">
 					<img class="w-[40px] h-40[px] rounded-full mr-4" src={creator.avatarUrl}/>
