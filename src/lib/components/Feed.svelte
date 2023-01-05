@@ -187,6 +187,10 @@
 		
 		$follows = [{ ...selectedProject, followType: 'project' }, ...$follows];
 		
+		if (!projects.find(p => p._id === selectedProject._id)) {
+			projects = [selectedProject, ...projects];
+		}
+		
 		await post('follows', follow);
 	}
 
@@ -201,9 +205,13 @@
 			query.creatorId = creator._id;
 		} 
 		
-		await del('follows', query);
-
 		$follows = $follows.filter(f => f._id !== (query.projectId || query.creatorId));
+		
+		if (!isExploreProjectsModeOn) {
+			projects = projects.filter(p => p._id !== (query.projectId || query.creatorId));
+		}
+		
+		await del('follows', query);
 	}
 
 	let isExploreProjectsModeOn = false;
