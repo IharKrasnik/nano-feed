@@ -16,6 +16,7 @@ export default async ({ url }) => {
 
 		if (!user && accessToken) {
 			let api = apiServerSide({ accessToken });
+			isUserLoading.set(true);
 
 			try {
 				user = await api.get('users/current');
@@ -29,6 +30,7 @@ export default async ({ url }) => {
 			throw redirect(302, `${API_URL}/auth/google/url?redirect_to=${url.href}`);
 		}
 	}
+
 	isUserLoading.set(false);
 
 	return {};

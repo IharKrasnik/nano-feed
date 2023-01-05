@@ -12,7 +12,7 @@
 	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
 
-	import currentUser from '$lib/stores/currentUser'; 
+	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser'; 
 	import follows from '$lib/stores/follows';
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 	import creators, { update as updateCreators } from '$lib/stores/creators';
@@ -63,9 +63,12 @@
 			if (usernameCopy !== prevCreator?.username) {
 				isCreatorLoading = true;
 				updateProjects({ creatorUsername: usernameCopy });
-
-				creator = await get(`creators/${usernameCopy}`)
-
+				debugger;
+				if (usernameCopy !== $currentUser?.username) {
+					creator = await get(`creators/${usernameCopy}`)
+				} else {
+					creator = $currentUser;
+				}
 				prevCreator = _.clone(creator);
 
 				isCreatorLoading = false;
@@ -123,6 +126,7 @@
 
   const setProject = (newProject = getDefaultProject()) => {
     if (!selectedProject || selectedProject?.slug !== newProject?.slug) {
+			debugger;
       selectedProject = newProject;
 		  refreshFeed();
     }
@@ -197,132 +201,148 @@
 
 </script>
 
-{#if !isProjectsLoading}
-<div>
-  <div>
-    {#if selectedProject && !$page.url.href.includes('/embed')}
-    <section class="relative flex justify-between mb-8">
-      <div class="flex w-full items-center">
-        <div>
-					<div class="flex items-center w-full">
-						<h1 class="flex items-center text-xl font-bold" style="z-index: 100;">
-							{selectedProject.title}
-						</h1>
+	<div>
+		<div>
+			<section class="relative flex justify-between mb-8">
+				<div class="flex w-full items-center">
+					<div>
+						<div class="flex items-center w-full">
+							<h1 class="flex items-center text-xl font-bold" style="z-index: 100;">
+								{selectedProject?.title || '...'}
+							</h1>
 
-						{#if $currentUser}
-							<div class="absolute right-0">
-								{#if selectedProject && $follows.find(f => f._id === selectedProject._id)}
-									<div class="font-bold text-sm cursor-pointer hover:underline ml-4" on:click={unfollowStream}>Following</div>
-								{:else}
-									<button class="small ml-4" on:click={followStream}> Follow </button>
-								{/if}
-							</div>
-						{/if}
-						
+							{#if $currentUser}
+								<div class="absolute right-0">
+									{#if selectedProject && $follows.find(f => f._id === selectedProject._id)}
+										<div class="font-bold text-sm cursor-pointer hover:underline ml-4" on:click={unfollowStream}>Following</div>
+									{:else}
+										<button class="small ml-4" on:click={followStream}> Follow </button>
+									{/if}
+								</div>
+							{/if}
+							
+						</div>
+						<div class="text-lg mt-2" style="opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
+							{selectedProject?.description || '...'}
+						</div>
 					</div>
-          <div class="text-lg mt-2" style="opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
-            {selectedProject.description || ''}
-          </div>
-        </div>
-      </div>
-    </section>
-    {/if}
-  </div>
+				</div>
+			</section>
+		</div>
 
 	<div class="fixed w-[250px] ml-[-300px]">
-    {#if creator}
-      <div class="flex items-center mb-8 font-bold">
-        <img class="w-[40px] h-40[px] rounded-full mr-4" src={creator.avatarUrl}/>
-        {creator.fullName}
-      </div>
-    {/if}
-
-		<div class="left-0" >
-			<label class="flex justify-between items-center font-bold block mb-2">
+		<div class="relative left-0" >
+			<div class="relative ml-[-9px]">
 				<div>
-					{isExploreProjectsModeOn ? 'Explore' : ($currentUser && !creator ? 'My': '')} Streams
-					{#if projects?.length}
-					<span class="number-tag">{projects.length}</span>
+					<a 
+						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
+						class:_selected="{!selectedProject?.slug && (!creator || (creator?._id !== selectedProject?._id)) }"
+						href="/"
+						on:click={isExploreProjectsModeOn && toggleProjectsExploreMode}
+					>
+						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
+							🌀
+						</div>
+						My Feed
+					</a>
+
+					{#if $currentUser}
+						<a 
+							class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
+							class:_selected="{selectedProject?._id === $currentUser._id}"
+							href="/@{$currentUser.username}"
+						>
+							<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+								@
+							</div>
+							{$currentUser.fullName}
+						</a>
 					{/if}
 				</div>
 
-				{#if $currentUser}
-				<a href="" class="font-bold text-sm hover:underline cursor-pointer" on:click={toggleProjectsExploreMode}>
-					{ isExploreProjectsModeOn ? 'See My' : 'Explore' }
-				</a>
-				{/if}
-			</label>
-
-			<div class="ml-[-9px]">
-				{#if !creator}
-					<a 
-						class="cursor-pointer _menu_item flex items-center py-2"
-						class:_selected="{!selectedProject?.slug}"
-						href="/"
-					>
-						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
-							#
-						</div>
-						All
-					</a>
-				{/if}
-
-				{#if !isExploreProjectsModeOn && $currentUser && !creator}
-					<a 
-						class="cursor-pointer _menu_item flex items-center py-2"
-						class:_selected="{!selectedProject?.slug && creator}"
-						href="/@{$currentUser.username}"
-					>
-						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
-							@
-						</div>
-						{$currentUser.fullName}
-					</a>
-				{/if}
-
-				{#if creator}
-					<a 
-						class="cursor-pointer _menu_item flex items-center py-2 "
-						class:_selected="{!selectedProject?.slug && creator}"
-						href="/@{creator.username}"
-					>
-						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
-							@
-						</div>
-						{creator.fullName}
-					</a>
-				{/if}
-
-				{#if projects?.length}
-					<div in:fade>
-						{#each projects as project}
-							<a 
-								class="cursor-pointer _menu_item flex items-center py-2" 
-								class:_selected="{selectedProject?.slug === project.slug}"
-								href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
-								style="border-color: {project.color}"
-							>
-								<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
-									#
-								</div>
-								{project.title}
-							</a>
-						{/each}
-					</div>
-				{/if}
-
-				<div class="mt-8 w-full">
+				<!-- <div class="mt-8 w-full">
 					<a href="/launch" class="w-full">
 						<button class="w-full">
 							Launch Your #Stream
 						</button>
 					</a>
+				</div> -->
+
+				<div class="mt-8">
+					{#if creator}
+						<h2 
+							class="flex items-center py-2 mt-16 text-lg"
+						>
+							{creator.fullName}
+							<img src={creator.avatarUrl} class="w-[30px] h-[30px] rounded-full inline ml-4 mr-[13px] my-2" />
+						</h2>
+					{/if}
+
+					<div class="flex justify-between items-center font-bold block mt-8 mb-4">
+						<div>
+							{isExploreProjectsModeOn ? 'Explore Streams' : ($currentUser && !creator ? 'My Streams': '')}{creator ? `Contributions` :''}
+							{#if projects?.length}
+							<span class="number-tag">{projects.length}</span>
+							{/if}
+						</div>
+
+						{#if !creator && $currentUser}
+						<a href="" class="font-bold text-sm hover:underline cursor-pointer" on:click={toggleProjectsExploreMode}>
+							{ isExploreProjectsModeOn ? 'See My' : 'Explore' }
+						</a>
+						{/if}
+					</div>
 				</div>
+
+				{#if creator && creator._id !== $currentUser?._id}
+					<a 
+						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
+						class:_selected={selectedProject?._id === creator._id}
+						href="/@{creator.username}"
+					>
+						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: rgb(208, 145, 255); opacity: .7;">
+							@
+						</div>
+						{creator.fullName}
+					</a>
+				{/if}
+				
+	      {#if !isProjectsLoading && projects.length}
+					<div>
+						{#if projects?.length}
+							<div in:fade>
+								{#each projects as project}
+									<a 
+										class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]" 
+										class:_selected="{selectedProject?.slug === project.slug}"
+										href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
+										style="border-color: {project.color}"
+									>
+										<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
+											#
+										</div>
+										{project.title}
+									</a>
+								{/each}
+							</div>
+						{/if}
+					</div>
+				{/if}
+
+			
 			</div>
+
 		</div>
 	</div>
+</div>
 
-	<div class="hidden md:block fixed w-[250px]" style="margin-left: 590px;">
+	<div class="hidden md:block fixed w-[250px] mt-6 top-0" style="margin-left: 590px;">
+			<!-- {#if creator}
+				<div class="flex items-center mb-8 font-bold">
+					<img class="w-[40px] h-40[px] rounded-full mr-4" src={creator.avatarUrl}/>
+					{creator.fullName}
+				</div>
+			{/if} -->
 		<div>
     	<div>
 				{#if $currentUser}
@@ -360,7 +380,7 @@
 			</div> -->
 
       {#if !creator}
-			<div class="mt-[80px] w-full">
+			<div class="w-full">
 				<label class="font-bold block mb-2">
 					Creators
 					{#if $creators?.length}
@@ -389,6 +409,8 @@
   <div>
 </div>
 
+{#if !isProjectsLoading}
+
 {#if $currentUser && (!creator || creator._id === $currentUser._id)}
 <div class="relative">
 	<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
@@ -411,7 +433,6 @@
 	</div>
 	{/if}
 {/key}
-</div>
 
 <div class="md:hidden flex items-center justify-center" style="
 	position: fixed;
@@ -514,7 +535,7 @@
         </a>
       {/if}
 
-      {#if projects.length}
+      {#if !isProjectsLoading && projects.length}
         <div in:fade>
           {#each projects as project}
             <a 

@@ -1,6 +1,9 @@
 import { writable } from 'svelte/store';
 import { get } from '$lib/api';
-import currentUser from '$lib/stores/currentUser';
+import { get as getFromStore } from 'svelte/store';
+import { browser } from '$app/environment';
+
+import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
 
 const followsStore = writable(null);
 
@@ -15,15 +18,17 @@ export const update = async ({} = {}) => {
 
 let prevUser;
 
-currentUser.subscribe((user) => {
-	if (user) {
-		if (prevUser?._id !== user._id) {
+if (browser) {
+	currentUser.subscribe((user) => {
+		if (user) {
+			if (prevUser?._id !== user._id) {
+				update();
+				prevUser = user;
+			}
+		} else if (!getFromStore(isUserLoading)) {
 			update();
-			prevUser = user;
 		}
-	} else {
-		update();
-	}
-});
+	});
+}
 
 export default followsStore;

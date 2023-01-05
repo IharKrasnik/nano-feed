@@ -1,11 +1,7 @@
 import { writable } from 'svelte/store';
 
-const currentUserStore = writable(null);
+const currentUserStore = writable(undefined);
 
-// socketIoService.on('user:updated', (user) => {
-// 	currentUserStore.set(user);
-// });
-
-export let isLoading = writable(true);
+export let isLoading = writable(false);
 
 export default currentUserStore;
