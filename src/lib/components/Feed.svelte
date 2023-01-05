@@ -210,7 +210,7 @@
 		if (!isExploreProjectsModeOn) {
 			projects = projects.filter(p => p._id !== (query.projectId || query.creatorId));
 		}
-		
+
 		await del('follows', query);
 	}
 
@@ -330,12 +330,12 @@
 						</div>
 
 						{#if !creator && $currentUser}
-						<a href="/" class="font-bold text-sm hover:underline cursor-pointer" on:click={() => {
+						<button href="/" class="small font-bold text-sm hover:underline cursor-pointer" on:click={() => {
 							 toggleProjectsExploreMode();
 							 setProject();
 						}}>
-							{ isExploreProjectsModeOn ? 'Show my' : '👀  Explore' }
-						</a>
+							{ isExploreProjectsModeOn ? 'x' : '👀  Explore' }
+						</button>
 						{/if}
 					</div>
 				</div>
