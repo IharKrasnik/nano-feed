@@ -63,7 +63,6 @@
 			if (usernameCopy !== prevCreator?.username) {
 				isCreatorLoading = true;
 				updateProjects({ creatorUsername: usernameCopy });
-				debugger;
 				if (usernameCopy !== $currentUser?.username) {
 					creator = await get(`creators/${usernameCopy}`)
 				} else {
@@ -113,7 +112,7 @@
 
 	let refreshFeed = async () => {
     feed = [];
-		exploreModeOn = false;
+		isExploreModeOn = false;
 
 		feed = await fetchFeed({ source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username, isExplore: isExploreProjectsModeOn });
 
@@ -126,7 +125,6 @@
 
   const setProject = (newProject = getDefaultProject()) => {
     if (!selectedProject || selectedProject?.slug !== newProject?.slug) {
-			debugger;
       selectedProject = newProject;
 		  refreshFeed();
     }
@@ -153,10 +151,10 @@
 
 	onDestroy(() => clearInterval(shuffleInterval));
     
-	let exploreModeOn = false;
+	let isExploreModeOn = false;
 	
 	const toggleExplore = () => {
-		exploreModeOn = !exploreModeOn;
+		isExploreModeOn = !isExploreModeOn;
 	}
 
 	const followStream = async () => {
@@ -230,8 +228,11 @@
 			</section>
 		</div>
 
-	<div class="fixed top-0 mt-32 w-[250px] ml-[-325px]" style="height: 100vh; overflow-y: scroll; padding-left: 5px;">
-		<div class="relative left-0" >
+	<div 
+		class="fixed top-0 left-0 md:left-auto md:ml-[-325px] w-full md:w-[300px] {isExploreModeOn ? '' : 'hidden md:block'} bg-black" 
+		style="height: 100vh; overflow-y: scroll; padding-left: 5px; z-index: 1002;"
+	>
+		<div class="relative left-0 p-8 md:p-auto" >
 			<div class="relative">
 				<div>
 					<a 
@@ -466,7 +467,7 @@
 	#
 </div>
 
-{#if exploreModeOn}
+<!-- {#if isExploreModeOn}
 	<div class="fixed overflow-y-scroll w-full h-screen left-0 top-0 p-8 bg-black" style="z-index: 1001;" in:fade={{ duration: 100 }}>
 		<button class="w-[60px] h-[60px] text-[30px] rounded-full flex items-center justify-center border-none fixed bg-black right-4 top-4 font-xl" on:click|preventDefault={toggleExplore}>
 			⤬
@@ -577,7 +578,7 @@
 			</div>
 		</div>
 	</div>
-{/if}
+{/if} -->
 
 {/if}
 
