@@ -7,6 +7,7 @@ export let filterQuery = writable(null);
 
 export const update = async ({
 	projectSlug = null,
+	isExplore = false,
 	sort = 'createdOn',
 	sortDirection = 'descending'
 } = {}) => {
@@ -14,6 +15,10 @@ export const update = async ({
 
 	if (projectSlug) {
 		query.projectSlug = projectSlug;
+	}
+
+	if (isExplore) {
+		query.isExplore = isExplore;
 	}
 
 	await get('creators', query).then(({ results: creators }) => {

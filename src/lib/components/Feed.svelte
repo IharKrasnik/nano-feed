@@ -31,30 +31,44 @@
 	const updateProjects = async ({ projectSlug, creatorUsername, isExplore = false }) => {
 		if (!creatorUsername && !isExplore && !projectSlug) {
 			projects = $follows.filter(f => f.followType === 'project');
-			return;
-		}
+		} else {
+			let query = {};
 
-		let query = {};
+			if (creatorUsername) {
+				query.creatorUsername = creatorUsername;
+			}
 
-		if (creatorUsername) {
-			query.creatorUsername = creatorUsername;
-		}
+			if (isExplore) {
+				query.isExplore = true;
+			}
+			
+			if (projectSlug) {
+				query.projectSlug = projectSlug;
+			}
 
-		if (isExplore) {
-			query.isExplore = true;
+			isProjectsLoading = true;
+			
+			try {
+				const { results } = await get('projects', query);
+				projects = results;
+			} finally {
+				isProjectsLoading = false;
+			}
 		}
+	}
+
+	$: if ($page.url.hash && projects) {
+		let project = projects.find(p => p.slug === $page.url.hash.replace('#', ''));
 		
-		if (projectSlug) {
-			query.projectSlug = projectSlug;
+		if (project) {
+			setProject(project);
+		} else {
+			updateProjects({ projectSlug: $page.url.hash.replace('#', '') })
+				.then(() => setProject(projects.find(p => p.slug === $page.url.hash.replace('#', ''))))
 		}
-
-		isProjectsLoading = true;
-		
-		try {
-			const { results } = await get('projects', query);
-			projects = results;
-		} finally {
-			isProjectsLoading = false;
+	} else {
+		if ($page.url.pathname === '/' || $page.url.pathname.startsWith('/@')) {
+			setProject(getDefaultProject());
 		}
 	}
 
@@ -72,7 +86,7 @@
 
 				isCreatorLoading = false;
 			}
-		} else {
+		} else if ($page.url.pathname === '/') {
 			creator = null;
 
 			if (prevCreator !== null ) {
@@ -117,7 +131,7 @@
 		feed = await fetchFeed({ source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username, isExplore: isExploreProjectsModeOn });
 
 		if (!creator) {
-			updateCreators({ projectSlug: selectedProject?.slug });
+			updateCreators({ projectSlug: selectedProject?.slug, isExplore: isExploreProjectsModeOn });
 		} else {
 			$creators = [];
 		}
@@ -130,26 +144,15 @@
     }
   }
 
-	$: if (projects && !isCreatorLoading) {
-		if ($page.url.hash) {
-			let project = projects.find(p => p.slug === $page.url.hash.replace('#', ''));
-			
-			if (project) {
-				setProject(project);
-			} else {
-				updateProjects({ projectSlug: $page.url.hash.replace('#', '') })
-					.then(() => setProject(projects.find(p => p.slug === $page.url.hash.replace('#', ''))))
-			}
-		} else {
-			setProject(getDefaultProject());
-		}
-	}
-
 	const shuffleInterval = setInterval(() => {
 		shuffleCreators();
 	}, 10000);
 
-	onDestroy(() => clearInterval(shuffleInterval));
+
+	onDestroy(() => {
+		feed = [];
+		clearInterval(shuffleInterval)
+	});
     
 	let isExploreModeOn = false;
 	
@@ -361,20 +364,10 @@
 </div>
 
 	<div class="hidden md:block fixed w-[250px] mt-6 top-0" style="margin-left: 605px;">
-			<!-- {#if creator}
-				<div class="flex items-center mb-8 font-bold">
-					<img class="w-[40px] h-40[px] rounded-full mr-4" src={creator.avatarUrl}/>
-					{creator.fullName}
-				</div>
-			{/if} -->
 		<div>
     	<div>
 				{#if $currentUser}
-					<!-- <a href="/write">
-						<button class="w-full mb-8 flex items-center justify-center">
-						<img src="{$currentUser.avatarUrl}" class="w-[20px] h-[20px] rounded-full mr-4" style="margin-left: -20px;">
-						Post a Moment</button>
-					</a> -->
+				
 				{:else}
 					<a class="mb-16" href="{API_URL}/auth/google/url?redirect_to={$page.url.href}" style="font-family: Montserrat; font-weight: bold;">
 						<button class="flex items-center justify-center w-full mb-8">
@@ -435,20 +428,19 @@
 
 {#if !isProjectsLoading}
 
-{#if $currentUser && (!creator || creator._id === $currentUser._id)}
-<div class="relative">
-	<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
+	{#if $currentUser && (!creator || creator._id === $currentUser._id)}
+		<div class="relative">
+			<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
 
-	<textarea class="pl-16 mb-4" placeholder="What have you created today?" rows="1" on:input={(e) => goto('/write', {
-		state: {
-			title: e.target.value,
-			projectSlug: selectedProject?.slug || ''
-		}
-	})} />
-</div>
-{/if}
+			<textarea class="pl-16 mb-4" placeholder="What have you created today?" rows="1" on:input={(e) => goto('/write', {
+				state: {
+					title: e.target.value,
+					projectSlug: selectedProject?.slug || ''
+				}
+			})} />
+		</div>
+	{/if}
 
-{#key feed}
 	{#if feed.length > 0}
 	<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
 		{#each feed as feedItem}
@@ -456,137 +448,23 @@
 		{/each}
 	</div>
 	{/if}
-{/key}
 
-<div class="md:hidden flex items-center justify-center" style="
-	position: fixed;
-	bottom: 120px;
-	width: 60px;
-	height: 60px;
-	border: 1px solid rgba(255, 255, 255, 0.8);
-	border-radius: 50%;
-	z-index: 1001;
-	background-color: black;
-	box-shadow: 0px 0px 6px #c2daba;
-	font-size: 30px;
-	right: 20px;
-	opacity: .95;
-	" on:click={toggleExplore}>
-	#
-</div>
-
-<!-- {#if isExploreModeOn}
-	<div class="fixed overflow-y-scroll w-full h-screen left-0 top-0 p-8 bg-black" style="z-index: 1001;" in:fade={{ duration: 100 }}>
-		<button class="w-[60px] h-[60px] text-[30px] rounded-full flex items-center justify-center border-none fixed bg-black right-4 top-4 font-xl" on:click|preventDefault={toggleExplore}>
-			⤬
-		</button>
-		{#if !creator}
-		<div class="w-full">
-			<label class="font-bold block mb-2">
-				Creators
-				{#if $creators?.length}
-				<span class="number-tag">{$creators.length}</span>
-				{/if}
-			</label>
-
-			{#key shuffledCreators}
-				{#if shuffledCreators.length}
-					<a class="_creators w-full mt-4 flex" class:justify-between={shuffledCreators.length > 7} href="/creators" in:fade={{ duration: 200 }}>
-						{#each shuffledCreators.slice(0, 10) as creator, i }
-						<img src={creator.avatarUrl} class="w-[35px] h-[35px] inline rounded-full { i !== 9 && 'mr-[-10px]' }" />
-						{/each}
-					</a>
-				{/if}
-			{/key}
-		</div>
-		{/if}
-		
-		{#if creator}
-      <div class="flex items-center mb-8 font-bold">
-        <img class="w-[40px] h-40[px] rounded-full mr-4" src={creator.avatarUrl}/>
-        {creator.fullName}
-      </div>
-    {/if}
-
-		<div class="left-0 mt-8" >
-			<label class="flex justify-between font-bold block mb-2">
-				{$currentUser && !creator ? 'My': ''} Streams
-				{#if projects.length}
-				<span class="number-tag">{projects.length}</span>
-				{/if}
-
-				<div class="font-bold text-sm hover:underline">
-					Explore
-				</div>
-			</label>
-
-      {#if !creator}
-        <a 
-          class="cursor-pointer _menu_item flex items-center py-2"
-					class:_selected="{!selectedProject?.slug}"
-          href="/"
-        >
-          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
-            #
-          </div>
-          All
-        </a>
-      {/if}
-
-      {#if $currentUser && !creator}
-        <a 
-          class="cursor-pointer _menu_item flex items-center py-2"
-					class:_selected="{!selectedProject?.slug && creator}"
-          href="/@{$currentUser.username}"
-        >
-          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
-            @
-          </div>
-          {$currentUser.fullName}
-        </a>
-      {/if}
-
-      {#if creator}
-        <a 
-          class="cursor-pointer _menu_item flex items-center py-2"
-					class:_selected="{!selectedProject?.slug && creator}"
-          href="/@{creator.username}"
-        >
-          <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
-            @
-          </div>
-          {creator.fullName}
-        </a>
-      {/if}
-
-      {#if !isProjectsLoading && projects.length}
-        <div in:fade>
-          {#each projects as project}
-            <a 
-              class="cursor-pointer _menu_item flex items-center py-2" 
-              class:_selected="{selectedProject?.slug === project.slug}"
-              href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
-              style="border-color: {project.color}"
-            >
-              <div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
-                #
-              </div>
-              {project.title}
-            </a>
-          {/each}
-        </div>
-			{/if}
-
-			<div class="mt-8 w-full">
-				<a href="/launch" class="w-full">
-					<button class="w-full">
-						Launch Your #Stream
-					</button>
-				</a>
-			</div>
-		</div>
+	<div class="md:hidden flex items-center justify-center" style="
+		position: fixed;
+		bottom: 120px;
+		width: 60px;
+		height: 60px;
+		border: 1px solid rgba(255, 255, 255, 0.8);
+		border-radius: 50%;
+		z-index: 1001;
+		background-color: black;
+		box-shadow: 0px 0px 6px #c2daba;
+		font-size: 30px;
+		right: 20px;
+		opacity: .95;
+		" on:click={toggleExplore}>
+		#
 	</div>
-{/if} -->
 
 {/if}
 
