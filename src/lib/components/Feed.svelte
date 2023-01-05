@@ -130,7 +130,6 @@
 
 	$: if (projects && !isCreatorLoading) {
 		if ($page.url.hash) {
-			debugger;
 			let project = projects.find(p => p.slug === $page.url.hash.replace('#', ''));
 			
 			if (project) {
