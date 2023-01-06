@@ -519,7 +519,11 @@
 			})} />
 		</div>
 	{/if}
-
+	{#if creator && selectedProject?._id !== creator._id}
+		<div class="flex justify-start items-center py-4 mb-4 text-lg font-bold" style="font-family: 'Montserrat'">
+			Substream from <img src="{creator.avatarUrl}" class="inline w-[15px] h-[15px] ml-4 mr-2 rounded-full" /> {creator.fullName}
+		</div>
+	{/if}
 	{#if feed.length > 0}
 	<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
 		{#each feed as feedItem}
