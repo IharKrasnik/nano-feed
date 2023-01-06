@@ -129,6 +129,10 @@
 					if (isExploreProjectsModeOn) {
 						toggleProjectsExploreMode();
 					} else {
+						if (!$projects) {
+							await updateProjects({});
+						}
+						
 						setProject();
 					}
 				}
