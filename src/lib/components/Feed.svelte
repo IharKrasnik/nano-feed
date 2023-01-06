@@ -132,7 +132,7 @@
 						if (!$projects) {
 							await updateProjects({});
 						}
-						
+
 						setProject();
 					}
 				}
@@ -255,10 +255,11 @@
 		
 		updateProjects({ isExplore: isExploreProjectsModeOn });
 
-		if (isExploreProjectsModeOn && creator) {
+		if (creator) {
 			creator = null;
-			setProject();
 		}
+		
+		setProject();
 
 		refreshFeed();
 	}
