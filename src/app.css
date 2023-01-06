@@ -63,38 +63,45 @@ select {
 	border: 1px rgba(255, 255, 255, 0.3) solid;
 }
 
-button {
+button,
+a.button {
 	cursor: pointer;
 	transition: all linear 0.1s;
 	padding: 16px 32px;
 	border: 1px rgba(255, 255, 255, 0.3) solid;
 }
 
-button.small {
+button.small,
+a.button.small {
 	padding: 4px 10px;
 	background: rgba(255, 255, 255, 0.1);
 }
 
-button.tab {
+button.tab,
+a.button.tab {
 	border: none;
 	border-bottom: 1px rgba(255, 255, 255, 0.3) solid;
 }
 
-button.tab.selected {
+button.tab.selected,
+a.button.tab.selected {
 	border: none;
 	border-bottom: 1px rgba(255, 255, 255, 0.9) solid;
 	/* background-color: rgba(255, 255, 255, 0.3); */
 }
 
-button:hover {
+button:hover,
+a.button:hover {
 	background: rgba(255, 255, 255, 0.1);
 }
 
-button.small:hover {
+button.small:hover,
+a.button.small:hover {
 	background: rgba(255, 255, 255, 0.3);
 }
 
-button.danger {
+button.danger,
+a.button.danger {
 	border-color: #f44747;
 }
 

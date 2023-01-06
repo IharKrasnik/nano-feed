@@ -20,19 +20,21 @@
 	import sources from '$lib/stores/sources'; 
 	
 	import Select from 'svelte-select';
+	import { writable } from 'svelte/store';
 
 	let creator;
 	let prevCreator;
-	let projects;
+
+	let projects = writable(null);
 
 	let isProjectsLoading = false;
 	let isCreatorLoading = false;
 
 	const updateProjects = async ({ projectSlug, creatorUsername, isExplore = false }) => {
-		let prevProjects = projects;
+		let prevProjects = $projects;
 
 		if (!creatorUsername && !isExplore && !projectSlug) {
-			projects = $follows.filter(f => f.followType === 'project');
+			$projects = $follows.filter(f => f.followType === 'project');
 		} else {
 			let query = {};
 
@@ -52,66 +54,65 @@
 			
 			try {
 				const { results } = await get('projects', query);
-				projects = results;
+				$projects = results;
 			} finally {
 				isProjectsLoading = false;
 			}
 		}
-
-		if (!prevProjects) {
-			let projectSlugFromUrl = $page.url.hash && $page.url.hash.replace('#', '');
-
-			if (projectSlugFromUrl) {
-				let project = projects.find(p => p.slug === projectSlugFromUrl);
-				
-				if (project) {
-					setProject(project);
-				} else {
-					projects = null;
-					toggleProjectsExploreMode();
-				}
-			} else {
-				setProject(getDefaultProject());
-			}
-		} 
 	}
 
-	let prevHash = $page.url.hash;
+	const checkAndUpdateProjects = async (paramUsername) => {
+		let username = (paramUsername && paramUsername.startsWith('@') ? paramUsername.replace('@', '') : null);
+		let projectSlug = (paramUsername && !paramUsername.startsWith('@') ? paramUsername : null);
 
-	$: if (!$page.url.hash) {
-		setTimeout(() => {
-			if (!$page.url.hash && selectedProject?.slug) {
-				setProject();
-			}
-		}, 0);
-	}
-
-	const checkAndUpdateProjects = async (usernameCopy) => {
-		if (usernameCopy) {
-			if (usernameCopy !== prevCreator?.username) {
+		if (username) {
+			if (username !== prevCreator?.username) {
 				isCreatorLoading = true;
-				updateProjects({ creatorUsername: usernameCopy });
-				if (usernameCopy !== $currentUser?.username) {
-					creator = await get(`creators/${usernameCopy}`)
+				updateProjects({ creatorUsername: username });
+				
+				if (username !== $currentUser?.username) {
+					creator = await get(`creators/${username}`)
 				} else {
 					creator = $currentUser;
 				}
+
+				if (!prevCreator) {
+					setProject();
+				}
+
 				prevCreator = _.clone(creator);
 
 				isCreatorLoading = false;
 			}
+		}
+
+		if (projectSlug) {
+		 	if ($projects) {
+				let project = $projects.find(p => p.slug === projectSlug);
+				
+				if (!project) {
+					project = await get(`projects/${projectSlug}`);
+				} 
+				
+				setProject(project);
+			} else {
+				await updateProjects({});
+				
+				return checkAndUpdateProjects(paramUsername);
+			}
 		} else if ($page.url.pathname === '/') {
 			creator = null;
-
-			if (prevCreator !== null ) {
-				updateProjects({ });
+			prevCreator = null;
+			
+			if (!isExploreProjectsModeOn) {
+				await updateProjects({ });
 			}
 
-			prevCreator = null;
+			setProject();
 		}
 	}
 
-	$: checkAndUpdateProjects($page.params.username)
+	$: checkAndUpdateProjects($page.params.username);
 
   let shuffledCreators = [];
 
@@ -155,7 +156,10 @@
     if (!selectedProject || selectedProject?.slug !== newProject?.slug) {
       selectedProject = newProject;
 		  refreshFeed();
-    }
+    } else if (!newProject?.slug) {
+			selectedProject = newProject;
+		  refreshFeed();
+		}
   }
 
 	const shuffleInterval = setInterval(() => {
@@ -187,8 +191,8 @@
 		
 		$follows = [{ ...selectedProject, followType: 'project' }, ...$follows];
 		
-		if (!projects.find(p => p._id === selectedProject._id)) {
-			projects = [selectedProject, ...projects];
+		if (!$projects.find(p => p._id === selectedProject._id)) {
+			$projects = [selectedProject, ...$projects];
 		}
 		
 		await post('follows', follow);
@@ -208,9 +212,9 @@
 		$follows = $follows.filter(f => f._id !== (query.projectId || query.creatorId));
 		
 		if (!isExploreProjectsModeOn) {
-			projects = projects.filter(p => p._id !== (query.projectId || query.creatorId));
+			$projects = $projects.filter(p => p._id !== (query.projectId || query.creatorId));
 		}
-
+		
 		await del('follows', query);
 	}
 
@@ -270,11 +274,9 @@
 				<div>
 					<a 
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
-						class:_selected="{!selectedProject?.slug && !isExploreProjectsModeOn && !isCreatorLoading && (!creator || (creator?._id !== selectedProject?._id)) }"
+						class:_selected="{!selectedProject?.slug && !isExploreProjectsModeOn && !isCreatorLoading && !creator }"
 						href="/"
 						on:click={() => {
-							setProject();
-
 							if (isExploreProjectsModeOn) {
 								toggleProjectsExploreMode();
 							}
@@ -290,7 +292,6 @@
 						<a 
 							class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 							class:_selected="{selectedProject?._id === $currentUser._id}"
-							on:click={() => setProject()}
 							href="/@{$currentUser.username}"
 						>
 							<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
@@ -299,6 +300,23 @@
 							{$currentUser.fullName}
 						</a>
 					{/if}
+
+					<a 
+						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
+						class:_selected="{isExploreProjectsModeOn}"
+						href="/"
+						on:click={() => {
+							if (!isExploreProjectsModeOn) {
+								toggleProjectsExploreMode();
+							}
+						}}
+					>
+
+						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
+							#
+						</div>
+						Explore
+					</a>
 				</div>
 
 				<!-- <div class="mt-8 w-full">
@@ -324,19 +342,10 @@
 							{isExploreProjectsModeOn ? 'Explore Streams' : ($currentUser && !creator ? 'My Streams': '')}
 							{creator ? `Contributions` :''}
 							{(!$currentUser && !creator && 'Explore Streams') || ''}
-							{#if projects?.length}
-							<span class="number-tag">{projects.length}</span>
+							{#if !isProjectsLoading && $projects?.length}
+							<span class="number-tag">{$projects.length}</span>
 							{/if}
 						</div>
-
-						{#if !creator && $currentUser}
-						<button href="/" class="small font-bold text-sm hover:underline cursor-pointer" on:click={() => {
-							 toggleProjectsExploreMode();
-							 setProject();
-						}}>
-							{ isExploreProjectsModeOn ? 'x' : '👀  Explore' }
-						</button>
-						{/if}
 					</div>
 				</div>
 
@@ -345,7 +354,9 @@
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 						class:_selected={selectedProject?._id === creator._id}
 						href="/@{creator.username}"
-						on:click={() => setProject()}
+						on:click="{() => {
+							setProject(); 
+						}}"
 					>
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: rgb(208, 145, 255); opacity: .7;">
 							@
@@ -359,7 +370,9 @@
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 						class:_selected="{!selectedProject?.slug && !creator }"
 						href="/"
-						on:click={() => setProject()}
+						on:click="{() => {
+							setProject(); 
+						}}"
 					>
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
 							#
@@ -368,17 +381,21 @@
 				</a>
 				{/if}
 				
-	      {#if !isProjectsLoading && projects.length}
+	      {#if !isProjectsLoading && $projects?.length}
 					<div class="pb-[200px]">
-						{#if projects?.length}
+						{#if $projects?.length}
 							<div in:fade>
-								{#each projects as project}
+								{#each $projects as project}
 									<a 
 										class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]" 
 										class:_selected="{selectedProject?.slug === project.slug}"
-										href= "{ (creator ? `/@${creator.username}` : '') + (project.slug ? `/#${project.slug}` : '/')}"
+										href= "{ (creator ? `/@${creator.username}` : '') || (project.slug ? `/${project.slug}` : '/')}"
+										on:click="{() => {
+											if (creator) { // as url not changing
+												setProject(project); 
+											}
+										}}"
 										style="border-color: {project.color}"
-										on:click={() => setProject(project)}
 									>
 										<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: {project.color}; opacity: .7;">
 											#
