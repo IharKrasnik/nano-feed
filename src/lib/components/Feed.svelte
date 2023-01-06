@@ -62,69 +62,77 @@
 	}
 
 	const checkAndUpdateProjects = async (paramUsername) => {
-		let username = (paramUsername && paramUsername.startsWith('@') ? paramUsername.replace('@', '') : null);
-		let projectSlug = (paramUsername && !paramUsername.startsWith('@') ? paramUsername : null);
-
-		if (username) {
-			if (username !== prevCreator?.username) {
-				isCreatorLoading = true;
-				updateProjects({ creatorUsername: username });
-				
-				if (username !== $currentUser?.username) {
-					creator = await get(`creators/${username}`)
-				} else {
-					creator = $currentUser;
-				}
-
-				if (!prevCreator) {
-					setProject();
-				}
-
-				if (isExploreProjectsModeOn) {
-					// toggleProjectsExploreMode();
-					isExploreProjectsModeOn = false;
-				}
-
-				prevCreator = _.clone(creator);
-
-				isCreatorLoading = false;
-			}
-		} else if (projectSlug) {
-
-		}
-
-		if (projectSlug) {
-			if (!username && creator) {
-				creator = null;
-				prevCreator = null;
-				await updateProjects({});
-			}
-
-		 	if ($projects) {
-				let project = $projects.find(p => p.slug === projectSlug);
-				
-				if (!project) {
-					project = await get(`projects/${projectSlug}`);
-				} 
-				
-				setProject(project);
-			} else {
-				await updateProjects({});
-				
-				return checkAndUpdateProjects(paramUsername);
-			}
-		} 
-
-		// if ($page.url.pathname === '/') {
-		if (!username && !projectSlug) {
-			creator = null;
-			prevCreator = null;
-			
+		if (paramUsername === 'explore') {
 			if (!isExploreProjectsModeOn) {
-				await updateProjects({ });
+				toggleProjectsExploreMode();
+			}
+		} else {
+			let username = (paramUsername && paramUsername.startsWith('@') ? paramUsername.replace('@', '') : null);
+			let projectSlug = (paramUsername && !paramUsername.startsWith('@') ? paramUsername : null);
+
+			if (username) {
+				if (username !== prevCreator?.username) {
+					isCreatorLoading = true;
+					updateProjects({ creatorUsername: username });
+					
+					if (username !== $currentUser?.username) {
+						creator = await get(`creators/${username}`)
+					} else {
+						creator = $currentUser;
+					}
+
+					if (!prevCreator) {
+						setProject();
+					}
+
+					if (isExploreProjectsModeOn) {
+						// toggleProjectsExploreMode();
+						isExploreProjectsModeOn = false;
+					}
+
+					prevCreator = _.clone(creator);
+
+					isCreatorLoading = false;
+				}
+			} 
+
+			if (projectSlug) {
+				let forceRefresh = false;
+
+				if (!username && creator) {
+					creator = null;
+					prevCreator = null;
+					await updateProjects({});
+					forceRefresh = true;
+				}
+
+				if ($projects) {
+					let project = $projects.find(p => p.slug === projectSlug);
+					
+					if (!project) {
+						project = await get(`projects/${projectSlug}`);
+					} 
+					
+					setProject(project, forceRefresh);
+				} else {
+					await updateProjects({});
+					
+					return checkAndUpdateProjects(paramUsername);
+				}
 			}
 
-			setProject();
+			if ($page.url.pathname === '/') {
+				if (!username && !projectSlug) {
+					creator = null;
+					prevCreator = null;
+					
+					if (isExploreProjectsModeOn) {
+						toggleProjectsExploreMode();
+					} else {
+						setProject();
+					}
+				}
+			}
 		}
 	}
 
@@ -168,13 +176,15 @@
 		}
 	}
 
-  const setProject = (newProject = getDefaultProject()) => {
+  const setProject = (newProject = getDefaultProject(), forceRefresh = false) => {
     if (!selectedProject || selectedProject?.slug !== newProject?.slug) {
       selectedProject = newProject;
 		  refreshFeed();
     } else if (!newProject?.slug) {
 			selectedProject = newProject;
 		  refreshFeed();
+		} else if (forceRefresh) {
+			refreshFeed();
 		}
   }
 
@@ -299,11 +309,6 @@
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 						class:_selected="{!selectedProject?.slug && !isExploreProjectsModeOn && !isCreatorLoading && !creator }"
 						href="/"
-						on:click={() => {
-							if (isExploreProjectsModeOn) {
-								toggleProjectsExploreMode();
-							}
-						}}
 					>
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
 							🌀
@@ -327,12 +332,7 @@
 					<a 
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 						class:_selected="{isExploreProjectsModeOn}"
-						href="/"
-						on:click={() => {
-							if (!isExploreProjectsModeOn) {
-								toggleProjectsExploreMode();
-							}
-						}}
+						href="/explore"
 					>
 
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
