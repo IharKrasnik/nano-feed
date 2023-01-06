@@ -80,13 +80,26 @@
 					setProject();
 				}
 
+				if (isExploreProjectsModeOn) {
+					// toggleProjectsExploreMode();
+					isExploreProjectsModeOn = false;
+				}
+
 				prevCreator = _.clone(creator);
 
 				isCreatorLoading = false;
 			}
+		} else if (projectSlug) {
+
 		}
 
 		if (projectSlug) {
+			if (!username && creator) {
+				creator = null;
+				prevCreator = null;
+				await updateProjects({});
+			}
+
 		 	if ($projects) {
 				let project = $projects.find(p => p.slug === projectSlug);
 				
@@ -100,7 +113,10 @@
 				
 				return checkAndUpdateProjects(paramUsername);
 			}
-		} else if ($page.url.pathname === '/') {
+		} 
+
+		// if ($page.url.pathname === '/') {
+		if (!username && !projectSlug) {
 			creator = null;
 			prevCreator = null;
 			
@@ -222,7 +238,14 @@
 
 	const toggleProjectsExploreMode = () => {
 		isExploreProjectsModeOn = !isExploreProjectsModeOn;
+		
 		updateProjects({ isExplore: isExploreProjectsModeOn });
+
+		if (isExploreProjectsModeOn && creator) {
+			creator = null;
+			setProject();
+		}
+
 		refreshFeed();
 	}
 
