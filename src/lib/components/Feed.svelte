@@ -347,13 +347,17 @@
 					</a>
 				</div>
 
-				<!-- <div class="mt-8 w-full">
+				{#if isExploreProjectsModeOn}
+
+				<div class="mt-16 w-full" in:fly>
 					<a href="/launch" class="w-full">
 						<button class="w-full">
 							Launch Your #Stream
 						</button>
 					</a>
-				</div> -->
+				</div>
+
+				{/if}
 
 				<div class="mt-16">
 					{#if creator}
