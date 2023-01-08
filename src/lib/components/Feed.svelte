@@ -13,6 +13,7 @@
 	import FeedItem from '$lib/components/FeedItem.svelte';
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
+	import FollowButton from '$lib/components/FollowButton.svelte';
 
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser'; 
 	import follows from '$lib/stores/follows';
@@ -274,7 +275,7 @@
 								{selectedProject?.title || '...'}
 							</h1>
 
-							{#if $currentUser}
+							<!-- {#if $currentUser}
 								<div class="absolute right-0">
 									{#if selectedProject && $follows.find(f => f._id === selectedProject._id)}
 										<div class="font-bold text-sm cursor-pointer hover:underline ml-4" on:click={unfollowStream}>✓ Following</div>
@@ -283,7 +284,7 @@
 									{/if}
 								</div>
 							{/if}
-							
+							 -->
 						</div>
 						<div class="text-lg mt-2" style="opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
 							{selectedProject?.description || '...'}
@@ -480,6 +481,35 @@
 			
 			{#if selectedProject || creator}
 				<StreamCard stream={ creator || selectedProject } creators={!creator && $creators} />
+
+				<FollowButton project={!creator && selectedProject} {creator} />
+<!-- 			
+				{#if $currentUser}
+					<div class="my-4">
+						{#if selectedProject && $follows.find(f => f._id === (creator ? creator._id : selectedProject._id))}
+							<div class="w-full font-bold text-sm cursor-pointer hover:underline text-center" on:click={unfollowStream}>
+								✓ You're following {creator ? creator.fullName : selectedProject?.title || stream.fullName}
+							</div>
+						{:else if (selectedProject?.slug || creator)}
+							<button class="w-full" on:click={followStream}>
+							Follow
+								{#if creator}
+									@{creator.fullName}
+								{:else}
+									#{selectedProject.title}
+								{/if}
+							</button>
+						{/if}
+					</div>
+				{/if} -->
+
+				{#if creator && selectedProject.slug}
+					<div class="mt-16"> 
+						<StreamCard stream={ selectedProject } />
+
+						<FollowButton project={selectedProject} />
+					</div>
+				{/if}
 
 				{#if $currentUser && (selectedProject?.slug || creator)}
 					{#if $currentUser.isAdmin || (selectedProject && selectedProject.creator?._id === $currentUser._id) || (creator && creator._id === $currentUser._id)}

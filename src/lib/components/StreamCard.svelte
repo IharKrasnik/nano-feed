@@ -41,7 +41,9 @@
       {/if}
        
       {#if stream.avatarUrl}
-        <img src={stream.avatarUrl} class="w-[100px] h-[100px] ml-4 rounded-full {stream.bannerUrl ? 'mt-[-50px]' : ''}" />
+        <div class="ml-4 {stream.bannerUrl ? 'mt-[-30px]' : 'pt-4'}">
+          <img src={stream.avatarUrl} class="w-[60px] h-[60px] rounded-full" />
+        </div>
       {/if}
 
       <div class="p-4" >
