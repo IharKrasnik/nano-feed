@@ -5,23 +5,28 @@ import { get } from '$lib/api';
 export async function load({ params }) {
 	const { username } = params;
 
-	if (username) {
+	let desciption = 'Momentum is a tool to build in public and grow audience early.';
+
+	if (username && username !== 'explore') {
 		if (username?.startsWith('@')) {
 			let creator = await get(`creators/${username.replace('@', '')}`);
 
 			return {
 				ogTitle: `${creator.fullName} — Momentum Stream`,
-				ogDescription: ''
+				ogDescription: desciption
 			};
 		} else {
 			let project = await get(`projects/${username}`);
 
 			return {
 				ogTitle: `${project.title} — Momentum Stream`,
-				ogDescription: ''
+				ogDescription: desciption
 			};
 		}
 	}
 
-	return {};
+	return {
+		ogTitle: 'Momentum',
+		ogDescription: desciption
+	};
 }

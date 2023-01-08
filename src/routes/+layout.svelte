@@ -18,9 +18,14 @@
 </script>
 
 <svelte:head>
-	<title>Momentum</title>
+	<title>{$page.data.ogTitle}</title>
+	<meta name="title" content="{$page.data.ogTitle}" />
+	<meta name="description" content="{$page.data.ogDescription}" />
+	<meta name="og:description" content="{$page.data.ogDescription}" />
+
+	<!-- <title>Momentum</title>
 	<meta name="description" content="Momentum is a tool to build in public and grow audience early." />
-	<meta name="og:description" content="Momentum is a tool to build in public and grow audience early." />
+	<meta name="og:description" content="Momentum is a tool to build in public and grow audience early." /> -->
 
 	{#if $page.params.username}
 	<meta property="og:image" content="https://stream.paralect.com/og.png?streamName={$page.params.username}" />
