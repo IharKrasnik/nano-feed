@@ -268,13 +268,13 @@
 
 <svelte:head>
 	{#if !creator && selectedProject}
-	<title>{selectedProject.slug ? selectedProject.title + ' Momentum Stream' : ( isExploreProjectsModeOn ? 'Explore — Momentum' : 'My Feed — Momentum') } </title>
-	<meta property="title" content="{selectedProject.title}" />
+	<title>{selectedProject.slug ? selectedProject.title + ' — Momentum Stream' : ( isExploreProjectsModeOn ? 'Explore — Momentum' : 'My Feed — Momentum') } </title>
+	<meta property="og:title" content="{selectedProject.slug ? selectedProject.title + ' — Momentum Stream' : ( isExploreProjectsModeOn ? 'Explore — Momentum' : 'My Feed — Momentum') }" />
 	{/if}
 
 	{#if creator}
 		<title>{creator.fullName} — Momentum Stream</title>
-		<meta property="title" content="{creator.fullName} — Momentum Stream" />
+		<meta property="og:title" content="{creator.fullName} — Momentum Stream" />
 	{/if}
 </svelte:head>
 
