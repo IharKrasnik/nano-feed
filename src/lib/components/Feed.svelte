@@ -20,7 +20,6 @@
 
 	import sources from '$lib/stores/sources'; 
 	
-	import Select from 'svelte-select';
 	import { writable } from 'svelte/store';
 
 	let creator;

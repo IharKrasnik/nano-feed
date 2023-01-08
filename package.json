@@ -28,14 +28,15 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-static": "^1.0.0",
+		"@resvg/resvg-js": "^2.2.0",
 		"@tailwindcss/line-clamp": "^0.4.2",
 		"axios": "^1.2.1",
 		"date-fns": "^2.29.3",
 		"dayjs": "^1.11.7",
 		"hotkeys-js": "^3.10.1",
 		"lodash": "^4.17.21",
-		"slug": "^8.2.2",
-		"svelte-select": "^5.0.1"
+		"satori": "^0.0.45",
+		"satori-html": "^0.3.2",
+		"slug": "^8.2.2"
 	}
 }
