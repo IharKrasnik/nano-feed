@@ -34,6 +34,7 @@
         title: creator.fullName,
         description: creator.description,
         longDescription: creator.longDescription,
+        avatarUrl: creator.avatarUrl,
         bannerUrl: creator.bannerUrl,
         url: creator.url,
       }
@@ -71,10 +72,9 @@
     }
   }
 
-  let fileUploaded = ( (evt) => {
-    let { url } = evt.detail;
-    stream.bannerUrl = url;
-  });
+  let fileUploaded = ({ type, url } = {}, streamKey) => {
+    stream[streamKey] = url;
+  };
 
 </script>
 
@@ -115,10 +115,16 @@
         <input type="text" class="block" bind:value={stream.url} />
       </div>
 
+      {#if creator}
+        <div class="mb-8">
+          <label>Avatar </label>
+          <FileInput bind:url={stream.avatarUrl} on:fileUploaded={ (evt) => fileUploaded(evt.detail, 'avatarUrl') } />
+        </div>
+      {/if}
+
       <div class="mb-8">
         <label>Banner </label>
-        
-        <FileInput bind:url={stream.bannerUrl} on:fileUploaded={fileUploaded} />
+        <FileInput bind:url={stream.bannerUrl} on:fileUploaded={ (evt) => fileUploaded(evt.detail, 'bannerUrl') } />
       </div>
 
       <button class="p-4 mt-8" type="submit" on:click="{updateStream}">
