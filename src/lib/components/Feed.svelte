@@ -11,6 +11,7 @@
 
 	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
+	import SourceLogo from '$lib/components/SourceLogo.svelte';
 
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser'; 
 	import follows from '$lib/stores/follows';
@@ -266,6 +267,13 @@
 
 </script>
 
+<svelte:head>
+	{#if selectedProject}
+	<meta property="og:image" content="https://momentum-ogimage-n2shh.ondigitalocean.app/stream?title={selectedProject.title}&description={selectedProject.description}&bannerUrl={selectedProject.bannerUrl}" />
+		<meta property="image" content="https://momentum-ogimage-n2shh.ondigitalocean.app/stream?title={selectedProject.title}&description={selectedProject.description}&bannerUrl={selectedProject.bannerUrl}" />
+	{/if}
+</svelte:head>
+
 	<div>
 		<div>
 			<section class="relative flex justify-between mb-8">
@@ -279,7 +287,7 @@
 							{#if $currentUser}
 								<div class="absolute right-0">
 									{#if selectedProject && $follows.find(f => f._id === selectedProject._id)}
-										<div class="font-bold text-sm cursor-pointer hover:underline ml-4" on:click={unfollowStream}>Following</div>
+										<div class="font-bold text-sm cursor-pointer hover:underline ml-4" on:click={unfollowStream}>✓ Following</div>
 									{:else if selectedProject?.slug}
 										<button class="small ml-4" on:click={followStream}> Follow </button>
 									{/if}
@@ -447,7 +455,7 @@
 	</div>
 </div>
 
-	<div class="hidden md:block fixed w-[250px] mt-6 top-0" style="margin-left: 605px;">
+	<div class="hidden md:block fixed w-[300px] mt-6 top-0" style="margin-left: 605px;">
 		<div>
     	<div>
 				{#if $currentUser}
@@ -480,29 +488,67 @@
 				</AutoCompleteInput>
 			</div> -->
 
-      {#if !creator}
-			<div class="w-full">
-				<label class="font-bold block mb-2">
-					Creators
-					{#if $creators?.length}
-					
-					<span class="number-tag">
-						{$creators.length}
-					</span>
-					{/if}
-				</label>
+			{#if selectedProject}
+				<div class="_project mb-8 rounded-xl">
 
-				{#key shuffledCreators}
-					{#if shuffledCreators.length}
-						<a class="_creators w-full mt-4 flex" class:justify-between={shuffledCreators.length > 7} href="/creators" transition:fade={{ duration: 200 }}>
-							{#each shuffledCreators.slice(0, 7) as creator}
-							<img src={creator.avatarUrl} class="w-[35px] h-[35px] inline rounded-full mr-[-10px]" />
-							{/each}
-						</a>
+					<!-- <img src="https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png" class="w-full rounded-xl"/> -->
+
+					{#if selectedProject.bannerUrl || creator?.avatarUrl}
+						<img src="{selectedProject.bannerUrl || creator?.avatarUrl}" class="w-full rounded-xl mb-4 max-h-[180px] object-cover"/>
 					{/if}
-				{/key}
-			</div>
-      {/if}
+
+					<div class="text-lg font-bold"> 
+						{selectedProject?.title}
+					</div>
+					
+					{#if selectedProject.longDescription}
+						<div>
+							{ selectedProject.longDescription }
+						</div>
+					{/if}
+					
+					<div class="flex justify-between items-center opacity-80 mt-2">
+						<div class="text-sm font-normal">
+							{#if selectedProject.url}
+								<svg class="inline w-[10px] h-[10px] text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="&#10;    stroke: white;&#10;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+								<a href="{selectedProject.url}" target="_blank"> {selectedProject.url.replace('https://', '').replace('http://', '')}</a>
+							{/if}
+						</div>
+						{#if selectedProject?.links?.length}
+							<div class="flex items-center my-2">
+								{#each selectedProject.links as link}
+									<a href="{link.url}" target="_blank" class="ml-2"> <SourceLogo source={link.source} /> </a>
+								{/each}
+							</div>
+						{/if}
+				  </div>
+
+					{#if !creator}
+					<div class="w-full mt-4">
+						<label class="font-bold block mb-2">
+							Creators
+							{#if $creators?.length}
+							
+							<span class="number-tag">
+								{$creators.length}
+							</span>
+							{/if}
+						</label>
+
+						{#key shuffledCreators}
+							{#if shuffledCreators.length}
+								<a class="_creators w-full mt-4 flex" class:justify-between={shuffledCreators.length > 7} href="/creators" in:fade={{ duration: 200 }}>
+									{#each shuffledCreators.slice(0, 7) as creator}
+									<img src={creator.avatarUrl} class="w-[35px] h-[35px] inline rounded-full mr-[-10px]" />
+									{/each}
+								</a>
+							{/if}
+						{/key}
+					</div>
+					{/if}
+				</div>
+			{/if}
+
 		</div>
 	
 	</div>
@@ -563,6 +609,18 @@
 		border-radius: 8px;
 		min-width: 200px;
 	}
+
+	._project {
+    outline: 2px rgba(255,255,255, .1) solid;
+    transition: all 0.08s linear;
+    padding: 16px;
+	}
+
+	._project:hover {
+    /* transform: scale(1.05); */
+    background: rgba(255,255,255, 0.03);
+    outline: 1px rgba(255,255,255, .3) solid;
+  }
 
 	._author:hover {
 		outline: 3px green solid;
