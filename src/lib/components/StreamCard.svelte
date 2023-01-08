@@ -56,7 +56,7 @@
         </div>
         
         {#if stream.longDescription}
-          <div>
+          <div class="whitespace-pre-wrap">
             { stream.longDescription }
           </div>
         {/if}

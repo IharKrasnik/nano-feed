@@ -17,6 +17,8 @@
   import FileInput from '$lib/components/FileInput.svelte';
   
   import sources from '$lib/stores/sources';
+  import projects from '$lib/stores/projects';
+  import follows from '$lib/stores/follows';
   import currentUser from '$lib/stores/currentUser';
   import { browser } from '$app/environment';
 
@@ -59,7 +61,24 @@
 
   let updateStream = async () => {
     if (!creator) {
-      await put(`projects/${project._id}`, stream);
+      const updatedProject = await put(`projects/${project._id}`, stream);
+
+      $projects = $projects.map(p => {
+        if (p._id === updatedProject._id) {
+          return updatedProject;
+        }
+
+        return p;
+      });
+
+      $follows = $follows.map(f => {
+        if (f._id === updatedProject._id) {
+          return { ...updatedProject, followType: 'project' };
+        }
+
+        return f;
+      });
+
       goto(`/${project.slug}`);
     } else {
 

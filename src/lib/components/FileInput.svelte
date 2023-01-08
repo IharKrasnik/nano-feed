@@ -10,7 +10,7 @@
     const newFile = await postFile('files', file);
 
     let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
-    debugger;
+
     dispatch('fileUploaded', {
       type: (newFile.url.includes('.mp4') || newFile.url.includes('.mov')) ? 'video' : 'image' , url: fileUrl
     });

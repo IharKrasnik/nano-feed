@@ -6,6 +6,7 @@
   
   import creators from '$lib/stores/creators';
   import projects from '$lib/stores/projects';
+  import follows from '$lib/stores/follows';
   import currentUser from '$lib/stores/currentUser';
 
   let project = {
@@ -45,12 +46,9 @@
     
     await post('feed', feedItem);
 
-    $projects = [{
-      slug: project.slug,
-      title: project.title,
-      description: project.description,
-      url: project.url,
-    }, ...$projects];
+    $projects = [createdProject, ...$projects];
+
+    $follows = [{ followType: 'project', ...createdProject }, ...$follows];
 
     goto('/' + project.slug);
   }

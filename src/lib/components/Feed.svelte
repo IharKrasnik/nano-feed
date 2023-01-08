@@ -326,7 +326,7 @@
 							class:_selected="{selectedProject?._id === $currentUser._id}"
 							href="/@{$currentUser.username}"
 						>
-							<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: orange; opacity: .7;">
+							<div class="_emoji p-2 mr-2 rounded-full text-[#00eaff] font-bold" style="opacity: .7;">
 								@
 							</div>
 							{$currentUser.fullName}
@@ -340,7 +340,7 @@
 					>
 
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
-							#
+							<svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 0 1792 1792" width="15" style="background: black;width: 15px;height: 15px;"><path d="M991 1024l64-256h-254l-64 256h254zm768-504l-56 224q-7 24-31 24h-327l-64 256h311q15 0 25 12 10 14 6 28l-56 224q-5 24-31 24h-327l-81 328q-7 24-31 24h-224q-16 0-26-12-9-12-6-28l78-312h-254l-81 328q-7 24-31 24h-225q-15 0-25-12-9-12-6-28l78-312h-311q-15 0-25-12-9-12-6-28l56-224q7-24 31-24h327l64-256h-311q-15 0-25-12-10-14-6-28l56-224q5-24 31-24h327l81-328q7-24 32-24h224q15 0 25 12 9 12 6 28l-78 312h254l81-328q7-24 32-24h224q15 0 25 12 9 12 6 28l-78 312h311q15 0 25 12 9 12 6 28z" style="fill: #00ffa4;"/></svg>
 						</div>
 						Explore
 					</a>
@@ -548,7 +548,7 @@
 	{/if}
 	{#if creator && selectedProject?._id !== creator._id}
 		<div class="flex justify-start items-center py-4 mb-4 text-lg font-bold" style="font-family: 'Montserrat'">
-			Substream from <img src="{creator.avatarUrl}" class="inline w-[15px] h-[15px] ml-4 mr-2 rounded-full" /> {creator.fullName}
+			Substream from {creator.fullName}
 		</div>
 	{/if}
 	{#if feed.length > 0}
