@@ -22,8 +22,8 @@
 	<meta name="description" content="Paralect's Momentum" />
 
 	{#if $page.params.username}
-	<meta property="og:image" content="https://stream.paralect.com/og.png?slug={$page.params.username}" />
-	<meta property="image" content="https://stream.paralect.com/og.png?slug={$page.params.username}" />
+	<meta property="og:image" content="https://stream.paralect.com/og.png?streamName={$page.params.username}" />
+	<meta property="image" content="https://stream.paralect.com/og.png?streamName={$page.params.username}" />
 	{/if}
 </svelte:head>
 

@@ -15,12 +15,23 @@ const width = 1200;
 
 /** @type {import('./$types').RequestHandler} */
 export const GET = async ({ url }) => {
-	const slug = url.searchParams.get('slug') ?? undefined;
-	console.log('slug', slug);
-	const project = await get(`projects/${slug}`);
+	const streamName = url.searchParams.get('streamName') ?? undefined;
 
-	const result = OGImage.render({ title: project.title, description: project.description });
-	const markup = toReactNode(`${result.html}<style>${result.css.code}</style>`);
+	let componentResult;
+
+	if (streamName?.startsWith('@')) {
+		let creator = await get(`creators/${streamName.replace('@', '')}`);
+		componentResult = OGImage.render({
+			title: creator.fullName,
+			description: 'Momentum Stream',
+			avatarUrl: creator.avatarUrl
+		});
+	} else {
+		let project = await get(`projects/${streamName}`);
+		componentResult = OGImage.render({ title: project.title, description: project.description });
+	}
+
+	const markup = toReactNode(`${componentResult.html}<style>${componentResult.css.code}</style>`);
 
 	const svg = await satori(markup, {
 		fonts: [

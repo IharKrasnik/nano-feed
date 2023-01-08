@@ -1,19 +1,29 @@
 <script>
   export let title = 'Paralect';
   export let description = 'A cozy startup studio';
-
+  export let avatarUrl;
 </script>
 
 <div class="og">
-  <div style="font-size: 64px; font-weight: bold; opacity: .8;">
-    {title}
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div style="display: flex; flex-direction: column;">
+      <div style="font-size: 64px; font-weight: bold; opacity: .8;">
+        {title}
+      </div>
+
+      <div class="_description" style="font-size: 40px; margin-top: 16px; opacity: .8;">
+        {description}
+      </div>
+    </div>
+
+    {#if avatarUrl}
+    <div style="display: flex;">
+      <img src={avatarUrl} style="width: 100px; height: 100px; border-radius: 50%;"/>
+    </div>
+    {/if}
   </div>
 
-  <div class="_description" style="font-size: 40px; margin-top: 16px; margin-bottom: 32px; opacity: .8;">
-    {description}
-  </div>
-
-  <div class="moment" style="display: flex; flex-direction: column;">
+  <div class="moment" style="display: flex; flex-direction: column; margin-top: 64px;">
     <div style="display: flex; font-weight: bold; font-size: 32px;">Follow <span style="text-decoration: underline; margin: 0 10px;">#{title}</span> stream on Momentum</div>
 
     <div style="display: flex; flex-direction: column; font-size: 32px; margin-top:32px;">
