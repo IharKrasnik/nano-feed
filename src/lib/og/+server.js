@@ -1,12 +1,15 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
-// import NotoSans from '$lib/NotoSans-Regular.ttf';
 
 const height = 630;
 const width = 1200;
 
+const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
+const fontData = await fontFile.arrayBuffer();
+
 /** @type {import('./$types').RequestHandler} */
 export const GET = async () => {
+	console.log('GET', fontData);
 	const html = {
 		type: 'div',
 		props: {
@@ -16,11 +19,11 @@ export const GET = async () => {
 	};
 	const svg = await satori(html, {
 		fonts: [
-			// {
-			// 	name: 'Noto Sans',
-			// 	data: Buffer.from(NotoSans),
-			// 	style: 'normal'
-			// }
+			{
+				name: 'Noto Sans',
+				data: fontData,
+				style: 'normal'
+			}
 		],
 		height,
 		width
