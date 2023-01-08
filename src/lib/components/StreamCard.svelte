@@ -37,7 +37,11 @@
       <!-- <img src="https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png" class="w-full rounded-xl"/> -->
 
       {#if stream.bannerUrl}
-        <img src="{stream.bannerUrl}" class="w-full rounded-xl max-h-[180px] object-cover" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;"/>
+        {#if stream.bannerUrl.includes('.mov') || stream.bannerUrl.includes('.mp4')}
+          <video autoplay muted src="{stream.bannerUrl}" class="w-full rounded-xl max-h-[180px] object-cover" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;"/>
+        {:else}
+          <img src="{stream.bannerUrl}" class="w-full rounded-xl max-h-[180px] object-cover" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;"/>
+        {/if}
       {/if}
        
       {#if stream.avatarUrl}

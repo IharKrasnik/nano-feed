@@ -18,7 +18,7 @@
 
   const pasteImage = (e) => {
     Array.from(e.clipboardData.files).forEach(async (file) => {
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
         uploadFile(file);
       } else if (file.type.startsWith('text/')) {
         // const textarea = document.createElement('textarea');
