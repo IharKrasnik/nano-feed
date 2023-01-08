@@ -1,11 +1,16 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
+import { html as toReactNode } from 'satori-html';
+import OGImage from '$lib/components/OGImage.svelte';
+
+import Montserrat from '$lib/Montserrat-Regular.ttf';
+import MontserratBold from '$lib/Montserrat-Bold.ttf';
 
 const height = 630;
 const width = 1200;
 
-const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
-const fontData = await fontFile.arrayBuffer();
+// const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
+// const fontData = await fontFile.arrayBuffer();
 
 /** @type {import('./$types').RequestHandler} */
 export const GET = async () => {
@@ -16,11 +21,22 @@ export const GET = async () => {
 			style: { color: 'red' }
 		}
 	};
-	const svg = await satori(html, {
+
+	const result = OGImage.render();
+	const markup = toReactNode(`${result.html}<style>${result.css.code}</style>`);
+
+	const svg = await satori(markup, {
 		fonts: [
 			{
-				name: 'Noto Sans',
-				data: fontData,
+				name: 'Montserrat',
+				data: Buffer.from(Montserrat),
+				weight: 400,
+				style: 'normal'
+			},
+			{
+				name: 'Montserrat',
+				data: Buffer.from(MontserratBold),
+				weight: 600,
 				style: 'normal'
 			}
 		],
