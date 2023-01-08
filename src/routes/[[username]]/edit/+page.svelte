@@ -59,7 +59,7 @@
         <textarea type="text" rows="3" class="block" bind:value={project.longDescription}></textarea>
       </div>
 
-     <div class="mb-8">
+     <!-- <div class="mb-8">
         <label>Attachments</label>
 
         {#if project.bannerUrl}
@@ -76,7 +76,7 @@
               </button>
             {/if}
         {/if}
-      </div>
+      </div> -->
 
       <!-- {#if feedItem.url || currentPage === 'update'}
         <div class="mb-8">
