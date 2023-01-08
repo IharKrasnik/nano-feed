@@ -243,6 +243,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Write a Moment — Momentum</title>
+</svelte:head>
+
 {#if $currentUser}
   <h2 class="mb-2">Post a Moment</h2>
 

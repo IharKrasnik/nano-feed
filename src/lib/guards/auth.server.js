@@ -21,5 +21,7 @@ export default async ({ url, cookies }) => {
 		}
 	}
 
-	return {};
+	return {
+		ogTitle: 'Momentum'
+	};
 };

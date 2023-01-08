@@ -52,7 +52,7 @@
       url: project.url,
     }, ...$projects];
 
-    goto('/#' + project.slug);
+    goto('/' + project.slug);
   }
 
 </script>

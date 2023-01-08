@@ -2,6 +2,13 @@
   export let title = 'Paralect';
   export let description = 'A cozy startup studio';
   export let avatarUrl;
+
+  let parseHtmlEntities = (str) => {
+    return str.replace(/&#([0-9]{1,3});/gi, function(match, numStr) {
+        var num = parseInt(numStr, 10); // read num as normal number
+        return String.fromCharCode(num);
+    });
+  }
 </script>
 
 <div class="og">
@@ -18,7 +25,7 @@
 
     {#if avatarUrl}
     <div style="display: flex;">
-      <img src={avatarUrl} style="width: 100px; height: 100px; border-radius: 50%;"/>
+      <img src={parseHtmlEntities(avatarUrl)} style="width: 100px; height: 100px; border-radius: 50%;"/>
     </div>
     {/if}
   </div>

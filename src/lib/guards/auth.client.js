@@ -33,5 +33,7 @@ export default async ({ url }) => {
 
 	isUserLoading.set(false);
 
-	return {};
+	return {
+		ogTitle: 'Momentum'
+	};
 };

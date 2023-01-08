@@ -1,0 +1,36 @@
+<script>
+  import { postFile } from '$lib/api';
+  import { createEventDispatcher, onMount } from 'svelte';
+	
+  export let url;
+
+  const dispatch = createEventDispatcher();
+
+  const uploadFile = async file => {
+    const newFile = await postFile('files', file);
+
+    let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
+    debugger;
+    dispatch('fileUploaded', {
+      type: (newFile.url.includes('.mp4') || newFile.url.includes('.mov')) ? 'video' : 'image' , url: fileUrl
+    });
+  }
+
+  const pasteImage = (e) => {
+    Array.from(e.clipboardData.files).forEach(async (file) => {
+      if (file.type.startsWith('image/')) {
+        uploadFile(file);
+      } else if (file.type.startsWith('text/')) {
+        // const textarea = document.createElement('textarea');
+        // textarea.value = await file.text();
+        // document.body.append(textarea);
+      }
+    });
+	};
+
+	const onFileUpload = async (e) => {
+		return uploadFile(e.target.files[0]);
+	};
+</script>
+
+<input type="text" bind:value={url} placeholder="Insert URL or paste from clipboard" on:paste={pasteImage}/>

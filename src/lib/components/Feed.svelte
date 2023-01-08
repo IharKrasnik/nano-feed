@@ -12,6 +12,7 @@
 	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
+	import StreamCard from '$lib/components/StreamCard.svelte';
 
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser'; 
 	import follows from '$lib/stores/follows';
@@ -145,14 +146,6 @@
 
 	$: checkAndUpdateProjects($page.params.username);
 
-  let shuffledCreators = [];
-
-	let shuffleCreators = () => shuffledCreators = _.shuffle($creators);
-
-	$: if ($creators?.length) {
-		shuffleCreators();
-	}
-
 	let selectedSource = null;
 
 	const getDefaultProject = () => {
@@ -160,7 +153,7 @@
 			_id: creator._id,
 			slug: null,
 			title: creator.fullName,
-			description: creator.tagline || `A feed from ${creator.fullName}`
+			description: creator.description || `A feed from ${creator.fullName}`
 		} : {
 			slug: null,
 			title: isExploreProjectsModeOn ? 'Explore Momentum' : ($currentUser ? 'My Feed': 'Momentum Feed'),
@@ -194,16 +187,6 @@
 			refreshFeed();
 		}
   }
-
-	const shuffleInterval = setInterval(() => {
-		shuffleCreators();
-	}, 10000);
-
-
-	onDestroy(() => {
-		feed = [];
-		clearInterval(shuffleInterval)
-	});
     
 	let isExploreModeOn = false;
 	
@@ -494,68 +477,25 @@
 				>
 				</AutoCompleteInput>
 			</div> -->
+			
+			{#if selectedProject || creator}
+				<StreamCard stream={ creator || selectedProject } creators={!creator && $creators} />
 
-			{#if selectedProject}
-				<div class="_project mb-8 rounded-xl">
-
-					<!-- <img src="https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png" class="w-full rounded-xl"/> -->
-
-					{#if selectedProject.bannerUrl || creator?.avatarUrl}
-						<img src="{selectedProject.bannerUrl || creator?.avatarUrl}" class="w-full rounded-xl mb-4 max-h-[180px] object-cover"/>
+				{#if $currentUser && (selectedProject?.slug || creator)}
+					{#if $currentUser.isAdmin || (selectedProject && selectedProject.creator?._id === $currentUser._id) || (creator && creator._id === $currentUser._id)}
+						<a class="w-full" href="/{creator ? `@${creator.username}`: selectedProject.slug}/edit">
+							<button class="w-full">
+								Edit
+								{#if creator}
+									@{creator.fullName}
+								{:else}
+									#{selectedProject.title}
+								{/if}
+							</button>
+						</a>
 					{/if}
-
-					<div class="text-lg font-bold"> 
-						{selectedProject?.title}
-					</div>
-					
-					{#if selectedProject.longDescription}
-						<div>
-							{ selectedProject.longDescription }
-						</div>
-					{/if}
-					
-					<div class="flex justify-between items-center opacity-80 mt-2">
-						<div class="text-sm font-normal">
-							{#if selectedProject.url}
-								<svg class="inline w-[10px] h-[10px] text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="&#10;    stroke: white;&#10;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-								<a href="{selectedProject.url}" target="_blank"> {selectedProject.url.replace('https://', '').replace('http://', '')}</a>
-							{/if}
-						</div>
-						{#if selectedProject?.links?.length}
-							<div class="flex items-center my-2">
-								{#each selectedProject.links as link}
-									<a href="{link.url}" target="_blank" class="ml-2"> <SourceLogo source={link.source} /> </a>
-								{/each}
-							</div>
-						{/if}
-				  </div>
-
-					{#if !creator}
-					<div class="w-full mt-4">
-						<label class="font-bold block mb-2">
-							Creators
-							{#if $creators?.length}
-							
-							<span class="number-tag">
-								{$creators.length}
-							</span>
-							{/if}
-						</label>
-
-						{#key shuffledCreators}
-							{#if shuffledCreators.length}
-								<a class="_creators w-full mt-4 flex" class:justify-between={shuffledCreators.length > 7} href="/creators" in:fade={{ duration: 200 }}>
-									{#each shuffledCreators.slice(0, 7) as creator}
-									<img src={creator.avatarUrl} class="w-[35px] h-[35px] inline rounded-full mr-[-10px]" />
-									{/each}
-								</a>
-							{/if}
-						{/key}
-					</div>
-					{/if}
-				</div>
+				{/if}
 			{/if}
-
 		</div>
 	
 	</div>
@@ -647,15 +587,5 @@
 	._menu_item._selected {
 		border-bottom: 1px solid;
 		margin-bottom: -1px;
-	}
-
-	._creators {
-		transition: all linear 0.1s;
-		border-radius: 8px;
-	}
-
-	._creators:hover {
-		background: rgba(255, 255, 255, .1);
-		padding: 16px;
 	}
 </style>

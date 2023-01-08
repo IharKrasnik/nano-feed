@@ -13,23 +13,74 @@
   import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
   import FeedItem from '$lib/components/FeedItem.svelte';
   import Loader from '$lib/components/Loader.svelte';
+  import StreamCard from '$lib/components/StreamCard.svelte';
+  import FileInput from '$lib/components/FileInput.svelte';
   
   import sources from '$lib/stores/sources';
   import currentUser from '$lib/stores/currentUser';
   import { browser } from '$app/environment';
 
   let project;
+  let creator;
 
-  let loadProject =  async () => {
-    project = await get(`projects/${$page.params.username}`);
+  let username;
+
+  let load =  async () => {
+    if ($page.params.username.startsWith('@')) {
+      username = $page.params.username.replace('@', '');
+      creator = await get(`creators/${username}`);
+
+      stream = {
+        title: creator.fullName,
+        description: creator.description,
+        longDescription: creator.longDescription,
+        bannerUrl: creator.bannerUrl,
+        url: creator.url,
+      }
+    } else {
+      project = await get(`projects/${$page.params.username}`);
+
+      stream = {
+        title: project.title,
+        description: project.description,
+        longDescription: project.longDescription,
+        bannerUrl: project.bannerUrl,
+        url: project.url,
+      }
+    } 
   }
 
   if (!project) {
-    loadProject()
+    load()
   }
 
+  let stream;
+
+  let updateStream = async () => {
+    if (!creator) {
+      await put(`projects/${project._id}`, stream);
+      goto(`/${project.slug}`);
+    } else {
+
+
+      await put(`creators/${creator._id}`, {
+        ...stream,
+        fullName: stream.title,
+      });
+      goto(`/@${creator.username}`);
+    }
+  }
+
+  let fileUploaded = ( (evt) => {
+    let { url } = evt.detail;
+    stream.bannerUrl = url;
+  });
 
 </script>
+
+<svelte:head>
+  <title>Edit {stream?.title || ''} — Momentum</title>
+</svelte:head>
 
 {#if $currentUser}
   {#if project}
@@ -45,159 +96,38 @@
 
   <!-- </div> -->
 
-  {#if !project}
+  {#if !stream}
     <Loader />
   {:else}
     <form class="mb-16 mt-8" style="padding: 2px;">
       <div class="mb-8">
         <label> Tagline  </label>
-        <input type="text" class="block" bind:value={project.description} />
+        <input type="text" class="block" bind:value={stream.description} />
       </div>
 
       <div class="mb-8">
         <label> Description  </label>
-        <textarea type="text" rows="3" class="block" bind:value={project.longDescription}></textarea>
+        <textarea type="text" rows="3" class="block" bind:value={stream.longDescription}></textarea>
       </div>
 
-     <!-- <div class="mb-8">
-        <label>Attachments</label>
+      <div class="mb-8">
+        <label> Url  </label>
+        <input type="text" class="block" bind:value={stream.url} />
+      </div>
 
-        {#if project.bannerUrl}
-          <img class="max-w-[400px]" src={project.bannerUrl} />
-        {:else}
-            <input type="text" bind:value={attachmentUrl} placeholder="Insert URL or paste from clipboard" on:paste={pasteImage}/>
-
-            {#if !feedItem.attachments.length && !attachmentUrl}
-              <div class="my-4">Or</div>
-              <input id="fileInput" type="file" on:change={onFileUpload}>
-              {:else}
-              <button class="mt-4" on:click={addAttachmentUrl}>
-                Add URL
-              </button>
-            {/if}
-        {/if}
-      </div> -->
-
-      <!-- {#if feedItem.url || currentPage === 'update'}
-        <div class="mb-8">
-          <label> Title </label>
-          <input type="text" class="block" bind:value={feedItem.title} use:autofocus/>
-        </div>
-        <div class="mb-8">
-          <label> Content </label>
-          <textarea rows="5" class="block" bind:value={feedItem.content} />
-        </div>
-
-        <div class="mb-8">
-          <label>Attachments</label>
-
-          {#if feedItem.attachments.length}
-            {#each feedItem.attachments as attachment}
-              <div on:click={removeAttachments}>
-                {#if attachment.type === 'video'  }
-                  <video class="max-w-[400px]" src={attachment.url} muted autoplay/>
-                {:else}
-                  <img class="max-w-[400px]" src={attachment.url} />
-                {/if}
-              </div>
-            {/each}
-          {:else}
-            {#if addAttachmentClicked}
-              <input type="text" bind:value={attachmentUrl} placeholder="Insert URL or paste from clipboard" use:autofocus on:paste={pasteImage}/>
-
-              {#if !feedItem.attachments.length && !attachmentUrl}
-                <div class="my-4">Or</div>
-                <input id="fileInput" type="file" on:change={onFileUpload}>
-                {:else}
-                <button class="mt-4" on:click={addAttachmentUrl}>
-                  Add URL
-                </button>
-              {/if}
-
-            {:else}
-              <a class="cursor-pointer text-gray-400 underline" on:click={() => { addAttachmentClicked = true; }}> Add attachment </a>
-            {/if}
-          {/if}
-        </div>
-
-        {#if currentPage !== 'update'}
-          <div class="mb-8">
-            <label>Source</label>
-            
-            <AutoCompleteInput
-              onChange={onSourceSelected}
-              placeholder="Select source.."
-              limitItemsCount={20}
-              allSuggestions={$sources.filter(s => s.value)}
-              initialSelectedItem={ feedItem.source ? { value: feedItem.source } : null }
-            >
-            </AutoCompleteInput>
-          </div>
-        {/if}
-
-        {#if projects}
-          <div class="mb-8">
-            <label>Streams</label>
-            <AutoCompleteInput
-              onChange={onProjectsSelected}
-              placeholder="Search Streams"
-              valueField="slug"
-              searchField="title"
-              isMulti
-              allSuggestions={projects.filter(s => s.slug)}
-              initialSelectedItems={feedItem.projects}
-            >
-            </AutoCompleteInput>
-          </div>
-        {/if}
-
+      <div class="mb-8">
+        <label>Banner </label>
         
-        {#if currentPage !== 'update'}
-        <div class="mb-8">
-          <label>Published On</label>
+        <FileInput bind:url={stream.bannerUrl} on:fileUploaded={fileUploaded} />
+      </div>
 
-          <input type="datetime-local" bind:value="{internalDate}">
-        </div>
-        {/if}
-
-        {#if $currentUser?.isAdmin && creators}
-          <div class="mb-8">
-            <label>Creators</label>
-
-            <AutoCompleteInput
-              onChange={onCreatorSelected}
-              searchField="fullName"
-              placeholder="Search creators.."
-              limitItemsCount={5}
-              isMulti
-              bind:allSuggestions={creators}
-              initialSelectedItems={feedItem.creators}
-            >
-              <div slot="item" let:item={item}>
-                <div class="flex items-center">
-                  <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
-                  {item.fullName}
-                </div>
-              </div>
-            </AutoCompleteInput>
-          </div>
-        {/if}
-
-
-        <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
-          {feedId ? 'Update' : 'Publish'} Moment
-        </button>
-
-        {#if feedId}
-        <button class="danger ml-8 p-4 mt-8" type="submit" on:click={deleteFeed}>
-          Delete Moment
-        </button>
-        {/if}
-      {/if} -->
+      <button class="p-4 mt-8" type="submit" on:click="{updateStream}">
+        Update Stream
+      </button>
     </form>
   {/if}
 
-  {#if project }
+  {#if project || creator}
     <div class="hidden md:flex" 
       style="
       position: fixed;
@@ -207,7 +137,15 @@
       height: 100vh;
       flex-direction: column;
       justify-content: center;">
-      <h3 class="mb-4">Moment Preview</h3>
+      <!-- <h3 class="mb-4">Stream Preview</h3> -->
+
+      {#if stream}
+        <h1> {stream.title} </h1>
+        <h3> {stream.description || 'No Tagline'} </h3>
+      {/if}
+      <div class="mt-4">
+        <StreamCard {stream} />
+      </div>
     </div>
   {/if}
 {/if}
