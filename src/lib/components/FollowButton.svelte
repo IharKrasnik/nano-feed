@@ -1,7 +1,12 @@
 <script>
   export let creator;
   export let project;
-
+  export let isShort = false;
+  export let isOnlyFollow = false;
+ 
+  let clazz = 'w-full';
+  export { clazz as class };
+ 
   import { post, del } from '$lib/api';
   import currentUser from '$lib/stores/currentUser';
   import follows from '$lib/stores/follows';
@@ -51,24 +56,44 @@
   <div class="my-4">
     {#if creator && creator._id !== $currentUser._id}
       {#if $follows.find(f => f._id === creator._id)}
-        <div class="w-full font-bold text-sm cursor-pointer hover:underline text-center" on:click={unfollowStream}>
-          ✓ You're following { creator.fullName }
-        </div>
+        {#if !isOnlyFollow}
+          <div class="w-full font-bold text-sm cursor-pointer hover:underline text-center" on:click={unfollowStream}>
+            {#if isShort}
+            ✓ Following
+            {:else}
+            ✓ You're following { creator.fullName }
+            {/if}
+          </div>
+        {/if}
       {:else}
-        <button class="w-full" on:click={followStream}>
+        <button class="{clazz}" on:click={followStream}>
+          {#if isShort}
+          Follow
+          {:else}
           Follow @{creator.fullName}
+          {/if}
         </button>
       {/if}
     {/if}
 
     {#if project && project.slug && project.creator?._id !== $currentUser._id}
       {#if $follows.find(f => f._id === project._id)}
-        <div class="w-full font-bold text-sm cursor-pointer hover:underline text-center" on:click={unfollowStream}>
-          ✓ You're following { project.title }
-        </div>
+        {#if !isOnlyFollow}
+          <div class="w-full font-bold text-sm cursor-pointer hover:underline text-center" on:click={unfollowStream}>
+            {#if isShort}
+            ✓ Following
+            {:else}
+            ✓ You're following { project.title }
+            {/if}
+          </div>
+        {/if}
       {:else}
-        <button class="w-full" on:click={followStream}>
+        <button class="{clazz}" on:click={followStream}>
+          {#if isShort}
+          Follow
+          {:else}
           Follow #{project.title}
+          {/if}
         </button>
       {/if}
     {/if}

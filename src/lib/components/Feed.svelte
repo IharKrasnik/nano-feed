@@ -1,6 +1,6 @@
 <script>
   import _ from 'lodash';
-	import { fly, fade } from 'svelte/transition'; 
+	import { fly, fade, slide } from 'svelte/transition'; 
   import { goto } from '$app/navigation';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores'
@@ -195,45 +195,6 @@
 		isExploreModeOn = !isExploreModeOn;
 	}
 
-	const followStream = async () => {
-		let follow = {};
-
-		if (creator) {
-			follow.creatorId = creator._id;
-		}
-		
-		if (selectedProject?.slug) {
-			follow.projectId = selectedProject._id
-		}
-		
-		$follows = [{ ...selectedProject, followType: 'project' }, ...$follows];
-		
-		if (!$projects.find(p => p._id === selectedProject._id)) {
-			$projects = [selectedProject, ...$projects];
-		}
-		
-		await post('follows', follow);
-	}
-
-	const unfollowStream = async () => {
-		let query = {};
-
-		if (selectedProject?.slug) {
-			query.projectId = selectedProject._id
-		}
-
-		if (creator) {
-			query.creatorId = creator._id;
-		} 
-		
-		$follows = $follows.filter(f => f._id !== (query.projectId || query.creatorId));
-		
-		if (!isExploreProjectsModeOn) {
-			$projects = $projects.filter(p => p._id !== (query.projectId || query.creatorId));
-		}
-		
-		await del('follows', query);
-	}
 
 	let isExploreProjectsModeOn = false;
 
@@ -251,6 +212,8 @@
 		refreshFeed();
 	}
 
+	let scrollY;
+
 </script>
 
 <svelte:head>
@@ -265,26 +228,39 @@
 	{/if}
 </svelte:head>
 
+<svelte:window bind:scrollY={scrollY} />
+
 	<div>
+		<!-- <div class="fixed w-full h-[65px] bg-black left-0 top-0 md:hidden" style="z-index: 1200; background-image: url({selectedProject?.bannerUrl})"> -->
+		{#if scrollY > 65}
+		{#key selectedProject?.slug}
+			<div class="fixed w-full h-[65px] bg-black left-0 top-[0px] md:hidden" style="z-index: 1200;" transition:slide={{ duration: 100 }}>
+				<div class="flex justify-between items-center px-8 h-full">
+					<h1 style="font-size: 18px;">{selectedProject?.title || ''}</h1>
+					{#if $currentUser}
+						<FollowButton {creator} project={selectedProject} isShort class="small" />
+					{:else}
+						<a href="{API_URL}/auth/google/url?redirect_to={$page.url.href}" style="font-family: Montserrat; font-weight: bold;">
+							<button class="flex items-center justify-center small">
+								<svg class="mr-4" style="width: 20px; height: 20px; " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48"><defs><path id="a" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></defs><clipPath id="b"><use xlink:href="#a" overflow="visible"/></clipPath><path clip-path="url(#b)" fill="#FBBC05" d="M0 37V11l17 13z"/><path clip-path="url(#b)" fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"/><path clip-path="url(#b)" fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"/><path clip-path="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"/></svg>
+
+								Sign In
+							</button>
+						</a>
+					{/if}
+				</div>
+			</div>
+		{/key}
+		{/if}
+	
 		<div>
 			<section class="relative flex justify-between mb-8">
 				<div class="flex w-full items-center">
 					<div>
-						<div class="flex items-center w-full">
+						<div class="items-center w-full">
 							<h1 class="flex items-center text-xl font-bold" style="z-index: 100;">
 								{selectedProject?.title || '...'}
 							</h1>
-
-							<!-- {#if $currentUser}
-								<div class="absolute right-0">
-									{#if selectedProject && $follows.find(f => f._id === selectedProject._id)}
-										<div class="font-bold text-sm cursor-pointer hover:underline ml-4" on:click={unfollowStream}>✓ Following</div>
-									{:else if selectedProject?.slug}
-										<button class="small ml-4" on:click={followStream}> Follow </button>
-									{/if}
-								</div>
-							{/if}
-							 -->
 						</div>
 						<div class="text-lg mt-2" style="opacity: .8;" in:fly={{  y: -50, duration: 150, delay: 150 }}>
 							{selectedProject?.description || '...'}
@@ -483,26 +459,6 @@
 				<StreamCard stream={ creator || selectedProject } creators={!creator && $creators} />
 
 				<FollowButton project={!creator && selectedProject} {creator} />
-<!-- 			
-				{#if $currentUser}
-					<div class="my-4">
-						{#if selectedProject && $follows.find(f => f._id === (creator ? creator._id : selectedProject._id))}
-							<div class="w-full font-bold text-sm cursor-pointer hover:underline text-center" on:click={unfollowStream}>
-								✓ You're following {creator ? creator.fullName : selectedProject?.title || stream.fullName}
-							</div>
-						{:else if (selectedProject?.slug || creator)}
-							<button class="w-full" on:click={followStream}>
-							Follow
-								{#if creator}
-									@{creator.fullName}
-								{:else}
-									#{selectedProject.title}
-								{/if}
-							</button>
-						{/if}
-					</div>
-				{/if} -->
-
 				{#if creator && selectedProject.slug}
 					<div class="mt-16"> 
 						<StreamCard stream={ selectedProject } />
@@ -534,7 +490,7 @@
 </div>
 
 {#if !isProjectsLoading}
-	{#if $currentUser && (!creator || creator._id === $currentUser._id)}
+	{#if $currentUser && (!creator || creator._id === $currentUser._id) && ( (!selectedProject?._id && !isExploreProjectsModeOn) || $follows.find(f => f._id === selectedProject?._id))}
 		<div class="relative">
 			<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
 
@@ -546,6 +502,9 @@
 			})} />
 		</div>
 	{/if}
+	
+	<FollowButton class="w-full mb-8" project={selectedProject} {creator} isOnlyFollow />
+
 	{#if creator && selectedProject?._id !== creator._id}
 		<div class="flex justify-start items-center py-4 mb-4 text-lg font-bold" style="font-family: 'Montserrat'">
 			Substream from {creator.fullName}

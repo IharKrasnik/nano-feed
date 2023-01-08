@@ -410,6 +410,10 @@
       justify-content: center;">
       <h3 class="mb-4">Moment Preview</h3>
       <FeedItem bind:feedItem />
+    
+      <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
+        {feedId ? 'Update' : 'Publish'} Moment
+      </button>
     </div>
   {/if}
 {/if}
