@@ -22,6 +22,9 @@
 	
 	import { writable } from 'svelte/store';
 
+	export let ogTitle = 'Momentum';
+	export let ogDescription = 'Momentum is a tool to build in public and grow audience early.'
+
 	let creator;
 	let prevCreator;
 
