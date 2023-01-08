@@ -267,9 +267,14 @@
 </script>
 
 <svelte:head>
-	{#if selectedProject}
-	<meta property="og:image" content="https://momentum-ogimage-n2shh.ondigitalocean.app/stream?title={selectedProject.title}&description={selectedProject.description}&bannerUrl={selectedProject.bannerUrl}" />
-		<meta property="image" content="https://momentum-ogimage-n2shh.ondigitalocean.app/stream?title={selectedProject.title}&description={selectedProject.description}&bannerUrl={selectedProject.bannerUrl}" />
+	{#if !creator && selectedProject}
+	<title>{selectedProject.slug ? selectedProject.title + ' Momentum Stream' : ( isExploreProjectsModeOn ? 'Explore — Momentum' : 'My Feed — Momentum') } </title>
+	<meta property="title" content="{selectedProject.title}" />
+	{/if}
+
+	{#if creator}
+		<title>{creator.fullName} — Momentum Stream</title>
+		<meta property="title" content="{creator.fullName} — Momentum Stream" />
 	{/if}
 </svelte:head>
 
