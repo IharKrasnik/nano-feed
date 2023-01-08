@@ -503,7 +503,7 @@
 		</div>
 	{/if}
 	
-	<FollowButton class="w-full mb-8" project={selectedProject} {creator} isOnlyFollow />
+	<FollowButton class="w-full mb-8 md:hidden" project={selectedProject} {creator} isOnlyFollow />
 
 	{#if creator && selectedProject?._id !== creator._id}
 		<div class="flex justify-start items-center py-4 mb-4 text-lg font-bold" style="font-family: 'Montserrat'">
