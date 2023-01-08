@@ -1,6 +1,7 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { html as toReactNode } from 'satori-html';
+import { get } from '$lib/api';
 import OGImage from '$lib/components/OGImage.svelte';
 
 import Montserrat from '$lib/Montserrat-Regular.ttf';
@@ -13,16 +14,12 @@ const width = 1200;
 // const fontData = await fontFile.arrayBuffer();
 
 /** @type {import('./$types').RequestHandler} */
-export const GET = async () => {
-	const html = {
-		type: 'div',
-		props: {
-			children: 'hello, world',
-			style: { color: 'red' }
-		}
-	};
+export const GET = async ({ url }) => {
+	const slug = url.searchParams.get('slug') ?? undefined;
+	console.log('slug', slug);
+	const project = await get(`projects/${slug}`);
 
-	const result = OGImage.render();
+	const result = OGImage.render({ title: project.title, description: project.description });
 	const markup = toReactNode(`${result.html}<style>${result.css.code}</style>`);
 
 	const svg = await satori(markup, {

@@ -20,6 +20,11 @@
 <svelte:head>
 	<title>Paralect's Momentum</title>
 	<meta name="description" content="Paralect's Momentum" />
+
+	{#if $page.params.username}
+	<meta property="og:image" content="https://stream.paralect.com/og.png?slug={$page.params.username}" />
+	<meta property="image" content="https://stream.paralect.com/og.png?slug={$page.params.username}" />
+	{/if}
 </svelte:head>
 
 <div class="app overflow-y-scroll" class:bg-black={ !$page.url.href.includes('embed-live') } class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') }>
