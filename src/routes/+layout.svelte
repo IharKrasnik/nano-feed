@@ -23,6 +23,8 @@
 	<meta name="description" content="{$page.data.ogDescription}" />
 	<meta name="og:description" content="{$page.data.ogDescription}" />
 
+	<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+
 	<!-- <title>Momentum</title>
 	<meta name="description" content="Momentum is a tool to build in public and grow audience early." />
 	<meta name="og:description" content="Momentum is a tool to build in public and grow audience early." /> -->

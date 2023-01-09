@@ -230,6 +230,10 @@
 
 <svelte:window bind:scrollY={scrollY} />
 
+<!-- <blockquote class="twitter-tweet">
+  <a href="https://twitter.com/x/status/807811447862468608"></a> 
+</blockquote> -->
+
 	<div>
 		<!-- <div class="fixed w-full h-[65px] bg-black left-0 top-0 md:hidden" style="z-index: 1200; background-image: url({selectedProject?.bannerUrl})"> -->
 		{#if scrollY > 65}

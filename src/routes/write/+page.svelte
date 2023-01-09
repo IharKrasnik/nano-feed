@@ -75,7 +75,8 @@
         params: { url, }
       });
 
-      feedItem.url = url;
+      feedItem.url = data.url || url;
+      feedItem.embedUrl = data.embedUrl;
 
       feedItem.source = data.source;
 
