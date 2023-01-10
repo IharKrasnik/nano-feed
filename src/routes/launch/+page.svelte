@@ -6,7 +6,6 @@
   
   import creators from '$lib/stores/creators';
   import projects from '$lib/stores/projects';
-  import follows from '$lib/stores/follows';
   import currentUser from '$lib/stores/currentUser';
 
   let project = {

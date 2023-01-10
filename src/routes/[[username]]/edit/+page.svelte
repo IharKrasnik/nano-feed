@@ -18,7 +18,6 @@
   
   import sources from '$lib/stores/sources';
   import projects from '$lib/stores/projects';
-  import follows from '$lib/stores/follows';
   import currentUser from '$lib/stores/currentUser';
   import { browser } from '$app/environment';
 
