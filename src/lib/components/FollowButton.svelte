@@ -65,7 +65,7 @@
 
 {#if $currentUser}
   <div class="my-4">
-    {#if creator && creator._id !== $currentUser._id}
+    <!-- {#if creator && creator._id !== $currentUser._id}
       {#if $allProjects.find(f => f._id === creator._id).isFollowing}
         {#if !isOnlyFollow}
           <div class="w-full font-bold text-sm cursor-pointer hover:underline text-center" on:click={unfollowStream}>
@@ -85,7 +85,7 @@
           {/if}
         </button>
       {/if}
-    {/if}
+    {/if} -->
 
     {#if project && project.slug && project.creator?._id !== $currentUser._id}
       {#if $allProjects.find(f => f._id === project._id).isFollowing}
