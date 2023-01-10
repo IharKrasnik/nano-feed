@@ -6,7 +6,7 @@
 	import { fade } from 'svelte/transition';
 
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
-	import follows from '$lib/stores/follows';
+	import allProjects from '$lib/stores/allProjects';
 	
 	import { API_URL } from '$lib/env';
 
@@ -87,7 +87,7 @@
 		</a>
 		{/if}
 
-		{#if $follows}
+		{#if $allProjects}
 			<slot />
 		{/if}
 	</main>

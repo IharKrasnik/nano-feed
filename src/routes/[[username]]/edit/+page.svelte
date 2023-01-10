@@ -71,7 +71,7 @@
         return p;
       });
 
-      $follows = $follows.map(f => {
+      $allProjects = $allProjects.map(f => {
         if (f._id === updatedProject._id) {
           return { ...updatedProject, followType: 'project' };
         }

@@ -5,14 +5,11 @@ import { browser } from '$app/environment';
 
 import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
 
-const followsStore = writable(null);
+const allProjectsStore = writable(null);
 
 export const update = async ({} = {}) => {
-	await get('follows').then(({ projects, creators }) => {
-		followsStore.set([
-			...projects.map((p) => ({ followType: 'project', ...p })),
-			...creators.map((c) => ({ followType: 'creator', ...c }))
-		]);
+	await get('projects').then(({ results }) => {
+		allProjectsStore.set(results);
 	});
 };
 
@@ -31,4 +28,4 @@ if (browser) {
 	});
 }
 
-export default followsStore;
+export default allProjectsStore;

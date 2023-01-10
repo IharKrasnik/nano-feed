@@ -16,7 +16,7 @@
 	import FollowButton from '$lib/components/FollowButton.svelte';
 
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser'; 
-	import follows from '$lib/stores/follows';
+	import allProjects from '$lib/stores/allProjects';
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 	import creators, { update as updateCreators } from '$lib/stores/creators';
 
@@ -38,23 +38,11 @@
 	const updateProjects = async ({ projectSlug, creatorUsername, isExplore = false }) => {
 		let prevProjects = $projects;
 
-		if (!creatorUsername && !isExplore && !projectSlug) {
-			$projects = $follows.filter(f => f.followType === 'project');
+		if (!creatorUsername) {
+			$projects = $allProjects;
 		} else {
-			let query = {};
-
-			if (creatorUsername) {
-				query.creatorUsername = creatorUsername;
-			}
-
-			if (isExplore) {
-				query.isExplore = true;
-			}
+			let query = { creatorUsername };
 			
-			if (projectSlug) {
-				query.projectSlug = projectSlug;
-			}
-
 			isProjectsLoading = true;
 			
 			try {
@@ -158,7 +146,7 @@
 		} : {
 			slug: null,
 			title: isExploreProjectsModeOn ? 'Explore Momentum' : ($currentUser ? 'My Feed': 'Momentum Feed'),
-			description: isExploreProjectsModeOn ? `Updates from streams that you don't follow yet.` : ($currentUser ? 'Latest updates from my Momentum streams' : 'Latest updates from Momentum streams'),
+			description: isExploreProjectsModeOn ? `Updates from streams that you don't follow yet.` : ($currentUser ? 'Latest updates from Momentum streams that I follow' : 'Latest updates from Momentum streams'),
 		}
 	}
  
@@ -313,7 +301,7 @@
 						</a>
 					{/if}
 
-					<a 
+					<!-- <a 
 						class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
 						class:_selected="{isExploreProjectsModeOn}"
 						href="/explore"
@@ -323,7 +311,7 @@
 							<svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 0 1792 1792" width="15" style="background: black;width: 15px;height: 15px;"><path d="M991 1024l64-256h-254l-64 256h254zm768-504l-56 224q-7 24-31 24h-327l-64 256h311q15 0 25 12 10 14 6 28l-56 224q-5 24-31 24h-327l-81 328q-7 24-31 24h-224q-16 0-26-12-9-12-6-28l78-312h-254l-81 328q-7 24-31 24h-225q-15 0-25-12-9-12-6-28l78-312h-311q-15 0-25-12-9-12-6-28l56-224q7-24 31-24h327l64-256h-311q-15 0-25-12-10-14-6-28l56-224q5-24 31-24h327l81-328q7-24 32-24h224q15 0 25 12 9 12 6 28l-78 312h254l81-328q7-24 32-24h224q15 0 25 12 9 12 6 28l-78 312h311q15 0 25 12 9 12 6 28z" style="fill: #00ffa4;"/></svg>
 						</div>
 						Explore
-					</a>
+					</a> -->
 				</div>
 
 				{#if isExploreProjectsModeOn}
@@ -350,7 +338,7 @@
 
 					<div class="flex justify-between items-center font-bold block mt-8 mb-4">
 						<div>
-							{isExploreProjectsModeOn ? 'Explore Streams' : ($currentUser && !creator ? 'My Streams': '')}
+							{$currentUser && !creator ? 'All Streams': ''}
 							{creator ? `Contributions` :''}
 							{(!$currentUser && !creator && 'Explore Streams') || ''}
 							{#if !isProjectsLoading && $projects?.length}
@@ -396,7 +384,7 @@
 					<div class="pb-[200px]">
 						{#if $projects?.length}
 							<div in:fade>
-								{#each $projects as project}
+								{#each (creator?.username ? $projects : $allProjects) as project}
 									<a 
 										class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]" 
 										class:_selected="{selectedProject?.slug === project.slug}"
@@ -494,7 +482,7 @@
 </div>
 
 {#if !isProjectsLoading}
-	{#if $currentUser && (!creator || creator._id === $currentUser._id) && ( (!selectedProject?._id && !isExploreProjectsModeOn) || $follows.find(f => f._id === selectedProject?._id))}
+	{#if $currentUser && (!creator || creator._id === $currentUser._id) && ( (!selectedProject?._id && !isExploreProjectsModeOn) || $projects.find(f => f._id === selectedProject?._id))}
 		<div class="relative">
 			<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
 

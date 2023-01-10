@@ -48,8 +48,6 @@
 
     $projects = [createdProject, ...$projects];
 
-    $follows = [{ followType: 'project', ...createdProject }, ...$follows];
-
     goto('/' + project.slug);
   }
 
