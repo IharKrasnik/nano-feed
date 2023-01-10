@@ -314,7 +314,7 @@
 					</a> -->
 				</div>
 
-				{#if isExploreProjectsModeOn}
+				{#if creator && $currentUser && creator._id === $currentUser._id}
 
 				<div class="mt-16 w-full" in:fly>
 					<a href="/launch" class="w-full">
@@ -342,7 +342,7 @@
 							{creator ? `Contributions` :''}
 							{(!$currentUser && !creator && 'Explore Streams') || ''}
 							{#if !isProjectsLoading && $projects?.length}
-							<span class="number-tag">{$projects.length}</span>
+							<span class="number-tag">{(creator ? $projects.length : $allProjects.length)}</span>
 							{/if}
 						</div>
 					</div>

@@ -28,6 +28,9 @@ export default async ({ url }) => {
 			}
 		} else if (url.href.includes('/write')) {
 			throw redirect(302, `${API_URL}/auth/google/url?redirect_to=${url.href}`);
+		} else {
+			isUserLoading.set(false);
+			currentUser.set(null);
 		}
 	}
 
