@@ -249,176 +249,177 @@
 </svelte:head>
 
 {#if $currentUser}
-  <h2 class="mb-2">Post a Moment</h2>
+  <div>
+    <h2 class="mb-2">Post a Moment</h2>
 
-  <h3 class="mb-4">
-    Moments are tiny yet important actions that you do daily. <br /> <br/>
-    What you've created today?
-  </h3>
+    <h3 class="mb-4">
+      Moments are tiny yet important actions that you do daily. <br /> <br/>
+      What you've created today?
+    </h3>
 
-  <div class="mb-4" in:fade={{ duration: 100 }}>
-    {#if !feedId}
-    <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
-    <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Submit Url</button>
-    {/if}
-
-    {#if currentPage === 'url'}
-      <label class="mt-4 mb-4"> URL </label>
-      <input type="text" class="block" bind:value={url} use:autofocus on:input={() => urlIsDirty = true} />
-
-      {#if urlIsDirty}
-      <button class="mt-4" on:click={addUrl}>Set Url</button>
+    <div class="mb-4" in:fade={{ duration: 100 }}>
+      {#if !feedId}
+      <button class="tab mb-4" class:selected={currentPage==='update'} on:click={() => setPage('update')}>Write Update</button>
+      <button class="tab mb-4" class:selected={currentPage==='url'} on:click={() => setPage('url')}>Submit Url</button>
       {/if}
-    {/if}
-  </div>
 
-  {#if urlIsLoading}
-    <Loader />
-  {:else}
-    <form class="mb-16" style="padding: 2px;">
-      {#if feedItem.url || currentPage === 'update'}
-        <div class="mb-8">
-          <label> Title </label>
-          <input type="text" class="block" bind:value={feedItem.title} use:autofocus/>
-        </div>
-        <div class="mb-8">
-          <label> Content </label>
-          <textarea rows="5" class="block" bind:value={feedItem.content} />
-        </div>
+      {#if currentPage === 'url'}
+        <label class="mt-4 mb-4"> URL </label>
+        <input type="text" class="block" bind:value={url} use:autofocus on:input={() => urlIsDirty = true} />
 
-        <div class="mb-8">
-          <label>Attachments</label>
+        {#if urlIsDirty}
+        <button class="mt-4" on:click={addUrl}>Set Url</button>
+        {/if}
+      {/if}
+    </div>
 
-          {#if feedItem.attachments.length}
-            {#each feedItem.attachments as attachment}
-              <div on:click={removeAttachments}>
-                {#if attachment.type === 'video'  }
-                  <video class="max-w-[400px]" src={attachment.url} muted autoplay/>
-                {:else}
-                  <img class="max-w-[400px]" src={attachment.url} />
-                {/if}
-              </div>
-            {/each}
-          {:else}
-            {#if addAttachmentClicked}
-              <input type="text" bind:value={attachmentUrl} placeholder="Insert URL or paste from clipboard" use:autofocus on:paste={pasteImage}/>
-
-              {#if !feedItem.attachments.length && !attachmentUrl}
-                <div class="my-4">Or</div>
-                <input id="fileInput" type="file" on:change={onFileUpload}>
-                {:else}
-                <button class="mt-4" on:click={addAttachmentUrl}>
-                  Add URL
-                </button>
-              {/if}
-
-            {:else}
-              <a class="cursor-pointer text-gray-400 underline" on:click={() => { addAttachmentClicked = true; }}> Add attachment </a>
-            {/if}
-          {/if}
-        </div>
-
-        {#if currentPage !== 'update'}
+    {#if urlIsLoading}
+      <Loader />
+    {:else}
+      <form class="mb-16" style="padding: 2px;">
+        {#if feedItem.url || currentPage === 'update'}
           <div class="mb-8">
-            <label>Source</label>
-            
-            <AutoCompleteInput
-              onChange={onSourceSelected}
-              placeholder="Select source.."
-              limitItemsCount={20}
-              allSuggestions={$sources.filter(s => s.value)}
-              initialSelectedItem={ feedItem.source ? { value: feedItem.source } : null }
-            >
-            </AutoCompleteInput>
+            <label> Title </label>
+            <input type="text" class="block" bind:value={feedItem.title} use:autofocus/>
           </div>
-        {/if}
-
-        {#if projects}
           <div class="mb-8">
-            <label>Streams</label>
-            <AutoCompleteInput
-              onChange={onProjectsSelected}
-              placeholder="Search Streams"
-              valueField="slug"
-              searchField="title"
-              isMulti
-              allSuggestions={projects.filter(s => s.slug)}
-              initialSelectedItems={feedItem.projects}
-            >
-              <!-- <div slot="item" let:item={item}>
-                hey {item.label}
-              </div> -->
-            </AutoCompleteInput>
+            <label> Content </label>
+            <textarea rows="5" class="block" bind:value={feedItem.content} />
           </div>
-        {/if}
 
-        
-        {#if currentPage !== 'update'}
-        <div class="mb-8">
-          <label>Published On</label>
-
-          <input type="datetime-local" bind:value="{internalDate}">
-        </div>
-        {/if}
-
-        {#if $currentUser?.isAdmin && creators}
           <div class="mb-8">
-            <label>Creators</label>
+            <label>Attachments</label>
 
-            <AutoCompleteInput
-              onChange={onCreatorSelected}
-              searchField="fullName"
-              placeholder="Search creators.."
-              limitItemsCount={5}
-              isMulti
-              bind:allSuggestions={creators}
-              initialSelectedItems={feedItem.creators}
-            >
-              <div slot="item" let:item={item}>
-                <div class="flex items-center">
-                  <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
-                  {item.fullName}
+            {#if feedItem.attachments.length}
+              {#each feedItem.attachments as attachment}
+                <div on:click={removeAttachments}>
+                  {#if attachment.type === 'video'  }
+                    <video class="max-w-[400px]" src={attachment.url} muted autoplay/>
+                  {:else}
+                    <img class="max-w-[400px]" src={attachment.url} />
+                  {/if}
                 </div>
-              </div>
-            </AutoCompleteInput>
+              {/each}
+            {:else}
+              {#if addAttachmentClicked}
+                <input type="text" bind:value={attachmentUrl} placeholder="Insert URL or paste from clipboard" use:autofocus on:paste={pasteImage}/>
+
+                {#if !feedItem.attachments.length && !attachmentUrl}
+                  <div class="my-4">Or</div>
+                  <input id="fileInput" type="file" on:change={onFileUpload}>
+                  {:else}
+                  <button class="mt-4" on:click={addAttachmentUrl}>
+                    Add URL
+                  </button>
+                {/if}
+
+              {:else}
+                <a class="cursor-pointer text-gray-400 underline" on:click={() => { addAttachmentClicked = true; }}> Add attachment </a>
+              {/if}
+            {/if}
           </div>
+
+          {#if currentPage !== 'update'}
+            <div class="mb-8">
+              <label>Source</label>
+              
+              <AutoCompleteInput
+                onChange={onSourceSelected}
+                placeholder="Select source.."
+                limitItemsCount={20}
+                allSuggestions={$sources.filter(s => s.value)}
+                initialSelectedItem={ feedItem.source ? { value: feedItem.source } : null }
+              >
+              </AutoCompleteInput>
+            </div>
+          {/if}
+
+          {#if projects}
+            <div class="mb-8">
+              <label>Streams</label>
+              <AutoCompleteInput
+                onChange={onProjectsSelected}
+                placeholder="Search Streams"
+                valueField="slug"
+                searchField="title"
+                isMulti
+                allSuggestions={projects.filter(s => s.slug)}
+                initialSelectedItems={feedItem.projects}
+              >
+                <!-- <div slot="item" let:item={item}>
+                  hey {item.label}
+                </div> -->
+              </AutoCompleteInput>
+            </div>
+          {/if}
+
+          
+          {#if currentPage !== 'update'}
+          <div class="mb-8">
+            <label>Published On</label>
+
+            <input type="datetime-local" bind:value="{internalDate}">
+          </div>
+          {/if}
+
+          {#if $currentUser?.isAdmin && creators}
+            <div class="mb-8">
+              <label>Creators</label>
+
+              <AutoCompleteInput
+                onChange={onCreatorSelected}
+                searchField="fullName"
+                placeholder="Search creators.."
+                limitItemsCount={5}
+                isMulti
+                bind:allSuggestions={creators}
+                initialSelectedItems={feedItem.creators}
+              >
+                <div slot="item" let:item={item}>
+                  <div class="flex items-center">
+                    <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
+                    {item.fullName}
+                  </div>
+                </div>
+              </AutoCompleteInput>
+            </div>
+          {/if}
+
+          <!-- <hr class="my-8" style="border-color: rgba(255, 255, 255, 0.3)"/> -->
+
+          <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
+            {feedId ? 'Update' : 'Publish'} Moment
+          </button>
+
+          {#if feedId}
+          <button class="danger ml-8 p-4 mt-8" type="submit" on:click={deleteFeed}>
+            Delete Moment
+          </button>
+          {/if}
         {/if}
+      </form>
+    {/if}
 
-        <!-- <hr class="my-8" style="border-color: rgba(255, 255, 255, 0.3)"/> -->
-
+    {#if feedItem }
+      <div class="hidden md:flex w-[400px]" 
+        style="
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: center;
+        transform: translateX(600px);
+        ">
+        <h3 class="mb-4">Moment Preview</h3>
+        <FeedItem bind:feedItem />
+      
         <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
           {feedId ? 'Update' : 'Publish'} Moment
         </button>
-
-        {#if feedId}
-        <button class="danger ml-8 p-4 mt-8" type="submit" on:click={deleteFeed}>
-          Delete Moment
-        </button>
-        {/if}
-      {/if}
-    </form>
-  {/if}
-
-  {#if feedItem }
-    <div class="hidden md:flex" 
-      style="
-      position: fixed;
-      right: 150px;
-      top: 0;
-      width: 400px;
-      height: 100vh;
-      flex-direction: column;
-      justify-content: center;">
-      <h3 class="mb-4">Moment Preview</h3>
-      <FeedItem bind:feedItem />
-    
-      <button class="p-4 mt-8" type="submit" on:click={postToFeed}>
-        {feedId ? 'Update' : 'Publish'} Moment
-      </button>
-    </div>
-  {/if}
+      </div>
+    {/if}
+  </div>
 {/if}
-
 <style>
   
 </style>

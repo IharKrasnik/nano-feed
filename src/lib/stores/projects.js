@@ -45,7 +45,7 @@ export const update = ({
 			]);
 		})
 		.catch(async (err) => await update({ creatorUsername, perPage, sort, sortDirection }))
-		.finally(() => isLoading.set(false));
+	.finally(() => isLoading.set(false));
 };
 
 update();

@@ -18,6 +18,7 @@
   
   import sources from '$lib/stores/sources';
   import projects from '$lib/stores/projects';
+  import allProjects from '$lib/stores/allProjects';
   import currentUser from '$lib/stores/currentUser';
   import { browser } from '$app/environment';
 
@@ -103,8 +104,8 @@
 {#if $currentUser}
   {#if project}
     <h2 class="mb-2">Edit #{project.title}</h2>
-  {:else}
-    <h2 class="mb-2">Edit Stream</h2>
+  {:else if creator}
+    <h2 class="mb-2">Edit Profile</h2>
   {/if}
 <!-- 
   <h3 class="mb-4">
@@ -152,15 +153,15 @@
   {/if}
 
   {#if project || creator}
-    <div class="hidden md:flex" 
+    <div class="hidden md:flex w-[400px]" 
       style="
       position: fixed;
-      right: 150px;
       top: 0;
-      width: 400px;
       height: 100vh;
       flex-direction: column;
-      justify-content: center;">
+      justify-content: center;
+      transform: translateX(600px);
+      ">
       <!-- <h3 class="mb-4">Stream Preview</h3> -->
 
       {#if stream}

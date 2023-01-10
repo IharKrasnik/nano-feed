@@ -414,8 +414,8 @@
 	</div>
 </div>
 
-	<div class="hidden md:block fixed w-[300px] mt-6 top-0" style="margin-left: 605px;">
-		<div>
+	<div class="hidden md:block fixed w-[300px] top-0" style="margin-left: 605px;">
+		<div class="mt-24 xl:mt-6">
     	<div>
 				{#if $currentUser}
 				
