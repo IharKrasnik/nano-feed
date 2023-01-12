@@ -55,9 +55,8 @@
   <FeedItemPreview {feedItem} />
 </Modal>
 
-<a class="_item mb-8 inline-block w-full relative {clazz}"
+<a class="_item _link mb-8 inline-block w-full relative {clazz}"
   class:_release="{feedItem.isRelease}"
-  class:_link="{!!feedItem.url}"
   href="{feedItem.url}" 
   on:click|preventDefault={showPreview}
   target="_blank"
@@ -122,7 +121,7 @@
 
         <div class="shrink-0">
           {#if $currentUser && ($currentUser.isAdmin || feedItem.creators.find( c => c._id === $currentUser._id))}
-            <a class="hover:underline opacity-90" href="/write?feedId={feedItem._id}">
+            <a class="hover:underline opacity-90" href="/write?feedId={feedItem._id}" on:click|stopPropagation={() => {}}>
               {dayjs(new Date(feedItem.publishedOn || feedItem.createdOn)).format('MMM DD, YYYY')}
             </a>
           {:else}

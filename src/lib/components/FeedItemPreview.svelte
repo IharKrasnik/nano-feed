@@ -42,9 +42,22 @@
   <div>
     <div class="_moment">
       <div class="p-4 md:p-8">
-        {#if feedItem.title}
-          <h1>{feedItem.title}</h1>
-        {/if}
+        <div class="flex justify-between">
+          <div>
+            {#if feedItem.title}
+              <h1>{feedItem.title}</h1>
+            {/if}
+          </div>
+
+          <div class="shrink-0">
+            <!-- {#if feedItem.source !== 'momentum'}
+              <a href="{feedItem.url}" target="_blank">
+                <button>Open Link</button>
+              </a>
+            {/if} -->
+          </div>
+
+        </div>
 
         {#if feedItem.content}
         <div class="whitespace-pre-wrap mt-4">
@@ -52,6 +65,14 @@
         </div>
         {/if}
       </div>
+
+      {#if feedItem.source !== 'momentum'}
+        <div class="pl-8 mb-4">
+          <a class="text-sm" href="{feedItem.url}" target="_blank">
+            See Original Link
+          </a>
+        </div>
+      {/if}
 
       {#if feedItem.source === 'momentum' || !feedItem.source }
         {#if feedItem.attachments}

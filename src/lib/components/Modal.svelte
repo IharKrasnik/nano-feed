@@ -3,7 +3,7 @@
 	export let isClosable = true;
 	export let isFixed = true;
 	export let maxWidth = 1080;
-	export let zIndex = 1200;
+	export let zIndex = 2000;
 	export let onClosed = () => {};
   
   import { fly } from 'svelte/transition';
