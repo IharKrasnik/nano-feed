@@ -23,7 +23,7 @@
 	<meta name="description" content="{$page.data.ogDescription}" />
 	<meta name="og:description" content="{$page.data.ogDescription}" />
 
-	<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+	<!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>  -->
  	<script src="https://www.tiktok.com/embed.js"></script>
 	
 	<!-- <title>Momentum</title>
