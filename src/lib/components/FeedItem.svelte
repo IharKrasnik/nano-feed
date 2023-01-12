@@ -3,6 +3,7 @@
   
   import dayjs from 'dayjs';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   
   import { API_URL } from '$lib/env';
   import { get, post } from '$lib/api';
@@ -30,7 +31,7 @@
 
   const likeFeedItem = async (evt) => {
     if (!$currentUser) {
-      return goto(`${API_URL}/auth/google/url`);
+      return goto(`${API_URL}/auth/google/url?redirect_to=${$page.url.href}`);
     }
     if (!feedItem.isLiked) {
       feedItem.isLiked = true;

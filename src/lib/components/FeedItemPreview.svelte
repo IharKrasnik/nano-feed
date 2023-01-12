@@ -19,6 +19,13 @@
   let isLoading = true;
   
   const load = async () => {
+    if (feedItem.url) {
+      const { iframeOptions } = await get('https://igor.npkn.net/iframe', {
+        url: feedItem.embedUrl || feedItem.url
+      });
+      feedItem.iframeOptions = iframeOptions;
+    }
+
     if (feedItem.source === 'twitter' && !feedItem.previewUrl) {
       const twitterData = await get(`https://igor.npkn.net/452788/?url=${feedItem.url}`);
       setTimeout(() => {
@@ -37,11 +44,13 @@
 </script>
 
 {#if isLoading}
-  <Loader />
+  <div class="flex justify-center w-full">
+    <Loader />
+  </div>
 {:else}
   <div>
-    <div class="_moment">
-      <div class="p-4 md:p-8">
+    <div class="_moment flex justify-center">
+      <div class="p-8 md:p-8 max-w-[800px] w-[800px]">
         <div class="flex justify-between">
           <div>
             {#if feedItem.title}
@@ -60,33 +69,11 @@
         </div>
 
         {#if feedItem.content}
-        <div class="whitespace-pre-wrap mt-4">
+        <div class="whitespace-pre-wrap py-4">
           {feedItem.content}
         </div>
         {/if}
       </div>
-
-      {#if feedItem.source !== 'momentum'}
-        <div class="pl-8 mb-4">
-          <a class="text-sm" href="{feedItem.url}" target="_blank">
-            See Original Link
-          </a>
-        </div>
-      {/if}
-
-      {#if feedItem.source === 'momentum' || !feedItem.source }
-        {#if feedItem.attachments}
-          {#each feedItem.attachments as attachment}
-            <div>
-              {#if attachment.url.includes('.mov') || attachment.url.includes('.mp4')}
-                <video src={attachment.url} controls autoplay class="w-full" />
-              {:else}
-                <img src="{attachment.url}" class="w-full"/>
-              {/if}
-            </div>
-          {/each}
-        {/if}
-      {/if}
     </div>
     {#if feedItem.source === 'momentum'}
     {:else if feedItem.source === 'notion'}
@@ -110,19 +97,50 @@
       <!-- <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote>  -->
     {:else if feedItem.source === 'loom'}
       <iframe style="width: 100%; min-height: 600px" src={feedItem.url.replace('share/', 'embed/')} />
-    {:else if !isLoadingError && feedItem.url && !feedItem.url.includes('.mp4') && !feedItem.url.includes('.mov')}
+    {:else if !feedItem.iframeOptions && !isLoadingError && feedItem.url && !feedItem.url.includes('.mp4') && !feedItem.url.includes('.mov')}
       <iframe 
         style="width: 100%; min-height: 600px"
         src={feedItem.embedUrl || feedItem.url} 
-        on:load={(evt) => { debugger; }}
-        on:error={() => { debugger; } }
-      />
+        on:load={(evt) => {  }}
+        on:error={() => { } }
+      >
+      </iframe>
     {:else if isLoadingError}
       <button>Open Link</button>
     {/if}
 
+    {#if feedItem.source !== 'momentum'}
+      <div class="py-8 bg-[#070707]">
+        <a class="flex flex-col justify-center items-center text-sm" href="{feedItem.url}" target="_blank">
+          {#if feedItem.iframeOptions}
+            <div class="mb-4">
+              Preview is not available 😅
+            </div>
+          {/if}
+          
+          <button>
+            <svg class="inline w-[15px] h-[15px] text-gray-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="&#10;    stroke: white;&#10;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            See Original Link
+          </button>
+        </a>
+      </div>
+    {/if}
+       {#if feedItem.source === 'momentum' || !feedItem.source }
+        {#if feedItem.attachments}
+          {#each feedItem.attachments as attachment}
+            <div>
+              {#if attachment.url.includes('.mov') || attachment.url.includes('.mp4')}
+                <video src={attachment.url} controls autoplay class="w-full" />
+              {:else}
+                <img src="{attachment.url}" class="w-full"/>
+              {/if}
+            </div>
+          {/each}
+        {/if}
+      {/if}
+
     {#if feedItem.projects?.length}
-      <div class="justify-center mb-8 md:mt-16 flex md:flex-row items-center md:items-start flex-col">
+      <div class="justify-center py-8 md:py-16 flex md:flex-row items-center md:items-start flex-col bg-black">
         {#each feedItem.projects as project}
           {#if !$allProjects.find(p => p._id === project._id)?.isHub}
             <div class="max-w-[300px] mr-8">
