@@ -150,14 +150,16 @@
         <div class="flex items-center">
           {#if feedItem?.creators}
             {#each feedItem.creators as creator, i}
-            <a href="/@{creator.username}" class="shrink-0 w-[40px] mr-[-20px]" style="z-index: {100-i};">
+            <a href="/@{creator.username}" class="shrink-0 w-[40px] mr-[-20px]" style="z-index: {100-i};" on:click|stopPropagation={() => {}}>
               <img src="{creator.avatarUrl}" class="rounded-full w-[40px] h-[40px]" /> 
             </a>
             {/each}
 
             <div class="pl-4 text-sm ml-[20px]">
               {#each feedItem.creators as creator, i}
-                <a href="/@{creator.username}" class="hover:underline">{creator.fullName}</a>{i !== feedItem.creators.length - 1 ? ', ' : ''}
+                <a href="/@{creator.username}" 
+                  on:click|stopPropagation={() => {}}
+                  class="hover:underline">{creator.fullName}</a>{i !== feedItem.creators.length - 1 ? ', ' : ''}
               {/each}
             </div>
           {/if}

@@ -60,9 +60,9 @@
       } else if (feedItem.source === 'reddit') {
         loadScript('https://embed.redditmedia.com/widgets/platform.js');
       }
-
-      isLoading = false;
     }
+
+    isLoading = false;
   }
 
   load();
