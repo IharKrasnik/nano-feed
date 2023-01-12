@@ -23,8 +23,9 @@
 	<meta name="description" content="{$page.data.ogDescription}" />
 	<meta name="og:description" content="{$page.data.ogDescription}" />
 
-	<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
-
+	<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+ 	<script src="https://www.tiktok.com/embed.js"></script>
+	
 	<!-- <title>Momentum</title>
 	<meta name="description" content="Momentum is a tool to build in public and grow audience early." />
 	<meta name="og:description" content="Momentum is a tool to build in public and grow audience early." /> -->
@@ -34,6 +35,9 @@
 	<meta property="image" content="https://stream.paralect.com/og.png?streamName={$page.params.username}" />
 	{/if}
 </svelte:head>
+
+
+<div id="modal-portal" />
 
 <div 
 	class="app overflow-y-scroll" 

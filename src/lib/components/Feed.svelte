@@ -202,6 +202,9 @@
 
 	let scrollY;
 
+	let startWritingPlaceholder = 'What have you created today?';
+	let startWritingFocusPlaceholder = 'Start typing or insert a link';
+	let isStartWritingFocus = false;
 </script>
 
 <svelte:head>
@@ -218,9 +221,11 @@
 
 <svelte:window bind:scrollY={scrollY} />
 
-<!-- <blockquote class="twitter-tweet">
-  <a href="https://twitter.com/x/status/807811447862468608"></a> 
-</blockquote> -->
+<!-- 
+<blockquote class="twitter-tweet" data-theme="dark"><p lang="en" dir="ltr">Most people don&#39;t grow on social media because they don&#39;t have anything interesting to say.</p>&mdash; Dakota Robertson (@WrongsToWrite) <a href="https://twitter.com/WrongsToWrite/status/1613440911249211392?ref_src=twsrc%5Etfw">January 12, 2023</a></blockquote> 
+
+<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@spookzapp/video/7182249917174353158" data-video-id="7182249917174353158" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@spookzapp" href="https://www.tiktok.com/@spookzapp?refer=embed">@spookzapp</a> Wow 70% that’s freaking high🤯 <a title="spookz" target="_blank" href="https://www.tiktok.com/tag/spookz?refer=embed">#spookz</a> <a title="spookzstreaming" target="_blank" href="https://www.tiktok.com/tag/spookzstreaming?refer=embed">#spookzstreaming</a> <a title="getspookz" target="_blank" href="https://www.tiktok.com/tag/getspookz?refer=embed">#getspookz</a> <a title="fy" target="_blank" href="https://www.tiktok.com/tag/fy?refer=embed">#fy</a> <a title="foryou" target="_blank" href="https://www.tiktok.com/tag/foryou?refer=embed">#foryou</a> <a title="fyp" target="_blank" href="https://www.tiktok.com/tag/fyp?refer=embed">#fyp</a> <a title="twitch" target="_blank" href="https://www.tiktok.com/tag/twitch?refer=embed">#twitch</a> <a title="streaming" target="_blank" href="https://www.tiktok.com/tag/streaming?refer=embed">#streaming</a> <a title="spookzstreaming" target="_blank" href="https://www.tiktok.com/tag/spookzstreaming?refer=embed">#spookzstreaming</a> <a title="gamingontiktok" target="_blank" href="https://www.tiktok.com/tag/gamingontiktok?refer=embed">#gamingontiktok</a> <a title="smalltwitchstreamer" target="_blank" href="https://www.tiktok.com/tag/smalltwitchstreamer?refer=embed">#smalltwitchstreamer</a> <a title="twitchcommunitygamer" target="_blank" href="https://www.tiktok.com/tag/twitchcommunitygamer?refer=embed">#twitchcommunitygamer</a> <a target="_blank" title="♬ She Share Story (for Vlog) - 山口夕依" href="https://www.tiktok.com/music/She-Share-Story-for-Vlog-6722656094272883458?refer=embed">♬ She Share Story (for Vlog) - 山口夕依</a> </section> </blockquote> -->
+
 
 	<div>
 		<!-- <div class="fixed w-full h-[65px] bg-black left-0 top-0 md:hidden" style="z-index: 1200; background-image: url({selectedProject?.bannerUrl})"> -->
@@ -486,12 +491,25 @@
 		<div class="relative">
 			<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
 
-			<textarea class="pl-16 mb-4" placeholder="What have you created today?" rows="1" on:input={(e) => goto('/write', {
-				state: {
-					title: e.target.value,
-					projectSlug: selectedProject?.slug || ''
-				}
-			})} />
+			<textarea 
+				class="pl-16 mb-4" 
+				placeholder={isStartWritingFocus ? startWritingFocusPlaceholder : startWritingPlaceholder} 
+				rows="1" 
+				on:input={(e) => goto('/write', {
+					state: {
+						title: e.target.value,
+						projectSlug: selectedProject?.slug || ''
+					}
+				})}
+				
+				on:focus={() => {
+					isStartWritingFocus = true;
+				}}
+
+				on:blur={() => {
+					isStartWritingFocus = false;
+				}}
+			/>
 		</div>
 	{/if}
 	
