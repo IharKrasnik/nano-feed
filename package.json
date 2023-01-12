@@ -38,6 +38,7 @@
 		"dayjs": "^1.11.7",
 		"hotkeys-js": "^3.10.1",
 		"lodash": "^4.17.21",
-		"slug": "^8.2.2"
+		"slug": "^8.2.2",
+		"svelte-twitter-widgets": "^0.1.0"
 	}
 }

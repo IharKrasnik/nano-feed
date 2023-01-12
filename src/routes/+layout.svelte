@@ -24,7 +24,7 @@
 	<meta name="og:description" content="{$page.data.ogDescription}" />
 
 	<!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>  -->
- 	<script src="https://www.tiktok.com/embed.js"></script>
+ 	<!-- <script src="https://www.tiktok.com/embed.js"></script> -->
 	
 	<!-- <title>Momentum</title>
 	<meta name="description" content="Momentum is a tool to build in public and grow audience early." />

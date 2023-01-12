@@ -17,26 +17,52 @@
   let isLoadingError = false;
 
   let isLoading = true;
-  
+  let htmlIsLoading = false;
+
+  let embedSocialEl;
+
+  let loadScript = async (url) => {
+    htmlIsLoading = true;
+    let script = document.createElement('script');
+
+    script.src = url;
+
+    document.head.appendChild(script);
+
+    let promise = new Promise((resolve, reject) => {
+      script.onload = () => {
+        setTimeout(() => {
+          htmlIsLoading = false;
+        }, 1000);
+
+        resolve();
+      }
+    });
+    return promise;
+  }
+
   const load = async () => {
-    if (feedItem.url && !['youtube', 'twitter', 'indiehackers', 'dribbble', 'linkedin'].includes(feedItem.source) && !feedItem.url.includes('.mp4') && !feedItem.url.includes('.mov')) {
+    if (feedItem.url && !['youtube', 'twitter', 'tiktok', 'indiehackers', 'dribbble', 'linkedin', 'reddit'].includes(feedItem.source) && !feedItem.url.includes('.mp4') && !feedItem.url.includes('.mov')) {
       const { iframeOptions } = await get('https://igor.npkn.net/iframe', {
         url: feedItem.embedUrl || feedItem.url
       });
       feedItem.iframeOptions = iframeOptions;
     }
 
-    if (feedItem.source === 'twitter' && !feedItem.previewUrl) {
-      const twitterData = await get(`https://igor.npkn.net/452788/?url=${feedItem.url}`);
-      setTimeout(() => {
-        feedItem.embedHtml = twitterData.html;
-      }, 0);
-    } else if (feedItem.source === 'tiktok' && !feedItem.previewUrl) {
-      const tiktokData = await get(`https://igor.npkn.net/embed-tiktok?url=${feedItem.url}`);
-      feedItem.embedHtml = tiktokData.html;
-    }
+    if (['twitter', 'tiktok', 'reddit'].includes(feedItem.source)) {
+      const data = await get(`https://igor.npkn.net/452788/?url=${feedItem.url}`);
+      feedItem.embedHtml = data.html;
 
-    isLoading = false;
+      if (feedItem.source === 'twitter') {
+        loadScript('https://platform.twitter.com/widgets.js');
+      } else if (feedItem.source === 'tiktok') {
+        loadScript('https://www.tiktok.com/embed.js');
+      } else if (feedItem.source === 'reddit') {
+        loadScript('https://embed.redditmedia.com/widgets/platform.js');
+      }
+
+      isLoading = false;
+    }
   }
 
   load();
@@ -92,7 +118,13 @@
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
     </iframe>
     {:else if feedItem.embedHtml}
-      {@html feedItem.embedHtml}
+      <div
+        bind:this={embedSocialEl}
+        class="w-full flex justify-center {htmlIsLoading ? 'opacity-0': 'opacity-100'}"
+        class:bg-white={feedItem.source === 'reddit'}
+      >
+        {@html feedItem.embedHtml}
+      </div>
         <!-- <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
       <!-- <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote>  -->
     {:else if feedItem.source === 'loom'}
@@ -109,6 +141,7 @@
         >
         </iframe>
       {/if}
+
     {:else if !feedItem.iframeOptions && !isLoadingError && feedItem.url && !feedItem.url.includes('.mp4') && !feedItem.url.includes('.mov')}
       <iframe 
         style="width: 100%; min-height: 600px"
