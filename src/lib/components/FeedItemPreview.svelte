@@ -66,14 +66,13 @@
       }
     }
 
-    if (['indiehackers', 'youtube'].includes(feedItem.source)) {
+    if (['indiehackers', 'youtube', 'loom'].includes(feedItem.source)) {
       feedItem.hideAttachments = true;
     }
 
     if (feedItem.source === 'linkedin' && !feedItem.embedUrl) {
       feedItem.hideAttachments = true;
     }
-
 
     isLoading = false;
   }
