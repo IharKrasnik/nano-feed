@@ -46,10 +46,14 @@
       const { iframeOptions } = await get('https://igor.npkn.net/iframe', {
         url: feedItem.embedUrl || feedItem.url
       });
+
       feedItem.iframeOptions = iframeOptions;
+      feedItem.hideAttachments = !feedItem.iframeOptions;
     }
 
     if (['twitter', 'tiktok', 'reddit'].includes(feedItem.source)) {
+      feedItem.hideAttachments = true;
+
       const data = await get(`https://igor.npkn.net/452788/?url=${feedItem.url}`);
       feedItem.embedHtml = data.html;
 
@@ -61,6 +65,15 @@
         loadScript('https://embed.redditmedia.com/widgets/platform.js');
       }
     }
+
+    if (['indiehackers', 'youtube'].includes(feedItem.source)) {
+      feedItem.hideAttachments = true;
+    }
+
+    if (feedItem.source === 'linkedin' && !feedItem.embedUrl) {
+      feedItem.hideAttachments = true;
+    }
+
 
     isLoading = false;
   }
@@ -171,7 +184,7 @@
       </div>
     {/if}
       <!-- {#if feedItem.source === 'momentum' || !feedItem.source } -->
-        {#if feedItem.attachments}
+        {#if !feedItem.hideAttachments && feedItem.attachments}
           {#each feedItem.attachments as attachment}
             <div>
               {#if attachment.url.includes('.mov') || attachment.url.includes('.mp4')}
