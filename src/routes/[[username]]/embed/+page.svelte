@@ -28,6 +28,10 @@
 
 </script>
 
+<svelte:head>
+  <script sr="https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js" />
+</svelte:head>
+
 <div class="container mx-auto">
   <div class="text-[32px] font-bold w-full text-center p-4 mt-8" style="font-family: Montserrat; opacity: .9;">
     <!-- {project?.title} builds momentum in public -->
