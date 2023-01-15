@@ -8,6 +8,9 @@
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 
   let feed = [];
+  
+  let theme = $page.url.searchParams.get('theme') || 'dark';
+  debugger;
   let project;
   let creator;
 
@@ -42,7 +45,7 @@
       {#if feed.length > 0}
         {#each feed as feedItem}
           <div class="px-2">
-            <FeedItem feedItem={feedItem}></FeedItem>
+            <FeedItem {theme} feedItem={feedItem}></FeedItem>
           </div>
         {/each}
       {/if}

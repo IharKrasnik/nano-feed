@@ -42,7 +42,7 @@
 
 <div 
 	class="app overflow-y-scroll" 
-	class:bg-black={ !$page.url.href.includes('embed-live') }
+	class:bg-black={ !$page.url.href.includes('embed') }
 	class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') 
 }>
 	{#if !$page.url.href.includes('/embed')}

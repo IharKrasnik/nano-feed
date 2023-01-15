@@ -14,6 +14,7 @@
   import Modal from '$lib/components/Modal.svelte';
 
   let isPreview = false;
+  export let theme = 'dark';
 
   export let feedItem = {
 	}
@@ -57,7 +58,7 @@
   <FeedItemPreview {feedItem} />
 </Modal>
 
-<a class="_item _link mb-8 inline-block w-full relative {clazz}"
+<a class="{ theme === 'dark' ? '_dark' : '_light'} _item _link mb-8 inline-block w-full relative {clazz}"
   class:_release="{feedItem.isRelease}"
   href="{feedItem.url}" 
   on:click|preventDefault={showPreview}
@@ -66,7 +67,7 @@
   <div class="relative">
     {#if feedItem.title}
       <div class="font-bold" href="{feedItem.url}">{feedItem.title}</div>
-      <hr class="my-4 opacity-20"/>
+      <hr class="my-4"/>
     {/if}
 
     {#if feedItem.content}
@@ -144,7 +145,7 @@
       <SourceLogo bind:source={feedItem.source} />
     </div>
 
-    <hr class="my-4 opacity-20"/>
+    <hr class="my-4"/>
     
     <div class="flex justify-between items-center">
       <div class="flex justify-between items-center">
@@ -213,7 +214,15 @@
     padding: 16px;
     z-index: 1000;
     color: white;
-    background: black;
+  }
+
+  ._item:not(._light) hr {
+    opacity: 0.2;
+  }
+
+  ._item._light {
+    color: #222;
+    border: 1px rgba(0,0,0, .2) solid;
   }
 
   ._item._link {
