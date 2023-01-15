@@ -13,7 +13,6 @@ const width = 1200;
 // const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
 // const fontData = await fontFile.arrayBuffer();
 
-/** @type {import('./$types').RequestHandler} */
 export const GET = async ({ url }) => {
 	const streamName = url.searchParams.get('streamName') ?? undefined;
 

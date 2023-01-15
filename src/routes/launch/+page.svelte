@@ -38,10 +38,12 @@
       content: 'See my website with build in public updates here:',
       url: project.url,
       isRelease: true,
-      source: 'momentum',
       creators: [$currentUser],
       projects: [{ _id: createdProject._id }],
-      attachments: [],
+      attachments: [{
+        type: 'image',
+        url: `${PAGE_URL}/og.png?pageSlug=${project.slug}`
+      }],
     };
     
     await post('feed', feedItem);
