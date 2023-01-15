@@ -155,6 +155,7 @@
 	let refreshFeed = async () => {
     feed = [];
 		isExploreModeOn = false;
+		searchText = '';
 
 		feed = await fetchFeed({ source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username, isExplore: isExploreProjectsModeOn });
 
@@ -205,6 +206,12 @@
 	let startWritingPlaceholder = 'What have you created today?';
 	let startWritingFocusPlaceholder = 'Start typing or insert a link';
 	let isStartWritingFocus = false;
+
+	let searchText = '';
+
+	let search = () => {
+	}
+
 </script>
 
 <svelte:head>
@@ -386,10 +393,12 @@
 				{/if}
 				
 	      {#if !isProjectsLoading && $projects?.length}
+					<input type="text" placeholder = "Search streams.." style="border: none; padding-left: 0;" bind:value={searchText} on:input={search} />
+
 					<div class="pb-[200px]">
 						{#if $projects?.length}
 							<div in:fade>
-								{#each (creator?.username ? $projects : $allProjects) as project}
+								{#each (creator?.username ? $projects : $allProjects).filter(p => p.title.toLowerCase().startsWith(searchText.toLowerCase())) as project}
 									<a 
 										class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]" 
 										class:_selected="{selectedProject?.slug === project.slug}"
