@@ -1,5 +1,6 @@
 <script>
-	import { page } from '$app/stores'
+	import { page } from '$app/stores';
+  import { STREAM_URL } from '$lib/env';
 
   import { get } from '$lib/api';
 
@@ -10,7 +11,7 @@
   let feed = [];
   
   let theme = $page.url.searchParams.get('theme') || 'dark';
-  debugger;
+
   let project;
   let creator;
 
@@ -35,21 +36,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.contentWindow.min.js" integrity="sha512-14SY6teTzhrLWeL55Q4uCyxr6GQOxF3pEoMxo2mBxXwPRikdMtzKMYWy2B5Lqjr6PHHoGOxZgPaxUYKQrSmu0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </svelte:head>
 
-<div class="container mx-auto">
-  <div class="text-[32px] font-bold w-full text-center p-4 mt-8" style="font-family: Montserrat; opacity: .9;">
-    <!-- {project?.title} builds momentum in public -->
-  </div>
-  <!-- <div class="mt-8" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto auto 1fr; gap: 10px;"> -->
-  <div class="columns-1 md:columns-2 lg:columns-3 mt-8">
+<div class="container mx-auto my-8">
     {#key feed}
       {#if feed.length > 0}
-        {#each feed as feedItem}
-          <div class="px-2">
-            <FeedItem {theme} feedItem={feedItem}></FeedItem>
-          </div>
-        {/each}
+        <div class="{ feed.length > 3 ? 'columns-1 md:columns-2 lg:columns-3 mt-8' : 'flex justify-center' }">
+          {#each feed as feedItem}
+            <div class="px-2 max-w-[600px]">
+              <a href="{feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`}" target="_blank">
+                <div class="pointer-events-none">
+                  <FeedItem {theme} feedItem={feedItem}></FeedItem>
+                </div>
+              </a>
+            </div>
+          {/each}
+        </div>
       {/if}
     {/key}
-  </div>
 </div>
 

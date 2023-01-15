@@ -2,6 +2,7 @@
   import slug from 'slug';
 	import { fade } from 'svelte/transition'; 
   import { post } from '$lib/api';
+  import { PAGE_URL } from '$lib/env';
   import { goto } from '$app/navigation';
   
   import creators from '$lib/stores/creators';
@@ -26,7 +27,7 @@
       callToAction: 'Join Waitlist'
     });
 
-    project.url = `https://page.mmntm.build/p/${project.slug}`;
+    project.url = `${PAGE_URL}/p/${project.slug}`;
 
     const createdProject = await post('projects', project);
 
