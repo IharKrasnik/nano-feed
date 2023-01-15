@@ -203,7 +203,7 @@
         {#each feedItem.projects as project}
           {#if !$allProjects.find(p => p._id === project._id)?.isHub}
             <div class="max-w-[300px] mr-8">
-              <StreamCard stream={$allProjects.find(p => p._id === project._id)} />
+              <StreamCard isLink stream={$allProjects.find(p => p._id === project._id)} />
             </div>
           {/if}
         {/each}

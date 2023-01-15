@@ -34,6 +34,14 @@
 	<meta property="og:image" content="https://stream.paralect.com/og.png?streamName={$page.params.username}" />
 	<meta property="image" content="https://stream.paralect.com/og.png?streamName={$page.params.username}" />
 	{/if}
+
+	{#if !$page.url.href.includes('/embed')}
+		<style>
+			body {
+				background: black;
+			}
+		</style>
+	{/if}
 </svelte:head>
 
 
@@ -47,7 +55,10 @@
 }>
 	{#if !$page.url.href.includes('/embed')}
 	<div class="container xl:mx-auto px-8 xl:px-0 max-w-[600px]">
-		<div class="fixed xl:ml-[-290px] px-8 py-4 sm:px-0 sm:py-8 top-0 left-0 sm:left-auto w-full xl:w-[300px] mb-8 bg-black" 
+		<div class="
+		fixed xl:ml-[-290px] px-8 py-4 sm:px-0 sm:py-8 top-0 left-0 sm:left-auto w-full  mb-8 bg-black
+		{$page.url.href.includes('/feed/') ? '' : 'xl:w-[300px]'}
+		" 
 			style="opacity: .95;
 						z-index: 1111;">
 			<a href="/" class="mb-8">
@@ -80,7 +91,12 @@
 	{/if}
 
 	
-	<main class="{$page.url.href.includes('/embed') ? '': 'container relative p-8 mx-0 xl:mx-auto max-w-[600px]'} mt-[45px] sm:mt-[65px] xl:mt-0" >
+	<main 
+		class="
+			{$page.url.href.includes('/embed') ? 'w-full' : 'container relative p-8 mx-0 xl:mx-auto'} mt-[45px] sm:mt-[65px] xl:mt-0
+			{ $page.url.href.includes('/feed/') ? 'max-w-[1200px]' : `${$page.url.href.includes('/embed') ? '' : 'max-w-[600px]'}`}
+			"
+			>
 
 		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch')}
 		<a href="/write" class="md:hidden flex items-center justify-center" style="
@@ -117,7 +133,6 @@
 		flex-direction: column;
 		min-height: 100vh;
 		transition: all 0.2s linear;
-		/* background: black; */
 	}
 
 	._gradient {
