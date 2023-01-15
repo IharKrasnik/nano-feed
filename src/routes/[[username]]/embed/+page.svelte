@@ -41,7 +41,7 @@
       {#if feed.length > 0}
         <div class="{ feed.length > 3 ? 'columns-1 md:columns-2 lg:columns-3 mt-8' : 'flex justify-center' }">
           {#each feed as feedItem}
-            <div class="px-2 max-w-[600px]">
+            <div class="px-2 max-w-[600px] _feed-item">
               <a href="{feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`}" target="_blank">
                 <div class="pointer-events-none">
                   <FeedItem {theme} feedItem={feedItem}></FeedItem>
@@ -54,3 +54,13 @@
     {/key}
 </div>
 
+<style>
+  ._feed-item {
+    cursor: pointer;
+    transition: all .1s linear;
+  }
+  
+  ._feed-item:hover {
+    transform: translateY(-20px);
+  }
+</style>
