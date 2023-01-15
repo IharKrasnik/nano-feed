@@ -39,11 +39,13 @@
 
 <div id="modal-portal" />
 
+
 <div 
 	class="app overflow-y-scroll" 
 	class:bg-black={ !$page.url.href.includes('embed-live') }
 	class:_gradient={ $page.url.href.toLowerCase().includes('bachrimchuk') 
 }>
+	{#if !$page.url.href.includes('/embed')}
 	<div class="container xl:mx-auto px-8 xl:px-0 max-w-[600px]">
 		<div class="fixed xl:ml-[-290px] px-8 py-4 sm:px-0 sm:py-8 top-0 left-0 sm:left-auto w-full xl:w-[300px] mb-8 bg-black" 
 			style="opacity: .95;
@@ -75,6 +77,7 @@
 
 		</div>
 	</div>
+	{/if}
 
 	
 	<main class="{$page.url.href.includes('/embed') ? '': 'container relative p-8 mx-0 xl:mx-auto max-w-[600px]'} mt-[45px] sm:mt-[65px] xl:mt-0" >

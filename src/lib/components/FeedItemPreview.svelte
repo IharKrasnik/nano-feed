@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte'
   import { get } from '$lib/api';
   import StreamCard from '$lib/components/StreamCard.svelte';
   import Loader from '$lib/components/Loader.svelte';
@@ -140,7 +141,8 @@
         <!-- <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
       <!-- <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote>  -->
     {:else if feedItem.source === 'loom'}
-      <iframe style="width: 100%; min-height: 600px" src={feedItem.url.replace('share/', 'embed/')} />
+      <iframe 
+      style="width: 100%; min-height: 600px" src={feedItem.url.replace('share/', 'embed/')} />
     {:else if ['dribbble', 'instagram', 'tiktok'].includes(feedItem.source)}
 
     {:else if feedItem.source === 'linkedin'}
@@ -156,7 +158,7 @@
 
     {:else if !feedItem.iframeOptions && !isLoadingError && feedItem.url && !feedItem.url.includes('.mp4') && !feedItem.url.includes('.mov')}
       <iframe 
-        style="width: 100%; min-height: 600px"
+        style="width: 100%; min-height: 600px;"
         src={feedItem.embedUrl || feedItem.url} 
         on:load={(evt) => {  }}
         on:error={() => { } }
