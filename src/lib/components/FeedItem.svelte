@@ -48,6 +48,7 @@
   
   const showPreview = async (evt) => {
     isPreview = true;
+    post(`feed/${feedItem._id}/view`);
   }
 </script>
 
