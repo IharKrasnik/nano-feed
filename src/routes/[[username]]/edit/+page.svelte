@@ -79,7 +79,7 @@
         return f;
       });
 
-      goto(`/${project.slug}`);
+      goto(`/${updatedProject.slug}`);
     } else {
 
 
@@ -119,6 +119,12 @@
     <Loader />
   {:else}
     <form class="mb-16 mt-8" style="padding: 2px;">
+      {#if $currentUser.isAdmin}
+      <div class="mb-8">
+        <label> Name </label>
+        <input type="text" class="block" bind:value={stream.title} />
+      </div>
+      {/if}
       <div class="mb-8">
         <label> Tagline  </label>
         <input type="text" class="block" bind:value={stream.description} />
