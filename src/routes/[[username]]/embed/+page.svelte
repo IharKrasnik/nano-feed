@@ -29,7 +29,7 @@
 </script>
 
 <svelte:head>
-  <script sr="https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js" />
+  <script src="https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js" />
 </svelte:head>
 
 <div class="container mx-auto">
