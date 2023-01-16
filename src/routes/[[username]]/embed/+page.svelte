@@ -13,7 +13,7 @@
   let theme = $page.url.searchParams.get('theme') || 'dark';
   let limit = $page.url.searchParams.get('limit') || 30;
   let bgColor = $page.url.searchParams.get('bgColor') || '';
-  debugger;
+
   let project;
   let creator;
 
