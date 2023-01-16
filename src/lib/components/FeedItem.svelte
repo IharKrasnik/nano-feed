@@ -211,7 +211,7 @@
 <style>
   ._item {
     transition: all 0.08s linear;
-    outline: 2px rgba(255,255,255, .1) solid;
+    border: 1px rgba(255,255,255, .3) solid;
     border-radius: 15px;
     padding: 16px;
     z-index: 1000;
@@ -232,8 +232,8 @@
   }
 
   ._item._release {
-    outline-color: #d87712 !important;
-    outline-width: 1px;
+    border-color: #d87712 !important;
+    border-width: 1px;
   }
 
   ._item._release:hover {
@@ -242,6 +242,6 @@
   ._item._link:hover {
     /* transform: scale(1.05); */
     background: rgba(255,255,255, 0.03);
-    outline: 1px rgba(255,255,255, .3) solid;
+    border: 1px rgba(255,255,255, .5) solid;
   }
 </style>

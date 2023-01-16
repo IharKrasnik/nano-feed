@@ -19,6 +19,7 @@
 
   let isLoading = true;
   let htmlIsLoading = false;
+  export let isEditable = false;
 
   let embedSocialEl;
 
