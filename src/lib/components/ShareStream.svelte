@@ -16,7 +16,7 @@
 
 <iframe id="momentum-feed" src="${shareUrl}/embed" \/>
 
-<script> iframeResize({}, '#momentum-feed') <\/script>
+<script> iFrameResize({}, '#momentum-feed') <\/script>
 `;
 
   let copyEmbedCode = () => {
