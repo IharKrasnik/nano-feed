@@ -9,14 +9,11 @@
   export let creator;
 
   let shareUrl = `${STREAM_URL}/${project ? project.slug : `@${creator.username}`}`;
-  debugger;
 
   let embedCode = `
 <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.min.js" integrity="sha512-dnvR4Aebv5bAtJxDunq3eE8puKAJrY9GBJYl9GC6lTOEC76s1dbDfJFcL9GyzpaDW4vlI/UjR8sKbc1j6Ynx6w==" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>
 
-<iframe id="momentum-feed" src="${shareUrl}/embed" \/>
-
-<script> iFrameResize({}, '#momentum-feed') <\/script>
+<iframe id="momentum-feed" style="width:100%; border: none;" src="${shareUrl}/embed" onload="iFrameResize({}, '#momentum-feed')" \/>
 `;
 
   let copyEmbedCode = () => {
