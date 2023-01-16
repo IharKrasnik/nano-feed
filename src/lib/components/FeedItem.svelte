@@ -15,6 +15,7 @@
 
   let isPreview = false;
   export let theme = 'dark';
+  export let bgColor = '';
 
   export let feedItem = {
 	}
@@ -58,7 +59,8 @@
   <FeedItemPreview {feedItem} />
 </Modal>
 
-<a class="{ theme === 'dark' ? '_dark' : '_light'} _item _link mb-8 inline-block w-full relative {clazz}"
+<a class="{ theme === 'dark' ? '_dark' : '_light'}  _item _link mb-8 inline-block w-full relative {clazz}"
+  style="{ bgColor ? `background-color: #${bgColor};` : ''}"
   class:_release="{feedItem.isRelease}"
   href="{feedItem.url}" 
   on:click|preventDefault={showPreview}

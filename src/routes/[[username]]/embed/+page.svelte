@@ -12,7 +12,8 @@
   
   let theme = $page.url.searchParams.get('theme') || 'dark';
   let limit = $page.url.searchParams.get('limit') || 30;
-
+  let bgColor = $page.url.searchParams.get('bgColor') || '';
+  debugger;
   let project;
   let creator;
 
@@ -45,7 +46,7 @@
             <div class="px-2 max-w-[600px] _feed-item">
               <a href="{feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`}" target="_blank">
                 <div class="pointer-events-none">
-                  <FeedItem {theme} feedItem={feedItem}></FeedItem>
+                  <FeedItem {theme} feedItem={feedItem} {bgColor}></FeedItem>
                 </div>
               </a>
             </div>
