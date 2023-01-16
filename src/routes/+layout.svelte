@@ -32,8 +32,8 @@
 	<meta name="og:description" content="Momentum is a tool to build in public and grow audience early." /> -->
 
 	{#if $page.params.username}
-	<meta property="og:image" content="https://stream.paralect.com/og.png?streamName={$page.params.username}" />
-	<meta property="image" content="https://stream.paralect.com/og.png?streamName={$page.params.username}" />
+	<meta property="og:image" content="https://app.mmnntm.build/og.png?streamName={$page.params.username}" />
+	<meta property="image" content="https://app.mmnntm.build/og.png?streamName={$page.params.username}" />
 	{/if}
 
 	{#if !$page.url.href.includes('/embed')}

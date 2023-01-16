@@ -11,4 +11,4 @@ export const PAGE_URL = dev
 
 export const STREAM_URL = dev
 	? 'https://sveltejskittemplatedefault2q1zcw-hsav--5173.local-credentialless.webcontainer.io'
-	: 'https://stream.paralect.com';
+	: 'https://app.mmntm.build';
