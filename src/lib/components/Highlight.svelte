@@ -1,6 +1,6 @@
 <script>
 	import Highlight from 'svelte-highlight';
-	import html from 'svelte-highlight/languages/html';
+	import javascript from 'svelte-highlight/languages/javascript';
 	import highlightStyle from 'svelte-highlight/styles/nnfx-dark';
 	export let code;
 </script>
@@ -9,4 +9,4 @@
 	{@html highlightStyle}
 </svelte:head>
 
-<Highlight language={html} {code} />
+<Highlight language={javascript} {code} />
