@@ -99,7 +99,7 @@
 			"
 			>
 
-		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch')}
+		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch') && !$page.url.href.includes('/embed')}
 		<a href="/write" class="md:hidden flex items-center justify-center" style="
 			position: fixed;
 			bottom: 40px;

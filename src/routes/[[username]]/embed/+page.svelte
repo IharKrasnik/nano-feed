@@ -11,6 +11,7 @@
   let feed = [];
   
   let theme = $page.url.searchParams.get('theme') || 'dark';
+  let limit = $page.url.searchParams.get('limit') || 30;
 
   let project;
   let creator;
@@ -21,7 +22,7 @@
     if ($page.params.username.startsWith('@')) {
      
     } else {
-  		feed = await fetchFeed({ project: $page.params.username });
+  		feed = await fetchFeed({ project: $page.params.username, perPage: limit });
       project = await get(`projects/${$page.params.username}`);
     } 
   }

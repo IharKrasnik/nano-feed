@@ -5,6 +5,8 @@ const feedStore = writable([]);
 
 export const fetch = async ({
 	sort = { publishedOn: -1, createdOn: -1 },
+	page = 1,
+	perPage = 20,
 	source,
 	project,
 	creatorUsername,
@@ -14,8 +16,8 @@ export const fetch = async ({
 
 	const query = {
 		sort,
-		perPage: 20,
-		page: 1
+		page,
+		perPage
 	};
 
 	if (project) {

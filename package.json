@@ -40,6 +40,7 @@
 		"iframe-resizer": "^4.3.2",
 		"lodash": "^4.17.21",
 		"slug": "^8.2.2",
+		"svelte-highlight": "^7.1.2",
 		"svelte-twitter-widgets": "^0.1.0"
 	}
 }
