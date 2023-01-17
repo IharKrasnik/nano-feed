@@ -10,7 +10,7 @@
   import currentUser from '$lib/stores/currentUser';
 
   import { page } from '$app/stores';
-  import { get } from '$lib/api';
+  import { get, postFile } from '$lib/api';
 
   let isLoading = true;
   let feedItem;
@@ -19,6 +19,7 @@
   let attachmentUrl;
   let files = [];
   let addAttachmentClicked = false;
+  let isArticle = false;
 
   let startTitle = browser ? window.history.state.title : null;
 
@@ -63,7 +64,6 @@
       if (data.projectSlugs) {
         feedItem.projects = data.projectSlugs.map(projectSlug => projects.find(c => c.slug === projectSlug));
       }
-      debugger;
     } finally {
       urlIsLoading = false;
     }
@@ -84,6 +84,7 @@
     creators: [$currentUser],
     title: (!url && startTitle) || '',
     content: '',
+    longContent: '',
     url,
     source: null,
     attachments: [],
@@ -98,7 +99,7 @@
       feedItem = {
         title: '',
         content: '',
-        longContent
+        longContent: '',
       } 
     }
 
@@ -107,28 +108,69 @@
 
   load();
 
+  const uploadFile = async file => {
+    const newFile = await postFile('files', file);
+		files = [...files, newFile];
+
+    if (!(newFile.url.startsWith('http'))) {
+      newFile.url = `https://${newFile.url}`;
+    }
+
+    feedItem.attachments.push({ type: (newFile.url.includes('.mp4') || newFile.url.includes('.mov')) ? 'video' : 'image' , url: newFile.url });
+
+    feedItem.attachments = [...feedItem.attachments];
+  }
+
+  const pasteImage = (e) => {
+    Array.from(e.clipboardData.files).forEach(async (file) => {
+      if (file.type.startsWith('image/')) {
+        e.preventDefault();
+        uploadFile(file);
+      } else if (file.type.startsWith('text/')) {
+        // const textarea = document.createElement('textarea');
+        // textarea.value = await file.text();
+        // document.body.append(textarea);
+      }
+    });
+	};
+
+  const addAttachmentUrl = () => {
+    feedItem.attachments = [{ type: 'image', url: attachmentUrl }];
+  }
+
+	const onFileUpload = async (e) => {
+		return uploadFile(e.target.files[0]);
+	};
+  
   let onTitleChange = async () => {
     if (isValidHttpUrl(feedItem.title)) {
       url = feedItem.title;
       await addUrl();
     }
   }
+
+  const INTRO_LIMIT_CHARS = 240;
+
+  let introIsTooLong = false;
+
+  let onContentChanged = () => {
+    introIsTooLong = feedItem.content.length > INTRO_LIMIT_CHARS;
+  }
 </script>
 
-<div class="mt-8">
-
-  <div>
+<div class="mt-16">
+  <div class="max-w-[600px] mx-auto">
     {#if !isLoading || feedItem.title}
-      <h1
-        style="font-size: 32px; font-family: Montserrat; font-weight:bold; border:none; padding-left: 0; outline: none;"
+      <div
         contenteditable
+        style="font-size: 32px; font-weight: bold; font-family: Montserrat; padding-left: 0; outline: none; margin:0;"
         use:placeholder={"Title"}
         bind:innerHTML={feedItem.title}
         on:input={onTitleChange}
       >
-      </h1>
+      </div>
     {/if}
-
+    
     {#if isLoading}
       <div class="w-full flex justify-center">
         <Loader />
@@ -140,13 +182,52 @@
         style="font-size: 20px; outline: none;"
         class="py-4 whitespace-pre-wrap"
         use:placeholder={"Content"}
+        on:input={onContentChanged}
+        on:paste={pasteImage}
         bind:innerHTML={feedItem.content}
       >
       </div>
 
-      <div class="mt-4">
-        Add Cover
+      {feedItem.content.length}/240
+      {#if introIsTooLong}
+      <div class="my-4">
+          Ooops, intro is too long.
+          Keep it short and focused.
+          <br />
+          
+          Or <a>expand your Moment to long-form article</a>
       </div>
+      {/if}
+
+      {#if isArticle}
+      <div>
+        <hr class="my-4" style="border-color: rgba(255, 255, 255, .3);" />
+
+        <div 
+          role="textbox"
+          contenteditable
+          style="font-size: 20px; outline: none;"
+          class="py-4 whitespace-pre-wrap"
+          use:placeholder={"Article Content"}
+          bind:innerHTML={feedItem.longContent}
+        >
+        </div>
+      </div>
+      {/if}
+
+      <!-- <input type="text" bind:value={attachmentUrl} placeholder="Insert URL or paste from clipboard" use:autofocus on:paste={pasteImage}/> -->
+    {/if}
+
+    {#if !feedItem.attachments?.length}
+      <div class="my-4">Or</div>
+      <input id="fileInput" type="file" on:change={onFileUpload}>
+
+      <button class="mt-4" on:click={addAttachmentUrl}>
+        Add URL
+      </button>
+    {:else}
+      <img class="w-full" src="{feedItem.attachments[0].url}" />
     {/if}
   </div>
+
 </div>

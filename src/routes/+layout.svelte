@@ -58,7 +58,7 @@
 	<div class="container xl:mx-auto px-8 xl:px-0 max-w-[600px]">
 		<div class="
 		fixed xl:ml-[-290px] px-8 py-4 sm:px-0 sm:py-8 top-0 left-0 sm:left-auto w-full  mb-8 bg-black
-		{$page.url.href.includes('/feed/') ? '' : 'xl:w-[300px]'}
+		{ ($page.url.href.includes('/feed/') || $page.url.href.includes('/write-editor')) ? '' : 'xl:w-[300px]'}
 		" 
 			style="opacity: .95;
 						z-index: 1111;">
@@ -95,7 +95,7 @@
 	<main 
 		class="
 			{$page.url.href.includes('/embed') ? 'w-full' : 'container relative p-8 mx-0 xl:mx-auto'} mt-[45px] sm:mt-[65px] xl:mt-0
-			{ $page.url.href.includes('/feed/') ? 'max-w-[1200px]' : `${$page.url.href.includes('/embed') ? '' : 'max-w-[600px]'}`}
+			{ ($page.url.href.includes('/feed/') || $page.url.href.includes('/write-editor')) ? 'max-w-[1200px]' : `${$page.url.href.includes('/embed') ? '' : 'max-w-[600px]'}`}
 			"
 			>
 

@@ -73,7 +73,7 @@
     {/if}
 
     {#if feedItem.content}
-      <div class="whitespace-pre-wrap">
+      <div class="whitespace-pre-wrap" class:line-clamp-7={feedItem.content?.length > 240}>
         {feedItem.content}
       </div>
     {/if}
