@@ -17,6 +17,7 @@
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
 	import FollowButton from '$lib/components/FollowButton.svelte';
+	import InfiniteScroll from '$lib/components/InfiniteScroll.svelte';
 
 	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser'; 
 	import allProjects from '$lib/stores/allProjects';
@@ -37,6 +38,7 @@
 
 	let isProjectsLoading = false;
 	let isCreatorLoading = false;
+	let currentPageNumber = 1;
 
 	const updateProjects = async ({ projectSlug, creatorUsername, isExplore = false }) => {
 		let prevProjects = $projects;
@@ -155,12 +157,19 @@
  
 	let selectedProject;
 
+	let fetchFeedPage = ({ page = 1 } = {}) => {
+		return fetchFeed({ 
+			source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username, isExplore: isExploreProjectsModeOn, page,
+		});
+	}
+
 	let refreshFeed = async () => {
     feed = [];
 		isExploreModeOn = false;
 		searchText = '';
+		currentPageNumber = 1;
 
-		feed = await fetchFeed({ source: selectedSource, project: selectedProject?.slug, creatorUsername: creator?.username, isExplore: isExploreProjectsModeOn });
+		feed = await fetchFeedPage();
 
 		if (!creator) {
 			updateCreators({ projectSlug: selectedProject?.slug, isExplore: isExploreProjectsModeOn });
@@ -222,6 +231,12 @@
 		isShare = true;
 	}
  
+
+	let loadMore = async () => {
+		currentPageNumber++;
+		const feedPage = await fetchFeedPage({ page: currentPageNumber });
+		feed = [...feed, ...feedPage];
+	}
 </script>
 
 <svelte:head>
@@ -561,6 +576,13 @@
 	{/if}
 	{#if feed.length > 0}
 	<div in:fly={{  y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
+		<InfiniteScroll
+			hasMore={true}
+			threshold={100}
+			elementScroll={'body'}
+			onLoadMore={() => { loadMore(); }}
+		/>
+
 		{#each feed as feedItem}
 			<FeedItem feedItem={feedItem}></FeedItem>
 		{/each}
