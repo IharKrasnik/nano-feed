@@ -40,7 +40,7 @@
     <div class="flex mt-8" style="width: 400x; height: 600px;">
       {#if shownFeed}
         <div class="mr-8" style="max-width: 100%; max-height: 100%;" transition:fade>
-          <FeedItem feedItem={shownFeed}></FeedItem>
+          <FeedItem feedItem={shownFeed} hideLikes></FeedItem>
         </div>
       {/if}
     </div>
