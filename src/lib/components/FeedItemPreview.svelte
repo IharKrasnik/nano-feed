@@ -110,7 +110,7 @@
 
         {#if feedItem.content}
         <div class="whitespace-pre-wrap py-4">
-          {feedItem.content}
+          { feedItem.longContent || feedItem.content }
         </div>
         {/if}
       </div>

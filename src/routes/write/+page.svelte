@@ -287,6 +287,13 @@
             <textarea rows="5" class="block" bind:value={feedItem.content} />
           </div>
 
+          {#if $currentUser?.isAdmin}
+          <div class="mb-8">
+            <label> Long Content (admin only) </label>
+            <textarea rows="5" class="block" bind:value={feedItem.longContent} />
+          </div>
+          {/if}
+
           <div class="mb-8">
             <label>Attachments</label>
 

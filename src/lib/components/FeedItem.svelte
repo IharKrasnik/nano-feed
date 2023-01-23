@@ -93,7 +93,7 @@
       {/if}
     {/if}
 
-    {#if (['linkedin'].includes(feedItem.source)) && !feedItem.isRelease}
+    {#if feedItem.longContent || ((['linkedin'].includes(feedItem.source)) && !feedItem.isRelease) }
     <div class="flex justify-between opacity-50">
     <div>...</div>
     <div class="text-right">...see more</div>
