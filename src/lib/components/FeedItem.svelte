@@ -134,7 +134,7 @@
           {/if}
         </div>
  
-         <div class="overflow-x-scroll mx-4">
+         <div class="mx-4">
           {#each (feedItem.projects || []).filter(p => !p.isHub) as project}
             <a class="hover:underline mr-4 opacity-90" on:click|stopPropagation={() => {}} href="/{project.slug}">
               <span style="color: {project.color};">#</span>
