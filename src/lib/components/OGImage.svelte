@@ -15,11 +15,11 @@
   <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
     <div style="display: flex; flex-direction: column;">
       <div style="font-size: 64px; font-weight: bold; opacity: .8;">
-        {title}
+        {parseHtmlEntities(title)}
       </div>
 
       <div class="_description" style="font-size: 40px; margin-top: 16px; opacity: .8;">
-        {description}
+        {parseHtmlEntities(description)}
       </div>
     </div>
 
