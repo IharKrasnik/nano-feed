@@ -42,7 +42,7 @@
         allWeeks[weekNum].push({
           count: dateStats?.count || 0,
           date: dateLabel,
-          dateFormatted: moment(dateLabel).format('MMM, DD'),
+          dateFormatted: moment(dateLabel).format('MMM DD'),
           isToday: now.isSame(date, 'day'),
           isFuture: date > now,
         })
@@ -71,7 +71,7 @@
           class:opacity-30={weekDay.isFuture}
           class:_today={weekDay.isToday}
           class:_empty={!weekDay.count}
-          title={weekDay.dateFormatted}
+          title={`${weekDay.dateFormatted} — ${weekDay.count || 'no'} posts`}
           use:tooltip
         >
           {weekDay.count}
