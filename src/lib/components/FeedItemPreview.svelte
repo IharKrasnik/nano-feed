@@ -44,7 +44,7 @@
   }
 
   const load = async () => {
-    if (feedItem.url && !['youtube', 'twitter', 'tiktok', 'indiehackers', 'dribbble', 'linkedin', 'reddit'].includes(feedItem.source) && !feedItem.url.includes('.mp4') && !feedItem.url.includes('.mov')) {
+    if (feedItem.url && !['youtube', 'twitter', 'tiktok', 'indiehackers', 'dribbble', 'linkedin', 'reddit', 'loom'].includes(feedItem.source) && !feedItem.url.includes('.mp4') && !feedItem.url.includes('.mov')) {
       const { iframeOptions } = await get('https://igor.npkn.net/iframe', {
         url: feedItem.embedUrl || feedItem.url
       });
@@ -193,7 +193,7 @@
         <a class="flex flex-col justify-center items-center text-sm" href="{feedItem.url}" target="_blank">
           {#if feedItem.iframeOptions}
             <div class="mb-4">
-              Preview is not available 😅
+              <!-- Preview is not available 😅 -->
             </div>
           {/if}
           

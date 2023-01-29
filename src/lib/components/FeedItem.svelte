@@ -68,7 +68,7 @@
   class:_release="{feedItem.isRelease}"
   href="{feedItem.url}" 
   on:click={(e) => { 
-    if (!feedItem.url || feedItem.source === 'youtube') {
+    if (!feedItem.url || ['youtube', 'loom'].includes(feedItem.source)) {
       showPreview();
       e.preventDefault();
     } else {

@@ -99,11 +99,11 @@
           </div>
         {/if}
       {:else}
-        <button class="{clazz}" on:click={followStream}>
+        <button class="{clazz}" on:click={followStream} >
           {#if isShort}
-          Follow
+          💥 Follow
           {:else}
-          Follow #{project.title}
+          💥 Follow #{project.title}
           {/if}
         </button>
       {/if}

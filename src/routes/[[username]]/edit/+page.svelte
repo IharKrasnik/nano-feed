@@ -122,22 +122,22 @@
       {#if $currentUser.isAdmin}
       <div class="mb-8">
         <label> Name </label>
-        <input type="text" class="block" bind:value={stream.title} />
+        <input type="text" class="block" bind:value={stream.title} placeholder="Your brand name"/>
       </div>
       {/if}
       <div class="mb-8">
         <label> Tagline  </label>
-        <input type="text" class="block" bind:value={stream.description} />
+        <input type="text" class="block" bind:value={stream.description} placeholder="Short 1-sentence pitch" />
       </div>
 
       <div class="mb-8">
         <label> Description  </label>
-        <textarea type="text" rows="3" class="block" bind:value={stream.longDescription}></textarea>
+        <textarea type="text" rows="3" class="block" bind:value={stream.longDescription} placeholder="Tell what your stream is about and what are your goals. In few short sentences."></textarea>
       </div>
 
       <div class="mb-8">
-        <label> Url  </label>
-        <input type="text" class="block" bind:value={stream.url} />
+        <label> Website  </label>
+        <input type="text" class="block" bind:value={stream.url} placeholder="https://{(project?.slug || creator.username).replaceAll('.', '-')}.com"/>
       </div>
 
       {#if creator}
@@ -153,7 +153,7 @@
       </div>
 
       <button class="p-4 mt-8" type="submit" on:click="{updateStream}">
-        Update Stream
+        Update { creator ? `@${creator.fullName}`: `#${project.title}`}
       </button>
     </form>
   {/if}
