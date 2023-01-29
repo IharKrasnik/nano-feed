@@ -12,10 +12,13 @@ const width = 1200;
 
 // const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
 // const fontData = await fontFile.arrayBuffer();
+function unEntity(str) {
+	return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+}
 
 export const GET = async ({ url }) => {
 	const streamName = url.searchParams.get('streamName') ?? undefined;
-
+	console.log('streamName', streamName);
 	let componentResult;
 
 	if (streamName?.startsWith('@')) {
@@ -29,6 +32,8 @@ export const GET = async ({ url }) => {
 		let project = await get(`projects/${streamName}`);
 		componentResult = OGImage.render({ title: project.title, description: project.description });
 	}
+
+	componentResult.html = unEntity(componentResult.html);
 
 	const markup = toReactNode(`${componentResult.html}<style>${componentResult.css.code}</style>`);
 
