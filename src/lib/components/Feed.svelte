@@ -16,6 +16,7 @@
 	import FeedItem from '$lib/components/FeedItem.svelte';
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
+	import CadenceGrid from '$lib/components/CadenceGrid.svelte';
 	import FollowButton from '$lib/components/FollowButton.svelte';
 	import InfiniteScroll from '$lib/components/InfiniteScroll.svelte';
 
@@ -461,7 +462,7 @@
 	</div>
 </div>
 
-	<div class="hidden md:block fixed w-[300px] top-0" style="margin-left: 605px;">
+	<div class="hidden md:block fixed w-[300px] top-0 overflow-y-scroll h-screen pb-32" style="margin-left: 605px; padding: 5px;">
 		<div class="mt-24 xl:mt-6">
     	<div>
 				{#if $currentUser}
@@ -533,8 +534,23 @@
 					{/if}
 				{/if}
 			{/if}
+			
 		</div>
-	
+  	
+		<div class="mt-8">
+			<div class="font-bold mb-4">
+				Cadence
+			</div>
+			
+			{#key selectedProject}
+				<div  in:fade>
+					<CadenceGrid projectSlug={selectedProject?.slug} creatorUsername={creator?.username} />
+				</div>
+			{/key}
+		</div>
+		<!-- {#if feed?.length}
+			<FeedItem feedItem={feed[0]} />
+		{/if} -->
 	</div>
 
   <div>
