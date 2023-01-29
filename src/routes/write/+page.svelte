@@ -23,6 +23,7 @@
 	let isProjectsLoading = false;
   let creators;
   let urlIsDirty = false;
+  let isFullUrlEdit = false;
   
 	const fetchProjects = async () => {
 		isProjectsLoading = true;
@@ -125,6 +126,9 @@
   const setPage = page => {
     if (page === 'update') {
       feedItem.source = 'momentum';
+      isFullUrlEdit = true;
+    } else {
+      isFullUrlEdit = false;
     }
 
     currentPage = page;
@@ -298,6 +302,16 @@
         {#if urlIsDirty}
         <button class="mt-4" on:click={addUrl}>Set Url</button>
         {/if}
+
+        {#if !urlIsLoading && feedItem.url && !isFullUrlEdit}
+        <div class="mt-4 text-sm text-gray-400">
+          This post is auto-populated from link. You can edit moment to improve copy and attachments.
+          
+          <div class="mt-2">
+            <div class="cursor-pointer underline" on:click={() => isFullUrlEdit = true}>Modify Moment</div>
+          </div>
+        </div>
+        {/if}
       {/if}
     </div>
 
@@ -306,67 +320,71 @@
     {:else}
       <form class="mb-16" style="padding: 2px;">
         {#if feedItem.url || currentPage === 'update'}
-          <div class="mb-8">
-            <label> Title </label>
-            <input type="text" class="block" bind:value={feedItem.title} use:autofocus/>
-          </div>
-          <div class="mb-8">
-            <label> Content </label>
-            <textarea rows="5" class="block" bind:value={feedItem.content} />
-          </div>
-
-          {#if $currentUser?.isAdmin}
-          <div class="mb-8">
-            <label> Long Content (admin only) </label>
-            <textarea rows="5" class="block" bind:value={feedItem.longContent} />
-          </div>
-          {/if}
-
-          <div class="mb-8">
-            <label>Attachments</label>
-
-            {#if feedItem.attachments.length}
-              {#each feedItem.attachments as attachment}
-                <div on:click={removeAttachments}>
-                  {#if attachment.type === 'video'  }
-                    <video class="max-w-[400px]" src={attachment.url} muted autoplay/>
-                  {:else}
-                    <img class="max-w-[400px]" src={attachment.url} />
-                  {/if}
-                </div>
-              {/each}
-            {:else}
-              {#if addAttachmentClicked}
-                <input type="text" bind:value={attachmentUrl} placeholder="Insert URL or paste from clipboard" use:autofocus on:paste={pasteImage}/>
-
-                {#if !feedItem.attachments.length && !attachmentUrl}
-                  <div class="my-4">Or</div>
-                  <input id="fileInput" type="file" on:change={onFileUpload}>
-                  {:else}
-                  <button class="mt-4" on:click={addAttachmentUrl}>
-                    Add URL
-                  </button>
-                {/if}
-
-              {:else}
-                <a class="cursor-pointer text-gray-400 underline" on:click={() => { addAttachmentClicked = true; }}> Add attachment </a>
-              {/if}
-            {/if}
-          </div>
-
-          {#if currentPage !== 'update'}
+          {#if isFullUrlEdit}
             <div class="mb-8">
-              <label>Source</label>
-              
-              <AutoCompleteInput
-                onChange={onSourceSelected}
-                placeholder="Select source.."
-                limitItemsCount={20}
-                allSuggestions={$sources.filter(s => s.value)}
-                initialSelectedItem={ feedItem.source ? { value: feedItem.source } : null }
-              >
-              </AutoCompleteInput>
+              <label> Title </label>
+              <input type="text" class="block" bind:value={feedItem.title} use:autofocus/>
             </div>
+            <div class="mb-8">
+              <label> Content </label>
+              <textarea rows="5" class="block" bind:value={feedItem.content} />
+            </div>
+
+            {#if $currentUser?.isAdmin}
+            <div class="mb-8">
+              <label> Long Content (admin only) </label>
+              <textarea rows="5" class="block" bind:value={feedItem.longContent} />
+            </div>
+            {/if}
+
+            <div class="mb-8">
+              <label>Attachments</label>
+
+              {#if feedItem.attachments.length}
+                {#each feedItem.attachments as attachment}
+                  <div on:click={removeAttachments}>
+                    {#if attachment.type === 'video'  }
+                      <video class="max-w-[400px]" src={attachment.url} muted autoplay/>
+                    {:else}
+                      <img class="max-w-[400px]" src={attachment.url} />
+                    {/if}
+                  </div>
+                {/each}
+              {:else}
+                {#if addAttachmentClicked}
+                  <input type="text" bind:value={attachmentUrl} placeholder="Insert URL or paste from clipboard" use:autofocus on:paste={pasteImage}/>
+
+                  {#if !feedItem.attachments.length && !attachmentUrl}
+                    <div class="my-4">Or</div>
+                    <input id="fileInput" type="file" on:change={onFileUpload}>
+                    {:else}
+                    <button class="mt-4" on:click={addAttachmentUrl}>
+                      Add URL
+                    </button>
+                  {/if}
+
+                {:else}
+                  <a class="cursor-pointer text-gray-400 underline" on:click={() => { addAttachmentClicked = true; }}> Add attachment </a>
+                {/if}
+              {/if}
+            </div>
+
+            {#if currentPage !== 'update'}
+              <div class="mb-8">
+                <label>Source</label>
+                
+                <AutoCompleteInput
+                  onChange={onSourceSelected}
+                  placeholder="Select source.."
+                  limitItemsCount={20}
+                  allSuggestions={$sources.filter(s => s.value)}
+                  initialSelectedItem={ feedItem.source ? { value: feedItem.source } : null }
+                >
+                </AutoCompleteInput>
+              </div>
+            {/if}
+          {:else}
+           
           {/if}
 
           {#if projects}
@@ -388,36 +406,39 @@
             </div>
           {/if}
 
-          
-          {#if currentPage !== 'update'}
-          <div class="mb-8">
-            <label>Published On</label>
-
-            <input type="datetime-local" bind:value="{internalDate}">
-          </div>
-          {/if}
-
-          {#if $currentUser?.isAdmin && creators}
+          {#if isFullUrlEdit}
+            {#if currentPage !== 'update'}
             <div class="mb-8">
-              <label>Creators</label>
+              <label>Published On</label>
 
-              <AutoCompleteInput
-                onChange={onCreatorSelected}
-                searchField="fullName"
-                placeholder="Search creators.."
-                limitItemsCount={5}
-                isMulti
-                bind:allSuggestions={creators}
-                initialSelectedItems={feedItem.creators}
-              >
-                <div slot="item" let:item={item}>
-                  <div class="flex items-center">
-                    <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
-                    {item.fullName}
-                  </div>
-                </div>
-              </AutoCompleteInput>
+              <input type="datetime-local" bind:value="{internalDate}">
             </div>
+            {/if}
+
+            {#if $currentUser?.isAdmin && creators}
+              <div class="mb-8">
+                <label>Creators</label>
+
+                <AutoCompleteInput
+                  onChange={onCreatorSelected}
+                  searchField="fullName"
+                  placeholder="Search creators.."
+                  limitItemsCount={5}
+                  isMulti
+                  bind:allSuggestions={creators}
+                  initialSelectedItems={feedItem.creators}
+                >
+                  <div slot="item" let:item={item}>
+                    <div class="flex items-center">
+                      <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
+                      {item.fullName}
+                    </div>
+                  </div>
+                </AutoCompleteInput>
+              </div>
+            {/if}
+          {:else}
+           
           {/if}
 
           <!-- <hr class="my-8" style="border-color: rgba(255, 255, 255, 0.3)"/> -->
