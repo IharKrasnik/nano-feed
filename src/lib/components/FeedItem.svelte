@@ -48,10 +48,13 @@
       await post(`feed/${feedItem._id}/unlike`);
     }
   }
+
+  const trackView = async (feedItem) => {
+    post(`feed/${feedItem._id}/view`);
+  }
   
   const showPreview = async (evt) => {
     isPreview = true;
-    post(`feed/${feedItem._id}/view`);
   }
 </script>
 
@@ -64,7 +67,14 @@
   style="{ bgColor ? `background-color: ${bgColor};` : ''}"
   class:_release="{feedItem.isRelease}"
   href="{feedItem.url}" 
-  on:click|preventDefault={showPreview}
+  on:click={(e) => { 
+    trackView(feedItem);
+
+    if (!feedItem.url || feedItem.source === 'youtube') {
+      showPreview();
+      e.preventDefault();
+    }
+  }}
   target="_blank"
 >
   <div class="relative">
