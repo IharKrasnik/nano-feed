@@ -541,7 +541,7 @@
 </div>
 
 {#if !isProjectsLoading}
-	{#if $currentUser && (!creator || creator._id === $currentUser._id) && ( (!selectedProject?._id && !isExploreProjectsModeOn) || $projects.find(f => f._id === selectedProject?._id))}
+	{#if $currentUser && (!creator || creator._id === $currentUser._id)}
 		<div class="relative">
 			<img class="absolute left-4 rounded-full top-3" style="width: 30px; height: 30px" src={$currentUser.avatarUrl}/>
 
