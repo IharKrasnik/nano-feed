@@ -46,7 +46,7 @@
             <div class="px-2 max-w-[600px] _feed-item">
               <a href="{feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`}" target="_blank">
                 <div class="pointer-events-none">
-                  <FeedItem {theme} feedItem={feedItem} {bgColor}></FeedItem>
+                  <FeedItem {theme} feedItem={feedItem} {bgColor} hideLikes></FeedItem>
                 </div>
               </a>
             </div>
