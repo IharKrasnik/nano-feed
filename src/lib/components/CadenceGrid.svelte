@@ -8,7 +8,7 @@
   export let projectSlug;
   export let creatorUsername;
 
-  export let weeks = 3;
+  export let weeks = 4;
 
   let allWeeks = [];
 
