@@ -33,6 +33,7 @@
 	"dependencies": {
 		"@leveluptuts/svelte-notion": "^0.0.7",
 		"@tailwindcss/line-clamp": "^0.4.2",
+		"@zerodevx/svelte-toast": "1.0.0-rc.1",
 		"axios": "^1.2.1",
 		"date-fns": "^2.29.3",
 		"dayjs": "^1.11.7",

@@ -15,6 +15,8 @@
 	const toggleBurger = () => {
     isBurgerOpen = !isBurgerOpen;
   }
+  import { SvelteToast } from '@zerodevx/svelte-toast'
+
 </script>
 
 <svelte:head>
@@ -91,6 +93,7 @@
 	</div>
 	{/if}
 
+	<SvelteToast />
 	
 	<main 
 		class="

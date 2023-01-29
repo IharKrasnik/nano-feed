@@ -17,12 +17,13 @@
   import sources from '$lib/stores/sources';
   import currentUser from '$lib/stores/currentUser';
   import { browser } from '$app/environment';
+  import { toast } from '@zerodevx/svelte-toast'
 
   let projects;
 	let isProjectsLoading = false;
   let creators;
   let urlIsDirty = false;
-
+  
 	const fetchProjects = async () => {
 		isProjectsLoading = true;
 		
@@ -207,8 +208,35 @@
 
     if (feedId) {
       updatedFeedItem = await put(`feed/${feedId}`, feedItem);
+
+      toast.push(`<strong>Moment updated 🔥</strong><br/>
+        Looks great!`, {
+        duration: 3000,
+        pausable: true,
+        theme: {
+          '--toastWidth:': '500px',
+          '--toastColor': 'mintcream',
+          '--toastBackground': '#054238',
+          '--toastBarBackground': '#2F855A',
+          '--toastPadding': '10px 15px',
+        }
+      });
     } else {
       updatedFeedItem = await post('feed', feedItem);
+
+      toast.push(`<strong>Moment published 🎉</strong><br/>
+  Post daily to improve your content. <br/><br/>
+  Looking forward to your next posts!`, {
+        duration: 5000,
+        pausable: true,
+        theme: {
+          '--toastWidth:': '500px',
+          '--toastColor': 'mintcream',
+          '--toastBackground': '#054238',
+          '--toastBarBackground': '#2F855A',
+          '--toastPadding': '10px 15px',
+        }
+      });
     }
 
     let projects = (updatedFeedItem.projects || []).filter(p => !p.isHub);
