@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte'
-  import { get } from '$lib/api';
+  import { get, post } from '$lib/api';
   import StreamCard from '$lib/components/StreamCard.svelte';
   import Loader from '$lib/components/Loader.svelte';
   import allProjects from '$lib/stores/allProjects';
@@ -76,10 +76,18 @@
       feedItem.hideAttachments = true;
     }
 
+    if (!feedItem.creator) {
+      feedItem.creator = feedItem.creators[0];
+    }
+
     isLoading = false;
   }
 
   load();
+
+  onMount(() => {
+    post(`feed/${feedItem._id}/view`);
+  });
 
 </script>
 
@@ -91,6 +99,7 @@
   <div>
     <div class="_moment flex justify-center">
       <div class="p-8 md:p-8 max-w-[800px] w-[800px]">
+        
         <div class="flex justify-between">
           <div>
             {#if feedItem.title}
@@ -106,13 +115,23 @@
             {/if} -->
           </div>
 
-        </div>
-
+        </div>  
+        
         {#if feedItem.content}
         <div class="whitespace-pre-wrap py-4">
           { feedItem.longContent || feedItem.content }
         </div>
         {/if}
+
+        <a href="/@{feedItem.creator.username}" class="">
+          <div class="flex text-gray-400 items-center text-lg my-8 ">
+            
+            <div class="mr-2">
+              By {feedItem.creator.fullName}
+            </div>
+            <img src="{feedItem.creator.avatarUrl}" class="w-[40px] h-[40px] rounded-full mr-2" />
+          </div>
+        </a>
       </div>
     </div>
     {#if feedItem.source === 'momentum'}

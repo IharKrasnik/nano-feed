@@ -68,11 +68,11 @@
   class:_release="{feedItem.isRelease}"
   href="{feedItem.url}" 
   on:click={(e) => { 
-    trackView(feedItem);
-
     if (!feedItem.url || feedItem.source === 'youtube') {
       showPreview();
       e.preventDefault();
+    } else {
+      trackView(feedItem);
     }
   }}
   target="_blank"

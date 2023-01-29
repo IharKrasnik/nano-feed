@@ -365,7 +365,7 @@
 				<div class="mt-16 w-full" in:fly>
 					<a href="/launch" class="w-full">
 						<button class="w-full">
-							Launch Your #Stream
+							🚀 Launch Your #Stream
 						</button>
 					</a>
 				</div>
@@ -523,6 +523,7 @@
 					{#if $currentUser.isAdmin || (selectedProject && selectedProject.creator?._id === $currentUser._id) || (creator && creator._id === $currentUser._id)}
 						<a class="w-full" href="/{creator ? `@${creator.username}`: selectedProject.slug}/edit">
 							<button class="w-full">
+							  ✨
 								Edit
 								{#if creator}
 									@{creator.fullName}
