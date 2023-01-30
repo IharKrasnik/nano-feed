@@ -115,7 +115,7 @@
       <div class="mt-2">
         {#each feedItem.attachments as attachment}
           {#if attachment.type === 'image'}
-            <img src={attachment.url} class="w-full " style="max-height: 500px; object-fit: cover;" />
+            <img src={attachment.url} class="w-full " style="max-height: 300px; object-fit: cover;" />
           {/if}
           {#if attachment.type === 'video'}
           
