@@ -434,7 +434,7 @@
 							<div in:fade>
 								{#each (creator?.username ? $projects : $allProjects).filter(p => p.title.toLowerCase().startsWith(searchText.toLowerCase())) as project}
 									<a 
-										class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]" 
+										class="cursor-pointer _menu_item flex items-center py-1 ml-[-10px]" 
 										class:_selected="{selectedProject?.slug === project.slug}"
 										href= "{ (creator ? `/@${creator.username}` : '') || (project.slug ? `/${project.slug}` : '/')}"
 										on:click="{() => {
