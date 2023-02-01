@@ -8,7 +8,7 @@
 
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 
-  let feed = [];
+  let feed;
   
   let theme = $page.url.searchParams.get('theme') || 'dark';
   let limit = $page.url.searchParams.get('limit') || 30;
@@ -21,14 +21,13 @@
 
   let load =  async () => {
     if ($page.params.username.startsWith('@')) {
-     
+     	feed = await fetchFeed({ creatorUsername: $page.params.username.replace('@', ''), perPage: limit });
     } else {
   		feed = await fetchFeed({ project: $page.params.username, perPage: limit });
-      project = await get(`projects/${$page.params.username}`);
     } 
   }
 
-  if (!project) {
+  if (!feed) {
     load()
   }
 
@@ -40,7 +39,7 @@
 
 <div class="container mx-auto my-8">
     {#key feed}
-      {#if feed.length > 0}
+      {#if feed?.length > 0}
         <div class="{ feed.length > 3 ? 'columns-1 md:columns-2 lg:columns-3 mt-8' : 'flex justify-center' }">
           {#each feed as feedItem}
             <div class="px-2 max-w-[600px] _feed-item">
