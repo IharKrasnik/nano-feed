@@ -18,7 +18,7 @@
     slug:'',
   }
 
-  import { post, put } from '$lib/services/api';
+  import { post, put } from 'lib/api';
 
   const publishPage = async () => {
     if (!$currentUser) {

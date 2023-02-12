@@ -1,5 +1,5 @@
 // import { error } from '@sveltejs/kit';
-import { get } from '$lib/api';
+import { get } from 'lib/api';
 
 export async function load({ params }) {
 	const { feedItemId } = params;

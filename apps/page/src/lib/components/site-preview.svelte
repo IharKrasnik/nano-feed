@@ -8,7 +8,7 @@
     bgColor: '#D98324'
   };
 
-  import { post } from '$lib/services/api';
+  import { post } from 'lib/api';
 
   let email;
   let isSubmitted = false;

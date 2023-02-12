@@ -1,4 +1,4 @@
-import apiServerSide from '$lib/services/apiServerSide';
+import apiServerSide from 'lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
 
 export default async ({ url, cookies }) => {

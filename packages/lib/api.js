@@ -1,12 +1,10 @@
 import { browser } from '$app/environment';
 import { get as getStoreValue } from 'svelte/store';
+import cookie from 'cookie';
+
+// import notify from '$lib/services/notify';
+
 import { API_URL } from '$lib/env';
-
-import notify from '$lib/services/notify';
-
-// const apiUrl =  import.meta.env.VITE_API_DOMAIN;
-
-const apiUrl = API_URL;
 
 const serialize = (obj) => {
 	if (!obj) {
@@ -39,7 +37,7 @@ class ValidationError extends Error {
 const ftch = async (method, url, params, options = {}) => {
 	let res;
 
-	const absoluteUrl = url.startsWith('http') ? url : `${apiUrl}/${url}`;
+	const absoluteUrl = url.startsWith('http') ? url : `${API_URL}/${url}`;
 
 	let body = null;
 	let headers = {};
@@ -54,26 +52,33 @@ const ftch = async (method, url, params, options = {}) => {
 		}
 	}
 
+	if (browser) {
+		const cookies = cookie.parse(document.cookie);
+		if (cookies.access_token) {
+			headers['Authorization'] = `Bearer ${cookies.access_token}`;
+		}
+	}
+
+	if (absoluteUrl.startsWith(API_URL)) {
+		options.credentials = 'include';
+		options.mode = 'cors';
+	}
+
 	try {
 		res = await fetch(`${absoluteUrl}${method === 'get' ? `?${serialize(params)}` : ''}`, {
 			method,
 			body,
-			credentials: 'include',
-			mode: 'cors',
 			...options,
 			headers: {
 				...headers,
 
-				// ...(browser && getStoreValue(currentProject)
-				// 	? {
-				// 			'x-project-id': getStoreValue(currentProject)?._id
-				// 	  }
-				// 	: {}),
 				...(options.headers || {})
 			}
 		});
 	} catch (err) {
-		console.log('error GET', err);
+		console.log('error GET', absoluteUrl, method, err);
+		// throw err;
+		return null;
 	}
 
 	if (res.ok || res.status === 302) {
@@ -88,7 +93,7 @@ const ftch = async (method, url, params, options = {}) => {
 		return data;
 	} else {
 		const data = await res.json();
-		notify('Error ' + JSON.stringify(data, null, 2));
+		// notify('Error ' + JSON.stringify(data, null, 2));
 
 		throw new ValidationError({ message: `Could not load ${url}`, data, status: res.status });
 	}

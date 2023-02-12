@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { get } from '$lib/api';
+import { get } from 'lib/api';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {

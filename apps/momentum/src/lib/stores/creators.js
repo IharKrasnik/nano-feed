@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { get } from '$lib/api';
+import { get } from 'lib/api';
 
 const creatorsStore = writable([]);
 

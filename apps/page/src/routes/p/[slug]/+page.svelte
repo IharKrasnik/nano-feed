@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { STREAM_URL, PAGE_URL } from '$lib/env';
-  import { get } from '$lib/services/api';
+  import { get } from 'lib/api';
   import iframeResize from 'iframe-resizer/js/iframeResizer';
 
   import SitePreview from '$lib/components/site-preview.svelte';

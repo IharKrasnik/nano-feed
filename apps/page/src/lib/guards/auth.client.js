@@ -1,7 +1,7 @@
 import cookie from 'cookie';
 import { browser } from '$app/environment';
 import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
-import apiServerSide from '$lib/services/apiServerSide';
+import apiServerSide from 'lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
 import { API_URL } from '$lib/env';
 

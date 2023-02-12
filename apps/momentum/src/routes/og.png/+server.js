@@ -1,7 +1,7 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { html as toReactNode } from 'satori-html';
-import { get } from '$lib/api';
+import { get } from 'lib/api';
 import OGImage from '$lib/components/OGImage.svelte';
 
 import Montserrat from '$lib/Montserrat-Regular.ttf';

@@ -1,31 +1,32 @@
 <script>
-  import { postFile } from '$lib/api';
-  import { createEventDispatcher, onMount } from 'svelte';
-	
-  export let url;
+	import { postFile } from 'lib/api';
+	import { createEventDispatcher, onMount } from 'svelte';
 
-  const dispatch = createEventDispatcher();
+	export let url;
 
-  const uploadFile = async file => {
-    const newFile = await postFile('files', file);
+	const dispatch = createEventDispatcher();
 
-    let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
+	const uploadFile = async (file) => {
+		const newFile = await postFile('files', file);
 
-    dispatch('fileUploaded', {
-      type: (newFile.url.includes('.mp4') || newFile.url.includes('.mov')) ? 'video' : 'image' , url: fileUrl
-    });
-  }
+		let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
 
-  const pasteImage = (e) => {
-    Array.from(e.clipboardData.files).forEach(async (file) => {
-      if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
-        uploadFile(file);
-      } else if (file.type.startsWith('text/')) {
-        // const textarea = document.createElement('textarea');
-        // textarea.value = await file.text();
-        // document.body.append(textarea);
-      }
-    });
+		dispatch('fileUploaded', {
+			type: newFile.url.includes('.mp4') || newFile.url.includes('.mov') ? 'video' : 'image',
+			url: fileUrl
+		});
+	};
+
+	const pasteImage = (e) => {
+		Array.from(e.clipboardData.files).forEach(async (file) => {
+			if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+				uploadFile(file);
+			} else if (file.type.startsWith('text/')) {
+				// const textarea = document.createElement('textarea');
+				// textarea.value = await file.text();
+				// document.body.append(textarea);
+			}
+		});
 	};
 
 	const onFileUpload = async (e) => {
@@ -33,4 +34,9 @@
 	};
 </script>
 
-<input type="text" bind:value={url} placeholder="Insert URL or paste from clipboard" on:paste={pasteImage}/>
+<input
+	type="text"
+	bind:value={url}
+	placeholder="Insert URL or paste from clipboard"
+	on:paste={pasteImage}
+/>

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { get } from '$lib/api';
+import { get } from 'lib/api';
 import { get as getFromStore } from 'svelte/store';
 import { browser } from '$app/environment';
 

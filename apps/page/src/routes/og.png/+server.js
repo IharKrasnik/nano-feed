@@ -1,7 +1,7 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { html as toReactNode } from 'satori-html';
-import { get } from '$lib/services/api';
+import { get } from 'lib/api';
 import OGImage from '$lib/components/OGImage.svelte';
 
 import Inter from '$lib/Inter-Regular.ttf';
@@ -11,7 +11,7 @@ const height = 630;
 const width = 1200;
 
 function unEntity(str) {
-	return str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+	return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 }
 
 export const GET = async ({ url }) => {
@@ -20,9 +20,9 @@ export const GET = async ({ url }) => {
 	let componentResult;
 
 	let page = await get(`pages/${pageSlug}`);
-	
+
 	componentResult = OGImage.render({
-		page,
+		page
 	});
 
 	componentResult.html = unEntity(componentResult.html);
@@ -44,7 +44,7 @@ export const GET = async ({ url }) => {
 				data: Buffer.from(Inter),
 				weight: 400,
 				style: 'normal'
-			},
+			}
 		],
 		height,
 		width

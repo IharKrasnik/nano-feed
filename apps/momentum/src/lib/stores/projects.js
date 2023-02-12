@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { get } from '$lib/api';
+import { get } from 'lib/api';
 
 const projectsStore = writable([]);
 
@@ -11,9 +11,7 @@ export const getProjects = ({
 	perPage = 20,
 	sort = 'createdOn',
 	sortDirection = 'descending'
-} = {}) => {
-
-}
+} = {}) => {};
 
 export const update = ({
 	creatorUsername,
@@ -45,7 +43,7 @@ export const update = ({
 			]);
 		})
 		.catch(async (err) => await update({ creatorUsername, perPage, sort, sortDirection }))
-	.finally(() => isLoading.set(false));
+		.finally(() => isLoading.set(false));
 };
 
 update();

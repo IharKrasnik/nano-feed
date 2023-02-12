@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { error } from '@sveltejs/kit';
-import { get } from '$lib/api';
+import { get } from 'lib/api';
 
 /** @param {Parameters<import('./$types').PageServerLoad>[0]} event */
 export async function load({ params }) {
