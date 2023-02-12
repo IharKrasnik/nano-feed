@@ -18,7 +18,7 @@
 	import FollowButton from '$lib/components/FollowButton.svelte';
 	import InfiniteScroll from 'lib/components/InfiniteScroll.svelte';
 
-	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentuser';
+	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import allProjects from '$lib/stores/allProjects';
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 	import creators, { update as updateCreators } from '$lib/stores/creators';

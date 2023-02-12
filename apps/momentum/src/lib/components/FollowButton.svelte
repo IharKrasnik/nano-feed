@@ -8,7 +8,7 @@
 	export { clazz as class };
 
 	import { post, del } from 'lib/api';
-	import currentUser from 'lib/stores/currentuser';
+	import currentUser from 'lib/stores/currentUser';
 	import allProjects from '$lib/stores/allProjects';
 
 	let sortProjectsByFollowing = () => {

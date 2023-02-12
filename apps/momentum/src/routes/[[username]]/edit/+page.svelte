@@ -9,7 +9,7 @@
 
 	import projects from '$lib/stores/projects';
 	import allProjects from '$lib/stores/allProjects';
-	import currentUser from 'lib/stores/currentuser';
+	import currentUser from 'lib/stores/currentUser';
 
 	let project;
 	let creator;

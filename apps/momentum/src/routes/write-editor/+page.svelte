@@ -7,7 +7,7 @@
 
 	import placeholder from 'lib/use/placeholder';
 
-	import currentUser from 'lib/stores/currentuser';
+	import currentUser from 'lib/stores/currentUser';
 
 	import { page } from '$app/stores';
 	import { get, postFile } from 'lib/api';

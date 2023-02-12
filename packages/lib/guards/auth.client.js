@@ -1,6 +1,6 @@
 import cookie from 'cookie';
 import { browser } from '$app/environment';
-import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentuser';
+import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 import apiServerSide from 'lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
 import { GOOGLE_LOGIN_URL } from 'lib/env';

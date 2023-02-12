@@ -7,7 +7,7 @@
 
 	import { GOOGLE_LOGIN_URL } from 'lib/env';
 	import { get, post } from 'lib/api';
-	import currentUser from 'lib/stores/currentuser';
+	import currentUser from 'lib/stores/currentUser';
 
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
 	import FeedItemPreview from '$lib/components/FeedItemPreview.svelte';

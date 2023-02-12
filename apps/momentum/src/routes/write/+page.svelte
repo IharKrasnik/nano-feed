@@ -14,7 +14,7 @@
 	import Loader from 'lib/components/Loader.svelte';
 
 	import sources from '$lib/stores/sources';
-	import currentUser from 'lib/stores/currentuser';
+	import currentUser from 'lib/stores/currentUser';
 	import { browser } from '$app/environment';
 	import { toast } from '@zerodevx/svelte-toast';
 

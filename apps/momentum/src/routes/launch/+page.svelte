@@ -7,7 +7,7 @@
 
 	import creators from '$lib/stores/creators';
 	import projects from '$lib/stores/projects';
-	import currentUser from 'lib/stores/currentuser';
+	import currentUser from 'lib/stores/currentUser';
 
 	let project = {
 		slug: '',
