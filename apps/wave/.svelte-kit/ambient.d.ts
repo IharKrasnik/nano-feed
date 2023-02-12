@@ -56,7 +56,6 @@ declare module '$env/static/private' {
 	export const COMPOSE_DOCKER_CLI_BUILD: string;
 	export const npm_package_json: string;
 	export const npm_config_engine_strict: string;
-	export const _: string;
 	export const LaunchInstanceID: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_init_module: string;
@@ -85,6 +84,7 @@ declare module '$env/static/private' {
 	export const SECURITYSESSIONID: string;
 	export const npm_node_execpath: string;
 	export const npm_config_prefix: string;
+	export const _: string;
 	export const NODE_ENV: string;
 }
 
@@ -145,7 +145,6 @@ declare module '$env/dynamic/private' {
 		COMPOSE_DOCKER_CLI_BUILD: string;
 		npm_package_json: string;
 		npm_config_engine_strict: string;
-		_: string;
 		LaunchInstanceID: string;
 		npm_config_userconfig: string;
 		npm_config_init_module: string;
@@ -174,6 +173,7 @@ declare module '$env/dynamic/private' {
 		SECURITYSESSIONID: string;
 		npm_node_execpath: string;
 		npm_config_prefix: string;
+		_: string;
 		NODE_ENV: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: string]: string | undefined;

@@ -1,13 +1,12 @@
 import babel from 'rollup-plugin-babel';
-import { terser } from 'rollup-plugin-terser';
 // import { eslint } from 'rollup-plugin-eslint';
 import replace from '@rollup/plugin-replace';
 
 const outputConfig = {
-	file: 'build/tracker.min.js',
+	file: './static/wave.js',
 	format: 'umd',
+	sourcemap: 'inline',
 	name: 'tracker',
-	sourcemap: false,
 	globals: {
 		tracker: 'tracker',
 		Fingerprint2: 'Fingerprint2'
@@ -22,19 +21,19 @@ export default {
 		{ ...outputConfig },
 		{
 			...outputConfig,
-			file: '../web/src/client/static/script/tracker.min.js'
+			file: '../web/src/client/static/script/tracker.js'
 		}
 	],
 	plugins: [
 		// eslint({
-		// 	exclude: ['node_modules/**', '../src/lib/**']
+		//   fix: true,
+		//   exclude: ['node_modules/**', '../src/lib/**'],
 		// }),
 		babel({
 			exclude: ['node_modules/**', '../src/lib/**']
 		}),
 		replace({
 			['process.env.BUILD']: JSON.stringify(process.env.BUILD)
-		}),
-		terser({ ecma: 5, safari10: true })
+		})
 	]
 };
