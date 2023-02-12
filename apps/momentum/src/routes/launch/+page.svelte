@@ -87,7 +87,7 @@
 			<input
 				type="text"
 				bind:value={project.description}
-				placeholder="eg. "Grow your audience early.""
+				placeholder="eg. 'Grow your audience early'"
 			/>
 		</div>
 	{/if}
