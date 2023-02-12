@@ -1,7 +1,7 @@
 import config from './config';
 
-// const API_URL = process.env.BUILD === 'dev' ? config.API_URL_DEV : config.API_URL;
-const API_URL = config.API_URL_DEV;
+const API_URL = process.env.BUILD === 'dev' ? config.API_URL_DEV : config.API_URL;
+// const API_URL = config.API_URL_DEV;
 
 const CLASS_DIVIDER = / /g;
 
