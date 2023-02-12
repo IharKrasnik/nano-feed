@@ -7,36 +7,36 @@ const MOUSE_MOVE_THROTTLE_TIME = 100;
 const ACTION_SEND_INTERVAL = 3000;
 
 const eventBuffer = {
-  data: [],
-  latestSend: Date.now(),
+	data: [],
+	latestSend: Date.now()
 };
 
 const mouseMoveHandler = (userData) => {
-  function handleEvent(event) {
-    const timestamp = Date.now();
-    const record = {
-      x: event.clientX,
-      y: event.clientY,
-      timestamp,
-    };
+	function handleEvent(event) {
+		const timestamp = Date.now();
+		const record = {
+			x: event.clientX,
+			y: event.clientY,
+			timestamp
+		};
 
-    eventBuffer.data.push(record);
+		eventBuffer.data.push(record);
 
-    if (timestamp - eventBuffer.latestSend > ACTION_SEND_INTERVAL) {
-      const manyRecords = {
-        type: 'mouseMove',
-        payload: {
-          batch: eventBuffer.data,
-        },
-      };
-      eventBuffer.data = [];
-      eventBuffer.latestSend = Date.now();
+		if (timestamp - eventBuffer.latestSend > ACTION_SEND_INTERVAL) {
+			const manyRecords = {
+				type: 'mouseMove',
+				payload: {
+					batch: eventBuffer.data
+				}
+			};
+			eventBuffer.data = [];
+			eventBuffer.latestSend = Date.now();
 
-      sendTrackData(userData, 'action', manyRecords);
-    }
-  }
+			sendTrackData(userData, 'waveActions', manyRecords);
+		}
+	}
 
-  window.addEventListener('mousemove', throttle(handleEvent, MOUSE_MOVE_THROTTLE_TIME));
+	window.addEventListener('mousemove', throttle(handleEvent, MOUSE_MOVE_THROTTLE_TIME));
 };
 
 export default mouseMoveHandler;
