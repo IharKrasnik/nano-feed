@@ -1,8 +1,8 @@
 import tracker from './tracker';
 
 export default (() => {
-	const { wave } = window;
-	const { params } = wave;
+	const params = window.wave && window.wave.params;
+
 	if (process.env.BUILD === 'dev') {
 		console.log('Wave script params:', params); // eslint-disable-line
 	}
