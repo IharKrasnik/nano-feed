@@ -1,6 +1,6 @@
 <script>
 	import FeedItemPreview from '$lib/components/FeedItemPreview.svelte';
-	import Loader from '$lib/components/Loader.svelte';
+	import Loader from 'lib/components/Loader.svelte';
 
 	import { page } from '$app/stores';
 	import { get } from 'lib/api';

@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-  import Loader from '$lib/components/Loader.svelte';
+  import Loader from 'lib/components/Loader.svelte';
 
   export let threshold = 0;
   export let horizontal = false;

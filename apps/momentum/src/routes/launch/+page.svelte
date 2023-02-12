@@ -2,12 +2,12 @@
 	import slug from 'slug';
 	import { fade } from 'svelte/transition';
 	import { post } from 'lib/api';
-	import { PAGE_URL } from '$lib/env';
+	import { PAGE_URL } from 'lib/env';
 	import { goto } from '$app/navigation';
 
 	import creators from '$lib/stores/creators';
 	import projects from '$lib/stores/projects';
-	import currentUser from '$lib/stores/currentUser';
+	import currentUser from 'lib/stores/currentuser';
 
 	let project = {
 		slug: '',

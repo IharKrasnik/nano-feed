@@ -7,15 +7,14 @@
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import { get, post, put, del, postFile } from 'lib/api';
-	import { API_URL } from '$lib/env';
-	import autofocus from '$lib/use/autofocus';
+	import autofocus from 'lib/use/autofocus';
 
-	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
+	import AutoCompleteInput from 'lib/components/AutoCompleteInput.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
-	import Loader from '$lib/components/Loader.svelte';
+	import Loader from 'lib/components/Loader.svelte';
 
 	import sources from '$lib/stores/sources';
-	import currentUser from '$lib/stores/currentUser';
+	import currentUser from 'lib/stores/currentuser';
 	import { browser } from '$app/environment';
 	import { toast } from '@zerodevx/svelte-toast';
 

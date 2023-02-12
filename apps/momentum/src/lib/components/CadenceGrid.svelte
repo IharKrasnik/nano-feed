@@ -1,7 +1,7 @@
 <script>
 	import _ from 'lodash';
 	import moment from 'moment';
-	import tooltip from '$lib/use/tooltip';
+	import tooltip from 'lib/use/tooltip';
 
 	import { get } from 'lib/api';
 

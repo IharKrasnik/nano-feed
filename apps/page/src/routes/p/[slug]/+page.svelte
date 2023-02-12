@@ -2,7 +2,7 @@
   import { browser } from '$app/environment';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { STREAM_URL, PAGE_URL } from '$lib/env';
+  import { STREAM_URL, PAGE_URL } from 'lib/env';
   import { get } from 'lib/api';
   import iframeResize from 'iframe-resizer/js/iframeResizer';
 

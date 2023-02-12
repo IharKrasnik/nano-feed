@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/stores';
-	import { STREAM_URL } from '$lib/env';
+	import { STREAM_URL } from 'lib/env';
 
 	import { get } from 'lib/api';
 

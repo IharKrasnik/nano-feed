@@ -2,9 +2,9 @@ import { browser } from '$app/environment';
 import { get as getStoreValue } from 'svelte/store';
 import cookie from 'cookie';
 
-// import notify from '$lib/services/notify';
+// import notify from 'lib/services/notify';
 
-import { API_URL } from '$lib/env';
+import { API_URL } from 'lib/env';
 
 const serialize = (obj) => {
 	if (!obj) {

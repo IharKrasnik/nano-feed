@@ -2,8 +2,8 @@
   import iframeResize from 'iframe-resizer/js/iframeResizer';
 
   import { onMount } from 'svelte';
-  import { STREAM_URL } from '$lib/env';
-  import Highlight from '$lib/components/Highlight.svelte';
+  import { STREAM_URL } from 'lib/env';
+  import Highlight from 'lib/components/Highlight.svelte';
 
   export let project;
   export let creator;

@@ -3,7 +3,7 @@ import { get } from 'lib/api';
 import { get as getFromStore } from 'svelte/store';
 import { browser } from '$app/environment';
 
-import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
+import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentuser';
 
 const allProjectsStore = writable(null);
 

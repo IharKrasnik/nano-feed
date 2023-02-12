@@ -3,13 +3,9 @@
 
   import "../app.css";
 	import { page } from '$app/stores';
-	import { fade } from 'svelte/transition';
 
-	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
 	import allProjects from '$lib/stores/allProjects';
 	
-	import { API_URL } from '$lib/env';
-
 	let isBurgerOpen = false;
 	
 	const toggleBurger = () => {

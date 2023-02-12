@@ -1,5 +1,5 @@
 <script>
-	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
+	import AutoCompleteInput from 'lib/components/AutoCompleteInput.svelte';
   import projects from '$lib/stores/projects'; 
   import creators, { update as updateCreators, filterQuery as creatorsFilterQuery } from '$lib/stores/creators'; 
 

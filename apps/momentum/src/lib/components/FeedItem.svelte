@@ -5,13 +5,13 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
-	import { API_URL } from '$lib/env';
+	import { GOOGLE_LOGIN_URL } from 'lib/env';
 	import { get, post } from 'lib/api';
-	import currentUser from '$lib/stores/currentUser';
+	import currentUser from 'lib/stores/currentuser';
 
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
 	import FeedItemPreview from '$lib/components/FeedItemPreview.svelte';
-	import Modal from '$lib/components/Modal.svelte';
+	import Modal from 'lib/components/Modal.svelte';
 
 	let isPreview = false;
 	export let theme = 'dark';
@@ -33,7 +33,7 @@
 
 	const likeFeedItem = async (evt) => {
 		if (!$currentUser) {
-			return goto(`${API_URL}/auth/google/url?redirect_to=${$page.url.href}`);
+			return goto(GOOGLE_LOGIN_URL);
 		}
 		if (!feedItem.isLiked) {
 			feedItem.isLiked = true;

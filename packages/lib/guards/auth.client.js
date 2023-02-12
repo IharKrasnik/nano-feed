@@ -1,9 +1,9 @@
 import cookie from 'cookie';
 import { browser } from '$app/environment';
-import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
+import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentuser';
 import apiServerSide from 'lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
-import { API_URL } from '$lib/env';
+import { GOOGLE_LOGIN_URL } from 'lib/env';
 
 let user;
 
@@ -27,7 +27,7 @@ export default async ({ url }) => {
 				console.log('err', err);
 			}
 		} else if (url.href.includes('/write')) {
-			throw redirect(302, `${API_URL}/auth/google/url?redirect_to=${url.href}`);
+			throw redirect(302, GOOGLE_LOGIN_URL);
 		} else {
 			isUserLoading.set(false);
 			currentUser.set(null);

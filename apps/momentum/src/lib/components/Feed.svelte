@@ -4,23 +4,21 @@
 	import { goto } from '$app/navigation';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
-	import { API_URL } from '$lib/env';
+	import { GOOGLE_LOGIN_URL } from 'lib/env';
 	import { get, post, del } from 'lib/api';
 
 	let feed = [];
 
-	import Modal from '$lib/components/Modal.svelte';
+	import Modal from 'lib/components/Modal.svelte';
 	import ShareStream from '$lib/components/ShareStream.svelte';
 
-	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
-	import SourceLogo from '$lib/components/SourceLogo.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
 	import CadenceGrid from '$lib/components/CadenceGrid.svelte';
 	import FollowButton from '$lib/components/FollowButton.svelte';
-	import InfiniteScroll from '$lib/components/InfiniteScroll.svelte';
+	import InfiniteScroll from 'lib/components/InfiniteScroll.svelte';
 
-	import currentUser, { isLoading as isUserLoading } from '$lib/stores/currentUser';
+	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentuser';
 	import allProjects from '$lib/stores/allProjects';
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 	import creators, { update as updateCreators } from '$lib/stores/creators';
@@ -306,7 +304,7 @@
 						<FollowButton {creator} project={selectedProject} isShort class="small" />
 					{:else}
 						<a
-							href="{API_URL}/auth/google/url?redirect_to={$page.url.href}"
+							href="{GOOGLE_LOGIN_URL}"
 							style="font-family: Montserrat; font-weight: bold;"
 						>
 							<button class="flex items-center justify-center small">
@@ -550,7 +548,7 @@
 			{#if $currentUser}{:else}
 				<a
 					class="mb-16"
-					href="{API_URL}/auth/google/url?redirect_to={$page.url.href}"
+					href="{GOOGLE_LOGIN_URL}"
 					style="font-family: Montserrat; font-weight: bold;"
 				>
 					<button class="flex items-center justify-center w-full mb-8">

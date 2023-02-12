@@ -1,4 +1,4 @@
-import authClientGuard from '$lib/guards/auth.client';
+import authClientGuard from 'lib/guards/auth.client';
 // export const prerender = false;
 
 export function load({ url, params, session }) {

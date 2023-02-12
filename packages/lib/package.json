@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "svelte": "^3.55.1"
+    "hotkeys-js": "^3.10.1",
+    "lodash": "^4.17.21",
+    "svelte": "^3.55.1",
+    "svelte-highlight": "^7.1.2"
   }
 }

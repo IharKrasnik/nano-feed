@@ -2,7 +2,7 @@
 	import _ from 'lodash';
   import { fly, fade } from 'svelte/transition';
 	import hotkeys from 'hotkeys-js';
-	import clickOutside from '$lib/use/clickOutside';
+	import clickOutside from 'lib/use/clickOutside';
 	import { goto } from '$app/navigation';
 
   import { createEventDispatcher, onMount } from 'svelte';

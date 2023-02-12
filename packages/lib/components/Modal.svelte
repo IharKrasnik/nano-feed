@@ -1,14 +1,14 @@
 <script>
+  import { fly } from 'svelte/transition';
+	import portal from 'lib/use/portal';
+	import clickOutside from 'lib/use/clickOutside';
+
 	export let isShown;
 	export let isClosable = true;
 	export let isFixed = true;
 	export let maxWidth = 1080;
 	export let zIndex = 2000;
 	export let onClosed = () => {};
-  
-  import { fly } from 'svelte/transition';
-	import portal from '$lib/use/portal';
-	import clickOutside from '$lib/use/clickOutside';
 	
   const closeModal = () => {
 		isShown = false;

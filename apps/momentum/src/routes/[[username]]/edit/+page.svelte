@@ -1,26 +1,15 @@
 <script>
-	import dayjs from 'dayjs';
-	import axios from 'axios';
-
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { fade } from 'svelte/transition';
 	import { page } from '$app/stores';
-	import { get, post, put, del, postFile } from 'lib/api';
-	import { API_URL } from '$lib/env';
-	import autofocus from '$lib/use/autofocus';
+	import { get, put } from 'lib/api';
 
-	import AutoCompleteInput from '$lib/components/AutoCompleteInput.svelte';
-	import FeedItem from '$lib/components/FeedItem.svelte';
-	import Loader from '$lib/components/Loader.svelte';
+	import Loader from 'lib/components/Loader.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
 	import FileInput from '$lib/components/FileInput.svelte';
 
-	import sources from '$lib/stores/sources';
 	import projects from '$lib/stores/projects';
 	import allProjects from '$lib/stores/allProjects';
-	import currentUser from '$lib/stores/currentUser';
-	import { browser } from '$app/environment';
+	import currentUser from 'lib/stores/currentuser';
 
 	let project;
 	let creator;

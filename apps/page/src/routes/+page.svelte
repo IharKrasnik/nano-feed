@@ -1,6 +1,6 @@
 <script>
   import { slide } from 'svelte/transition';
-  import currentUser from '$lib/stores/currentUser';
+  import currentUser from 'lib/stores/currentuser';
   import SitePreview from '$lib/components/site-preview.svelte';
   import SignupForm from '$lib/components/signup-form.svelte';
   import ABToggle from '$lib/components/a-b-toggle.svelte';

@@ -3,11 +3,11 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import FeedItemPreview from '$lib/components/FeedItemPreview.svelte';
-	import Loader from '$lib/components/Loader.svelte';
+	import Loader from 'lib/components/Loader.svelte';
 
-	import placeholder from '$lib/use/placeholder';
+	import placeholder from 'lib/use/placeholder';
 
-	import currentUser from '$lib/stores/currentUser';
+	import currentUser from 'lib/stores/currentuser';
 
 	import { page } from '$app/stores';
 	import { get, postFile } from 'lib/api';

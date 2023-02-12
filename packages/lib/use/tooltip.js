@@ -1,4 +1,4 @@
-import Tooltip from '$lib/components/Tooltip.svelte';
+import Tooltip from 'lib/components/Tooltip.svelte';
 
 export default function tooltip(element) {
 	let div;

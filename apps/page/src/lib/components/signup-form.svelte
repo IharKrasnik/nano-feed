@@ -1,6 +1,6 @@
 <script>
   import { fade } from 'svelte/transition';
-  import { API_URL } from '$lib/env';
+  import { GOOGLE_LOGIN_URL } from 'lib/env';
   import { page } from '$app/stores';
 </script>
 
@@ -9,7 +9,7 @@
     Join Momentum
   </div>
 
-  <a href="{API_URL}/auth/google/url?redirect_to={$page.url.href}">
+  <a href="{GOOGLE_LOGIN_URL}">
     <button class="_primary flex items-center px-[90px]">
       <svg class="mr-2" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_251_709)">

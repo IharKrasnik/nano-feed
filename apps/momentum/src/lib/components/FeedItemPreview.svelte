@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { get, post } from 'lib/api';
 	import StreamCard from '$lib/components/StreamCard.svelte';
-	import Loader from '$lib/components/Loader.svelte';
+	import Loader from 'lib/components/Loader.svelte';
 	import allProjects from '$lib/stores/allProjects';
 
 	import { Notion, fetchNotion } from '@leveluptuts/svelte-notion';
