@@ -1,8 +1,8 @@
 import tracker from './tracker';
 
 export default (() => {
-	const { waveloop } = window;
-	const { params } = waveloop;
+	const { wave } = window;
+	const { params } = wave;
 	if (process.env.BUILD === 'dev') {
 		console.log('Wave script params:', params); // eslint-disable-line
 	}
@@ -11,7 +11,7 @@ export default (() => {
 	const userData = {
 		visitorId: null,
 		sessionId: null,
-		projectId: params.pid
+		projectId: params && params.pid
 	};
 
 	if (window.requestIdleCallback) {

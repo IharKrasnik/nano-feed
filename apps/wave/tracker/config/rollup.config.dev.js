@@ -17,13 +17,7 @@ export default {
 	input: 'src/index.js',
 	context: 'window',
 	moduleContext: 'window',
-	output: [
-		{ ...outputConfig },
-		{
-			...outputConfig,
-			file: '../web/src/client/static/script/tracker.js'
-		}
-	],
+	output: [{ ...outputConfig }],
 	plugins: [
 		// eslint({
 		//   fix: true,
