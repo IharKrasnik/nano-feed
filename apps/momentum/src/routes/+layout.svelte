@@ -2,6 +2,7 @@
 	// export const prerender = false;
 
   import "../app.css";
+	import "lib/app.css";
 	import { page } from '$app/stores';
 
 	import allProjects from '$lib/stores/allProjects';
