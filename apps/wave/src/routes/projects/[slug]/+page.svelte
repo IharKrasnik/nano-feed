@@ -277,8 +277,6 @@
           </div>
         </div>
       </div>
-    {:else}
-      <Loader></Loader>
     {/if}
   {:else}
     <div class="p-4 bg-zinc-900">
