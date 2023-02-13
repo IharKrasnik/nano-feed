@@ -2,6 +2,7 @@
   import _ from 'lodash';
   import moment from 'moment';
 
+  import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { browser } from '$app/environment';
@@ -91,18 +92,20 @@
 
 	$: browser && refreshStats($allProjects, $page.params.slug);
 
-  socketIoService.on('waveProject:activated', (project) => {
-    $allProjects = $allProjects.map(p => {
-      if (p._id === project._id){
-        return project;
-      } else {
-        return p;
+  onMount(() => {
+    socketIoService.on('waveProject:activated', (project) => {
+      $allProjects = $allProjects.map(p => {
+        if (p._id === project._id){
+          return project;
+        } else {
+          return p;
+        }
+      });
+
+      if (selectedProject._id === project._id) {
+        selectedProject.isActive = true;
       }
     });
-
-    if (selectedProject._id === project._id) {
-      selectedProject.isActive = true;
-    }
   });
 </script>
 
