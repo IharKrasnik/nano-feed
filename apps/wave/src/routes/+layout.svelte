@@ -1,12 +1,27 @@
 <script>
 	// export const prerender = false;
 
-  import "../app.css";
-	import "lib/app.css";
+  import '../app.css';
+	import 'lib/app.css';
 
+	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 
-  import { SvelteToast } from '@zerodevx/svelte-toast'
+  import { SvelteToast } from '@zerodevx/svelte-toast';
+	
+	import {
+		connect as connectSocketIo,
+		disconnect as disconnectSocketIo
+	} from '$lib/socketIoService';
+
+	if (browser) {
+		connectSocketIo();
+
+		onDestroy(() => {
+			disconnectSocketIo();
+		});
+	}
 </script>
 
 <svelte:head>

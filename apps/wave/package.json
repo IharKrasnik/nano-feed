@@ -48,6 +48,7 @@
 		"rollup-plugin-multi-entry": "^2.1.0",
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"rollup-plugin-terser": "^6.1.0",
+		"socket.io-client": "^4.6.0",
 		"svelte-tiny-linked-charts": "^1.1.5"
 	}
 }

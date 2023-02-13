@@ -9,11 +9,11 @@
 	.lds-ellipsis {
 		position: relative;
 		width: 65px;
-		height: 65px;
+		/* height: 65px; */
 	}
 	.lds-ellipsis div {
 		position: absolute;
-		top: 33px;
+		/* top: 33px; */
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
