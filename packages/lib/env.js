@@ -3,8 +3,11 @@ import { dev } from '$app/environment';
 import { browser } from '$app/environment';
 
 export const API_URL = dev
-	? 'https://ship-627ed08f489a970013572f5d.paralect.net'
+	? // ? 'https://ship-627ed08f489a970013572f5d.paralect.net'
+	  'https://ship-prod-627ed08f489a970013572f5d.paralect.net'
 	: 'https://ship-prod-627ed08f489a970013572f5d.paralect.net';
+
+export const WAVE_URL = dev ? '' : 'https://wave.mmntm.build';
 
 export const PAGE_URL = dev
 	? 'https://iharkrasnik-potential-robot-4q5pjgx4ggf7gx9-5173.preview.app.github.dev'

@@ -22,6 +22,11 @@
   let projectSlug = $page.params.slug;
 
   let selectedTimeframe = '7_days';
+  
+  const timeframeLabels = {
+    '7_days': '7 days',
+    '24_hours': '24 hours'
+  }
 
   if (browser && !$currentUser) {
     goto(GOOGLE_LOGIN_URL);
@@ -167,7 +172,7 @@
               {Object.keys(userChartData)[0]}
             </div>
             <div class='py-4'>
-              <LinkedLabel linked='chart' empty='7 days'/> —
+              <LinkedLabel linked='chart' empty='{timeframeLabels[selectedTimeframe]}'/> —
               <LinkedValue uid='users' empty={stats.totalUsersCount}/> users
             </div>
             <div class='text-sm text-slate-300 mt-4'>
@@ -206,7 +211,7 @@
               {Object.keys(viewChartData)[0]}
             </div>
             <div class='py-4'>
-              <LinkedLabel linked='chart' empty='7 days'/> —
+              <LinkedLabel linked='chart' empty='{timeframeLabels[selectedTimeframe]}'/> —
               <LinkedValue uid='views' empty={stats.totalViewsCount}/> views
             </div>
             <div class='text-sm text-slate-300 mt-4'>
