@@ -23,7 +23,6 @@ if (browser) {
 				prevUser = user;
 			}
 		} else if (!getFromStore(isUserLoading)) {
-			update();
 		}
 	});
 }
