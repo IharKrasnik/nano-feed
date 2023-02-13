@@ -13,8 +13,12 @@
 
   debugger;
 
-  $: if ($allProjects?.length) {
-    goto(`/projects/${$allProjects[0].slug}`);
+  $: if ($allProjects) {
+    if ($allProjects.length) {
+      goto(`/projects/${$allProjects[0].slug}`);
+    } else {
+      goto(`/new`);
+    }
   }
 </script>
 
