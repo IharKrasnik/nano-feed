@@ -5,7 +5,15 @@
 		"src/routes/+layout.js",
 		"src/routes/+layout.server.js"
 	],
+	"/new": [
+		"src/routes/+layout.js",
+		"src/routes/+layout.server.js"
+	],
 	"/og.png": [
 		"src/routes/og.png/+server.js"
+	],
+	"/projects/[slug]": [
+		"src/routes/+layout.js",
+		"src/routes/+layout.server.js"
 	]
 }

@@ -45,6 +45,10 @@ input[type='datetime-local'] {
 	outline: none;
 }
 
+select.small {
+	padding: 8px;
+}
+
 textarea {
 	width: 100%;
 	background: none;
