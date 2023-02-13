@@ -18,7 +18,8 @@
   import Highlight from 'lib/components/Highlight.svelte';
   import allProjects from '$lib/stores/allProjects';
   import currentUser from 'lib/stores/currentUser';
-  import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
+  // import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
+  import { LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
 
   let projectSlug = $page.params.slug;
 
@@ -160,7 +161,7 @@
         <hr class="_border-white my-4" style="border-width: .5px"/>
 
         {#if userChartData}
-          <LinkedChart 
+          <!-- <LinkedChart 
             linked='chart'
             uid='users'
             data={userChartData}
@@ -172,7 +173,7 @@
             width={450}
             transition={500}
             >
-          </LinkedChart>
+          </LinkedChart> -->
         {/if}
 
         <div class='px-4 flex w-full justify-between'>
@@ -199,7 +200,7 @@
         <hr class='_border-white my-4' style="border-width: .5px"/>
 
         {#if viewChartData}
-          <LinkedChart 
+          <!-- <LinkedChart 
             linked='chart'
             uid='views'
             data={viewChartData}
@@ -211,7 +212,7 @@
             width={450}
             transition={500}
             >
-          </LinkedChart>
+          </LinkedChart> -->
         {/if}
 
         <div class='px-4 flex w-full justify-between'>
