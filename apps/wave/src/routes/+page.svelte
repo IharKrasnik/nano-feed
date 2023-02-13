@@ -11,8 +11,6 @@
     goto(GOOGLE_LOGIN_URL);
   }
 
-  debugger;
-
   $: if ($allProjects) {
     if ($allProjects.length) {
       goto(`/projects/${$allProjects[0].slug}`);

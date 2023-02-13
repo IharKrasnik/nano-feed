@@ -9,7 +9,6 @@
 	import { GOOGLE_LOGIN_URL } from 'lib/env';
 
   import Loader from 'lib/components/Loader.svelte';
-  import AutoCompleteInput from 'lib/components/AutoCompleteInput.svelte';
   import allProjects from '$lib/stores/allProjects';
   import currentUser from 'lib/stores/currentUser';
   import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
@@ -26,8 +25,6 @@
     'Feb 13': 10,
   }
 
-  debugger;
-  
   if (browser && !$currentUser) {
     goto(GOOGLE_LOGIN_URL);
   }
@@ -63,43 +60,6 @@
   }
 
 	$: refreshStats($allProjects, $page.params.slug);
-  
-
-  let pageStats = [{
-    url: '/',
-    usersCount: 17,
-    percentage: 100
-  }, {
-    url: '/docs/intro',
-    usersCount: 16,
-    percentage: 98
-  }, {
-    url: '/docs/architecture',
-    usersCount: 7,
-    percentage: 40
-  }, {
-    url: '/#showcase',
-    usersCount: 5,
-    percentage: 30
-  }, {
-    url: '/docs/migrator',
-    usersCount: 5,
-    percentage: 30
-  }];
-
-  let referralStats = [{
-    url: 'indiehackers.com',
-    usersCount: '3,123',
-    percentage: 100
-  }, {
-    url: 'google.com',
-    usersCount: '1,234',
-    percentage: 33
-  }, {
-    url: 't.co',
-    usersCount: '987',
-    percentage: 30
-  }]
 
 </script>
 
@@ -223,7 +183,7 @@
             <div class='flex justify-between py-1 my-1'>
               <div class='relative w-full'>
                 <div class='absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20' style='width: {pageStat.count / maxViewsCount * 100}%;'></div>
-                {pageStat.url}
+                {pageStat.url.replace(/^.*\/\/[^\/]+/, '')}
               </div>
               <div class='w-[100px] shrink-0 text-right'>
                 {pageStat.count}
