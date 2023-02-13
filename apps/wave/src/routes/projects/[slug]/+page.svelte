@@ -48,7 +48,7 @@
     isStatsLoading = true;
 
     if (projects?.length && slug) {
-      selectedProject = $allProjects.find(p => p.slug === slug);
+      selectedProject = projects.find(p => p.slug === slug);
       
       if (selectedProject.isActive) {
         stats = await get(`waveProjects/${selectedProject._id}/stats`, {
@@ -90,7 +90,7 @@
     isStatsLoading = false;
   }
 
-	$: browser && refreshStats($allProjects, $page.params.slug);
+	$: refreshStats($allProjects, $page.params.slug);
 
   // onMount(() => {
   //   socketIoService.on('waveProject:activated', (project) => {
