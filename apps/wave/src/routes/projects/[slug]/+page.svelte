@@ -89,7 +89,7 @@
     isStatsLoading = false;
   }
 
-	$: refreshStats($allProjects, $page.params.slug);
+	$: browser && refreshStats($allProjects, $page.params.slug);
 
   socketIoService.on('waveProject:activated', (project) => {
     $allProjects = $allProjects.map(p => {
