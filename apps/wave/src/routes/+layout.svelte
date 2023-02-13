@@ -1,5 +1,5 @@
 <script>
-	// export const prerender = false;
+	export const prerender = false;
 
   import '../app.css';
 	import 'lib/app.css';
