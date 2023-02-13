@@ -1,14 +1,17 @@
 <script>
   import _ from 'lodash';
   import moment from 'moment';
+  import { fly } from 'svelte/transition';
   import { get } from 'lib/api';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
+  import { browser } from '$app/environment';
+	import { GOOGLE_LOGIN_URL } from 'lib/env';
 
-  import Chart from '$lib/components/Chart.svelte';
   import Loader from 'lib/components/Loader.svelte';
   import AutoCompleteInput from 'lib/components/AutoCompleteInput.svelte';
   import allProjects from '$lib/stores/allProjects';
+  import currentUser from 'lib/stores/currentUser';
   import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
 
   let projectSlug = $page.params.slug;
@@ -21,6 +24,12 @@
     'Feb 11': 4,
     'Feb 12': 0,
     'Feb 13': 10,
+  }
+
+  debugger;
+  
+  if (browser && !$currentUser) {
+    goto(GOOGLE_LOGIN_URL);
   }
 
   let stats;
@@ -117,7 +126,9 @@
   </div>
 
   {#if stats}
-    <div class='grid grid-cols-2 gap-4'>
+    <div class='grid grid-cols-2 gap-4' 
+      in:fly={{ y: 50, duration: 150, delay: 150 }}
+    >
       <div class='rounded-xl p-4 _border-white'>
         <div class='flex justify-between items-center mb-4'>
           <div class='text-lg'>Unique Users</div>
@@ -253,6 +264,8 @@
         </div>
       </div>
     </div>
+  {:else}
+    <Loader></Loader>
   {/if}
 {:else}
   <Loader></Loader>
