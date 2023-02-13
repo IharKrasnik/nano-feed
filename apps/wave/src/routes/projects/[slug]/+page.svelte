@@ -111,6 +111,21 @@
   // });
 </script>
 
+{#if $allProjects}
+  <div class='flex items-center mb-8'>
+    <select bind:value={projectSlug} class='small max-w-[300px]' on:change={() => goto(`/projects/${projectSlug}`)}>
+      {#each $allProjects as project}
+        <option value={project.slug}>{project.name}</option>
+      {/each}
+    </select>
+    <a href='/new' style='margin-right: -60px;'>
+      <button class='ml-4 small'>Add</button>
+    </a>
+  </div>
+{/if}
+
+
+
 
 <style>
   ._border-white {
