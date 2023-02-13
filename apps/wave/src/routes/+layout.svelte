@@ -7,6 +7,7 @@
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
+	import allProjects from '$lib/stores/allProjects';
 
   import { SvelteToast } from '@zerodevx/svelte-toast';
 	
@@ -44,7 +45,9 @@
 		class="container relative p-8 mx-0 xl:mx-auto mt-[45px] sm:mt-[65px] xl:mt-0 
 			max-w-[1080px]">
 		
-		<slot />
+		{#if $allProjects}
+			<slot />
+		{/if}
 	</main>
 
 	<footer>
