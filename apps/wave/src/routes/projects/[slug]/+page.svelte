@@ -9,7 +9,7 @@
 
   import { fly } from 'svelte/transition';
 
-  import * as socketIoService from '$lib/socketIoService';
+  // import * as socketIoService from '$lib/socketIoService';
 
   import { get } from 'lib/api';
 	import { GOOGLE_LOGIN_URL } from 'lib/env';
@@ -92,21 +92,21 @@
 
 	$: browser && refreshStats($allProjects, $page.params.slug);
 
-  onMount(() => {
-    socketIoService.on('waveProject:activated', (project) => {
-      $allProjects = $allProjects.map(p => {
-        if (p._id === project._id){
-          return project;
-        } else {
-          return p;
-        }
-      });
+  // onMount(() => {
+  //   socketIoService.on('waveProject:activated', (project) => {
+  //     $allProjects = $allProjects.map(p => {
+  //       if (p._id === project._id){
+  //         return project;
+  //       } else {
+  //         return p;
+  //       }
+  //     });
 
-      if (selectedProject._id === project._id) {
-        selectedProject.isActive = true;
-      }
-    });
-  });
+  //     if (selectedProject._id === project._id) {
+  //       selectedProject.isActive = true;
+  //     }
+  //   });
+  // });
 </script>
 
 {#if $allProjects}
