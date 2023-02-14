@@ -6,8 +6,9 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { browser } from '$app/environment';
+  import { GOOGLE_LOGIN_URL } from 'lib/env';
 
-  import { fly } from 'svelte/transition';
+  import { fly, fade } from 'svelte/transition';
 
   // import * as socketIoService from '$lib/socketIoService';
 
@@ -16,6 +17,7 @@
   import Loader from 'lib/components/Loader.svelte';
   import Logo from '$lib/images/logo.svelte';
   import allProjects from '$lib/stores/allProjects';
+  import currentUser from 'lib/stores/currentUser';
   import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
 
   let projectSlug = $page.params.slug;
@@ -146,6 +148,21 @@
 </div>
 
 {#if !selectedProject || selectedProject.isActive}
+  {#if !$currentUser }
+  <div class="p-4 md:p-8 bg-zinc-900 mb-8 rounded-xl" in:fade>
+    <div class="mb-2">Hey 👋 <br/></div>
+
+    Momentum Wave is stupid-simple analytics dashboard that you can add to your website <b>in seconds</b>.
+
+    <a href="{GOOGLE_LOGIN_URL}" class="block my-4">
+      <button class="small">Add analytics to my website</button> <br />
+    </a>
+
+    <div>
+      <span class="opacity-70">Here's a public analytics dashboard for <a target="_blank" href="{$page.params.slug}">{$page.params.slug}</a> </span>👇
+    </div>
+  </div>
+  {/if}
   {#if stats}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"
       in:fly={{ y: 50, duration: 150, delay: 150 }}
@@ -192,7 +209,7 @@
       
       <div class="rounded-xl p-4 border _border-white">
         <div class="flex justify-between items-center mb-4">
-          <div class="text-lg">Views</div>
+          <div class="text-lg">Page Views</div>
           <div class="text-3xl font-bold">
             {stats.totalViewsCount}
           </div>
