@@ -53,6 +53,7 @@
 			<Logo></Logo>
 		
 			{#if !$isUserLoading && $allProjects && $page.url.href.includes('/projects')}
+				{#if $allProjects.length}
 				<div class="flex items-center ml-8">
 					<select bind:value="{projectSlug}" style="border:none;" class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
 						{#each $allProjects as project}
@@ -65,6 +66,9 @@
 						<button class="ml-4 small">Add</button>
 					</a> -->
 				</div>
+				{:else}
+					<button class="ml-8 small">🚀 Add New Project</button>
+				{/if}
 			{/if}
 		</div>
 		
