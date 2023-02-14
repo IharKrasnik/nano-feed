@@ -34,7 +34,7 @@
 </div>
 
 <div class="_root">
-  <div class="_content h-screen {page.demoUrl ? 'flex-row justify-between' : 'flex-column items-center'}">
+  <div class="_content {page.demoUrl ? 'flex-row justify-between py-32' : 'flex-column items-center h-screen'}">
     <div class="{page.demoUrl ? 'text-left max-w-[500px]' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
       <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
       
