@@ -264,9 +264,8 @@
                 {referralStat.count}
               </div>
             </div>
-            {#if i !== 4}
+            
             <hr class="border-gray-600"/>
-            {/if} 
           {/each}
         </div>
       </div>

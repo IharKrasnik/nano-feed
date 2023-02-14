@@ -26,6 +26,8 @@
 			disconnectSocketIo();
 		});
 	}
+
+	let projectSlug = $page.params.slug;
 </script>
 
 <svelte:head>
@@ -52,7 +54,7 @@
 		
 			{#if $allProjects && $page.url.href.includes('/projects')}
 				<div class="flex items-center ml-8">
-					<select style="border:none;" class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
+					<select bind:value="{projectSlug}" style="border:none;" class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
 						{#each $allProjects as project}
 							<option value={project.slug}>{project.name}</option>
 						{/each}

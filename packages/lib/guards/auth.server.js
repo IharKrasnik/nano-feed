@@ -1,7 +1,7 @@
 import apiServerSide from 'lib/apiServerSide';
 import { redirect } from '@sveltejs/kit';
 
-export default async ({ url, cookies }) => {
+export default async ({ url, cookies }, pageName = 'Momentum') => {
 	if (!url.href.includes('_redirect')) {
 		let otp = new URL(url.href).searchParams.get('otp');
 
@@ -22,6 +22,6 @@ export default async ({ url, cookies }) => {
 	}
 
 	return {
-		ogTitle: 'Momentum'
+		ogTitle: pageName
 	};
 };
