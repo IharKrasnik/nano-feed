@@ -12,12 +12,10 @@
   // import * as socketIoService from '$lib/socketIoService';
 
   import { get } from 'lib/api';
-	import { GOOGLE_LOGIN_URL } from 'lib/env';
 
   import Loader from 'lib/components/Loader.svelte';
-  import Highlight from 'lib/components/Highlight.svelte';
+  import Logo from '$lib/images/logo.svelte';
   import allProjects from '$lib/stores/allProjects';
-  import currentUser from 'lib/stores/currentUser';
   import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
 
   let projectSlug = $page.params.slug;
@@ -112,19 +110,6 @@
 
   let embedCode = `<script async src="https://wave.mmntm.build/wave.js"><\/script>`;
 </script>
-
-{#if $allProjects}
-  <div class="flex items-center mb-8">
-    <select bind:value={projectSlug} class="small max-w-[300px]" on:change={() => goto(`/projects/${projectSlug}`)}>
-      {#each $allProjects as project}
-        <option value={project.slug}>{project.name}</option>
-      {/each}
-    </select>
-    <a href="/new" style="margin-right: -60px;">
-      <button class="ml-4 small">Add</button>
-    </a>
-  </div>
-{/if}
 
 <div class="flex justify-between items-center mb-8">
   <h1 class="text-xl font-bold"> Analytics </h1>

@@ -7,9 +7,11 @@
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 	import allProjects from '$lib/stores/allProjects';
 	import currentUser from 'lib/stores/currentUser';
 
+	import Logo from '$lib/images/logo.svelte';
   import { SvelteToast } from '@zerodevx/svelte-toast';
 	
 	import {
@@ -36,7 +38,6 @@
 
 <div id="modal-portal" />
 
-
 <div 
 	class="app overflow-y-scroll bg-black" 
 >
@@ -45,6 +46,25 @@
 	<main 
 		class="container relative p-8 mx-0 xl:mx-auto mt-[45px] sm:mt-[65px] xl:mt-0 
 			max-w-[1080px]">
+
+		<div class="w-full flex items-center mb-8">
+			<Logo></Logo>
+		
+			{#if $allProjects && $page.url.href.includes('/projects')}
+				<div class="flex items-center ml-8">
+					<select style="border:none;" class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
+						{#each $allProjects as project}
+							<option value={project.slug}>{project.name}</option>
+						{/each}
+		
+						<option value="add_new" on:click={() => goto('/new')}>Add New Project</option>
+					</select>
+					<!-- <a href="/new" style="margin-right: -60px;">
+						<button class="ml-4 small">Add</button>
+					</a> -->
+				</div>
+			{/if}
+		</div>
 		
 		<slot />
 	</main>
