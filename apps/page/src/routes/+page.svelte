@@ -44,7 +44,9 @@
     isLoading = true;
 
     try {
-      page = await (page._id ? put : post)(`pages${ page._id ? `/${page._id}` : '' }`, {
+      let isNewPage = !page._id;
+
+      page = await (isNewPage ? post : put)(`pages${ page._id ? `/${page._id}` : '' }`, {
         name: page.name,
         slug: page.slug,
         title: page.title,
@@ -54,6 +56,18 @@
       });
 
       $pageDraft = null;
+
+      if (isNewPage) {
+        $allPages = [{...page}, ...$allPages];
+      } else {
+        $allPages = $allPages.map(p => {
+          if (p._id === page._id) {
+            return { ...page };
+          } else {
+            return p;
+          }
+        })
+      }
     } catch(err) {
 
     } finally {
@@ -147,7 +161,7 @@
         <button class="_primary {isLoading ? 'loading': '' }" on:click="{publishPage}">Publish</button>
 
         {#if !page.slug}
-          <div class="cursor-pointer" on:click={() => {
+          <div class="cursor-pointer text-sm opacity-70" on:click={() => {
             page = { ...defaultPage };
             $pageDraft = null;
           }}>Reset Page</div>

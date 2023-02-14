@@ -17,6 +17,9 @@ if (browser) {
 	pageDraftStore.set(pageDraft);
 
 	pageDraftStore.subscribe((p) => {
+		if (p) {
+			p.updatedOn = new Date();
+		}
 		localStorage[KEY] = JSON.stringify(p);
 	});
 }
