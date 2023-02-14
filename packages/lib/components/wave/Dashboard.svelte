@@ -62,7 +62,7 @@
 
 {#if stats}
   <div 
-    class="grid grid-cols-1 md:grid-cols-{columns} gap-4"
+    class="grid grid-cols-1 md:grid-cols-2 md:grid-cols-{columns} gap-4"
     in:fly={{ y: 50, duration: 150, delay: 150 }}
   >
     <div class="rounded-xl p-4 _border-white">
