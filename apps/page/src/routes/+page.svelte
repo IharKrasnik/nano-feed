@@ -5,7 +5,7 @@
   
   import { get } from 'lib/api';
 
-  import { PAGE_URL } from 'lib/env';
+  import { GOOGLE_LOGIN_URL, PAGE_URL } from 'lib/env';
 
   import allPages from '$lib/stores/allPages';
   import pageDraft from '$lib/stores/pageDraft';
@@ -132,7 +132,7 @@
 
 {#if !$currentUser || $allPages}
   <div class="container mx-auto px-4 pt-4">
-    <div class="flex items-center mb-4 ">
+    <div class="flex items-center mb-4" class:justify-between={!$currentUser}>
       <a on:click={() => isSignupFormShown = false }>
         <h2 class="font-bold flex items-center" style="font-family: Archivo; font-size: 20px;"> 
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -168,6 +168,12 @@
         {/if}
       {:else}
         <div class="ml-8 opacity-70">Launch your landing page in seconds</div>
+        
+        <a href="{GOOGLE_LOGIN_URL}">
+          <button class="_primary">
+            Log In
+          </button>
+        </a>
       {/if}
     </div>
   </div>
