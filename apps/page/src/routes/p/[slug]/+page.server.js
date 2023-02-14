@@ -8,8 +8,8 @@ export async function load({ params }) {
 
 	return {
 		page,
-		ogTitle: `${page.name}`,
-		ogDescription: `${page.title || page.subtitle || page.callToAction}`,
-		image: `${PAGE_URL}/og.png?pageSlug=${slug}`
+		ogTitle: `${page.name} — ${page.title}`,
+		ogDescription: `${page.subtitle || page.callToAction}`,
+		image: page.demoUrl || `${PAGE_URL}/og.png?pageSlug=${slug}`
 	};
 }
