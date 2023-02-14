@@ -15,5 +15,9 @@
 	"/projects/[slug]": [
 		"src/routes/+layout.js",
 		"src/routes/+layout.server.js"
+	],
+	"/p/[slug]": [
+		"src/routes/+layout.js",
+		"src/routes/+layout.server.js"
 	]
 }
