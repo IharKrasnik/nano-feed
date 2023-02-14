@@ -135,6 +135,8 @@
   
   ._input_button {
     position: absolute;
+    display: flex;
+    align-items: center;
     z-index: 100;
     height: 100%;
     right: 0;
