@@ -13,6 +13,7 @@
   let currentPage;
 
   if (browser) {
+    window.WAVE_SESSION_KEY = $page.params.slug;
     slug = $page.params.slug;
 
     get(`pages/${slug}`)

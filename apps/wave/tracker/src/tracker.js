@@ -64,7 +64,9 @@ const init =
 							referrerUrl: document.referrer
 						};
 
-						const session = JSON.parse(localStorage.getItem('wave_session'));
+						const session = JSON.parse(
+							localStorage.getItem(`wave_session_${window.WAVE_SESSION_KEY || ''}`)
+						);
 						const TEN_MINUTES_MS = 1 * 60 * 1000;
 
 						if (
