@@ -9,7 +9,7 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import allProjects from '$lib/stores/allProjects';
-	import currentUser from 'lib/stores/currentUser';
+	import currentUser, { isLoading as isUserLoading }  from 'lib/stores/currentUser';
 
 	import Logo from '$lib/images/logo.svelte';
   import { SvelteToast } from '@zerodevx/svelte-toast';
@@ -52,7 +52,7 @@
 		<div class="w-full flex justify-between md:justify-start items-center mb-8">
 			<Logo></Logo>
 		
-			{#if $allProjects && $page.url.href.includes('/projects')}
+			{#if !$isUserLoading && $allProjects && $page.url.href.includes('/projects')}
 				<div class="flex items-center ml-8">
 					<select bind:value="{projectSlug}" style="border:none;" class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
 						{#each $allProjects as project}

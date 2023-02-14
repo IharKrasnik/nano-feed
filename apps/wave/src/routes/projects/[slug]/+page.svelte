@@ -8,16 +8,15 @@
   import { browser } from '$app/environment';
   import { GOOGLE_LOGIN_URL } from 'lib/env';
 
-  import { fly, fade } from 'svelte/transition';
+  import { fly, slide } from 'svelte/transition';
 
   // import * as socketIoService from '$lib/socketIoService';
 
   import { get } from 'lib/api';
 
   import Loader from 'lib/components/Loader.svelte';
-  import Logo from '$lib/images/logo.svelte';
   import allProjects from '$lib/stores/allProjects';
-  import currentUser from 'lib/stores/currentUser';
+  import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
   import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
 
   let projectSlug = $page.params.slug;
@@ -148,8 +147,8 @@
 </div>
 
 {#if !selectedProject || selectedProject.isActive}
-  {#if !$currentUser }
-  <div class="p-4 md:p-8 bg-zinc-900 mb-8 rounded-xl" in:fade>
+  {#if !$isUserLoading && !$currentUser }
+  <div class="p-4 md:p-8 bg-zinc-900 mb-8 rounded-xl">
     <div class="mb-2">Hey 👋 <br/></div>
 
     Momentum Wave is stupid-simple analytics dashboard that you can add to your website <b>in seconds</b>.
@@ -163,6 +162,7 @@
     </div>
   </div>
   {/if}
+
   {#if stats}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"
       in:fly={{ y: 50, duration: 150, delay: 150 }}
