@@ -65,12 +65,12 @@ const init =
 						};
 
 						const session = JSON.parse(localStorage.getItem('wave_session'));
-						const ONE_MINUTE_MS = 1 * 60 * 1000;
+						const TEN_MINUTES_MS = 1 * 60 * 1000;
 
 						if (
 							session &&
 							session.sessionId &&
-							new Date() - new Date(session.updatedOn) < ONE_MINUTE_MS
+							new Date() - new Date(session.updatedOn) < TEN_MINUTES_MS
 						) {
 							return {
 								sessionId: session.sessionId
@@ -80,6 +80,7 @@ const init =
 						return sendData('waveSessions/init', {
 							visitorId,
 							domain: window.location.hostname,
+							url: window.location.href,
 							payload,
 							projectId: userData.projectId
 						});
