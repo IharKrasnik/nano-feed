@@ -1,7 +1,9 @@
 <script>
   import moment from 'moment';
-  import { slide, fly } from 'svelte/transition';
+  import { slide, fly, scale } from 'svelte/transition';
   import currentUser from 'lib/stores/currentUser';
+  import tooltip from 'lib/use/tooltip';
+  import clickOutside from 'lib/use/clickOutside';
   
   import { get } from 'lib/api';
 
@@ -9,9 +11,11 @@
 
   import allPages from '$lib/stores/allPages';
   import pageDraft from '$lib/stores/pageDraft';
+  import 'emoji-picker-element';
 
   import Loader from 'lib/components/Loader.svelte';
   import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
+  import FileInput from 'lib/components/FileInput.svelte';
 
   import SitePreview from '$lib/components/site-preview.svelte';
   import SignupForm from '$lib/components/signup-form.svelte';
@@ -25,7 +29,7 @@
     name: '',
     title: '',
     subtitle: '',
-    callToAction: '',
+    callToAction: 'Join Waitlist',
     bgColor: '',
     slug:'',
   }
@@ -41,6 +45,8 @@
 
   import { post, put } from 'lib/api';
 
+  let isJustPublished = false;
+
   const publishPage = async () => {
     if (!$currentUser) {
       $pageDraft = page;
@@ -53,14 +59,7 @@
     try {
       let isNewPage = !page._id;
 
-      page = await (isNewPage ? post : put)(`pages${ page._id ? `/${page._id}` : '' }`, {
-        name: page.name,
-        slug: page.slug,
-        title: page.title,
-        subtitle: page.subtitle,
-        callToAction: page.callToAction,
-        bgColor: page.bgColor,
-      });
+      page = await (isNewPage ? post : put)(`pages${ page._id ? `/${page._id}` : '' }`, page);
 
       $pageDraft = null;
 
@@ -79,6 +78,11 @@
 
     } finally {
       isLoading = false;
+      isJustPublished = true;
+
+      setTimeout(() => {
+        isJustPublished = false;
+      }, 1000);
     }
   }
 
@@ -126,9 +130,14 @@
     }
   }
 
+	let fileUploaded = ({ type, url } = {}, key) => {
+		page[key] = url;
+	};
 
+  let isEmojiPickerShown = false;
 
 </script>
+
 
 {#if !$currentUser || $allPages}
   <div class="container mx-auto px-4 pt-4">
@@ -189,31 +198,51 @@
     <div class="min-w-[426px] p-4 h-screen overflow-y-scroll" in:fly={{ x: 50, duration: 150, delay: 150 }}>
       
       {#if page.slug}
-        <div class="w-full flex justify-end items-center cursor-pointer">
-          <div class="flex items-center" on:click={toggleSubmissions}>
-            <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 1V6H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0H17C17.2652 0 17.5196 0.105357 17.7071 0.292893C17.8946 0.48043 18 0.734784 18 1ZM17 9H1C0.734784 9 0.48043 9.10536 0.292893 9.29289C0.105357 9.48043 0 9.73478 0 10C0 10.2652 0.105357 10.5196 0.292893 10.7071C0.48043 10.8946 0.734784 11 1 11H17C17.2652 11 17.5196 10.8946 17.7071 10.7071C17.8946 10.5196 18 10.2652 18 10C18 9.73478 17.8946 9.48043 17.7071 9.29289C17.5196 9.10536 17.2652 9 17 9ZM17 14H1C0.734784 14 0.48043 14.1054 0.292893 14.2929C0.105357 14.4804 0 14.7348 0 15C0 15.2652 0.105357 15.5196 0.292893 15.7071C0.48043 15.8946 0.734784 16 1 16H17C17.2652 16 17.5196 15.8946 17.7071 15.7071C17.8946 15.5196 18 15.2652 18 15C18 14.7348 17.8946 14.4804 17.7071 14.2929C17.5196 14.1054 17.2652 14 17 14Z" fill="#8B786D"/>
-            </svg>
-            <span class="ml-2 mr-8 text-[#8B786D]">
-              Forms ({submissions?.results?.length || 0})
-            </span>
+        <div class="w-full flex justify-between items-center mb-4">
+          <div class="relative cursor-pointer" 
+            on:click={() => isEmojiPickerShown = true }
+            use:clickOutside
+            on:clickOutside={() => { isEmojiPickerShown = false } }
+          >
+            {page.logo}
+
+            {#if isEmojiPickerShown}
+              <div class="absolute top-0 mt-8 z-10" in:fly={{ y: 50, duration: 150 }}>
+                <emoji-picker
+                  class="light"
+                  on:emoji-click={(evt) => { page.logo = evt.detail.unicode; isEmojiPickerShown = false; }} />
+              </div>
+            {/if}
           </div>
 
-          <div class="flex items-center" on:click={toggleMetrics}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 2H22V22H18V2ZM10 7V22H14V7H10ZM6 12H2V22H6V12Z" fill="#8B786D"/>
-            </svg>
-            <span class="ml-2 text-[#8B786D]">
-              Views ({metrics?.totalViewsCount || 0})
-            </span>
-         </div>
+          <div class="flex">
+            <div class="flex items-center cursor-pointer" on:click={toggleSubmissions}>
+              <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 1V6H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0H17C17.2652 0 17.5196 0.105357 17.7071 0.292893C17.8946 0.48043 18 0.734784 18 1ZM17 9H1C0.734784 9 0.48043 9.10536 0.292893 9.29289C0.105357 9.48043 0 9.73478 0 10C0 10.2652 0.105357 10.5196 0.292893 10.7071C0.48043 10.8946 0.734784 11 1 11H17C17.2652 11 17.5196 10.8946 17.7071 10.7071C17.8946 10.5196 18 10.2652 18 10C18 9.73478 17.8946 9.48043 17.7071 9.29289C17.5196 9.10536 17.2652 9 17 9ZM17 14H1C0.734784 14 0.48043 14.1054 0.292893 14.2929C0.105357 14.4804 0 14.7348 0 15C0 15.2652 0.105357 15.5196 0.292893 15.7071C0.48043 15.8946 0.734784 16 1 16H17C17.2652 16 17.5196 15.8946 17.7071 15.7071C17.8946 15.5196 18 15.2652 18 15C18 14.7348 17.8946 14.4804 17.7071 14.2929C17.5196 14.1054 17.2652 14 17 14Z" fill="#8B786D"/>
+              </svg>
+              <span class="ml-2 mr-8 text-[#8B786D]">
+                Forms ({submissions?.results?.length || 0})
+              </span>
+            </div>
+
+            <div class="flex items-center cursor-pointer" on:click={toggleMetrics}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 2H22V22H18V2ZM10 7V22H14V7H10ZM6 12H2V22H6V12Z" fill="#8B786D"/>
+              </svg>
+              <span class="ml-2 text-[#8B786D]">
+                Views ({metrics?.totalViewsCount || 0})
+              </span>
+          </div>
+        </div>
       </div>
       {/if}
 
-      <div class="_section mt-4">
-        <div class="_title">Brand Name</div> 
-        <input class="w-full" bind:value={page.name} placeholder="Momentum"/>
-      </div>
+      {#if !page._id}
+        <div class="_section">
+          <div class="_title">Brand Name</div> 
+          <input class="w-full" bind:value={page.name} placeholder="Momentum"/>
+        </div>
+      {/if}
 
       <!-- <div class="my-4">
         <ABToggle></ABToggle>
@@ -222,28 +251,75 @@
         <div class="_title">Tagline</div> 
         <input class="w-full" bind:value={page.title} placeholder="Build a better product in public and grow your audience."/>
       </div>
-      <div class="_section">
-        <div class="_title">Subtitle</div> 
 
-        <textarea 
-          bind:value={page.subtitle}
-          rows="4"
-          class="w-full" 
-          placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback.
-        " />
-      </div>
+      {#if page._id}
+        <div class="_section">
+          <div class="_title">Subtitle</div> 
+
+          <textarea 
+            bind:value={page.subtitle}
+            rows="4"
+            class="w-full" 
+            placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback.
+          " />
+        </div>
+      {/if}
+
+      {#if page._id}
+        <div class="_section">
+          <div class="_title">
+            Product Demo
+
+            <div class="font-normal text-sm opacity-70 mb-4">
+              Screenshot, live GIF or a <a href="//loom.com" class="underline" target="_blank" use:tooltip title="We recommend using Loom">video demo</a> <br />
+            </div> 
+          </div>
+
+          <FileInput
+            class="w-full"
+            bind:url={page.demoUrl}
+            on:fileUploaded={(evt) => fileUploaded(evt.detail, 'demoUrl')}
+          >
+          </FileInput>
+        </div>
+      {/if}
+
+
+      {#if page._id}
       <div class="_section">
         <div class="_title">Call to action</div> 
 
         <input class="w-full" bind:value={page.callToAction} placeholder="Join Waitlist"/>
       </div>
+      {/if}
       <!-- <div class="_section">
         <div class="_title">Appearance</div> 
 
       </div> -->
 
       <div class="flex items-center w-full justify-between mt-4">
-        <button class="_primary {isLoading ? 'loading': '' }" on:click="{publishPage}">Publish</button>
+        <button
+          class="relative _primary {isLoading ? 'loading': '' }" 
+          on:click="{publishPage}">
+         
+          {#if isLoading}
+            <div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
+              <Loader></Loader>
+            </div>
+            Publish
+
+          {:else}
+            {#if isJustPublished}
+              <div class="" in:scale={{ duration: 150 }}>
+                👌
+              </div>
+            {:else}
+              Publish
+            {/if}
+          {/if}
+        </button>
+
+
 
         {#if !page.slug}
           <div class="cursor-pointer text-sm opacity-70" on:click={() => {

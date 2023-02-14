@@ -17,35 +17,52 @@
     await post(`pages/${page.slug}/submissions`, { email });
     isSubmitted = true;
   }
+
+
 </script>
 
 <div class="_header">
   <div class="_logo">
-    {page.name}
+    {page.logo || ''} {page.name}
   </div>
 </div>
 
 <div class="_root">
-  <div class="_content">
-    <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
-    
-    {#if page.subtitle}
-      <h2 class="_subtitle">{page.subtitle}</h2>
-    {/if}
-    
-    <div class="_input_container">
-      <form on:submit|preventDefault="{submitEmail}">
-        <input class="_input" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
+  <div class="_content h-screen {page.demoUrl ? 'flex-row justify-between' : 'flex-column items-center'}">
+    <div class="{page.demoUrl ? 'text-left max-w-[500px]' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
+      <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
+      
+      {#if page.subtitle}
+        <h2 class="_subtitle">{page.subtitle}</h2>
+      {/if}
+      
+      <div class="_input_container">
+        <form on:submit|preventDefault="{submitEmail}">
+          <input class="_input" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
 
-        {#if !isSubmitted}
-          <button type="submit" class="_input_button" style="background-color: {page.bgColor || '#000'}">{page.callToAction}</button>
-        {:else}
-          <div class="_input_button" style="color: #000">
-            💥 Thank you!
-          </div>
-        {/if}
-      </form>
+          {#if !isSubmitted}
+            <button type="submit" class="_input_button" style="background-color: {page.bgColor || '#000'}">{page.callToAction}</button>
+          {:else}
+            <div class="_input_button" style="color: #000">
+              💥 Thank you!
+            </div>
+          {/if}
+        </form>
+      </div>
     </div>
+
+    {#if page.demoUrl}
+    <div class="w-[600px] p-8">
+      {#if page.demoUrl.includes('loom.com')}
+        <iframe
+          style="width: 100%; aspect-ratio: 536/300;"
+          src={page.demoUrl.replace('share/', 'embed/')}
+        />  
+      {:else}
+        <img src="{page.demoUrl}" />
+      {/if}
+    </div>
+    {/if}
   </div>
 
 </div>
@@ -53,68 +70,66 @@
 <style>
   ._root {
     width: 100%;
-    max-width: 870px;
+    max-width: 1080px;
     color: #0C120C;
     margin: 0 auto;
     background: white;
   }
 
   ._header {
-    max-width: 1200px;
+    max-width: 1080px;
     margin: 0 auto;
   }
 
   ._logo {
     font-family: Archivo;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
     margin-top: 12px;
   }
 
   ._content {
-    height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
     margin-top: -40px;
   }
 
   ._title {
     font-family: Archivo;
-    font-size: 56px;
+    font-size: 36px;
     line-height: 1.2;
     margin-bottom: 32px;
   }
 
   ._subtitle {
-    font-size: 20px;
-    line-height: 36px;
+    font-size: 18px;
+    line-height: 26px;
     margin-bottom: 40px;
   }
 
   ._input_container {
     position: relative;
     width: 392px;
-    margin: 0 auto;
   }
 
   ._input {
     background: #F5F5F5;
     width: 100%;
-    padding: 15px 18px;
-    border-radius: 30px;
-    font-size: 18px;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 16px;
   }
 
   ._input_button {
     position: absolute;
+    display: flex;
+    align-items: center;
     z-index: 100;
     height: 100%;
     right: 0;
     top: 0;
-    border-radius: 30px;
+    border-radius: 20px;
     padding: 13px 30px;
     color: white;
   }
