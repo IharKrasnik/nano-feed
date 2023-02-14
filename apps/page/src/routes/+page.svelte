@@ -288,10 +288,18 @@
       {#if page._id}
       <div class="_section">
         <div class="_title">Call to action</div> 
+ 
+        <div class="font-normal text-sm opacity-70 mb-2">
+          Button text
+        </div>
+
+        <input class="mb-4 w-full" bind:value={page.callToAction} placeholder="Join Waitlist"/>
+
+        <div class="font-normal text-sm opacity-70 mb-2">
+          URL to open once email submitted (optional)
+        </div>
 
         <input class="w-full mb-4" bind:value={page.actionUrl} placeholder="Action Url"/>
-
-        <input class="w-full" bind:value={page.callToAction} placeholder="Join Waitlist"/>
 
         <!-- <div class="flex items-center mt-2 text-[14px]">
           <input type="checkbox" class="mr-2"  /> Collect Emails

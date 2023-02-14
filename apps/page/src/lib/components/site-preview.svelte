@@ -16,6 +16,12 @@
   let submitEmail = async () => {
     await post(`pages/${page.slug}/submissions`, { email });
     isSubmitted = true;
+
+    if (page.actionUrl) {
+      setTimeout(() => {
+        window.location.href = page.actionUrl;
+      }, 2000);
+    }
   }
 
 
@@ -36,16 +42,22 @@
         <h2 class="_subtitle">{page.subtitle}</h2>
       {/if}
       
-      <div class="_input_container">
-        <form on:submit|preventDefault="{submitEmail}">
-          <input class="_input" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
+      <div class="_input_container flex items-center">
+        <form class="w-full" on:submit|preventDefault="{submitEmail}">
 
           {#if !isSubmitted}
+            <input class="_input w-full" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
             <button type="submit" class="_input_button" style="background-color: {page.bgColor || '#000'}">{page.callToAction}</button>
           {:else}
-            <div class="_input_button" style="color: #000">
+            <div style="color: #000">
               💥 Thank you!
             </div>
+
+            {#if page.actionUrl}
+              <div class="mt-8 opacity-70">
+                Redirecting...
+              </div>
+            {/if}
           {/if}
         </form>
       </div>
@@ -120,16 +132,14 @@
     border-radius: 20px;
     font-size: 16px;
   }
-
+  
   ._input_button {
     position: absolute;
-    display: flex;
-    align-items: center;
     z-index: 100;
     height: 100%;
     right: 0;
     top: 0;
-    border-radius: 20px;
+    border-radius: 30px;
     padding: 13px 30px;
     color: white;
   }
