@@ -9,7 +9,7 @@ let user;
 
 currentUser.subscribe((value) => (user = value));
 
-export default async ({ url }) => {
+export default async ({ url }, title = 'Momentum') => {
 	if (browser && !user) {
 		const cookies = cookie.parse(document.cookie);
 		let accessToken = cookies.access_token;
@@ -37,6 +37,6 @@ export default async ({ url }) => {
 	}
 
 	return {
-		ogTitle: 'Momentum'
+		ogTitle: title
 	};
 };

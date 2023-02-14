@@ -289,7 +289,13 @@
       <div class="_section">
         <div class="_title">Call to action</div> 
 
+        <input class="w-full mb-4" bind:value={page.actionUrl} placeholder="Action Url"/>
+
         <input class="w-full" bind:value={page.callToAction} placeholder="Join Waitlist"/>
+
+        <!-- <div class="flex items-center mt-2 text-[14px]">
+          <input type="checkbox" class="mr-2"  /> Collect Emails
+        </div> -->
       </div>
       {/if}
       <!-- <div class="_section">

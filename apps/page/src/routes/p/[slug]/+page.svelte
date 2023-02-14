@@ -10,16 +10,11 @@
 
   let slug;
 
-  let currentPage;
+  let currentPage = $page.data.page;
 
   if (browser) {
     window.WAVE_SESSION_KEY = $page.params.slug;
     slug = $page.params.slug;
-
-    get(`pages/${slug}`)
-      .then(page => {
-        currentPage = page;
-      });
   }
 
   let resize = () => {
@@ -27,19 +22,8 @@
   }
 </script>
 
-  <svelte:head>
-    {#if currentPage}
-      <title>{currentPage.name}</title>
-      <meta name="description" content="{currentPage.title} {currentPage.subtitle}" />
-      <meta name="og:description" content="{currentPage.title} {currentPage.subtitle}" />
-      <meta name="image" content="{PAGE_URL}/og.png?pageSlug={currentPage.slug}" />
-      <meta name="og:image" content="{PAGE_URL}/og.png?pageSlug={currentPage.slug}" />
-    {/if}
-  </svelte:head>
 
 {#if currentPage}
-
-
   <SitePreview
     bind:page={currentPage}
   >
