@@ -1,11 +1,14 @@
 <script>
-  import { slide } from 'svelte/transition';
+  import { slide, fly } from 'svelte/transition';
   import currentUser from 'lib/stores/currentUser';
+  
+  import { get } from 'lib/api';
 
   import allPages from '$lib/stores/allPages';
   import pageDraft from '$lib/stores/pageDraft';
 
   import Loader from 'lib/components/Loader.svelte';
+  import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 
   import SitePreview from '$lib/components/site-preview.svelte';
   import SignupForm from '$lib/components/signup-form.svelte';
@@ -74,6 +77,22 @@
       isLoading = false;
     }
   }
+
+  let isMetricsOpen = false;
+
+  let metrics;
+  
+
+  let toggleMetrics = async () => {
+    isMetricsOpen = !isMetricsOpen;
+
+    if (!metrics) {
+      metrics = await get(`waveProjects/page.mmntm.build/stats`, {
+        timeframe: '7_days',
+      });
+    }
+  }
+
 </script>
 
 {#if !$currentUser || $allPages}
@@ -124,8 +143,18 @@
   {/if}
 
   <div class="container mx-auto flex relative">
-    <div class="min-w-[426px] mt-4 p-4">
-      <div class="_section">
+    {#if !isMetricsOpen}
+    <div class="min-w-[426px] p-4" in:fly={{ x: 50, duration: 150, delay: 150 }}>
+      <div class="w-full flex justify-end items-center cursor-pointer" on:click={toggleMetrics}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 2H22V22H18V2ZM10 7V22H14V7H10ZM6 12H2V22H6V12Z" fill="#8B786D"/>
+        </svg>
+        <span class="ml-2 text-[#8B786D]">
+          Metrics
+        </span>
+      </div>
+
+      <div class="_section mt-4">
         <div class="_title">Brand Name</div> 
         <input class="w-full" bind:value={page.name} placeholder="Momentum"/>
       </div>
@@ -168,6 +197,24 @@
         {/if}
       </div>
     </div>
+    {:else}
+    <div class="min-w-[426px] p-4 mt-4" in:fly={{ x: -50, duration: 150, delay: 150 }}>
+      <div class="flex items-center cursor-pointer text-[#8B786D]" on:click={toggleMetrics}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M10.114 4.04508L2.95451 11.2045C2.51517 11.6439 2.51517 12.3562 2.95451 12.7955L10.114 19.955C10.5533 20.3943 11.2656 20.3943 11.705 19.955C12.1443 19.5156 12.1443 18.8033 11.705 18.364L6.46599 13.125H20.25C20.8713 13.125 21.375 12.6214 21.375 12C21.375 11.3787 20.8713 10.875 20.25 10.875H6.46599L11.705 5.63607C12.1443 5.19673 12.1443 4.48442 11.705 4.04508C11.2656 3.60574 10.5533 3.60574 10.114 4.04508Z" fill="#8B786D"/>
+        </svg>
+        Back to Editor
+      </div>
+      
+      {#if metrics}
+        <div class="mt-8">
+          <WaveDashboard stats={metrics} columns={1}></WaveDashboard>
+        </div>
+      {:else}
+        <Loader></Loader>
+      {/if}
+    </div>
+    {/if}
 
     {#if page.name || page.title || page.subtitle || page.callToAction}
       <div class="_preview p-4 mx-4" in:slide>
