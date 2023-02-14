@@ -51,8 +51,7 @@
 
 		<div class="w-full flex justify-between md:justify-start items-center mb-8">
 			<Logo></Logo>
-		
-			{#if !$isUserLoading && $allProjects && $page.url.href.includes('/projects')}
+			{#if !$isUserLoading && $allProjects && $page.url.href.includes('/p')}
 				{#if $allProjects.length}
 				<div class="flex items-center ml-8">
 					<select bind:value="{projectSlug}" style="border:none;" class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
