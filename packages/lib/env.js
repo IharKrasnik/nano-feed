@@ -10,7 +10,8 @@ export const API_URL = dev
 export const WAVE_URL = dev ? '' : 'https://wave.mmntm.build';
 
 export const PAGE_URL = dev
-	? 'https://iharkrasnik-potential-robot-4q5pjgx4ggf7gx9-5173.preview.app.github.dev'
+	? // ? 'https://iharkrasnik-potential-robot-4q5pjgx4ggf7gx9-5173.preview.app.github.dev'
+	  'https://page.mmntm.build'
 	: 'https://page.mmntm.build';
 
 export const STREAM_URL = dev

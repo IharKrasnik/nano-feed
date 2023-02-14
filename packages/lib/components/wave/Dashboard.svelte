@@ -8,6 +8,8 @@
   export let selectedTimeframe = '7_days';
   export let columns = 2;
 
+  export let isSinglePage = false;
+
   let widthEl;
   let chartWidth;
   
@@ -94,14 +96,14 @@
       {/if}
 
       <div class="px-4 flex w-full justify-between">
-        <div class="text-sm text-slate-300 mt-4">
+        <div class="text-sm text-slate-300 mt-4 shrink-0">
           {Object.keys(userChartData)[0]}
         </div>
         <div class="py-4">
           <LinkedLabel linked="chart" empty="{timeframeLabels[selectedTimeframe]}"/> —
           <LinkedValue uid="users" empty={stats.totalUsersCount}/> users
         </div>
-        <div class="text-sm text-slate-300 mt-4">
+        <div class="text-sm text-slate-300 mt-4 shrink-0">
           {_.last(Object.keys(userChartData))}
         </div>
       </div>
@@ -134,45 +136,47 @@
       {/if}
 
       <div class="px-4 flex w-full justify-between">
-        <div class="text-sm text-slate-300 mt-4">
+        <div class="text-sm text-slate-300 mt-4 shrink-0">
           {Object.keys(viewChartData)[0]}
         </div>
         <div class="py-4">
           <LinkedLabel linked="chart" empty="{timeframeLabels[selectedTimeframe]}"/> —
           <LinkedValue uid="views" empty={stats.totalViewsCount}/> views
         </div>
-        <div class="text-sm text-slate-300 mt-4">
+        <div class="text-sm text-slate-300 mt-4 shrink-0">
           {_.last(Object.keys(viewChartData))}
         </div>
       </div>
     </div>
 
-    <div class="rounded-xl p-4 border _border-white">
-      <div class="flex justify-between items-center mb-4">
-        <div class="text-lg mb-4">Pages</div>
-      </div>
+    {#if !isSinglePage}
+      <div class="rounded-xl p-4 border _border-white">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-lg mb-4">Pages</div>
+        </div>
 
-      <div class="flex justify-between mb-2">
-        <div>Page</div>
-        <div class="w-[100px] text-right">Users</div>
-      </div>
-      
-      <div>
-        {#each stats.pageStats as pageStat, i}
-          <div class="flex justify-between py-1 my-1">
-            <div class="relative w-full">
-              <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {pageStat.count / maxViewsCount * 100}%;"></div>
-              {pageStat.url.replace(/^.*\/\/[^\/]+/, '')}
+        <div class="flex justify-between mb-2">
+          <div>Page</div>
+          <div class="w-[100px] text-right">Users</div>
+        </div>
+        
+        <div>
+          {#each stats.pageStats as pageStat, i}
+            <div class="flex justify-between py-1 my-1">
+              <div class="relative w-full">
+                <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {pageStat.count / maxViewsCount * 100}%;"></div>
+                {pageStat.url.replace(/^.*\/\/[^\/]+/, '')}
+              </div>
+              <div class="w-[100px] shrink-0 text-right">
+                {pageStat.count}
+              </div>
             </div>
-            <div class="w-[100px] shrink-0 text-right">
-              {pageStat.count}
-            </div>
-          </div>
 
-          <hr class="border-gray-600"/>
-        {/each}
+            <hr class="border-gray-600"/>
+          {/each}
+        </div>
       </div>
-    </div>
+    {/if}
 
     <div class="rounded-xl p-4 border _border-white">
       <div class="flex justify-between items-center mb-4">

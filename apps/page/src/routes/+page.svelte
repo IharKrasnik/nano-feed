@@ -1,8 +1,11 @@
 <script>
+  import moment from 'moment';
   import { slide, fly } from 'svelte/transition';
   import currentUser from 'lib/stores/currentUser';
   
   import { get } from 'lib/api';
+
+  import { PAGE_URL } from 'lib/env';
 
   import allPages from '$lib/stores/allPages';
   import pageDraft from '$lib/stores/pageDraft';
@@ -32,6 +35,7 @@
 
   $: if (!isPageSet && $currentUser && $allPages?.length && !$pageDraft && !page._id) {
     page = { ...$allPages[0] };
+    refreshData();
     isPageSet = true;
   }
 
@@ -81,17 +85,48 @@
   let isMetricsOpen = false;
 
   let metrics;
-  
 
+  let refreshData = () => {
+    refreshMetrics();
+    refreshSubmissions();
+  }
+
+  let refreshMetrics = async () => {
+    metrics = null;
+
+    metrics = await get(`waveProjects/page.mmntm.build/stats`, {
+      timeframe: '7_days',
+      url: `${PAGE_URL}/p/${page.slug}`
+    });
+  }
+  
   let toggleMetrics = async () => {
     isMetricsOpen = !isMetricsOpen;
 
-    if (!metrics) {
-      metrics = await get(`waveProjects/page.mmntm.build/stats`, {
-        timeframe: '7_days',
-      });
+    if (isMetricsOpen) {
+      refreshMetrics();
     }
   }
+
+  let isSubmissionsOpen = false;
+  let submissions;
+
+  let refreshSubmissions = async () => {
+    submissions = null;
+
+    submissions = await get(`pages/${page._id}/submissions`, {
+    });
+  }
+
+  let toggleSubmissions = async () => {
+    isSubmissionsOpen = !isSubmissionsOpen;
+
+    if (isSubmissionsOpen) {
+      refreshSubmissions();
+    }
+  }
+
+
 
 </script>
 
@@ -113,13 +148,14 @@
 
       {#if $currentUser}
         {#if $allPages}
-          <select class="ml-8 max-w-[300px]" bind:value={page.slug} on:change={evt => { 
+          <select class="ml-8 w-[275px]" bind:value={page.slug} on:change={evt => { 
             let slug = evt.target.value;
 
             if (slug === '') {
               page = { ...($pageDraft || defaultPage) };
             } else {
               page = { ...$allPages.find(p => p.slug === evt.target.value) };
+              refreshData();
             }
           }}>
             {#each $allPages as page}
@@ -143,16 +179,30 @@
   {/if}
 
   <div class="container mx-auto flex relative">
-    {#if !isMetricsOpen}
-    <div class="min-w-[426px] p-4" in:fly={{ x: 50, duration: 150, delay: 150 }}>
-      <div class="w-full flex justify-end items-center cursor-pointer" on:click={toggleMetrics}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 2H22V22H18V2ZM10 7V22H14V7H10ZM6 12H2V22H6V12Z" fill="#8B786D"/>
-        </svg>
-        <span class="ml-2 text-[#8B786D]">
-          Metrics
-        </span>
+    {#if !isMetricsOpen && !isSubmissionsOpen}
+    <div class="min-w-[426px] p-4 h-screen overflow-y-scroll" in:fly={{ x: 50, duration: 150, delay: 150 }}>
+      
+      {#if page.slug}
+        <div class="w-full flex justify-end items-center cursor-pointer">
+          <div class="flex items-center" on:click={toggleSubmissions}>
+            <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 1V6H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0H17C17.2652 0 17.5196 0.105357 17.7071 0.292893C17.8946 0.48043 18 0.734784 18 1ZM17 9H1C0.734784 9 0.48043 9.10536 0.292893 9.29289C0.105357 9.48043 0 9.73478 0 10C0 10.2652 0.105357 10.5196 0.292893 10.7071C0.48043 10.8946 0.734784 11 1 11H17C17.2652 11 17.5196 10.8946 17.7071 10.7071C17.8946 10.5196 18 10.2652 18 10C18 9.73478 17.8946 9.48043 17.7071 9.29289C17.5196 9.10536 17.2652 9 17 9ZM17 14H1C0.734784 14 0.48043 14.1054 0.292893 14.2929C0.105357 14.4804 0 14.7348 0 15C0 15.2652 0.105357 15.5196 0.292893 15.7071C0.48043 15.8946 0.734784 16 1 16H17C17.2652 16 17.5196 15.8946 17.7071 15.7071C17.8946 15.5196 18 15.2652 18 15C18 14.7348 17.8946 14.4804 17.7071 14.2929C17.5196 14.1054 17.2652 14 17 14Z" fill="#8B786D"/>
+            </svg>
+            <span class="ml-2 mr-8 text-[#8B786D]">
+              Forms ({submissions?.results?.length || 0})
+            </span>
+          </div>
+
+          <div class="flex items-center" on:click={toggleMetrics}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 2H22V22H18V2ZM10 7V22H14V7H10ZM6 12H2V22H6V12Z" fill="#8B786D"/>
+            </svg>
+            <span class="ml-2 text-[#8B786D]">
+              Views ({metrics?.totalViewsCount || 0})
+            </span>
+         </div>
       </div>
+      {/if}
 
       <div class="_section mt-4">
         <div class="_title">Brand Name</div> 
@@ -198,22 +248,43 @@
       </div>
     </div>
     {:else}
-    <div class="min-w-[426px] p-4 mt-4" in:fly={{ x: -50, duration: 150, delay: 150 }}>
-      <div class="flex items-center cursor-pointer text-[#8B786D]" on:click={toggleMetrics}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M10.114 4.04508L2.95451 11.2045C2.51517 11.6439 2.51517 12.3562 2.95451 12.7955L10.114 19.955C10.5533 20.3943 11.2656 20.3943 11.705 19.955C12.1443 19.5156 12.1443 18.8033 11.705 18.364L6.46599 13.125H20.25C20.8713 13.125 21.375 12.6214 21.375 12C21.375 11.3787 20.8713 10.875 20.25 10.875H6.46599L11.705 5.63607C12.1443 5.19673 12.1443 4.48442 11.705 4.04508C11.2656 3.60574 10.5533 3.60574 10.114 4.04508Z" fill="#8B786D"/>
-        </svg>
-        Back to Editor
-      </div>
-      
-      {#if metrics}
-        <div class="mt-8">
-          <WaveDashboard stats={metrics} columns={1}></WaveDashboard>
+
+      <div class="min-w-[426px] p-4 h-screen overflow-y-scroll mt-4" in:fly={{ x: -50, duration: 150, delay: 150 }}>
+        <div class="flex items-center cursor-pointer text-[#8B786D]" on:click={() => { isSubmissionsOpen = false; isMetricsOpen = false; }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.114 4.04508L2.95451 11.2045C2.51517 11.6439 2.51517 12.3562 2.95451 12.7955L10.114 19.955C10.5533 20.3943 11.2656 20.3943 11.705 19.955C12.1443 19.5156 12.1443 18.8033 11.705 18.364L6.46599 13.125H20.25C20.8713 13.125 21.375 12.6214 21.375 12C21.375 11.3787 20.8713 10.875 20.25 10.875H6.46599L11.705 5.63607C12.1443 5.19673 12.1443 4.48442 11.705 4.04508C11.2656 3.60574 10.5533 3.60574 10.114 4.04508Z" fill="#8B786D"/>
+          </svg>
+          Back to Editor
         </div>
-      {:else}
-        <Loader></Loader>
-      {/if}
-    </div>
+
+        {#if isMetricsOpen}
+          {#if metrics}
+            <div class="mt-8">
+              <WaveDashboard stats={metrics} columns={1} isSinglePage></WaveDashboard>
+            </div>
+          {:else}
+            <Loader></Loader>
+          {/if}
+        {/if}
+
+        {#if isSubmissionsOpen}
+          {#if submissions}
+            <div class="mt-4">
+              <div class="text-lg font-bold">Forms Submissions: {submissions.results.length}</div>
+              {#each submissions.results as submission}
+                <div class="flex my-2 opacity-90 w-full justify-between items-center">
+                  <div>
+                    {submission.email}
+                  </div>
+                  <div class="text-sm opacity-70">
+                    {moment(submission.createdOn).format('MMM DD HH:MM')}
+                  </div>
+              </div>
+              {/each}
+            </div>
+          {/if}
+        {/if}
+      </div>
     {/if}
 
     {#if page.name || page.title || page.subtitle || page.callToAction}
@@ -224,7 +295,7 @@
 
         {#if page.slug}
           <div class="_published-label">
-            ✅ Published at <a href="https://{window.location.hostname}/p/{page.slug}" style="color: #5375F0;" target="_blank" rel="noreferrer">{window.location.hostname}/p/{page.slug}</a>
+            ✅ Published at <a href="{PAGE_URL}/p/{page.slug}" style="color: #5375F0;" target="_blank" rel="noreferrer">{PAGE_URL.replace('https://', '')}/p/{page.slug}</a>
           </div>
         {/if}
       </div>
