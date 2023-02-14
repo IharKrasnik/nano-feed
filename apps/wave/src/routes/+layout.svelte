@@ -56,10 +56,10 @@
 				<div class="flex items-center ml-8">
 					<select bind:value="{projectSlug}" style="border:none;" class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
 						{#each $allProjects as project}
-							<option value={project.slug}>{project.name}</option>
+							<option value={project.url}>{project.name}</option>
 						{/each}
 		
-						<option value="add_new" on:click={() => goto('/new')}>Add New Project</option>
+						<option value="add_new" on:click={() => goto('/new')}>🚀 Add New Project</option>
 					</select>
 					<!-- <a href="/new" style="margin-right: -60px;">
 						<button class="ml-4 small">Add</button>

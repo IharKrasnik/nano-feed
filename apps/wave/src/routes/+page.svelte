@@ -13,7 +13,7 @@
 
   $: if ($allProjects) {
     if ($allProjects.length) {
-      goto(`/projects/${$allProjects[0].slug}`);
+      goto(`/projects/${$allProjects[0].url}`);
     } else {
       goto(`/new`);
     }

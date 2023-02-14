@@ -120,8 +120,14 @@
 </script>
 
 <div class="flex justify-between items-center mb-8">
-  <h1 class="text-xl font-bold"> Analytics </h1>
-  
+  <div>
+    <h1 class="text-xl font-bold"> Analytics </h1>
+    <div class="opacity-70">
+      <a href="//{$page.params.slug}" target="_blank">
+        {$page.params.slug}
+      </a>
+    </div>
+  </div>
   <div class="flex items-center">
     {#if isStatsLoading}
       <div class="mr-2">
