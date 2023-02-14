@@ -10,6 +10,6 @@ export async function load({ params }) {
 		page,
 		ogTitle: `${page.name} — ${page.title}`,
 		ogDescription: `${page.subtitle || page.callToAction}`,
-		image: page.demoUrl || `${PAGE_URL}/og.png?pageSlug=${slug}`
+		ogImage: page.demoUrl || `${PAGE_URL}/og.png?pageSlug=${slug}`
 	};
 }
