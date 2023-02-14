@@ -46,10 +46,10 @@
 	<SvelteToast />
 	
 	<main 
-		class="container relative p-8 mx-0 xl:mx-auto mt-[45px] sm:mt-[65px] xl:mt-0 
+		class="container relative p-8 mx-0 xl:mx-auto mt-[0px] sm:mt-[65px] xl:mt-0 
 			max-w-[1080px]">
 
-		<div class="w-full flex items-center mb-8">
+		<div class="w-full flex justify-between md:justify-start items-center mb-8">
 			<Logo></Logo>
 		
 			{#if $allProjects && $page.url.href.includes('/projects')}

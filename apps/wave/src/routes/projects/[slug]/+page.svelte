@@ -37,6 +37,8 @@
   let viewChartData = null;
   let maxViewsCount;
   let maxReferralCount;
+  let chartWidth;
+  let widthEl;
 
   let selectedProject;
 
@@ -88,6 +90,12 @@
     }
 
     isStatsLoading = false;
+
+    if (!chartWidth) {
+      setTimeout(() => {
+        chartWidth = widthEl.offsetWidth;
+      }, 0);
+    } 
   }
 
 	$: browser && refreshStats($allProjects, $page.params.slug);
@@ -133,11 +141,11 @@
 
 {#if !selectedProject || selectedProject.isActive}
   {#if stats}
-    <div class="grid grid-cols-2 gap-4"
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"
       in:fly={{ y: 50, duration: 150, delay: 150 }}
     >
       <div class="rounded-xl p-4 _border-white">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex justify-between items-center mb-4" bind:this={widthEl}>
           <div class="text-lg">Unique Users</div>
           <div class="text-3xl font-bold">
             {stats.totalUsersCount}
@@ -146,7 +154,7 @@
 
         <hr class="_border-white my-4" style="border-width: .5px"/>
 
-        {#if userChartData}
+        {#if userChartData && chartWidth}
           <LinkedChart 
             linked="chart"
             uid="users"
@@ -156,7 +164,7 @@
             barMinWidth={20}
             gap={10}
             height={150}
-            width={450}
+            width={chartWidth}
             transition={500}
             >
           </LinkedChart>
@@ -186,7 +194,7 @@
 
         <hr class="_border-white my-4" style="border-width: .5px"/>
 
-        {#if viewChartData}
+        {#if viewChartData && chartWidth}
           <LinkedChart 
             linked="chart"
             uid="views"
@@ -196,7 +204,7 @@
             barMinWidth={20}
             gap={10}
             height={150}
-            width={450}
+            width={chartWidth}
             transition={500}
             >
           </LinkedChart>
@@ -264,7 +272,7 @@
                 {referralStat.count}
               </div>
             </div>
-            
+
             <hr class="border-gray-600"/>
           {/each}
         </div>
