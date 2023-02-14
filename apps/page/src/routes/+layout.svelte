@@ -1,6 +1,12 @@
 <script>
   import "../app.css";
+	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
+  import allPages from '$lib/stores/allPages';
 </script>
+
+{#if !$isUserLoading}
+  <slot />
+{/if}
 
 <style>
   :global(body) {
@@ -44,5 +50,4 @@
   }
 </style>
 
-<slot />
 
