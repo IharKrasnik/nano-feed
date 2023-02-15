@@ -8,6 +8,8 @@
     bgColor: '#D98324'
   };
 
+  export let noStickyHeader = false;
+
   import SvelteMarkdown from 'svelte-markdown';
 
   import { post } from 'lib/api';
@@ -57,13 +59,13 @@
 
 <svelte:window bind:scrollY />
 
-{#if scrollY > 300}
+{#if !noStickyHeader && scrollY > 300}
   <div 
     class="fixed top-0 z-30 bg-white w-full"
     in:fly={{ y: -150, duration: 150, delay: 150 }}
     out:fade={{ duration: 150, delay: 150 }}
   >
-  <div class="flex w-full justify-between items-center px-8 md:px-16 py-2">
+  <div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2">
     <div class="flex items-center shrink-0">
       <div class="text-lg font-bold">{page.logo || ''} {page.name}</div>
 

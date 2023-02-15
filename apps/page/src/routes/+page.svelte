@@ -389,7 +389,12 @@
               <div class="font-normal text-sm opacity-70 mb-2">
                 Their Avatar
               </div>
-              <FileInput class="w-full" bind:url={testimonial.avatarUrl}></FileInput>
+              <FileInput 
+                class="w-full" 
+                bind:url={testimonial.avatarUrl}
+                on:fileUploaded={(evt) => { testimonial.avatarUrl = evt.detail.url; }}
+              >
+              </FileInput>
 
               <hr class="my-4 border-[#8B786D] opacity-30" />
 
@@ -435,7 +440,12 @@
               <div class="font-normal text-sm opacity-70 mb-2">
                 Image
               </div>
-              <FileInput class="w-full" bind:url={benefit.imageUrl}></FileInput>
+              
+              <FileInput 
+                class="w-full"
+                on:fileUploaded={(evt) => { benefit.imageUrl = evt.detail.url; }}
+                bind:url={benefit.imageUrl}>
+              </FileInput>
 
               <hr class="my-4 border-[#8B786D] opacity-30" />
 
@@ -528,6 +538,7 @@
     {#if page.name || page.title }
       <div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
         <SitePreview
+          noStickyHeader={true}
           bind:page={page}
           />
 
