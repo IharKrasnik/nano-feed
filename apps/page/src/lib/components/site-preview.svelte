@@ -97,7 +97,7 @@
     <div class="_root" >
       <div 
         class="_content {page.demoUrl ? 'py-32' : 'h-screen'}"
-        class:h-screen={!page.streamSlug}
+        class:h-screen={!page.streamSlug && !page.benefits?.length}
         >
         <div class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between' : 'text-center items-center'}">
           <div class="{page.demoUrl ? 'text-left max-w-[500px]' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
@@ -202,7 +202,9 @@
   </div>
 
   <iframe id="iframeResize" on:load={resize} class="w-full sticky z-20 bg-white" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&isViewAll=true"></iframe>
+{/if}
 
+{#if page.streamSlug || page.benefits?.length}
   <div class="h-screen sticky"></div>
 
   <div class="w-full text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4">
@@ -231,7 +233,6 @@
       </form>
     </div>
   </div>
-
 {/if}
 
 
