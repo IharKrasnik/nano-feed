@@ -11,6 +11,8 @@
   import SvelteMarkdown from 'svelte-markdown';
 
   import { post } from 'lib/api';
+  import { fly, fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
 
   import RenderUrl from '$lib/components/RenderUrl.svelte';
 
@@ -19,6 +21,12 @@
   import iframeResize from 'iframe-resizer/js/iframeResizer';
 
   import { STREAM_URL, PAGE_URL } from 'lib/env';
+
+  let isMounted = false;
+  
+  onMount(() => {
+    isMounted = true;
+  });
 
   let email;
   let isSubmitted = false;
@@ -46,97 +54,98 @@
 
 </script>
 
-<div class="sticky bg-white z-20 w-full p-8 md:p-0">
-  <div class="_header flex justify-between items-center">
-    <div class="_logo">
-      {page.logo || ''} {page.name}
+{#if isMounted}
+  <div class="sticky bg-white z-20 w-full p-8 md:p-0" in:fade={{ duration: 150 }}>
+    <div class="_header flex justify-between items-center">
+      <div class="_logo">
+        {page.logo || ''} {page.name}
+      </div>
+
+      <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
     </div>
 
-    <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
-  </div>
+    <div class="_root" >
+      <div 
+        class="_content {page.demoUrl ? 'py-32' : 'h-screen'}"
+        class:h-screen={!page.streamSlug}
+        >
+        <div class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between' : 'flex-column items-center'}">
+          <div class="{page.demoUrl ? 'text-left max-w-[500px]' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
+            <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
+            
+            {#if page.subtitle}
+              <h2 class="_subtitle">{page.subtitle}</h2>
+            {/if}
+            
+            <div class="_input_container flex items-center md:w-[392px] w-full">
+              <form class="w-full" on:submit|preventDefault="{submitEmail}">
 
-  <div class="_root" >
-    <div 
-      class="_content {page.demoUrl ? 'py-32' : 'h-screen'}"
-      class:h-screen={!page.streamSlug}
-      >
-      <div class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between' : 'flex-column items-center'}">
-        <div class="{page.demoUrl ? 'text-left max-w-[500px]' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
-          <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
-          
-          {#if page.subtitle}
-            <h2 class="_subtitle">{page.subtitle}</h2>
-          {/if}
-          
-          <div class="_input_container flex items-center md:w-[392px] w-full">
-            <form class="w-full" on:submit|preventDefault="{submitEmail}">
-
-              {#if !isSubmitted}
-                <input class="_input w-full" placeholder="Your Email" type="email" required bind:this={inputEl} bind:value={email} disabled={isSubmitted}/>
-                <button type="submit" class="_input_button">{page.callToAction}</button>
-              {:else}
-                <div style="color: #000">
-                  💥 Thank you!
-                </div>
-
-                {#if page.actionUrl}
-                  <div class="mt-8 opacity-70">
-                    Redirecting...
+                {#if !isSubmitted}
+                  <input class="_input w-full" placeholder="Your Email" type="email" required bind:this={inputEl} bind:value={email} disabled={isSubmitted}/>
+                  <button type="submit" class="_input_button">{page.callToAction}</button>
+                {:else}
+                  <div style="color: #000">
+                    💥 Thank you!
                   </div>
+
+                  {#if page.actionUrl}
+                    <div class="mt-8 opacity-70">
+                      Redirecting...
+                    </div>
+                  {/if}
                 {/if}
-              {/if}
-            </form>
+              </form>
+            </div>
           </div>
+
+          {#if page.demoUrl}
+            <div class="w-full md:max-w-[600px] mt-8 md:mt-0 md:ml-8">
+              <RenderUrl  url={page.demoUrl} />
+            </div>
+          {/if}
         </div>
 
-        {#if page.demoUrl}
-          <div class="w-full md:max-w-[600px] mt-8 md:mt-0 md:ml-8">
-            <RenderUrl  url={page.demoUrl} />
+        {#if isMounted && page.testimonials?.length}
+          <div class="w-full flex flex-col md:flex-row justify-center mt-16 md:mt-32 mb-8">
+            {#each page.testimonials as testimonial, i}
+              <div class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4 mb-4 md:mb-0" in:fly={{ x: -50, y:-50, duration: 150, delay: 150 * (i + 1) }}>
+                <div class="flex flex-col md:flex-row">
+                  {#if testimonial.avatarUrl}
+                    <div class="mr-4 mb-4 md:mb-0">
+                      <img src={testimonial.avatarUrl} class="max-w-[50px] aspect-square rounded-full" />
+                    </div>
+                  {/if}
+                  <div>
+                    <SvelteMarkdown source={testimonial.name}></SvelteMarkdown>
+                    <div class="mt-1 opacity-80">
+                      <SvelteMarkdown source={testimonial.comment}></SvelteMarkdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </div>
+        {/if}
+
+        {#if page.benefits?.length}
+          <div class="w-full mt-16 md:mt-32 mb-8">
+            {#each page.benefits as benefit,i}
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-16" style="{ i%2===1 ? '': '' }">
+                <div class="text-left self-center order-none { i%2===1 ? 'md:order-last' : '' }" class:order-last={i%2===0}>
+                  <h2 class="text-2xl font-bold mb-4">{benefit.title}</h2>
+                  <h3 class="whitespace-pre-wrap text-lg">{benefit.description}</h3>
+                </div>
+                <div class="order-none { i%2===0 ? 'md:order-last' : '' }">
+                  <RenderUrl url={benefit.imageUrl}></RenderUrl>
+                </div>
+              </div>
+            {/each}
           </div>
         {/if}
       </div>
-
-      {#if page.testimonials?.length}
-        <div class="w-full flex flex-col md:flex-row justify-center mt-16 md:mt-32 mb-8">
-          {#each page.testimonials as testimonial}
-            <div class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4 mb-4 md:mb-0">
-              <div class="flex flex-col md:flex-row">
-                {#if testimonial.avatarUrl}
-                  <div class="mr-4 mb-4 md:mb-0">
-                    <img src={testimonial.avatarUrl} class="max-w-[50px] aspect-square rounded-full" />
-                  </div>
-                {/if}
-                <div>
-                  <SvelteMarkdown source={testimonial.name}></SvelteMarkdown>
-                  <div class="mt-1 opacity-80">
-                    <SvelteMarkdown source={testimonial.comment}></SvelteMarkdown>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {/each}
-        </div>
-      {/if}
-
-      {#if page.benefits?.length}
-        <div class="w-full mt-16 md:mt-32 mb-8">
-          {#each page.benefits as benefit,i}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-16" style="{ i%2===1 ? '': '' }">
-              <div class="text-left self-center order-none { i%2===1 ? 'md:order-last' : '' }" class:order-last={i%2===0}>
-                <h2 class="text-2xl font-bold mb-4">{benefit.title}</h2>
-                <h3 class="whitespace-pre-wrap text-lg">{benefit.description}</h3>
-              </div>
-              <div class="order-none { i%2===0 ? 'md:order-last' : '' }">
-                <RenderUrl url={benefit.imageUrl}></RenderUrl>
-              </div>
-            </div>
-          {/each}
-        </div>
-      {/if}
     </div>
   </div>
-</div>
-
+{/if}
 
 {#if page.streamSlug}
   <div class="sticky z-20 bg-white">
