@@ -1,6 +1,7 @@
 <script>
   import moment from 'moment';
-  import { slide, fly, scale } from 'svelte/transition';
+  import { onMount } from 'svelte';
+  import { slide, fly, scale, fade } from 'svelte/transition';
   import currentUser from 'lib/stores/currentUser';
   import tooltip from 'lib/use/tooltip';
   import clickOutside from 'lib/use/clickOutside';
@@ -11,7 +12,10 @@
 
   import allPages from '$lib/stores/allPages';
   import pageDraft from '$lib/stores/pageDraft';
-  import 'emoji-picker-element';
+
+  onMount(async () => {
+    await import('emoji-picker-element/svelte');
+  });
 
   import Loader from 'lib/components/Loader.svelte';
   import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
@@ -384,7 +388,7 @@
     {/if}
 
     {#if page.name || page.title || page.subtitle || page.callToAction}
-      <div class="_preview p-4 mx-4" in:slide>
+      <div class="_preview p-4 mx-4" in:fade={{ delay: 150 }}>
         <SitePreview
           bind:page={page}
           />
