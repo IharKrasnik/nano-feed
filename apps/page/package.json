@@ -34,6 +34,7 @@
 		"emoji-picker-element": "^1.15.1",
 		"iframe-resizer": "^4.3.2",
 		"satori": "^0.1.1",
-		"satori-html": "^0.3.2"
+		"satori-html": "^0.3.2",
+		"svelte-markdown": "^0.2.3"
 	}
 }

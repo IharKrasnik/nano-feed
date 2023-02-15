@@ -3,6 +3,8 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let url;
+	export let placeholder = 'Insert URL or paste from clipboard';
+
 	let clazz;
 	export { clazz as class };
 
@@ -39,7 +41,7 @@
 <input
 	type="text"
 	bind:value={url}
-	placeholder="Insert URL or paste from clipboard"
+	placeholder={placeholder}
 	on:paste={pasteImage}
 	class="{clazz}"
 />
