@@ -11,7 +11,7 @@
   import SvelteMarkdown from 'svelte-markdown';
 
   import { post } from 'lib/api';
-  import { fly, fade } from 'svelte/transition';
+  import { fly, fade, slide } from 'svelte/transition';
   import { onMount } from 'svelte';
 
   import RenderUrl from '$lib/components/RenderUrl.svelte';
@@ -52,7 +52,35 @@
     iframeResize({ log: true }, '#iframeResize');
   }
 
+  let scrollY;
 </script>
+
+<svelte:window bind:scrollY />
+
+{#if scrollY > 300}
+  <div 
+    class="fixed top-0 z-30 bg-white w-full"
+    in:fly={{ y: -150, duration: 150, delay: 150 }}
+    out:fade={{ duration: 150, delay: 150 }}
+  >
+  <div class="flex w-full justify-between items-center px-8 md:px-16 py-2">
+    <div class="flex items-center shrink-0">
+      <div class="text-lg font-bold">{page.logo || ''} {page.name}</div>
+
+      <div class="ml-4 opacity-70 invisible md:visible">
+      &nbsp; {page.title}
+      </div>
+    </div>
+    
+    <div class="shrink-0">
+      <button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+    </div>
+  </div>
+
+  <hr class="border-[#8B786D] opacity-30 w-full">
+  
+</div>
+{/if}
 
 {#if isMounted}
   <div class="sticky bg-white z-20 w-full p-8 md:p-0" in:fade={{ duration: 150 }}>
@@ -69,7 +97,7 @@
         class="_content {page.demoUrl ? 'py-32' : 'h-screen'}"
         class:h-screen={!page.streamSlug}
         >
-        <div class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between' : 'flex-column items-center'}">
+        <div class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between' : 'text-center items-center'}">
           <div class="{page.demoUrl ? 'text-left max-w-[500px]' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
             <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
             

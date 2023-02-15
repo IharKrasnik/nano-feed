@@ -532,7 +532,7 @@
           />
 
         {#if page.slug}
-          <div class="_published-label">
+          <div class="_published-label z-50">
             ✅ Published at <a href="{PAGE_URL}/p/{page.slug}" style="color: #5375F0;" target="_blank" rel="noreferrer">{PAGE_URL.replace('https://', '')}/p/{page.slug}</a>
           </div>
         {/if}
