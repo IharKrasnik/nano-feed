@@ -160,7 +160,7 @@
       {/if}
     </div>
 
-    <iframe id="iframeResize" on:load={resize} class="w-full" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true"></iframe>
+    <iframe id="iframeResize" on:load={resize} class="w-full" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&isViewAll=true"></iframe>
 
     <div class="w-full p-4 md:p-32 text-center bg-[#fafafa]">
       <div class="text-xl mb-8">

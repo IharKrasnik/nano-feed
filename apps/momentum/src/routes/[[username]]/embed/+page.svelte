@@ -7,13 +7,15 @@
 	import FeedItem from '$lib/components/FeedItem.svelte';
 
 	import { fetch as fetchFeed } from '$lib/stores/feed';
+	import slug from 'slug';
 
 	let feed;
 
 	let theme = $page.url.searchParams.get('theme') || 'dark';
-	let limit = $page.url.searchParams.get('limit') || 30;
+	let limit = $page.url.searchParams.get('limit') || 20;
 	let bgColor = $page.url.searchParams.get('bgColor') || '';
 	let isHorizontal = $page.url.searchParams.get('isHorizontal') || false;
+	let isViewAll = $page.url.searchParams.get('isViewAll') || false;
 
 	let project;
 	let creator;
@@ -61,6 +63,20 @@
 					</div>
 				{/each}
 			</div>
+
+			{#if isViewAll && feed?.length === limit}
+				<div class="w-full text-center">
+					<a href="{STREAM_URL}/{$page.params.username}" target="_blank">
+						<button 
+							class:text-white={theme==='light'}
+							class:text-black={theme==='dark'} 
+							class="rounded-xl"
+							style="background-color: {theme === 'light' ? '#000' : '#fff'};">
+							View Full Feed
+						</button>
+					</a>
+				</div>
+			{/if}
 		{/if}
 	{/key}
 </div>
