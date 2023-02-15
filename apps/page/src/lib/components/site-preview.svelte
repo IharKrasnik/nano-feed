@@ -10,6 +10,12 @@
 
   import { post } from 'lib/api';
 
+  import TwitterIcon from '$lib/icons/Twitter.svelte';
+  import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
+  import iframeResize from 'iframe-resizer/js/iframeResizer';
+
+  import { STREAM_URL, PAGE_URL } from 'lib/env';
+
   let email;
   let isSubmitted = false;
 
@@ -28,6 +34,10 @@
 
   const onButtonClick = () => {
     inputEl.focus();
+  }
+
+  let resize = () => {
+    iframeResize({ log: true }, '#iframeResize');
   }
 
 </script>
@@ -53,7 +63,7 @@
         <form class="w-full" on:submit|preventDefault="{submitEmail}">
 
           {#if !isSubmitted}
-            <input class="_input w-full" placeholder="Your Email" type="email" required bind:value={email} bind:this={inputEl} disabled={isSubmitted}/>
+            <input class="_input w-full" placeholder="Your Email" type="email" required bind:this={inputEl} bind:value={email} disabled={isSubmitted}/>
             <button type="submit" class="_input_button">{page.callToAction}</button>
           {:else}
             <div style="color: #000">
@@ -85,6 +95,62 @@
   </div>
 
 </div>
+
+
+{#if page.streamSlug}
+  <div class="mt-[-50px]">
+    <h1 class="w-full text-center font-bold text-2xl opacity-70" style="font-family: Inter;">We Build In Public</h1>
+    <h1 class="w-full text-center text-lg opacity-70" style="font-family: Inter;">Follow our journey in social network and blogs.</h1>
+    {#if page.links}
+      <div class="flex justify-center w-full">
+        {#if page.links.twitter}
+        <div class="w-[35px] h-[35px] m-2">
+          <a href="{page.links.twitter}" class="scale-110" target="_blank">
+            <TwitterIcon></TwitterIcon>
+          </a>
+        </div>
+        {/if}
+        {#if page.links.linkedin}
+        <div class="w-[35px] h-[35px] m-2">
+          <a href="{page.links.linkedin}" target="_blank">
+            <LinkedInIcon></LinkedInIcon>
+          </a>
+        </div>
+        {/if}
+      </div>
+    {/if}
+  </div>
+
+
+  <iframe id="iframeResize" on:load={resize} class="w-full" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light"></iframe>
+
+  <div class="w-full p-32 text-center bg-[#fafafa]">
+    <div class="text-xl mb-8">
+      {page.title}
+    </div>
+
+    <div class="_input_container flex items-center mx-auto">
+      <form class="w-full" on:submit|preventDefault="{submitEmail}">
+
+        {#if !isSubmitted}
+          <input class="_input w-full" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
+          <button type="submit" class="_input_button">{page.callToAction}</button>
+        {:else}
+          <div style="color: #000">
+            💥 Thank you!
+          </div>
+
+          {#if page.actionUrl}
+            <div class="mt-8 opacity-70">
+              Redirecting...
+            </div>
+          {/if}
+        {/if}
+      </form>
+    </div>
+  </div>
+
+{/if}
 
 <style>
   ._root {

@@ -37,7 +37,7 @@
 
 	let isProjectsLoading = false;
 	let isCreatorLoading = false;
-	let currentPageNumber = 1;
+	let pageNumber = 1;
 
 	const updateProjects = async ({ projectSlug, creatorUsername, isExplore = false }) => {
 		let prevProjects = $projects;
@@ -181,7 +181,7 @@
 		feed = [];
 		isExploreModeOn = false;
 		searchText = '';
-		currentPageNumber = 1;
+		pageNumber = 1;
 
 		feed = await fetchFeedPage();
 
@@ -243,8 +243,8 @@
 	};
 
 	let loadMore = async () => {
-		currentPageNumber++;
-		const feedPage = await fetchFeedPage({ page: currentPageNumber });
+		pageNumber++;
+		const feedPage = await fetchFeedPage({ page: pageNumber });
 		feed = [...feed, ...feedPage];
 	};
 </script>

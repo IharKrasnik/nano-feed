@@ -15,7 +15,8 @@ export const PAGE_URL = dev
 	: 'https://page.mmntm.build';
 
 export const STREAM_URL = dev
-	? 'https://sveltejskittemplatedefault2q1zcw-hsav--5173.local-credentialless.webcontainer.io'
+	? // ? 'https://sveltejskittemplatedefault2q1zcw-hsav--5173.local-credentialless.webcontainer.io'
+	  'https://app.mmntm.build'
 	: 'https://app.mmntm.build';
 
 export const GOOGLE_LOGIN_URL = browser
