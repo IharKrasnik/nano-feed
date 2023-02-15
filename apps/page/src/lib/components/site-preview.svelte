@@ -46,7 +46,7 @@
 
 </script>
 
-<div class="p-8 md:p-0">
+<div class="sticky bg-white z-20 w-full p-8 md:p-0">
   <div class="_header flex justify-between items-center">
     <div class="_logo">
       {page.logo || ''} {page.name}
@@ -138,60 +138,62 @@
 </div>
 
 
-  {#if page.streamSlug}
-    <div>
-      <h1 class="w-full text-center font-bold text-2xl opacity-70" style="font-family: Inter;">We Build In Public</h1>
-      <h1 class="w-full text-center text-lg opacity-70" style="font-family: Inter;">Follow our journey in social network and blogs.</h1>
-      {#if page.links}
-        <div class="flex justify-center w-full">
-          {#if page.links.twitter}
-          <div class="w-[35px] h-[35px] m-2">
-            <a href="{page.links.twitter}" class="scale-110" target="_blank">
-              <TwitterIcon></TwitterIcon>
-            </a>
-          </div>
-          {/if}
-          {#if page.links.linkedin}
-          <div class="w-[35px] h-[35px] m-2">
-            <a href="{page.links.linkedin}" target="_blank">
-              <LinkedInIcon></LinkedInIcon>
-            </a>
-          </div>
-          {/if}
+{#if page.streamSlug}
+  <div class="sticky z-20 bg-white">
+    <h1 class="w-full text-center font-bold text-2xl opacity-70" style="font-family: Inter;">We Build In Public</h1>
+    <h1 class="w-full text-center text-lg opacity-70" style="font-family: Inter;">Follow our journey in social network and blogs.</h1>
+    {#if page.links}
+      <div class="flex justify-center w-full">
+        {#if page.links.twitter}
+        <div class="w-[35px] h-[35px] m-2">
+          <a href="{page.links.twitter}" class="scale-110" target="_blank">
+            <TwitterIcon></TwitterIcon>
+          </a>
         </div>
-      {/if}
+        {/if}
+        {#if page.links.linkedin}
+        <div class="w-[35px] h-[35px] m-2">
+          <a href="{page.links.linkedin}" target="_blank">
+            <LinkedInIcon></LinkedInIcon>
+          </a>
+        </div>
+        {/if}
+      </div>
+    {/if}
+  </div>
+
+  <iframe id="iframeResize" on:load={resize} class="w-full sticky z-20 bg-white" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&isViewAll=true"></iframe>
+
+  <div class="h-screen sticky"></div>
+
+  <div class="w-full text-center bg-[#fafafa] h-screen fixed z-0 bottom-0 flex flex-col justify-center p-4">
+    <div class="text-lg my-4">{page.logo||''} {page.name}</div>
+    <div class="text-3xl font-bold mb-8">
+      {page.title}
     </div>
 
-    <iframe id="iframeResize" on:load={resize} class="w-full" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&isViewAll=true"></iframe>
+    <div class="_input_container flex items-center mx-auto w-full md:w-[392px]">
+      <form class="w-full" on:submit|preventDefault="{submitEmail}">
 
-    <div class="w-full text-center bg-[#fafafa] h-screen flex flex-col justify-center p-4">
-      <div class="text-lg my-4">{page.logo||''} {page.name}</div>
-      <div class="text-3xl font-bold mb-8">
-        {page.title}
-      </div>
+        {#if !isSubmitted}
+          <input class="_input w-full" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
+          <button type="submit" class="_input_button">{page.callToAction}</button>
+        {:else}
+          <div style="color: #000">
+            💥 Thank you!
+          </div>
 
-      <div class="_input_container flex items-center mx-auto w-full md:w-[392px]">
-        <form class="w-full" on:submit|preventDefault="{submitEmail}">
-
-          {#if !isSubmitted}
-            <input class="_input w-full" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
-            <button type="submit" class="_input_button">{page.callToAction}</button>
-          {:else}
-            <div style="color: #000">
-              💥 Thank you!
+          {#if page.actionUrl}
+            <div class="mt-8 opacity-70">
+              Redirecting...
             </div>
-
-            {#if page.actionUrl}
-              <div class="mt-8 opacity-70">
-                Redirecting...
-              </div>
-            {/if}
           {/if}
-        </form>
-      </div>
+        {/if}
+      </form>
     </div>
+  </div>
 
-  {/if}
+{/if}
 
 
 <style>
