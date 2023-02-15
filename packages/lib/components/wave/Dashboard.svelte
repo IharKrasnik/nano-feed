@@ -3,6 +3,8 @@
   import moment from 'moment';
   import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
   import { fly } from 'svelte/transition';
+  import { countryCodeEmoji } from 'country-code-emoji';
+  import countryCodeLoockup from 'country-code-lookup';
 
   export let stats;
   export let selectedTimeframe = '7_days';
@@ -17,6 +19,9 @@
   let viewChartData = null;
   let maxViewsCount;
   let maxReferralCount;
+  let maxCountryCount;
+
+  let isShowAll;
 
   const timeframeLabels = {
     '7_days': '7 days',
@@ -24,8 +29,10 @@
   }
 
   $: if(stats) {
+    isShowAll = false;
     maxViewsCount = stats.pageStats[0]?.count;
     maxReferralCount = stats.referralStats[0]?.count;
+    maxCountryCount = stats.userCountryStats[0]?.count;
 
     let dateFrom;
     let unitToAdd;
@@ -161,7 +168,7 @@
         </div>
         
         <div>
-          {#each stats.pageStats as pageStat, i}
+          {#each (isShowAll ? stats.pageStats : stats.pageStats.slice(0,4)) as pageStat, i}
             <div class="flex justify-between py-1 my-1">
               <div class="relative w-full">
                 <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {pageStat.count / maxViewsCount * 100}%;"></div>
@@ -174,6 +181,9 @@
 
             <hr class="border-gray-600"/>
           {/each}
+          {#if !isShowAll && stats.referralStats.length > 4}
+            <div class="w-full mt-8 p-4 text-center cursor-pointer" on:click={() => isShowAll=true }>Show More</div>
+          {/if}
         </div>
       </div>
     {/if}
@@ -189,7 +199,7 @@
       </div>
       
       <div>
-        {#each stats.referralStats as referralStat, i}
+        {#each (isShowAll ? stats.referralStats : stats.referralStats.slice(0,4)) as referralStat, i}
           <div class="flex justify-between py-1 my-1">
             <div class="relative w-full">
               <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {referralStat.count / maxReferralCount * 100}%;"></div>
@@ -197,6 +207,37 @@
             </div>
             <div class="w-[100px] shrink-0 text-right">
               {referralStat.count}
+            </div>
+          </div>
+
+          <hr class="_border-white"/>
+        {/each}
+        {#if !isShowAll && stats.referralStats.length > 4}
+          <div class="w-full mt-8 p-4 text-center cursor-pointer" on:click={() => isShowAll=true }>Show More</div>
+        {/if}
+      </div>
+    </div>
+
+    <div class="rounded-xl p-4 border _border-white">
+      <div class="flex justify-between items-center mb-4">
+        <div class="text-lg mb-2">Countries</div>
+      </div>
+
+      <div class="flex justify-between mb-2">
+        <div>Country</div>
+        <div class="w-[100px] text-right">Users</div>
+      </div>
+      
+      <div>
+        {#each stats.userCountryStats as userCountryStat, i}
+          <div class="flex justify-between py-1 my-1">
+            <div class="relative w-full">
+              <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {userCountryStat.count / maxCountryCount * 100}%;"></div>
+              {userCountryStat.country ? countryCodeEmoji(userCountryStat.country): ''}
+              {userCountryStat.country ? countryCodeLoockup.byIso(userCountryStat.country).country : '(none)' }
+            </div>
+            <div class="w-[100px] shrink-0 text-right">
+              {userCountryStat.count}
             </div>
           </div>
 

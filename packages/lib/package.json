@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "country-code-emoji": "^2.3.0",
+    "country-code-lookup": "^0.0.22",
     "hotkeys-js": "^3.10.1",
     "lodash": "^4.17.21",
     "svelte": "^3.55.1",

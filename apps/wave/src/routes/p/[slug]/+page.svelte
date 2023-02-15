@@ -149,8 +149,4 @@
     border: 1px rgba(255, 255, 255, .4) solid;
   }
  
-  svg {
-    width: 100%;
-    height: 50px;
-  }
 </style>
