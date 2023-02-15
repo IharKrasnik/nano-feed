@@ -124,7 +124,7 @@
 		attachments: []
 	};
 
-	let page;
+	let currentPage;
 
 	const setPage = (page) => {
 		if (page === 'update') {
@@ -134,7 +134,7 @@
 			isFullUrlEdit = false;
 		}
 
-		page = page;
+		currentPage = page;
 	};
 
 	let feedId = $page.url.searchParams.get('feedId');
@@ -310,17 +310,17 @@
 			{#if !feedId}
 				<button
 					class="tab mb-4"
-					class:selected={page === 'update'}
+					class:selected={currentPage === 'update'}
 					on:click={() => setPage('update')}>Write Update</button
 				>
 				<button
 					class="tab mb-4"
-					class:selected={page === 'url'}
+					class:selected={currentPage === 'url'}
 					on:click={() => setPage('url')}>Submit Url</button
 				>
 			{/if}
 
-			{#if page === 'url'}
+			{#if currentPage === 'url'}
 				<label class="mt-4 mb-4"> URL </label>
 				<input
 					type="text"
@@ -353,7 +353,7 @@
 			<Loader />
 		{:else}
 			<form class="mb-16" style="padding: 2px;">
-				{#if feedItem.url || page === 'update'}
+				{#if feedItem.url || currentPage === 'update'}
 					{#if isFullUrlEdit}
 						<div class="mb-8">
 							<label> Title </label>
@@ -411,7 +411,7 @@
 							{/if}
 						</div>
 
-						{#if page !== 'update'}
+						{#if currentPage !== 'update'}
 							<div class="mb-8">
 								<label>Source</label>
 
@@ -446,7 +446,7 @@
 					{/if}
 
 					{#if isFullUrlEdit}
-						{#if page !== 'update'}
+						{#if currentPage !== 'update'}
 							<div class="mb-8">
 								<label>Published On</label>
 
