@@ -63,7 +63,7 @@
 </script>
 
 {#if stats}
-  <div class="grid-cols-1 grid-cols-2 grid-cols-3"> </div>
+  <div class="md:grid-cols-1 md:grid-cols-2 mdgrid-cols-3"> </div>
   
   <div 
     class="grid grid-cols-1 md:grid-cols-{columns} gap-4"

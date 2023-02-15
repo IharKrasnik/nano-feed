@@ -185,7 +185,7 @@
 				</div>
 			</div>
 
-			<SourceLogo bind:source={feedItem.source} />
+			<SourceLogo theme={theme} bind:source={feedItem.source} />
 		</div>
 
 		<hr class="my-4" />
