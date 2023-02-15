@@ -89,16 +89,18 @@
           </div>
         </div>
 
-       <RenderUrl class="w-full md:max-w-[600px] mt-8 md:mt-0 md:ml-8" url={page.demoUrl} />
+        <div class="w-full md:max-w-[600px] mt-8 md:mt-0 md:ml-8">
+          <RenderUrl  url={page.demoUrl} />
+        </div>
       </div>
 
       {#if page.testimonials?.length}
-        <div class="w-full flex justify-center mt-32 mb-8">
+        <div class="w-full flex flex-col md:flex-row justify-center mt-16 md:mt-32 mb-8">
           {#each page.testimonials as testimonial}
-            <div class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4">
-              <div class="flex">
+            <div class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4 mb-4 md:mb-0">
+              <div class="flex flex-col md:flex-row">
                 {#if testimonial.avatarUrl}
-                  <div class="mr-4">
+                  <div class="mr-4 mb-4 md:mb-0">
                     <img src={testimonial.avatarUrl} class="max-w-[50px] aspect-square rounded-full" />
                   </div>
                 {/if}
@@ -115,14 +117,14 @@
       {/if}
 
       {#if page.benefits?.length}
-        <div class="w-full mt-32 mb-8">
+        <div class="w-full mt-16 md:mt-32 mb-8">
           {#each page.benefits as benefit,i}
-            <div class="grid grid-cols-2 gap-8 w-full mt-16" style="{ i%2===1 ? '': '' }">
-              <div class="text-left self-center" class:order-last={i%2===0}>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-16" style="{ i%2===1 ? '': '' }">
+              <div class="text-left self-center order-none { i%2===1 ? 'md:order-last' : '' }" class:order-last={i%2===0}>
                 <h2 class="text-2xl font-bold mb-4">{benefit.title}</h2>
                 <h3 class="whitespace-pre-wrap text-lg">{benefit.description}</h3>
               </div>
-              <div class:order-last={i%2===1}>
+              <div class="order-none { i%2===0 ? 'md:order-last' : '' }">
                 <RenderUrl url={benefit.imageUrl}></RenderUrl>
               </div>
             </div>
