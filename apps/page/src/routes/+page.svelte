@@ -465,7 +465,7 @@
     {/if}
 
     {#if page.name || page.title || page.subtitle || page.callToAction}
-      <div class="ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
+      <div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
         <SitePreview
           bind:page={page}
           />
@@ -513,13 +513,14 @@
 
   ._published-label {
     position: absolute;
-    right: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     top: 0;
     text-transform: uppercase;
     border-radius: 30px;
     background-color: #F5F5F5;
     padding: 3px 10px;
-    margin-top: 10px;
+    margin-top: 20px;
     color: #828282;
   }
 </style>
