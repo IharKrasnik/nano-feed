@@ -2,10 +2,12 @@
   import moment from 'moment';
   import { onMount } from 'svelte';
   import { slide, fly, scale, fade } from 'svelte/transition';
+
+  import { post, put } from 'lib/api';
   import currentUser from 'lib/stores/currentUser';
   import tooltip from 'lib/use/tooltip';
   import clickOutside from 'lib/use/clickOutside';
-  
+  import getRandomEmoji from 'lib/services/getRandomEmoji';
   import { get } from 'lib/api';
 
   import { GOOGLE_LOGIN_URL, PAGE_URL } from 'lib/env';
@@ -47,7 +49,6 @@
     isPageSet = true;
   }
 
-  import { post, put } from 'lib/api';
 
   let isJustPublished = false;
 
@@ -63,6 +64,8 @@
     try {
       let isNewPage = !page._id;
 
+      page.testimonials = page.testimonials || [];
+      page.benefits = page.benefits || [];
       page = await (isNewPage ? post : put)(`pages${ page._id ? `/${page._id}` : '' }`, page);
 
       $pageDraft = null;
@@ -151,10 +154,22 @@
   }
 
   let removeTestimonial = (testimonial) => {
-    debugger;
     page.testimonials = page.testimonials.filter(t => t !== testimonial);
   }
 
+  let addNewBenefit = () => {
+    page.benefits = page.benefits || [];
+    
+    page.benefits.push({
+      title: '',
+      description: '',
+      imageUrl: getRandomEmoji(),
+    });
+  }
+
+  let removeBenefit = (benefit) => {
+    page.benefits = page.benefits.filter(b => b !== benefit);
+  }
 </script>
 
 
@@ -318,7 +333,7 @@
 
         {#if page._id}
         <div class="_section">
-          <div class="_title">Call to action</div> 
+          <div class="_title">Call To Action</div> 
 
           <div class="font-normal text-sm opacity-70 mb-2">
             Button text
@@ -384,6 +399,52 @@
             </div> -->
           </div>
         {/if}
+        {#if page._id}
+          <div class="_section">
+            <div class="flex justify-between items-center">
+              <div class="_title" style="margin: 0;">
+                Benefits
+              </div> 
+
+              <div class="text-right w-full">
+                <a class="cursor-pointer text-[#8B786D]" on:click="{addNewBenefit}">Add</a>
+              </div>
+            </div>
+
+            {#each (page.benefits || []) as benefit}
+              <div class="flex justify-between items-center">
+                <div class="font-normal text-sm opacity-70 mb-2 mt-4">
+                  Title
+                </div>
+                <div class="text-sm cursor-pointer text-[#8B786D]" on:click={() => removeBenefit(benefit)}>Remove</div>
+              </div>
+    
+              <input class="mb-4 w-full" bind:value={benefit.title} placeholder="Title"/>
+              
+              <div class="font-normal text-sm opacity-70 mb-2">
+                Description
+              </div>
+              
+              <textarea 
+                class="w-full mb-4"
+                bind:value={benefit.description}
+                placeholder="Description"
+                rows="3"
+              />
+              
+              <div class="font-normal text-sm opacity-70 mb-2">
+                Image
+              </div>
+              <FileInput class="w-full" bind:url={benefit.imageUrl}></FileInput>
+
+              <hr class="my-4 border-[#8B786D] opacity-30" />
+
+            {/each}
+            <!-- <div class="flex items-center mt-2 text-[14px]">
+              <input type="checkbox" class="mr-2"  /> Collect Emails
+            </div> -->
+          </div>
+        {/if}
 
 
         <!-- <div class="_section">
@@ -391,7 +452,7 @@
 
         </div> -->
 
-        <div class="flex items-center w-full justify-between mt-4">
+        <div class="flex items-center w-full justify-between mt-4 mb-32">
           <button
             class="relative _primary {isLoading ? 'loading': '' }" 
             on:click="{publishPage}">
@@ -464,7 +525,7 @@
       </div>
     {/if}
 
-    {#if page.name || page.title || page.subtitle || page.callToAction}
+    {#if page.name || page.title }
       <div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
         <SitePreview
           bind:page={page}
@@ -477,7 +538,7 @@
         {/if}
       </div>
     {:else}
-      <div class="w-full self-stretch flex-col flex items-center justify-center" in:slide>
+      <div class="w-full h-screen ml-[426px] self-stretch flex-col flex items-center justify-center" in:slide>
         <svg width="190" height="114" viewBox="0 0 190 114" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="190" height="114" rx="7" fill="#F5F5F5"/>
           <path d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44" stroke="#828282" stroke-width="3" stroke-linecap="round"/>

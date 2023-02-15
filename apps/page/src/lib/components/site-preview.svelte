@@ -12,6 +12,8 @@
 
   import { post } from 'lib/api';
 
+  import RenderUrl from '$lib/components/RenderUrl.svelte';
+
   import TwitterIcon from '$lib/icons/Twitter.svelte';
   import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
   import iframeResize from 'iframe-resizer/js/iframeResizer';
@@ -87,41 +89,46 @@
           </div>
         </div>
 
-        {#if page.demoUrl}
-        <div class="w-full md:w-[600px] mt-8 md:mt-0 md:ml-8">
-          {#if page.demoUrl.includes('loom.com')}
-            <iframe
-              style="width: 100%; aspect-ratio: 536/300;"
-              src={page.demoUrl.replace('share/', 'embed/')}
-            />  
-          {:else}
-            <img src="{page.demoUrl}" />
-          {/if}
-        </div>
-        {/if}
+       <RenderUrl class="w-full md:max-w-[600px] mt-8 md:mt-0 md:ml-8" url={page.demoUrl} />
       </div>
 
       {#if page.testimonials?.length}
-      <div class="w-full flex justify-center mt-32 mb-8">
-        {#each page.testimonials as testimonial}
-          <div class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4">
-            <div class="flex">
-              {#if testimonial.avatarUrl}
-                <div class="mr-4">
-                  <img src={testimonial.avatarUrl} class="max-w-[50px] aspect-square rounded-full" />
-                </div>
-              {/if}
-              <div>
-                <SvelteMarkdown source={testimonial.name}></SvelteMarkdown>
-                <div class="mt-1 opacity-80">
-                  <SvelteMarkdown source={testimonial.comment}></SvelteMarkdown>
+        <div class="w-full flex justify-center mt-32 mb-8">
+          {#each page.testimonials as testimonial}
+            <div class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4">
+              <div class="flex">
+                {#if testimonial.avatarUrl}
+                  <div class="mr-4">
+                    <img src={testimonial.avatarUrl} class="max-w-[50px] aspect-square rounded-full" />
+                  </div>
+                {/if}
+                <div>
+                  <SvelteMarkdown source={testimonial.name}></SvelteMarkdown>
+                  <div class="mt-1 opacity-80">
+                    <SvelteMarkdown source={testimonial.comment}></SvelteMarkdown>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        {/each}
-      </div>
-    {/if}
+          {/each}
+        </div>
+      {/if}
+
+      {#if page.benefits?.length}
+        <div class="w-full mt-32 mb-8">
+          {#each page.benefits as benefit,i}
+            <div class="grid grid-cols-2 gap-8 w-full mt-16" style="{ i%2===1 ? '': '' }">
+              <div class="text-left self-center" class:order-last={i%2===0}>
+                <h2 class="text-2xl font-bold mb-4">{benefit.title}</h2>
+                <h3 class="whitespace-pre-wrap text-lg">{benefit.description}</h3>
+              </div>
+              <div class:order-last={i%2===1}>
+                <RenderUrl url={benefit.imageUrl}></RenderUrl>
+              </div>
+            </div>
+          {/each}
+        </div>
+      {/if}
     </div>
   </div>
 </div>
