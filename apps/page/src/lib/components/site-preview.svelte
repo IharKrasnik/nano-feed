@@ -68,7 +68,7 @@
             <h2 class="_subtitle">{page.subtitle}</h2>
           {/if}
           
-          <div class="_input_container flex items-center md:w-[392px]">
+          <div class="_input_container flex items-center md:w-[392px] w-full">
             <form class="w-full" on:submit|preventDefault="{submitEmail}">
 
               {#if !isSubmitted}
@@ -89,9 +89,11 @@
           </div>
         </div>
 
-        <div class="w-full md:max-w-[600px] mt-8 md:mt-0 md:ml-8">
-          <RenderUrl  url={page.demoUrl} />
-        </div>
+        {#if page.demoUrl}
+          <div class="w-full md:max-w-[600px] mt-8 md:mt-0 md:ml-8">
+            <RenderUrl  url={page.demoUrl} />
+          </div>
+        {/if}
       </div>
 
       {#if page.testimonials?.length}
@@ -162,12 +164,13 @@
 
     <iframe id="iframeResize" on:load={resize} class="w-full" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&isViewAll=true"></iframe>
 
-    <div class="w-full p-4 md:p-32 text-center bg-[#fafafa]">
-      <div class="text-xl mb-8">
+    <div class="w-full text-center bg-[#fafafa] h-screen flex flex-col justify-center p-4">
+      <div class="text-lg my-4">{page.logo||''} {page.name}</div>
+      <div class="text-3xl font-bold mb-8">
         {page.title}
       </div>
 
-      <div class="_input_container flex items-center mx-auto md:w-[392px]">
+      <div class="_input_container flex items-center mx-auto w-full md:w-[392px]">
         <form class="w-full" on:submit|preventDefault="{submitEmail}">
 
           {#if !isSubmitted}
