@@ -14,7 +14,9 @@
 </svelte:head>
 
 {#if !$isUserLoading}
-  <slot />
+  <div class="relative">
+    <slot />
+  </div>
 {/if}
 
 <style>
