@@ -175,7 +175,7 @@
 
   <div class="h-screen sticky"></div>
 
-  <div class="w-full text-center bg-[#fafafa] h-screen fixed z-0 bottom-0 flex flex-col justify-center p-4">
+  <div class="w-full text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4">
     <div class="text-lg my-4">{page.logo||''} {page.name}</div>
     <div class="text-3xl font-bold mb-8">
       {page.title}
