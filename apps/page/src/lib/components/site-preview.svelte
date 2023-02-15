@@ -24,13 +24,20 @@
     }
   }
 
+  let inputEl;
+
+  const onButtonClick = () => {
+    inputEl.focus();
+  }
 
 </script>
 
-<div class="_header">
+<div class="_header flex justify-between items-center">
   <div class="_logo">
     {page.logo || ''} {page.name}
   </div>
+
+  <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
 </div>
 
 <div class="_root">
@@ -46,8 +53,8 @@
         <form class="w-full" on:submit|preventDefault="{submitEmail}">
 
           {#if !isSubmitted}
-            <input class="_input w-full" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
-            <button type="submit" class="_input_button" style="background-color: {page.bgColor || '#000'}">{page.callToAction}</button>
+            <input class="_input w-full" placeholder="Your Email" type="email" required bind:value={email} bind:this={inputEl} disabled={isSubmitted}/>
+            <button type="submit" class="_input_button">{page.callToAction}</button>
           {:else}
             <div style="color: #000">
               💥 Thank you!
@@ -64,7 +71,7 @@
     </div>
 
     {#if page.demoUrl}
-    <div class="w-[600px] p-8">
+    <div class="w-[600px] p-8 pr-0">
       {#if page.demoUrl.includes('loom.com')}
         <iframe
           style="width: 100%; aspect-ratio: 536/300;"
@@ -133,7 +140,15 @@
     font-size: 16px;
   }
   
+  button {
+    border-radius: 30px;
+    padding: 5px 20px;
+    color: white;
+    background-color: #000;
+  }
+
   ._input_button {
+    padding: 13px 30px;
     position: absolute;
     display: flex;
     align-items: center;
@@ -141,9 +156,6 @@
     height: 100%;
     right: 0;
     top: 0;
-    border-radius: 30px;
-    padding: 13px 30px;
-    color: white;
   }
 
   ._momentum-stream {

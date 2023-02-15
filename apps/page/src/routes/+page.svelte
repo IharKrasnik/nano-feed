@@ -199,7 +199,7 @@
 
   <div class="container mx-auto flex relative">
     {#if !isMetricsOpen && !isSubmissionsOpen}
-    <div class="min-w-[426px] p-4 h-screen overflow-y-scroll" in:fly={{ x: 50, duration: 150, delay: 150 }}>
+    <div class="min-w-[426px] p-4 h-[calc(100vh - 200px)] overflow-y-scroll" in:fly={{ x: 50, duration: 150, delay: 150 }}>
       
       {#if page.slug}
         <div class="w-full flex justify-between items-center mb-4">
@@ -349,7 +349,7 @@
     </div>
     {:else}
 
-      <div class="min-w-[426px] p-4 h-screen overflow-y-scroll mt-4" in:fly={{ x: -50, duration: 150, delay: 150 }}>
+      <div class="min-w-[426px] p-4 h-[calc(100vh - 200px)] overflow-y-scroll mt-4" in:fly={{ x: -50, duration: 150, delay: 150 }}>
         <div class="flex items-center cursor-pointer text-[#8B786D]" on:click={() => { isSubmissionsOpen = false; isMetricsOpen = false; }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M10.114 4.04508L2.95451 11.2045C2.51517 11.6439 2.51517 12.3562 2.95451 12.7955L10.114 19.955C10.5533 20.3943 11.2656 20.3943 11.705 19.955C12.1443 19.5156 12.1443 18.8033 11.705 18.364L6.46599 13.125H20.25C20.8713 13.125 21.375 12.6214 21.375 12C21.375 11.3787 20.8713 10.875 20.25 10.875H6.46599L11.705 5.63607C12.1443 5.19673 12.1443 4.48442 11.705 4.04508C11.2656 3.60574 10.5533 3.60574 10.114 4.04508Z" fill="#8B786D"/>
