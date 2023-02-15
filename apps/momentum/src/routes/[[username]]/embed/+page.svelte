@@ -49,7 +49,7 @@
 	{#key feed}
 		{#if feed?.length > 0}
 			<div
-				class={feed.length > 3 ? `${isHorizontal ? 'flex flex-row': ''} md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8` : 'flex justify-center'}
+				class={feed.length > 3 ? `${isHorizontal ? 'flex flex-row': ''} sm:block sm:columns-1 md:columns-2 lg:columns-3 mt-8` : 'flex justify-center'}
 			>
 				{#each feed as feedItem}
 					<div class="px-2 {isHorizontal ? 'w-[90%]': ''} md:w-auto shrink-0 md:w-auto max-w-[600px] _feed-item md:block">
