@@ -99,8 +99,8 @@
         class="_content {page.demoUrl ? 'py-32' : 'h-screen'}"
         class:h-screen={!page.streamSlug && !page.benefits?.length}
         >
-        <div class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between' : 'text-center items-center'}">
-          <div class="{page.demoUrl ? 'text-left max-w-[500px]' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
+        <div class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between items-center' : 'text-center items-center'}">
+          <div class="{page.demoUrl ? 'text-left max-w-[500px] items-center' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
             <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
             
             {#if page.subtitle}
