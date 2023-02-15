@@ -102,7 +102,9 @@
     {/if}
     <select
       bind:value={selectedTimeframe}
-      on:change={() => refreshStats($allProjects, $page.params.slug)} class="max-w-[200px] small">
+      on:change={() => refreshStats($allProjects, $page.params.slug)}
+      class="max-w-[200px] small"
+      >
       <option value="7_days">Last 7 days</option>
       <option value="24_hours">Last 24 hours</option>
       <!-- <option>Last 14 days</option> -->

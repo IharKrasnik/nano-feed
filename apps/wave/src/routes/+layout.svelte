@@ -54,7 +54,9 @@
 			{#if !$isUserLoading && $allProjects && $page.url.href.includes('/p')}
 				{#if $allProjects.length}
 				<div class="flex items-center ml-8">
-					<select bind:value="{projectSlug}" style="border:none;" class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
+					<select bind:value="{projectSlug}" 
+						style="border-radius: 20px; padding: 8px 16px;"
+					  class="small max-w-[300px]" on:change={(evt) => { goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`) }}>
 						{#each $allProjects as project}
 							<option value={project.url}>{project.name}</option>
 						{/each}
