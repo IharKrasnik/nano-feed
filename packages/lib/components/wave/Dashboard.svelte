@@ -2,7 +2,7 @@
   import _ from 'lodash';
   import moment from 'moment';
   import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
-  import { fly } from 'svelte/transition';
+  import { fade, fly } from 'svelte/transition';
   import { countryCodeEmoji } from 'country-code-emoji';
   import countryCodeLoockup from 'country-code-lookup';
 
@@ -27,6 +27,8 @@
     '7_days': '7 days',
     '24_hours': '24 hours'
   }
+  
+  let isFirstTime = true;
 
   $: if(stats) {
     isShowAll = false;
@@ -64,102 +66,136 @@
     if (!chartWidth) {
       setTimeout(() => {
         chartWidth = widthEl.offsetWidth;
+        isFirstTime = false;
       }, 0);
     } 
+
   }
 </script>
 
-{#if stats}
-  <div class="md:grid-cols-1 md:grid-cols-2 mdgrid-cols-3"> </div>
-  
-  <div 
-    class="grid grid-cols-1 md:grid-cols-{columns} gap-4"
-    in:fly={{ y: 50, duration: 150, delay: 150 }}
-  >
-    <div class="rounded-xl p-4 _border-white">
-      <div class="flex justify-between items-center mb-4" bind:this={widthEl}>
-        <div class="text-lg">Unique Users</div>
-        <div class="text-3xl font-bold">
-          {stats.totalUsersCount}
-        </div>
-      </div>
-
-      <hr class="_border-white my-4" style="border-width: .5px"/>
-
-      {#if userChartData && chartWidth}
-        <LinkedChart 
-          linked="chart"
-          uid="users"
-          data={userChartData}
-          fill="#8B786D"
-          grow={true}
-          barMinWidth={20}
-          gap={10}
-          height={150}
-          width={chartWidth}
-          transition={500}
-          >
-        </LinkedChart>
-      {/if}
-
-      <div class="px-4 flex w-full justify-between">
-        <div class="text-sm text-slate-300 mt-4 shrink-0">
-          {Object.keys(userChartData)[0]}
-        </div>
-        <div class="py-4">
-          <LinkedLabel linked="chart" empty="{timeframeLabels[selectedTimeframe]}"/> —
-          <LinkedValue uid="users" empty={stats.totalUsersCount}/> users
-        </div>
-        <div class="text-sm text-slate-300 mt-4 shrink-0">
-          {_.last(Object.keys(userChartData))}
-        </div>
-      </div>
-    </div>
+{#key stats}
+  {#if stats}
+    <div class="md:grid-cols-1 md:grid-cols-2 mdgrid-cols-3"> </div>
     
-    <div class="rounded-xl p-4 border _border-white">
-      <div class="flex justify-between items-center mb-4">
-        <div class="text-lg">Page Views</div>
-        <div class="text-3xl font-bold">
-          {stats.totalViewsCount}
+    <div 
+      class="grid grid-cols-1 md:grid-cols-{columns} gap-4"
+      in:fly={{ y: 50, duration: isFirstTime ? 150 : 0 }}
+    >
+      <div class="rounded-xl p-4 _border-white">
+        <div class="flex justify-between items-center mb-4" bind:this={widthEl}>
+          <div class="text-lg">Unique Users</div>
+          <div class="text-3xl font-bold">
+            {stats.totalUsersCount}
+          </div>
+        </div>
+
+        <hr class="_border-white my-4" style="border-width: .5px"/>
+
+        {#if userChartData && chartWidth}
+          <LinkedChart 
+            linked="chart"
+            uid="users"
+            data={userChartData}
+            fill="#8B786D"
+            grow={true}
+            barMinWidth={20}
+            gap={10}
+            height={150}
+            width={chartWidth}
+            transition={500}
+            >
+          </LinkedChart>
+        {/if}
+
+        <div class="px-4 flex w-full justify-between">
+          <div class="text-sm text-slate-300 mt-4 shrink-0">
+            {Object.keys(userChartData)[0]}
+          </div>
+          <div class="py-4">
+            <LinkedLabel linked="chart" empty="{timeframeLabels[selectedTimeframe]}"/> —
+            <LinkedValue uid="users" empty={stats.totalUsersCount}/> users
+          </div>
+          <div class="text-sm text-slate-300 mt-4 shrink-0">
+            {_.last(Object.keys(userChartData))}
+          </div>
         </div>
       </div>
-
-      <hr class="_border-white my-4" style="border-width: .5px"/>
-
-      {#if viewChartData && chartWidth}
-        <LinkedChart 
-          linked="chart"
-          uid="views"
-          data={viewChartData}
-          fill="#8B786D"
-          grow={true}
-          barMinWidth={20}
-          gap={10}
-          height={150}
-          width={chartWidth}
-          transition={500}
-          >
-        </LinkedChart>
-      {/if}
-
-      <div class="px-4 flex w-full justify-between">
-        <div class="text-sm text-slate-300 mt-4 shrink-0">
-          {Object.keys(viewChartData)[0]}
-        </div>
-        <div class="py-4">
-          <LinkedLabel linked="chart" empty="{timeframeLabels[selectedTimeframe]}"/> —
-          <LinkedValue uid="views" empty={stats.totalViewsCount}/> views
-        </div>
-        <div class="text-sm text-slate-300 mt-4 shrink-0">
-          {_.last(Object.keys(viewChartData))}
-        </div>
-      </div>
-    </div>
-
-    {#if !isSinglePage}
+      
       <div class="rounded-xl p-4 border _border-white">
         <div class="flex justify-between items-center mb-4">
-          <div class="text-lg mb-4">Pages</div>
+          <div class="text-lg">Page Views</div>
+          <div class="text-3xl font-bold">
+            {stats.totalViewsCount}
+          </div>
+        </div>
+
+        <hr class="_border-white my-4" style="border-width: .5px"/>
+
+        {#if viewChartData && chartWidth}
+          <LinkedChart 
+            linked="chart"
+            uid="views"
+            data={viewChartData}
+            fill="#8B786D"
+            grow={true}
+            barMinWidth={20}
+            gap={10}
+            height={150}
+            width={chartWidth}
+            transition={500}
+            >
+          </LinkedChart>
+        {/if}
+
+        <div class="px-4 flex w-full justify-between">
+          <div class="text-sm text-slate-300 mt-4 shrink-0">
+            {Object.keys(viewChartData)[0]}
+          </div>
+          <div class="py-4">
+            <LinkedLabel linked="chart" empty="{timeframeLabels[selectedTimeframe]}"/> —
+            <LinkedValue uid="views" empty={stats.totalViewsCount}/> views
+          </div>
+          <div class="text-sm text-slate-300 mt-4 shrink-0">
+            {_.last(Object.keys(viewChartData))}
+          </div>
+        </div>
+      </div>
+
+      {#if !isSinglePage}
+        <div class="rounded-xl p-4 border _border-white">
+          <div class="flex justify-between items-center mb-4">
+            <div class="text-lg mb-4">Pages</div>
+          </div>
+
+          <div class="flex justify-between mb-2">
+            <div>Page</div>
+            <div class="w-[100px] text-right">Users</div>
+          </div>
+          
+          <div>
+            {#each (isShowAll ? stats.pageStats : stats.pageStats.slice(0,4)) as pageStat, i}
+              <div class="flex justify-between py-1 my-1">
+                <div class="relative w-full">
+                  <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {pageStat.count / maxViewsCount * 100}%;"></div>
+                  {pageStat.url.replace(/^.*\/\/[^\/]+/, '')}
+                </div>
+                <div class="w-[100px] shrink-0 text-right">
+                  {pageStat.count}
+                </div>
+              </div>
+
+              <hr class="border-gray-600"/>
+            {/each}
+            {#if !isShowAll && stats.referralStats.length > 4}
+              <div class="w-full mt-8 p-4 text-center cursor-pointer" on:click={() => isShowAll=true }>Show More</div>
+            {/if}
+          </div>
+        </div>
+      {/if}
+
+      <div class="rounded-xl p-4 border _border-white">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-lg mb-2">Referrers</div>
         </div>
 
         <div class="flex justify-between mb-2">
@@ -168,85 +204,55 @@
         </div>
         
         <div>
-          {#each (isShowAll ? stats.pageStats : stats.pageStats.slice(0,4)) as pageStat, i}
+          {#each (isShowAll ? stats.referralStats : stats.referralStats.slice(0,4)) as referralStat, i}
             <div class="flex justify-between py-1 my-1">
               <div class="relative w-full">
-                <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {pageStat.count / maxViewsCount * 100}%;"></div>
-                {pageStat.url.replace(/^.*\/\/[^\/]+/, '')}
+                <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {referralStat.count / maxReferralCount * 100}%;"></div>
+                {referralStat.origin || '(none)'}
               </div>
               <div class="w-[100px] shrink-0 text-right">
-                {pageStat.count}
+                {referralStat.count}
               </div>
             </div>
 
-            <hr class="border-gray-600"/>
+            <hr class="_border-white"/>
           {/each}
           {#if !isShowAll && stats.referralStats.length > 4}
             <div class="w-full mt-8 p-4 text-center cursor-pointer" on:click={() => isShowAll=true }>Show More</div>
           {/if}
         </div>
       </div>
-    {/if}
 
-    <div class="rounded-xl p-4 border _border-white">
-      <div class="flex justify-between items-center mb-4">
-        <div class="text-lg mb-2">Referrers</div>
-      </div>
+      <div class="rounded-xl p-4 border _border-white">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-lg mb-2">Countries</div>
+        </div>
 
-      <div class="flex justify-between mb-2">
-        <div>Page</div>
-        <div class="w-[100px] text-right">Users</div>
-      </div>
-      
-      <div>
-        {#each (isShowAll ? stats.referralStats : stats.referralStats.slice(0,4)) as referralStat, i}
-          <div class="flex justify-between py-1 my-1">
-            <div class="relative w-full">
-              <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {referralStat.count / maxReferralCount * 100}%;"></div>
-              {referralStat.origin || '(none)'}
+        <div class="flex justify-between mb-2">
+          <div>Country</div>
+          <div class="w-[100px] text-right">Users</div>
+        </div>
+        
+        <div>
+          {#each stats.userCountryStats as userCountryStat, i}
+            <div class="flex justify-between py-1 my-1">
+              <div class="relative w-full">
+                <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {userCountryStat.count / maxCountryCount * 100}%;"></div>
+                {userCountryStat.country ? countryCodeEmoji(userCountryStat.country): ''}
+                {userCountryStat.country ? countryCodeLoockup.byIso(userCountryStat.country).country : '(none)' }
+              </div>
+              <div class="w-[100px] shrink-0 text-right">
+                {userCountryStat.count}
+              </div>
             </div>
-            <div class="w-[100px] shrink-0 text-right">
-              {referralStat.count}
-            </div>
-          </div>
 
-          <hr class="_border-white"/>
-        {/each}
-        {#if !isShowAll && stats.referralStats.length > 4}
-          <div class="w-full mt-8 p-4 text-center cursor-pointer" on:click={() => isShowAll=true }>Show More</div>
-        {/if}
+            <hr class="_border-white"/>
+          {/each}
+        </div>
       </div>
     </div>
-
-    <div class="rounded-xl p-4 border _border-white">
-      <div class="flex justify-between items-center mb-4">
-        <div class="text-lg mb-2">Countries</div>
-      </div>
-
-      <div class="flex justify-between mb-2">
-        <div>Country</div>
-        <div class="w-[100px] text-right">Users</div>
-      </div>
-      
-      <div>
-        {#each stats.userCountryStats as userCountryStat, i}
-          <div class="flex justify-between py-1 my-1">
-            <div class="relative w-full">
-              <div class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20" style="width: {userCountryStat.count / maxCountryCount * 100}%;"></div>
-              {userCountryStat.country ? countryCodeEmoji(userCountryStat.country): ''}
-              {userCountryStat.country ? countryCodeLoockup.byIso(userCountryStat.country).country : '(none)' }
-            </div>
-            <div class="w-[100px] shrink-0 text-right">
-              {userCountryStat.count}
-            </div>
-          </div>
-
-          <hr class="_border-white"/>
-        {/each}
-      </div>
-    </div>
-  </div>
-{/if}
+  {/if}
+{/key}
 
 <style>
   ._border-white {
