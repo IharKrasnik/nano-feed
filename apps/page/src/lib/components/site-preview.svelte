@@ -81,11 +81,11 @@
     in:fly={{ y: -150, duration: 150, delay: 150 }}
     out:fade={{ duration: 150, delay: 150 }}
   >
-  <div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2">
+  <div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 md:px-0">
     <div class="flex items-center shrink-0">
       <div class="text-lg font-bold">{page.logo || ''} {page.name}</div>
 
-      <div class="ml-4 opacity-70 invisible md:visible">
+      <div class="ml-4 opacity-70 hidden md:block">
       &nbsp; {page.title}
       </div>
     </div>
@@ -118,7 +118,7 @@
         <div 
           class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between items-center' : 'text-center items-center'}"
           >
-          <div class="{page.demoUrl ? 'text-left max-w-[500px] items-center' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
+          <div class="{page.demoUrl ? 'text-center md:text-left max-w-[500px] items-center' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
             <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
             
             {#if page.subtitle}
@@ -209,7 +209,7 @@
     {/if}
   </div>
 
-  <iframe id="iframeResize" on:load={resize} class="w-full sticky z-20 bg-white" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&isViewAll=true"></iframe>
+  <iframe id="iframeResize" on:load={resize} class="w-full sticky z-20 bg-white" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&limit=15&isViewAll=true"></iframe>
 {/if}
 
 {#if page.streamSlug || page.sections?.length}

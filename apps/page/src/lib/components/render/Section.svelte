@@ -4,7 +4,7 @@
 
   const headerTextStyle = (item) => {
     return {
-      1: item.imageUrl ? 'text-2xl' : 'text-4xl',
+      1: item.imageUrl ? 'text-2xl' : 'md:text-4xl text-3xl',
       2: 'text-2xl',
       3: 'text-lg',
       4: ''
