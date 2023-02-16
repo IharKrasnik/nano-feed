@@ -96,8 +96,8 @@
 
     <div class="_root" >
       <div 
-        class="_content py-32"
-        class:h-screen={!page.streamSlug}
+        class="_content pb-16 pt-32 md:py-32"
+        class:h-screen={!page.streamSlug && !page.testimonials?.length}
         >
         <div 
           class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between items-center' : 'text-center items-center'}"
@@ -131,7 +131,7 @@
           </div>
 
           {#if page.demoUrl}
-            <div class="w-full md:max-w-[600px] mt-8 md:mt-0 md:ml-8">
+            <div class="w-full md:max-w-[600px] mt-16 md:mt-0 md:ml-8">
               <RenderUrl  url={page.demoUrl} />
             </div>
           {/if}
@@ -160,9 +160,9 @@
         {/if}
       </div>
       {#if page.benefits?.length}
-          <div class="w-full mt-16 md:mt-32 mb-8" style="min-height: 40vh;">
+          <div class="w-full py-4 md:py-16">
             {#each page.benefits as benefit,i}
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-16" style="{ i%2===1 ? '': '' }">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full pb-16" style="{ i%2===1 ? '': '' }">
                 <div class="text-left self-center order-none { i%2===1 ? 'md:order-last' : '' }" class:order-last={i%2===0}>
                   <h2 class="text-2xl font-bold mb-4">{benefit.title}</h2>
                   <h3 class="whitespace-pre-wrap text-lg">{benefit.description}</h3>
