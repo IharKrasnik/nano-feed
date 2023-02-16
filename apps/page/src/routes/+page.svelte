@@ -405,7 +405,7 @@
         {#if page._id}
           <div 
             class="p-4 w-full text-center cursor-pointer"
-            on:click={() => { page.sections = [{ columns: 1, items: [{}] }, ...(page.sections || [])] }}>
+            on:click={() => { page.sections = [...(page.sections || []), { columns: 1, items: [{ title: '', description: '' }] }] }}>
             Add section
           </div>
         {/if}
