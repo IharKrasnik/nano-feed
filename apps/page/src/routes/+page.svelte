@@ -11,6 +11,7 @@
   import clickOutside from 'lib/use/clickOutside';
   import getRandomEmoji from 'lib/services/getRandomEmoji';
   import { get } from 'lib/api';
+  import { v4 as uuidv4 } from 'uuid';
 
   import { GOOGLE_LOGIN_URL, PAGE_URL } from 'lib/env';
 
@@ -28,6 +29,19 @@
   import SitePreview from '$lib/components/site-preview.svelte';
   import SignupForm from '$lib/components/signup-form.svelte';
   import ABToggle from '$lib/components/a-b-toggle.svelte';
+
+  import {flip} from "svelte/animate";
+  import {dndzone} from "svelte-dnd-action";
+
+  const flipDurationMs = 300;
+  
+  function handleDndConsider(e) {
+    page.sections = e.detail.items;
+  }
+
+  function handleDndFinalize(e) {
+    page.sections = e.detail.items;
+  }
 
   let isLoading = false;
   let isSignupFormShown = false;
@@ -159,6 +173,19 @@
   let removeTestimonial = (testimonial) => {
     page.testimonials = page.testimonials.filter(t => t !== testimonial);
   }
+
+  let addGuids = (sections) => {
+    return sections.map(s => {
+      if (!s.id) {
+        return s.id = uuidv4();
+      }
+      
+      return s;
+    })
+  } 
+
+  let isOrdering = false;
+
 </script>
 
 
@@ -230,9 +257,12 @@
           </div>
         {/if}
         
-        <div class="py-4 mr-4">
+        <div class="w-[426px] p-4 pl-0 mr-4">
         {#if !isMetricsOpen && !isSubmissionsOpen}
-          {#if page.slug}
+          
+
+        {#if !isOrdering}
+        {#if page.slug}
           <div class="w-full flex justify-between items-center mb-4">
             <div class="relative cursor-pointer" 
               on:click={() => isEmojiPickerShown = true }
@@ -267,147 +297,173 @@
                 <span class="ml-2 text-[#8B786D]">
                   Views ({metrics?.totalViewsCount || 0})
                 </span>
+              </div>
             </div>
           </div>
-        </div>
         {/if}
-
-        {#if !page._id}
-          <div class="_section">
-            <div class="_title">Brand Name</div> 
-            <input class="w-full" bind:value={page.name} placeholder="Momentum"/>
-          </div>
-        {/if}
-
-        <!-- <div class="my-4">
-          <ABToggle></ABToggle>
-        </div> -->
-        <div class="_section">
-          <div class="_title">Tagline</div> 
-          <input class="w-full" bind:value={page.title} placeholder="Build a better product in public and grow your audience."/>
-        </div>
-
-        {#if page._id}
-          <div class="_section">
-            <div class="_title">Subtitle</div> 
-
-            <textarea 
-              bind:value={page.subtitle}
-              rows="4"
-              class="w-full" 
-              placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback.
-            " />
-          </div>
-        {/if}
-
-        {#if page._id}
-          <div class="_section">
-            <div class="_title">
-              Product Demo
-
-              <div class="font-normal text-sm opacity-70 mb-4">
-                Screenshot, live GIF or a <a href="//loom.com" class="underline" target="_blank" use:tooltip title="We recommend using Loom">video demo</a> <br />
-              </div> 
+          {#if !page._id}
+            <div class="_section">
+              <div class="_title">Brand Name</div> 
+              <input class="w-full" bind:value={page.name} placeholder="Momentum"/>
             </div>
+          {/if}
 
-            <FileInput
-              class="w-full"
-              bind:url={page.demoUrl}
-              on:fileUploaded={(evt) => fileUploaded(evt.detail, 'demoUrl')}
-            >
-            </FileInput>
-          </div>
-        {/if}
-
-
-        {#if page._id}
-        <div class="_section">
-          <div class="_title">Call To Action</div> 
-
-          <div class="font-normal text-sm opacity-70 mb-2">
-            Button text
-          </div>
-
-          <input class="mb-4 w-full" bind:value={page.callToAction} placeholder="Join Waitlist"/>
-
-          <div class="font-normal text-sm opacity-70 mb-2">
-            URL to open once email submitted (optional)
-          </div>
-
-          <input class="w-full mb-4" bind:value={page.actionUrl} placeholder="Action Url"/>
-
-          <!-- <div class="flex items-center mt-2 text-[14px]">
-            <input type="checkbox" class="mr-2"  /> Collect Emails
+          <!-- <div class="my-4">
+            <ABToggle></ABToggle>
           </div> -->
-        </div>
-        {/if}
-
-        {#if page._id}
           <div class="_section">
-            <div class="flex justify-between items-center">
-              <div class="_title" style="margin: 0;">
-                Testimonials
-              </div> 
+            <div class="_title">Tagline</div> 
+            <input class="w-full" bind:value={page.title} placeholder="Build a better product in public and grow your audience."/>
+          </div>
 
-              <div class="text-right w-full">
-                <a class="cursor-pointer text-[#8B786D]" on:click="{addNewTestimonial}">Add</a>
-              </div>
-            </div>
+          {#if page._id}
+            <div class="_section">
+              <div class="_title">Subtitle</div> 
 
-            {#each (page.testimonials || []) as testimonial}
-              <div class="flex justify-between items-center">
-                <div class="font-normal text-sm opacity-70 mb-2 mt-4">
-                  Name
-                </div>
-                <div class="text-sm cursor-pointer text-[#8B786D]" on:click={() => removeTestimonial(testimonial)}>Remove</div>
-              </div>
-    
-              <input class="mb-4 w-full" bind:value={testimonial.name} placeholder="Victoriya Barovskaya, CEO, Kickstart"/>
-              
-              <div class="font-normal text-sm opacity-70 mb-2">
-                Their Comment
-              </div>
-              
               <textarea 
-                class="w-full mb-4"
-                bind:value={testimonial.comment}
-                placeholder="These action plans finally made me post daily and share the Kickstart news with a wide audience. Great to start!"
-                rows="3"
-              />
-              
-              <div class="font-normal text-sm opacity-70 mb-2">
-                Their Avatar
-              </div>
-              <FileInput 
+                bind:value={page.subtitle}
+                rows="4"
                 class="w-full" 
-                bind:url={testimonial.avatarUrl}
-                on:fileUploaded={(evt) => { testimonial.avatarUrl = evt.detail.url; }}
+                placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback.
+              " />
+            </div>
+          {/if}
+
+          {#if page._id}
+            <div class="_section">
+              <div class="_title">
+                Product Demo
+
+                <div class="font-normal text-sm opacity-70 mb-4">
+                  Screenshot, live GIF or a <a href="//loom.com" class="underline" target="_blank" use:tooltip title="We recommend using Loom">video demo</a> <br />
+                </div> 
+              </div>
+
+              <FileInput
+                class="w-full"
+                bind:url={page.demoUrl}
+                on:fileUploaded={(evt) => fileUploaded(evt.detail, 'demoUrl')}
               >
               </FileInput>
+            </div>
+          {/if}
 
-              <hr class="my-4 border-[#8B786D] opacity-30" />
 
-            {/each}
+          {#if page._id}
+          <div class="_section">
+            <div class="_title">Call To Action</div> 
+
+            <div class="font-normal text-sm opacity-70 mb-2">
+              Button text
+            </div>
+
+            <input class="mb-4 w-full" bind:value={page.callToAction} placeholder="Join Waitlist"/>
+
+            <div class="font-normal text-sm opacity-70 mb-2">
+              URL to open once email submitted (optional)
+            </div>
+
+            <input class="w-full mb-4" bind:value={page.actionUrl} placeholder="Action Url"/>
+
             <!-- <div class="flex items-center mt-2 text-[14px]">
               <input type="checkbox" class="mr-2"  /> Collect Emails
             </div> -->
           </div>
+          {/if}
+
+          {#if page._id}
+            <div class="_section">
+              <div class="flex justify-between items-center">
+                <div class="_title" style="margin: 0;">
+                  Testimonials
+                </div> 
+
+                <div class="text-right w-full">
+                  <a class="cursor-pointer text-[#8B786D]" on:click="{addNewTestimonial}">Add Testimonial</a>
+                </div>
+              </div>
+
+              {#each (page.testimonials || []) as testimonial}
+                <div class="flex justify-between items-center">
+                  <div class="font-normal text-sm opacity-70 mb-2 mt-4">
+                    Name
+                  </div>
+                  <div class="text-sm cursor-pointer text-[#8B786D]" on:click={() => removeTestimonial(testimonial)}>Remove</div>
+                </div>
+      
+                <input class="mb-4 w-full" bind:value={testimonial.name} placeholder="Victoriya Barovskaya, CEO, Kickstart"/>
+                
+                <div class="font-normal text-sm opacity-70 mb-2">
+                  Their Comment
+                </div>
+                
+                <textarea 
+                  class="w-full mb-4"
+                  bind:value={testimonial.comment}
+                  placeholder="These action plans finally made me post daily and share the Kickstart news with a wide audience. Great to start!"
+                  rows="3"
+                />
+                
+                <div class="font-normal text-sm opacity-70 mb-2">
+                  Their Avatar
+                </div>
+                <FileInput 
+                  class="w-full" 
+                  bind:url={testimonial.avatarUrl}
+                  on:fileUploaded={(evt) => { testimonial.avatarUrl = evt.detail.url; }}
+                >
+                </FileInput>
+
+                <hr class="my-4 border-[#8B786D] opacity-30" />
+
+              {/each}
+              <!-- <div class="flex items-center mt-2 text-[14px]">
+                <input type="checkbox" class="mr-2"  /> Collect Emails
+              </div> -->
+            </div>
+          {/if}
         {/if}
 
-        {#if page._id}
-          {#each (page.sections || []) as section}
-            <EditSection bind:section={section} onRemove={() => {
-              page.sections = page.sections.filter(s => s !== section);
-            }}></EditSection>
-          {/each}
-        {/if}
+        
 
-        {#if page._id}
-          <div 
-            class="p-4 w-full text-center cursor-pointer"
-            on:click={() => { page.sections = [...(page.sections || []), { columns: 1, items: [{ title: '', description: '' }] }] }}>
-            Add section
+        <div class="w-[426px] flex top-[0px] sticky z-30 w-full bg-[#fafafa] p-4 my-4 justify-between"> 
+          <div class="flex items-center">
+            <div>
+              Sections
+            </div>
+
+            <div class="ml-2 number-tag">
+              { page.sections?.length || 0 }
+            </div>
           </div>
+
+          {#if page.sections?.length > 1 && !isOrdering}
+            <div class="text-sm cursor-pointer" on:click={ () => isOrdering = true }>
+              Reorder Sections
+            </div>
+          {/if}
+        </div>
+
+        {#if page._id}
+          <div use:dndzone="{{ items: addGuids(page.sections), flipDurationMs }}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
+            {#each addGuids(page.sections).filter(p => p.id) as section(section.id)}
+              <div animate:flip="{{ duration: flipDurationMs }}">
+                <EditSection bind:isShort={isOrdering} bind:section={section} onRemove={() => {
+                  page.sections = page.sections.filter(s => s !== section);
+                }}></EditSection>
+              </div>
+            {/each}
+          </div>  
+        {/if}
+
+        {#if !isOrdering}
+          {#if page._id}
+            <div 
+              class="p-4 w-full text-center cursor-pointer"
+              on:click={() => { page.sections = [...(page.sections || []), { columns: 1, items: [{ title: '', description: '' }] }] }}>
+              Add section
+            </div>
+          {/if}
         {/if}
 
 
@@ -416,36 +472,43 @@
 
         </div> -->
 
-        <div class="flex items-center w-full justify-between mt-4 mb-32">
+        {#if isOrdering}
           <button
-            class="relative _primary {isLoading ? 'loading': '' }" 
-            on:click="{publishPage}">
-          
-            {#if isLoading}
-              <div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
-                <Loader></Loader>
-              </div>
-              Publish
-
-            {:else}
-              {#if isJustPublished}
-                <div class="" in:scale={{ duration: 150 }}>
-                  👌
-                </div>
-              {:else}
-                Publish
-              {/if}
-            {/if}
+          class="mt-8 _secondary {isLoading ? 'loading': '' }" on:click={() => isOrdering = false } >
+            ✅ Save Sections Order
           </button>
+        {:else}
+          <div class="flex items-center w-full justify-between mt-4 mb-32">
+            <button
+              class="relative _primary {isLoading ? 'loading': '' }" 
+              on:click="{publishPage}">
+            
+              {#if isLoading}
+                <div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
+                  <Loader></Loader>
+                </div>
+                Publish
+
+              {:else}
+                {#if isJustPublished}
+                  <div class="" in:scale={{ duration: 150 }}>
+                    👌
+                  </div>
+                {:else}
+                  Publish
+                {/if}
+              {/if}
+            </button>
 
 
-          {#if !page.slug}
-            <div class="cursor-pointer text-sm opacity-70" on:click={() => {
-              page = { ...defaultPage };
-              $pageDraft = null;
-            }}>Reset Page</div>
+            {#if !page.slug}
+              <div class="cursor-pointer text-sm opacity-70" on:click={() => {
+                page = { ...defaultPage };
+                $pageDraft = null;
+              }}>Reset Page</div>
+            {/if}
+          </div>
           {/if}
-        </div>
         {/if}
       </div>
     </div>
@@ -491,16 +554,43 @@
 
     {#if page.name || page.title }
       <div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
-        <SitePreview
-          noStickyHeader={true}
-          bind:page={page}
-          />
 
         {#if page.slug}
-          <div class="_published-label z-50">
-            ✅ Published at <a href="{PAGE_URL}/p/{page.slug}" style="color: #5375F0;" target="_blank" rel="noreferrer">{PAGE_URL.replace('https://', '')}/p/{page.slug}</a>
+          <div class="sticky top-[20px] w-full z-50 h-[0px]">
+            <div class="_published-label flex items-center mt-4">
+              <a href="{PAGE_URL}/p/{page.slug}" style="color: #5375F0;" target="_blank" rel="noreferrer">{PAGE_URL.replace('https://', '')}/p/{page.slug}</a>
+            
+              <button
+                class="relative _primary flex justify-center w-full {isLoading ? 'loading': '' }" 
+                style="margin-right: -10px; margin-left:10px; border-radius: 30px; padding: 10px 30px; width: 170px;"
+                on:click="{publishPage}">
+              
+                {#if isLoading}
+                  <div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
+                    <Loader></Loader>
+                  </div>
+                  Publish
+
+                {:else}
+                  {#if isJustPublished}
+                    <div class="" in:scale={{ duration: 150 }}>
+                      👌
+                    </div>
+                  {:else}
+                    Publish
+                  {/if}
+                {/if}
+              </button>
+            </div>
           </div>
+
+          
         {/if}
+
+        <SitePreview
+        noStickyHeader={true}
+        bind:page={page}
+        />
       </div>
     {:else}
       <div class="w-full h-screen ml-[426px] self-stretch flex-col flex items-center justify-center" in:slide>
@@ -526,15 +616,15 @@
   }
 
   ._published-label {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0;
+    max-width: 400px;
+    margin: 0 auto;
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    text-align: center;
     text-transform: uppercase;
     border-radius: 30px;
     background-color: #F5F5F5;
     padding: 3px 10px;
-    margin-top: 20px;
     color: #828282;
   }
 </style>
