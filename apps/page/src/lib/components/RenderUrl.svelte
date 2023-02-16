@@ -22,7 +22,7 @@
         {#if url.includes('.mp4') || url.includes('mov')}
           <video autoplay muted src={url}></video>
         {:else}
-          <img src="{url}" />
+          <img class="rounded-xl" src="{url}" />
         {/if}
       {/if}
     </div>

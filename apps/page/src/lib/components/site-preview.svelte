@@ -96,10 +96,12 @@
 
     <div class="_root" >
       <div 
-        class="_content {page.demoUrl ? 'py-32' : 'h-screen'}"
-        class:h-screen={!page.streamSlug && !page.benefits?.length}
+        class="_content py-32"
+        class:h-screen={!page.streamSlug}
         >
-        <div class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between items-center' : 'text-center items-center'}">
+        <div 
+          class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between items-center' : 'text-center items-center'}"
+          >
           <div class="{page.demoUrl ? 'text-left max-w-[500px] items-center' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
             <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
             
@@ -136,7 +138,7 @@
         </div>
 
         {#if isMounted && page.testimonials?.length}
-          <div class="w-full flex flex-col md:flex-row justify-center mt-16 md:mt-32 mb-8">
+          <div class="w-full flex flex-col md:flex-row justify-center mt-16 md:mt-32">
             {#each page.testimonials as testimonial, i}
               <div class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4 mb-4 md:mb-0" in:fly={{ x: -50, y:-50, duration: 150, delay: 150 * (i + 1) }}>
                 <div class="flex flex-col md:flex-row">
@@ -156,9 +158,9 @@
             {/each}
           </div>
         {/if}
-
-        {#if page.benefits?.length}
-          <div class="w-full mt-16 md:mt-32 mb-8">
+      </div>
+      {#if page.benefits?.length}
+          <div class="w-full mt-16 md:mt-32 mb-8" style="min-height: 40vh;">
             {#each page.benefits as benefit,i}
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-16" style="{ i%2===1 ? '': '' }">
                 <div class="text-left self-center order-none { i%2===1 ? 'md:order-last' : '' }" class:order-last={i%2===0}>
@@ -172,7 +174,6 @@
             {/each}
           </div>
         {/if}
-      </div>
     </div>
   </div>
 {/if}
@@ -205,12 +206,14 @@
 {/if}
 
 {#if page.streamSlug || page.benefits?.length}
-  <div class="h-screen sticky"></div>
+  <!-- <div class="h-screen sticky"></div> -->
 
-  <div class="w-full text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4">
-    <div class="text-lg my-4">{page.logo||''} {page.name}</div>
-    <div class="text-3xl font-bold mb-8">
-      {page.title}
+  <div class="w-full] text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4">
+    <div class="mx-auto max-w-[600px]">
+      <div class="text-lg my-4">{page.logo||''} {page.name}</div>
+      <div class="text-3xl font-bold mb-8">
+        {page.title}
+      </div>
     </div>
 
     <div class="_input_container flex items-center mx-auto w-full md:w-[392px]">
