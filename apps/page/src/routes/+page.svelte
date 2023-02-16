@@ -487,7 +487,7 @@
             {#if !isOrdering}
             <div>
               <div 
-                class="w-full text-center cursor-pointer"
+                class="w-full text-center cursor-pointer text-[#8B786D]"
                 on:click={() => { page.sections = [...(page.sections || []), { columns: 1, items: [{ title: '', description: '' }] }] }}>
                 Add section
               </div>
