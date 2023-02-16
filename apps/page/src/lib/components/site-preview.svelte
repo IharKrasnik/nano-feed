@@ -112,8 +112,7 @@
 
     <div class="_root" >
       <div 
-        class="_content pb-16 pt-32 md:py-32"
-        class:h-screen={!page.streamSlug && !page.testimonials?.length}
+        class="_content pb-16 pt-32 md:py-32 {(!page.streamSlug && !page.testimonials?.length) ? 'md:h-screen': ''}"
         >
         <div 
           class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between items-center' : 'text-center items-center'}"
