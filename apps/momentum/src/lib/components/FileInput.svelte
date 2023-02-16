@@ -1,4 +1,6 @@
 <script>
+	import Dropzone from 'svelte-file-dropzone';
+
 	import { postFile } from 'lib/api';
 	import { createEventDispatcher, onMount } from 'svelte';
 
@@ -32,7 +34,13 @@
 	const onFileUpload = async (e) => {
 		return uploadFile(e.target.files[0]);
 	};
+
+	let handleFilesSelect = () => {
+		debugger;
+	}
 </script>
+
+<Dropzone on:drop={handleFilesSelect} />
 
 <input
 	type="text"

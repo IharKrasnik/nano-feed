@@ -112,7 +112,8 @@
 
     <div class="_root" >
       <div 
-        class="_content pb-16 pt-32 md:py-32 {(!page.streamSlug && !page.testimonials?.length) ? 'md:h-screen': ''}"
+        class="_content pb-16 pt-32 {(!page.streamSlug && !page.testimonials?.length) ? 'md:h-screen': ''}"
+        style="{!page.testimonials}"
         >
         <div 
           class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between items-center' : 'text-center items-center'}"
@@ -185,7 +186,7 @@
 {/if}
 
 {#if page.streamSlug}
-  <div class="sticky z-20 bg-white">
+  <div class="sticky z-20 py-4 md:py-16 bg-white">
     <h1 class="w-full text-center font-bold text-2xl opacity-70" style="font-family: Inter;">We Build In Public</h1>
     <h1 class="w-full text-center text-lg opacity-70" style="font-family: Inter;">Follow our journey in social network and blogs.</h1>
     {#if page.links}

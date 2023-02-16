@@ -26,24 +26,14 @@
   }
 </script>
 
-{#if section.title}
-<div class="my-8">
-  <div class="w-full text-center text-3xl font-bold">
-    {section.title || ''}
-  </div>
-  <div class="w-full text-center text-lg mt-4">
-    {section.description || ''}
-  </div>
-</div>
-{/if}
-
-
 {#if section.items?.length}
   <div class="w-full py-4 md:py-16">
     <div class="grid grid-cols-1 md:grid-cols-{section.columns} gap-4 {section.columns > 1 ? 'items-start': '' }">
       {#each section.items || [] as item,i }
         <div class="grid h-full grid-cols-1 md:grid-cols-{(section.columns === 1 && item.imageUrl && section.items.length > 1) ? 2 : ''} w-full {section.columns > 1 ? 'bg-[#fafafa] rounded-2xl' : '' } items-center content-start"  style="{ i%2===1 ? '': '' }">
-          <div class="{ section.columns > 2 ? 'p-4': 'p-8' } max-w-[600px] text-left self-center order-none { (section.columns == 1 && i%2===1) ? 'md:order-last' : '' } {section.columns === 1 && (!item.imageUrl || section.items.length === 1) && 'mx-auto text-center'}" class:order-last={i%2===0}>
+          <div
+            style="{ (section.columns === 1 && section.items.length === 1 && !item.imageUrl) ? 'margin-bottom: -64px;' : '' }"
+            class="{ section.columns > 2 ? 'p-4': 'p-8' } max-w-[600px] text-left self-center order-none { (section.columns == 1 && i%2===1) ? 'md:order-last' : '' } {section.columns === 1 && (!item.imageUrl || section.items.length === 1) && 'mx-auto text-center'}" class:order-last={i%2===0}>
             {#if item.emoji }
               <div class="{emojiStyle[section.columns]}">{item.emoji}</div>
             {/if}
