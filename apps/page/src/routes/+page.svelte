@@ -448,15 +448,16 @@
         {#if page._id}
           {#if !isOrdering}
             <div>
-              {#each (page.sections || []) as section(section.id)}
+              {#each (page.sections || []) as section}
                 <EditSection bind:section={section} onRemove={() => {
                   page.sections = page.sections.filter(s => s !== section);
                 }}></EditSection>
               {/each}
             </div>
           {:else}
-            <div use:dndzone="{{ items: addGuids(page.sections), flipDurationMs }}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
-              {#each addGuids(page.sections).filter(p => p.id) as section(section.id)}
+            { addGuids(page.sections) && ''}
+            <div use:dndzone="{{ items: page.sections, flipDurationMs }}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
+              {#each (page.sections || []) as section(section.id)}
                 <div animate:flip="{{ duration: flipDurationMs }}">
                   <EditSection isShort bind:section={section} onRemove={() => {
                     page.sections = page.sections.filter(s => s !== section);
