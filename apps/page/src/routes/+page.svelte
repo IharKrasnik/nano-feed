@@ -174,7 +174,7 @@
     page.testimonials = page.testimonials.filter(t => t !== testimonial);
   }
 
-  let addGuids = (sections) => {
+  let addGuids = (sections = []) => {
     return sections.map(s => {
       if (!s.id) {
         return s.id = uuidv4();
@@ -425,35 +425,46 @@
         {/if}
 
         
+        {#if page.slug && page.sections?.length > 0}
+          <div class="w-[426px] flex top-[0px] sticky z-30 w-full bg-[#fafafa] p-4 my-4 justify-between"> 
+            <div class="flex items-center">
+              <div>
+                Sections
+              </div>
 
-        <div class="w-[426px] flex top-[0px] sticky z-30 w-full bg-[#fafafa] p-4 my-4 justify-between"> 
-          <div class="flex items-center">
-            <div>
-              Sections
+              <div class="ml-2 number-tag">
+                { page.sections?.length || 0 }
+              </div>
             </div>
 
-            <div class="ml-2 number-tag">
-              { page.sections?.length || 0 }
-            </div>
+            {#if page.sections?.length > 1 && !isOrdering}
+              <div class="text-sm cursor-pointer" on:click={ () => isOrdering = true }>
+                Reorder Sections
+              </div>
+            {/if}
           </div>
-
-          {#if page.sections?.length > 1 && !isOrdering}
-            <div class="text-sm cursor-pointer" on:click={ () => isOrdering = true }>
-              Reorder Sections
-            </div>
-          {/if}
-        </div>
+        {/if}
 
         {#if page._id}
-          <div use:dndzone="{{ items: addGuids(page.sections), flipDurationMs }}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
-            {#each addGuids(page.sections).filter(p => p.id) as section(section.id)}
-              <div animate:flip="{{ duration: flipDurationMs }}">
-                <EditSection bind:isShort={isOrdering} bind:section={section} onRemove={() => {
+          {#if !isOrdering}
+            <div>
+              {#each (page.sections || []) as section(section.id)}
+                <EditSection bind:section={section} onRemove={() => {
                   page.sections = page.sections.filter(s => s !== section);
                 }}></EditSection>
-              </div>
-            {/each}
-          </div>  
+              {/each}
+            </div>
+          {:else}
+            <div use:dndzone="{{ items: addGuids(page.sections), flipDurationMs }}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
+              {#each addGuids(page.sections).filter(p => p.id) as section(section.id)}
+                <div animate:flip="{{ duration: flipDurationMs }}">
+                  <EditSection isShort bind:section={section} onRemove={() => {
+                    page.sections = page.sections.filter(s => s !== section);
+                  }}></EditSection>
+                </div>
+              {/each}
+            </div>
+          {/if}
         {/if}
 
         {#if !isOrdering}
