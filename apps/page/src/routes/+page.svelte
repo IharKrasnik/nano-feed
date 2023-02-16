@@ -3,6 +3,8 @@
   import { onMount } from 'svelte';
   import { slide, fly, scale, fade } from 'svelte/transition';
 
+  import EditSection from '$lib/components/edit/Section.svelte';
+
   import { post, put } from 'lib/api';
   import currentUser from 'lib/stores/currentUser';
   import tooltip from 'lib/use/tooltip';
@@ -45,6 +47,7 @@
 
   $: if (!isPageSet && $currentUser && $allPages?.length && !$pageDraft && !page._id) {
     page = { ...$allPages[0] };
+
     refreshData();
     isPageSet = true;
   }
@@ -156,20 +159,6 @@
   let removeTestimonial = (testimonial) => {
     page.testimonials = page.testimonials.filter(t => t !== testimonial);
   }
-
-  let addNewBenefit = () => {
-    page.benefits = page.benefits || [];
-    
-    page.benefits.push({
-      title: '',
-      description: '',
-      imageUrl: getRandomEmoji(),
-    });
-  }
-
-  let removeBenefit = (benefit) => {
-    page.benefits = page.benefits.filter(b => b !== benefit);
-  }
 </script>
 
 
@@ -187,7 +176,7 @@
 
       <div class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll" in:fly={{ x: 50, duration: 150, delay: 150 }}>
         <div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
-          <div class="p-4 flex items-center justify-between w-full py-4" class:justify-between={!$currentUser}>
+          <div class="flex items-center justify-between w-full py-4" class:justify-between={!$currentUser}>
             <a on:click={() => isSignupFormShown = false }>
               <h2 class="font-bold flex items-center" style="font-family: Archivo; font-size: 20px;"> 
                 <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -230,7 +219,7 @@
             {/if}
           </div>
 
-          <div class="pl-2">
+          <div>
             <hr class="w-full"/>
           </div>
         </div>
@@ -241,7 +230,7 @@
           </div>
         {/if}
         
-        <div class="p-4">
+        <div class="py-4 mr-4">
         {#if !isMetricsOpen && !isSubmissionsOpen}
           {#if page.slug}
           <div class="w-full flex justify-between items-center mb-4">
@@ -404,55 +393,20 @@
             </div> -->
           </div>
         {/if}
+
         {#if page._id}
-          <div class="_section">
-            <div class="flex justify-between items-center">
-              <div class="_title" style="margin: 0;">
-                Benefits
-              </div> 
+          {#each (page.sections || []) as section}
+            <EditSection bind:section={section} onRemove={() => {
+              page.sections = page.sections.filter(s => s !== section);
+            }}></EditSection>
+          {/each}
+        {/if}
 
-              <div class="text-right w-full">
-                <a class="cursor-pointer text-[#8B786D]" on:click="{addNewBenefit}">Add</a>
-              </div>
-            </div>
-
-            {#each (page.benefits || []) as benefit}
-              <div class="flex justify-between items-center">
-                <div class="font-normal text-sm opacity-70 mb-2 mt-4">
-                  Title
-                </div>
-                <div class="text-sm cursor-pointer text-[#8B786D]" on:click={() => removeBenefit(benefit)}>Remove</div>
-              </div>
-    
-              <input class="mb-4 w-full" bind:value={benefit.title} placeholder="Title"/>
-              
-              <div class="font-normal text-sm opacity-70 mb-2">
-                Description
-              </div>
-              
-              <textarea 
-                class="w-full mb-4"
-                bind:value={benefit.description}
-                placeholder="Description"
-                rows="3"
-              />
-              
-              <div class="font-normal text-sm opacity-70 mb-2">
-                Image
-              </div>
-              
-              <FileInput 
-                class="w-full"
-                on:fileUploaded={(evt) => { benefit.imageUrl = evt.detail.url; }}
-                bind:url={benefit.imageUrl}>
-              </FileInput>
-
-              <hr class="my-4 border-[#8B786D] opacity-30" />
-
-            {/each}
-            <!-- <div class="flex items-center mt-2 text-[14px]">
-              <input type="checkbox" class="mr-2"  /> Collect Emails
-            </div> -->
+        {#if page._id}
+          <div 
+            class="p-4 w-full text-center cursor-pointer"
+            on:click={() => { page.sections = [{ columns: 1, items: [{}] }, ...(page.sections || [])] }}>
+            Add section
           </div>
         {/if}
 
@@ -565,18 +519,6 @@
 {/if}
 
 <style>
-  ._section {
-    border: 1px #E0DEDE solid;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 8px;
-  }
-
-  ._title {
-    font-weight: bold;
-    margin-bottom: 12px;
-  }
-
   ._preview {
     width: 100%;
     height: 100%;

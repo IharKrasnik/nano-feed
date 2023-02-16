@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+._section {
+	border: 1px #e0dede solid;
+	border-radius: 8px;
+	padding: 16px;
+	margin-bottom: 8px;
+}
+
+._title {
+	font-weight: bold;
+	margin-bottom: 12px;
+}

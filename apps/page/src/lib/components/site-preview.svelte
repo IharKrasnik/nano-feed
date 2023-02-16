@@ -1,4 +1,19 @@
 <script>
+  import SvelteMarkdown from 'svelte-markdown';
+
+  import { post } from 'lib/api';
+  import { fly, fade, slide } from 'svelte/transition';
+  import { onMount } from 'svelte';
+
+  import RenderUrl from '$lib/components/RenderUrl.svelte';
+  import RenderSection from '$lib/components/render/Section.svelte';
+
+  import TwitterIcon from '$lib/icons/Twitter.svelte';
+  import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
+  import iframeResize from 'iframe-resizer/js/iframeResizer';
+
+  import { STREAM_URL, PAGE_URL } from 'lib/env';
+
   export let page = {
     name:  'momentum',
     slug: 'momentum',
@@ -8,21 +23,20 @@
     bgColor: '#D98324'
   };
 
+  let grid = {
+    title: '',
+    description: '',
+    columns: '',
+   
+    items: [{
+      title: '',
+      description: '',
+      icon: '',
+      imageUrl: '',
+    }]
+  }
+
   export let noStickyHeader = false;
-
-  import SvelteMarkdown from 'svelte-markdown';
-
-  import { post } from 'lib/api';
-  import { fly, fade, slide } from 'svelte/transition';
-  import { onMount } from 'svelte';
-
-  import RenderUrl from '$lib/components/RenderUrl.svelte';
-
-  import TwitterIcon from '$lib/icons/Twitter.svelte';
-  import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
-  import iframeResize from 'iframe-resizer/js/iframeResizer';
-
-  import { STREAM_URL, PAGE_URL } from 'lib/env';
 
   let isMounted = false;
   
@@ -55,10 +69,12 @@
   }
 
   let scrollY;
+
+  let COLUMNS = 1;
 </script>
 
 <svelte:window bind:scrollY />
-
+<div class="md:grid-cols-1 md:grid-cols-2 md:grid-cols-3 md:grid-cols-4 md:grid-cols-5 md:grid-cols-3"></div>
 {#if !noStickyHeader && scrollY > 300}
   <div 
     class="fixed top-0 z-30 bg-white w-full"
@@ -159,21 +175,12 @@
           </div>
         {/if}
       </div>
-      {#if page.benefits?.length}
-          <div class="w-full py-4 md:py-16">
-            {#each page.benefits as benefit,i}
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full pb-16" style="{ i%2===1 ? '': '' }">
-                <div class="text-left self-center order-none { i%2===1 ? 'md:order-last' : '' }" class:order-last={i%2===0}>
-                  <h2 class="text-2xl font-bold mb-4">{benefit.title}</h2>
-                  <h3 class="whitespace-pre-wrap text-lg">{benefit.description}</h3>
-                </div>
-                <div class="order-none { i%2===0 ? 'md:order-last' : '' }">
-                  <RenderUrl url={benefit.imageUrl}></RenderUrl>
-                </div>
-              </div>
-            {/each}
-          </div>
-        {/if}
+
+      {#if page.sections?.length}
+        {#each page.sections as section}
+          <RenderSection bind:section={section}></RenderSection>
+        {/each}
+      {/if}
     </div>
   </div>
 {/if}
@@ -205,7 +212,7 @@
   <iframe id="iframeResize" on:load={resize} class="w-full sticky z-20 bg-white" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&isViewAll=true"></iframe>
 {/if}
 
-{#if page.streamSlug || page.benefits?.length}
+{#if page.streamSlug || page.sections?.length}
   <!-- <div class="h-screen sticky"></div> -->
 
   <div class="w-full] text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4">

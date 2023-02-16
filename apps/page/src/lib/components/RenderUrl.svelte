@@ -1,5 +1,6 @@
 <script>
   export let url;
+  export let imgClass = '';
 
   let isUrl = () => {
     return url.startsWith('http');
@@ -22,7 +23,7 @@
         {#if url.includes('.mp4') || url.includes('mov')}
           <video autoplay muted src={url}></video>
         {:else}
-          <img class="rounded-xl" src="{url}" />
+          <img class="rounded-xl {imgClass}" src="{url}" />
         {/if}
       {/if}
     </div>
