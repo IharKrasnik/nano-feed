@@ -12,6 +12,7 @@
   import getRandomEmoji from 'lib/services/getRandomEmoji';
   import { get } from 'lib/api';
   import { v4 as uuidv4 } from 'uuid';
+	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 
   import { GOOGLE_LOGIN_URL, PAGE_URL } from 'lib/env';
 
@@ -68,6 +69,7 @@
 
 
   let isJustPublished = false;
+  let isJustCreated = false;
 
   const publishPage = async () => {
     if (!$currentUser) {
@@ -89,6 +91,7 @@
 
       if (isNewPage) {
         $allPages = [{...page}, ...$allPages];
+        isJustCreated = true;
       } else {
         $allPages = $allPages.map(p => {
           if (p._id === page._id) {
@@ -569,6 +572,12 @@
 
         {#if page.slug}
           <div class="sticky top-[20px] w-full z-50 h-[0px]">
+            <div class="mx-auto">
+              {#if isJustCreated}
+                <ConfettiExplosion particleCount={200} force={0.3} />
+              {/if}
+            </div>
+            
             <div class="_published-label flex items-center mt-4">
               <a href="{PAGE_URL}/p/{page.slug}" style="color: #5375F0;" target="_blank" rel="noreferrer">{PAGE_URL.replace('https://', '')}/p/{page.slug}</a>
             
