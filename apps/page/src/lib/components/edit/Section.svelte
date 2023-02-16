@@ -49,7 +49,7 @@
       </div>
 
       <div class="relative mt-4"
-        use:clickOutside on:clickOutside={() => isEmojiPickerShown = false}
+        use:clickOutside on:clickOutside={() => isfojiPickerShown = false}
       >
 
         <!-- <input class="mb-4 w-full" bind:value={section.title} placeholder="Title (optional)"/>
@@ -164,6 +164,7 @@
       > 
         <FileInput 
           class="w-full"
+          placeholder="Insert image/video url or paste from clipboard"
           on:fileUploaded={(evt) => { item.imageUrl = evt.detail.url; }}
           bind:url={item.imageUrl}>
         </FileInput>      

@@ -51,6 +51,12 @@
     padding: 10px 18px;
   }
 
+
+  :global(button._small) {
+    border-radius: 8px;
+    padding: 5px 9px;
+  }
+
   :global(button._primary) {
     background-color: #8B786D;
     color: white;

@@ -1,20 +1,18 @@
 <script>
   import moment from 'moment';
   import { onMount } from 'svelte';
+  import { v4 as uuidv4 } from 'uuid';
   import { slide, fly, scale, fade } from 'svelte/transition';
-
+  import { goto } from '$app/navigation';
   import EditSection from '$lib/components/edit/Section.svelte';
 
-  import { post, put } from 'lib/api';
+  import { get, post, put } from 'lib/api';
   import currentUser from 'lib/stores/currentUser';
   import tooltip from 'lib/use/tooltip';
   import clickOutside from 'lib/use/clickOutside';
-  import getRandomEmoji from 'lib/services/getRandomEmoji';
-  import { get } from 'lib/api';
-  import { v4 as uuidv4 } from 'uuid';
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 
-  import { GOOGLE_LOGIN_URL, PAGE_URL } from 'lib/env';
+  import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
 
   import allPages from '$lib/stores/allPages';
   import pageDraft from '$lib/stores/pageDraft';
@@ -29,7 +27,6 @@
 
   import SitePreview from '$lib/components/site-preview.svelte';
   import SignupForm from '$lib/components/signup-form.svelte';
-  import ABToggle from '$lib/components/a-b-toggle.svelte';
 
   import {flip} from "svelte/animate";
   import {dndzone} from "svelte-dnd-action";
@@ -188,6 +185,12 @@
   } 
 
   let isOrdering = false;
+
+  let embedStream = async () => {
+    page = await put(`pages/${page._id}/embed-stream`);
+
+    window.open(`${STREAM_URL}/${page.streamSlug}`, '_blank');
+  }
 
 </script>
 
@@ -427,24 +430,70 @@
           {/if}
         {/if}
 
-        
-        {#if page.slug && page.sections?.length > 0}
-          <div class="w-[426px] flex top-[0px] sticky z-30 w-full bg-[#fafafa] p-4 my-4 justify-between"> 
-            <div class="flex items-center">
+        {#if page._id && !isOrdering}
+          <div class="_section">
+            <div class="flex justify-between items-center">
+              <div class="_title" style="margin: 0">Build in Public Wall</div>
               <div>
-                Sections
-              </div>
-
-              <div class="ml-2 number-tag">
-                { page.sections?.length || 0 }
+                <a href="{page.streamSlug ? `${STREAM_URL}/${page.streamSlug}`: ''}" target="_blank" 
+                  on:click={(evt) => { 
+                    if (!page.streamSlug) {
+                      evt.preventDefault();
+                      embedStream();
+                    } 
+                  } }
+                >
+                  <button class="_primary _small"
+                    style="{page.streamSlug ? 'background-color:green': ''}">
+                      {#if !page.streamSlug}
+                      ⚡️ Embed Wall
+                      {:else}
+                      ⚡️ Wall Embedded
+                      {/if}
+                  </button>
+                </a>
               </div>
             </div>
 
+            {#if !page.streamSlug}
+              <div class="font-normal text-sm opacity-70 mt-4">
+                Embed live content feed with your posts from social networks and blogs.
+              </div> 
+            {/if}
+          </div>
+        {/if}
+        
+        {#if page.slug}
+          <div class="w-[426px] flex top-[0px] sticky z-30 w-full bg-[#fafafa] p-4 my-4 justify-between items-center"> 
+            <div class="flex items-center">
+              <div>
+                Sections
+              
+              </div>
+
+              {#if  page.sections?.length}
+                <div class="ml-4 number-tag">
+                  { page.sections?.length || 0 }
+                </div>
+              {/if}
+            </div>
+
             {#if page.sections?.length > 1 && !isOrdering}
-              <div class="text-sm cursor-pointer" on:click={ () => isOrdering = true }>
-                Reorder Sections
+              <div class="text-sm cursor-pointer opacity-70" on:click={ () => isOrdering = true }>
+                Reorder
               </div>
             {/if}
+            
+            {#if !isOrdering}
+            <div>
+              <div 
+                class="w-full text-center cursor-pointer"
+                on:click={() => { page.sections = [...(page.sections || []), { columns: 1, items: [{ title: '', description: '' }] }] }}>
+                Add section
+              </div>
+            </div>
+            {/if}
+           
           </div>
         {/if}
 
@@ -470,17 +519,6 @@
             </div>
           {/if}
         {/if}
-
-        {#if !isOrdering}
-          {#if page._id}
-            <div 
-              class="p-4 w-full text-center cursor-pointer"
-              on:click={() => { page.sections = [...(page.sections || []), { columns: 1, items: [{ title: '', description: '' }] }] }}>
-              Add section
-            </div>
-          {/if}
-        {/if}
-
 
         <!-- <div class="_section">
           <div class="_title">Appearance</div> 
