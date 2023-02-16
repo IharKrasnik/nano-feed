@@ -206,7 +206,7 @@
 
       <div class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll" in:fly={{ x: 50, duration: 150, delay: 150 }}>
         <div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
-          <div class="flex items-center justify-between w-full py-4" class:justify-between={!$currentUser}>
+          <div class="flex items-center justify-between w-full py-4 pr-4" class:justify-between={!$currentUser}>
             <a on:click={() => isSignupFormShown = false }>
               <h2 class="font-bold flex items-center" style="font-family: Archivo; font-size: 20px;"> 
                 <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -255,7 +255,7 @@
         </div>
 
         {#if !$currentUser}
-          <div class="px-4 mt-8">
+          <div class="mt-8">
             Launch your landing page in seconds 👇
           </div>
         {/if}
