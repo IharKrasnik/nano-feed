@@ -448,7 +448,7 @@
                       {#if !page.streamSlug}
                       ⚡️ Embed Wall
                       {:else}
-                      ⚡️ Wall Embedded
+                      ⚡️ Submit Post
                       {/if}
                   </button>
                 </a>
