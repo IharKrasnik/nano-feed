@@ -187,9 +187,10 @@
   let isOrdering = false;
 
   let embedStream = async () => {
-    page = await put(`pages/${page._id}/embed-stream`);
+    const { streamSlug } = await put(`pages/${page._id}/embed-stream`);
+    page.streamSlug = streamSlug;
 
-    window.open(`${STREAM_URL}/${page.streamSlug}`, '_blank');
+    window.open(`${STREAM_URL}/${streamSlug}`, '_blank');
   }
 
 </script>
