@@ -112,7 +112,7 @@
 
     <div class="_root" >
       <div 
-        class="_content pb-16 pt-32 {(!page.streamSlug && !page.testimonials?.length) ? 'md:h-screen': ''}"
+        class="_content pb-16 pt-32 {(!page.testimonials?.length) ? 'md:h-screen': ''}"
         style="{!page.testimonials}"
         >
         <div 

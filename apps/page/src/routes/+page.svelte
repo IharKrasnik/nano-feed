@@ -431,6 +431,65 @@
           {/if}
         {/if}
 
+        <hr class="my-8 border-[#8B786D] opacity-30" />
+        
+        {#if page.slug}
+	
+          <div class="bg-white rounded-xl w-[426px] flex top-[0px] sticky z-30 w-full p-4 my-4 justify-between items-center" style="border: 1px #e0dede solid;"> 
+            <div class="flex items-center">
+              <div class="font-bold">
+                Sections 👇
+              </div>
+
+              {#if  page.sections?.length}
+                <div class="ml-4 number-tag">
+                  { page.sections?.length || 0 }
+                </div>
+              {/if}
+            </div>
+
+            {#if page.sections?.length > 1 && !isOrdering}
+              <div class="text-sm cursor-pointer opacity-70" on:click={ () => isOrdering = true }>
+                Reorder
+              </div>
+            {/if}
+            
+            {#if !isOrdering}
+            <div>
+              <button 
+                class="_secondary small w-full text-center cursor-pointer text-[#8B786D]"
+                on:click={() => { page.sections = [...(page.sections || []), { columns: 1, items: [{ title: '', description: '' }] }] }}>
+                Add section
+              </button>
+            </div>
+            {/if}
+           
+          </div>
+        {/if}
+        {#if page._id}
+          {#if !isOrdering}
+            <div>
+              {#each (page.sections || []) as section}
+                <EditSection bind:section={section} onRemove={() => {
+                  page.sections = page.sections.filter(s => s !== section);
+                }}></EditSection>
+              {/each}
+            </div>
+          {:else}
+            { addGuids(page.sections) && ''}
+            <div use:dndzone="{{ items: page.sections, flipDurationMs }}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
+              {#each (page.sections || []) as section(section.id)}
+                <div animate:flip="{{ duration: flipDurationMs }}">
+                  <EditSection isShort bind:section={section} onRemove={() => {
+                    page.sections = page.sections.filter(s => s !== section);
+                  }}></EditSection>
+                </div>
+              {/each}
+            </div>
+          {/if}
+        {/if}
+        <hr class="my-8 border-[#8B786D] opacity-30" />
+
         {#if page._id && !isOrdering}
           <div class="_section">
             <div class="flex justify-between items-center">
@@ -462,63 +521,6 @@
               </div> 
             {/if}
           </div>
-        {/if}
-        
-        {#if page.slug}
-          <div class="w-[426px] flex top-[0px] sticky z-30 w-full bg-[#fafafa] p-4 my-4 justify-between items-center"> 
-            <div class="flex items-center">
-              <div>
-                Sections
-              
-              </div>
-
-              {#if  page.sections?.length}
-                <div class="ml-4 number-tag">
-                  { page.sections?.length || 0 }
-                </div>
-              {/if}
-            </div>
-
-            {#if page.sections?.length > 1 && !isOrdering}
-              <div class="text-sm cursor-pointer opacity-70" on:click={ () => isOrdering = true }>
-                Reorder
-              </div>
-            {/if}
-            
-            {#if !isOrdering}
-            <div>
-              <div 
-                class="w-full text-center cursor-pointer text-[#8B786D]"
-                on:click={() => { page.sections = [...(page.sections || []), { columns: 1, items: [{ title: '', description: '' }] }] }}>
-                Add section
-              </div>
-            </div>
-            {/if}
-           
-          </div>
-        {/if}
-
-        {#if page._id}
-          {#if !isOrdering}
-            <div>
-              {#each (page.sections || []) as section}
-                <EditSection bind:section={section} onRemove={() => {
-                  page.sections = page.sections.filter(s => s !== section);
-                }}></EditSection>
-              {/each}
-            </div>
-          {:else}
-            { addGuids(page.sections) && ''}
-            <div use:dndzone="{{ items: page.sections, flipDurationMs }}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
-              {#each (page.sections || []) as section(section.id)}
-                <div animate:flip="{{ duration: flipDurationMs }}">
-                  <EditSection isShort bind:section={section} onRemove={() => {
-                    page.sections = page.sections.filter(s => s !== section);
-                  }}></EditSection>
-                </div>
-              {/each}
-            </div>
-          {/if}
         {/if}
 
         <!-- <div class="_section">
@@ -564,7 +566,10 @@
           </div>
           {/if}
         {/if}
+
+        
       </div>
+
     </div>
       
     {#if isSubmissionsOpen || isMetricsOpen}
