@@ -431,14 +431,22 @@
           {/if}
         {/if}
 
-        <hr class="my-8 border-[#8B786D] opacity-30" />
         
         {#if page.slug}
+  
+          <hr class="my-8 border-[#8B786D] opacity-30" />
 	
           <div class="bg-white rounded-xl w-[426px] flex top-[0px] sticky z-30 w-full p-4 my-4 justify-between items-center" style="border: 1px #e0dede solid;"> 
             <div class="flex items-center">
               <div class="font-bold">
-                Sections 👇
+                🧱 Sections
+
+
+              {#if page.sections?.length > 1 && !isOrdering}
+                <div class="ml-5 font-normal text-sm cursor-pointer opacity-70" on:click={ () => isOrdering = true }>
+                  Reorder
+                </div>
+              {/if}   
               </div>
 
               {#if  page.sections?.length}
@@ -448,11 +456,6 @@
               {/if}
             </div>
 
-            {#if page.sections?.length > 1 && !isOrdering}
-              <div class="text-sm cursor-pointer opacity-70" on:click={ () => isOrdering = true }>
-                Reorder
-              </div>
-            {/if}
             
             {#if !isOrdering}
             <div>
@@ -534,7 +537,7 @@
             ✅ Save Sections Order
           </button>
         {:else}
-          <div class="flex items-center w-full justify-between mt-4 mb-32">
+          <div class="flex items-center w-full justify-between mt-8 mb-32">
             <button
               class="relative _primary {isLoading ? 'loading': '' }" 
               on:click="{publishPage}">
@@ -609,6 +612,10 @@
           {/if}
         {/if}
       </div>
+    {/if}
+
+    {#if page._id && !isOrdering}
+      <hr class="my-8 border-[#8B786D] opacity-30" />
     {/if}
 
     {#if page.name || page.title }

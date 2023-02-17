@@ -36,9 +36,9 @@
     </div>
   </div>
 {:else}
-  <div class="_section" style="padding-top: 0px;">
-    <div class="sticky z-10 bg-white top-[55px]">
-      <div class="flex justify-between items-center pt-4">
+  <div class="_section rounded-xl" style="padding: 0px;">
+    <div class="sticky z-10 bg-white top-[70px] rounded-xl">
+      <div class="p-4 pb-0 flex justify-between items-center">
         <div class="_title" style="margin: 0;">
           Section
         </div> 
@@ -94,7 +94,7 @@
           </div>
         {/if}
 
-        <div class="flex items-center">
+        <div class="px-4 flex items-center">
           <div 
             class="cursor-pointer bg-[#fafafa] h-[37px] flex justify-center items-center rounded-xl mr-2"
             class:aspect-square={section.columns !== 1}
@@ -134,43 +134,46 @@
           </div>
         </div>
 
-        <hr class="my-4 border-[#8B786D] opacity-30" />
       </div>
+      <hr class="mt-4 border-[#8B786D] opacity-30" />
     </div>
 
+
     {#each (section.items || []) as item}
-      <div
-        class="relative flex justify-between items-center mb-4"
-      >
-        <div 
-          class="min-w-[37px] min-h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
-          on:click={() => { isEmojiPickerShown = item; } }
-          >
-          { item.emoji || '✨' }
+      <div class="p-4">
+        <div
+          class="relative flex justify-between items-center mb-4"
+        >
+          <div 
+            class="min-w-[37px] min-h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+            on:click={() => { isEmojiPickerShown = item; } }
+            >
+            { item.emoji || '✨' }
+          </div>
+          <div class="text-sm cursor-pointer text-[#8B786D]" on:click={() => removeItem(item)}>Remove Item</div>
         </div>
-        <div class="text-sm cursor-pointer text-[#8B786D]" on:click={() => removeItem(item)}>Remove Item</div>
+
+        <input class="mb-4 w-full" bind:value={item.title} placeholder="Title"/>
+        
+        <textarea 
+          class="w-full mb-4"
+          bind:value={item.description}
+          placeholder="Description"
+          rows="3"
+        />
+        
+        <div class="relative flex justify-between items-center"
+        > 
+          <FileInput 
+            class="w-full"
+            placeholder="Insert image/video url or paste from clipboard"
+            on:fileUploaded={(evt) => { item.imageUrl = evt.detail.url; }}
+            bind:url={item.imageUrl}>
+          </FileInput>      
+        </div>  
       </div>
 
-      <input class="mb-4 w-full" bind:value={item.title} placeholder="Title"/>
-      
-      <textarea 
-        class="w-full mb-4"
-        bind:value={item.description}
-        placeholder="Description"
-        rows="3"
-      />
-      
-      <div class="relative flex justify-between items-center"
-      > 
-        <FileInput 
-          class="w-full"
-          placeholder="Insert image/video url or paste from clipboard"
-          on:fileUploaded={(evt) => { item.imageUrl = evt.detail.url; }}
-          bind:url={item.imageUrl}>
-        </FileInput>      
-      </div>  
-
-      <hr class="my-4 border-[#8B786D] opacity-30" />
+      <hr class=" border-[#8B786D] opacity-30" />
 
     {/each}
 
