@@ -148,7 +148,7 @@
 
           {#if page.demoUrl}
             <div class="w-full md:max-w-[600px] mt-16 md:mt-0 md:ml-8">
-              <RenderUrl  url={page.demoUrl} />
+              <RenderUrl url={page.demoUrl} imgClass="m-auto" />
             </div>
           {/if}
         </div>
