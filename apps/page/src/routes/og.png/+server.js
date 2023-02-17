@@ -17,9 +17,23 @@ function unEntity(str) {
 export const GET = async ({ url }) => {
 	const pageSlug = url.searchParams.get('pageSlug') ?? undefined;
 
+	const name = url.searchParams.get('name') ?? undefined;
+	const title = url.searchParams.get('title') ?? undefined;
+	const description = url.searchParams.get('description') ?? undefined;
+
 	let componentResult;
 
-	let page = await get(`pages/${pageSlug}`);
+	let page;
+
+	if (pageSlug) {
+		page = await get(`pages/${pageSlug}`);
+	} else {
+		page = {
+			name,
+			title,
+			description
+		};
+	}
 
 	componentResult = OGImage.render({
 		page

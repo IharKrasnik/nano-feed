@@ -11,13 +11,19 @@
   <div class="og">
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
       <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-        <div class="_title" style="font-size: 64px; font-weight: bold; opacity: .8; text-align: center;">
+        <div class="_title" style="font-size: 32px; font-weight: bold; opacity: .8; text-align: center;">
          {page.name}
         </div>
 
-        <div class="_title" style="font-size: 48px; font-weight: bold; opacity: .8; text-align: center; margin-top: 32px; max-width: 80%;">
+        <div class="_title" style="font-size: 64px; font-weight: bold; opacity: .8; text-align: center; margin-top: 32px; max-width: 80%;">
           {page.title}
         </div>
+
+        {#if page.description}
+          <div class="_title" style="font-size: 32px; opacity: .8; text-align: center; margin-top: 32px; max-width: 80%;">
+            {page.description}
+          </div>
+        {/if}
       </div>
     </div>
 
