@@ -630,7 +630,7 @@
             </div>
             
             <div class="_published-label flex items-center mt-4">
-              <a href="{PAGE_URL}/p/{page.slug}" style="color: #5375F0;" target="_blank" rel="noreferrer">{PAGE_URL.replace('https://', '')}/p/{page.slug}</a>
+              <a href="{PAGE_URL}/{page.slug}" style="color: #5375F0;" target="_blank" rel="noreferrer">{PAGE_URL.replace('https://', '')}/p/{page.slug}</a>
             
               <button
                 class="relative _primary flex justify-center w-full {isLoading ? 'loading': '' }" 
