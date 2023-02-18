@@ -1,6 +1,5 @@
 <script>
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
-
 	import { fly } from 'svelte/transition';
 	import axios from 'axios';
 	import { onMount } from 'svelte';

@@ -100,8 +100,8 @@
 	}
 </script>
 
-<div class="w-full text-center mt-16 opacity-80">Feed Preview</div>
-<div class="w-full text-center text-sm mb-4 opacity-60">
+<div class="w-full text-center mt-16 opacity-100">Feed Preview</div>
+<div class="w-full text-center text-sm mb-4 opacity-80">
 	Here's how Momentum Feed will look like on your site.
 </div>
 

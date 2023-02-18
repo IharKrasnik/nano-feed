@@ -83,8 +83,11 @@ a.button {
 
 button.small,
 a.button.small {
-	padding: 4px 10px;
-	background: rgba(255, 255, 255, 0.1);
+	padding: 8px 10px;
+	/* background: #18181b; */
+	background: #111111;
+	border: 1px rgba(255, 255, 255, 0.1) solid;
+	border-radius: 4px;
 }
 
 button.tab,
@@ -108,7 +111,8 @@ a.button:hover:not([disabled]) {
 
 button.small:hover,
 a.button.small:hover {
-	background: rgba(255, 255, 255, 0.3);
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px rgba(255, 255, 255, 0.3) solid;
 }
 
 button.danger,

@@ -1,5 +1,5 @@
 <script>
-  import { fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import portal from 'lib/use/portal';
 	import clickOutside from 'lib/use/clickOutside';
 
@@ -9,13 +9,13 @@
 	export let maxWidth = 1080;
 	export let zIndex = 2000;
 	export let onClosed = () => {};
-	
-  const closeModal = () => {
+
+	const closeModal = () => {
 		isShown = false;
 		onClosed();
 	};
 
-  const handleKeydown = (evt) => {
+	const handleKeydown = (evt) => {
 		if (isShown && evt.key === 'Escape') {
 			closeModal();
 		}
@@ -27,8 +27,8 @@
 {#if isShown}
 	<div use:portal={'#modal-portal'}>
 		<div
-      in:fly={{  y: 50, duration: 150, delay: 150 }}
-			class="_modal inset-0 overflow-y-hidden rounded-2xl max-h-[100%]"
+			in:fly={{ y: 50, duration: 150, delay: 150 }}
+			class="_modal inset-0 overflow-y-hidden rounded-2xl max-h-[100%] my-8"
 			aria-labelledby="modal-title"
 			role="dialog"
 			aria-modal="true"
@@ -42,12 +42,9 @@
 
 				<div
 					class="modal-content max-h-full overflow-y-scroll absolute inline-block align-bottom rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
-          
-          use:clickOutside on:clickOutside={closeModal}
-				
-        	style="{maxWidth
-						? `max-width: ${maxWidth}px;`
-						: ''}"
+					use:clickOutside
+					on:clickOutside={closeModal}
+					style={maxWidth ? `max-width: ${maxWidth}px;` : ''}
 				>
 					{#if isClosable}
 						<!-- <div class="_cross" on:click={closeModal}>

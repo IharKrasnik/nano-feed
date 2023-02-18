@@ -17,6 +17,7 @@
 	import CadenceGrid from '$lib/components/CadenceGrid.svelte';
 	import FollowButton from '$lib/components/FollowButton.svelte';
 	import InfiniteScroll from 'lib/components/InfiniteScroll.svelte';
+	import WaveIndicator from '$lib/components/WaveIndicator.svelte';
 
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import allProjects from '$lib/stores/allProjects';
@@ -634,6 +635,8 @@
 				</a>
 			</div>
 		{/if}
+
+		<WaveIndicator bind:project={selectedProject} />
 	</div>
 
 	<div class="mt-8">
