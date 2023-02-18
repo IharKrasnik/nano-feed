@@ -10,7 +10,7 @@
 	let feed = [];
 
 	import Modal from 'lib/components/Modal.svelte';
-	import ShareStream from '$lib/components/ShareStream.svelte';
+	import EmbedStream from '$lib/components/EmbedStream.svelte';
 
 	import FeedItem from '$lib/components/FeedItem.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
@@ -112,6 +112,10 @@
 					}
 
 					setProject(project, forceRefresh);
+
+					if ($page.url.searchParams.get('embed')) {
+						embed();
+					}
 				} else {
 					await updateProjects({});
 
@@ -236,10 +240,10 @@
 
 	let search = () => {};
 
-	let isShare = false;
+	let isEmbed = false;
 
-	let share = () => {
-		isShare = true;
+	let embed = () => {
+		isEmbed = true;
 	};
 
 	let loadMore = async () => {
@@ -281,10 +285,10 @@
 
 <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@spookzapp/video/7182249917174353158" data-video-id="7182249917174353158" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@spookzapp" href="https://www.tiktok.com/@spookzapp?refer=embed">@spookzapp</a> Wow 70% that’s freaking high🤯 <a title="spookz" target="_blank" href="https://www.tiktok.com/tag/spookz?refer=embed">#spookz</a> <a title="spookzstreaming" target="_blank" href="https://www.tiktok.com/tag/spookzstreaming?refer=embed">#spookzstreaming</a> <a title="getspookz" target="_blank" href="https://www.tiktok.com/tag/getspookz?refer=embed">#getspookz</a> <a title="fy" target="_blank" href="https://www.tiktok.com/tag/fy?refer=embed">#fy</a> <a title="foryou" target="_blank" href="https://www.tiktok.com/tag/foryou?refer=embed">#foryou</a> <a title="fyp" target="_blank" href="https://www.tiktok.com/tag/fyp?refer=embed">#fyp</a> <a title="twitch" target="_blank" href="https://www.tiktok.com/tag/twitch?refer=embed">#twitch</a> <a title="streaming" target="_blank" href="https://www.tiktok.com/tag/streaming?refer=embed">#streaming</a> <a title="spookzstreaming" target="_blank" href="https://www.tiktok.com/tag/spookzstreaming?refer=embed">#spookzstreaming</a> <a title="gamingontiktok" target="_blank" href="https://www.tiktok.com/tag/gamingontiktok?refer=embed">#gamingontiktok</a> <a title="smalltwitchstreamer" target="_blank" href="https://www.tiktok.com/tag/smalltwitchstreamer?refer=embed">#smalltwitchstreamer</a> <a title="twitchcommunitygamer" target="_blank" href="https://www.tiktok.com/tag/twitchcommunitygamer?refer=embed">#twitchcommunitygamer</a> <a target="_blank" title="♬ She Share Story (for Vlog) - 山口夕依" href="https://www.tiktok.com/music/She-Share-Story-for-Vlog-6722656094272883458?refer=embed">♬ She Share Story (for Vlog) - 山口夕依</a> </section> </blockquote> -->
 
-{#if isShare}
-	<Modal isShown onClosed={() => (isShare = false)}>
-		<div class="p-8 min-h-[300px] max-w-[600px] mx-auto">
-			<ShareStream project={selectedProject} {creator} />
+{#if isEmbed}
+	<Modal isShown onClosed={() => (isEmbed = false)} maxWidth={800}>
+		<div class="p-8 min-h-[300px] max-w-[800px] mx-auto">
+			<EmbedStream project={selectedProject} {creator} />
 		</div>
 	</Modal>
 {/if}
@@ -303,10 +307,7 @@
 					{#if $currentUser}
 						<FollowButton {creator} project={selectedProject} isShort class="small" />
 					{:else}
-						<a
-							href="{GOOGLE_LOGIN_URL}"
-							style="font-family: Montserrat; font-weight: bold;"
-						>
+						<a href={GOOGLE_LOGIN_URL} style="font-family: Montserrat; font-weight: bold;">
 							<button class="flex items-center justify-center small">
 								<svg
 									class="mr-4"
@@ -548,7 +549,7 @@
 			{#if $currentUser}{:else}
 				<a
 					class="mb-16"
-					href="{GOOGLE_LOGIN_URL}"
+					href={GOOGLE_LOGIN_URL}
 					style="font-family: Montserrat; font-weight: bold;"
 				>
 					<button class="flex items-center justify-center w-full mb-8">
@@ -598,9 +599,10 @@
 			</div> -->
 
 		{#if selectedProject || creator}
-			<StreamCard stream={creator || selectedProject} creators={!creator && $creators} />
+			<StreamCard isEditable stream={creator || selectedProject} creators={!creator && $creators} />
 
-			<FollowButton project={!creator && selectedProject} {creator} />
+			<FollowButton class="w-full mb-8" project={!creator && selectedProject} {creator} />
+
 			{#if creator && selectedProject.slug}
 				<div class="mt-16">
 					<StreamCard stream={selectedProject} />
@@ -609,33 +611,11 @@
 				</div>
 			{/if}
 
-			{#if selectedProject?.slug}
-				<div class="cursor-pointer w-full flex justify-center my-8">
-					<a class="flex items-center justify-center" on:click={share}>
-						<svg
-							style="fill:white"
-							class="w-[25px] h-[25px]"
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 50 50"
-							enable-background="new 0 0 50 50"
-						>
-							<path d="M30.3 13.7L25 8.4l-5.3 5.3-1.4-1.4L25 5.6l6.7 6.7z" /><path
-								d="M24 7h2v21h-2z"
-							/><path
-								d="M35 40H15c-1.7 0-3-1.3-3-3V19c0-1.7 1.3-3 3-3h7v2h-7c-.6 0-1 .4-1 1v18c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V19c0-.6-.4-1-1-1h-7v-2h7c1.7 0 3 1.3 3 3v18c0 1.7-1.3 3-3 3z"
-							/>
-						</svg>
-
-						Share
-					</a>
-				</div>
-			{/if}
-
-			{#if $currentUser && (selectedProject?.slug || creator)}
+			<!-- {#if $currentUser && (selectedProject?.slug || creator)}
 				{#if $currentUser.isAdmin || (selectedProject && selectedProject.creator?._id === $currentUser._id) || (creator && creator._id === $currentUser._id)}
 					<a class="w-full" href="/{creator ? `@${creator.username}` : selectedProject.slug}/edit">
-						<button class="w-full">
-							✨ Edit
+						<button class="my-2 small w-full">
+							Edit
 							{#if creator}
 								@{creator.fullName}
 							{:else}
@@ -644,7 +624,15 @@
 						</button>
 					</a>
 				{/if}
-			{/if}
+			{/if} -->
+		{/if}
+
+		{#if $currentUser && ($currentUser.isAdmin || selectedProject?.creator?._id === $currentUser._id)}
+			<div class="cursor-pointer w-full flex justify-center my-2">
+				<a class="button w-full small flex items-center justify-center" on:click={embed}>
+					✨ Embed Stream
+				</a>
+			</div>
 		{/if}
 	</div>
 

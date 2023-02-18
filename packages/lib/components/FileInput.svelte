@@ -39,19 +39,11 @@
 		return uploadFile(e.target.files[0]);
 	};
 
-	let handleFilesSelect = () => {
-		debugger;
-	}
+	let handleFilesSelect = () => {};
 </script>
 
 <!-- <div class="w-full">
 	<Dropzone on:drop={handleFilesSelect}></Dropzone>
 </div> -->
 
-<input
-	type="text"
-	bind:value={url}
-	placeholder={placeholder}
-	on:paste={pasteImage}
-	class="{clazz}"
-/>
+<input type="text" bind:value={url} {placeholder} on:paste={pasteImage} class={clazz} />

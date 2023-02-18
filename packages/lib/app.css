@@ -41,12 +41,19 @@ label {
 }
 
 input[type='text'],
-input[type='datetime-local'] {
+input[type='datetime-local'],
+input[type='url'],
+input[type='number'] {
 	width: 100%;
 	background: none;
 	padding: 16px;
 	border: 1px rgba(255, 255, 255, 0.3) solid;
 	outline: none;
+}
+
+input.small {
+	padding: 8px;
+	border-radius: 4px;
 }
 
 select.small {
@@ -69,7 +76,6 @@ select {
 
 button,
 a.button {
-	cursor: pointer;
 	transition: all linear 0.1s;
 	padding: 16px 32px;
 	border: 1px rgba(255, 255, 255, 0.3) solid;
@@ -94,8 +100,9 @@ a.button.tab.selected {
 	/* background-color: rgba(255, 255, 255, 0.3); */
 }
 
-button:hover,
-a.button:hover {
+button:hover:not([disabled]),
+a.button:hover:not([disabled]) {
+	cursor: pointer;
 	background: rgba(255, 255, 255, 0.1);
 }
 

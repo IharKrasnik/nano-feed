@@ -40,7 +40,6 @@ socket.on('connect', () => {
 		if (user) {
 			if (user._id !== currentUserId) {
 				currentUserId = user._id;
-
 				emit('subscribe', `user-${user._id}`);
 
 				if (currentUserId && currentUserId !== user._id) {

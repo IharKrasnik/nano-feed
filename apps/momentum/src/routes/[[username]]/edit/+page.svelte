@@ -5,7 +5,7 @@
 
 	import Loader from 'lib/components/Loader.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
-	import FileInput from '$lib/components/FileInput.svelte';
+	import FileInput from 'lib/components/FileInput.svelte';
 
 	import projects from '$lib/stores/projects';
 	import allProjects from '$lib/stores/allProjects';
@@ -168,6 +168,7 @@
 			<button class="p-4 mt-8" type="submit" on:click={updateStream}>
 				Update {creator ? `@${creator.fullName}` : `#${project.title}`}
 			</button>
+			<a class="ml-8" href="/{creator ? '@' + creator.username : project.slug}">Cancel</a>
 		</form>
 	{/if}
 

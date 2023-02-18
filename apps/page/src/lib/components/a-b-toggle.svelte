@@ -2,7 +2,6 @@
   let option = 'a';
   
   const setOption = (newOption) => {
-    debugger;
     option = newOption;
   }
 </script>
