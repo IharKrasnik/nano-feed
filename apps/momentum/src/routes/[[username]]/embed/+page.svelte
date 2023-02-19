@@ -110,7 +110,7 @@
 			{/if}
 
 			<a
-				href={STREAM_URL}
+				href="https://mmntm.build"
 				target="_blank"
 				class:text-black={theme === 'light'}
 				class:text-white={theme === 'dark'}
