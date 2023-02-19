@@ -144,7 +144,7 @@
 
 		metrics = await get(`waveProjects/page.mmntm.build/stats`, {
 			timeframe: '7_days',
-			url: `${PAGE_URL}/p/${page.slug}`,
+			url: `${PAGE_URL}/${page.slug}`,
 			timezone
 		});
 	};
