@@ -24,7 +24,7 @@
 	</div>
 {/if}
 
-{#if currentUser}
+{#if $currentUser && !$page.params.pageSlug}
 	<Dock activeIcon="page" />
 {/if}
 
