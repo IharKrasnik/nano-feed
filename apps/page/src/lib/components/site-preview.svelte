@@ -1,327 +1,362 @@
 <script>
-  import SvelteMarkdown from 'svelte-markdown';
+	import SvelteMarkdown from 'svelte-markdown';
 
-  import { post } from 'lib/api';
-  import { fly, fade, slide } from 'svelte/transition';
-  import { onMount } from 'svelte';
+	import { post } from 'lib/api';
+	import { fly, fade, slide } from 'svelte/transition';
+	import { onMount } from 'svelte';
 
-  import RenderUrl from '$lib/components/RenderUrl.svelte';
-  import RenderSection from '$lib/components/render/Section.svelte';
+	import RenderUrl from '$lib/components/RenderUrl.svelte';
+	import RenderSection from '$lib/components/render/Section.svelte';
 
-  import TwitterIcon from '$lib/icons/Twitter.svelte';
-  import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
-  import iframeResize from 'iframe-resizer/js/iframeResizer';
+	import TwitterIcon from '$lib/icons/Twitter.svelte';
+	import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
+	import iframeResize from 'iframe-resizer/js/iframeResizer';
 
-  import { STREAM_URL, PAGE_URL } from 'lib/env';
+	import { STREAM_URL, PAGE_URL } from 'lib/env';
 
-  export let page = {
-    name:  'momentum',
-    slug: 'momentum',
-    title: 'Build a better product in public and grow your audience',
-    subtitle: 'Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback.',
-    callToAction: 'Join Waitlist',
-    bgColor: '#D98324'
-  };
+	export let page = {
+		name: 'momentum',
+		slug: 'momentum',
+		title: 'Build a better product in public and grow your audience',
+		subtitle:
+			'Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback.',
+		callToAction: 'Join Waitlist',
+		bgColor: '#D98324'
+	};
 
-  let grid = {
-    title: '',
-    description: '',
-    columns: '',
-   
-    items: [{
-      title: '',
-      description: '',
-      icon: '',
-      imageUrl: '',
-    }]
-  }
+	let grid = {
+		title: '',
+		description: '',
+		columns: '',
 
-  export let noStickyHeader = false;
+		items: [
+			{
+				title: '',
+				description: '',
+				icon: '',
+				imageUrl: ''
+			}
+		]
+	};
 
-  let isMounted = false;
-  
-  onMount(() => {
-    isMounted = true;
-  });
+	export let noStickyHeader = false;
 
-  let email;
-  let isSubmitted = false;
+	let isMounted = false;
 
-  let submitEmail = async () => {
-    await post(`pages/${page.slug}/submissions`, { email });
-    isSubmitted = true;
+	onMount(() => {
+		isMounted = true;
+	});
 
-    if (page.actionUrl) {
-      setTimeout(() => {
-        window.location.href = page.actionUrl;
-      }, 2000);
-    }
-  }
+	let email;
+	let isSubmitted = false;
 
-  let inputEl;
+	let submitEmail = async () => {
+		await post(`pages/${page.slug}/submissions`, { email });
+		isSubmitted = true;
 
-  const onButtonClick = () => {
-    inputEl.focus();
-  }
+		if (page.actionUrl) {
+			setTimeout(() => {
+				window.location.href = page.actionUrl;
+			}, 2000);
+		}
+	};
 
-  let resize = () => {
-    iframeResize({ log: true }, '#iframeResize');
-  }
+	let inputEl;
 
-  let scrollY;
+	const onButtonClick = () => {
+		inputEl.focus();
+	};
 
-  let COLUMNS = 1;
+	let resize = () => {
+		iframeResize({ log: true }, '#iframeResize');
+	};
+
+	let scrollY;
+
+	let COLUMNS = 1;
 </script>
 
 <svelte:window bind:scrollY />
-<div class="md:grid-cols-1 md:grid-cols-2 md:grid-cols-3 md:grid-cols-4 md:grid-cols-5 md:grid-cols-3"></div>
+<div
+	class="md:grid-cols-1 md:grid-cols-2 md:grid-cols-3 md:grid-cols-4 md:grid-cols-5 md:grid-cols-3"
+/>
 {#if !noStickyHeader && scrollY > 300}
-  <div 
-    class="fixed top-0 z-30 bg-white w-full"
-    in:fly={{ y: -150, duration: 150, delay: 150 }}
-    out:fade={{ duration: 150, delay: 150 }}
-  >
-  <div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 md:px-0">
-    <div class="flex items-center shrink-0">
-      <div class="text-lg font-bold">{page.logo || ''} {page.name}</div>
+	<div
+		class="fixed top-0 z-30 bg-white w-full"
+		in:fly={{ y: -150, duration: 150, delay: 150 }}
+		out:fade={{ duration: 150, delay: 150 }}
+	>
+		<div
+			class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 md:px-0"
+		>
+			<div class="flex items-center shrink-0">
+				<div class="text-lg font-bold">{page.logo || ''} {page.name}</div>
 
-      <div class="ml-4 opacity-70 hidden md:block">
-      &nbsp; {page.title}
-      </div>
-    </div>
-    
-    <div class="shrink-0">
-      <button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
-    </div>
-  </div>
+				<div class="ml-4 opacity-70 hidden md:block">
+					&nbsp; {page.title}
+				</div>
+			</div>
 
-  <hr class="border-[#8B786D] opacity-30 w-full">
-  
-</div>
+			<div class="shrink-0">
+				<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+			</div>
+		</div>
+
+		<hr class="border-[#8B786D] opacity-30 w-full" />
+	</div>
 {/if}
 
 {#if isMounted}
-  <div class="sticky bg-white z-20 w-full p-8 md:p-0" in:fade={{ duration: 150 }}>
-    <div class="_header flex justify-between items-center">
-      <div class="_logo">
-        {page.logo || ''} {page.name}
-      </div>
+	<div class="sticky bg-white z-20 w-full p-8 md:p-0" in:fade={{ duration: 150 }}>
+		<div class="_header flex justify-between items-center">
+			<div class="_logo">
+				{page.logo || ''}
+				{page.name}
+			</div>
 
-      <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
-    </div>
+			<button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+		</div>
 
-    <div class="_root" >
-      <div 
-        class="_content pb-16 pt-32 {(!page.testimonials?.length) ? 'md:h-screen': ''}"
-        style="{!page.testimonials}"
-        >
-        <div 
-          class="flex h-full {page.demoUrl ? 'flex-col sm:flex-row justify-between items-center' : 'text-center items-center'}"
-          >
-          <div class="{page.demoUrl ? 'text-center md:text-left max-w-[500px] items-center' : 'flex flex-col items-center max-w-[800px] mx-auto'}">
-            <h1 class="_title" style="color: {page.bgColor}">{page.title}</h1> 
-            
-            {#if page.subtitle}
-              <h2 class="_subtitle">{page.subtitle}</h2>
-            {/if}
-            
-            <div class="_input_container flex items-center md:w-[392px] w-full">
-              <form class="w-full" on:submit|preventDefault="{submitEmail}">
+		<div class="_root">
+			<div
+				class="_content pb-16 pt-32 {!page.testimonials?.length ? 'md:h-screen' : ''}"
+				style={!page.testimonials}
+			>
+				<div
+					class="flex h-full {page.demoUrl
+						? 'flex-col sm:flex-row justify-between items-center'
+						: 'text-center items-center'}"
+				>
+					<div
+						class={page.demoUrl
+							? 'text-center md:text-left max-w-[500px] items-center'
+							: 'flex flex-col items-center max-w-[800px] mx-auto'}
+					>
+						<h1 class="_title" style="color: {page.bgColor}">{page.title}</h1>
 
-                {#if !isSubmitted}
-                  <input class="_input w-full" placeholder="Your Email" type="email" required bind:this={inputEl} bind:value={email} disabled={isSubmitted}/>
-                  <button type="submit" class="_input_button">{page.callToAction}</button>
-                {:else}
-                  <div style="color: #000">
-                    💥 Thank you!
-                  </div>
+						{#if page.subtitle}
+							<h2 class="_subtitle">{page.subtitle}</h2>
+						{/if}
 
-                  {#if page.actionUrl}
-                    <div class="mt-8 opacity-70">
-                      Redirecting...
-                    </div>
-                  {/if}
-                {/if}
-              </form>
-            </div>
-          </div>
+						<div class="_input_container flex items-center md:w-[392px] w-full">
+							<form class="w-full" on:submit|preventDefault={submitEmail}>
+								{#if !isSubmitted}
+									<input
+										class="_input w-full"
+										placeholder="Your Email"
+										type="email"
+										required
+										bind:this={inputEl}
+										bind:value={email}
+										disabled={isSubmitted}
+									/>
+									<button type="submit" class="_input_button">{page.callToAction}</button>
+								{:else}
+									<div style="color: #000">💥 Thank you!</div>
 
-          {#if page.demoUrl}
-            <div class="w-full md:max-w-[600px] mt-16 md:mt-0 md:ml-8">
-              <RenderUrl url={page.demoUrl} imgClass="m-auto" />
-            </div>
-          {/if}
-        </div>
+									{#if page.actionUrl}
+										<div class="mt-8 opacity-70">Redirecting...</div>
+									{/if}
+								{/if}
+							</form>
+						</div>
+					</div>
 
-        {#if isMounted && page.testimonials?.length}
-          <div class="w-full flex flex-col md:flex-row justify-center mt-16 md:mt-32">
-            {#each page.testimonials as testimonial, i}
-              <div class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4 mb-4 md:mb-0" in:fly={{ x: -50, y:-50, duration: 150, delay: 150 * (i + 1) }}>
-                <div class="flex flex-col md:flex-row">
-                  {#if testimonial.avatarUrl}
-                    <div class="mr-4 mb-4 md:mb-0">
-                      <img src={testimonial.avatarUrl} class="max-w-[50px] aspect-square rounded-full" />
-                    </div>
-                  {/if}
-                  <div>
-                    <SvelteMarkdown source={testimonial.name}></SvelteMarkdown>
-                    <div class="mt-1 opacity-80">
-                      <SvelteMarkdown source={testimonial.comment}></SvelteMarkdown>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {/each}
-          </div>
-        {/if}
-      </div>
+					{#if page.demoUrl}
+						<div class="w-full md:max-w-[600px] mt-16 md:mt-0 md:ml-8">
+							<RenderUrl url={page.demoUrl} imgClass="m-auto" />
+						</div>
+					{/if}
+				</div>
 
-      {#if page.sections?.length}
-        {#each page.sections as section}
-          <RenderSection bind:section={section}></RenderSection>
-        {/each}
-      {/if}
-    </div>
-  </div>
+				{#if isMounted && page.testimonials?.length}
+					<div class="w-full flex flex-col md:flex-row justify-center mt-16 md:mt-32">
+						{#each page.testimonials as testimonial, i}
+							<div
+								class="p-4 rounded-2xl bg-[#fafafa] w-full md:max-w-[350px] mr-4 mb-4 md:mb-0"
+								in:fly={{ x: -50, y: -50, duration: 150, delay: 150 * (i + 1) }}
+							>
+								<div class="flex flex-col md:flex-row">
+									{#if testimonial.avatarUrl}
+										<div class="mr-4 mb-4 md:mb-0">
+											<img
+												src={testimonial.avatarUrl}
+												class="max-w-[50px] aspect-square rounded-full"
+											/>
+										</div>
+									{/if}
+									<div>
+										<SvelteMarkdown source={testimonial.name} />
+										<div class="mt-1 opacity-80">
+											<SvelteMarkdown source={testimonial.comment} />
+										</div>
+									</div>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</div>
+
+			{#if page.sections?.length}
+				<div class={page.streamSlug ? '' : 'pb-[200px]'}>
+					{#each page.sections as section}
+						<RenderSection bind:section />
+					{/each}
+				</div>
+			{/if}
+		</div>
+	</div>
 {/if}
 
 {#if page.streamSlug}
-  <div class="sticky z-20 py-4 md:py-16 bg-white">
-    <h1 class="w-full text-center font-bold text-2xl opacity-70" style="font-family: Inter;">We Build In Public</h1>
-    <h1 class="w-full text-center text-lg opacity-70" style="font-family: Inter;">Follow our journey in social network and blogs.</h1>
-    {#if page.links}
-      <div class="flex justify-center w-full">
-        {#if page.links.twitter}
-        <div class="w-[35px] h-[35px] m-2">
-          <a href="{page.links.twitter}" class="scale-110" target="_blank">
-            <TwitterIcon></TwitterIcon>
-          </a>
-        </div>
-        {/if}
-        {#if page.links.linkedin}
-        <div class="w-[35px] h-[35px] m-2">
-          <a href="{page.links.linkedin}" target="_blank">
-            <LinkedInIcon></LinkedInIcon>
-          </a>
-        </div>
-        {/if}
-      </div>
-    {/if}
-  </div>
+	<div>
+		<div class="sticky z-20 py-4 md:py-16 bg-white">
+			<h1 class="w-full text-center font-bold text-2xl opacity-70" style="font-family: Inter;">
+				We Build In Public
+			</h1>
+			<h1 class="w-full text-center text-lg opacity-70" style="font-family: Inter;">
+				Follow our journey in social network and blogs.
+			</h1>
+			{#if page.links}
+				<div class="flex justify-center w-full">
+					{#if page.links.twitter}
+						<div class="w-[35px] h-[35px] m-2">
+							<a href={page.links.twitter} class="scale-110" target="_blank">
+								<TwitterIcon />
+							</a>
+						</div>
+					{/if}
+					{#if page.links.linkedin}
+						<div class="w-[35px] h-[35px] m-2">
+							<a href={page.links.linkedin} target="_blank">
+								<LinkedInIcon />
+							</a>
+						</div>
+					{/if}
+				</div>
+			{/if}
+		</div>
 
-  <iframe id="iframeResize" on:load={resize} class="w-full sticky z-20 bg-white" src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&limit=15&isViewAll=true"></iframe>
+		<iframe
+			id="iframeResize"
+			on:load={resize}
+			class="w-full sticky z-20 pb-[200px] bg-white"
+			src="{STREAM_URL}/{page.streamSlug}/embed?theme=light&isHorizontal=true&limit=15&isViewAll=true"
+		/>
+	</div>
 {/if}
 
 {#if page.streamSlug || page.sections?.length}
-  <!-- <div class="h-screen sticky"></div> -->
+	<!-- <div class="h-screen sticky"></div> -->
 
-  <div class="w-full] text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4">
-    <div class="mx-auto max-w-[600px]">
-      <div class="text-lg my-4">{page.logo||''} {page.name}</div>
-      <div class="text-3xl font-bold mb-8">
-        {page.title}
-      </div>
-    </div>
+	<div
+		class="w-full] text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4"
+	>
+		<div class="mx-auto max-w-[600px]">
+			<div class="text-lg my-4">{page.logo || ''} {page.name}</div>
+			<div class="text-3xl font-bold mb-8">
+				{page.title}
+			</div>
+		</div>
 
-    <div class="_input_container flex items-center mx-auto w-full md:w-[392px]">
-      <form class="w-full" on:submit|preventDefault="{submitEmail}">
+		<div class="_input_container flex items-center mx-auto w-full md:w-[392px]">
+			<form class="w-full" on:submit|preventDefault={submitEmail}>
+				{#if !isSubmitted}
+					<input
+						class="_input w-full"
+						placeholder="Your Email"
+						type="email"
+						required
+						bind:value={email}
+						disabled={isSubmitted}
+					/>
+					<button type="submit" class="_input_button">{page.callToAction}</button>
+				{:else}
+					<div style="color: #000">💥 Thank you!</div>
 
-        {#if !isSubmitted}
-          <input class="_input w-full" placeholder="Your Email" type="email" required bind:value={email} disabled={isSubmitted}/>
-          <button type="submit" class="_input_button">{page.callToAction}</button>
-        {:else}
-          <div style="color: #000">
-            💥 Thank you!
-          </div>
-
-          {#if page.actionUrl}
-            <div class="mt-8 opacity-70">
-              Redirecting...
-            </div>
-          {/if}
-        {/if}
-      </form>
-    </div>
-  </div>
+					{#if page.actionUrl}
+						<div class="mt-8 opacity-70">Redirecting...</div>
+					{/if}
+				{/if}
+			</form>
+		</div>
+	</div>
 {/if}
 
-
 <style>
-  ._root {
-    width: 100%;
-    max-width: 1080px;
-    color: #0C120C;
-    margin: 0 auto;
-    background: white;
-  }
+	._root {
+		width: 100%;
+		max-width: 1080px;
+		color: #0c120c;
+		margin: 0 auto;
+		background: white;
+	}
 
-  ._header {
-    max-width: 1080px;
-    margin: 0 auto;
-  }
+	._header {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
 
-  ._logo {
-    font-family: Archivo;
-    font-weight: bold;
-    font-size: 18px;
-    margin-top: 12px;
-  }
+	._logo {
+		font-family: Archivo;
+		font-weight: bold;
+		font-size: 18px;
+		margin-top: 12px;
+	}
 
-  ._content {
-    margin-top: -40px;
-  }
+	._content {
+		margin-top: -40px;
+	}
 
-  ._title {
-    font-family: Archivo;
-    font-size: 36px;
-    line-height: 1.2;
-    margin-bottom: 32px;
-  }
+	._title {
+		font-family: Archivo;
+		font-size: 36px;
+		line-height: 1.2;
+		margin-bottom: 32px;
+	}
 
-  ._subtitle {
-    font-size: 18px;
-    line-height: 26px;
-    margin-bottom: 40px;
-  }
+	._subtitle {
+		font-size: 18px;
+		line-height: 26px;
+		margin-bottom: 40px;
+	}
 
-  ._input_container {
-    position: relative;
-  }
+	._input_container {
+		position: relative;
+	}
 
-  ._input {
-    background: #F5F5F5;
-    width: 100%;
-    padding: 10px 18px;
-    border-radius: 20px;
-    font-size: 16px;
-  }
-  
-  button {
-    border-radius: 30px;
-    padding: 5px 20px;
-    color: white;
-    background-color: #000;
-  }
+	._input {
+		background: #f5f5f5;
+		width: 100%;
+		padding: 10px 18px;
+		border-radius: 20px;
+		font-size: 16px;
+	}
 
-  ._input_button {
-    padding: 13px 30px;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    z-index: 100;
-    height: 100%;
-    right: 0;
-    top: 0;
-  }
+	button {
+		border-radius: 30px;
+		padding: 5px 20px;
+		color: white;
+		background-color: #000;
+	}
 
-  ._momentum-stream {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 500px;
-    height: 600px;
-  }
+	._input_button {
+		padding: 13px 30px;
+		position: absolute;
+		display: flex;
+		align-items: center;
+		z-index: 100;
+		height: 100%;
+		right: 0;
+		top: 0;
+	}
 
+	._momentum-stream {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 500px;
+		height: 600px;
+	}
 </style>
-
-
