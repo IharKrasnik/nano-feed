@@ -1,18 +1,24 @@
 import moment from 'moment';
 let getGrowthPercentage = () => {};
-export default (stats, selectedTimeframe = '7_days') => {
+
+export default (stats, timeframe = '7_days') => {
 	let userChartData = null;
 	let viewChartData = null;
 	let maxViewsCount;
 	let maxReferralCount;
 	let maxCountryCount;
 
-	let userGrowth =
-		!stats.totalUsersCount && !stats.prevUsersCount
-			? 0
-			: stats.totalUsersCount === 0
-			? -100
-			: ((stats.prevUsersCount / stats.totalUsersCount - 1) * 100).toFixed(0);
+	let userGrowth;
+
+	if (!stats.totalUsersCount && !stats.prevUsersCount) {
+		userGrowth = 0;
+	} else if (stats.totalUsersCount === 0) {
+		userGrowth = -100;
+	} else if (stats.prevUsersCount === 0) {
+		userGrowth = 100;
+	} else {
+		userGrowth = parseInt((stats.totalUsersCount / stats.prevUsersCount - 1) * 100);
+	}
 
 	maxViewsCount = stats.pageStats[0]?.count;
 	maxReferralCount = stats.referralStats[0]?.count;
@@ -22,11 +28,11 @@ export default (stats, selectedTimeframe = '7_days') => {
 	let unitToAdd;
 	let dateLabelFormat = 'yyyy-MM-DD';
 
-	if (selectedTimeframe === '7_days') {
+	if (timeframe === '7_days') {
 		dateFrom = moment().subtract(7, 'days');
 		unitToAdd = 'day';
 		dateLabelFormat = 'yyyy-MM-DD';
-	} else if (selectedTimeframe === '24_hours') {
+	} else if (timeframe === '24_hours') {
 		dateFrom = moment().subtract(24, 'hours');
 		unitToAdd = 'hour';
 		dateLabelFormat = 'DD-HH';

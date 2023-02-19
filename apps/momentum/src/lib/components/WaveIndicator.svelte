@@ -1,5 +1,5 @@
 <script>
-	import moment from 'moment';
+	import moment from 'moment-timezone';
 
 	import Modal from 'lib/components/Modal.svelte';
 	import Loader from 'lib/components/Loader.svelte';
@@ -38,16 +38,18 @@
 	};
 
 	let timeframe;
+	let timezone = moment.tz.guess();
 
 	let loadMetrics = async (projectId) => {
 		timeframe = '24_hours';
 
-		if (project && project.createdOn < moment().subtract(1, 'week').toDate()) {
+		if (project && new Date(project.createdOn) < moment().subtract(1, 'week').toDate()) {
 			timeframe = '7_days';
 		}
 
 		metrics = await get(`waveProjects/${projectId}/stats`, {
-			timeframe
+			timeframe,
+			timezone
 		});
 	};
 
@@ -77,7 +79,7 @@
 
 			{#if project.waveProject?._id}
 				<div class="mt-8">
-					<WaveDashboard stats={metrics} timeframe="7_days" />
+					<WaveDashboard stats={metrics} bind:timeframe />
 				</div>
 			{:else}
 				<div class="mt-8">
@@ -117,8 +119,8 @@
 
 {#if project && $currentUser && ($currentUser.isAdmin || project.creator._id === $currentUser._id)}
 	<button class="mt-4 w-full small" on:click={openModal}>
-		{#if project?.waveProject?._id}
-			<WaveShortStats bind:metrics />
+		{#if project?.waveProject?._id && metrics}
+			<WaveShortStats bind:metrics bind:timeframe />
 		{:else}
 			👋 Add Wave Analytics
 		{/if}

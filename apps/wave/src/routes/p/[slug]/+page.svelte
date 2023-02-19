@@ -22,7 +22,7 @@
 
 	let projectSlug = $page.params.slug;
 
-	let selectedTimeframe = '7_days';
+	let timeframe = '7_days';
 
 	const timeframeLabels = {
 		'7_days': '7 days',
@@ -58,7 +58,7 @@
 
 			if (!selectedProject || selectedProject.isActive) {
 				stats = await get(`waveProjects/${slug}/stats`, {
-					timeframe: selectedTimeframe,
+					timeframe: timeframe,
 					timezone
 				});
 			}
@@ -104,7 +104,7 @@
 			</div>
 		{/if}
 		<select
-			bind:value={selectedTimeframe}
+			bind:value={timeframe}
 			on:change={() => refreshStats($allProjects, $page.params.slug)}
 			class="max-w-[200px] small"
 		>
@@ -140,7 +140,7 @@
 	{/if}
 
 	{#if stats}
-		<Dashboard bind:stats bind:selectedTimeframe />
+		<Dashboard bind:stats bind:timeframe />
 	{/if}
 {:else}
 	<div class="p-4 bg-zinc-900">
