@@ -1,17 +1,18 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
-const KEY = 'page_draft';
+const KEY = 'pages_draft';
 
-const pageDraftStore = writable(null);
+const pageDraftStore = writable({});
 
 if (browser) {
 	let pageDraft;
 
 	try {
-		pageDraft = JSON.parse(localStorage[KEY]);
+		pageDraft = JSON.parse(localStorage[KEY]) || {};
 	} catch (err) {
-		localStorage[KEY] = null;
+		localStorage[KEY] = {};
+		pageDraft = {};
 	}
 
 	pageDraftStore.set(pageDraft);

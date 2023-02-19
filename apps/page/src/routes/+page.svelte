@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import moment from 'moment';
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
@@ -51,14 +52,31 @@
 		subtitle: '',
 		callToAction: 'Join Waitlist',
 		bgColor: '',
-		slug: ''
+		slug: '_new'
 	};
 
-	let page = { ...($pageDraft || defaultPage) };
+	let page = { ...($pageDraft['_new'] || defaultPage) };
 	let isPageSet = false;
 
-	$: if (!isPageSet && $currentUser && $allPages?.length && !$pageDraft && !page._id) {
-		page = { ...$allPages[0] };
+	let setPageAndDraft = (p, { force = false } = {}) => {
+		page = { ...p };
+
+		if (
+			!force &&
+			$pageDraft[page.slug] &&
+			new Date(page.updatedOn) < new Date($pageDraft[page.slug].updatedOn)
+		) {
+			page = { ...$pageDraft[page.slug] };
+		} else {
+			$pageDraft = {
+				...$pageDraft,
+				[page.slug]: { ...page }
+			};
+		}
+	};
+
+	$: if (!isPageSet && $currentUser && $allPages?.length && !page?._id) {
+		setPageAndDraft({ ...$allPages[0] });
 
 		refreshData();
 		isPageSet = true;
@@ -69,7 +87,7 @@
 
 	const publishPage = async () => {
 		if (!$currentUser) {
-			$pageDraft = page;
+			$pageDraft = { ...$pageDraft, _new: page };
 			isSignupFormShown = true;
 			return;
 		}
@@ -83,7 +101,10 @@
 			page.benefits = page.benefits || [];
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
 
-			$pageDraft = null;
+			$pageDraft = {
+				...$pageDraft,
+				[isNewPage ? '_new' : page.slug]: null
+			};
 
 			if (isNewPage) {
 				$allPages = [{ ...page }, ...$allPages];
@@ -189,6 +210,19 @@
 
 		window.open(`${STREAM_URL}/${streamSlug}`, '_blank');
 	};
+
+	$: if (page) {
+		if (!$pageDraft[page.slug] || !_.isEqual(page, $pageDraft[page.slug])) {
+			debugger;
+
+			page.isDirty = true;
+
+			$pageDraft = {
+				...$pageDraft,
+				[page.slug || '_new']: { ...page, isDirty: true, updatedOn: new Date() }
+			};
+		}
+	}
 </script>
 
 {#if !$currentUser || $allPages}
@@ -241,14 +275,13 @@
 							{#if $allPages}
 								<select
 									class="ml-8 w-[275px]"
-									bind:value={page.slug}
 									on:change={(evt) => {
 										let slug = evt.target.value;
 
 										if (slug === '') {
-											page = { ...($pageDraft || defaultPage) };
+											page = { ...($pageDraft['_new'] || defaultPage) };
 										} else {
-											page = { ...$allPages.find((p) => p.slug === evt.target.value) };
+											setPageAndDraft({ ...$allPages.find((p) => p.slug === evt.target.value) });
 											refreshData();
 										}
 									}}
@@ -280,7 +313,7 @@
 				<div class="w-[426px] p-4 pl-0 mr-4">
 					{#if !isMetricsOpen && !isSubmissionsOpen}
 						{#if !isOrdering}
-							{#if page.slug}
+							{#if page._id}
 								<div class="w-full flex justify-between items-center mb-4">
 									<div
 										class="relative cursor-pointer"
@@ -481,7 +514,7 @@
 							{/if}
 						{/if}
 
-						{#if page.slug}
+						{#if page._id}
 							<hr class="my-8 border-[#8B786D] opacity-30" />
 
 							<div
@@ -628,12 +661,16 @@
 									{/if}
 								</button>
 
-								{#if !page.slug}
+								{#if page.isDirty}
 									<div
 										class="cursor-pointer text-sm opacity-70"
 										on:click={() => {
-											page = { ...defaultPage };
-											$pageDraft = null;
+											setPageAndDraft(
+												page._id
+													? { ...$allPages.find((p) => p.slug === page.slug) }
+													: { ...defaultPage },
+												{ force: true }
+											);
 										}}
 									>
 										Reset Page
@@ -711,7 +748,7 @@
 
 			{#if page.name || page.title}
 				<div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
-					{#if page.slug}
+					{#if page._id}
 						<div class="sticky top-[20px] w-full z-50 h-[0px]">
 							<div class="mx-auto">
 								{#if isJustCreated}
@@ -725,32 +762,50 @@
 							>
 								<a
 									href="{PAGE_URL}/{page.slug}"
-									style="color: #5375F0;max-width: 240px; overflow: hidden; text-overflow: ellipsis;"
+									class="flex justify-center {page.isDirty ? 'max-w-[240px]' : 'w-full'}"
+									style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
 									target="_blank"
-									rel="noreferrer">{PAGE_URL.replace('https://', '')}/p/{page.slug}</a
+									rel="noreferrer"
 								>
+									<div
+										class="mr-2 ml-4 z-20"
+										use:tooltip
+										title={page.isDirty ? 'Pending Changes' : 'Published'}
+									>
+										{#if !page.isDirty}
+											✅
+										{:else}
+											🌝
+										{/if}
+									</div>
 
-								<button
-									class="absolute right-0 _primary flex justify-center w-full {isLoading
-										? 'loading'
-										: ''}"
-									style="margin-left: 80px;
+									{PAGE_URL.replace('https://', '')}/p/{page.slug}
+								</a>
+
+								{#if page.isDirty}
+									<button
+										class="absolute right-0 _primary flex justify-center w-full {isLoading
+											? 'loading'
+											: ''}"
+										style="margin-left: 80px;
                   border-radius: 30px;
                   width: auto;
                   padding: 4px 45px;"
-									on:click={publishPage}
-								>
-									{#if isLoading}
-										<div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
-											<Loader />
-										</div>
-										Publish
-									{:else if isJustPublished}
-										<div class="" in:scale={{ duration: 150 }}>👌</div>
-									{:else}
-										Publish
-									{/if}
-								</button>
+										transition:fly={{ x: 50, duration: 150 }}
+										on:click={publishPage}
+									>
+										{#if isLoading}
+											<div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
+												<Loader />
+											</div>
+											Publish
+										{:else if isJustPublished}
+											<div class="" in:scale={{ duration: 150 }}>👌</div>
+										{:else}
+											Publish
+										{/if}
+									</button>
+								{/if}
 							</div>
 						</div>
 					{/if}
