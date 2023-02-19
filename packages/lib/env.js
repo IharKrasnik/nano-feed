@@ -9,7 +9,7 @@ export const API_URL = dev
 
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
 
-export const PAGE_URL = dev ? 'http://localhost:5175' : 'https://mmntm.me';
+export const PAGE_URL = dev ? 'http://localhost:5175' : 'https://page.mmntm.build';
 // export const PAGE_URL = 'https://mmntm.me';
 
 export const STREAM_URL = dev
