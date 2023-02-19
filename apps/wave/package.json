@@ -41,6 +41,7 @@
 		"fingerprintjs2": "^2.1.0",
 		"lodash": "^4.17.21",
 		"moment": "^2.29.4",
+		"moment-timezone": "^0.5.40",
 		"rollup": "^2.13.1",
 		"rollup-plugin-babel": "^4.4.0",
 		"rollup-plugin-commonjs": "^10.1.0",

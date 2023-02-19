@@ -1,7 +1,7 @@
 <script>
 	import _ from 'lodash';
+	import moment from 'moment-timezone';
 	import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
-
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
@@ -28,6 +28,8 @@
 		'7_days': '7 days',
 		'24_hours': '24 hours'
 	};
+
+	let timezone = moment.tz.guess();
 
 	// if (browser && !$currentUser) {
 	//   goto(GOOGLE_LOGIN_URL);
@@ -56,7 +58,8 @@
 
 			if (!selectedProject || selectedProject.isActive) {
 				stats = await get(`waveProjects/${slug}/stats`, {
-					timeframe: selectedTimeframe
+					timeframe: selectedTimeframe,
+					timezone
 				});
 			}
 		}

@@ -6,7 +6,7 @@ export default (stats, selectedTimeframe = '7_days') => {
 	let maxViewsCount;
 	let maxReferralCount;
 	let maxCountryCount;
-	debugger;
+
 	let userGrowth =
 		!stats.totalUsersCount && !stats.prevUsersCount
 			? 0

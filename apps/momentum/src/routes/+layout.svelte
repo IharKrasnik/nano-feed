@@ -64,6 +64,8 @@
 	{/if}
 
 	{#if !$page.url.href.includes('/embed')}
+		<script async src="https://wave.mmntm.build/wave.js"></script>
+
 		<style>
 			body {
 				background: black;
