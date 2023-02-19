@@ -10,5 +10,4 @@
 	<meta name="og:description" content="{data.ogDescription}" />
 </svelte:head> -->
 
-
 <Feed ogTitle={data.ogTitle} ogDescription={data.ogDescription} />

@@ -3,10 +3,13 @@
 	import { fly } from 'svelte/transition';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
+
 	import { STREAM_URL, WAVE_URL } from 'lib/env';
+
 	import Highlight from 'lib/components/Highlight.svelte';
 	import Browser from '$lib/components/Browser.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
+
 	import * as socketIoService from 'lib/socketIoService';
 
 	export let project;
@@ -79,7 +82,7 @@
 		return true;
 	};
 
-	import ColorPicker from 'svelte-awesome-color-picker';
+	// import ColorPicker from 'svelte-awesome-color-picker';
 
 	let rgb = { r: 255, g: 255, b: 255, a: 1 }; // or hsv or hex
 
@@ -114,8 +117,9 @@
 		<div class="bg-zinc-900 p-8 rounded-xl">
 			<h2 class="mb-2 text-base">Add the code below to your website</h2>
 
-			<Highlight code={embedCode} />
-
+			{#if embedCode}
+				<Highlight code={embedCode} />
+			{/if}
 			<div class="text-sm mt-2 opacity-80">
 				You can customize settings once the feed is embedded.
 			</div>

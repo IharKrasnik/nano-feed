@@ -4,7 +4,6 @@ import { get } from 'lib/api';
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
 	const { username } = params;
-
 	let desciption = 'Momentum is a tool to build in public and grow audience early.';
 
 	if (username && username !== 'explore') {
@@ -24,6 +23,7 @@ export async function load({ params }) {
 			};
 		}
 	}
+	console.log('wtf', desciption);
 
 	return {
 		ogTitle: 'Momentum',
