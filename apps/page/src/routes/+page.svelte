@@ -689,7 +689,7 @@
 
 			{#if isSubmissionsOpen || isMetricsOpen}
 				<div
-					class="fixed min-w-[426px] p-4 overflow-y-scroll mt-[70px]"
+					class="fixed min-w-[426px] pr-4 pt-4 overflow-y-scroll mt-[70px]"
 					in:fly={{ x: -50, duration: 150, delay: 150 }}
 					style="height: calc(100vh - 60px);"
 				>
