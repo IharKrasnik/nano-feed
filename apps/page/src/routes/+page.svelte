@@ -106,6 +106,8 @@
 				[isNewPage ? '_new' : page.slug]: null
 			};
 
+			page.isDirty = false;
+
 			if (isNewPage) {
 				$allPages = [{ ...page }, ...$allPages];
 				isJustCreated = true;
