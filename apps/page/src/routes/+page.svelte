@@ -1,6 +1,6 @@
 <script>
 	import _ from 'lodash';
-	import moment from 'moment';
+	import moment from 'moment-timezone';
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
@@ -137,13 +137,15 @@
 		refreshMetrics();
 		refreshSubmissions();
 	};
+	let timezone = moment.tz.guess();
 
 	let refreshMetrics = async () => {
 		metrics = null;
 
 		metrics = await get(`waveProjects/page.mmntm.build/stats`, {
 			timeframe: '7_days',
-			url: `${PAGE_URL}/p/${page.slug}`
+			url: `${PAGE_URL}/p/${page.slug}`,
+			timezone
 		});
 	};
 

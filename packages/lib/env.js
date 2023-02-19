@@ -10,8 +10,8 @@ export const API_URL = 'https://ship-prod-627ed08f489a970013572f5d.paralect.net'
 
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
 
-export const PAGE_URL = dev ? 'http://localhost:5175' : 'https://page.mmntm.build';
-// export const PAGE_URL = 'https://mmntm.me';
+// export const PAGE_URL = dev ? 'http://localhost:5175' : 'https://page.mmntm.build';
+export const PAGE_URL = 'https://page.mmntm.build';
 
 export const STREAM_URL = dev
 	? 'http://localhost:5174'
