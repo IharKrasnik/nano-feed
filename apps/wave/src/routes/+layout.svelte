@@ -11,6 +11,7 @@
 	import allProjects from '$lib/stores/allProjects';
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 
+	import Dock from 'lib/components/Dock.svelte';
 	import Logo from '$lib/images/logo.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 
@@ -77,6 +78,8 @@
 
 		<slot />
 	</main>
+
+	<Dock activeIcon="wave" />
 
 	<footer>
 		<p />

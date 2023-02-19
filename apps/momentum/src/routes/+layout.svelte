@@ -7,13 +7,8 @@
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
 
+	import Dock from 'lib/components/Dock.svelte';
 	import allProjects from '$lib/stores/allProjects';
-
-	let isBurgerOpen = false;
-
-	const toggleBurger = () => {
-		isBurgerOpen = !isBurgerOpen;
-	};
 
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 
@@ -21,6 +16,12 @@
 		connect as connectSocketIo,
 		disconnect as disconnectSocketIo
 	} from 'lib/socketIoService';
+
+	let isBurgerOpen = false;
+
+	const toggleBurger = () => {
+		isBurgerOpen = !isBurgerOpen;
+	};
 
 	if (!$page.url.href.includes('/embed')) {
 		if (browser) {
@@ -193,6 +194,9 @@
 			<slot />
 		{/if}
 	</main>
+	{#if !$page.url.href.includes('/embed')}
+		<Dock activeIcon="momentum" />
+	{/if}
 
 	<footer>
 		<p />
