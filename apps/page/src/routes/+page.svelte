@@ -100,13 +100,12 @@
 			page.testimonials = page.testimonials || [];
 			page.benefits = page.benefits || [];
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
+			page.isDirty = false;
 
 			$pageDraft = {
 				...$pageDraft,
 				[isNewPage ? '_new' : page.slug]: null
 			};
-
-			page.isDirty = false;
 
 			if (isNewPage) {
 				$allPages = [{ ...page }, ...$allPages];
@@ -217,13 +216,15 @@
 
 	$: if (page) {
 		if (!$pageDraft[page.slug] || !_.isEqual(page, $pageDraft[page.slug])) {
-			debugger;
-
-			page.isDirty = true;
+			if (page.isDirty !== false) {
+				page.isDirty = true;
+			} else {
+				delete page.isDirty;
+			}
 
 			$pageDraft = {
 				...$pageDraft,
-				[page.slug || '_new']: { ...page, isDirty: true, updatedOn: new Date() }
+				[page.slug || '_new']: { ...page, updatedOn: new Date() }
 			};
 		}
 	}
