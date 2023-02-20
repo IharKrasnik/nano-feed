@@ -120,7 +120,7 @@
 	</Modal>
 {/if}
 
-{#if project && $currentUser}
+{#if (project && $currentUser && project?.waveProject?._id) || $currentUser.isAdmin || project?.creator?._id === $currentUser?._id}
 	<button class="mt-4 w-full small" on:click={openModal}>
 		{#if project?.waveProject?._id && metrics}
 			<WaveShortStats bind:metrics bind:timeframe />
