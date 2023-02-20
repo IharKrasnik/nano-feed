@@ -3,7 +3,8 @@ import { redirect } from '@sveltejs/kit';
 
 export default async ({ url, cookies }, pageName = 'Momentum') => {
 	if (!url.href.includes('_redirect')) {
-		let otp = new URL(url.href).searchParams.get('otp');
+		let urlObj = new URL(url.href);
+		let otp = urlObj.searchParams.get('otp');
 
 		if (otp) {
 			let api = apiServerSide({});
@@ -17,7 +18,7 @@ export default async ({ url, cookies }, pageName = 'Momentum') => {
 				console.log('err', err);
 			}
 
-			throw redirect(302, '/');
+			throw redirect(302, `${urlObj.origin}${urlObj.pathname}`);
 		}
 	}
 

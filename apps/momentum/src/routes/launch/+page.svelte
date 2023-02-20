@@ -2,8 +2,10 @@
 	import slug from 'slug';
 	import axios from 'axios';
 	import { fade, fly } from 'svelte/transition';
+	import { GOOGLE_LOGIN_URL } from 'lib/env';
 	import { post, put } from 'lib/api';
 	import { PAGE_URL } from 'lib/env';
+	import { browser } from '$app/environment';
 	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { goto } from '$app/navigation';
 	import Loader from 'lib/components/Loader.svelte';
@@ -13,6 +15,10 @@
 	import currentUser from 'lib/stores/currentUser';
 	import Browser from '$lib/components/Browser.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
+
+	if (browser && !$currentUser) {
+		goto(GOOGLE_LOGIN_URL);
+	}
 
 	let project = {
 		icon: getRandomProjectEmoji(),
@@ -161,100 +167,103 @@ Follow my updates here:`,
 	Stream is a public page for your updates, releases and links.
 </h3>
 
-<form on:submit={submit}>
-	<div class="mb-8">
-		<label>Your Website</label>
-		<div class="_hint mb-4">Website to embed Momentum Feed into.</div>
-
+{#if !$currentUser}
+	<Loader />
+{:else}
+	<form on:submit={submit}>
 		<div class="mb-8">
-			<button
-				class="tab mb-4 text-left"
-				type="button"
-				class:selected={currentPage === 'page'}
-				on:click={() => setPage('page')}>Launch new page</button
-			>
-			<button
-				type="button"
-				class="tab mb-4"
-				class:selected={currentPage === 'url'}
-				on:click={() => setPage('url')}>Embed to existing website</button
-			>
-		</div>
-	</div>
+			<label>Your Website</label>
+			<div class="_hint mb-4">Website to embed Momentum Feed into.</div>
 
-	{#if isTitleAdding}
-		<div class="mb-8" in:fade>
-			<label>Name </label>
-			<div class="_hint mb-4">The name should be short and catchy. It's your brand name.</div>
-
-			<input
-				type="text"
-				bind:value={project.title}
-				on:input={onNameChange}
-				placeholder="eg. Momentum, Paralect, MyCatchyBrand etc."
-			/>
+			<div class="mb-8">
+				<button
+					class="tab mb-4 text-left"
+					type="button"
+					class:selected={currentPage === 'page'}
+					on:click={() => setPage('page')}>Launch new page</button
+				>
+				<button
+					type="button"
+					class="tab mb-4"
+					class:selected={currentPage === 'url'}
+					on:click={() => setPage('url')}>Embed to existing website</button
+				>
+			</div>
 		</div>
 
-		{#if project.title}
-			<div class="mb-8" in:fade={{ duration: 100 }}>
-				<label>Tagline</label>
-				<div class="_hint mb-4">
-					One-liner about your brand. Explain what you to with {project.title}. Make a random reader
-					want to follow your journey.
-				</div>
+		{#if isTitleAdding}
+			<div class="mb-8" in:fade>
+				<label>Name </label>
+				<div class="_hint mb-4">The name should be short and catchy. It's your brand name.</div>
 
 				<input
 					type="text"
-					bind:value={project.description}
-					placeholder="eg. 'Grow your audience early'"
+					bind:value={project.title}
+					on:input={onNameChange}
+					placeholder="eg. Momentum, Paralect, MyCatchyBrand etc."
 				/>
 			</div>
+
+			{#if project.title}
+				<div class="mb-8" in:fade={{ duration: 100 }}>
+					<label>Tagline</label>
+					<div class="_hint mb-4">
+						One-liner about your brand. Explain what you to with {project.title}. Make a random
+						reader want to follow your journey.
+					</div>
+
+					<input
+						type="text"
+						bind:value={project.description}
+						placeholder="eg. 'Grow your audience early'"
+					/>
+				</div>
+			{/if}
+		{:else if isUrlAdding}
+			<div class="mb-8" in:fade>
+				{#if currentPage === 'url'}
+					<input
+						type="url"
+						bind:value={project.url}
+						placeholder="https://{project.slug || 'mybrand'}.com"
+					/>
+				{:else}{/if}
+			</div>
+		{:else if isFeedItemAdding}
+			<FeedItem {feedItem} />
 		{/if}
-	{:else if isUrlAdding}
-		<div class="mb-8" in:fade>
-			{#if currentPage === 'url'}
-				<input
-					type="url"
-					bind:value={project.url}
-					placeholder="https://{project.slug || 'mybrand'}.com"
-				/>
-			{:else}{/if}
+
+		{#if isLoading}
+			<Loader />
+		{:else}
+			{#if isUrlAdding && !isTitleAdding}
+				<div class="mt-12" class:opacity-40={!project.url}>
+					<button disabled={!project.url}> Continue → </button>
+				</div>
+			{/if}
+
+			{#if isTitleAdding}
+				<div class="mt-12">
+					<button type="submit" disabled={!project.title || !project.description}>
+						🚀 Launch #{project.title}
+					</button>
+				</div>
+			{/if}
+		{/if}
+	</form>
+
+	{#if isTitleAdding && project.title}
+		<div in:fly={{ y: 50, delay: 200 }} class="mt-8">
+			<Browser
+				bind:project
+				bind:feed
+				onClose={() => {
+					isTitleAdding = false;
+					isUrlAdding = true;
+				}}
+			/>
 		</div>
-	{:else if isFeedItemAdding}
-		<FeedItem {feedItem} />
-	{/if}
-
-	{#if isLoading}
-		<Loader />
-	{:else}
-		{#if isUrlAdding && !isTitleAdding}
-			<div class="mt-12" class:opacity-40={!project.url}>
-				<button disabled={!project.url}> Continue → </button>
-			</div>
-		{/if}
-
-		{#if isTitleAdding}
-			<div class="mt-12">
-				<button type="submit" disabled={!project.title || !project.description}>
-					🚀 Launch #{project.title}
-				</button>
-			</div>
-		{/if}
-	{/if}
-</form>
-
-{#if isTitleAdding && project.title}
-	<div in:fly={{ y: 50, delay: 200 }} class="mt-8">
-		<Browser
-			bind:project
-			bind:feed
-			onClose={() => {
-				isTitleAdding = false;
-				isUrlAdding = true;
-			}}
-		/>
-	</div>
-	<!-- <div class="p-4 md:p-8 bg-zinc-900 mb-8 rounded-xl mt-16">
+		<!-- <div class="p-4 md:p-8 bg-zinc-900 mb-8 rounded-xl mt-16">
 		<div class="flex">
 			<div>
 				<div class="font-bold mt-4">
@@ -288,4 +297,5 @@ Follow my updates here:`,
 			</div>
 		</div>
 	</div> -->
+	{/if}
 {/if}
