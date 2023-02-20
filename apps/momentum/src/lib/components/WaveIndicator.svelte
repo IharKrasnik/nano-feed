@@ -40,7 +40,7 @@
 	let timeframe;
 	let timezone = moment.tz.guess();
 
-	let loadMetrics = async (projectId) => {
+	let loadMetrics = async ({ projectId, subProjectId }) => {
 		timeframe = '24_hours';
 
 		if (project && new Date(project.createdOn) < moment().subtract(1, 'week').toDate()) {
@@ -49,7 +49,8 @@
 
 		metrics = await get(`waveProjects/${projectId}/stats`, {
 			timeframe,
-			timezone
+			timezone,
+			subProjectId
 		});
 	};
 
@@ -57,16 +58,28 @@
 
 	$: if (project?.waveProject?._id) {
 		if (!metrics || prevProjectId !== project.waveProject._id) {
-			loadMetrics(project.waveProject._id);
+			loadMetrics({ projectId: project.waveProject._id });
+
 			prevProjectId = project.waveProject._id;
+		}
+	}
+
+	let prevPageId;
+
+	$: if (project?.page?._id) {
+		if (!metrics || prevPageId !== project.page._id) {
+			debugger;
+			loadMetrics({ projectId: 'page.mmntm.build', subProjectId: project.page._id });
+
+			prevPageId = project.page._id;
 		}
 	}
 
 	let openModal = () => {
 		isModalOpen = true;
 
-		if (!project.waveProject?._id) {
-			loadMetrics('mmntm.build');
+		if (!metrics) {
+			loadMetrics({ projectId: 'mmntm.build' });
 		}
 	};
 </script>
@@ -120,11 +133,11 @@
 	</Modal>
 {/if}
 
-{#if (project && $currentUser && project?.waveProject?._id) || $currentUser.isAdmin || project?.creator?._id === $currentUser?._id}
+{#if project && (project?.waveProject?._id || project?.page?._id)}
 	<button class="mt-4 w-full small" on:click={openModal}>
-		{#if project?.waveProject?._id && metrics}
+		{#if (project?.waveProject?._id || project?.page?._id) && metrics}
 			<WaveShortStats bind:metrics bind:timeframe />
-		{:else if $currentUser.isAdmin || project.creator?._id === $currentUser._id}
+		{:else if $currentUser?.isAdmin || project.creator?._id === $currentUser?._id}
 			👋 Add Wave Analytics
 		{/if}
 	</button>

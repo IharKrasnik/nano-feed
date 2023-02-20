@@ -47,7 +47,10 @@
 
 				createdProject.url = `${PAGE_URL}/${page.slug}`;
 
-				createdProject = await put(`projects/${createdProject._id}`, { url: createdProject.url });
+				createdProject = await put(`projects/${createdProject._id}`, {
+					url: createdProject.url,
+					page: { _id: page._id }
+				});
 			} else {
 				queryString = '?embed=true';
 			}
