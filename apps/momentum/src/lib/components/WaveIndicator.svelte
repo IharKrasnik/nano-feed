@@ -68,7 +68,6 @@
 
 	$: if (project?.page?._id) {
 		if (!metrics || prevPageId !== project.page._id) {
-			debugger;
 			loadMetrics({ projectId: 'page.mmntm.build', subProjectId: project.page._id });
 
 			prevPageId = project.page._id;
@@ -135,8 +134,10 @@
 
 {#if project && (project?.waveProject?._id || project?.page?._id)}
 	<button class="mt-4 w-full small" on:click={openModal}>
-		{#if (project?.waveProject?._id || project?.page?._id) && metrics}
-			<WaveShortStats bind:metrics bind:timeframe />
+		{#if project?.waveProject?._id || project?.page?._id}
+			{#if metrics}
+				<WaveShortStats bind:metrics bind:timeframe />
+			{/if}
 		{:else if $currentUser?.isAdmin || project.creator?._id === $currentUser?._id}
 			👋 Add Wave Analytics
 		{/if}
