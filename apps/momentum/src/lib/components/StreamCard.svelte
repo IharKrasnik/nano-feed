@@ -47,7 +47,9 @@
 				? `/${stream.slug}`
 				: ''}
 		>
-			<div class="_project mb-8 rounded-xl">
+			<div
+				class="_project mb-8 rounded-xl {stream?._id || stream?.creator?._id ? 'bg-[#111]' : ''}"
+			>
 				<!-- <img src="https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png" class="w-full rounded-xl"/> -->
 
 				{#if stream.bannerUrl}
@@ -162,7 +164,7 @@
 
 	._project:hover {
 		/* transform: scale(1.05); */
-		background: rgba(255, 255, 255, 0.03);
+		background: #101010;
 		outline: 1px rgba(255, 255, 255, 0.3) solid;
 	}
 

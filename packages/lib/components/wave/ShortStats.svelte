@@ -36,7 +36,7 @@
 	</div>
 
 	<div class="w-full">
-		<div class="p-2 bg-[#222] rounded">
+		<div class="p-2 bg-[#222] rounded min-h-[70px]">
 			<LinkedChart
 				linked="chart"
 				uid="users"

@@ -41,6 +41,8 @@
 	let timezone = moment.tz.guess();
 
 	let loadMetrics = async ({ projectId, subProjectId }) => {
+		metrics = null;
+
 		timeframe = '24_hours';
 
 		if (project && new Date(project.createdOn) < moment().subtract(1, 'week').toDate()) {
@@ -56,21 +58,28 @@
 
 	let prevProjectId;
 
-	$: if (project?.waveProject?._id) {
-		if (!metrics || prevProjectId !== project.waveProject._id) {
-			loadMetrics({ projectId: project.waveProject._id });
+	$: if (project) {
+		if (!metrics || prevProjectId !== project.waveProject?._id) {
+			if (project.waveProject?._id) {
+				loadMetrics({ projectId: project.waveProject._id });
 
-			prevProjectId = project.waveProject._id;
+				prevProjectId = project.waveProject._id;
+			} else {
+				prevProjectId = null;
+			}
 		}
 	}
 
 	let prevPageId;
 
-	$: if (project?.page?._id) {
-		if (!metrics || prevPageId !== project.page._id) {
-			loadMetrics({ projectId: 'page.mmntm.build', subProjectId: project.page._id });
-
-			prevPageId = project.page._id;
+	$: if (project) {
+		if (!metrics || prevPageId !== project.page?._id) {
+			if (project.page?._id) {
+				loadMetrics({ projectId: 'page.mmntm.build', subProjectId: project.page._id });
+				prevPageId = project.page._id;
+			} else {
+				prevPageId = null;
+			}
 		}
 	}
 

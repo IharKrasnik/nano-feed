@@ -115,7 +115,7 @@
 				class:text-black={theme === 'light'}
 				class:text-white={theme === 'dark'}
 			>
-				<div class="mt-4 flex justify-center items-center">
+				<div class="mt-4 flex justify-center items-center opacity-60 transition hover:opacity-100">
 					Feed by
 					<svg
 						width="25"

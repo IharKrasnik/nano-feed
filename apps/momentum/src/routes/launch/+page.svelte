@@ -74,13 +74,16 @@
 	let isUrlAdding = true;
 	let isTitleAdding = false;
 
-	let currentPage = 'url';
+	let currentPage = 'page';
+	isTitleAdding = true;
 
 	const setPage = (newPage) => {
 		currentPage = newPage;
 
 		if (newPage === 'page') {
 			isTitleAdding = true;
+		} else {
+			isTitleAdding = false;
 		}
 	};
 
@@ -142,9 +145,7 @@ Follow my updates here:`,
 			attachments: [
 				{
 					type: 'image',
-					url:
-						(feedItem?.attachments && feedItem?.attachments[0] && feedItem.attachments[0].url) ||
-						`${PAGE_URL}/og.png?name=${project.title}&title=${project.description}`
+					url: `${PAGE_URL}/og.png?name=${project.title}&title=${project.description}`
 				}
 			]
 		};
@@ -161,6 +162,26 @@ Follow my updates here:`,
 </h3>
 
 <form on:submit={submit}>
+	<div class="mb-8">
+		<label>Your Website</label>
+		<div class="_hint mb-4">Website to embed Momentum Feed into.</div>
+
+		<div class="mb-8">
+			<button
+				class="tab mb-4 text-left"
+				type="button"
+				class:selected={currentPage === 'page'}
+				on:click={() => setPage('page')}>Launch new page</button
+			>
+			<button
+				type="button"
+				class="tab mb-4"
+				class:selected={currentPage === 'url'}
+				on:click={() => setPage('url')}>Embed to existing website</button
+			>
+		</div>
+	</div>
+
 	{#if isTitleAdding}
 		<div class="mb-8" in:fade>
 			<label>Name </label>
@@ -191,25 +212,6 @@ Follow my updates here:`,
 		{/if}
 	{:else if isUrlAdding}
 		<div class="mb-8" in:fade>
-			<label>Your Website</label>
-			<div class="_hint mb-4">Website to embed Momentum Feed into.</div>
-
-			<div class="mb-8">
-				<button
-					type="button"
-					class="tab mb-4"
-					class:selected={currentPage === 'url'}
-					on:click={() => setPage('url')}>Embed to existing website</button
-				>
-
-				<button
-					class="tab mb-4 text-left"
-					type="button"
-					class:selected={currentPage === 'page'}
-					on:click={() => setPage('page')}>Launch new page</button
-				>
-			</div>
-
 			{#if currentPage === 'url'}
 				<input
 					type="url"
