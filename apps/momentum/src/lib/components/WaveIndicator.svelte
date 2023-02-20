@@ -78,6 +78,9 @@
 			<h3>Wave is a stupid-simple web analytics dashboard.</h3>
 
 			{#if project.waveProject?._id}
+				<div class="mt-4 text-lg opacity-70">
+					{project.waveProject?.url}
+				</div>
 				<div class="mt-8">
 					<WaveDashboard stats={metrics} bind:timeframe />
 				</div>
@@ -117,11 +120,11 @@
 	</Modal>
 {/if}
 
-{#if project && $currentUser && ($currentUser.isAdmin || project.creator._id === $currentUser._id)}
+{#if project && $currentUser}
 	<button class="mt-4 w-full small" on:click={openModal}>
 		{#if project?.waveProject?._id && metrics}
 			<WaveShortStats bind:metrics bind:timeframe />
-		{:else}
+		{:else if $currentUser.isAdmin || project.creator?._id === $currentUser._id}
 			👋 Add Wave Analytics
 		{/if}
 	</button>
