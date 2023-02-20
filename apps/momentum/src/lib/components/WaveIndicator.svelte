@@ -89,10 +89,11 @@
 			<h2>Add Wave Analytics</h2>
 			<h3>Wave is a stupid-simple web analytics dashboard.</h3>
 
-			{#if project.waveProject?._id}
+			{#if project.waveProject?._id || project.page?._id}
 				<div class="mt-4 text-lg opacity-70">
-					{project.waveProject?.url}
+					{project.waveProject?.url || project.url}
 				</div>
+
 				<div class="mt-8">
 					<WaveDashboard stats={metrics} bind:timeframe />
 				</div>
