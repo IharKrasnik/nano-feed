@@ -42,7 +42,7 @@
 				const page = await post('pages', {
 					name: project.title,
 					title: project.description,
-					projectSlug: createdProject.slug
+					streamSlug: createdProject.slug
 				});
 
 				createdProject.url = `${PAGE_URL}/${page.slug}`;
