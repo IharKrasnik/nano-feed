@@ -113,7 +113,8 @@ export const sendTrackData = (userData, url, data) =>
 		...data,
 		projectId: userData.projectId,
 		visitorId: userData.visitorId,
-		sessionId: userData.sessionId
+		sessionId: userData.sessionId,
+		subProjectId: window.WAVE_SUBPROJECT_ID
 	}).then((trackData) => {
 		if (trackData.sessionId) {
 			// eslint-disable-next-line no-param-reassign

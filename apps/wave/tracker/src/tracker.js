@@ -65,7 +65,7 @@ const init =
 						};
 
 						const session = JSON.parse(
-							localStorage.getItem(`wave_session_${window.WAVE_SESSION_KEY || ''}`)
+							localStorage.getItem(`wave_session_${window.WAVE_SUBPROJECT_ID || ''}`)
 						);
 						const TEN_MINUTES_MS = 1 * 60 * 1000;
 
@@ -84,7 +84,8 @@ const init =
 							domain: window.location.hostname,
 							url: window.location.href,
 							payload,
-							projectId: userData.projectId
+							projectId: userData.projectId,
+							subProjectId: window.WAVE_SUBPROJECT_ID
 						});
 					});
 			})
