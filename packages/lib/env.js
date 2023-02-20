@@ -14,7 +14,7 @@ export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.b
 export const PAGE_URL = 'https://page.mmntm.build';
 
 export const STREAM_URL = dev
-	? 'http://localhost:5174'
+	? 'http://localhost:5173'
 	: // 'https://feed.mmntm.build'
 	  'https://feed.mmntm.build';
 

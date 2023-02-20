@@ -174,6 +174,7 @@
 							item.imageUrl = evt.detail.url;
 						}}
 						bind:url={item.imageUrl}
+						theme="light"
 					/>
 				</div>
 			</div>

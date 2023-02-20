@@ -65,17 +65,17 @@
 </svelte:head>
 
 <div class="hidden lg:columns-1 lg:columns-3 lg:columns-2 lg:columns-4" />
-<div class="container mx-auto my-8">
+<div class="container mx-auto">
 	{#key feed}
 		{#if feed?.length > 0}
 			<div
-				class={feed.length > 0
+				class="pt-[20px] {feed.length > 0
 					? `${
 							isHorizontal ? 'flex flex-row max-w-[100%] overflow-x-scroll' : ''
 					  } sm:block sm:columns-1 md:columns-2 lg:columns-${
 							columns > feed.length ? feed.length : columns
-					  } mt-8`
-					: 'flex justify-center'}
+					  }`
+					: 'flex justify-center'}"
 			>
 				{#each feed as feedItem}
 					<div

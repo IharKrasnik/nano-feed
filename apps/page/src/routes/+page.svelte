@@ -784,7 +784,7 @@
 										{/if}
 									</div>
 
-									{PAGE_URL.replace('https://', '')}/p/{page.slug}
+									{PAGE_URL.replace('https://', '')}/{page.slug}
 								</a>
 
 								{#if page.isDirty}

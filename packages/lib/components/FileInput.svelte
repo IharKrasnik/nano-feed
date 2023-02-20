@@ -1,10 +1,11 @@
 <script>
-	import Dropzone from 'svelte-file-dropzone';
-
 	import { postFile } from 'lib/api';
 	import { createEventDispatcher, onMount } from 'svelte';
+	import dropzone from 'lib/use/dropzone';
+	import Loader from 'lib/components/Loader.svelte';
 
 	export let url;
+	export let theme = 'dark';
 	export let placeholder = 'Insert URL or paste from clipboard';
 
 	let clazz;
@@ -12,15 +13,21 @@
 
 	const dispatch = createEventDispatcher();
 
+	let isLoading = false;
 	const uploadFile = async (file) => {
-		const newFile = await postFile('files', file);
+		isLoading = true;
+		try {
+			const newFile = await postFile('files', file);
 
-		let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
+			let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
 
-		dispatch('fileUploaded', {
-			type: newFile.url.includes('.mp4') || newFile.url.includes('.mov') ? 'video' : 'image',
-			url: fileUrl
-		});
+			dispatch('fileUploaded', {
+				type: newFile.url.includes('.mp4') || newFile.url.includes('.mov') ? 'video' : 'image',
+				url: fileUrl
+			});
+		} finally {
+			isLoading = false;
+		}
 	};
 
 	const pasteImage = (e) => {
@@ -36,14 +43,21 @@
 	};
 
 	const onFileUpload = async (e) => {
-		return uploadFile(e.target.files[0]);
+		return uploadFile((e.target?.files || e.detail?.files)[0]);
 	};
 
 	let handleFilesSelect = () => {};
 </script>
 
-<!-- <div class="w-full">
-	<Dropzone on:drop={handleFilesSelect}></Dropzone>
-</div> -->
-
-<input type="text" bind:value={url} {placeholder} on:paste={pasteImage} class={clazz} />
+<input
+	type="text"
+	bind:value={url}
+	{placeholder}
+	on:paste={pasteImage}
+	class={clazz}
+	use:dropzone={{}}
+	on:filedrop={onFileUpload}
+/>
+{#if isLoading}
+	<Loader {theme} />
+{/if}

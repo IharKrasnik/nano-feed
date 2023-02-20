@@ -1,8 +1,12 @@
-<div class="lds-ellipsis">
-	<div />
-	<div />
-	<div />
-	<div />
+<script>
+	export let theme = 'dark';
+</script>
+
+<div class="lds-ellipsis bg-black">
+	<div style="background-color: {theme === 'light' ? '#8B786D' : '#fff'};" />
+	<div style="background-color: {theme === 'light' ? '#8B786D' : '#fff'};" />
+	<div style="background-color: {theme === 'light' ? '#8B786D' : '#fff'};" />
+	<div style="background-color: {theme === 'light' ? '#8B786D' : '#fff'};" />
 </div>
 
 <style>
@@ -17,7 +21,6 @@
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
-		background: #fff;
 		animation-timing-function: cubic-bezier(0, 1, 1, 0);
 	}
 	.lds-ellipsis div:nth-child(1) {

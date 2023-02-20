@@ -12,6 +12,7 @@
   "dependencies": {
     "country-code-emoji": "^2.3.0",
     "country-code-lookup": "^0.0.22",
+    "file-selector": "^0.6.0",
     "hotkeys-js": "^3.10.1",
     "lodash": "^4.17.21",
     "socket.io-client": "^4.6.0",
@@ -20,5 +21,8 @@
     "svelte-highlight": "^7.2.0",
     "svelte-tiny-linked-charts": "^1.1.5",
     "tailwindcss": "^3.2.6"
+  },
+  "devDependencies": {
+    "filedrop-svelte": "^0.1.2"
   }
 }
