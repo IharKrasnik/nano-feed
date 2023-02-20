@@ -26,7 +26,7 @@
 	let shareUrl;
 
 	$: if (project) {
-		shareUrl = `${STREAM_URL}/${project ? project.slug || '_embed' : `@${creator.username}`}`;
+		shareUrl = `${STREAM_URL}/${project?.slug || `@${creator?.username}`}`;
 	}
 
 	let prevEmbedConfig;
