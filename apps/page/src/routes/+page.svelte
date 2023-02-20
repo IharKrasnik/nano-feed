@@ -431,11 +431,14 @@
 										</div>
 									</div>
 
-									<FileInput
-										class="w-full"
-										bind:url={page.demoUrl}
-										on:fileUploaded={(evt) => fileUploaded(evt.detail, 'demoUrl')}
-									/>
+									<div class="flex items-center">
+										<FileInput
+											class="w-full"
+											bind:url={page.demoUrl}
+											theme="light"
+											on:fileUploaded={(evt) => fileUploaded(evt.detail, 'demoUrl')}
+										/>
+									</div>
 								</div>
 							{/if}
 
@@ -502,13 +505,16 @@
 										/>
 
 										<div class="font-normal text-sm opacity-70 mb-2">Their Avatar</div>
-										<FileInput
-											class="w-full"
-											bind:url={testimonial.avatarUrl}
-											on:fileUploaded={(evt) => {
-												testimonial.avatarUrl = evt.detail.url;
-											}}
-										/>
+										<div class="flex items-center">
+											<FileInput
+												class="w-full"
+												theme="light"
+												bind:url={testimonial.avatarUrl}
+												on:fileUploaded={(evt) => {
+													testimonial.avatarUrl = evt.detail.url;
+												}}
+											/>
+										</div>
 
 										<hr class="my-4 border-[#8B786D] opacity-30" />
 									{/each}

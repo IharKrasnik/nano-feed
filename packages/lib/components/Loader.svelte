@@ -2,7 +2,7 @@
 	export let theme = 'dark';
 </script>
 
-<div class="lds-ellipsis bg-black">
+<div class="lds-ellipsis">
 	<div style="background-color: {theme === 'light' ? '#8B786D' : '#fff'};" />
 	<div style="background-color: {theme === 'light' ? '#8B786D' : '#fff'};" />
 	<div style="background-color: {theme === 'light' ? '#8B786D' : '#fff'};" />
