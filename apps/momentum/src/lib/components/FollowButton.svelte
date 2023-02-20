@@ -106,7 +106,7 @@
 					</div>
 				{/if}
 			{:else}
-				<button class={clazz} on:click={followStream}>
+				<button class="small {clazz}" on:click={followStream}>
 					{#if isShort}
 						💥 Follow
 					{:else}
