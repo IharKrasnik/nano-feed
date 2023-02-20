@@ -50,7 +50,7 @@
 		metrics = await get(`waveProjects/${projectId}/stats`, {
 			timeframe,
 			timezone,
-			subProjectId
+			...(subProjectId ? { subProjectId } : {})
 		});
 	};
 
@@ -86,7 +86,7 @@
 {#if isModalOpen}
 	<Modal isShown onClosed={() => (isModalOpen = false)} maxWidth={900}>
 		<div class="p-8">
-			<h2>Add Wave Analytics</h2>
+			<h2>{project?.page?._id || project?.waveProject?._id ? '' : 'Add '}Wave Analytics</h2>
 			<h3>Wave is a stupid-simple web analytics dashboard.</h3>
 
 			{#if project.waveProject?._id || project.page?._id}
