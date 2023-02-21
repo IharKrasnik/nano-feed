@@ -7,7 +7,7 @@ export async function load({ url, params, session, cookies }) {
 	let { pageSlug } = params;
 
 	if (!pageSlug && url.href.includes('.mmntm.live')) {
-		pageSlug = /:\/\/([^\/]+)/.exec(url.href)?.split('.')[0];
+		pageSlug = /:\/\/([^\/]+)/.exec(url.href)[1].split('.')[0];
 	}
 
 	let extend = {};
