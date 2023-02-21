@@ -6,8 +6,8 @@ import { get } from 'lib/api';
 export async function load({ url, params, session, cookies }) {
 	let { pageSlug } = params;
 
-	if (!pageSlug && url.href.includes('.mmntm.me')) {
-		pageSlug = /:\/\/([^\/]+)/.exec(url.href)?.split('.')[1];
+	if (!pageSlug && url.href.includes('.mmntm.live')) {
+		pageSlug = /:\/\/([^\/]+)/.exec(url.href)?.split('.')[0];
 	}
 
 	let extend = {};
