@@ -1,12 +1,24 @@
 <script>
 	import { postFile } from 'lib/api';
 	import { createEventDispatcher, onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 	import dropzone from 'lib/use/dropzone';
 	import Loader from 'lib/components/Loader.svelte';
+	import RenderUrl from 'lib/components/RenderUrl.svelte';
 
 	export let url;
 	export let theme = 'dark';
 	export let placeholder = 'Insert URL or paste from clipboard';
+
+	let innerUrlValue = url?.startsWith('http') ? url : null;
+
+	$: if (innerUrlValue) {
+		if (innerUrlValue.startsWith('http')) {
+			url = innerUrlValue;
+		}
+	} else {
+		url = null;
+	}
 
 	let clazz;
 	export { clazz as class };
@@ -14,12 +26,16 @@
 	const dispatch = createEventDispatcher();
 
 	let isLoading = false;
+
 	const uploadFile = async (file) => {
 		isLoading = true;
 		try {
 			const newFile = await postFile('files', file);
 
 			let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
+
+			url = fileUrl;
+			innerUrlValue = url;
 
 			dispatch('fileUploaded', {
 				type: newFile.url.includes('.mp4') || newFile.url.includes('.mov') ? 'video' : 'image',
@@ -49,15 +65,45 @@
 	let handleFilesSelect = () => {};
 </script>
 
-<input
-	type="text"
-	bind:value={url}
-	{placeholder}
-	on:paste={pasteImage}
-	class={clazz}
-	use:dropzone={{}}
-	on:filedrop={onFileUpload}
-/>
+<div class="w-full flex items-center">
+	<input
+		type="text"
+		bind:value={innerUrlValue}
+		{placeholder}
+		on:paste={pasteImage}
+		class={clazz}
+		use:dropzone={{}}
+		on:filedrop={onFileUpload}
+	/>
+
+	{#if url}
+		<div class={'ml-4 rounded aspect-square flex items-center h-[35px]'}>
+			<RenderUrl {url} class="h-full w-full" imgClass={'h-full w-full object-cover'} />
+		</div>
+
+		<!-- <img
+			src={url}
+			class="ml-4 rounded aspect-square"
+			style="max-height: 35px;"
+			in:fly={{ x: 50, duration: 150 }}
+		/> -->
+	{/if}
+
+	<div class="w-[1px] mx-4 my-1 bg-[#8B786D] opacity-40 self-stretch" />
+
+	{#if !isLoading}
+		<label
+			for="fileInput"
+			class="p-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center"
+			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
+		>
+			📁
+		</label>
+	{/if}
+
+	<input id="fileInput" type="file" on:change={onFileUpload} hidden />
+</div>
+
 {#if isLoading}
 	<Loader {theme} />
 {/if}

@@ -2,6 +2,7 @@
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
 	import { fly } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
+	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 
 	export let section;
@@ -61,7 +62,7 @@
         /> -->
 
 				{#if isEmojiPickerShown}
-					<div class="fixed top-[200px] mt-8 z-10" in:fly={{ y: 50, duration: 150 }}>
+					<div class="fixed top-[200px] mt-8" in:fly={{ y: 50, duration: 150 }}>
 						<emoji-picker
 							class="light"
 							on:emoji-click={(evt) => {

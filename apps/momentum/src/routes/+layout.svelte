@@ -159,6 +159,8 @@
 
 	<SvelteToast />
 
+	<div class="_file-icon" />
+
 	<main
 		class="
 			{$page.url.href.includes('/embed')

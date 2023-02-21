@@ -13,10 +13,10 @@ export const API_URL = dev
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
 
 // export const PAGE_URL = dev ? 'http://localhost:5175' : 'https://page.mmntm.build';
-export const PAGE_URL = 'https://page.mmntm.build';
+export const PAGE_URL = 'http://localhost:5175';
 
 export const STREAM_URL = dev
-	? 'http://localhost:5173'
+	? 'http://localhost:5174'
 	: // 'https://feed.mmntm.build'
 	  'https://feed.mmntm.build';
 

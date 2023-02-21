@@ -5,8 +5,9 @@
 	import { fly, fade, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 
-	import RenderUrl from '$lib/components/RenderUrl.svelte';
+	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
+	import Emoji from '$lib/components/render/Emoji.svelte';
 
 	import TwitterIcon from '$lib/icons/Twitter.svelte';
 	import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
@@ -109,8 +110,8 @@
 {#if isMounted}
 	<div class="sticky bg-white z-20 w-full p-8 md:p-0" in:fade={{ duration: 150 }}>
 		<div class="_header flex justify-between items-center">
-			<div class="_logo">
-				{page.logo || ''}
+			<div class="flex items-center _logo">
+				<Emoji class="mr-2" emoji={page.logo} />
 				{page.name}
 			</div>
 
@@ -254,7 +255,10 @@
 		class="w-full] text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4"
 	>
 		<div class="mx-auto max-w-[600px]">
-			<div class="text-lg my-4">{page.logo || ''} {page.name}</div>
+			<div class="text-lg my-4">
+				<Emoji emoji={page.logo} />
+				{page.name}
+			</div>
 			<div class="text-3xl font-bold mb-8">
 				{page.title}
 			</div>

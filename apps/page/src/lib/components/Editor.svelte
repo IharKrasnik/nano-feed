@@ -11,6 +11,7 @@
 	import currentUser from 'lib/stores/currentUser';
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
+	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 
 	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
@@ -320,28 +321,7 @@
 						{#if !isOrdering}
 							{#if page._id}
 								<div class="w-full flex justify-between items-center mb-4">
-									<div
-										class="relative cursor-pointer"
-										on:click={() => (isEmojiPickerShown = true)}
-										use:clickOutside
-										on:clickOutside={() => {
-											isEmojiPickerShown = false;
-										}}
-									>
-										{page.logo}
-
-										{#if isEmojiPickerShown}
-											<div class="absolute top-0 mt-8 z-10" in:fly={{ y: 50, duration: 150 }}>
-												<emoji-picker
-													class="light"
-													on:emoji-click={(evt) => {
-														page.logo = evt.detail.unicode;
-														isEmojiPickerShown = false;
-													}}
-												/>
-											</div>
-										{/if}
-									</div>
+									<EmojiPicker bind:icon={page.logo} />
 
 									<div class="flex">
 										<div class="flex items-center cursor-pointer" on:click={toggleSubmissions}>
