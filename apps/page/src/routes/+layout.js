@@ -3,11 +3,21 @@ import authClientGuard from 'lib/guards/auth.client';
 import { PAGE_URL } from 'lib/env';
 import { get } from 'lib/api';
 
+let getDomain = (href) => {
+	return /:\/\/([^\/]+)/.exec(href)[1];
+};
+
 export async function load({ url, params, session, cookies }) {
 	let { pageSlug } = params;
 
-	if (!pageSlug && url.href.includes('.mmntm.live')) {
-		pageSlug = /:\/\/([^\/]+)/.exec(url.href)[1].split('.')[0];
+	let currentDomain = getDomain(url.href);
+
+	if (!pageSlug) {
+		if (url.href.includes('.mmntm.live')) {
+			pageSlug = currentDomain;
+		} else if (currentDomain !== getDomain(PAGE_URL)) {
+			pageSlug = currentDomain;
+		}
 	}
 
 	let extend = {};
