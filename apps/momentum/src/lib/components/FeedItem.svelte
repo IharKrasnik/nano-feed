@@ -172,7 +172,7 @@
 				</div>
 
 				<div class="mx-4">
-					{#each (feedItem.projects || []).filter((p) => !p.isHub) as project}
+					{#each (feedItem.projects || []).sort((a, b) => !!a.isHub - !!b.isHub) as project}
 						<a
 							class="hover:underline mr-4 opacity-90"
 							on:click|stopPropagation={() => {}}
@@ -185,7 +185,7 @@
 				</div>
 			</div>
 
-			<SourceLogo theme={theme} bind:source={feedItem.source} />
+			<SourceLogo {theme} bind:source={feedItem.source} />
 		</div>
 
 		<hr class="my-4" />

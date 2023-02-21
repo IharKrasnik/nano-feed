@@ -3,7 +3,6 @@
 	import { page } from '$app/stores';
 
 	$page;
-	debugger;
 </script>
 
 <Page />
