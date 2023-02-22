@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
 	import { fly } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
@@ -6,8 +7,13 @@
 	import clickOutside from 'lib/use/clickOutside';
 
 	export let section;
+
+	export let page;
+
 	export let onRemove = () => {};
 	export let isShort = false;
+
+	let innerSection;
 
 	let addNewItem = () => {
 		section.items = section.items || [];
@@ -24,6 +30,25 @@
 	};
 
 	let isEmojiPickerShown;
+
+	let prevSection = _.cloneDeep(section);
+
+	$: if (section) {
+		if (!_.isEqual(prevSection, section)) {
+			// externalSection = { ...section };
+			prevSection = _.cloneDeep(section);
+
+			page.sections = page.sections.map((s) => {
+				if (s === section) {
+					debugger;
+					return _.cloneDeep(section);
+				} else {
+					return s;
+				}
+			});
+		}
+		debugger;
+	}
 </script>
 
 {#if isShort}

@@ -57,28 +57,28 @@
 		isCollectEmails: true
 	};
 
-	let page = { ...($pageDraft['_new'] || defaultPage) };
+	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 	let isPageSet = false;
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
-		page = { ...p };
+		page = { ..._.cloneDeep(p) };
 
 		if (
 			!force &&
 			$pageDraft[page.slug] &&
 			new Date(page.updatedOn) < new Date($pageDraft[page.slug].updatedOn)
 		) {
-			page = { ...$pageDraft[page.slug] };
+			page = _.cloneDeep($pageDraft[page.slug]);
 		} else {
 			$pageDraft = {
-				...$pageDraft,
-				[page.slug]: { ...page }
+				..._.cloneDeep($pageDraft),
+				[page.slug]: { ..._.cloneDeep(page) }
 			};
 		}
 	};
 
 	$: if (!isPageSet && $currentUser && $allPages?.length && !page?._id) {
-		setPageAndDraft({ ...$allPages[0] });
+		setPageAndDraft({ ..._.cloneDeep($allPages[0]) });
 
 		refreshData();
 		isPageSet = true;
@@ -89,7 +89,7 @@
 
 	const publishPage = async () => {
 		if (!$currentUser) {
-			$pageDraft = { ...$pageDraft, _new: page };
+			$pageDraft = { ..._.cloneDeep($pageDraft), _new: page };
 			isSignupFormShown = true;
 			return;
 		}
@@ -105,7 +105,7 @@
 			page.isDirty = false;
 
 			$pageDraft = {
-				...$pageDraft,
+				..._.cloneDeep($pageDraft),
 				[isNewPage ? '_new' : page.slug]: null
 			};
 
@@ -115,7 +115,7 @@
 			} else {
 				$allPages = $allPages.map((p) => {
 					if (p._id === page._id) {
-						return { ...page };
+						return { ..._.cloneDeep(page) };
 					} else {
 						return p;
 					}
@@ -225,8 +225,8 @@
 			}
 
 			$pageDraft = {
-				...$pageDraft,
-				[page.slug || '_new']: { ...page, updatedOn: new Date() }
+				..._.cloneDeep($pageDraft),
+				[page.slug || '_new']: { ..._.cloneDeep(page), updatedOn: new Date() }
 			};
 		}
 	}
@@ -286,9 +286,11 @@
 										let slug = evt.target.value;
 
 										if (slug === '') {
-											page = { ...($pageDraft['_new'] || defaultPage) };
+											page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 										} else {
-											setPageAndDraft({ ...$allPages.find((p) => p.slug === evt.target.value) });
+											setPageAndDraft({
+												..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
+											});
 											refreshData();
 										}
 									}}
@@ -561,6 +563,7 @@
 								<div>
 									{#each page.sections || [] as section}
 										<EditSection
+											bind:page
 											bind:section
 											onRemove={() => {
 												page.sections = page.sections.filter((s) => s !== section);
@@ -664,7 +667,7 @@
 										on:click={() => {
 											setPageAndDraft(
 												page._id
-													? { ...$allPages.find((p) => p.slug === page.slug) }
+													? { ..._.cloneDeep($allPages.find((p) => p.slug === page.slug)) }
 													: { ...defaultPage },
 												{ force: true }
 											);
@@ -784,10 +787,11 @@
 										class="absolute right-0 _primary flex justify-center w-full {isLoading
 											? 'loading'
 											: ''}"
-										style="margin-left: 80px;
+										style="margin-left: 78px;
                   border-radius: 30px;
                   width: auto;
-                  padding: 4px 45px;"
+                  padding: 4px 45px;
+									right: 3px;"
 										transition:fly={{ x: 50, duration: 150 }}
 										on:click={publishPage}
 									>

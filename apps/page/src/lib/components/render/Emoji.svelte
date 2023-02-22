@@ -15,7 +15,9 @@
 
 <div class={clazz}>
 	{#if url}
-		<img class="w-[25px] h-[25px]" src={url} />
+		{#key url}
+			<img class="w-[25px] h-[25px]" src={url} />
+		{/key}
 	{:else}
 		{emoji || ''}
 	{/if}
