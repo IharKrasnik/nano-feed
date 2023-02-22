@@ -17,6 +17,6 @@
 	{#if url}
 		<img class="w-[25px] h-[25px]" src={url} />
 	{:else}
-		{emoji}
+		{emoji || ''}
 	{/if}
 </div>

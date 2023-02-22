@@ -146,8 +146,8 @@
 				>
 					<div
 						class={page.demoUrl
-							? 'text-center md:text-left max-w-[500px] items-center'
-							: 'flex flex-col items-center max-w-[800px] mx-auto'}
+							? 'w-full text-center md:text-left max-w-[500px] items-center'
+							: 'flex flex-col items-center w-full md:w-auto md:max-w-[800px] mx-auto'}
 					>
 						<h1 class="_title" style="color: {page.bgColor}">{page.title}</h1>
 
@@ -157,7 +157,10 @@
 
 						<div class="_input_container flex items-center md:w-[392px] w-full">
 							<form
-								class={page.isCollectEmails ? ' w-full flex justify-center' : ''}
+								class="{page.isCollectEmails
+									? 'w-full flex flex-col sm:flex-row items-center justify-center'
+									: 'mx-auto md:mx-0'} "
+								style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
 								on:submit|preventDefault={submitEmail}
 							>
 								{#if !isSubmitted}
@@ -174,8 +177,9 @@
 										/>
 										<button
 											type="submit"
-											class="_input_button"
-											class:absolute={page.isCollectEmails}>{page.callToAction}</button
+											class="_input_button {page.isCollectEmails
+												? 'md:absolute w-full sm:w-auto mt-4 md:mt-0'
+												: ''}">{page.callToAction}</button
 										>
 									{:else}
 										<a href={page.actionUrl} target="_blank" class="button _input_button">
@@ -311,8 +315,11 @@
 							disabled={isSubmitted}
 							in:fade={{ duration: 150 }}
 						/>
-						<button type="submit" class="_input_button" class:absolute={page.isCollectEmails}
-							>{page.callToAction}</button
+						<button
+							type="submit"
+							class="_input_button {page.isCollectEmails
+								? 'md:absolute w-full sm:w-auto mt-4 md:mt-0'
+								: ''}">{page.callToAction}</button
 						>
 					{:else}
 						<a href={page.actionUrl} target="_blank" class="button _input_button">

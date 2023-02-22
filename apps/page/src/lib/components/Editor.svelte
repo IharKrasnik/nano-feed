@@ -54,7 +54,7 @@
 		callToAction: 'Join Waitlist',
 		bgColor: '',
 		slug: '_new',
-		isCollectEmails: false
+		isCollectEmails: true
 	};
 
 	let page = { ...($pageDraft['_new'] || defaultPage) };
