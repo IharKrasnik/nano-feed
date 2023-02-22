@@ -2,6 +2,7 @@
 	import { postFile } from 'lib/api';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
+	import tooltip from 'lib/use/tooltip';
 	import dropzone from 'lib/use/dropzone';
 	import Loader from 'lib/components/Loader.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
@@ -100,6 +101,8 @@
 			for="fileInput"
 			class="p-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center"
 			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
+			use:tooltip
+			title="Upload File"
 		>
 			📁
 		</label>

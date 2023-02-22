@@ -4,10 +4,12 @@
 	export let y;
 </script>
 
-<div style="
+<div
+	style="
   top: {y + 5}px;
-  left: {x + 5}px;">
-  {title}
+  left: {x + 5}px;"
+>
+	{title}
 </div>
 
 <style>
@@ -19,5 +21,6 @@
 		border-radius: 4px;
 		padding: 4px;
 		position: absolute;
+		z-index: 100;
 	}
 </style>
