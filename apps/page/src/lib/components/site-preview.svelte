@@ -91,7 +91,8 @@
 			class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 md:px-0"
 		>
 			<div class="flex items-center shrink-0">
-				<div class="text-lg font-bold">{page.logo || ''} {page.name}</div>
+				<Emoji class="mr-2" emoji={page.logo} />
+				{page.name}
 
 				<div class="ml-4 opacity-70 hidden md:block">
 					&nbsp; {page.title}
@@ -99,7 +100,13 @@
 			</div>
 
 			<div class="shrink-0">
-				<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+				{#if page.isCollectEmails}
+					<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+				{:else}
+					<a href={page.actionUrl} target="_blank" class="button">
+						{page.callToAction}
+					</a>
+				{/if}
 			</div>
 		</div>
 
@@ -115,7 +122,16 @@
 				{page.name}
 			</div>
 
-			<button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+			<div class="mt-2">
+				{#if page.isCollectEmails}
+					<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+				{:else}
+					<a href={page.actionUrl} target="_blank" class="button">
+						{page.callToAction}
+					</a>
+				{/if}
+			</div>
+			<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
 		</div>
 
 		<div class="_root">
@@ -141,7 +157,7 @@
 
 						<div class="_input_container flex items-center md:w-[392px] w-full">
 							<form
-								class="w-full {page.demoUrl ? '' : 'flex justify-center'}"
+								class={page.isCollectEmails ? ' w-full flex justify-center' : ''}
 								on:submit|preventDefault={submitEmail}
 							>
 								{#if !isSubmitted}
@@ -156,13 +172,14 @@
 											disabled={isSubmitted}
 											in:fade={{ duration: 150 }}
 										/>
+										<button
+											type="submit"
+											class="_input_button"
+											class:absolute={page.isCollectEmails}>{page.callToAction}</button
+										>
 									{:else}
-										<a href={page.actionUrl}>
-											<button
-												type="submit"
-												class="_input_button"
-												class:absolute={page.isCollectEmails}>{page.callToAction}</button
-											>
+										<a href={page.actionUrl} target="_blank" class="button _input_button">
+											{page.callToAction}
 										</a>
 									{/if}
 								{:else}
@@ -265,9 +282,9 @@
 	<!-- <div class="h-screen sticky"></div> -->
 
 	<div
-		class="w-full] text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4"
+		class="w-full text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4"
 	>
-		<div class="mx-auto max-w-[600px]">
+		<div class="mx-auto max-w-[600px] flex flex-col items-center justify-center">
 			<div class="flex items-center text-lg my-4">
 				<Emoji class="mr-2" emoji={page.logo} />
 				{page.name}
@@ -298,10 +315,8 @@
 							>{page.callToAction}</button
 						>
 					{:else}
-						<a href={page.actionUrl}>
-							<button type="submit" class="_input_button" class:absolute={page.isCollectEmails}
-								>{page.callToAction}</button
-							>
+						<a href={page.actionUrl} target="_blank" class="button _input_button">
+							{page.callToAction}
 						</a>
 					{/if}
 				{:else}
@@ -366,7 +381,8 @@
 		font-size: 16px;
 	}
 
-	button {
+	button,
+	.button {
 		border-radius: 30px;
 		padding: 5px 20px;
 		color: white;
