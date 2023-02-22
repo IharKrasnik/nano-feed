@@ -513,18 +513,7 @@
 								style="border: 1px #e0dede solid;"
 							>
 								<div class="flex items-center">
-									<div class="font-bold">
-										🧱 Sections
-
-										{#if page.sections?.length > 1 && !isOrdering}
-											<div
-												class="ml-5 font-normal text-sm cursor-pointer opacity-70"
-												on:click={() => (isOrdering = true)}
-											>
-												Reorder
-											</div>
-										{/if}
-									</div>
+									<div class="font-bold">🧱 Sections</div>
 
 									{#if page.sections?.length}
 										<div class="ml-4 number-tag">
@@ -552,6 +541,15 @@
 						{/if}
 						{#if page._id}
 							{#if !isOrdering}
+								{#if page.sections?.length > 1 && !isOrdering}
+									<div
+										class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+										on:click={() => (isOrdering = true)}
+									>
+										💫 Reorder Sections
+									</div>
+								{/if}
+
 								<div>
 									{#each page.sections || [] as section}
 										<EditSection
