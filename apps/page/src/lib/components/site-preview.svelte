@@ -7,6 +7,7 @@
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
+	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 
 	import TwitterIcon from '$lib/icons/Twitter.svelte';
@@ -100,12 +101,14 @@
 			</div>
 
 			<div class="shrink-0">
-				{#if page.isCollectEmails}
-					<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
-				{:else}
-					<a href={page.actionUrl} target="_blank" class="button">
-						{page.callToAction}
-					</a>
+				{#if !isSubmitted}
+					{#if page.isCollectEmails}
+						<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+					{:else}
+						<a href={page.actionUrl} target="_blank" class="button">
+							{page.callToAction}
+						</a>
+					{/if}
 				{/if}
 			</div>
 		</div>
@@ -123,12 +126,14 @@
 			</div>
 
 			<div class="mt-2">
-				{#if page.isCollectEmails}
-					<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
-				{:else}
-					<a href={page.actionUrl} target="_blank" class="button">
-						{page.callToAction}
-					</a>
+				{#if !isSubmitted}
+					{#if page.isCollectEmails}
+						<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+					{:else}
+						<a href={page.actionUrl} target="_blank" class="button">
+							{page.callToAction}
+						</a>
+					{/if}
 				{/if}
 			</div>
 			<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
@@ -243,6 +248,8 @@
 		</div>
 	</div>
 {/if}
+
+<RenderFAQ bind:page />
 
 {#if page.streamSlug}
 	<div>

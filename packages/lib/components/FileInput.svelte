@@ -22,7 +22,7 @@
 		if (innerUrlValue.startsWith('http')) {
 			url = innerUrlValue;
 		}
-	} else {
+	} else if (url) {
 		url = null;
 	}
 

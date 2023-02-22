@@ -33,21 +33,19 @@
 
 	let prevSection = _.cloneDeep(section);
 
-	$: if (section) {
+	$: if (page && section) {
 		if (!_.isEqual(prevSection, section)) {
 			// externalSection = { ...section };
 			prevSection = _.cloneDeep(section);
 
 			page.sections = page.sections.map((s) => {
 				if (s === section) {
-					debugger;
 					return _.cloneDeep(section);
 				} else {
 					return s;
 				}
 			});
 		}
-		debugger;
 	}
 </script>
 
@@ -63,7 +61,7 @@
 	</div>
 {:else}
 	<div class="_section rounded-xl" style="padding: 0px;">
-		<div class="sticky z-10 bg-white top-[70px] rounded-xl">
+		<div class="bg-white top-[60px] rounded-xl">
 			<div class="p-4 pb-0 flex justify-between items-center">
 				<div class="_title" style="margin: 0;">Section</div>
 
@@ -77,15 +75,6 @@
 				use:clickOutside
 				on:clickOutside={() => (isEmojiPickerShown = false)}
 			>
-				<!-- <input class="mb-4 w-full" bind:value={section.title} placeholder="Title (optional)"/>
-        
-        <textarea 
-          class="w-full mb-4"
-          bind:value={section.description}
-          placeholder="Description (optional)"
-          rows="3"
-        /> -->
-
 				{#if isEmojiPickerShown}
 					<div class="fixed top-[200px] mt-8" in:fly={{ y: 50, duration: 150 }}>
 						<emoji-picker

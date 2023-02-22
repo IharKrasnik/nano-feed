@@ -69,7 +69,9 @@
 					<div class="order-none {section.columns === 1 && i % 2 === 0 ? 'md:order-last' : ''}">
 						<RenderUrl
 							class="rounded-xl"
-							imgClass="{section.columns === 1 ? '' : 'max-h-[200px]'} w-full object-cover"
+							imgClass="{section.columns === 1 ? '' : 'max-h-[200px]'} {section.items.length === 1
+								? 'mx-auto'
+								: 'w-full'} max-h-[350px] object-cover"
 							url={item.imageUrl}
 						/>
 					</div>

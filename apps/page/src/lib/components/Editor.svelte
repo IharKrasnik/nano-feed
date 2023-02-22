@@ -6,6 +6,8 @@
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import EditSection from '$lib/components/edit/Section.svelte';
+	import EditFAQ from '$lib/components/edit/FAQ.svelte';
+	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 
 	import { get, post, put } from 'lib/api';
 	import currentUser from 'lib/stores/currentUser';
@@ -75,6 +77,8 @@
 				[page.slug]: { ..._.cloneDeep(page) }
 			};
 		}
+
+		pageSlug = page.slug;
 	};
 
 	$: if (!isPageSet && $currentUser && $allPages?.length && !page?._id) {
@@ -102,10 +106,13 @@
 			page.testimonials = page.testimonials || [];
 			page.benefits = page.benefits || [];
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
+
 			page.isDirty = false;
+			pageSlug = page.slug;
 
 			$pageDraft = {
 				..._.cloneDeep($pageDraft),
+
 				[isNewPage ? '_new' : page.slug]: null
 			};
 
@@ -140,6 +147,7 @@
 		refreshMetrics();
 		refreshSubmissions();
 	};
+
 	let timezone = moment.tz.guess();
 
 	let refreshMetrics = async () => {
@@ -216,18 +224,33 @@
 		window.open(`${STREAM_URL}/${streamSlug}`, '_blank');
 	};
 
+	let addNewSection = () => {
+		page.sections = [
+			...(page.sections || []),
+			{ columns: 1, items: [{ title: '', description: '' }] }
+		];
+	};
+
+	let pageSlug = '_new';
+
 	$: if (page) {
 		if (!$pageDraft[page.slug] || !_.isEqual(page, $pageDraft[page.slug])) {
-			if (page.isDirty !== false) {
-				page.isDirty = true;
-			} else {
+			if (page.isDirty === false) {
 				delete page.isDirty;
+			} else {
+				page.isDirty = true;
 			}
-
-			$pageDraft = {
-				..._.cloneDeep($pageDraft),
-				[page.slug || '_new']: { ..._.cloneDeep(page), updatedOn: new Date() }
-			};
+			if (!$pageDraft[page.slug]) {
+				$pageDraft = {
+					..._.cloneDeep($pageDraft),
+					[page.slug || '_new']: { ..._.cloneDeep(page) }
+				};
+			} else {
+				$pageDraft = {
+					..._.cloneDeep($pageDraft),
+					[page.slug || '_new']: { ..._.cloneDeep(page), updatedOn: new Date().toISOString() }
+				};
+			}
 		}
 	}
 </script>
@@ -282,11 +305,13 @@
 							{#if $allPages}
 								<select
 									class="ml-8 w-[275px]"
+									bind:value={pageSlug}
 									on:change={(evt) => {
 										let slug = evt.target.value;
 
-										if (slug === '') {
+										if (slug === '_new') {
 											page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+											pageSlug = page.slug;
 										} else {
 											setPageAndDraft({
 												..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
@@ -298,7 +323,7 @@
 									{#each $allPages as page}
 										<option value={page.slug}>{page.name}</option>
 									{/each}
-									<option value="">⬜️ Create New Page</option>
+									<option value="_new">⬜️ Create New Page</option>
 								</select>
 							{:else}
 								<Loader />
@@ -456,71 +481,14 @@
 								</div>
 							{/if}
 
-							{#if page._id}
-								<div class="_section">
-									<div class="flex justify-between items-center">
-										<div class="_title" style="margin: 0;">Testimonials</div>
-
-										<div class="text-right w-full">
-											<a class="cursor-pointer text-[#8B786D]" on:click={addNewTestimonial}
-												>Add Testimonial</a
-											>
-										</div>
-									</div>
-
-									{#each page.testimonials || [] as testimonial}
-										<div class="flex justify-between items-center">
-											<div class="font-normal text-sm opacity-70 mb-2 mt-4">Name</div>
-											<div
-												class="text-sm cursor-pointer text-[#8B786D]"
-												on:click={() => removeTestimonial(testimonial)}
-											>
-												Remove
-											</div>
-										</div>
-
-										<input
-											class="mb-4 w-full"
-											bind:value={testimonial.name}
-											placeholder="Victoriya Barovskaya, CEO, Kickstart"
-										/>
-
-										<div class="font-normal text-sm opacity-70 mb-2">Their Comment</div>
-
-										<textarea
-											class="w-full mb-4"
-											bind:value={testimonial.comment}
-											placeholder="These action plans finally made me post daily and share the Kickstart news with a wide audience. Great to start!"
-											rows="3"
-										/>
-
-										<div class="font-normal text-sm opacity-70 mb-2">Their Avatar</div>
-										<div class="flex items-center">
-											<FileInput
-												class="w-full"
-												theme="light"
-												bind:url={testimonial.avatarUrl}
-												on:fileUploaded={(evt) => {
-													testimonial.avatarUrl = evt.detail.url;
-												}}
-											/>
-										</div>
-
-										<hr class="my-4 border-[#8B786D] opacity-30" />
-									{/each}
-									<!-- <div class="flex items-center mt-2 text-[14px]">
-                <input type="checkbox" class="mr-2"  /> Collect Emails
-              </div> -->
-								</div>
-							{/if}
+							<EditTestimonials bind:page />
 						{/if}
 
 						{#if page._id}
 							<hr class="my-8 border-[#8B786D] opacity-30" />
 
 							<div
-								class="bg-white rounded-xl w-[426px] flex top-[0px] sticky z-30 w-full p-4 my-4 justify-between items-center"
-								style="border: 1px #e0dede solid;"
+								class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
 							>
 								<div class="flex items-center">
 									<div class="font-bold">🧱 Sections</div>
@@ -533,33 +501,30 @@
 								</div>
 
 								{#if !isOrdering}
-									<div>
-										<button
-											class="_secondary small w-full text-center cursor-pointer text-[#8B786D]"
-											on:click={() => {
-												page.sections = [
-													...(page.sections || []),
-													{ columns: 1, items: [{ title: '', description: '' }] }
-												];
-											}}
+									{#if !page.sections?.length}
+										<div>
+											<button
+												class="_secondary small w-full text-center cursor-pointer text-[#8B786D]"
+												on:click={addNewSection}
+											>
+												Add section
+											</button>
+										</div>
+									{/if}
+
+									{#if page.sections?.length > 1}
+										<div
+											class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+											on:click={() => (isOrdering = true)}
 										>
-											Add section
-										</button>
-									</div>
+											💫 Reorder Sections
+										</div>
+									{/if}
 								{/if}
 							</div>
 						{/if}
 						{#if page._id}
 							{#if !isOrdering}
-								{#if page.sections?.length > 1 && !isOrdering}
-									<div
-										class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
-										on:click={() => (isOrdering = true)}
-									>
-										💫 Reorder Sections
-									</div>
-								{/if}
-
 								<div>
 									{#each page.sections || [] as section}
 										<EditSection
@@ -592,6 +557,14 @@
 								</div>
 							{/if}
 						{/if}
+
+						{#if !isOrdering && page.sections?.length}
+							<a
+								class="w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+								on:click={addNewSection}>Add Section</a
+							>
+						{/if}
+
 						<hr class="my-8 border-[#8B786D] opacity-30" />
 
 						{#if page._id && !isOrdering}
@@ -629,6 +602,12 @@
 									</div>
 								{/if}
 							</div>
+						{/if}
+
+						<hr class="my-8 border-[#8B786D] opacity-30" />
+
+						{#if page._id && !isOrdering}
+							<EditFAQ bind:page />
 						{/if}
 
 						<!-- <div class="_section">
