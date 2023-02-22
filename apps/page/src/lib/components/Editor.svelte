@@ -406,7 +406,7 @@
 												class="underline"
 												target="_blank"
 												use:tooltip
-												title="We recommend using Loom">video demo</a
+												title="We recommend using Loom or YouTube">video demo</a
 											> <br />
 										</div>
 									</div>

@@ -77,9 +77,13 @@
 	/>
 
 	{#if url}
-		<div class={'ml-4 rounded aspect-square flex items-center h-[35px]'}>
-			<RenderUrl {url} class="h-full w-full" imgClass={'h-full w-full object-cover'} />
-		</div>
+		<RenderUrl
+			bind:url
+			class="ml-4 rounded aspect-square flex items-center"
+			style="width: 35px; height: 35px;"
+			imgClass={'h-full w-full object-cover'}
+			isFilesOnly={true}
+		/>
 
 		<!-- <img
 			src={url}
