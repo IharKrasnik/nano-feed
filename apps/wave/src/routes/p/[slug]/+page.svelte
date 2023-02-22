@@ -48,16 +48,16 @@
 
 	let isStatsLoading = true;
 
-	const refreshStats = async (projects, slug) => {
+	const refreshStats = async (projects, url) => {
 		isStatsLoading = true;
 
-		if (slug) {
+		if (url) {
 			if (projects) {
-				selectedProject = projects.find((p) => p.slug === slug);
+				selectedProject = projects.find((p) => p.url === url);
 			}
 
 			if (!selectedProject || selectedProject.isActive) {
-				stats = await get(`waveProjects/${slug}/stats`, {
+				stats = await get(`waveProjects/${url}/stats`, {
 					timeframe: timeframe,
 					timezone
 				});
@@ -84,7 +84,6 @@
 			}
 		});
 	});
-
 	let embedCode = `<script async src="https://wave.mmntm.build/wave.js"><\/script>`;
 </script>
 

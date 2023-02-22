@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import { get as getStoreValue } from 'svelte/store';
 import cookie from 'cookie';
+import { toast } from '@zerodevx/svelte-toast';
 
 // import notify from 'lib/services/notify';
 
@@ -77,6 +78,7 @@ const ftch = async (method, url, params, options = {}) => {
 		});
 	} catch (err) {
 		console.log('error GET', absoluteUrl, method, err);
+
 		// throw err;
 		return null;
 	}
@@ -93,7 +95,19 @@ const ftch = async (method, url, params, options = {}) => {
 		return data;
 	} else {
 		const data = await res.json();
-		// notify('Error ' + JSON.stringify(data, null, 2));
+		if (browser) {
+			toast.push('Error: ' + (data?.errors?.global || 'unknown'), {
+				duration: 3000,
+				pausable: true,
+				theme: {
+					'--toastWidth:': '500px',
+					'--toastColor': 'white',
+					'--toastBackground': '#b13131',
+					'--toastBarBackground': 'red',
+					'--toastPadding': '10px 15px'
+				}
+			});
+		}
 
 		throw new ValidationError({ message: `Could not load ${url}`, data, status: res.status });
 	}

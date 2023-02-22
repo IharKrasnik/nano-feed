@@ -16,7 +16,7 @@
 	const addProject = async () => {
 		const newProject = await post('waveProjects', project);
 		$allProjects = [newProject, ...$allProjects];
-		goto(`projects/${newProject.slug}`);
+		goto(`projects/${newProject.url}`);
 	};
 </script>
 

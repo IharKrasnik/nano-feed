@@ -27,8 +27,6 @@
 			disconnectSocketIo();
 		});
 	}
-
-	let projectSlug = $page.params.slug;
 </script>
 
 <svelte:head>
@@ -53,11 +51,12 @@
 				{#if $allProjects.length}
 					<div class="flex items-center ml-8">
 						<select
-							bind:value={projectSlug}
+							bind:value={$page.params.slug}
 							style="border-radius: 20px; padding: 8px 16px;"
 							class="small max-w-[300px]"
 							on:change={(evt) => {
-								goto(evt.target.value === 'add_new' ? '/new' : `/projects/${evt.target.value}`);
+								debugger;
+								goto(evt.target.value === 'add_new' ? '/new' : `/p/${evt.target.value}`);
 							}}
 						>
 							{#each $allProjects as project}
@@ -71,7 +70,9 @@
 					</a> -->
 					</div>
 				{:else}
-					<button class="ml-8 small">🚀 Add New Project</button>
+					<a href="/new">
+						<button class="ml-8 small">🚀 Add New Project</button>
+					</a>
 				{/if}
 			{/if}
 		</div>
