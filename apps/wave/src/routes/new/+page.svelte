@@ -1,9 +1,11 @@
 <script>
 	import slug from 'slug';
+	import { browser } from '$app/environment';
 	import { fade } from 'svelte/transition';
-	import { post } from 'lib/api';
-	import { PAGE_URL } from 'lib/env';
 	import { goto } from '$app/navigation';
+
+	import { GOOGLE_LOGIN_URL, PAGE_URL } from 'lib/env';
+	import { post } from 'lib/api';
 
 	import currentUser from 'lib/stores/currentUser';
 	import allProjects from '$lib/stores/allProjects';
@@ -12,6 +14,10 @@
 		name: '',
 		url: ''
 	};
+
+	if (browser && !$currentUser) {
+		goto(GOOGLE_LOGIN_URL);
+	}
 
 	const addProject = async () => {
 		const newProject = await post('waveProjects', project);
