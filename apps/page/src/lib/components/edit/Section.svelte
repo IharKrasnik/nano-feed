@@ -172,9 +172,6 @@
 						class="w-full"
 						placeholder="Insert image/video url or paste from clipboard"
 						isCanSearch
-						on:fileUploaded={(evt) => {
-							item.imageUrl = evt.detail.url;
-						}}
 						bind:url={item.imageUrl}
 						theme="light"
 					/>

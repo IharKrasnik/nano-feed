@@ -4,7 +4,7 @@
 	import { fly } from 'svelte/transition';
 	import tooltip from 'lib/use/tooltip';
 	import dropzone from 'lib/use/dropzone';
-
+	import { v4 as uuidv4 } from 'uuid';
 	import Loader from 'lib/components/Loader.svelte';
 	import ImageSearch from 'lib/components/ImageSearch.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
@@ -15,6 +15,8 @@
 	export let placeholder = 'Insert URL or paste from clipboard';
 
 	let innerUrlValue = url?.startsWith('http') ? url : null;
+
+	let componentId = uuidv4();
 
 	$: if (innerUrlValue) {
 		if (innerUrlValue.startsWith('http')) {
@@ -41,10 +43,10 @@
 			url = fileUrl;
 			innerUrlValue = url;
 
-			dispatch('fileUploaded', {
-				type: newFile.url.includes('.mp4') || newFile.url.includes('.mov') ? 'video' : 'image',
-				url: fileUrl
-			});
+			// dispatch('fileUploaded', {
+			// 	type: newFile.url.includes('.mp4') || newFile.url.includes('.mov') ? 'video' : 'image',
+			// 	url: fileUrl
+			// });
 		} finally {
 			isLoading = false;
 		}
@@ -115,7 +117,7 @@
 
 	{#if !isLoading}
 		<label
-			for="fileInput"
+			for="fileInput-{componentId}"
 			class="p-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center"
 			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
 			use:tooltip
@@ -125,7 +127,7 @@
 		</label>
 	{/if}
 
-	<input id="fileInput" type="file" on:change={onFileUpload} hidden />
+	<input id="fileInput-{componentId}" type="file" on:change={onFileUpload} hidden />
 </div>
 
 {#if isLoading}

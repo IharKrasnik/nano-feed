@@ -413,13 +413,7 @@
 									</div>
 
 									<div class="flex items-center">
-										<FileInput
-											class="w-full"
-											bind:url={page.demoUrl}
-											theme="light"
-											isCanSearch
-											on:fileUploaded={(evt) => fileUploaded(evt.detail, 'demoUrl')}
-										/>
+										<FileInput class="w-full" bind:url={page.demoUrl} theme="light" isCanSearch />
 									</div>
 								</div>
 							{/if}
