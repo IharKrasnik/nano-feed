@@ -31,7 +31,7 @@
 
 	<h3 class="mb-8">Add web analytics to your page in seconds</h3>
 
-	<div>
+	<form>
 		<div class="mb-8" in:fade>
 			<label>Name</label>
 			<div class="_hint mb-4" />
@@ -51,9 +51,9 @@
 		</div>
 
 		<div class="mt-12">
-			<button on:click={addProject} disabled={!project.name || !project.url}
+			<button type="submit" on:click={addProject} disabled={!project.name || !project.url}
 				>Create {project.name}</button
 			>
 		</div>
-	</div>
+	</form>
 </div>

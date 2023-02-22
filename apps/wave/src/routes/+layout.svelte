@@ -55,7 +55,6 @@
 							style="border-radius: 20px; padding: 8px 16px;"
 							class="small max-w-[300px]"
 							on:change={(evt) => {
-								debugger;
 								goto(evt.target.value === 'add_new' ? '/new' : `/p/${evt.target.value}`);
 							}}
 						>
