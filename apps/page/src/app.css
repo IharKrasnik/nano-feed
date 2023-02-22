@@ -25,3 +25,7 @@
 	font-size: 13px;
 	opacity: 0.9;
 }
+
+input[type='checkbox'] {
+	accent-color: #8b796c;
+}

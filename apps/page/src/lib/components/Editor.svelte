@@ -424,7 +424,17 @@
 
 							{#if page._id}
 								<div class="_section">
-									<div class="_title">Call To Action</div>
+									<div class="_title flex justify-between w-full">
+										Call To Action
+
+										<div class="flex font-normal items-center">
+											Collect Emails <input
+												bind:checked={page.isCollectEmails}
+												class="ml-2"
+												type="checkbox"
+											/>
+										</div>
+									</div>
 
 									<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
 
@@ -435,7 +445,9 @@
 									/>
 
 									<div class="font-normal text-sm opacity-70 mb-2">
-										URL to open once email submitted (optional)
+										URL to open {page.isCollectEmails
+											? 'once email submitted (optional)'
+											: 'on click'}
 									</div>
 
 									<input class="w-full mb-4" bind:value={page.actionUrl} placeholder="Action Url" />

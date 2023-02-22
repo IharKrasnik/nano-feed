@@ -140,18 +140,26 @@
 						{/if}
 
 						<div class="_input_container flex items-center md:w-[392px] w-full">
-							<form class="w-full" on:submit|preventDefault={submitEmail}>
+							<form
+								class="w-full {page.demoUrl ? '' : 'flex justify-center'}"
+								on:submit|preventDefault={submitEmail}
+							>
 								{#if !isSubmitted}
-									<input
-										class="_input w-full"
-										placeholder="Your Email"
-										type="email"
-										required
-										bind:this={inputEl}
-										bind:value={email}
-										disabled={isSubmitted}
-									/>
-									<button type="submit" class="_input_button">{page.callToAction}</button>
+									{#if page.isCollectEmails}
+										<input
+											class="_input w-full"
+											placeholder="Your Email"
+											type="email"
+											required
+											bind:this={inputEl}
+											bind:value={email}
+											disabled={isSubmitted}
+											in:fade={{ duration: 150 }}
+										/>
+									{/if}
+									<button type="submit" class="_input_button" class:absolute={page.isCollectEmails}
+										>{page.callToAction}</button
+									>
 								{:else}
 									<div style="color: #000">💥 Thank you!</div>
 
@@ -347,7 +355,6 @@
 
 	._input_button {
 		padding: 13px 30px;
-		position: absolute;
 		display: flex;
 		align-items: center;
 		z-index: 100;
