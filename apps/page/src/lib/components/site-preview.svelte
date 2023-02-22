@@ -156,10 +156,15 @@
 											disabled={isSubmitted}
 											in:fade={{ duration: 150 }}
 										/>
+									{:else}
+										<a href={page.actionUrl}>
+											<button
+												type="submit"
+												class="_input_button"
+												class:absolute={page.isCollectEmails}>{page.callToAction}</button
+											>
+										</a>
 									{/if}
-									<button type="submit" class="_input_button" class:absolute={page.isCollectEmails}
-										>{page.callToAction}</button
-									>
 								{:else}
 									<div style="color: #000">💥 Thank you!</div>
 
@@ -263,8 +268,8 @@
 		class="w-full] text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4"
 	>
 		<div class="mx-auto max-w-[600px]">
-			<div class="text-lg my-4">
-				<Emoji emoji={page.logo} />
+			<div class="flex items-center text-lg my-4">
+				<Emoji class="mr-2" emoji={page.logo} />
 				{page.name}
 			</div>
 			<div class="text-3xl font-bold mb-8">
@@ -273,17 +278,32 @@
 		</div>
 
 		<div class="_input_container flex items-center mx-auto w-full md:w-[392px]">
-			<form class="w-full" on:submit|preventDefault={submitEmail}>
+			<form
+				class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
+				on:submit|preventDefault={submitEmail}
+			>
 				{#if !isSubmitted}
-					<input
-						class="_input w-full"
-						placeholder="Your Email"
-						type="email"
-						required
-						bind:value={email}
-						disabled={isSubmitted}
-					/>
-					<button type="submit" class="_input_button">{page.callToAction}</button>
+					{#if page.isCollectEmails}
+						<input
+							class="_input w-full"
+							placeholder="Your Email"
+							type="email"
+							required
+							bind:this={inputEl}
+							bind:value={email}
+							disabled={isSubmitted}
+							in:fade={{ duration: 150 }}
+						/>
+						<button type="submit" class="_input_button" class:absolute={page.isCollectEmails}
+							>{page.callToAction}</button
+						>
+					{:else}
+						<a href={page.actionUrl}>
+							<button type="submit" class="_input_button" class:absolute={page.isCollectEmails}
+								>{page.callToAction}</button
+							>
+						</a>
+					{/if}
 				{:else}
 					<div style="color: #000">💥 Thank you!</div>
 
