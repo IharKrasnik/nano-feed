@@ -1,7 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 ._file-icon {
+	background: red;
+}
+
+._modal-contents {
 	background: red;
 }

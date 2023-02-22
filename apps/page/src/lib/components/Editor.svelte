@@ -416,6 +416,7 @@
 											class="w-full"
 											bind:url={page.demoUrl}
 											theme="light"
+											isCanSearch
 											on:fileUploaded={(evt) => fileUploaded(evt.detail, 'demoUrl')}
 										/>
 									</div>

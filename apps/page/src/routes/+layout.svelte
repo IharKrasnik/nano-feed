@@ -18,6 +18,8 @@
 	/>
 </svelte:head>
 
+<div id="modal-portal" />
+
 {#if !$isUserLoading}
 	<div class="relative">
 		<slot />

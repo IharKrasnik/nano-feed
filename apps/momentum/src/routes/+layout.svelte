@@ -1,8 +1,9 @@
 <script>
 	// export const prerender = false;
 
-	import '../app.css';
 	import 'lib/app.css';
+	import '../app.css';
+
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';

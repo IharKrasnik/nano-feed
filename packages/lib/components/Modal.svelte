@@ -38,7 +38,7 @@
 			style="z-index: {zIndex}"
 		>
 			<div class="flex items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-				<div class="absolute backdrop inset-0 transition-opacity" aria-hidden="true" />
+				<div class="absolute _modal-backdrop inset-0 transition-opacity" aria-hidden="true" />
 
 				<div
 					class="modal-content max-h-full overflow-y-scroll absolute inline-block align-bottom rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
@@ -51,7 +51,7 @@
 							<CrossSvg />
 						</div> -->
 					{/if}
-					<div class="bg-[#111111]">
+					<div class="_modal-contents bg-[#fff]">
 						<slot />
 					</div>
 				</div>
@@ -85,9 +85,5 @@
 		left: 50%;
 		transform: translateX(-50%) translateY(-50%);
 		width: calc(100% - 32px);
-	}
-	.backdrop {
-		background-color: #14161a;
-		opacity: 0.5;
 	}
 </style>

@@ -29,3 +29,11 @@
 input[type='checkbox'] {
 	accent-color: #8b796c;
 }
+
+._modal-content {
+	background: white;
+}
+
+._modal-backdrop {
+	display: none;
+}

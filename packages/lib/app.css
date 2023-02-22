@@ -7,6 +7,15 @@ body {
 	/* background: black; */
 }
 
+body.dark ._modal-contents {
+	background: #111;
+}
+
+body.dark ._modal-backdrop {
+	background-color: #14161a;
+	opacity: 0.5;
+}
+
 h1,
 h2,
 h3 {
