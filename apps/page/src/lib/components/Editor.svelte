@@ -53,7 +53,8 @@
 		subtitle: '',
 		callToAction: 'Join Waitlist',
 		bgColor: '',
-		slug: '_new'
+		slug: '_new',
+		isCollectEmails: false
 	};
 
 	let page = { ...($pageDraft['_new'] || defaultPage) };

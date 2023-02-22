@@ -6,7 +6,7 @@
 
 	let url;
 
-	$: if (emoji.startsWith('http')) {
+	$: if (emoji?.startsWith('http')) {
 		url = emoji;
 	} else {
 		url = null;
