@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
-	import { GOOGLE_LOGIN_URL } from 'lib/env';
+	import { GOOGLE_LOGIN_URL, PAGE_URL } from 'lib/env';
 	import { get, post, del } from 'lib/api';
 
 	let feed = [];
@@ -626,6 +626,14 @@
 					</a>
 				{/if}
 			{/if} -->
+		{/if}
+
+		{#if $currentUser && selectedProject?.page?._id && ($currentUser.isAdmin || selectedProject?.creator?._id === $currentUser._id)}
+			<div class="cursor-pointer w-full flex justify-center my-2">
+				<a class="button w-full small flex items-center justify-center" href={PAGE_URL}>
+					📄 Edit Page
+				</a>
+			</div>
 		{/if}
 
 		{#if $currentUser && ($currentUser.isAdmin || selectedProject?.creator?._id === $currentUser._id)}
