@@ -34,52 +34,54 @@
 				: ''}"
 		>
 			{#each section.items || [] as item, i}
-				<div
-					class="grid mb-8 h-full grid-cols-1 md:grid-cols-{section.columns === 1 &&
-					item.imageUrl &&
-					section.items.length > 1
-						? 2
-						: ''} w-full {section.columns > 1
-						? 'bg-[#fafafa] rounded-2xl'
-						: ''} items-center content-start"
-					style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
-						? 'margin-bottom: -64px;'
-						: ''}
-				>
+				<div class="mb-8">
 					<div
-						class="{section.columns > 2
-							? 'p-4'
-							: 'p-8'} max-w-[600px] text-left self-center order-none {section.columns == 1 &&
-						i % 2 === 1
-							? 'md:order-last'
-							: ''} {section.columns === 1 &&
-							(!item.imageUrl || section.items.length === 1) &&
-							'mx-auto text-center'}"
-						class:order-last={i % 2 === 0}
+						class="grid h-full grid-cols-1 md:grid-cols-{section.columns === 1 &&
+						item.imageUrl &&
+						section.items.length > 1
+							? 2
+							: ''} w-full {section.columns > 1
+							? 'bg-[#fafafa] rounded-2xl'
+							: ''} items-center content-start"
+						style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
+							? 'margin-bottom: -64px;'
+							: ''}
 					>
-						{#if item.emoji}
-							<div class={emojiStyle[section.columns]}>{item.emoji}</div>
-						{/if}
+						<div
+							class="{section.columns > 2
+								? 'p-4'
+								: 'p-8'} max-w-[600px] text-left self-center order-none {section.columns == 1 &&
+							i % 2 === 1
+								? 'md:order-last'
+								: ''} {section.columns === 1 &&
+								(!item.imageUrl || section.items.length === 1) &&
+								'mx-auto text-center'}"
+							class:order-last={i % 2 === 0}
+						>
+							{#if item.emoji}
+								<div class={emojiStyle[section.columns]}>{item.emoji}</div>
+							{/if}
 
-						<h2 class="{headerTextStyle(item)[section.columns]} font-bold mb-4">{item.title}</h2>
-						<h3 class="{descriptionStyle[section.columns]} whitespace-pre-wrap">
-							{item.description}
-						</h3>
+							<h2 class="{headerTextStyle(item)[section.columns]} font-bold mb-4">{item.title}</h2>
+							<h3 class="{descriptionStyle[section.columns]} whitespace-pre-wrap">
+								{item.description}
+							</h3>
 
-						{#if item.url}
-							<a href={item.url} target="_blank" class="block mt-4 text-[#8B786D] text-sm"
-								>Learn More</a
-							>
-						{/if}
-					</div>
-					<div class="order-none {section.columns === 1 && i % 2 === 0 ? 'md:order-last' : ''}">
-						<RenderUrl
-							class="rounded-xl"
-							imgClass="{section.columns === 1 ? '' : 'max-h-[200px]'} {section.items.length === 1
-								? 'mx-auto'
-								: 'w-full'} max-h-[350px] object-cover"
-							url={item.imageUrl}
-						/>
+							{#if item.url}
+								<a href={item.url} target="_blank" class="block mt-4 text-[#8B786D] text-sm"
+									>Learn More</a
+								>
+							{/if}
+						</div>
+						<div class="order-none {section.columns === 1 && i % 2 === 0 ? 'md:order-last' : ''}">
+							<RenderUrl
+								class="rounded-xl"
+								imgClass="{section.columns === 1 ? '' : 'max-h-[200px]'} {section.items.length === 1
+									? 'mx-auto'
+									: 'w-full'} max-h-[350px] object-cover"
+								url={item.imageUrl}
+							/>
+						</div>
 					</div>
 				</div>
 			{/each}
