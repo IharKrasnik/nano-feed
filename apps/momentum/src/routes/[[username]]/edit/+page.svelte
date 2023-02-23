@@ -6,6 +6,7 @@
 	import Loader from 'lib/components/Loader.svelte';
 	import StreamCard from '$lib/components/StreamCard.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
+	import AutoCompleteInput from 'lib/components/AutoCompleteInput.svelte';
 
 	import projects from '$lib/stores/projects';
 	import allProjects from '$lib/stores/allProjects';
@@ -22,6 +23,7 @@
 			creator = await get(`creators/${username}`);
 
 			stream = {
+				...creator,
 				title: creator.fullName,
 				description: creator.description,
 				longDescription: creator.longDescription,
@@ -32,13 +34,7 @@
 		} else {
 			project = await get(`projects/${$page.params.username}`);
 
-			stream = {
-				title: project.title,
-				description: project.description,
-				longDescription: project.longDescription,
-				bannerUrl: project.bannerUrl,
-				url: project.url
-			};
+			stream = { ...project };
 		}
 	};
 
@@ -50,6 +46,7 @@
 
 	let updateStream = async () => {
 		if (!creator) {
+			debugger;
 			const updatedProject = await put(`projects/${project._id}`, stream);
 
 			$projects = $projects.map((p) => {
@@ -165,9 +162,27 @@
 				/>
 			</div>
 
+			{#if $currentUser.isAdmin}
+				<div class="mb-8">
+					<label> Hub Stream </label>
+
+					{#if $allProjects.length}
+						<AutoCompleteInput
+							onChange={(selectedProject) => (stream.hubProject = selectedProject)}
+							placeholder="Search Streams"
+							valueField="_id"
+							searchField="title"
+							allSuggestions={$allProjects.filter((s) => s.slug)}
+							initialSelectedItem={stream.hubProject}
+						/>
+					{/if}
+				</div>
+			{/if}
+
 			<button class="p-4 mt-8" type="submit" on:click={updateStream}>
 				Update {creator ? `@${creator.fullName}` : `#${project.title}`}
 			</button>
+
 			<a class="ml-8" href="/{creator ? '@' + creator.username : project.slug}">Cancel</a>
 		</form>
 	{/if}
