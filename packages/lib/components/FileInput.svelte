@@ -18,12 +18,18 @@
 
 	let componentId = uuidv4();
 
-	$: if (innerUrlValue) {
+	let prevUrl = url;
+
+	$: if (prevUrl !== url) {
+		prevUrl = url;
+	} else if (innerUrlValue) {
 		if (innerUrlValue.startsWith('http')) {
 			url = innerUrlValue;
+			prevUrl = url;
 		}
 	} else if (url) {
 		url = null;
+		prevUrl = null;
 	}
 
 	let clazz;

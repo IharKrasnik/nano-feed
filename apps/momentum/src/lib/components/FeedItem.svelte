@@ -152,7 +152,7 @@
 		{/if}
 
 		<div class="my-4 flex items-center justify-between">
-			<div class="flex items-center text-sm opacity-80">
+			<div class="flex items-center text-sm opacity-80  max-w-[90%]">
 				{#if feedItem.isRelease}
 					<div class="mr-2">🚀</div>
 				{/if}
@@ -171,7 +171,7 @@
 					{/if}
 				</div>
 
-				<div class="flex items-center overflow-x-scroll mx-4">
+				<div class="flex items-center overflow-x-hidden mx-4">
 					{#each (feedItem.projects || []).sort((a, b) => !!a.isHub - !!b.isHub) as project}
 						<a
 							class="shrink-0 hover:underline mr-4 opacity-90"

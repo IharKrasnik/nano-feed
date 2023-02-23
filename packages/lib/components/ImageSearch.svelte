@@ -36,6 +36,8 @@
 	};
 </script>
 
+<div on:click={search}>🔎</div>
+
 {#if isSearching}
 	<Modal isShown onClosed={() => close()} maxWidth={600}>
 		<div>
@@ -73,5 +75,3 @@
 		</div>
 	</Modal>
 {/if}
-
-<div on:click={search}>🔎</div>
