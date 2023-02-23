@@ -4,6 +4,7 @@
 	import { fly } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
+	import EditUrl from '$lib/components/edit/URL.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 
 	export let section;
@@ -76,7 +77,7 @@
 				on:clickOutside={() => (isEmojiPickerShown = false)}
 			>
 				{#if isEmojiPickerShown}
-					<div class="fixed top-[200px] mt-8" in:fly={{ y: 50, duration: 150 }}>
+					<div class="fixed top-[200px] mt-8 z-40" in:fly={{ y: 50, duration: 150 }}>
 						<emoji-picker
 							class="light"
 							on:emoji-click={(evt) => {
@@ -159,20 +160,26 @@
 		{#each section.items || [] as item}
 			<div class="p-4">
 				<div class="relative flex justify-between items-center mb-4">
-					<div
-						class="min-w-[37px] min-h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
-						on:click={() => {
-							isEmojiPickerShown = item;
-						}}
-					>
-						{item.emoji || '✨'}
+					<div class="flex items-center ">
+						<div
+							class="min-w-[37px] min-h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+							on:click={() => {
+								isEmojiPickerShown = item;
+							}}
+						>
+							{item.emoji || '✨'}
+						</div>
+
+						<EditUrl bind:url={item.url} />
 					</div>
 					<div class="text-sm cursor-pointer text-[#8B786D]" on:click={() => removeItem(item)}>
 						Remove Item
 					</div>
 				</div>
 
-				<input class="mb-4 w-full" bind:value={item.title} placeholder="Title" />
+				<div class="flex w-full items-center mb-4">
+					<input class="w-full" bind:value={item.title} placeholder="Title" />
+				</div>
 
 				<textarea
 					class="w-full mb-4"

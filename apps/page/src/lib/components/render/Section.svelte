@@ -65,6 +65,12 @@
 						<h3 class="{descriptionStyle[section.columns]} whitespace-pre-wrap">
 							{item.description}
 						</h3>
+
+						{#if item.url}
+							<a href={item.url} target="_blank" class="block mt-4 text-[#8B786D] text-sm"
+								>Learn More</a
+							>
+						{/if}
 					</div>
 					<div class="order-none {section.columns === 1 && i % 2 === 0 ? 'md:order-last' : ''}">
 						<RenderUrl
