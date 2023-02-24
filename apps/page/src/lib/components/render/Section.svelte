@@ -1,6 +1,7 @@
 <script>
 	export let section;
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import isGif from 'lib/helpers/isGif';
 
 	const headerTextStyle = (item) => {
 		return {
@@ -76,9 +77,10 @@
 						<div class="order-none {section.columns === 1 && i % 2 === 0 ? 'md:order-last' : ''}">
 							<RenderUrl
 								class="rounded-xl"
-								imgClass="{section.columns === 1 ? '' : 'max-h-[200px]'} {section.items.length === 1
-									? 'mx-auto'
-									: 'mx-auto'} max-h-[350px]"
+								imgClass="mx-auto {section.columns === 1 ? '' : 'max-h-[200px]'}  {section.items
+									.length === 1
+									? ''
+									: ''} {isGif(item.imageUrl) ? 'w-full object-cover' : ''} max-h-[350px]"
 								url={item.imageUrl}
 							/>
 						</div>
