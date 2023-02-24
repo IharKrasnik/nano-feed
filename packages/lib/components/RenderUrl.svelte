@@ -5,7 +5,7 @@
 
 	// let clazz = '';
 	// export { clazz as class };
-	let clazz;
+	let clazz = '';
 	export let style = '';
 
 	export { clazz as class };

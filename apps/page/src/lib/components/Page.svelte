@@ -10,7 +10,6 @@
 
 	let currentPage = $page.data.page;
 
-	debugger;
 	if (browser && currentPage) {
 		window.WAVE_SUBPROJECT_ID = currentPage._id;
 		slug = $page.params.pageSlug;
