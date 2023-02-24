@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
-	import { GOOGLE_LOGIN_URL, PAGE_URL } from 'lib/env';
+	import { GOOGLE_LOGIN_URL, LINKEDIN_LOGIN_URL, TWITTER_LOGIN_URL, PAGE_URL } from 'lib/env';
 	import { get, post, del } from 'lib/api';
 
 	let feed = [];
@@ -251,6 +251,16 @@
 		pageNumber++;
 		const feedPage = await fetchFeedPage({ page: pageNumber });
 		feed = [...feed, ...feedPage];
+	};
+
+	let linkedInLogin = async () => {
+		const { url } = await get(LINKEDIN_LOGIN_URL);
+		window.document.location.href = url;
+	};
+
+	let twitterLogin = async () => {
+		const { url } = await get(TWITTER_LOGIN_URL);
+		window.document.location.href = url;
 	};
 </script>
 
@@ -626,6 +636,28 @@
 					</a>
 				{/if}
 			{/if} -->
+		{/if}
+
+		{#if $currentUser && creator && creator._id === $currentUser._id}
+			<div class="cursor-pointer w-full flex justify-center my-2">
+				<a
+					class="button w-full small flex items-center justify-center"
+					on:click|preventDefault={linkedInLogin}
+				>
+					🟦 Connect LinkedIn
+				</a>
+			</div>
+		{/if}
+
+		{#if $currentUser && creator && creator._id === $currentUser._id}
+			<div class="cursor-pointer w-full flex justify-center my-2">
+				<a
+					class="button w-full small flex items-center justify-center"
+					on:click|preventDefault={twitterLogin}
+				>
+					🐦 Connect Twitter
+				</a>
+			</div>
 		{/if}
 
 		{#if $currentUser && selectedProject?.page?._id && ($currentUser.isAdmin || selectedProject?.creator?._id === $currentUser._id)}
