@@ -1,12 +1,9 @@
 const isValidUrl = (urlString) => {
-	var inputElement = document.createElement('input');
-	inputElement.type = 'url';
-	inputElement.value = urlString;
-
-	if (!inputElement.checkValidity()) {
-		return false;
-	} else {
+	try {
+		new URL(urlString);
 		return true;
+	} catch {
+		return false;
 	}
 };
 

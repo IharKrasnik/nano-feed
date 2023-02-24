@@ -111,14 +111,15 @@
 			<div
 				class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 md:px-0"
 			>
-				<div class="flex items-center shrink-0">
+				<a class="flex items-center shrink-0" href="/">
 					<Emoji class="mr-2" emoji={page.logo} />
-					{page.name}
-
+					<span class="font-bold">
+						{page.name}
+					</span>
 					<div class="ml-4 opacity-70 hidden md:block">
 						&nbsp; {page.title}
 					</div>
-				</div>
+				</a>
 
 				<div class="shrink-0">
 					{#if !isSubmitted}
@@ -140,10 +141,10 @@
 	{#if isMounted}
 		<div class="sticky bg-site z-20 w-full md:p-4 p-8" in:fade={{ duration: 150 }}>
 			<div class="_header flex justify-between items-center">
-				<div class="flex items-center _logo">
+				<a class="flex items-center shrink-0 _logo" href="/">
 					<Emoji class="mr-2" emoji={page.logo} />
 					{page.name}
-				</div>
+				</a>
 
 				<div class="mt-2">
 					{#if !isSubmitted}
@@ -292,7 +293,7 @@
 				/>
 
 				{#if page.links}
-					<div class="flex justify-center w-full">
+					<div class="flex justify-center w-full my-4">
 						{#if page.links.twitter}
 							<div class="w-[35px] h-[35px] mr-2">
 								<a href={page.links.twitter} class="scale-110" target="_blank">
