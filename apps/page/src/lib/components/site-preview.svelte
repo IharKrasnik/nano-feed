@@ -195,6 +195,7 @@
 										{#if page.isCollectEmails}
 											<input
 												class="_input w-full"
+												style="min-width: 392px;"
 												placeholder="Your Email"
 												type="email"
 												required
@@ -342,7 +343,7 @@
 
 			<div
 				class="_input_container flex items-center mx-auto w-full"
-				style="max-width: {page.callToAction.length < 20 ? '392px' : '500px'}"
+				style="max-width: {page.callToAction.length < 20 ? '392px' : '500px'};"
 			>
 				<form
 					class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
@@ -351,6 +352,7 @@
 					{#if !isSubmitted}
 						{#if page.isCollectEmails}
 							<input
+								style="min-width: 392px;"
 								class="_input w-full"
 								placeholder="Your Email"
 								type="email"
