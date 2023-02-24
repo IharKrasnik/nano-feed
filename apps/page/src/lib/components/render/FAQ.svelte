@@ -3,7 +3,7 @@
 </script>
 
 {#if page.faqs?.length}
-	<div class="sticky bg-white z-20">
+	<div class="sticky bg-site z-20">
 		<div class="flex justify-center">
 			<div class="max-w-[600px] w-full my-8 p-4">
 				{#each page.faqs as faq}

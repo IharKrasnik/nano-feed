@@ -14,6 +14,7 @@
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
+	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 
 	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
@@ -265,7 +266,7 @@
 	<div class="container mx-auto relative">
 		<div class="flex relative">
 			<div
-				class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll"
+				class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white"
 				in:fly={{ x: 50, duration: 150, delay: 150 }}
 			>
 				<div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
@@ -737,7 +738,7 @@
 
 							<div
 								class="relative _published-label flex items-center mt-4"
-								style="padding: 7px 14px;"
+								style="padding: 6px 10px;"
 							>
 								<a
 									href="{PAGE_URL}/{page.slug}"
@@ -759,7 +760,7 @@
 									</div>
 
 									<div>
-										{PAGE_URL.replace('https://', '')}/{page.slug}
+										/{page.slug}
 									</div>
 								</a>
 
@@ -792,7 +793,15 @@
 						</div>
 					{/if}
 
-					<SitePreview noStickyHeader={true} bind:page />
+					{#if page}
+						{#key page._id}
+							<div in:fly={{ y: 50, duration: 300 }}>
+								<BrowserFrame>
+									<SitePreview noStickyHeader={true} bind:page />
+								</BrowserFrame>
+							</div>
+						{/key}
+					{/if}
 				</div>
 			{:else}
 				<div

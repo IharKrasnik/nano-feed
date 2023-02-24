@@ -3,6 +3,10 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import isGif from 'lib/helpers/isGif';
 
+	let clazz = 'py-4 md:py-16';
+
+	export { clazz as class };
+
 	const headerTextStyle = (item) => {
 		return {
 			1: item.imageUrl ? 'text-2xl' : 'md:text-4xl text-3xl',
@@ -28,7 +32,7 @@
 </script>
 
 {#if section.items?.length}
-	<div class="w-full py-4 md:py-16">
+	<div class="w-full {clazz}">
 		<div
 			class="grid grid-cols-1 md:grid-cols-{section.columns} gap-4 {section.columns > 1
 				? 'items-start'
@@ -42,7 +46,7 @@
 						section.items.length > 1
 							? 2
 							: ''} w-full {section.columns > 1
-							? 'bg-[#fafafa] rounded-2xl'
+							? 'bg-section rounded-2xl'
 							: ''} items-center content-start"
 						style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
 							? 'margin-bottom: -64px;'
@@ -63,9 +67,11 @@
 								<div class={emojiStyle[section.columns]}>{item.emoji}</div>
 							{/if}
 
-							<h2 class="{headerTextStyle(item)[section.columns]} font-bold mb-4">{item.title}</h2>
+							<h2 class="{headerTextStyle(item)[section.columns]} font-bold mb-4">
+								{item.title || ''}
+							</h2>
 							<h3 class="{descriptionStyle[section.columns]} whitespace-pre-wrap">
-								{item.description}
+								{item.description || ''}
 							</h3>
 
 							{#if item.url}

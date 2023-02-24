@@ -16,7 +16,7 @@ export const PAGE_URL = dev ? 'http://localhost:5175' : 'https://page.mmntm.buil
 // export const PAGE_URL = 'http://localhost:5175/';
 
 export const STREAM_URL = dev
-	? 'http://localhost:5174'
+	? 'https://feed.mmntm.build'
 	: // 'https://feed.mmntm.build'
 	  'https://feed.mmntm.build';
 

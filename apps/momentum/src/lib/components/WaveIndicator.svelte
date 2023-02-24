@@ -9,7 +9,7 @@
 
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import WaveShortStats from 'lib/components/wave/ShortStats.svelte';
-	import BrowserFrame from '$lib/components/BrowserFrame.svelte';
+	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 
 	import { WAVE_URL } from 'lib/env';
 
@@ -133,7 +133,7 @@
 						We'll create the same dashboard for {project.title}.
 					</div>
 
-					<BrowserFrame url="{WAVE_URL}/p/mmntm.build">
+					<BrowserFrame class="max-h-[800px] p-4 mt-4 mb-16" url="{WAVE_URL}/p/mmntm.build">
 						<WaveDashboard stats={metrics} bind:timeframe />
 					</BrowserFrame>
 				</div>

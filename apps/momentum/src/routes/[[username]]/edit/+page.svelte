@@ -46,7 +46,6 @@
 
 	let updateStream = async () => {
 		if (!creator) {
-			debugger;
 			const updatedProject = await put(`projects/${project._id}`, stream);
 
 			$projects = $projects.map((p) => {

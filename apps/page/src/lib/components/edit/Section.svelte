@@ -114,7 +114,7 @@
 
 				<div class="px-4 flex items-center">
 					<div
-						class="cursor-pointer bg-[#fafafa] h-[37px] flex justify-center items-center rounded-xl mr-2"
+						class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
 						class:aspect-square={section.columns !== 1}
 						class:px-4={section.columns === 1}
 						on:click={() => (section.columns = 1)}
@@ -124,7 +124,7 @@
 					</div>
 
 					<div
-						class="aspect-square cursor-pointer bg-[#fafafa] h-[37px] flex justify-center items-center rounded-xl mr-2"
+						class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
 						on:click={() => (section.columns = 2)}
 						class:aspect-square={section.columns !== 2}
 						class:px-4={section.columns === 2}
@@ -134,7 +134,7 @@
 					</div>
 
 					<div
-						class="aspect-square cursor-pointer bg-[#fafafa] h-[37px] flex justify-center items-center rounded-xl mr-2"
+						class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
 						class:aspect-square={section.columns !== 3}
 						class:px-4={section.columns === 3}
 						on:click={() => (section.columns = 3)}
@@ -144,7 +144,7 @@
 					</div>
 
 					<div
-						class="aspect-square cursor-pointer bg-[#fafafa] h-[37px] flex justify-center items-center rounded-xl mr-2"
+						class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
 						class:aspect-square={section.columns !== 4}
 						class:px-4={section.columns === 4}
 						on:click={() => (section.columns = 4)}
@@ -162,7 +162,7 @@
 				<div class="relative flex justify-between items-center mb-4">
 					<div class="flex items-center ">
 						<div
-							class="min-w-[37px] min-h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+							class="min-w-[37px] min-h-[37px] bg-section rounded-xl flex items-center justify-center cursor-pointer"
 							on:click={() => {
 								isEmojiPickerShown = item;
 							}}

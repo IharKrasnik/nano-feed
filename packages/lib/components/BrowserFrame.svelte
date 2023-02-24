@@ -1,17 +1,14 @@
 <script>
-	import iframeResize from 'iframe-resizer/js/iframeResizer';
-
 	import axios from 'axios';
 	import _ from 'lodash';
 	import { onMount } from 'svelte';
 	import { STREAM_URL, PAGE_URL } from 'lib/env';
-	import FeedItem from '$lib/components/FeedItem.svelte';
 	import slug from 'slug';
 
 	let clazz = '';
 
 	export { clazz as class };
-	export let browserClass = 'p-4';
+	export let browserClass = '';
 	export let onClose;
 	export let fullscreenUrl = { STREAM_URL };
 
@@ -23,10 +20,10 @@
 </script>
 
 <div
-	class="relative mt-4 mb-16 {clazz} rounded-xl max-h-[800px] overflow-y-scroll"
+	class="relative rounded-xl overflow-y-scroll {clazz}"
 	style="background-color:{bgColor === 'transparent' || bgColor === 'rgba(255, 255, 255, 0)'
 		? '#fafafa'
-		: bgColor};"
+		: bgColor}; border: 1px rgba(128, 128, 128, .3) solid;"
 >
 	<div
 		class="sticky z-30 h-[40px] bg-[#676869] w-full top-0 left-0 flex items-center rounded-tl-xl rounded-tr-xl"
@@ -44,17 +41,19 @@
 				<div class="w-[10px] h-[10px] bg-[#27ca42] rounded-full mr-2" />
 			</a>
 		</div>
-		<div class="w-full flex justify-center items-center">
-			<div
-				class="text-black w-[300px] bg-white h-[20px] rounded-2xl flex justify-center items-center text-black text-xs"
-			>
-				{url}
+		{#if url}
+			<div class="w-full flex justify-center items-center">
+				<div
+					class="text-black w-[300px] bg-white h-[20px] rounded-2xl flex justify-center items-center text-black text-xs"
+				>
+					{url}
+				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
 
-	<div class="p-4 pt-8">
-		{#if title}
+	{#if title}
+		<div class="p-4 pt-8">
 			<div class="w-full overflow-hidden mt-8">
 				<div
 					class:text-black={theme === 'light'}
@@ -70,8 +69,8 @@
 					{title}
 				</div>
 			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 
 	<div class={browserClass} class:text-black={theme === 'light'}>
 		<slot />
