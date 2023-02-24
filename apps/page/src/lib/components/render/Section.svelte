@@ -78,7 +78,7 @@
 								class="rounded-xl"
 								imgClass="{section.columns === 1 ? '' : 'max-h-[200px]'} {section.items.length === 1
 									? 'mx-auto'
-									: 'w-full'} max-h-[350px] object-cover"
+									: 'mx-auto'} max-h-[350px]"
 								url={item.imageUrl}
 							/>
 						</div>
