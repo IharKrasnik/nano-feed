@@ -21,7 +21,7 @@
 
 	{#if $page.data?.page?.logo}
 		{#if isUrl($page.data.page.logo)}
-			<link rel="icon" href="%sveltekit.assets%/momentum_square_logo.png" />
+			<link rel="icon" href={$page.data.page.logo} />
 		{:else}
 			<link
 				rel="icon"
@@ -29,6 +29,8 @@
 					.data.page.logo}</text></svg>"
 			/>
 		{/if}
+	{:else}
+		<link rel="icon" href="%sveltekit.assets%/momentum_square_logo.png" />
 	{/if}
 </svelte:head>
 
