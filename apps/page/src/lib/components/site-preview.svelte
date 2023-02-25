@@ -173,7 +173,7 @@
 						<div
 							class={page.demoUrl
 								? 'w-full text-center sm:text-left sm:max-w-[500px] items-center'
-								: 'flex flex-col items-center w-full sm:w-auto sm:max-w-[800px] mx-auto'}
+								: 'flex flex-col items-center w-full sm:w-auto sm:max-w-[600px] mx-auto'}
 						>
 							<h1 class="_title">{page.title}</h1>
 
