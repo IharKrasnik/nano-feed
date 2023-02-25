@@ -3,13 +3,13 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import isGif from 'lib/helpers/isGif';
 
-	let clazz = 'py-4 md:py-16';
+	let clazz = 'py-4 sm:py-16';
 
 	export { clazz as class };
 
 	const headerTextStyle = (item) => {
 		return {
-			1: item.imageUrl ? 'text-2xl' : 'md:text-4xl text-3xl',
+			1: item.imageUrl ? 'text-2xl' : 'sm:text-4xl text-3xl',
 			2: 'text-2xl',
 			3: 'text-lg',
 			4: ''
@@ -34,14 +34,14 @@
 {#if section.items?.length}
 	<div class="w-full {clazz}">
 		<div
-			class="grid grid-cols-1 md:grid-cols-{section.columns} gap-4 {section.columns > 1
+			class="grid grid-cols-1 sm:grid-cols-{section.columns} gap-4 {section.columns > 1
 				? 'items-start'
 				: ''}"
 		>
 			{#each section.items || [] as item, i}
 				<div class="mb-8">
 					<div
-						class="grid h-full grid-cols-1 md:grid-cols-{section.columns === 1 &&
+						class="grid h-full grid-cols-1 sm:grid-cols-{section.columns === 1 &&
 						item.imageUrl &&
 						section.items.length > 1
 							? 2
@@ -57,7 +57,7 @@
 								? 'p-4'
 								: 'p-8'} max-w-[600px] text-left self-center order-none {section.columns == 1 &&
 							i % 2 === 1
-								? 'md:order-last'
+								? 'sm:order-last'
 								: ''} {section.columns === 1 &&
 								(!item.imageUrl || section.items.length === 1) &&
 								'mx-auto text-center'}"
@@ -80,7 +80,7 @@
 								>
 							{/if}
 						</div>
-						<div class="order-none {section.columns === 1 && i % 2 === 0 ? 'md:order-last' : ''}">
+						<div class="order-none {section.columns === 1 && i % 2 === 0 ? 'sm:order-last' : ''}">
 							<RenderUrl
 								class="rounded-xl"
 								imgClass="mx-auto {section.columns === 1 ? '' : 'max-h-[200px]'}  {section.items

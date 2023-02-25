@@ -98,7 +98,7 @@
 <svelte:window bind:scrollY />
 
 <div
-	class="md:grid-cols-1 md:grid-cols-2 md:grid-cols-3 md:grid-cols-4 md:grid-cols-5 md:grid-cols-3"
+	class="sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px]"
 />
 
 <div class="color-site" style={cssVarStyles}>
@@ -109,14 +109,14 @@
 			out:fade={{ duration: 150, delay: 150 }}
 		>
 			<div
-				class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 md:px-0"
+				class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 sm:px-0"
 			>
 				<a class="flex items-center shrink-0" href="/">
 					<Emoji class="mr-2" emoji={page.logo} />
 					<span class="font-bold">
 						{page.name}
 					</span>
-					<div class="ml-4 opacity-70 hidden md:block">
+					<div class="ml-4 opacity-70 hidden sm:block">
 						&nbsp; {page.title}
 					</div>
 				</a>
@@ -139,14 +139,14 @@
 	{/if}
 
 	{#if isMounted}
-		<div class="sticky bg-site z-20 w-full md:p-4 p-8" in:fade={{ duration: 150 }}>
+		<div class="sticky bg-site z-20 w-full sm:p-4 p-8" in:fade={{ duration: 150 }}>
 			<div class="_header flex justify-between items-center">
 				<a class="flex items-center shrink-0 _logo" href="/">
 					<Emoji class="mr-2" emoji={page.logo} />
 					{page.name}
 				</a>
 
-				<div class="mt-2">
+				<div class="shrink-0 mt-2">
 					{#if !isSubmitted}
 						{#if page.isCollectEmails}
 							<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
@@ -162,7 +162,7 @@
 
 			<div class="_root bg-site">
 				<div
-					class="_content pb-16 pt-32 {!page.testimonials?.length ? 'md:h-screen' : ''}"
+					class="_content pb-16 pt-32 {!page.testimonials?.length ? 'sm:h-screen' : ''}"
 					style={!page.testimonials}
 				>
 					<div
@@ -172,8 +172,8 @@
 					>
 						<div
 							class={page.demoUrl
-								? 'w-full text-center md:text-left max-w-[500px] items-center'
-								: 'flex flex-col items-center w-full md:w-auto md:max-w-[800px] mx-auto'}
+								? 'w-full text-center sm:text-left sm:max-w-[500px] items-center'
+								: 'flex flex-col items-center w-full sm:w-auto sm:max-w-[800px] mx-auto'}
 						>
 							<h1 class="_title">{page.title}</h1>
 
@@ -182,13 +182,14 @@
 							{/if}
 
 							<div
-								class="_input_container flex items-center w-full {page.demoUrl ? '' : 'mx-auto'}"
-								style="max-width: {page.callToAction.length < 20 ? '392px' : '500px'}"
+								class="_input_container flex items-center w-full {page.demoUrl
+									? ''
+									: 'mx-auto'} {page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]'}"
 							>
 								<form
 									class="{page.isCollectEmails
 										? 'w-full flex flex-col sm:flex-row items-center justify-center'
-										: 'mx-auto md:mx-0'} "
+										: 'mx-auto sm:mx-0'} "
 									style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
 									on:submit|preventDefault={submitEmail}
 								>
@@ -196,7 +197,6 @@
 										{#if page.isCollectEmails}
 											<input
 												class="_input w-full"
-												style="min-width: 392px;"
 												placeholder="Your Email"
 												type="email"
 												required
@@ -207,8 +207,8 @@
 											/>
 											<button
 												type="submit"
-												class="_input_button {page.isCollectEmails
-													? 'md:absolute w-full sm:w-auto mt-4 md:mt-0'
+												class="_input_button justify-center {page.isCollectEmails
+													? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
 													: ''}">{page.callToAction}</button
 											>
 										{:else}
@@ -228,22 +228,22 @@
 						</div>
 
 						{#if page.demoUrl}
-							<div class="w-full md:max-w-[600px] mt-16 md:mt-0 md:ml-8">
+							<div class="w-full sm:max-w-[600px] mt-16 sm:mt-0 sm:ml-8">
 								<RenderUrl class="w-full flex justify-end" url={page.demoUrl} imgClass="" />
 							</div>
 						{/if}
 					</div>
 
 					{#if isMounted && page.testimonials?.length}
-						<div class="w-full flex flex-col md:flex-row justify-center mt-16 md:mt-32">
+						<div class="w-full flex flex-col sm:flex-row justify-center mt-16 sm:mt-32">
 							{#each page.testimonials as testimonial, i}
 								<div
-									class="p-4 rounded-2xl w-full md:max-w-[350px] mr-4 mb-4 md:mb-0 bg-section"
+									class="p-4 rounded-2xl w-full sm:max-w-[350px] mr-4 mb-4 sm:mb-0 bg-section"
 									in:fly={{ x: -50, y: -50, duration: 150, delay: 150 * (i + 1) }}
 								>
-									<div class="flex flex-col md:flex-row">
+									<div class="flex flex-col sm:flex-row">
 										{#if testimonial.avatarUrl}
-											<div class="mr-4 mb-4 md:mb-0">
+											<div class="mr-4 mb-4 sm:mb-0">
 												<img
 													src={testimonial.avatarUrl}
 													class="max-w-[50px] aspect-square rounded-full"
@@ -278,7 +278,7 @@
 
 	{#if page.streamSlug}
 		<div>
-			<div class="sticky z-20 py-4 md:py-16 bg-site">
+			<div class="sticky z-20 py-4 sm:py-16 bg-site">
 				<RenderSection
 					class="p-0"
 					section={{
@@ -343,8 +343,9 @@
 			</div>
 
 			<div
-				class="_input_container flex items-center mx-auto w-full"
-				style="max-width: {page.callToAction.length < 20 ? '392px' : '500px'};"
+				class="_input_container flex items-center mx-auto w-full {page.callToAction.length < 20
+					? 'sm:w-[392px]'
+					: 'sm:w-[500px]'}"
 			>
 				<form
 					class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
@@ -353,7 +354,6 @@
 					{#if !isSubmitted}
 						{#if page.isCollectEmails}
 							<input
-								style="min-width: 392px;"
 								class="_input w-full"
 								placeholder="Your Email"
 								type="email"
@@ -365,8 +365,8 @@
 							/>
 							<button
 								type="submit"
-								class="_input_button {page.isCollectEmails
-									? 'md:absolute w-full sm:w-auto mt-4 md:mt-0'
+								class="_input_button justify-center {page.isCollectEmails
+									? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
 									: ''}">{page.callToAction}</button
 							>
 						{:else}
