@@ -113,7 +113,7 @@
 			>
 				<a class="flex items-center shrink-0" href="/">
 					<Emoji class="mr-2" emoji={page.logo} />
-					<span class="font-bold">
+					<span class="font-bold  ">
 						{page.name}
 					</span>
 					<div class="ml-4 opacity-70 hidden sm:block">
@@ -140,13 +140,16 @@
 
 	{#if isMounted}
 		<div class="sticky bg-site z-20 w-full sm:p-4 p-8" in:fade={{ duration: 150 }}>
-			<div class="_header flex justify-between items-center">
+			<div class="_header flex md:justify-between items-center justify-center">
 				<a class="flex items-center shrink-0 _logo" href="/">
 					<Emoji class="mr-2" emoji={page.logo} />
-					{page.name}
+
+					<span class="font-bold">
+						{page.name}
+					</span>
 				</a>
 
-				<div class="shrink-0 mt-2">
+				<div class="shrink-0 mt-2 hidden md:block">
 					{#if !isSubmitted}
 						{#if page.isCollectEmails}
 							<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
@@ -335,7 +338,9 @@
 			<div class="mx-auto max-w-[600px] flex flex-col items-center justify-center">
 				<div class="flex items-center text-lg my-4">
 					<Emoji class="mr-2" emoji={page.logo} />
-					{page.name}
+					<span>
+						{page.name}
+					</span>
 				</div>
 				<div class="text-3xl font-bold mb-8">
 					{page.title}
