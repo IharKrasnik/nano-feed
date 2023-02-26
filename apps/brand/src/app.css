@@ -4,17 +4,24 @@
 
 body {
 	font-family: Inter;
-	background: black;
 	color: white;
 
-	--background-color: #000;
+	--background-color: #0a120b;
+
 	--input-background-color: #181a18;
 	--accent-color: #8b786d;
 	--border-color: rgba(255, 255, 255, 0.3);
+
+	background: var(--background-color);
 }
 
 ._border-brand {
 	border: 1px var(--border-color) solid;
+}
+
+._heading {
+	font-weight: 700;
+	font-family: Archivo;
 }
 
 ._section {
@@ -26,6 +33,11 @@ body {
 
 ._title {
 	margin-bottom: 12px;
+}
+
+._link {
+	cursor: pointer;
+	color: var(--accent-color);
 }
 
 .number-tag {

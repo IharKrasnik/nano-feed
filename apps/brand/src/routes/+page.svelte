@@ -12,19 +12,43 @@
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
+	import EditOpenGraphImage from '$lib/components/edit/OpenGraphImage.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
-	import BannerPreview from '$lib/components/BannerPreview.svelte';
+	import OpenGraphPreview from '$lib/components/OpenGraphPreview.svelte';
+	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 
 	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
+
+	onMount(async () => {
+		await import('emoji-picker-element/svelte');
+	});
 
 	let projectSlug;
 	let isJustCreated = false;
 	let isSignupFormShown = false;
 	let isLoading = false;
 
-	let project = {};
+	let getProject = () => {
+		return {
+			logo: '💯',
+			name: '',
+			description: '',
+			imageUrl: '',
+			theme: {},
+			brands: []
+		};
+	};
+
+	let project = getProject();
+
+	let addBrand = () => {
+		project = {
+			...project,
+			brands: [...project.brands, { ...project }]
+		};
+	};
 </script>
 
 {#if !$currentUser || $allProjects}
@@ -111,39 +135,29 @@
 				{/if} -->
 
 				<div class="w-[426px] p-4 pl-0 mr-4">
-					{#if !project._id}
-						<div class="_section">
-							<div class="_title">Header</div>
-							<textarea
-								class="w-full"
-								bind:value={project.header}
-								rows="4"
-								placeholder="Build a better product in public and grow your audience."
-							/>
-						</div>
+					<div class="mb-2">
+						<EmojiPicker theme="dark" bind:icon={project.logo} />
+					</div>
+					<EditOpenGraphImage bind:openGraphImage={project} isSections />
+
+					{#if project.brands.length}
+						<div class="py-8">Open Graph Images</div>
 					{/if}
 
-					<!-- <div class="my-4">
-            <ABToggle></ABToggle>
-          </div> -->
-					<!-- <div class="_section">
-						<div class="_title">Description</div>
-						<textarea
-							class="w-full"
-							bind:value={project.description}
-							rows="4"
-							placeholder="Build a better product in public and grow your audience."
-						/>
-					</div> -->
+					{#each project.brands as brand}
+						<EditOpenGraphImage bind:parent={project} bind:openGraphImage={brand} />
+					{/each}
 
-					<div class="_section">
-						<div class="_title">Image</div>
-						<FileInput class="w-full" bind:url={project.imageUrl} />
+					<div
+						class="p-8 flex items-center justify-center cursor-pointer _link"
+						on:click={addBrand}
+					>
+						Add Open Graph Image
 					</div>
 				</div>
 			</div>
 
-			{#if project.header || project.description}
+			{#if project.name || project.description}
 				<div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
 					{#if project._id}
 						<div class="sticky top-[20px] w-full z-50 h-[0px]">
@@ -211,8 +225,14 @@
 					{/if}
 
 					<div class="mt-8 relative">
-						<BannerPreview bind:project />
+						<OpenGraphPreview bind:openGraphImage={project} />
 					</div>
+
+					{#each project.brands as openGraphImage}
+						<div class="mt-8 relative">
+							<OpenGraphPreview bind:openGraphImage />
+						</div>
+					{/each}
 				</div>
 			{:else}
 				<div
