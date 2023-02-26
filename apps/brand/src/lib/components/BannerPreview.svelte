@@ -32,25 +32,33 @@
 
 <div>
 	<div
-		class="absolute top-0 left-0 bg-black"
+		class="absolute top-0 left-0 bg-black overflow-hidden"
 		style="width: 1200px; height: 630px; {isScale
 			? 'transform: scale(0.5); transform-origin: top left;'
-			: ''}background-size: cover; padding: 64px; {style}"
+			: ''}background-size: cover; padding: 64px; padding-bottom: 0; {style}"
 		bind:this={imageEl}
 	>
-		<div class="h-full">
-			<div class="flex items-center h-full">
+		<div class="h-full overflow-hidden">
+			<div class="mt-32 flex flex-col justify-center items-center h-full ">
 				<div class="w-full">
-					<div class="text-center w-full" style="font-size: 48px; font-weight: bold;">
+					<div
+						class="text-center w-full whitespace-pre"
+						style="font-size: 50px; font-weight: bold;"
+					>
 						{project.header}
 					</div>
-					<div class="mt-4 text-center" style="font-size: 32px;">
+					<!-- <div class="mt-4 text-center" style="font-size: 48px;">
 						{project.description || ''}
-					</div>
+					</div> -->
 				</div>
 				<div>
 					{#if project.imageUrl}
-						<img crossorigin="anonymous" src={project.imageUrl} />
+						<img
+							crossorigin="anonymous"
+							class="mt-16"
+							style="max-width: 700px; border-radius: 16px;"
+							src={project.imageUrl}
+						/>
 					{/if}
 				</div>
 			</div>

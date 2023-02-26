@@ -114,14 +114,19 @@
 					{#if !project._id}
 						<div class="_section">
 							<div class="_title">Header</div>
-							<input class="w-full" bind:value={project.header} placeholder="Momentum" />
+							<textarea
+								class="w-full"
+								bind:value={project.header}
+								rows="4"
+								placeholder="Build a better product in public and grow your audience."
+							/>
 						</div>
 					{/if}
 
 					<!-- <div class="my-4">
             <ABToggle></ABToggle>
           </div> -->
-					<div class="_section">
+					<!-- <div class="_section">
 						<div class="_title">Description</div>
 						<textarea
 							class="w-full"
@@ -129,7 +134,7 @@
 							rows="4"
 							placeholder="Build a better product in public and grow your audience."
 						/>
-					</div>
+					</div> -->
 
 					<div class="_section">
 						<div class="_title">Image</div>
