@@ -7,6 +7,12 @@
 	let isEmojiPickerShown = false;
 
 	export let icon;
+	export let defaultIcon;
+
+	if (!icon && defaultIcon) {
+		icon = defaultIcon;
+	}
+
 	export let theme = 'light';
 
 	let url = icon?.startsWith('http') ? icon : null;
@@ -28,7 +34,7 @@
 	<Emoji bind:emoji={icon} />
 
 	{#if isEmojiPickerShown}
-		<div class="absolute top-0 mt-8 z-40" in:fly={{ y: 50, duration: 150 }}>
+		<div class="absolute top-0 mt-32 z-40" in:fly={{ y: 50, duration: 150 }}>
 			<emoji-picker
 				class={theme}
 				on:emoji-click={(evt) => {

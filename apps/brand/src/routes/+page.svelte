@@ -14,6 +14,7 @@
 	import clickOutside from 'lib/use/clickOutside';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import EditOpenGraphImage from '$lib/components/edit/OpenGraphImage.svelte';
+	import EditColorPicker from '$lib/components/edit/ColorPicker.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import OpenGraphPreview from '$lib/components/OpenGraphPreview.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
@@ -204,23 +205,28 @@
 				{/if} -->
 
 				<div class="w-[426px] p-4 pl-0 mr-4">
-					<div class="mb-2">
+					<div class="flex items-center mb-2">
 						{#if brand._id}
 							<EmojiPicker theme="dark" bind:icon={brand.logo} />
+							<div class="ml-2">
+								<EditColorPicker bind:color={brand.bgColor} />
+							</div>
 						{/if}
 					</div>
-					<div class="_section">
-						<div class="_title">Brand Name</div>
+					{#if !brand._id}
+						<div class="_section">
+							<div class="_title">Brand Name</div>
 
-						<div>
-							<input
-								type="text"
-								class="w-full mb-4"
-								bind:value={brand.name}
-								placeholder="Momentum"
-							/>
+							<div>
+								<input
+									type="text"
+									class="w-full mb-4"
+									bind:value={brand.name}
+									placeholder="Momentum"
+								/>
+							</div>
 						</div>
-					</div>
+					{/if}
 					<div class="_section">
 						<div class="_title">Tagline</div>
 

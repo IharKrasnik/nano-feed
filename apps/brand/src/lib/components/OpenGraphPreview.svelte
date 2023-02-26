@@ -48,14 +48,19 @@
 				console.error('oops, something went wrong!', error);
 			});
 	};
+
+	let bgColor;
+	$: bgColor = openGraphImage.bgColor || brand.bgColor;
 </script>
 
 <div>
 	<div
-		class="absolute top-0 left-0 bg-black overflow-hidden"
+		class="absolute top-0 left-0 bg-black overflow-hidden transition"
 		style="width: 1200px; height: 630px; {isScale
 			? 'transform: scale(0.5); transform-origin: top left;'
-			: ''}background-size: cover; padding: 64px; {style}"
+			: ''}background-size: cover; padding: 64px; {bgColor?.type === 'file'
+			? `background-image: url(${bgColor.value})`
+			: ''} {bgColor?.type === 'plain' ? `background: ${bgColor.value}` : ''}"
 		bind:this={imageEl}
 	>
 		<div class="h-full overflow-hidden">

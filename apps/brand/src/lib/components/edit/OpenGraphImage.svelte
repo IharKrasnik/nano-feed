@@ -3,6 +3,7 @@
 
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import EditColorPicker from '$lib/components/edit/ColorPicker.svelte';
 
 	export let openGraphImage;
 	export let brand;
@@ -11,8 +12,13 @@
 
 <div class="_section">
 	<div class="flex justify-between mb-4">
-		<EmojiPicker theme="dark" bind:icon={openGraphImage.logo} />
+		<div class="flex items-center">
+			<EmojiPicker theme="dark" bind:icon={openGraphImage.logo} bind:defaultIcon={brand.logo} />
 
+			<div class="ml-2">
+				<EditColorPicker bind:color={openGraphImage.bgColor} bind:defaultColor={brand.bgColor} />
+			</div>
+		</div>
 		<div class="text-sm _link" on:click={onRemove}>Remove</div>
 	</div>
 	<div>
