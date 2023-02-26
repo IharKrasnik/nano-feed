@@ -10,6 +10,8 @@ body {
 
 	--input-background-color: #181a18;
 	--accent-color: #8b786d;
+	--button-background-color: rgba(255, 255, 255, 0.8);
+	--button-color: #0c120c;
 	--border-color: rgba(255, 255, 255, 0.3);
 
 	background: var(--background-color);
@@ -86,6 +88,8 @@ textarea {
 }
 
 button {
+	background: var(--button-background-color);
+	color: var(--button-color);
 	cursor: pointer;
 	border-radius: 8px;
 	padding: 10px 18px;

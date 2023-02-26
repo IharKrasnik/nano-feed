@@ -20,6 +20,6 @@
 			<img style="width: {width}px; height: {width}px;" src={url} />
 		{/key}
 	{:else}
-		{emoji || ''}
+		{emoji || '✨'}
 	{/if}
 </div>

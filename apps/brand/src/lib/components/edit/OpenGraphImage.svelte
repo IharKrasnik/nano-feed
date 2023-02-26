@@ -1,73 +1,40 @@
 <script>
+	import _ from 'lodash';
+
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 
 	export let openGraphImage;
-	export let parent;
-	export let isSections = false;
+	export let brand;
+	export let onRemove = () => {};
 </script>
 
-{#if isSections}
-	<div class="_section">
-		<div class="_title">Brand Name</div>
+<div class="_section">
+	<div class="flex justify-between mb-4">
+		<EmojiPicker theme="dark" bind:icon={openGraphImage.logo} />
 
-		<div>
-			<input
-				type="text"
-				class="w-full mb-4"
-				bind:value={openGraphImage.name}
-				placeholder="Momentum"
-			/>
-		</div>
+		<div class="text-sm _link" on:click={onRemove}>Remove</div>
 	</div>
-	<div class="_section">
-		<div class="_title">Tagline</div>
-
-		<div>
-			<textarea
-				type="text"
-				rows="4"
-				class="w-full mb-4"
-				bind:value={openGraphImage.description}
-				placeholder="Build a better product in public and grow your audience early"
-			/>
-		</div>
+	<div>
+		<input
+			type="text"
+			class="w-full mb-4"
+			bind:value={openGraphImage.name}
+			placeholder={brand.name || 'Momentum'}
+		/>
 	</div>
 
-	<div class="_section">
-		<div class="_title">Image</div>
-
-		<div>
-			<FileInput class="w-full" bind:url={openGraphImage.imageUrl} />
-		</div>
+	<div>
+		<textarea
+			type="text"
+			class="w-full mb-4"
+			rows="4"
+			bind:value={openGraphImage.title}
+			placeholder={brand.title || 'Build a better product in public and grow your audience early'}
+		/>
 	</div>
-{:else}
-	<div class="_section">
-		<div class="mb-4">
-			<EmojiPicker theme="dark" bind:icon={openGraphImage.logo} />
-		</div>
-		<div>
-			<input
-				type="text"
-				class="w-full mb-4"
-				bind:value={openGraphImage.name}
-				placeholder={parent?.name || 'Momentum'}
-			/>
-		</div>
 
-		<div>
-			<textarea
-				type="text"
-				class="w-full mb-4"
-				rows="4"
-				bind:value={openGraphImage.description}
-				placeholder={parent?.description ||
-					'Build a better product in public and grow your audience early'}
-			/>
-		</div>
-
-		<div>
-			<FileInput class="w-full" bind:url={openGraphImage.imageUrl} />
-		</div>
+	<div>
+		<FileInput class="w-full" bind:url={openGraphImage.imageUrl} />
 	</div>
-{/if}
+</div>

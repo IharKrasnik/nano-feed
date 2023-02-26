@@ -6,10 +6,10 @@
 
 	let isEmojiPickerShown = false;
 
-	export let icon = '✨';
+	export let icon;
 	export let theme = 'light';
 
-	let url = icon.startsWith('http') ? icon : null;
+	let url = icon?.startsWith('http') ? icon : null;
 
 	$: if (url && url.startsWith('http')) {
 		icon = url;

@@ -8,7 +8,8 @@
 
 	import { get, post, put } from 'lib/api';
 	import currentUser from 'lib/stores/currentUser';
-	import allProjects from '$lib/stores/allProjects';
+	import allBrands from '$lib/stores/allBrands';
+	import brandDraft from '$lib/stores/brandDraft';
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
@@ -25,39 +26,107 @@
 		await import('emoji-picker-element/svelte');
 	});
 
-	let projectSlug;
+	let brandSlug;
 	let isJustCreated = false;
 	let isSignupFormShown = false;
 	let isLoading = false;
 
-	let getProject = () => {
+	let defaultBrand = () => {
 		return {
 			logo: '💯',
+			slug: '_new',
 			name: '',
-			description: '',
+			title: '',
 			imageUrl: '',
 			theme: {},
-			brands: []
+			openGraphImages: []
 		};
 	};
 
-	let project = getProject();
+	let publishBrand = async () => {
+		if (brand._id) {
+			brand = await put(`brands/${brand._id}`, brand);
 
-	let addBrand = () => {
-		project = {
-			...project,
-			brands: [...project.brands, { ...project }]
+			$allBrands = $allBrands.map((b) => {
+				if (b._id === brand._id) {
+					return _.cloneDeep(brand);
+				} else {
+					return b;
+				}
+			});
+		} else {
+			brand = await post('brands', brand);
+			isJustCreated = true;
+			$allBrands = [brand, ...$allBrands];
+		}
+	};
+
+	let addOpenGraphImage = () => {
+		brand = {
+			...brand,
+			openGraphImages: [...brand.openGraphImages, {}]
+		};
+	};
+
+	let defaultPage = {
+		_id: undefined,
+		name: '',
+		title: '',
+		subtitle: '',
+		callToAction: 'Join Waitlist',
+		bgColor: '',
+		slug: '_new',
+		isCollectEmails: true
+	};
+
+	let brand = { ..._.cloneDeep($brandDraft['_new'] || defaultBrand()) };
+
+	let isBrandSet = false;
+
+	let refreshData = () => {};
+
+	let setBrandAndDraft = (p, { force = false } = {}) => {
+		brand = { ..._.cloneDeep(p) };
+
+		if (
+			!force &&
+			$brandDraft[brand.slug] &&
+			new Date(brand.updatedOn) < new Date($brandDraft[brand.slug].updatedOn)
+		) {
+			brand = _.cloneDeep($brandDraft[brand.slug]);
+		} else {
+			$brandDraft = {
+				..._.cloneDeep($brandDraft),
+				[brand.slug]: { ..._.cloneDeep(brand) }
+			};
+		}
+
+		brandSlug = brand.slug;
+	};
+
+	$: if (!isBrandSet && $currentUser && $allBrands?.length && !brand?._id) {
+		setBrandAndDraft({ ..._.cloneDeep($allBrands[0]) });
+
+		refreshData();
+		isBrandSet = true;
+	}
+
+	let removeOpenGraphImage = (openGraphImage) => {
+		brand = {
+			...brand,
+			openGraphImages: [...brand.openGraphImages.filter((image) => image !== openGraphImage)]
 		};
 	};
 </script>
 
-{#if !$currentUser || $allProjects}
+{#if !$currentUser || $allBrands}
 	<div class="fixed w-full" />
 
 	<div class="container mx-auto relative">
 		<div class="flex relative">
 			<div
 				class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll"
+				style="padding-bottom: 100px;"
 				in:fly={{ x: 50, duration: 150, delay: 150 }}
 			>
 				<div class="fixed top-0 z-10 w-[426px] mb-[70px]">
@@ -93,27 +162,27 @@
 						</a>
 
 						{#if $currentUser}
-							{#if $allProjects}
+							{#if $allBrands}
 								<select
 									class="ml-8 w-[275px]"
-									bind:value={projectSlug}
+									bind:value={brandSlug}
 									on:change={(evt) => {
-										// let slug = evt.target.value;
-										// if (slug === '_new') {
-										// 	project = { ..._.cloneDeep($projectDraft['_new'] || defaultProject) };
-										// 	projectSlug = project.slug;
-										// } else {
-										// 	setProjectAndDraft({
-										// 		..._.cloneDeep($allProjects.find((p) => p.slug === evt.target.value))
-										// 	});
-										// 	refreshData();
-										// }
+										let slug = evt.target.value;
+										if (slug === '_new') {
+											brand = { ..._.cloneDeep($brandDraft['_new'] || defaultBrand()) };
+											brandSlug = brand.slug;
+										} else {
+											setBrandAndDraft({
+												..._.cloneDeep($allBrands.find((p) => p.slug === evt.target.value))
+											});
+											refreshData();
+										}
 									}}
 								>
-									<!-- {#each $allProjects as project}
-										<option value={project.slug}>{project.name}</option>
-									{/each} -->
-									<option value="_new">⬜️ Create New project</option>
+									{#each $allBrands as brand}
+										<option value={brand.slug}>{brand.name}</option>
+									{/each}
+									<option value="_new">⬜️ Create New Brand</option>
 								</select>
 							{:else}
 								<Loader />
@@ -131,35 +200,81 @@
 				</div>
 
 				<!-- {#if !$currentUser}
-					<div class="mt-8">Launch your project in seconds 👇</div>
+					<div class="mt-8">Launch your brand in seconds 👇</div>
 				{/if} -->
 
 				<div class="w-[426px] p-4 pl-0 mr-4">
 					<div class="mb-2">
-						<EmojiPicker theme="dark" bind:icon={project.logo} />
+						{#if brand._id}
+							<EmojiPicker theme="dark" bind:icon={brand.logo} />
+						{/if}
 					</div>
-					<EditOpenGraphImage bind:openGraphImage={project} isSections />
+					<div class="_section">
+						<div class="_title">Brand Name</div>
 
-					{#if project.brands.length}
+						<div>
+							<input
+								type="text"
+								class="w-full mb-4"
+								bind:value={brand.name}
+								placeholder="Momentum"
+							/>
+						</div>
+					</div>
+					<div class="_section">
+						<div class="_title">Tagline</div>
+
+						<div>
+							<textarea
+								type="text"
+								rows="4"
+								class="w-full mb-4"
+								bind:value={brand.title}
+								placeholder="Build a better product in public and grow your audience early"
+							/>
+						</div>
+					</div>
+
+					{#if brand._id}
+						<div class="_section">
+							<div class="_title">Image</div>
+
+							<div>
+								<FileInput class="w-full" bind:url={brand.imageUrl} />
+							</div>
+						</div>
+					{/if}
+
+					{#if brand.openGraphImages.length}
 						<div class="py-8">Open Graph Images</div>
 					{/if}
 
-					{#each project.brands as brand}
-						<EditOpenGraphImage bind:parent={project} bind:openGraphImage={brand} />
+					{#each brand.openGraphImages as openGraphImage}
+						<EditOpenGraphImage
+							bind:brand
+							bind:openGraphImage
+							onRemove={() => removeOpenGraphImage(openGraphImage)}
+						/>
 					{/each}
 
-					<div
-						class="p-8 flex items-center justify-center cursor-pointer _link"
-						on:click={addBrand}
-					>
-						Add Open Graph Image
+					{#if brand._id}
+						<div
+							class="p-8 flex items-center justify-center cursor-pointer _link"
+							on:click={addOpenGraphImage}
+						>
+							Add Open Graph Image
+						</div>
+					{/if}
+
+					<div class="mt-8">
+						<button on:click={publishBrand}>Publish</button>
 					</div>
 				</div>
 			</div>
 
-			{#if project.name || project.description}
+			{#if brand.name || brand.description}
 				<div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
-					{#if project._id}
+					{#if brand._id}
 						<div class="sticky top-[20px] w-full z-50 h-[0px]">
 							<div class="mx-auto">
 								{#if isJustCreated}
@@ -167,13 +282,13 @@
 								{/if}
 							</div>
 
-							<div
+							<!-- <div
 								class="relative _published-label flex items-center mt-4"
 								style="padding: 6px 10px;"
 							>
 								<a
-									href="{PAGE_URL}/{project.slug}"
-									class="flex justify-center {project.isDirty ? 'max-w-[240px]' : 'w-full'}"
+									href="{PAGE_URL}/{brand.slug}"
+									class="flex justify-center {brand.isDirty ? 'max-w-[240px]' : 'w-full'}"
 									style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
 									target="_blank"
 									rel="noreferrer"
@@ -181,9 +296,9 @@
 									<div
 										class="mr-2 ml-4 z-20"
 										use:tooltip
-										title={project.isDirty ? 'Pending Changes' : 'Published'}
+										title={brand.isDirty ? 'Pending Changes' : 'Published'}
 									>
-										{#if !project.isDirty}
+										{#if !brand.isDirty}
 											✅
 										{:else}
 											🌝
@@ -191,11 +306,11 @@
 									</div>
 
 									<div>
-										/{project.slug}
+										/{brand.slug}
 									</div>
 								</a>
 
-								{#if project.isDirty}
+								{#if brand.isDirty}
 									<button
 										class="absolute right-0 _primary flex justify-center w-full {isLoading
 											? 'loading'
@@ -208,7 +323,7 @@
 										transition:fly={{ x: 50, duration: 150 }}
 										on:click={() => {}}
 									>
-										<!-- {#if isLoading}
+										{#if isLoading}
 											<div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
 												<Loader />
 											</div>
@@ -217,20 +332,20 @@
 											<div class="" in:scale={{ duration: 150 }}>👌</div>
 										{:else}
 											Publish
-										{/if} -->
+										{/if}
 									</button>
 								{/if}
-							</div>
+							</div> -->
 						</div>
 					{/if}
 
 					<div class="mt-8 relative">
-						<OpenGraphPreview bind:openGraphImage={project} />
+						<OpenGraphPreview bind:openGraphImage={brand} bind:brand />
 					</div>
 
-					{#each project.brands as openGraphImage}
+					{#each brand.openGraphImages as openGraphImage}
 						<div class="mt-8 relative">
-							<OpenGraphPreview bind:openGraphImage />
+							<OpenGraphPreview bind:openGraphImage bind:brand />
 						</div>
 					{/each}
 				</div>

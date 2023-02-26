@@ -5,13 +5,12 @@ import { browser } from '$app/environment';
 
 import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 
-const allProjectsStore = writable([]);
-// const allProjectsStore = writable(null);
+const allBrandsStore = writable(null);
 
 export const update = async ({} = {}) => {
-	// await get('projects/my').then((results) => {
-	// 	allProjectsStore.set(results);
-	// });
+	await get('brands/my').then((results) => {
+		allBrandsStore.set(results);
+	});
 };
 
 let prevUser;
@@ -28,4 +27,4 @@ if (browser) {
 	});
 }
 
-export default allProjectsStore;
+export default allBrandsStore;
