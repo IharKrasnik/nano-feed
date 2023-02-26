@@ -4,11 +4,11 @@ import { browser } from '$app/environment';
 
 //
 
-// export const API_URL = dev
-// 	? 'https://ship-627ed08f489a970013572f5d.paralect.net'
-// 	: 'https://ship-prod-627ed08f489a970013572f5d.paralect.net';
+export const API_URL = dev
+	? 'https://ship-627ed08f489a970013572f5d.paralect.net'
+	: 'https://ship-prod-627ed08f489a970013572f5d.paralect.net';
 
-export const API_URL = 'https://ship-prod-627ed08f489a970013572f5d.paralect.net';
+// export const API_URL = 'https://ship-prod-627ed08f489a970013572f5d.paralect.net';
 
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
 
@@ -22,4 +22,12 @@ export const STREAM_URL = dev
 
 export const GOOGLE_LOGIN_URL = browser
 	? `${API_URL}/auth/google/url?redirect_to=${window.document.location.href}`
+	: null;
+
+export const LINKEDIN_LOGIN_URL = browser
+	? `${API_URL}/auth/linkedin/url?redirect_to=${window.document.location.href}`
+	: null;
+
+export const TWITTER_LOGIN_URL = browser
+	? `${API_URL}/auth/twitter/url?redirect_to=${window.document.location.href}`
 	: null;
