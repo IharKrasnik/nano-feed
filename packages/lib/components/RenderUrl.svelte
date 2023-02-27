@@ -57,8 +57,7 @@
 				{#if !isFilesOnly}
 					<iframe
 						src="https://player.vimeo.com/video/{new URL(url).pathname.replace('/', '')}"
-						width="640"
-						height="360"
+						class="w-full mt-2 aspect-video"
 						frameborder="0"
 						allow="autoplay; fullscreen; picture-in-picture"
 						allowfullscreen
