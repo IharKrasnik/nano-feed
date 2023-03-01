@@ -12,7 +12,7 @@ export const API_URL = dev
 
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
 
-export const PAGE_URL = dev ? 'http://localhost:5175' : 'https://page.mmntm.build';
+export const PAGE_URL = dev ? 'http://localhost:5176' : 'https://page.mmntm.build';
 // export const PAGE_URL = 'http://localhost:5175/';
 
 export const STREAM_URL = dev
@@ -20,7 +20,7 @@ export const STREAM_URL = dev
 	: // 'https://feed.mmntm.build'
 	  'https://feed.mmntm.build';
 
-export const GOOGLE_LOGIN_URL = browser
+export let GOOGLE_LOGIN_URL = browser
 	? `${API_URL}/auth/google/url?redirect_to=${window.document.location.href}`
 	: null;
 

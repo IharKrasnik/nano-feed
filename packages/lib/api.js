@@ -58,6 +58,10 @@ const ftch = async (method, url, params, options = {}) => {
 		if (cookies.access_token) {
 			headers['Authorization'] = `Bearer ${cookies.access_token}`;
 		}
+
+		if (cookies['wave_fingerprint']) {
+			headers['X-FINGERPRINT'] = cookies['wave_fingerprint'];
+		}
 	}
 
 	if (absoluteUrl.startsWith(API_URL)) {

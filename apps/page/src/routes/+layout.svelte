@@ -6,6 +6,7 @@
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import allPages from '$lib/stores/allPages';
 	import Dock from 'lib/components/Dock.svelte';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 </script>
 
 <svelte:head>
@@ -33,6 +34,8 @@
 		<link rel="icon" href="momentum_square_logo.png" />
 	{/if}
 </svelte:head>
+
+<SvelteToast />
 
 <div id="modal-portal" />
 

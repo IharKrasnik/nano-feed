@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import { get } from 'lib/api';
 import { get as getFromStore } from 'svelte/store';
 import { browser } from '$app/environment';
+import pageDraft from '$lib/stores/pageDraft';
 
 import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 
@@ -23,6 +24,19 @@ if (browser) {
 				prevUser = user;
 			}
 		} else if (!getFromStore(isUserLoading)) {
+			let pageDraftValue = getFromStore(pageDraft);
+			if (pageDraftValue) {
+				let pages = [];
+
+				Object.keys(pageDraftValue).forEach((key) => {
+					if (pageDraftValue[key]?._id) {
+						pages.push(pageDraftValue[key]);
+					}
+				});
+				debugger;
+
+				allPagesStore.set(pages);
+			}
 		}
 	});
 }

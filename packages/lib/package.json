@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zerodevx/svelte-toast": "^1.0.0-rc.1",
     "country-code-emoji": "^2.3.0",
     "country-code-lookup": "^0.0.22",
     "file-selector": "^0.6.0",

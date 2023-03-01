@@ -8,6 +8,8 @@
 	import Loader from 'lib/components/Loader.svelte';
 	import ImageSearch from 'lib/components/ImageSearch.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import { showErrorMessage } from 'lib/services/toast';
+	import currentUser from 'lib/stores/currentUser';
 
 	export let isCanSearch = false;
 	export let url;
@@ -71,6 +73,9 @@
 	};
 
 	const onFileUpload = async (e) => {
+		if (!$currentUser) {
+			return showErrorMessage('Please log in to upload files');
+		}
 		return uploadFile((e.target?.files || e.detail?.files)[0]);
 	};
 

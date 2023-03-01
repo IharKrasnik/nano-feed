@@ -5,9 +5,11 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
+	import loginWithGoogle from 'lib/helpers/loginWithGoogle';
 	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
+	import { showErrorMessage } from 'lib/services/toast';
 
 	import { get, post, put } from 'lib/api';
 	import currentUser from 'lib/stores/currentUser';
@@ -61,6 +63,7 @@
 	};
 
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+	debugger;
 	let isPageSet = false;
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
@@ -82,7 +85,7 @@
 		pageSlug = page.slug;
 	};
 
-	$: if (!isPageSet && $currentUser && $allPages?.length && !page?._id) {
+	$: if (!isPageSet && $allPages?.length && !page?._id) {
 		setPageAndDraft({ ..._.cloneDeep($allPages[0]) });
 
 		refreshData();
@@ -90,14 +93,15 @@
 	}
 
 	let isJustPublished = false;
+
 	let isJustCreated = false;
 
 	const publishPage = async () => {
-		if (!$currentUser) {
-			$pageDraft = { ..._.cloneDeep($pageDraft), _new: page };
-			isSignupFormShown = true;
-			return;
-		}
+		// if (!$currentUser) {
+		// 	$pageDraft = { ..._.cloneDeep($pageDraft), _new: page };
+		// 	isSignupFormShown = true;
+		// 	return;
+		// }
 
 		isLoading = true;
 
@@ -118,7 +122,7 @@
 			};
 
 			if (isNewPage) {
-				$allPages = [{ ...page }, ...$allPages];
+				$allPages = [{ ...page }, ...($allPages || [])];
 				isJustCreated = true;
 			} else {
 				$allPages = $allPages.map((p) => {
@@ -138,6 +142,8 @@
 				isJustPublished = false;
 			}, 1000);
 		}
+
+		debugger;
 	};
 
 	let isMetricsOpen = false;
@@ -219,6 +225,10 @@
 	let isOrdering = false;
 
 	let embedStream = async () => {
+		debugger;
+		if (!$currentUser) {
+			return showErrorMessage('Log in to embed wall');
+		}
 		const { streamSlug } = await put(`pages/${page._id}/embed-stream`);
 		page.streamSlug = streamSlug;
 
@@ -259,9 +269,9 @@
 {#if !$currentUser || $allPages}
 	<div class="fixed w-full" />
 
-	{#if isSignupFormShown}
+	<!-- {#if isSignupFormShown}
 		<SignupForm />
-	{/if}
+	{/if} -->
 
 	<div class="container mx-auto relative">
 		<div class="flex relative">
@@ -330,9 +340,7 @@
 								<Loader />
 							{/if}
 						{:else}
-							<a href={GOOGLE_LOGIN_URL}>
-								<button class="_primary"> Log In </button>
-							</a>
+							<button class="_primary" on:click={loginWithGoogle}> Log In </button>
 						{/if}
 					</div>
 
@@ -341,7 +349,7 @@
 					</div>
 				</div>
 
-				{#if !$currentUser}
+				{#if !page._id}
 					<div class="mt-8">Launch your landing page in seconds 👇</div>
 				{/if}
 
@@ -566,7 +574,9 @@
 							>
 						{/if}
 
-						<hr class="my-8 border-[#8B786D] opacity-30" />
+						{#if page._id}
+							<hr class="my-8 border-[#8B786D] opacity-30" />
+						{/if}
 
 						{#if page._id && !isOrdering}
 							<div class="_section">
