@@ -102,11 +102,14 @@
 		// 	isSignupFormShown = true;
 		// 	return;
 		// }
+		let isNewPage = !page._id;
 
-		isLoading = true;
+		if (!isNewPage && page.creator && !$currentUser) {
+			return showErrorMessage('Please log in to update the page.');
+		}
 
 		try {
-			let isNewPage = !page._id;
+			isLoading = true;
 
 			page.testimonials = page.testimonials || [];
 			page.benefits = page.benefits || [];
