@@ -2,6 +2,7 @@ import './lib/fingerprint2.min';
 import clickHandler from './actions/click';
 import pageResizeHandler from './actions/pageResize';
 import pageScrollingHandler from './actions/pageScrolling';
+import signupHandler from './actions/signup';
 import mouseMoveHandler from './actions/mouseMove';
 import pathChangeHandler, { handleLocationChange } from './actions/pathChange';
 import trackerMutationObserver from './records/observer';
@@ -27,6 +28,7 @@ const defaultHandlers = [
 	clickHandler,
 	pageResizeHandler,
 	pageScrollingHandler,
+	signupHandler,
 	mouseMoveHandler,
 	pathChangeHandler
 ];
