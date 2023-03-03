@@ -9,6 +9,8 @@
 	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
+	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import Modal from 'lib/components/Modal.svelte';
 	import { showErrorMessage } from 'lib/services/toast';
 
 	import { get, post, put } from 'lib/api';
@@ -96,6 +98,8 @@
 
 	let isJustCreated = false;
 
+	let isTutorialShown = false;
+
 	const publishPage = async () => {
 		// if (!$currentUser) {
 		// 	$pageDraft = { ..._.cloneDeep($pageDraft), _new: page };
@@ -127,6 +131,10 @@
 			if (isNewPage) {
 				$allPages = [{ ...page }, ...($allPages || [])];
 				isJustCreated = true;
+
+				if ($allPages.length === 1) {
+					isTutorialShown = true;
+				}
 			} else {
 				$allPages = $allPages.map((p) => {
 					if (p._id === page._id) {
@@ -268,6 +276,34 @@
 		}
 	}
 </script>
+
+{#if isTutorialShown}
+	<Modal isShown>
+		<div class="p-8 bg-[#fafafa]">
+			<h1 class="text-xl mb-4 font-bold">Get started with Momentum Page ✨</h1>
+			<div class="text-lg">
+				Congrats! You just published your first page 🥳<br />
+
+				<div class="mt-2">
+					Momentum Page is a stupid-simple landing page builder that helps you get to product-market
+					fit faster.<br />
+
+					Check out this video to learn how to see views analytics, collect emails and edit
+					above-the-fold section
+					<br />
+				</div>
+			</div>
+		</div>
+		<RenderUrl url="https://www.loom.com/share/04131e22b8454cbaaa5a8bd80b0acabe" />
+		<div class="p-4 text-center">
+			Reach out to <a
+				class="text-blue-800 cursor-pointer"
+				href="https://twitter.com/that_igor_"
+				target="_blank">Igor</a
+			> for any help with Page. Let's make your page converting and beautiful.
+		</div>
+	</Modal>
+{/if}
 
 {#if !$currentUser || $allPages}
 	<div class="fixed w-full" />
