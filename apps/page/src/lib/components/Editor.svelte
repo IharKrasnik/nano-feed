@@ -526,7 +526,7 @@
 										{#if focuses.subtitle || (page._id && page.title && !page.subtitle)}
 											<div
 												class="p-4 transition {page.subtitle
-													? 'bg-green-500'
+													? 'bg-green-600'
 													: 'bg-orange-400'} mt-4 rounded-xl text-white font-bold"
 												in:fly={{ y: 50, duration: 150 }}
 											>
@@ -566,7 +566,7 @@
 												class="p-4 bg-orange-400 mt-4 rounded-xl text-white font-bold"
 												in:fly={{ y: 50, duration: 150 }}
 											>
-												Add your product demo.
+												Add your product demo
 
 												<div class="font-normal mt-2">
 													A picture is worth a thousand words. But video works even better. Show how
@@ -741,7 +741,7 @@
 									</div>
 								{/if}
 
-								{#if page.name}
+								{#if page._id && page.name && page.title}
 									<hr class="my-8 border-[#8B786D] opacity-30" />
 								{/if}
 
@@ -980,7 +980,9 @@
 					{#if page}
 						{#key page._id}
 							<div in:fly={{ y: 50, duration: 300 }}>
-								<BrowserFrame frameBgColor={page._id && page.isDirty ? '#fb923c' : '#17a34a'}>
+								<BrowserFrame
+									frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#17a34a') : undefined}
+								>
 									<SitePreview noStickyHeader={true} bind:page />
 								</BrowserFrame>
 							</div>
