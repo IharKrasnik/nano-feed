@@ -111,8 +111,9 @@
 				on:change={() => refreshStats($allProjects, $page.params.slug)}
 				class="max-w-[200px] small"
 			>
-				<option value="7_days">Last 7 days</option>
 				<option value="24_hours">Last 24 hours</option>
+				<option value="7_days">Last 7 days</option>
+				<option value="30_days">Last 30 days</option>
 				<!-- <option>Last 14 days</option> -->
 				<!-- <option>Last 30 days</option> -->
 			</select>

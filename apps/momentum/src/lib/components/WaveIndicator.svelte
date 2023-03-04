@@ -37,17 +37,19 @@
 		window.open(`${WAVE_URL}/p/${waveProject.url}`, '_blank');
 	};
 
-	let timeframe;
+	let timeframe = '24_hours';
 	let timezone = moment.tz.guess();
 
+	let prevWaveProjectId;
+	let prevSubProjectId;
+
 	let loadMetrics = async ({ projectId, subProjectId }) => {
-		metrics = null;
+		prevWaveProjectId = projectId;
+		prevSubProjectId = subProjectId;
 
-		timeframe = '24_hours';
-
-		if (project && new Date(project.createdOn) < moment().subtract(1, 'week').toDate()) {
-			timeframe = '7_days';
-		}
+		// if (project && new Date(project.createdOn) < moment().subtract(1, 'week').toDate()) {
+		// 	timeframe = '7_days';
+		// }
 
 		metrics = await get(`waveProjects/${projectId}/stats`, {
 			timeframe,
@@ -99,8 +101,21 @@
 			<h3>Wave is a stupid-simple web analytics dashboard.</h3>
 
 			{#if project.waveProject?._id || project.page?._id}
-				<div class="mt-4 text-lg opacity-70">
-					{project.waveProject?.url || project.url}
+				<div class="flex justify-between">
+					<div class="mt-4 text-lg opacity-70">
+						{project.waveProject?.url || project.url}
+					</div>
+					<div>
+						<select
+							bind:value={timeframe}
+							on:change={() =>
+								loadMetrics({ projectId: prevWaveProjectId, subProjectId: prevSubProjectId })}
+						>
+							<option value="24_hours">24 hours</option>
+							<option value="7_days">7 days</option>
+							<option value="30_days">30 days</option>
+						</select>
+					</div>
 				</div>
 
 				<div class="mt-8">

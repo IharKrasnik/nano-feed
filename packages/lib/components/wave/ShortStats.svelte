@@ -9,6 +9,7 @@
 
 	let timeframeLabel = {
 		'7_days': 'Last Week',
+		'30_days': 'Last 30 days',
 		'24_hours': 'Last 24 Hours'
 	};
 

@@ -183,11 +183,13 @@
 
 	let timezone = moment.tz.guess();
 
+	let timeframe = '7_days';
+
 	let refreshMetrics = async () => {
 		metrics = null;
 
 		metrics = await get(`waveProjects/page.mmntm.build/stats`, {
-			timeframe: '7_days',
+			timeframe,
 			subProjectId: page._id,
 			timezone
 		});
@@ -342,10 +344,7 @@
 
 	<div class="container mx-auto relative">
 		<div class="flex relative">
-			<div
-				class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white"
-				in:fly={{ x: 50, duration: 150, delay: 150 }}
-			>
+			<div class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white">
 				<div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
 					<div
 						class="flex items-center justify-between w-full py-4 pr-4"
@@ -745,34 +744,45 @@
 					in:fly={{ x: -50, duration: 150, delay: 150 }}
 					style="height: calc(100vh - 60px);"
 				>
-					<div
-						class="flex items-center cursor-pointer text-[#8B786D]"
-						on:click={() => {
-							isSubmissionsOpen = false;
-							isMetricsOpen = false;
-						}}
-					>
-						<svg
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
+					<div class="flex justify-between">
+						<div
+							class="flex items-center cursor-pointer text-[#8B786D]"
+							on:click={() => {
+								isSubmissionsOpen = false;
+								isMetricsOpen = false;
+							}}
 						>
-							<path
-								fill-rule="evenodd"
-								clip-rule="evenodd"
-								d="M10.114 4.04508L2.95451 11.2045C2.51517 11.6439 2.51517 12.3562 2.95451 12.7955L10.114 19.955C10.5533 20.3943 11.2656 20.3943 11.705 19.955C12.1443 19.5156 12.1443 18.8033 11.705 18.364L6.46599 13.125H20.25C20.8713 13.125 21.375 12.6214 21.375 12C21.375 11.3787 20.8713 10.875 20.25 10.875H6.46599L11.705 5.63607C12.1443 5.19673 12.1443 4.48442 11.705 4.04508C11.2656 3.60574 10.5533 3.60574 10.114 4.04508Z"
-								fill="#8B786D"
-							/>
-						</svg>
-						Back to Editor
+							<svg
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									fill-rule="evenodd"
+									clip-rule="evenodd"
+									d="M10.114 4.04508L2.95451 11.2045C2.51517 11.6439 2.51517 12.3562 2.95451 12.7955L10.114 19.955C10.5533 20.3943 11.2656 20.3943 11.705 19.955C12.1443 19.5156 12.1443 18.8033 11.705 18.364L6.46599 13.125H20.25C20.8713 13.125 21.375 12.6214 21.375 12C21.375 11.3787 20.8713 10.875 20.25 10.875H6.46599L11.705 5.63607C12.1443 5.19673 12.1443 4.48442 11.705 4.04508C11.2656 3.60574 10.5533 3.60574 10.114 4.04508Z"
+									fill="#8B786D"
+								/>
+							</svg>
+							Back to Editor
+						</div>
+						{#if isMetricsOpen}
+							<div>
+								<select bind:value={timeframe} on:change={refreshMetrics}>
+									<option value="24_hours">24 hours</option>
+									<option value="7_days">7 days</option>
+									<option value="30_days">30 days</option>
+								</select>
+							</div>
+						{/if}
 					</div>
 
 					{#if isMetricsOpen}
 						{#if metrics}
 							<div class="mt-8 w-full">
-								<WaveDashboard stats={metrics} isSingleColumn isSinglePage />
+								<WaveDashboard bind:timeframe stats={metrics} isSingleColumn isSinglePage />
 							</div>
 						{:else}
 							<Loader />

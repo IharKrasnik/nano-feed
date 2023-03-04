@@ -27,6 +27,7 @@
 
 	const timeframeLabels = {
 		'7_days': '7 days',
+		'30_days': '30 days',
 		'24_hours': '24 hours'
 	};
 
@@ -44,6 +45,10 @@
 
 		if (timeframe === '7_days') {
 			dateFrom = moment().subtract(7, 'days');
+			unitToAdd = 'day';
+			dateLabelFormat = 'yyyy-MM-DD';
+		} else if (timeframe === '30_days') {
+			dateFrom = moment().subtract(30, 'days');
 			unitToAdd = 'day';
 			dateLabelFormat = 'yyyy-MM-DD';
 		} else if (timeframe === '24_hours') {
@@ -66,8 +71,10 @@
 		}
 
 		setTimeout(() => {
-			chartWidth = widthEl.offsetWidth;
-			isFirstTime = false;
+			if (widthEl) {
+				chartWidth = widthEl.offsetWidth;
+				isFirstTime = false;
+			}
 		}, 0);
 	}
 </script>
@@ -100,7 +107,7 @@
 						data={userChartData}
 						fill="#8B786D"
 						grow={true}
-						barMinWidth={20}
+						barMinWidth={5}
 						gap={10}
 						height={150}
 						width={chartWidth}
@@ -141,7 +148,7 @@
 						data={viewChartData}
 						fill="#8B786D"
 						grow={true}
-						barMinWidth={20}
+						barMinWidth={5}
 						gap={10}
 						height={150}
 						width={chartWidth}
