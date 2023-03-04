@@ -305,6 +305,11 @@
 			return 'green';
 		}
 	};
+
+	let focuses = {
+		title: false,
+		subtitle: false
+	};
 </script>
 
 {#if isTutorialShown}
@@ -465,6 +470,7 @@
 									</div>
 								</div>
 							{/if}
+
 							{#if !page._id}
 								<div class="_section">
 									<div class="_title">Brand Name</div>
@@ -475,216 +481,274 @@
 							<!-- <div class="my-4">
             <ABToggle></ABToggle>
           </div> -->
-							<div class="_section">
-								<div class="_title">Tagline</div>
-								<input
-									class="w-full"
-									bind:value={page.title}
-									placeholder="Build a better product in public and grow your audience."
-								/>
-							</div>
 
-							{#if page._id}
+							{#if page.name}
 								<div class="_section">
-									<div class="_title">Subtitle</div>
-
-									<textarea
-										bind:value={page.subtitle}
-										rows="4"
-										class="w-full"
-										placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback.
-              "
-									/>
-								</div>
-							{/if}
-
-							{#if page._id}
-								<div class="_section">
-									<div class="_title">
-										Product Demo
-
-										<div class="font-normal text-sm opacity-70 mb-4">
-											Screenshot, live GIF or a <a
-												href="//loom.com"
-												class="underline"
-												target="_blank"
-												use:tooltip
-												title="We recommend using Loom or YouTube">video demo</a
-											> <br />
-										</div>
-									</div>
-
-									<div class="flex items-center">
-										<FileInput class="w-full" bind:url={page.demoUrl} theme="light" isCanSearch />
-									</div>
-								</div>
-							{/if}
-
-							{#if page._id}
-								<div class="_section">
-									<div class="_title flex justify-between w-full">
-										Call To Action
-
-										<div class="flex font-normal items-center">
-											Collect Emails <input
-												bind:checked={page.isCollectEmails}
-												class="ml-2"
-												type="checkbox"
-											/>
-										</div>
-									</div>
-
-									<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
-
+									<div class="_title">Tagline</div>
 									<input
-										class="mb-4 w-full"
-										bind:value={page.callToAction}
-										placeholder="Join Waitlist"
+										class="w-full"
+										bind:value={page.title}
+										on:focus={() => (focuses.title = true)}
+										on:blur={() => (focuses.title = false)}
+										placeholder="Build a better product in public and grow your audience."
 									/>
 
-									<div class="font-normal text-sm opacity-70 mb-2">
-										URL to open {page.isCollectEmails
-											? 'once email submitted (optional)'
-											: 'on click'}
+									{#if focuses.title || (page.name && (!page.title || !page._id))}
+										<div
+											class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
+											in:fly={{ y: 50, duration: 150 }}
+										>
+											Start with a bold tagline
+
+											<div class="font-normal mt-2">
+												Make a big promise to your customer. Start with a verb. Spark curiosity and
+												hook their attention.
+											</div>
+										</div>
+									{/if}
+								</div>
+							{/if}
+
+							{#if page.title}
+								{#if page._id}
+									<div class="_section">
+										<div class="_title">Subtitle</div>
+
+										<textarea
+											bind:value={page.subtitle}
+											on:focus={() => (focuses.subtitle = true)}
+											on:blur={() => (focuses.subtitle = false)}
+											rows="4"
+											class="w-full"
+											placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
+										/>
+
+										{#if focuses.subtitle || (page._id && page.title && !page.subtitle)}
+											<div
+												class="p-4 transition {page.subtitle
+													? 'bg-green-500'
+													: 'bg-orange-400'} mt-4 rounded-xl text-white font-bold"
+												in:fly={{ y: 50, duration: 150 }}
+											>
+												Explain your value propositon
+
+												<div class="font-normal mt-2">
+													What change do you bring to the customer's life? Get specific. Avoid
+													self-explaining. Talk to them.
+												</div>
+											</div>
+										{/if}
 									</div>
+								{/if}
 
-									<input class="w-full mb-4" bind:value={page.actionUrl} placeholder="Action Url" />
+								{#if page._id}
+									<div class="_section">
+										<div class="_title">
+											Product Demo
 
-									<!-- <div class="flex items-center mt-2 text-[14px]">
+											<div class="font-normal text-sm opacity-70 mb-4">
+												Screenshot, live GIF or a <a
+													href="//loom.com"
+													class="underline"
+													target="_blank"
+													use:tooltip
+													title="We recommend using Loom or YouTube">video demo</a
+												> <br />
+											</div>
+										</div>
+
+										<div class="flex items-center">
+											<FileInput class="w-full" bind:url={page.demoUrl} theme="light" isCanSearch />
+										</div>
+
+										{#if !page.demoUrl && page.subtitle && page.title}
+											<div
+												class="p-4 bg-orange-400 mt-4 rounded-xl text-white font-bold"
+												in:fly={{ y: 50, duration: 150 }}
+											>
+												Add your product demo.
+
+												<div class="font-normal mt-2">
+													A picture is worth a thousand words. But video works even better. Show how
+													the future product will look like or translate emotion through GIF.
+												</div>
+											</div>
+										{/if}
+									</div>
+								{/if}
+
+								{#if page._id}
+									<div class="_section">
+										<div class="_title flex justify-between w-full">
+											Call To Action
+
+											<div class="flex font-normal items-center">
+												Collect Emails <input
+													bind:checked={page.isCollectEmails}
+													class="ml-2"
+													type="checkbox"
+												/>
+											</div>
+										</div>
+
+										<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
+
+										<input
+											class="mb-4 w-full"
+											bind:value={page.callToAction}
+											placeholder="Join Waitlist"
+										/>
+
+										<div class="font-normal text-sm opacity-70 mb-2">
+											URL to open {page.isCollectEmails
+												? 'once email submitted (optional)'
+												: 'on click'}
+										</div>
+
+										<input
+											class="w-full mb-4"
+											bind:value={page.actionUrl}
+											placeholder="Action Url"
+										/>
+
+										<!-- <div class="flex items-center mt-2 text-[14px]">
               <input type="checkbox" class="mr-2"  /> Collect Emails
             </div> -->
-								</div>
-							{/if}
+									</div>
+								{/if}
 
-							<EditTestimonials bind:page />
-						{/if}
+								<EditTestimonials bind:page />
 
-						{#if page._id}
-							<hr class="my-8 border-[#8B786D] opacity-30" />
+								{#if page._id}
+									<hr class="my-8 border-[#8B786D] opacity-30" />
 
-							<div
-								class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
-							>
-								<div class="flex items-center">
-									<div class="font-bold">🧱 Sections</div>
+									<div
+										class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
+									>
+										<div class="flex items-center">
+											<div class="font-bold">🧱 Sections</div>
 
-									{#if page.sections?.length}
-										<div class="ml-4 number-tag">
-											{page.sections?.length || 0}
+											{#if page.sections?.length}
+												<div class="ml-4 number-tag">
+													{page.sections?.length || 0}
+												</div>
+											{/if}
 										</div>
-									{/if}
-								</div>
 
-								{#if !isOrdering}
-									{#if !page.sections?.length}
+										{#if !isOrdering}
+											{#if !page.sections?.length}
+												<div>
+													<button
+														class="_secondary small w-full text-center cursor-pointer text-[#8B786D]"
+														on:click={addNewSection}
+													>
+														Add section
+													</button>
+												</div>
+											{/if}
+
+											{#if page.sections?.length > 1}
+												<div
+													class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+													on:click={() => (isOrdering = true)}
+												>
+													💫 Reorder Sections
+												</div>
+											{/if}
+										{/if}
+									</div>
+								{/if}
+								{#if page._id}
+									{#if !isOrdering}
 										<div>
-											<button
-												class="_secondary small w-full text-center cursor-pointer text-[#8B786D]"
-												on:click={addNewSection}
-											>
-												Add section
-											</button>
+											{#each page.sections || [] as section}
+												<EditSection
+													bind:page
+													bind:section
+													onRemove={() => {
+														page.sections = page.sections.filter((s) => s !== section);
+													}}
+												/>
+											{/each}
 										</div>
-									{/if}
-
-									{#if page.sections?.length > 1}
+									{:else}
+										{addGuids(page.sections) && ''}
 										<div
-											class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
-											on:click={() => (isOrdering = true)}
+											use:dndzone={{ items: page.sections, flipDurationMs }}
+											on:consider={handleDndConsider}
+											on:finalize={handleDndFinalize}
 										>
-											💫 Reorder Sections
+											{#each page.sections || [] as section (section.id)}
+												<div animate:flip={{ duration: flipDurationMs }}>
+													<EditSection
+														isShort
+														bind:section
+														onRemove={() => {
+															page.sections = page.sections.filter((s) => s !== section);
+														}}
+													/>
+												</div>
+											{/each}
 										</div>
 									{/if}
 								{/if}
-							</div>
-						{/if}
-						{#if page._id}
-							{#if !isOrdering}
-								<div>
-									{#each page.sections || [] as section}
-										<EditSection
-											bind:page
-											bind:section
-											onRemove={() => {
-												page.sections = page.sections.filter((s) => s !== section);
-											}}
-										/>
-									{/each}
-								</div>
-							{:else}
-								{addGuids(page.sections) && ''}
-								<div
-									use:dndzone={{ items: page.sections, flipDurationMs }}
-									on:consider={handleDndConsider}
-									on:finalize={handleDndFinalize}
-								>
-									{#each page.sections || [] as section (section.id)}
-										<div animate:flip={{ duration: flipDurationMs }}>
-											<EditSection
-												isShort
-												bind:section
-												onRemove={() => {
-													page.sections = page.sections.filter((s) => s !== section);
-												}}
-											/>
+
+								{#if !isOrdering && page.sections?.length}
+									<a
+										class="w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+										on:click={addNewSection}>Add Section</a
+									>
+								{/if}
+
+								{#if page._id}
+									<hr class="my-8 border-[#8B786D] opacity-30" />
+								{/if}
+
+								{#if page._id && !isOrdering}
+									<div class="_section">
+										<div class="flex justify-between items-center">
+											<div class="_title" style="margin: 0">Build in Public Wall</div>
+											<div>
+												<a
+													href={page.streamSlug ? `${STREAM_URL}/${page.streamSlug}` : ''}
+													target="_blank"
+													on:click={(evt) => {
+														if (!page.streamSlug) {
+															evt.preventDefault();
+															embedStream();
+														}
+													}}
+												>
+													<button
+														class="_primary _small"
+														style={page.streamSlug ? 'background-color:green' : ''}
+													>
+														{#if !page.streamSlug}
+															⚡️ Embed Wall
+														{:else}
+															⚡️ Submit Post
+														{/if}
+													</button>
+												</a>
+											</div>
 										</div>
-									{/each}
-								</div>
-							{/if}
-						{/if}
 
-						{#if !isOrdering && page.sections?.length}
-							<a
-								class="w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-								on:click={addNewSection}>Add Section</a
-							>
-						{/if}
-
-						{#if page._id}
-							<hr class="my-8 border-[#8B786D] opacity-30" />
-						{/if}
-
-						{#if page._id && !isOrdering}
-							<div class="_section">
-								<div class="flex justify-between items-center">
-									<div class="_title" style="margin: 0">Build in Public Wall</div>
-									<div>
-										<a
-											href={page.streamSlug ? `${STREAM_URL}/${page.streamSlug}` : ''}
-											target="_blank"
-											on:click={(evt) => {
-												if (!page.streamSlug) {
-													evt.preventDefault();
-													embedStream();
-												}
-											}}
-										>
-											<button
-												class="_primary _small"
-												style={page.streamSlug ? 'background-color:green' : ''}
-											>
-												{#if !page.streamSlug}
-													⚡️ Embed Wall
-												{:else}
-													⚡️ Submit Post
-												{/if}
-											</button>
-										</a>
-									</div>
-								</div>
-
-								{#if !page.streamSlug}
-									<div class="font-normal text-sm opacity-70 mt-4">
-										Embed live content feed with your posts from social networks and blogs.
+										{#if !page.streamSlug}
+											<div class="font-normal text-sm opacity-70 mt-4">
+												Embed live content feed with your posts from social networks and blogs.
+											</div>
+										{/if}
 									</div>
 								{/if}
-							</div>
-						{/if}
 
-						<hr class="my-8 border-[#8B786D] opacity-30" />
+								{#if page.name}
+									<hr class="my-8 border-[#8B786D] opacity-30" />
+								{/if}
 
-						{#if page._id && !isOrdering}
-							<EditFAQ bind:page />
+								{#if page._id && !isOrdering}
+									<EditFAQ bind:page />
+								{/if}
+							{/if}
 						{/if}
 
 						<!-- <div class="_section">
@@ -701,23 +765,25 @@
 							</button>
 						{:else}
 							<div class="flex items-center w-full justify-between mt-8 mb-32">
-								<button
-									class="relative _primary {isLoading ? 'loading' : ''}"
-									on:click={publishPage}
-								>
-									{#if isLoading}
-										<div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
-											<Loader />
-										</div>
-										Publish
-									{:else if isJustPublished}
-										<div class="" in:scale={{ duration: 150 }}>👌</div>
-									{:else}
-										Publish
-									{/if}
-								</button>
+								{#if page.name}
+									<button
+										class="relative _primary {isLoading ? 'loading' : ''}"
+										on:click={publishPage}
+									>
+										{#if isLoading}
+											<div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
+												<Loader />
+											</div>
+											Publish
+										{:else if isJustPublished}
+											<div class="" in:scale={{ duration: 150 }}>👌</div>
+										{:else}
+											Publish
+										{/if}
+									</button>
+								{/if}
 
-								{#if page.isDirty}
+								{#if page._id && page.isDirty}
 									<div
 										class="cursor-pointer text-sm opacity-70"
 										on:click={() => {
@@ -870,7 +936,7 @@
 
 								{#if page.isDirty}
 									<button
-										class="absolute right-0 _primary flex justify-center w-full {isLoading
+										class="absolute bg-yellow-500 right-0 _primary flex justify-center w-full {isLoading
 											? 'loading'
 											: ''}"
 										style="margin-left: 78px;
@@ -914,7 +980,7 @@
 					{#if page}
 						{#key page._id}
 							<div in:fly={{ y: 50, duration: 300 }}>
-								<BrowserFrame>
+								<BrowserFrame frameBgColor={page._id && page.isDirty ? '#fb923c' : '#17a34a'}>
 									<SitePreview noStickyHeader={true} bind:page />
 								</BrowserFrame>
 							</div>
