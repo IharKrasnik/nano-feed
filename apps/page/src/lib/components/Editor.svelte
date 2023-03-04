@@ -658,46 +658,19 @@
 										{/if}
 									</div>
 								{/if}
-								{#if page._id}
-									{#if !isOrdering}
-										<div>
-											{#each page.sections || [] as section}
-												<EditSection
-													bind:page
-													bind:section
-													onRemove={() => {
-														page.sections = page.sections.filter((s) => s !== section);
-													}}
-												/>
-											{/each}
-										</div>
-									{:else}
-										{addGuids(page.sections) && ''}
-										<div
-											use:dndzone={{ items: page.sections, flipDurationMs }}
-											on:consider={handleDndConsider}
-											on:finalize={handleDndFinalize}
-										>
-											{#each page.sections || [] as section (section.id)}
-												<div animate:flip={{ duration: flipDurationMs }}>
-													<EditSection
-														isShort
-														bind:section
-														onRemove={() => {
-															page.sections = page.sections.filter((s) => s !== section);
-														}}
-													/>
-												</div>
-											{/each}
-										</div>
-									{/if}
-								{/if}
 
-								{#if !isOrdering && page.sections?.length}
-									<a
-										class="w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-										on:click={addNewSection}>Add Section</a
-									>
+								{#if !isOrdering}
+									<div>
+										{#each page.sections || [] as section}
+											<EditSection
+												bind:page
+												bind:section
+												onRemove={() => {
+													page.sections = page.sections.filter((s) => s !== section);
+												}}
+											/>
+										{/each}
+									</div>
 								{/if}
 
 								{#if page._id}
@@ -755,6 +728,36 @@
           <div class="_title">Appearance</div> 
 
         </div> -->
+
+						{#if page._id}
+							{#if isOrdering}
+								{addGuids(page.sections) && ''}
+								<div
+									use:dndzone={{ items: page.sections, flipDurationMs }}
+									on:consider={handleDndConsider}
+									on:finalize={handleDndFinalize}
+								>
+									{#each page.sections || [] as section (section.id)}
+										<div animate:flip={{ duration: flipDurationMs }}>
+											<EditSection
+												isShort
+												bind:section
+												onRemove={() => {
+													page.sections = page.sections.filter((s) => s !== section);
+												}}
+											/>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						{/if}
+
+						{#if !isOrdering && page.sections?.length}
+							<a
+								class="w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+								on:click={addNewSection}>Add Section</a
+							>
+						{/if}
 
 						{#if isOrdering}
 							<button
