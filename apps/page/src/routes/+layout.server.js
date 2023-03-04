@@ -19,7 +19,7 @@ export async function load({ url, params, session, cookies }) {
 	}
 	console.log('extend', extend);
 
-	let authData = await authServerGuard({ url, params, session, cookies });
+	let authData = await authServerGuard({ url, params, session, cookies }, 'Momentum Page');
 
 	console.log('authData', { ...authData, ...extend });
 	return { ...authData, ...extend };

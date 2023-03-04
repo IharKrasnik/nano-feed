@@ -31,7 +31,7 @@
 			/>
 		{/if}
 	{:else}
-		<link rel="icon" href="momentum_square_logo.png" />
+		<link rel="icon" href="logo.svg" />
 	{/if}
 </svelte:head>
 

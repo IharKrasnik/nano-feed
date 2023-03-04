@@ -33,7 +33,7 @@ export async function load({ url, params, session, cookies }) {
 		};
 	}
 
-	let authData = await authClientGuard({ url, params, session });
+	let authData = await authClientGuard({ url, params, session }, 'Momentum Page');
 
 	return { ...authData, ...extend };
 }
