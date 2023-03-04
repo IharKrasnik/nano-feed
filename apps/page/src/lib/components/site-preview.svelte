@@ -178,7 +178,9 @@
 								? 'w-full text-center sm:text-left sm:max-w-[500px] items-center'
 								: 'flex flex-col items-center w-full sm:w-auto sm:max-w-[600px] mx-auto'}
 						>
-							<h1 class="_title">{page.title}</h1>
+							<h1 class="_title" style={page.title ? '' : 'opacity: 20%;'}>
+								{page.title || 'Type Tagline...'}
+							</h1>
 
 							{#if page.subtitle}
 								<h2 class="_subtitle">{page.subtitle}</h2>
