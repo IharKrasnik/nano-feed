@@ -33,7 +33,6 @@ if (browser) {
 						pages.push(pageDraftValue[key]);
 					}
 				});
-				debugger;
 
 				allPagesStore.set(pages);
 			}

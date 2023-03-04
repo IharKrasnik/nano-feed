@@ -31,6 +31,7 @@
 	});
 
 	import Loader from 'lib/components/Loader.svelte';
+	import WaveSingleStat from 'lib/components/wave/SingleStat.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 
@@ -65,7 +66,7 @@
 	};
 
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-	debugger;
+
 	let isPageSet = false;
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
@@ -153,17 +154,31 @@
 				isJustPublished = false;
 			}, 1000);
 		}
-
-		debugger;
 	};
 
 	let isMetricsOpen = false;
 
 	let metrics;
 
-	let refreshData = () => {
-		refreshMetrics();
-		refreshSubmissions();
+	let refreshData = async () => {
+		await Promise.all([refreshMetrics(), refreshSubmissions()]);
+		calculateConversion();
+	};
+
+	let calculateConversion = () => {
+		if (metrics && submissions) {
+			if (submissions.results.length) {
+				metrics.conversion = (submissions.results.length / metrics.totalUsersCount) * 100;
+
+				if (metrics.conversion > 100) {
+					metrics.conversion = 0;
+				}
+
+				metrics.conversion = parseInt(metrics.conversion);
+			} else {
+				metrics.conversion = 0;
+			}
+		}
 	};
 
 	let timezone = moment.tz.guess();
@@ -176,6 +191,8 @@
 			subProjectId: page._id,
 			timezone
 		});
+
+		calculateConversion();
 	};
 
 	let toggleMetrics = async () => {
@@ -193,6 +210,8 @@
 		submissions = null;
 
 		submissions = await get(`pages/${page._id}/submissions`, {});
+
+		calculateConversion();
 	};
 
 	let toggleSubmissions = async () => {
@@ -236,7 +255,6 @@
 	let isOrdering = false;
 
 	let embedStream = async () => {
-		debugger;
 		if (!$currentUser) {
 			return showErrorMessage('Log in to embed wall');
 		}
@@ -275,6 +293,16 @@
 			}
 		}
 	}
+
+	let getConversionColor = (conversion) => {
+		if (conversion < 5) {
+			return 'red';
+		} else if (conversion < 10) {
+			return 'orange';
+		} else {
+			return 'green';
+		}
+	};
 </script>
 
 {#if isTutorialShown}
@@ -743,8 +771,8 @@
 
 					{#if isMetricsOpen}
 						{#if metrics}
-							<div class="mt-8">
-								<WaveDashboard stats={metrics} columns={1} isSinglePage />
+							<div class="mt-8 w-full">
+								<WaveDashboard stats={metrics} isSingleColumn isSinglePage />
 							</div>
 						{:else}
 							<Loader />
@@ -752,9 +780,26 @@
 					{/if}
 
 					{#if isSubmissionsOpen}
+						<!-- <div class="my-4">
+							<WaveSingleStat
+								actionType="signup"
+								projectId="63eaab5b0ebb830015458b95"
+								subProjectId={page._id}
+								timeframe="7_days"
+							/>
+						</div> -->
+
 						{#if submissions}
 							<div class="mt-4">
-								<div class="text-lg font-bold">Forms Submissions: {submissions.results.length}</div>
+								{#if submissions.results.length}
+									<div class="text-lg font-bold">
+										Forms Submissions: {submissions.results.length}
+									</div>
+								{:else}
+									You don't have form submissions yet. <br />
+									Share your page around to get your first signups.
+								{/if}
+
 								{#each submissions.results as submission}
 									<div class="flex my-2 opacity-90 w-full justify-between items-center">
 										<div>
@@ -791,13 +836,13 @@
 							>
 								<a
 									href="{PAGE_URL}/{page.slug}"
-									class="flex justify-center {page.isDirty ? 'max-w-[240px]' : 'w-full'}"
+									class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
 									style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
 									target="_blank"
 									rel="noreferrer"
 								>
 									<div
-										class="mr-2 ml-4 z-20"
+										class="mr-2 z-20"
 										use:tooltip
 										title={page.isDirty ? 'Pending Changes' : 'Published'}
 									>
@@ -839,6 +884,20 @@
 									</button>
 								{/if}
 							</div>
+							{#if metrics?.conversion}
+								<div class="flex w-full justify-center mt-2">
+									<div
+										class="left-[10px] mr-4 opacity-80 text-center px-4 rounded-xl"
+										style="background-color: {getConversionColor(
+											metrics.conversion
+										)}; color:white; left:50%;"
+										use:tooltip
+										title="Conversion rate. Target 10+%"
+									>
+										{metrics.conversion}%
+									</div>
+								</div>
+							{/if}
 						</div>
 					{/if}
 

@@ -2,13 +2,15 @@
 	import _ from 'lodash';
 	import moment from 'moment';
 	import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
+	import SingleStat from 'lib/components/wave/SingleStat.svelte';
 	import { fade, fly } from 'svelte/transition';
 	import { countryCodeEmoji } from 'country-code-emoji';
 	import countryCodeLoockup from 'country-code-lookup';
 
 	export let stats;
 	export let timeframe = '7_days';
-	export let columns = 2;
+	export let isShowSignups = false;
+	export let isSingleColumn;
 
 	export let isSinglePage = false;
 
@@ -63,22 +65,23 @@
 			dateFrom.add(1, unitToAdd);
 		}
 
-		if (!chartWidth) {
-			setTimeout(() => {
-				chartWidth = widthEl.offsetWidth;
-				isFirstTime = false;
-			}, 0);
-		}
+		setTimeout(() => {
+			chartWidth = widthEl.offsetWidth;
+			isFirstTime = false;
+		}, 0);
 	}
 </script>
 
 {#key stats}
 	{#if stats}
-		<div class="md:grid-cols-1 md:grid-cols-2 mdgrid-cols-3" />
+		<div class="md:grid-cols-1 md:grid-cols-2 md:grid-cols-3" />
 
 		<div
-			class="grid grid-cols-1 md:grid-cols-{columns} gap-4"
-			in:fly={{ y: 50, duration: isFirstTime ? 150 : 0 }}
+			class="grid grid-cols-1 {isShowSignups
+				? 'md:grid-cols-3'
+				: isSingleColumn
+				? ''
+				: 'md:grid-cols-2'} gap-4"
 		>
 			<div class="rounded-xl p-4 _border-white">
 				<div class="flex justify-between items-center mb-4" bind:this={widthEl}>
@@ -109,13 +112,15 @@
 					<div class="text-sm text-slate-300 mt-4 shrink-0">
 						{Object.keys(userChartData)[0]}
 					</div>
-					<div class="py-4">
-						<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
-						<LinkedValue uid="users" empty={stats.totalUsersCount} /> users
-					</div>
+
 					<div class="text-sm text-slate-300 mt-4 shrink-0">
 						{_.last(Object.keys(userChartData))}
 					</div>
+				</div>
+
+				<div class="w-full text-center py-4">
+					<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
+					<LinkedValue uid="users" empty={stats.totalUsersCount} /> users
 				</div>
 			</div>
 
@@ -148,16 +153,27 @@
 					<div class="text-sm text-slate-300 mt-4 shrink-0">
 						{Object.keys(viewChartData)[0]}
 					</div>
-					<div class="py-4">
-						<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
-						<LinkedValue uid="views" empty={stats.totalViewsCount} /> views
-					</div>
+
 					<div class="text-sm text-slate-300 mt-4 shrink-0">
 						{_.last(Object.keys(viewChartData))}
 					</div>
 				</div>
+
+				<div class="w-full text-center py-4">
+					<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
+					<LinkedValue uid="views" empty={stats.totalViewsCount} /> views
+				</div>
 			</div>
 
+			{#if isShowSignups}
+				<SingleStat actionType="signup" projectId="63eaab5b0ebb830015458b95" bind:timeframe />
+			{/if}
+		</div>
+
+		<div
+			class="mt-8 grid grid-cols-1 {isSingleColumn ? '' : 'md:grid-cols-3'} gap-4"
+			in:fly={{ y: 50, duration: isFirstTime ? 150 : 0 }}
+		>
 			{#if !isSinglePage}
 				<div class="rounded-xl p-4 border _border-white">
 					<div class="flex justify-between items-center mb-4">
@@ -186,7 +202,7 @@
 
 							<hr class="border-gray-600" />
 						{/each}
-						{#if !isShowAll && stats.referralStats.length > 4}
+						{#if !isShowAll && stats.pageStats.length > 4}
 							<div
 								class="w-full mt-8 p-4 text-center cursor-pointer"
 								on:click={() => (isShowAll = true)}
@@ -247,7 +263,7 @@
 				</div>
 
 				<div>
-					{#each stats.userCountryStats as userCountryStat, i}
+					{#each isShowAll ? stats.userCountryStats : stats.userCountryStats.slice(0, 4) as userCountryStat, i}
 						<div class="flex justify-between py-1 my-1">
 							<div class="relative w-full">
 								<div
@@ -266,6 +282,14 @@
 
 						<hr class="_border-white" />
 					{/each}
+					{#if !isShowAll && stats.userCountryStats.length > 4}
+						<div
+							class="w-full mt-8 p-4 text-center cursor-pointer"
+							on:click={() => (isShowAll = true)}
+						>
+							Show More
+						</div>
+					{/if}
 				</div>
 			</div>
 		</div>
