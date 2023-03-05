@@ -208,7 +208,7 @@ Follow my updates here:`,
 				<div class="mb-8" in:fade={{ duration: 100 }}>
 					<label>Tagline</label>
 					<div class="_hint mb-4">
-						One-liner about your brand. Explain what you to with {project.title}. Make a random
+						One-liner about your brand. Explain what you do with {project.title}. Make a random
 						reader want to follow your journey.
 					</div>
 
