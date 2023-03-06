@@ -144,7 +144,7 @@
 		{/if}
 
 		{#if stats}
-			<Dashboard isShowSignups={selectedProject.isTrackForms} bind:stats bind:timeframe />
+			<Dashboard isShowSignups={selectedProject?.isTrackForms} bind:stats bind:timeframe />
 		{/if}
 
 		<!-- <SingleStat actionType="signup" projectId="63eaab5b0ebb830015458b95" bind:timeframe /> -->
