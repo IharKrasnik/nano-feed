@@ -127,8 +127,7 @@
 			/></noscript
 		>
 		<!-- End Meta Pixel Code -->
-
-		<meta name="facebook-domain-verification" content="nst3737y7kfmhrb2lmobdr6nqs7rj9" />
+		<meta name="facebook-domain-verification" content="fgxw7njamqdo4fljdlp3exdm0q7s7j" />
 	{/if}
 </svelte:head>
 
