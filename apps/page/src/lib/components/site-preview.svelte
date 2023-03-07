@@ -494,8 +494,20 @@
 
 	._input_container {
 		position: relative;
-		border: 3px white solid;
+
 		border-radius: 25px;
+	}
+
+	@media (min-width: 640px) {
+		._input_container {
+			border: 3px white solid;
+		}
+	}
+
+	@media (max-width: 640px) {
+		._input_container button {
+			border: 2px rgba(255, 255, 255, 0.8) solid;
+		}
 	}
 
 	._input {
