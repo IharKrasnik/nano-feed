@@ -161,7 +161,11 @@
 				<div class="shrink-0">
 					{#if !isSubmitted}
 						{#if page.isCollectEmails}
-							<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+							<button
+								class="cursor-pointer"
+								style="border: 2px rgba(255, 255, 255, .8) solid;"
+								on:click={onButtonClick}>{page.callToAction}</button
+							>
 						{:else}
 							<a href={page.actionUrl} target="_blank" class="button">
 								{page.callToAction}
@@ -189,7 +193,11 @@
 				<div class="shrink-0 mt-2 hidden md:block">
 					{#if !isSubmitted}
 						{#if page.isCollectEmails}
-							<button class="cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button>
+							<button
+								class="cursor-pointer"
+								style="border: 2px rgba(255, 255, 255, .8) solid;"
+								on:click={onButtonClick}>{page.callToAction}</button
+							>
 						{:else}
 							<a href={page.actionUrl} target="_blank" class="button">
 								{page.callToAction}
@@ -224,9 +232,11 @@
 							{/if}
 
 							<div
-								class="_input_container flex items-center w-full {page.demoUrl
+								class="_input_container flex items-center {page.demoUrl
 									? ''
-									: 'mx-auto'} {page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]'}"
+									: 'mx-auto'} {page.isCollectEmails
+									? 'w-full ' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
+									: ''}"
 							>
 								<form
 									class="{page.isCollectEmails
@@ -389,9 +399,10 @@
 			</div>
 
 			<div
-				class="_input_container flex items-center mx-auto w-full {page.callToAction.length < 20
-					? 'sm:w-[392px]'
-					: 'sm:w-[500px]'}"
+				class="_input_container flex items-center mx-auto 
+				{page.isCollectEmails
+					? 'w-full ' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
+					: ''}"
 			>
 				<form
 					class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
@@ -483,6 +494,8 @@
 
 	._input_container {
 		position: relative;
+		border: 3px white solid;
+		border-radius: 25px;
 	}
 
 	._input {

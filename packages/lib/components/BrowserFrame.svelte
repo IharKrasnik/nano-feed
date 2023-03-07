@@ -13,6 +13,7 @@
 	export let fullscreenUrl = { STREAM_URL };
 
 	export let bgColor = '#fafafa';
+	export let frameBgColor = '#494949';
 	export let theme = 'light';
 	export let url;
 	export let favicon;
@@ -20,13 +21,14 @@
 </script>
 
 <div
-	class="relative rounded-xl overflow-y-scroll {clazz}"
+	class="transition relative rounded-xl overflow-y-scroll {clazz}"
 	style="background-color:{bgColor === 'transparent' || bgColor === 'rgba(255, 255, 255, 0)'
 		? '#fafafa'
 		: bgColor}; border: 1px rgba(128, 128, 128, .3) solid;"
 >
 	<div
-		class="sticky z-30 h-[40px] bg-[#676869] w-full top-0 left-0 flex items-center rounded-tl-xl rounded-tr-xl"
+		class="sticky z-30 h-[40px] w-full top-0 left-0 flex items-center rounded-tl-xl rounded-tr-xl"
+		style="background-color: {frameBgColor};"
 	>
 		<div class="absolute top-0 left-[15px] flex z-10 h-full flex items-center">
 			<div
