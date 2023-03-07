@@ -148,7 +148,7 @@
 			<div
 				class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 sm:px-0"
 			>
-				<a class="flex items-center shrink-0" href="/">
+				<a class="flex items-center shrink-0" href="">
 					<Emoji class="mr-2" emoji={page.logo} />
 					<span class="font-bold  ">
 						{page.name}
@@ -182,7 +182,7 @@
 	{#if isMounted}
 		<div class="sticky bg-site z-20 w-full sm:p-4 p-8" in:fade={{ duration: 150 }}>
 			<div class="_header flex md:justify-between items-center justify-center">
-				<a class="flex items-center shrink-0 _logo" href="/">
+				<a class="flex items-center shrink-0 _logo" href="">
 					<Emoji class="mr-2" emoji={page.logo} />
 
 					<span class="font-bold">
