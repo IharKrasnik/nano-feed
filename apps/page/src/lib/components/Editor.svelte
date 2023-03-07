@@ -984,7 +984,7 @@
 						{#key page._id}
 							<div in:fly={{ y: 50, duration: 300 }}>
 								<BrowserFrame
-									frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#17a34a') : undefined}
+									frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'}
 								>
 									<SitePreview noStickyHeader={true} bind:page />
 								</BrowserFrame>
