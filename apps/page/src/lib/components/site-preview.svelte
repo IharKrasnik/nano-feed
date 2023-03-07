@@ -77,12 +77,14 @@
 	let scrollY;
 
 	let cssVarStyles;
+	let styles;
 
 	$: if (page) {
-		let styles = {
+		styles = {
 			'background-color': page.theme?.backgroundColor || 'white',
 			'text-color': page.theme?.textColor || '#111',
-			'accent-color': page.theme?.accentColor || '#000'
+			'accent-color': page.theme?.accentColor || '#000',
+			'section-background-color': page.theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)'
 		};
 
 		cssVarStyles = Object.entries(styles)
@@ -357,7 +359,9 @@
 				on:load={resize}
 				class="w-full sticky z-20 pb-[200px] bg-site"
 				src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.theme ||
-					'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor=rgb(128, 127, 128, 0.05)"
+					'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
+					'section-background-color'
+				]}"
 			/>
 		</div>
 	{/if}
@@ -435,7 +439,7 @@
 	}
 
 	:global(.bg-section) {
-		background-color: rgb(128, 127, 128, 0.05);
+		background-color: var(--section-background-color);
 	}
 
 	.color-site {
