@@ -128,8 +128,6 @@
 		>
 		<!-- End Meta Pixel Code -->
 	{/if}
-
-	<meta name="facebook-domain-verification" content="fgxw7njamqdo4fljdlp3exdm0q7s7j" />
 </svelte:head>
 
 <svelte:window bind:scrollY />
