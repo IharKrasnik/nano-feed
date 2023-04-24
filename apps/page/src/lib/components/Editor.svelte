@@ -673,6 +673,13 @@
 									</div>
 								{/if}
 
+								{#if !isOrdering && page.sections?.length}
+									<a
+										class="w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+										on:click={addNewSection}>Add Section</a
+									>
+								{/if}
+
 								{#if page._id}
 									<hr class="my-8 border-[#8B786D] opacity-30" />
 								{/if}
@@ -750,13 +757,6 @@
 									{/each}
 								</div>
 							{/if}
-						{/if}
-
-						{#if !isOrdering && page.sections?.length}
-							<a
-								class="w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-								on:click={addNewSection}>Add Section</a
-							>
 						{/if}
 
 						{#if isOrdering}
