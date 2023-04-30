@@ -19,13 +19,15 @@
 			backgroundColor: '#0C120C',
 			textColor: '#fff',
 			accentColor: '#000',
-			sectionBackgroundColor: '#212121'
+			sectionBackgroundColor: '#212121',
+			theme: 'dark'
 		},
 		{
 			backgroundColor: '#0C1020',
 			textColor: '#D5CCB2',
 			accentColor: '#A4368D',
-			sectionBackgroundColor: '#D5CCB2'
+			sectionBackgroundColor: '#D5CCB2',
+			theme: 'dark'
 		},
 		{
 			backgroundColor: '#F4FCFC',
