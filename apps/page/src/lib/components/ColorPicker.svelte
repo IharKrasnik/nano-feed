@@ -26,7 +26,7 @@
 			backgroundColor: '#0C1020',
 			textColor: '#D5CCB2',
 			accentColor: '#A4368D',
-			sectionBackgroundColor: '#D5CCB2',
+			sectionBackgroundColor: '#222',
 			theme: 'dark'
 		},
 		{
