@@ -11,6 +11,8 @@
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 
+	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
+
 	import TwitterIcon from '$lib/icons/Twitter.svelte';
 	import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
@@ -366,15 +368,17 @@
 					{/if}
 				</div>
 
-				<iframe
-					id="iframeResize"
-					on:load={resize}
-					class="w-full sticky z-20 pb-[200px] bg-site"
-					src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.theme ||
-						'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
-						'section-background-color'
-					]}"
-				/>
+				{#key $feedLastUpdatedOn}
+					<iframe
+						id="iframeResize"
+						on:load={resize}
+						class="w-full sticky z-20 pb-[200px] bg-site"
+						src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.theme ||
+							'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
+							'section-background-color'
+						]}"
+					/>
+				{/key}
 			</div>
 		{/if}
 

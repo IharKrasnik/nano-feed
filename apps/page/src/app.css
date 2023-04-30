@@ -50,6 +50,17 @@ input {
 	border-radius: 8px;
 }
 
+input._dark {
+	background: none;
+	border: 1px rgba(255, 255, 255, 0.3) solid;
+}
+
+textarea._dark {
+	background: none !important;
+	color: white;
+	border: 1px rgba(255, 255, 255, 0.5) solid;
+}
+
 select {
 	background: #f6f5f5;
 	padding: 8px 12px;
@@ -82,4 +93,18 @@ button._primary {
 
 button._secondary {
 	border: 1px #8b786d solid;
+}
+
+button.tab,
+a.button.tab {
+	border: none;
+	border-radius: 0;
+	border-bottom: 1px rgba(255, 255, 255, 0.3) solid;
+}
+
+button.tab.selected,
+a.button.tab.selected {
+	border: none;
+	border-bottom: 1px rgba(255, 255, 255, 0.9) solid;
+	/* background-color: rgba(255, 255, 255, 0.3); */
 }

@@ -30,6 +30,7 @@
 
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
+	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -304,16 +305,6 @@ See you!
 	};
 
 	let isOrdering = false;
-
-	let embedStream = async () => {
-		if (!$currentUser) {
-			return showErrorMessage('Log in to embed wall');
-		}
-		const { streamSlug } = await put(`pages/${page._id}/embed-stream`);
-		page.streamSlug = streamSlug;
-
-		window.open(`${STREAM_URL}/${streamSlug}`, '_blank');
-	};
 
 	let addNewSection = () => {
 		page.sections = [
@@ -934,7 +925,7 @@ See you!
 									<hr class="my-8 border-[#8B786D] opacity-30" />
 								{/if}
 
-								{#if page._id && !isOrdering}
+								<!-- {#if page._id && !isOrdering}
 									<div class="_section">
 										<div class="flex justify-between items-center">
 											<div class="_title" style="margin: 0">Build in Public Wall</div>
@@ -956,7 +947,7 @@ See you!
 														{#if !page.streamSlug}
 															⚡️ Embed Wall
 														{:else}
-															⚡️ Submit Post
+															⚡️ Open Stream
 														{/if}
 													</button>
 												</a>
@@ -971,8 +962,12 @@ See you!
 												users.
 											</div>
 										{/if}
+
+										<button class="_primary mt-8" style="background-color: green;">
+											💥 Feature Content
+										</button>
 									</div>
-								{/if}
+								{/if} -->
 
 								{#if page._id && page.name && page.title}
 									<hr class="my-8 border-[#8B786D] opacity-30" />
@@ -1355,6 +1350,10 @@ See you!
 								</BrowserFrame>
 							</div>
 						{/key}
+					{/if}
+
+					{#if page._id}
+						<MomentumWidget bind:page />
 					{/if}
 				</div>
 			{:else}
