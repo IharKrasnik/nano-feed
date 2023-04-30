@@ -29,6 +29,7 @@
 	import SignupForm from '$lib/components/signup-form.svelte';
 
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
+	import ColorPicker from '$lib/components/ColorPicker.svelte';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
 
@@ -670,8 +671,12 @@ See you!
 						{#if !isOrdering}
 							{#if page._id}
 								<div class="w-full flex justify-between items-center mb-4">
-									<EmojiPicker bind:icon={page.logo} />
-
+									<div class="flex">
+										<div class="mr-4">
+											<EmojiPicker bind:icon={page.logo} />
+										</div>
+										<ColorPicker bind:page />
+									</div>
 									<div class="flex">
 										<div class="flex items-center cursor-pointer" on:click={toggleSubmissions}>
 											<svg

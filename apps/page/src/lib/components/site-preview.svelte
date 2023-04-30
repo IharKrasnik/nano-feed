@@ -29,6 +29,8 @@
 		bgColor: '#D98324'
 	};
 
+	export let maxHeight;
+
 	let grid = {
 		title: '',
 		description: '',
@@ -215,7 +217,7 @@
 				<div class="_root bg-site">
 					<div
 						class="_content pb-16 pt-32 {!page.testimonials?.length ? 'sm:h-screen' : ''}"
-						style={!page.testimonials}
+						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
 						<div
 							class="flex h-full {page.demoUrl
@@ -386,7 +388,7 @@
 			<!-- <div class="h-screen sticky"></div> -->
 
 			<div
-				class="w-full text-center bg-[#fafafa] h-screen sticky z-0 bottom-0 flex flex-col justify-center p-4"
+				class="w-full text-center bg-[#fafafa] h-screen max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center p-4"
 				style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page
 					.theme?.theme === 'dark'
 					? '#222'

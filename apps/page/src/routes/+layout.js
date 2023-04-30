@@ -4,7 +4,8 @@ import { PAGE_URL } from 'lib/env';
 import { get } from 'lib/api';
 
 let getDomain = (href) => {
-	return /:\/\/([^\/]+)/.exec(href)[1];
+	let res = /:\/\/([^\/]+)/.exec(href);
+	return (res && res[1]) || href;
 };
 
 export async function load({ url, params, session, cookies }) {
@@ -15,7 +16,7 @@ export async function load({ url, params, session, cookies }) {
 	if (!pageSlug) {
 		if (url.href.includes('.mmntm.live')) {
 			pageSlug = currentDomain;
-		} else if (currentDomain !== getDomain(PAGE_URL)) {
+		} else if (currentDomain !== getDomain(PAGE_URL) && !currentDomain.includes('localhost')) {
 			pageSlug = currentDomain;
 		}
 	}
