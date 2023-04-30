@@ -12,7 +12,8 @@
 <style>
 	.lds-ellipsis {
 		position: relative;
-		width: 65px;
+		width: 40px;
+		margin-top: -3px;
 		/* height: 65px; */
 	}
 	.lds-ellipsis div {

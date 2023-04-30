@@ -1,35 +1,25 @@
 <script>
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
+	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
+
+	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
+
+	import { get, post, put } from 'lib/api';
+
 	import loginWithGoogle from 'lib/helpers/loginWithGoogle';
+
 	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
-	import { showErrorMessage } from 'lib/services/toast';
 
-	import { get, post, put } from 'lib/api';
-	import currentUser from 'lib/stores/currentUser';
-	import tooltip from 'lib/use/tooltip';
-	import clickOutside from 'lib/use/clickOutside';
-	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
-	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
-	import { ConfettiExplosion } from 'svelte-confetti-explosion';
-
-	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
-
-	import allPages from '$lib/stores/allPages';
-	import pageDraft from '$lib/stores/pageDraft';
-
-	onMount(async () => {
-		await import('emoji-picker-element/svelte');
-	});
-
+	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import WaveSingleStat from 'lib/components/wave/SingleStat.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
@@ -37,6 +27,22 @@
 
 	import SitePreview from '$lib/components/site-preview.svelte';
 	import SignupForm from '$lib/components/signup-form.svelte';
+
+	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
+	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
+
+	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
+
+	import tooltip from 'lib/use/tooltip';
+	import clickOutside from 'lib/use/clickOutside';
+
+	import currentUser from 'lib/stores/currentUser';
+	import allPages from '$lib/stores/allPages';
+	import pageDraft from '$lib/stores/pageDraft';
+
+	onMount(async () => {
+		await import('emoji-picker-element/svelte');
+	});
 
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
@@ -62,7 +68,8 @@
 		callToAction: 'Join Waitlist',
 		bgColor: '',
 		slug: '_new',
-		isCollectEmails: true
+		isCollectEmails: true,
+		welcomeEmail: null
 	};
 
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
@@ -101,6 +108,29 @@
 
 	let isTutorialShown = false;
 
+	let isBroadcastEmailModalShown;
+
+	let broadcastEmail = { callToAction: {} };
+
+	let getWelcomeEmailHtml = () => {
+		if (!$currentUser) {
+			return null;
+		}
+
+		return `
+Hi! My name is ${$currentUser.fullName.split(' ')[0]}. 👋 <br />
+Thank you for joining ${page.name} and welcome! <br />
+Your participation means a lot for our tiny team of 1 here, so I'm extremely grateful!
+<br />
+We'll keep in touch and let you know when we launch. <br /> <br />
+
+Meanwhile, if you open for a call — I'd love to chat! <br />
+Simply reply to this email and say "hi"! <br />
+
+See you!
+		`;
+	};
+
 	const publishPage = async () => {
 		// if (!$currentUser) {
 		// 	$pageDraft = { ..._.cloneDeep($pageDraft), _new: page };
@@ -118,6 +148,11 @@
 
 			page.testimonials = page.testimonials || [];
 			page.benefits = page.benefits || [];
+
+			if (!page.welcomeEmail) {
+				page.welcomeEmail = { html: getWelcomeEmailHtml(), imageUrl: null };
+			}
+
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
 
 			page.isDirty = false;
@@ -207,17 +242,31 @@
 
 	let isSubmissionsOpen = false;
 	let submissions;
+	let broadcastEmails = null;
 
 	let refreshSubmissions = async () => {
 		submissions = null;
 
 		submissions = await get(`pages/${page._id}/submissions`, {});
+		broadcastEmails = await get(`pages/${page._id}/broadcast-emails`, {});
 
 		calculateConversion();
 	};
 
+	let getDefaultWelcomeEmail = () => {
+		return {
+			subject: `Welcome to ${page.name}!`,
+			html: getWelcomeEmailHtml(),
+			imageUrl: null
+		};
+	};
+
 	let toggleSubmissions = async () => {
 		isSubmissionsOpen = !isSubmissionsOpen;
+
+		if (!page.welcomeEmail) {
+			page.welcomeEmail = getDefaultWelcomeEmail();
+		}
 
 		if (isSubmissionsOpen) {
 			refreshSubmissions();
@@ -276,7 +325,10 @@
 	let pageSlug = '_new';
 
 	$: if (page) {
-		if (!$pageDraft[page.slug] || !_.isEqual(page, $pageDraft[page.slug])) {
+		if (
+			!$pageDraft[page.slug] ||
+			!_.isEqual(_.omit(page, ['welcomeEmail']), _.omit($pageDraft[page.slug], ['welcomeEmail']))
+		) {
 			if (page.isDirty === false) {
 				delete page.isDirty;
 			} else {
@@ -310,7 +362,205 @@
 		title: false,
 		subtitle: false
 	};
+
+	let updateEmailHtml = async () => {
+		await put(`pages/${page._id}/welcome-email`, {
+			subject: page.welcomeEmail.subject,
+			html: page.welcomeEmail.html,
+			imageUrl: page.welcomeEmail.imageUrl
+		});
+	};
+
+	let sendTestEmail = async () => {
+		await post(`pages/${page._id}/welcome-email/test`, {
+			html: page.welcomeEmail.html,
+			imageUrl: page.welcomeEmail.imageUrl
+		});
+
+		showSuccessMessage(`Sent test email to ${$currentUser.email}`);
+	};
+
+	let isBroadcastTestSent = false;
+
+	let sendTestBroadcastEmail = async () => {
+		if (broadcastEmail.subject && broadcastEmail.html) {
+			await post(`pages/${page._id}/broadcast-email/test`, {
+				subject: broadcastEmail.subject,
+				html: broadcastEmail.html,
+				callToAction: broadcastEmail.callToAction,
+				imageUrl: broadcastEmail.imageUrl
+			});
+
+			isBroadcastTestSent = true;
+		} else {
+			alert('Fill all the required fields');
+		}
+	};
+
+	let editBroadcastEmail = () => {
+		isBroadcastTestSent = false;
+	};
+
+	let sendBroadcastEmail = async () => {
+		let { sentToEmails } = await post(`pages/${page._id}/broadcast-email`, {
+			subject: broadcastEmail.subject,
+			html: broadcastEmail.html,
+			callToAction: broadcastEmail.callToAction,
+			imageUrl: broadcastEmail.imageUrl
+		});
+
+		broadcastEmail.isSent = true;
+		broadcastEmail.sentToEmails = sentToEmails;
+
+		broadcastEmails.results = [
+			{
+				subject: broadcastEmail.subject,
+				sentToEmails: broadcastEmail.sentToEmails,
+				html: broadcastEmail.html,
+				createdOn: new Date()
+			},
+			...(broadcastEmails.results || [])
+		];
+	};
 </script>
+
+{#if isBroadcastEmailModalShown}
+	<Modal
+		isShown
+		maxWidth={600}
+		onClosed={() => {
+			isBroadcastEmailModalShown = false;
+		}}
+	>
+		<div class="p-8 w-full">
+			<div class="text-xl font-bold mb-4">Broadcast emails to your audience</div>
+
+			{#if !isBroadcastTestSent}
+				<div class="mt-4 mb-2">Email Subject</div>
+				<div class="text-sm mt-2 mb-4">
+					Subject is very important! <br /> Spark reader's curiosity and make them want to open your
+					email.
+				</div>
+				<input
+					placeholder="{moment().format('MMMM')} Update 🔥"
+					class="w-full"
+					bind:value={broadcastEmail.subject}
+				/>
+
+				<div class="mt-4 mb-2">Message</div>
+				<div class="text-sm mt-2 mb-4">
+					What's in your email for them? <br />
+					Talk to your audience and solve their problems. <br />
+					Genuinly lead them to call to action through storytelling.
+				</div>
+
+				<div
+					class="w-full p-4 bg-[#f6f5f5] min-h-[200px] rounded-xl"
+					bind:innerHTML={broadcastEmail.html}
+					contenteditable
+				/>
+
+				<hr class="my-8 border-[#8B786D] opacity-30" />
+
+				<div class="mt-4">Call To Action (optional)</div>
+				<div class="text-sm mb-2 opacity-70">
+					Text & link for the button at the bottom of your email.
+				</div>
+
+				<div class="flex w-full">
+					<div class="w-full">
+						<div class="text-sm mb-2">Title</div>
+						<input
+							class="w-full"
+							placeholder="Join discovery call"
+							bind:value={broadcastEmail.callToAction.title}
+						/>
+					</div>
+					<div class="ml-4 w-full">
+						<div class="text-sm mb-2">URL</div>
+						<input
+							class="w-full"
+							type="text"
+							placeholder="https://cal.com/igor-krasnik-7uhewy/30min"
+							bind:value={broadcastEmail.callToAction.url}
+						/>
+					</div>
+				</div>
+
+				<div class="mt-4 mb-2">Image (optional)</div>
+				<div class="text-sm mt-2 mb-4">Add friendly photo or product demo to the end of email.</div>
+				<FileInput class="w-full" bind:url={broadcastEmail.imageUrl} />
+			{/if}
+
+			{#if isBroadcastTestSent}
+				<div class="p-4 bg-[#fafafa] rounded-xl mb-2">
+					<div class="text-lg font-bold mb-2">{broadcastEmail.subject}</div>
+
+					<div class="mt-2">
+						{@html broadcastEmail.html}
+					</div>
+
+					{#if broadcastEmail.callToAction.title && broadcastEmail.callToAction.url}
+						<a
+							class="mt-4 inline-block"
+							style="background-color: #222; color: white; padding: 8px 16px; border-radius: 8px;"
+							href={broadcastEmail.callToAction.url}
+						>
+							{broadcastEmail.callToAction.title}
+						</a>
+					{/if}
+
+					{#if broadcastEmail.imageUrl}
+						<img
+							src={broadcastEmail.imageUrl}
+							class="rounded-xl mt-4 max-h-[150px] max-w-[300px]"
+						/>
+					{/if}
+				</div>
+
+				{#if broadcastEmail.isSent}
+					<div class="my-8 mt-16 text-lg">
+						🎉 Email was sent to {broadcastEmail.sentToEmails.length} subscribers! <br />
+
+						<button
+							class="mt-4 _secondary"
+							on:click={() => {
+								isBroadcastEmailModalShown = false;
+							}}>✅ Cool, close the window</button
+						>
+					</div>
+				{:else}
+					The test email was sent to&nbsp;<b> {$currentUser.email}</b>. <br />
+					Does it look good? Ready to send it to your subscribers? <br />
+
+					<div class="mt-4 bg-[#fafafa] p-4 rounded-xl">
+						<b>🙅‍♀️ No Spam Area</b> <br />
+						People like me and you don't like spam. <br />
+						Your subscribers put effort to follow your work. <br />
+						Put your heart into your messaging to turn your audience into potential clients.
+					</div>
+
+					<div class="flex mt-8">
+						<Button class="mt-4 _primary" onClick={sendBroadcastEmail}>📢 Broadcast Email</Button>
+
+						<button
+							class="ml-4 mt-4 secondary"
+							on:click={() => {
+								isBroadcastTestSent = false;
+							}}>🖊 Nah, continue editing</button
+						>
+					</div>
+				{/if}
+			{:else}
+				<div class="mt-8">
+					<Button class="mt-4 _secondary" onClick={sendTestBroadcastEmail}
+						>🔬 Send Test Email</Button
+					>
+				</div>
+			{/if}
+		</div>
+	</Modal>
+{/if}
 
 {#if isTutorialShown}
 	<Modal isShown>
@@ -446,7 +696,7 @@
 												/>
 											</svg>
 											<span class="ml-2 mr-8 text-[#8B786D]">
-												Forms ({submissions?.results?.length || 0})
+												Audience ({submissions?.results?.length || 0})
 											</span>
 										</div>
 
@@ -715,7 +965,10 @@
 
 										{#if !page.streamSlug}
 											<div class="font-normal text-sm opacity-70 mt-4">
-												Embed live content feed with your posts from social networks and blogs.
+												Embed live content feed with your posts from social networks and blogs. <br
+												/><br />
+												Your content will keep website fresh and live and you'll convert more relevant
+												users.
 											</div>
 										{/if}
 									</div>
@@ -769,6 +1022,8 @@
 						{:else}
 							<div class="flex items-center w-full justify-between mt-8 mb-32">
 								{#if page.name}
+									<Button class="_primary" onClick={publishPage}>Publish</Button>
+									<!-- 
 									<button
 										class="relative _primary {isLoading ? 'loading' : ''}"
 										on:click={publishPage}
@@ -783,7 +1038,7 @@
 										{:else}
 											Publish
 										{/if}
-									</button>
+									</button> -->
 								{/if}
 
 								{#if page._id && page.isDirty}
@@ -791,9 +1046,12 @@
 										class="cursor-pointer text-sm opacity-70"
 										on:click={() => {
 											setPageAndDraft(
-												page._id
-													? { ..._.cloneDeep($allPages.find((p) => p.slug === page.slug)) }
-													: { ...defaultPage },
+												{
+													...(page._id
+														? { ..._.cloneDeep($allPages.find((p) => p.slug === page.slug)) }
+														: { ...defaultPage }),
+													welcomeEmail: page.welcomeEmail
+												},
 												{ force: true }
 											);
 										}}
@@ -809,7 +1067,7 @@
 
 			{#if isSubmissionsOpen || isMetricsOpen}
 				<div
-					class="fixed min-w-[426px] pr-4 pt-4 overflow-y-scroll mt-[70px]"
+					class="fixed w-[426px] pb-[150px] pr-4 pt-4 overflow-y-scroll mt-[70px]"
 					in:fly={{ x: -50, duration: 150, delay: 150 }}
 					style="height: calc(100vh - 60px);"
 				>
@@ -867,11 +1125,12 @@
 								timeframe="7_days"
 							/>
 						</div> -->
+						<div class="mt-4 text-lg mb-2 font-bold">Your Audience</div>
 
 						{#if submissions}
 							<div class="mt-4">
 								{#if submissions.results.length}
-									<div class="text-lg font-bold">
+									<div class="font-bold">
 										Forms Submissions: {submissions.results.length}
 									</div>
 								{:else}
@@ -883,14 +1142,104 @@
 									<div class="flex my-2 opacity-90 w-full justify-between items-center">
 										<div>
 											{submission.email}
+											{#if submission.isVerified}
+												<div
+													class="inline"
+													use:tooltip
+													title="Email address is verified; Welcome email sent"
+												>
+													✅
+												</div>
+											{/if}
 										</div>
 										<div class="text-sm opacity-70">
 											{moment(submission.createdOn).format('MMM DD HH:MM')}
 										</div>
 									</div>
 								{/each}
+
+								{#if submissions?.results?.length}
+									<div class="font-bold mt-8 mb-4">Broadcast Emails</div>
+
+									{#if broadcastEmails?.results?.length}
+										{#each broadcastEmails.results as email}
+											<div class="flex justify-between items-center mb-4">
+												<div>
+													<div>
+														{email.subject}
+													</div>
+												</div>
+												<div class="flex">
+													<div class="mr-4 number-tag">{email.sentToEmails.length}</div>
+
+													<div class="opacity-70">
+														{moment(email.createdOn).format('MMM DD HH:MM')}
+													</div>
+												</div>
+											</div>
+										{/each}
+									{/if}
+
+									<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
+										<b> Keep your audience engaged </b> <br />
+
+										Stay in touch with them, keep them updated, share useful content, prepare them
+										for the launch.
+									</div>
+
+									<button
+										class="mt-4 _primary"
+										on:click={() => {
+											isBroadcastEmailModalShown = true;
+										}}>📢 Broadcast Emails</button
+									>
+								{/if}
 							</div>
 						{/if}
+
+						<hr class="my-8 border-[#8B786D] opacity-30" />
+
+						<div class="mt-4 font-bold">Your Welcome Email</div>
+
+						<div class="mt-4">
+							<div class="text-sm opacity-70 mb-2">Subject</div>
+							<input
+								type="text"
+								class="w-full"
+								placeholder="Welcome to {page.name}!"
+								bind:value={page.welcomeEmail.subject}
+							/>
+						</div>
+						<div class="mt-2 w-full">
+							<div class="text-sm opacity-70 mb-2">Email</div>
+							<div
+								contenteditable="true"
+								bind:innerHTML={page.welcomeEmail.html}
+								class="w-full p-4 bg-[#fafafa]"
+							/>
+						</div>
+
+						<div class="text-sm opacity-70 mt-4 mb-2">Demo Image</div>
+						<div class="text-sm mb-2">
+							Attach your friendly selfie or image relevant to your product.
+						</div>
+						<FileInput class="w-full" bind:url={page.welcomeEmail.imageUrl} theme="light" />
+
+						<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
+							Welcome email is sent once a user <b>verified</b> their email. <br />
+
+							🤝 Make it friendly and personal <br />
+							⏳ Keep it short and sweet <br />
+							⚡️ Stimulate reader to take action: book a call, check out the link, reply to email, share
+							in social media <br />
+						</div>
+
+						<div class="flex items-center">
+							<Button class="_primary my-8 mr-4" onClick={updateEmailHtml}
+								>Update Welcome Email</Button
+							>
+							<Button class="_secondary my-8" onClick={sendTestEmail}>🔬 Send Test Email</Button>
+						</div>
 					{/if}
 				</div>
 			{/if}
@@ -910,7 +1259,7 @@
 							</div>
 
 							<div
-								class="relative _published-label flex items-center mt-4"
+								class="relative _published-label flex justify-between items-center mt-4"
 								style="padding: 6px 10px;"
 							>
 								<a
@@ -938,7 +1287,23 @@
 								</a>
 
 								{#if page.isDirty}
-									<button
+									<div transition:fly={{ x: 50, duration: 150 }}>
+										<Button
+											class="bg-yellow-500 right-0 _primary flex justify-center w-full"
+											onClick={publishPage}
+											style="margin-left: 78px;
+                  border-radius: 30px;
+                  padding: 4px 45px;
+									right: 3px;
+									width: auto;
+									margin: -4px -10px -4px 0px;
+									"
+										>
+											Publish
+										</Button>
+									</div>
+
+									<!-- <button
 										class="absolute bg-yellow-500 right-0 _primary flex justify-center w-full {isLoading
 											? 'loading'
 											: ''}"
@@ -960,7 +1325,7 @@
 										{:else}
 											Publish
 										{/if}
-									</button>
+									</button> -->
 								{/if}
 							</div>
 							{#if metrics?.conversion}
