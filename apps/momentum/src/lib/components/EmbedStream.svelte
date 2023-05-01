@@ -19,7 +19,7 @@
 
 	let embedCode = `<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.min.js" integrity="sha512-dnvR4Aebv5bAtJxDunq3eE8puKAJrY9GBJYl9GC6lTOEC76s1dbDfJFcL9GyzpaDW4vlI/UjR8sKbc1j6Ynx6w==" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>
 <script async src="https://wave.mmntm.build/wave.js"><\/script>
-<iframe src="${shareUrl}/embed?isAutoConfig=true" onload="iFrameResize({}, '#momentum-feed')"  id="momentum-feed" style="width:100%; border: none;" \/>
+<iframe src="${shareUrl}/embed?isAutoConfig=true" onload="iFrameResize({}, '#momentum-feed')"  id="momentum-feed" style="width:100%; border: none;"><\/iframe>
 `;
 
 	let isJustCopied = false;
