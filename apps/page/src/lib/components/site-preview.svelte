@@ -234,7 +234,7 @@
 								</h1>
 
 								{#if page.subtitle}
-									<h2 class="_subtitle">{page.subtitle}</h2>
+									<h2 class="_subtitle whitespace-pre-wrap">{page.subtitle}</h2>
 								{/if}
 
 								<div
