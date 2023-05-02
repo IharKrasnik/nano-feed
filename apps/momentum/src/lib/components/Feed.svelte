@@ -638,23 +638,31 @@
 
 		{#if $currentUser && creator && creator._id === $currentUser._id}
 			<div class="cursor-pointer w-full flex justify-center my-2">
-				<a
-					class="button w-full small flex items-center justify-center"
-					on:click|preventDefault={linkedInLogin}
-				>
-					🟦 Connect LinkedIn
-				</a>
+				{#if $currentUser.oauth.linkedin}
+					✅ LinkedIn Connected
+				{:else}
+					<a
+						class="button w-full small flex items-center justify-center"
+						on:click|preventDefault={linkedInLogin}
+					>
+						🟦 Connect LinkedIn
+					</a>
+				{/if}
 			</div>
 		{/if}
 
 		{#if $currentUser && creator && creator._id === $currentUser._id}
 			<div class="cursor-pointer w-full flex justify-center my-2">
-				<a
-					class="button w-full small flex items-center justify-center"
-					on:click|preventDefault={twitterLogin}
-				>
-					🐦 Connect Twitter
-				</a>
+				{#if $currentUser.oauth.twitter}
+					✅ Twitter Connected
+				{:else}
+					<a
+						class="button w-full small flex items-center justify-center"
+						on:click|preventDefault={twitterLogin}
+					>
+						🐦 Connect Twitter
+					</a>
+				{/if}
 			</div>
 		{/if}
 
@@ -667,7 +675,7 @@
 		{/if}
 
 		{#if $currentUser && ($currentUser.isAdmin || selectedProject?.creator?._id === $currentUser._id)}
-			<div class="cursor-pointer w-full flex justify-center my-2">
+			<div class="cursor-pointer w-full flex justify-center my-4">
 				<a class="button w-full small flex items-center justify-center" on:click={embed}>
 					✨ Embed Stream
 				</a>
