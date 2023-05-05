@@ -221,12 +221,18 @@
 					>
 						<div
 							class="flex h-full {page.demoUrl
-								? 'flex-col sm:flex-row justify-between items-center'
+								? `flex-col ${
+										page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
+								  } justify-between items-center`
 								: 'text-center items-center'}"
 						>
 							<div
 								class={page.demoUrl
-									? 'w-full text-center sm:text-left sm:max-w-[500px] items-center'
+									? `w-full text-center ${
+											page.theme?.hero === 'vertical'
+												? 'flex flex-col items-center mb-8'
+												: 'sm:text-left'
+									  } sm:max-w-[500px] items-center`
 									: 'flex flex-col items-center w-full sm:w-auto sm:max-w-[600px] mx-auto'}
 							>
 								<h1 class="_title" style={page.title ? '' : 'opacity: 20%;'}>
@@ -246,7 +252,9 @@
 								>
 									<form
 										class="{page.isCollectEmails
-											? 'w-full flex flex-col sm:flex-row items-center justify-center'
+											? `w-full flex flex-col ${
+													page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
+											  } items-center justify-center`
 											: 'mx-auto sm:mx-0'} "
 										style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
 										on:submit|preventDefault={submitEmail}
