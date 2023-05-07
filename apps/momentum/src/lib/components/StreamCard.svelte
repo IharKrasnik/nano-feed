@@ -16,11 +16,11 @@
 
 	export let creator;
 
+	export let isIncludeChart = false;
+
 	export let isWithDescription = false;
 
 	export let isLink = false;
-
-	let isHover = false;
 
 	let shuffledCreators = [];
 
@@ -42,15 +42,6 @@
 <div>
 	{#if stream}
 		<a
-			on:mouseenter={() => {
-				isHover = true;
-
-				console.log('hover');
-			}}
-			on:mouseleave={() => {
-				isHover = false;
-				console.log('ver');
-			}}
 			href={isEditable &&
 			stream._id &&
 			($currentUser?.isAdmin ||
@@ -175,7 +166,9 @@
 						</div>
 					{/if}
 
-					<!-- <WaveIndicator bind:isChart={isHover} timeframe="7_days" project={stream} /> -->
+					{#if isIncludeChart}
+						<WaveIndicator isChart={false} timeframe="7_days" project={stream} />
+					{/if}
 				</div>
 			</div>
 		</a>

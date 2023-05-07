@@ -164,14 +164,16 @@
 
 	<main
 		class="
-			{$page.url.href.includes('/embed')
+			{$page.url.href.includes('/embed') || $page.url.href.includes('/invest')
 			? 'w-full'
 			: 'container relative p-8 mx-0 xl:mx-auto'} mt-[45px] sm:mt-[65px] xl:mt-0
-			{$page.url.href.includes('/feed/') ||
-		$page.url.href.includes('/write-editor') ||
-		$page.url.href.includes('/invest')
+			{$page.url.href.includes('/feed/') || $page.url.href.includes('/write-editor')
 			? 'max-w-[1200px]'
-			: `${$page.url.href.includes('/embed') ? '' : 'max-w-[600px]'}`}
+			: `${
+					$page.url.href.includes('/embed') || $page.url.href.includes('/invest')
+						? ''
+						: 'max-w-[600px]'
+			  }`}
 			"
 	>
 		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch') && !$page.url.href.includes('/embed')}

@@ -27,7 +27,11 @@
 
 <div>
 	{#if feed.length > 0}
-		<div in:fly={{ y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
+		<div
+			in:fly={{ y: 50, duration: 150, delay: 150 }}
+			style="padding: 2px; padding-bottom: 300px;"
+			class="columns-3"
+		>
 			<InfiniteScroll
 				hasMore={true}
 				threshold={100}
