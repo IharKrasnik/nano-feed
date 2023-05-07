@@ -15,6 +15,9 @@
 
 	import { get, post } from 'lib/api';
 
+	let clazz;
+	export { clazz as class };
+
 	export let project;
 	export let isChart = true;
 
@@ -165,7 +168,7 @@
 {/if}
 
 {#if project && (project?.waveProject?._id || project?.page?._id)}
-	<button class="mt-4 w-full small" on:click={openModal}>
+	<button class="{clazz} w-full small" on:click={openModal}>
 		{#if project?.waveProject?._id || project?.page?._id}
 			<WaveShortStats bind:isChart bind:isLoading bind:metrics bind:timeframe />
 		{:else if $currentUser?.isAdmin || project.creator?._id === $currentUser?._id}

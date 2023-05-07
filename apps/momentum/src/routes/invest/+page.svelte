@@ -54,6 +54,8 @@
 		}
 	};
 
+	let projects = $allProjects.filter((p) => p.hubProject?.slug === 'nano');
+
 	let getCreators = async () => {
 		streamCreators = (await get('creators', { projectSlug: hubProject.slug })).results;
 		$creators = streamCreators;
@@ -87,17 +89,17 @@
 		</div>
 	</div>
 
-	<div class="text-3xl font-bold text-center mb-8">Startups</div>
+	<div class="text-3xl font-bold text-center mb-8">{projects.length} Startups..</div>
 
-	<div class="sticky top-[20px] mt-4 mx-8 flex overflow-y-scroll px-[1px]">
-		{#each $allProjects.filter((p) => p.hubProject?.slug === 'nano') as project}
-			<div class="min-w-[300px] mr-4">
-				<StreamCard isLink isWithDescription stream={project} />
+	<div class="mt-4 mx-8 flex overflow-y-scroll px-[1px]">
+		{#each projects as project}
+			<div class="min-w-[300px] mr-6">
+				<StreamCard isIncludeGoal isIncludeChart={true} isLink isWithDescription stream={project} />
 			</div>
 		{/each}
 	</div>
 
-	<div class="text-3xl font-bold text-center mb-8">Feed</div>
+	<div class="sticky text-3xl font-bold text-center my-8">Building in public..</div>
 
 	<div class="container max-w-[1200px] mx-auto relative pt-16 shrink-0 w-full">
 		<div class="shrink-0 ml-16  overflow-y-scroll">

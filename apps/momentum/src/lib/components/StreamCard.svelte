@@ -1,4 +1,6 @@
 <script>
+	import Modal from 'lib/components/Modal.svelte';
+	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
 	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -17,6 +19,7 @@
 	export let creator;
 
 	export let isIncludeChart = false;
+	export let isIncludeGoal = false;
 
 	export let isWithDescription = false;
 
@@ -25,6 +28,8 @@
 	let shuffledCreators = [];
 
 	let shuffleCreators = () => (shuffledCreators = _.shuffle(creators));
+
+	let isPitchOpen = false;
 
 	$: if (creators?.length) {
 		shuffleCreators();
@@ -38,6 +43,17 @@
 		clearInterval(shuffleInterval);
 	});
 </script>
+
+{#if isPitchOpen}
+	<Modal
+		isShown={isPitchOpen}
+		onClosed={() => {
+			isPitchOpen = false;
+		}}
+	>
+		<RenderUrl url={stream.pitchUrl} />
+	</Modal>
+{/if}
 
 <div>
 	{#if stream}
@@ -165,13 +181,32 @@
 							{/key}
 						</div>
 					{/if}
-
-					{#if isIncludeChart}
-						<WaveIndicator isChart={false} timeframe="7_days" project={stream} />
-					{/if}
 				</div>
 			</div>
 		</a>
+
+		{#if isIncludeChart}
+			<WaveIndicator class="my-2" isChart={false} timeframe="7_days" project={stream} />
+		{/if}
+
+		{#if isIncludeGoal && stream.goal}
+			<div class="mt-2 p-4 text-center rounded-xl bg-zinc-900 rounded-2xl">
+				🎯 {stream.goal}
+			</div>
+		{/if}
+
+		{#if stream.pitchUrl}
+			<div
+				class="cursor-pointer w-full my-4"
+				on:click={() => {
+					isPitchOpen = true;
+				}}
+			>
+				<div style="pointer-events: none;">
+					<RenderUrl url={stream.pitchUrl} imgClass="max-h-[200px]" />
+				</div>
+			</div>
+		{/if}
 	{/if}
 </div>
 

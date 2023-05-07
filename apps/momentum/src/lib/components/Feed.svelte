@@ -682,7 +682,7 @@
 			</div>
 		{/if}
 
-		<WaveIndicator bind:project={selectedProject} />
+		<WaveIndicator bind:project={selectedProject} class="mt-4" />
 	</div>
 
 	<div class="mt-8">
@@ -741,6 +741,14 @@
 			Substream from {creator.fullName}
 		</div>
 	{/if}
+
+	{#if selectedProject?.goal}
+		<div class="p-2 text-center bg-zinc-900 flex items-center mb-8 rounded-3xl justify-center">
+			<div class="rounded-full rounded-full flex items-center jusify-center mr-4">🎯</div>
+			<div>{selectedProject.goal}</div>
+		</div>
+	{/if}
+
 	{#if feed.length > 0}
 		<div in:fly={{ y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
 			<InfiniteScroll

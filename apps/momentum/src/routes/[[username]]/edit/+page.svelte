@@ -1,4 +1,5 @@
 <script>
+	import moment from 'moment';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { get, put } from 'lib/api';
@@ -161,6 +162,30 @@
 				/>
 			</div>
 
+			<div class="mb-8">
+				<label> End-Of-Month Goal </label>
+
+				<div class="opacity-70">
+					By {moment().endOf('month').format('MMMM, DD')}, I want to get..
+				</div>
+
+				<input
+					type="text"
+					class="block mt-4"
+					bind:value={stream.goal}
+					placeholder="+100 paid users"
+				/>
+			</div>
+
+			<div class="mb-8">
+				<label> Video Pitch </label>
+
+				<FileInput
+					bind:url={stream.pitchUrl}
+					on:fileUploaded={(evt) => fileUploaded(evt.detail, 'pitchUrl')}
+				/>
+			</div>
+
 			{#if $currentUser.isAdmin}
 				<div class="mb-8">
 					<label> Hub Stream </label>
@@ -205,7 +230,7 @@
 				<h3>{stream.description || 'No Tagline'}</h3>
 			{/if}
 			<div class="mt-4">
-				<StreamCard {stream} />
+				<StreamCard {stream} isIncludeGoal />
 			</div>
 		</div>
 	{/if}
