@@ -82,7 +82,7 @@
 	class:bg-black={!$page.url.href.includes('embed')}
 	class:_gradient={$page.url.href.toLowerCase().includes('bachrimchuk')}
 >
-	{#if !$page.url.href.includes('/embed')}
+	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest')}
 		<div class="container xl:mx-auto px-8 xl:px-0 max-w-[600px]">
 			<div
 				class="
@@ -167,7 +167,9 @@
 			{$page.url.href.includes('/embed')
 			? 'w-full'
 			: 'container relative p-8 mx-0 xl:mx-auto'} mt-[45px] sm:mt-[65px] xl:mt-0
-			{$page.url.href.includes('/feed/') || $page.url.href.includes('/write-editor')
+			{$page.url.href.includes('/feed/') ||
+		$page.url.href.includes('/write-editor') ||
+		$page.url.href.includes('/invest')
 			? 'max-w-[1200px]'
 			: `${$page.url.href.includes('/embed') ? '' : 'max-w-[600px]'}`}
 			"

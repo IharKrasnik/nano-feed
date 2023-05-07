@@ -1,0 +1,45 @@
+<script>
+	import { fly, fade, slide } from 'svelte/transition';
+	import InfiniteScroll from 'lib/components/InfiniteScroll.svelte';
+	import FeedItem from '$lib/components/FeedItem.svelte';
+	import { fetch as fetchFeed } from '$lib/stores/feed';
+
+	export let projectSlug;
+
+	let feed = [];
+	let pageNumber = 0;
+
+	let fetchFeedPage = async ({ page = 1 } = {}) => {
+		return fetchFeed({
+			project: projectSlug,
+			page
+		});
+	};
+
+	let loadMore = async () => {
+		pageNumber++;
+		const feedPage = await fetchFeedPage({ page: pageNumber });
+		feed = [...feed, ...feedPage];
+	};
+
+	loadMore();
+</script>
+
+<div>
+	{#if feed.length > 0}
+		<div in:fly={{ y: 50, duration: 150, delay: 150 }} style="padding: 2px; padding-bottom: 300px;">
+			<InfiniteScroll
+				hasMore={true}
+				threshold={100}
+				elementScroll={'body'}
+				onLoadMore={() => {
+					loadMore();
+				}}
+			/>
+
+			{#each feed as feedItem}
+				<FeedItem {feedItem} />
+			{/each}
+		</div>
+	{/if}
+</div>

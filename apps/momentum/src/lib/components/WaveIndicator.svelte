@@ -16,6 +16,7 @@
 	import { get, post } from 'lib/api';
 
 	export let project;
+	export let isChart = true;
 
 	let isLoading = false;
 
@@ -37,25 +38,31 @@
 		window.open(`${WAVE_URL}/p/${waveProject.url}`, '_blank');
 	};
 
-	let timeframe = '24_hours';
+	export let timeframe = '24_hours';
 	let timezone = moment.tz.guess();
 
 	let prevWaveProjectId;
 	let prevSubProjectId;
 
 	let loadMetrics = async ({ projectId, subProjectId }) => {
+		isLoading = true;
+
 		prevWaveProjectId = projectId;
 		prevSubProjectId = subProjectId;
 
 		// if (project && new Date(project.createdOn) < moment().subtract(1, 'week').toDate()) {
 		// 	timeframe = '7_days';
 		// }
-
-		metrics = await get(`waveProjects/${projectId}/stats`, {
-			timeframe,
-			timezone,
-			...(subProjectId ? { subProjectId } : {})
-		});
+		try {
+			metrics = await get(`waveProjects/${projectId}/stats`, {
+				timeframe,
+				timezone,
+				...(subProjectId ? { subProjectId } : {})
+			});
+		} catch (err) {
+		} finally {
+			isLoading = false;
+		}
 	};
 
 	let prevProjectId;
@@ -160,9 +167,7 @@
 {#if project && (project?.waveProject?._id || project?.page?._id)}
 	<button class="mt-4 w-full small" on:click={openModal}>
 		{#if project?.waveProject?._id || project?.page?._id}
-			{#if metrics}
-				<WaveShortStats bind:metrics bind:timeframe />
-			{/if}
+			<WaveShortStats bind:isChart bind:isLoading bind:metrics bind:timeframe />
 		{:else if $currentUser?.isAdmin || project.creator?._id === $currentUser?._id}
 			👋 Add Wave Analytics
 		{/if}

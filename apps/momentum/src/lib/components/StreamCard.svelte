@@ -3,6 +3,7 @@
 	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import currentUser from 'lib/stores/currentUser';
+	import WaveIndicator from '$lib/components/WaveIndicator.svelte';
 
 	import _ from 'lodash';
 
@@ -15,7 +16,11 @@
 
 	export let creator;
 
+	export let isWithDescription = false;
+
 	export let isLink = false;
+
+	let isHover = false;
 
 	let shuffledCreators = [];
 
@@ -37,6 +42,15 @@
 <div>
 	{#if stream}
 		<a
+			on:mouseenter={() => {
+				isHover = true;
+
+				console.log('hover');
+			}}
+			on:mouseleave={() => {
+				isHover = false;
+				console.log('ver');
+			}}
 			href={isEditable &&
 			stream._id &&
 			($currentUser?.isAdmin ||
@@ -53,26 +67,28 @@
 				<!-- <img src="https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png" class="w-full rounded-xl"/> -->
 
 				{#if stream.bannerUrl}
-					{#if stream.bannerUrl.includes('.mov') || stream.bannerUrl.includes('.mp4')}
-						<video
-							autoplay
-							muted
-							src={stream.bannerUrl}
-							class="w-full rounded-xl max-h-[180px] object-cover"
-							style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;"
-						/>
-					{:else}
-						<img
-							src={stream.bannerUrl}
-							class="w-full rounded-xl max-h-[180px] object-cover"
-							style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;"
-						/>
-					{/if}
+					<div class="relative">
+						{#if stream.bannerUrl.includes('.mov') || stream.bannerUrl.includes('.mp4')}
+							<video
+								autoplay
+								muted
+								src={stream.bannerUrl}
+								class="w-full rounded-xl max-h-[180px] object-cover"
+								style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;"
+							/>
+						{:else}
+							<img
+								src={stream.bannerUrl}
+								class="w-full rounded-xl max-h-[180px] object-cover"
+								style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;"
+							/>
+						{/if}
+					</div>
 				{/if}
 
-				{#if stream.avatarUrl}
+				{#if stream.avatarUrl || stream.logoUrl}
 					<div class="ml-4 {stream.bannerUrl ? 'mt-[-30px]' : 'pt-4'}">
-						<img src={stream.avatarUrl} class="w-[60px] h-[60px] rounded-full" />
+						<img src={stream.avatarUrl || stream.logoUrl} class="w-[60px] h-[60px] rounded-full" />
 					</div>
 				{/if}
 
@@ -80,6 +96,13 @@
 					<div class="text-lg font-bold">
 						{stream.title || stream.fullName}
 					</div>
+
+					{#if stream.description && isWithDescription}
+						<div class="text-lg whitespace-pre-wrap mb-2">
+							{stream.description}
+						</div>
+						<hr class="my-4" style="border: .5px rgba(255, 255, 255, .2) solid;" />
+					{/if}
 
 					{#if stream.longDescription}
 						<div class="whitespace-pre-wrap">
@@ -109,6 +132,7 @@
 								>
 							{/if}
 						</div>
+
 						{#if stream.links?.length}
 							<div class="flex items-center my-2">
 								{#each stream.links as link}
@@ -150,6 +174,8 @@
 							{/key}
 						</div>
 					{/if}
+
+					<!-- <WaveIndicator bind:isChart={isHover} timeframe="7_days" project={stream} /> -->
 				</div>
 			</div>
 		</a>
