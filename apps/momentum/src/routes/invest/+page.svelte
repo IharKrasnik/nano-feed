@@ -62,9 +62,9 @@
 	getCreators();
 </script>
 
-<div>
+<div class="relative">
 	<div
-		class="relative flex justify-between p-8 rounded-2xl text-white"
+		class="relative my-8 flex justify-between p-8 rounded-2xl text-white max-w-[1200px] mx-auto"
 		style="background: url('/backgrounds/gradient-1.svg');"
 	>
 		<div>
@@ -87,13 +87,20 @@
 		</div>
 	</div>
 
-	<div class="relative pt-8 shrink-0 flex justify-between w-full">
-		<div class="overflow-y-scroll px-[1px] ">
-			{#each $allProjects.filter((p) => p.hubProject?.slug === 'nano') as project}
+	<div class="text-3xl font-bold text-center mb-8">Startups</div>
+
+	<div class="sticky top-[20px] mt-4 mx-8 flex overflow-y-scroll px-[1px]">
+		{#each $allProjects.filter((p) => p.hubProject?.slug === 'nano') as project}
+			<div class="min-w-[300px] mr-4">
 				<StreamCard isLink isWithDescription stream={project} />
-			{/each}
-		</div>
-		<div class="shrink-0 ml-16 w-[400px] overflow-y-scroll">
+			</div>
+		{/each}
+	</div>
+
+	<div class="text-3xl font-bold text-center mb-8">Feed</div>
+
+	<div class="container max-w-[1200px] mx-auto relative pt-16 shrink-0 w-full">
+		<div class="shrink-0 ml-16  overflow-y-scroll">
 			<Stream projectSlug={'nano'} />
 		</div>
 	</div>
