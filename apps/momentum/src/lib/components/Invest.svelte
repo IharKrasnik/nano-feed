@@ -165,7 +165,7 @@
 						<textarea
 							bind:value={request.message}
 							rows="3"
-							placeholder="Hi I'm Igor https://twitter.com/that_igor_. Nano is sick, I'd love to support indie-hackers and it's great that the data is open to public. Looking forward to our chat!"
+							placeholder={`Hi I'm Igor https://twitter.com/that_igor_. Nano is sick, I'd love to support "too early" startups and it looks have some decent founders here.. Looking forward to our chat!`}
 						/>
 					</div>
 				</div>
@@ -176,7 +176,7 @@
 	</Modal>
 {/if}
 
-<div class="relative" style="margin-bottom: 300px;">
+<div class="relative" style="margin-bottom: 200px;">
 	<div
 		class="relative my-8 flex justify-between p-8 rounded-2xl text-white max-w-[1200px] mx-auto"
 		style="background: url('/backgrounds/gradient-1.svg');"
@@ -374,6 +374,14 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="w-full flex flex-col items-center justify-center">
+		<img
+			style="width: 150px;"
+			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683477275194-nano-logo-big.png"
+		/>
+		<h1 class="mt-4 text-3xl">Nano</h1>
+		<h3 class="mt-2">Build your million dollars startups with media</h3>
 	</div>
 </div>
 
