@@ -7,8 +7,10 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
+	import getDomain from 'lib/helpers/getDomain';
 
 	import Dock from 'lib/components/Dock.svelte';
+	import Invest from '$lib/components/Invest.svelte';
 	import allProjects from '$lib/stores/allProjects';
 
 	import { SvelteToast } from '@zerodevx/svelte-toast';
@@ -33,6 +35,7 @@
 			});
 		}
 	}
+	debugger;
 </script>
 
 <svelte:head>
@@ -82,7 +85,7 @@
 	class:bg-black={!$page.url.href.includes('embed')}
 	class:_gradient={$page.url.href.toLowerCase().includes('bachrimchuk')}
 >
-	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest')}
+	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && !$page.url.href.includes('nanohq.co')}
 		<div class="container xl:mx-auto px-8 xl:px-0 max-w-[600px]">
 			<div
 				class="
@@ -164,13 +167,17 @@
 
 	<main
 		class="
-			{$page.url.href.includes('/embed') || $page.url.href.includes('/invest')
+			{$page.url.href.includes('/embed') ||
+		$page.url.href.includes('/invest') ||
+		$page.url.href.includes('nanohq.co')
 			? 'w-full'
 			: 'container relative p-8 mx-0 xl:mx-auto'} mt-[45px] sm:mt-[65px] xl:mt-0
 			{$page.url.href.includes('/feed/') || $page.url.href.includes('/write-editor')
 			? 'max-w-[1200px]'
 			: `${
-					$page.url.href.includes('/embed') || $page.url.href.includes('/invest')
+					$page.url.href.includes('/embed') ||
+					$page.url.href.includes('/invest') ||
+					$page.url.href.includes('nanohq.co')
 						? ''
 						: 'max-w-[600px]'
 			  }`}
@@ -199,7 +206,9 @@
 			</a>
 		{/if}
 
-		{#if $allProjects}
+		{#if getDomain($page.url.href) === 'nanohq.co'}
+			<Invest />
+		{:else if $allProjects}
 			<slot />
 		{/if}
 	</main>

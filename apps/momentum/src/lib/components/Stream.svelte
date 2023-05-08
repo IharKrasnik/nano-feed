@@ -13,7 +13,8 @@
 	let fetchFeedPage = async ({ page = 1 } = {}) => {
 		return fetchFeed({
 			project: projectSlug,
-			page
+			page,
+			perPage: 15
 		});
 	};
 
