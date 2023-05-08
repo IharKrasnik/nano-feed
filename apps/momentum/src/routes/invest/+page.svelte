@@ -7,7 +7,7 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import Avatar from '$lib/components/Avatar.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
-
+	import Calendar from './Calendar.svelte';
 	import creators from '$lib/stores/creators';
 
 	let streamCreators;
@@ -29,7 +29,7 @@
 		title: 'Nano',
 		emoji: null,
 		color: '#a263d9',
-		description: 'Build your million-dollars startup with help of media.',
+		description: 'Start and grow your startup to $1M+ with media.',
 		url: 'https://nanohq.co',
 		bannerUrl:
 			'https://assets.website-files.com/64246fe509498c27897c2eaa/6425acab275655043392fea7_OpenGraph%20(1).png',
@@ -102,15 +102,22 @@
 			</a>
 		</div>
 
-		<div class="cursor-pointer max-w-[400px]">
-			<video muted controls autoplay src={hubProject.pinnedUrl} class="rounded-xl" />
+		<div class="max-w-[350px] flex-1 h-full flex flex-col justify-center items-center p-8">
+			<h2 class="text-4xl">$3,000</h2>
+			<h3 class="text-2xl">May Fund</h3>
+			<button class="mt-8 rounded-xl text-xl w-full">Invest in open startups</button>
+			<!-- <video muted controls autoplay src={hubProject.pinnedUrl} class="rounded-xl" /> -->
 			<!-- <RenderUrl url={hubProject.pinnedUrl} /> -->
 			<!-- <img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" /> -->
 		</div>
 	</div>
-	<div class="_header text-3xl font-bold text-center my-16">
+	<div class="_header text-3xl font-bold text-center mt-16">
 		We've invited {projects.length} early-stage startups <br />
-		to grow their traction daily, together..
+		to grow their traction together, daily..
+	</div>
+
+	<div class="mt-8 mb-16">
+		<Calendar class="w-full" />
 	</div>
 
 	<div class="mt-4 mx-8 flex overflow-y-scroll px-[1px]">
@@ -122,8 +129,8 @@
 	</div>
 
 	<div class="_header text-3xl font-bold text-center my-8 mt-16">
-		And we all are building in public. <br />
-		Sharing our goals, learnings and metrics in Social Media..
+		And everyone of us here is building in public. <br />
+		We share our goals, learnings and metrics in Social Media..
 	</div>
 
 	<div class="container max-w-[1200px] mx-auto relative pt-16 shrink-0 w-full">
@@ -264,7 +271,7 @@
 						style="font-size: 32px; background: #007b50;"
 						on:click={() => {
 							isInvestModalOpen = true;
-						}}>Invest into startup</a
+						}}>Invest in startup</a
 					>
 				</div>
 			</div>

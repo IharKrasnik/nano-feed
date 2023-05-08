@@ -1,0 +1,60 @@
+<script>
+	let clazz;
+
+	export { clazz as class };
+
+	import moment from 'moment';
+	import _ from 'lodash';
+
+	let days = _.range(moment().daysInMonth());
+
+	let currentDay = moment().date();
+</script>
+
+<div class="flex justify-center items-center {clazz}">
+	<div class="flex flex-col items-center mr-8">
+		<div class="font-bold">⚡️ {moment().startOf('month').format('MMM DD')}</div>
+		<div class="text-base font-normal">Kick Off Day</div>
+	</div>
+	{#each days as day}
+		<div class="relative">
+			<div
+				class="day mr-1"
+				class:past={day < currentDay}
+				class:today={day === currentDay}
+				class:future={day > currentDay}
+			/>
+			{#if day === currentDay}
+				<div
+					class="absolute bottom-0"
+					style="margin-left: 5px; padding-top: 5px; transform: translateY(100%)"
+				>
+					👆
+				</div>
+			{/if}
+		</div>
+	{/each}
+	<div class="flex flex-col items-center ml-8">
+		<div class="font-bold">📺 {moment().endOf('month').format('MMM DD')}</div>
+		<div class="text-base font-normal">Demo Day</div>
+	</div>
+	<div />
+</div>
+
+<style>
+	.day {
+		width: 20px;
+		height: 20px;
+		border: 1px white solid;
+		border-radius: 50%;
+	}
+
+	.past {
+		opacity: 0.6;
+		background: white;
+	}
+
+	.today {
+		background: white;
+	}
+</style>
