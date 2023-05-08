@@ -23,6 +23,8 @@
 
 	let isLoading = false;
 
+	export let isUseCache = false;
+
 	let isModalOpen = false;
 
 	let metrics;
@@ -47,11 +49,16 @@
 	let prevWaveProjectId;
 	let prevSubProjectId;
 
-	let loadMetrics = async ({ projectId, subProjectId }) => {
-		isLoading = true;
-
+	let loadMetrics = async ({ projectId, subProjectId, forceCacheReset = false }) => {
 		prevWaveProjectId = projectId;
 		prevSubProjectId = subProjectId;
+
+		if (!forceCacheReset && isUseCache && project?.statsCache && project?.statsCache[timeframe]) {
+			metrics = project.statsCache[timeframe];
+			return;
+		}
+
+		isLoading = true;
 
 		// if (project && new Date(project.createdOn) < moment().subtract(1, 'week').toDate()) {
 		// 	timeframe = '7_days';
@@ -86,7 +93,7 @@
 
 	$: if (project) {
 		if (!metrics || prevPageId !== project.page?._id) {
-			if (project.page?._id) {
+			if (project.page?._id && !project.waveProject?._id) {
 				loadMetrics({ projectId: 'page.mmntm.build', subProjectId: project.page._id });
 				prevPageId = project.page._id;
 			} else {
@@ -118,8 +125,14 @@
 					<div>
 						<select
 							bind:value={timeframe}
-							on:change={() =>
-								loadMetrics({ projectId: prevWaveProjectId, subProjectId: prevSubProjectId })}
+							on:change={() => {
+								debugger;
+								loadMetrics({
+									projectId: prevWaveProjectId,
+									subProjectId: prevSubProjectId,
+									forceCacheReset: true
+								});
+							}}
 						>
 							<option value="24_hours">24 hours</option>
 							<option value="7_days">7 days</option>

@@ -82,14 +82,17 @@
 				{/if}
 			</a>
 		</div>
+
 		<div class="cursor-pointer max-w-[400px]">
 			<video muted controls autoplay src={hubProject.pinnedUrl} class="rounded-xl" />
 			<!-- <RenderUrl url={hubProject.pinnedUrl} /> -->
 			<!-- <img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" /> -->
 		</div>
 	</div>
-
-	<div class="text-3xl font-bold text-center mb-8">{projects.length} Startups..</div>
+	<div class="font-bold text-center mb-8" style="font-size: 50px;">Invest</div>
+	<div class="text-3xl font-bold text-center mb-8">
+		{projects.length} early-stage startups work daily to gain early traction..
+	</div>
 
 	<div class="mt-4 mx-8 flex overflow-y-scroll px-[1px]">
 		{#each projects as project}

@@ -57,6 +57,16 @@
 
 <div>
 	{#if stream}
+		{#if isIncludeChart}
+			<WaveIndicator
+				class="my-4"
+				isUseCache={true}
+				isChart={false}
+				timeframe="7_days"
+				project={stream}
+			/>
+		{/if}
+
 		<a
 			href={isEditable &&
 			stream._id &&
@@ -184,10 +194,6 @@
 				</div>
 			</div>
 		</a>
-
-		{#if isIncludeChart}
-			<WaveIndicator class="my-2" isChart={false} timeframe="7_days" project={stream} />
-		{/if}
 
 		{#if isIncludeGoal && stream.goal}
 			<div class="mt-2 p-4 text-center rounded-xl bg-zinc-900 rounded-2xl">
