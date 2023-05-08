@@ -7,7 +7,6 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
-	import getDomain from 'lib/helpers/getDomain';
 
 	import Dock from 'lib/components/Dock.svelte';
 	import Invest from '$lib/components/Invest.svelte';
@@ -35,7 +34,6 @@
 			});
 		}
 	}
-	debugger;
 </script>
 
 <svelte:head>
@@ -206,7 +204,7 @@
 			</a>
 		{/if}
 
-		{#if getDomain($page.url.href) === 'nanohq.co'}
+		{#if $page.url.href.includes('nanohq.co')}
 			<Invest />
 		{:else if $allProjects}
 			<slot />
