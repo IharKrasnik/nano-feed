@@ -5,6 +5,7 @@
 	import { fetch as fetchFeed } from '$lib/stores/feed';
 
 	export let projectSlug;
+	export let maxPagesCount = null;
 
 	let feed = [];
 	let pageNumber = 0;
@@ -37,7 +38,10 @@
 				threshold={100}
 				elementScroll={'body'}
 				onLoadMore={() => {
-					loadMore();
+					if (maxPagesCount && maxPagesCount <= pageNumber) {
+						debugger;
+						loadMore();
+					}
 				}}
 			/>
 

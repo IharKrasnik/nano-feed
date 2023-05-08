@@ -4,6 +4,7 @@
 	import allProjects from '$lib/stores/allProjects';
 	import StreamCard from '$lib/components/StreamCard.svelte';
 	import Stream from '$lib/components/Stream.svelte';
+	import Modal from 'lib/components/Modal.svelte';
 	import Avatar from '$lib/components/Avatar.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 
@@ -12,6 +13,9 @@
 	let streamCreators;
 
 	let loadMore = () => {};
+
+	let isGrowModalOpen;
+	let isInvestModalOpen;
 
 	let hubProject = {
 		_id: '642e827852b497001703f41a',
@@ -64,7 +68,22 @@
 	getCreators();
 </script>
 
-<div class="relative">
+<svelte:head>
+	<title>Nano — Invest</title>
+</svelte:head>
+
+{#if isGrowModalOpen}
+	<Modal
+		isShown={isGrowModalOpen}
+		onClosed={() => {
+			isGrowModalOpen = false;
+		}}
+	>
+		<div>the rules are simple</div>
+	</Modal>
+{/if}
+
+<div class="relative" style="margin-bottom: 300px;">
 	<div
 		class="relative my-8 flex justify-between p-8 rounded-2xl text-white max-w-[1200px] mx-auto"
 		style="background: url('/backgrounds/gradient-1.svg');"
@@ -89,9 +108,9 @@
 			<!-- <img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" /> -->
 		</div>
 	</div>
-	<div class="font-bold text-center mb-8" style="font-size: 50px;">Invest</div>
-	<div class="text-3xl font-bold text-center mb-8">
-		{projects.length} early-stage startups work daily to gain early traction..
+	<div class="_header text-3xl font-bold text-center my-16">
+		We've invited {projects.length} early-stage startups <br />
+		to grow their traction daily, together..
 	</div>
 
 	<div class="mt-4 mx-8 flex overflow-y-scroll px-[1px]">
@@ -102,14 +121,157 @@
 		{/each}
 	</div>
 
-	<div class="sticky text-3xl font-bold text-center my-8">Building in public..</div>
+	<div class="_header text-3xl font-bold text-center my-8 mt-16">
+		And we all are building in public. <br />
+		Sharing our goals, learnings and metrics in Social Media..
+	</div>
 
 	<div class="container max-w-[1200px] mx-auto relative pt-16 shrink-0 w-full">
 		<div class="shrink-0 ml-16  overflow-y-scroll">
-			<Stream projectSlug={'nano'} />
+			<Stream projectSlug={'nano'} maxPagesCount={2} />
+		</div>
+	</div>
+
+	<div class="_header text-3xl text-center mb-16" style="margin-top: -100px;">
+		Because we believe that every company is a media company. <br />
+		You are no longer a CEO, you are Chief Executive Producer. <br />
+	</div>
+
+	<div class="w-full flex justify-center my-8 mx-auto" style="max-width: 1200px;">
+		<RenderUrl url="https://www.youtube.com/watch?v=2zE7uWxA95s" />
+	</div>
+
+	<div class="_header text-3xl text-center mb-16 mt-32">
+		<div class="flex justify-center my-4">
+			<div class="mx-2">🥳</div>
+			<div class="mx-2">🥳</div>
+			<div class="mx-2">🥳</div>
+		</div>
+		And it seems people love this "media" thing<br />
+	</div>
+
+	<div
+		class="grid grid-cols-2 gap-4 text-center w-full mb-16 mx-auto p-8 rounded-2xl "
+		style="max-width: 1200px;"
+	>
+		<div class="flex flex-col items-center px-8 bg-zinc-900 rounded-xl py-8">
+			<img
+				class="max-w-[200px] h-[150px] mr-4 rounded-xl"
+				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683560688826-image.png"
+			/>
+			<div>
+				<div class="font-bold text-xl mb-2 mt-8">
+					<a href="https://www.linkedin.com/in/norris-panton-82a064b/" target="_blank"
+						>Norris Panton</a
+					>, <a href="https://www.carouselboxing.com" target="_blank">CarouselBoxing</a>
+				</div>
+
+				<div class="text-xl">
+					Some people do yoga to relax, whereas I really need to work out on high intensity. <br
+					/><br />
+					Nano is more boxing, than it is yoga.
+				</div>
+			</div>
+		</div>
+
+		<div class="flex flex-col items-center px-8 text-xl bg-zinc-900 rounded-xl py-8">
+			<img
+				class="max-w-[200px] h-[150px] object-cover mr-4 rounded-xl"
+				src="https://cameronwestland.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FCameron.f4e94b79.jpg&w=384&q=75"
+			/>
+			<div>
+				<div class="font-bold text-xl mb-2 mt-8">
+					<a href="https://www.linkedin.com/in/norris-panton-82a064b/" target="_blank"
+						>Cameron Westland</a
+					>, <a href="https://fforward.ai" target="_blank">FForward</a>
+				</div>
+
+				<div>
+					My last startup raised $80M to date, it never was featured on HackerNews. <br /><br />
+					I wrote 10 blog posts and my new startup was front-paged yesterday.
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="_header text-3xl text-center mb-16 mt-32">
+		Don't jump into tech and building your product early
+
+		<br />
+
+		Launch startups the modern way and make yourself easy to follow
+	</div>
+
+	<div class="container text-center w-full text-2xl mb-16 mx-auto" style="max-width: 1200px; ">
+		<div class="columns-4">
+			<div class="p-8 bg-zinc-900 rounded-xl">
+				<div class="mb-2">🦸‍♂️</div>
+				Discover genuine founders with grit
+			</div>
+			<div class="p-8 bg-zinc-900 rounded-xl">
+				<div class="mb-2">📈</div>
+				Keep track of other's progress
+			</div>
+			<div class="p-8 bg-zinc-900 rounded-xl">
+				<div class="mb-2">🤝</div>
+				Learn, network, partner
+			</div>
+			<div class="p-8 bg-zinc-900 rounded-xl">
+				<div class="mb-2">💰</div>
+				Invest early with confidence
+			</div>
+		</div>
+	</div>
+
+	<div class="py-8 pb-32">
+		<div
+			class="_header text-3xl text-center  mx-auto py-16"
+			style="max-width: 600px; background-image: url(''"
+		>
+			Ready to work hard and have fun?
+
+			<br />
+
+			Choose your path below 👇
+		</div>
+
+		<div class="max-w-[600px] mx-auto">
+			<video
+				muted
+				autoplay
+				src={'https://fra1.digitaloceanspaces.com/ship-app-assets/stream/rec4sLfwGXzHxLy54/1683564658097-down point.mp4'}
+				class="rounded-xl"
+			/>
+		</div>
+
+		<div class="container  mx-auto rounded-xl py-16" style="max-width: 1200px;">
+			<div class="grid grid-cols-2">
+				<div class="mr-16 w-full text-center max-w-[1200px] mx-auto rounded-3xl">
+					<a
+						class="block button mr-8 rounded-xl"
+						style="font-size: 32px; background: #7900d9;"
+						on:click={() => {
+							isGrowModalOpen = true;
+						}}
+					>
+						Grow my startup</a
+					>
+				</div>
+
+				<div class="w-full text-center mx-auto rounded-3xl">
+					<a
+						class="block button ml-8 rounded-xl"
+						style="font-size: 32px; background: #007b50;"
+						on:click={() => {
+							isInvestModalOpen = true;
+						}}>Invest into startup</a
+					>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+
 <!-- <table>
 	<thead>
 		<td>Name</td>
@@ -132,3 +294,9 @@
 		</tr>
 	{/each}
 </table> -->
+<style>
+	._header {
+		font-family: Archivo;
+		line-height: 1.4;
+	}
+</style>
