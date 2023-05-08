@@ -1,5 +1,5 @@
 <script>
-	import { get } from 'lib/api';
+	import { get, post } from 'lib/api';
 
 	import allProjects from '$lib/stores/allProjects';
 	import StreamCard from '$lib/components/StreamCard.svelte';
@@ -16,6 +16,7 @@
 
 	let isGrowModalOpen;
 	let isInvestModalOpen;
+	let isRequestSubmitted = false;
 
 	let hubProject = {
 		_id: '642e827852b497001703f41a',
@@ -66,6 +67,34 @@
 	};
 
 	getCreators();
+
+	let isEmailSubmitted = false;
+
+	let request = {
+		email: '',
+		message: ''
+	};
+
+	let requestInvest = () => {
+		if (request.email) {
+			post('nanoRequests', {
+				...request,
+				type: 'invest'
+			});
+			isRequestSubmitted = true;
+		}
+	};
+
+	let launchStream = () => {
+		if (request.email) {
+			post('nanoRequests', {
+				...request,
+				type: 'grow'
+			});
+		}
+		isRequestSubmitted = true;
+		document.location.href = 'https://feed.mmntm.build/launch';
+	};
 </script>
 
 <svelte:head>
@@ -74,12 +103,76 @@
 
 {#if isGrowModalOpen}
 	<Modal
+		maxWidth={700}
 		isShown={isGrowModalOpen}
 		onClosed={() => {
 			isGrowModalOpen = false;
 		}}
 	>
-		<div>the rules are simple</div>
+		<div class="p-16">
+			<div class="mb-8">
+				<h1>Grow your startup 🕺</h1>
+
+				<div class="mb-2">Join a public community of genuine builders.</div>
+			</div>
+
+			<div>
+				<div class="text-lg mb-2">What's your email?</div>
+				<input bind:value={request.email} type="text" placeholder="igor@paralect.com" />
+			</div>
+
+			<button class="mt-8" on:click={launchStream}>Launch a stream</button>
+		</div>
+	</Modal>
+{/if}
+
+{#if isInvestModalOpen}
+	<Modal
+		maxWidth={700}
+		isShown={isInvestModalOpen}
+		onClosed={() => {
+			isInvestModalOpen = false;
+		}}
+	>
+		<div class="p-16">
+			<div class="mb-8">
+				<h1>Invest in Nano startups 💥</h1>
+
+				<div class="mb-2">
+					Support startups that share their knowledge with the public community.
+				</div>
+			</div>
+
+			{#if isRequestSubmitted}
+				<div class="bg-zinc-900 rounded-xl p-8">
+					Thank you for supporting genuine founders! <br /> <br />
+					We'll keep in touch with you at <b>{request.email}</b>
+					<hr class="my-8 opacity-20" />
+					PS Feel free to DM Igor in Twitter:
+					<a class="text-blue-700" href="https://twitter.com/that_igor_" target="_blank"
+						>@that_igor_</a
+					>
+				</div>
+			{:else}
+				<div>
+					<div>
+						<div class="text-lg mb-2">What's your email?</div>
+						<input bind:value={request.email} type="text" placeholder="igor@paralect.com" />
+					</div>
+
+					<div class="mt-4">
+						<div class="text-lg mb-2">A short intro</div>
+						<textarea
+							bind:value={request.message}
+							rows="3"
+							placeholder="Hi I'm Igor https://twitter.com/that_igor_. Nano is sick, I'd love to support indie-hackers and it's great that the data is open to public. Looking forward to our chat!"
+						/>
+					</div>
+				</div>
+
+				<button class="mt-8" on:click={requestInvest}>Book a chat</button>
+			{/if}
+		</div>
 	</Modal>
 {/if}
 
@@ -105,7 +198,12 @@
 		<div class="max-w-[350px] flex-1 h-full flex flex-col justify-center items-center p-8">
 			<h2 class="text-4xl">$3,000</h2>
 			<h3 class="text-2xl">May Fund</h3>
-			<button class="mt-8 rounded-xl text-xl w-full">Invest in open startups</button>
+			<button
+				class="mt-8 rounded-xl text-xl w-full"
+				on:click={() => {
+					isInvestModalOpen = true;
+				}}>Invest in open startups</button
+			>
 			<!-- <video muted controls autoplay src={hubProject.pinnedUrl} class="rounded-xl" /> -->
 			<!-- <RenderUrl url={hubProject.pinnedUrl} /> -->
 			<!-- <img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" /> -->
@@ -271,7 +369,7 @@
 						style="font-size: 32px; background: #007b50;"
 						on:click={() => {
 							isInvestModalOpen = true;
-						}}>Invest in startup</a
+						}}>Invest in open startups</a
 					>
 				</div>
 			</div>
