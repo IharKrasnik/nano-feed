@@ -83,7 +83,7 @@
 	class:bg-black={!$page.url.href.includes('embed')}
 	class:_gradient={$page.url.href.toLowerCase().includes('bachrimchuk')}
 >
-	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && $page.url.hreh !== 'https://nanohq.co/'}
+	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && $page.url.href !== 'https://nanohq.co/'}
 		<div class="container xl:mx-auto px-8 xl:px-0 max-w-[600px]">
 			<div
 				class="
