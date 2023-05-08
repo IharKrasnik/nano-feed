@@ -286,7 +286,7 @@
 			/>
 			<div>
 				<div class="font-bold text-xl mb-2 mt-8">
-					<a href="https://www.linkedin.com/in/norris-panton-82a064b/" target="_blank"
+					<a href="https://www.tiktok.com/@fforwardai/video/7227119467535273222" target="_blank"
 						>Cameron Westland</a
 					>, <a href="https://fforward.ai" target="_blank">FForward</a>
 				</div>
