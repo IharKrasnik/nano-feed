@@ -83,7 +83,7 @@
 	class:bg-black={!$page.url.href.includes('embed')}
 	class:_gradient={$page.url.href.toLowerCase().includes('bachrimchuk')}
 >
-	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && !$page.url.href.includes('localhost:5173')}
+	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && !$page.url.href.includes('nanohq.co')}
 		<div class="container xl:mx-auto px-8 xl:px-0 max-w-[600px]">
 			<div
 				class="
@@ -167,7 +167,7 @@
 		class="
 			{$page.url.href.includes('/embed') ||
 		$page.url.href.includes('/invest') ||
-		$page.url.href.includes('localhost:5173')
+		$page.url.href.includes('nanohq.co')
 			? 'w-full'
 			: 'container relative p-8 mx-0 xl:mx-auto'} mt-[45px] sm:mt-[65px] xl:mt-0
 			{$page.url.href.includes('/feed/') || $page.url.href.includes('/write-editor')
@@ -175,7 +175,7 @@
 			: `${
 					$page.url.href.includes('/embed') ||
 					$page.url.href.includes('/invest') ||
-					$page.url.href.includes('localhost:5173')
+					$page.url.href.includes('nanohq.co')
 						? ''
 						: 'max-w-[600px]'
 			  }`}
@@ -205,7 +205,7 @@
 		{/if}
 
 		{#if $allProjects}
-			{#if $page.url.href.includes('localhost:5173')}
+			{#if $page.url.href.includes('nanohq.co')}
 				<Invest />
 			{:else if $allProjects}
 				<slot />
