@@ -210,8 +210,8 @@
 		</div>
 	</div>
 	<div class="_header text-3xl font-bold text-center mt-16">
-		We've invited {projects.length} early-stage startups <br />
-		to grow their traction together, daily..
+		Watch as {projects.length} early-stage startups <br />
+		grow their traction together, daily...
 	</div>
 
 	<div class="mt-8 mb-16">
@@ -227,8 +227,8 @@
 	</div>
 
 	<div class="_header text-3xl font-bold text-center my-8 mt-16">
-		And everyone of us here is building in public. <br />
-		We share our goals, learnings and metrics in Social Media..
+		Everyone of us here is building in public. <br />
+		We share our goals, learnings and metrics in Social Media.
 	</div>
 
 	<div class="container max-w-[1200px] mx-auto relative pt-16 shrink-0 w-full">
@@ -238,7 +238,7 @@
 	</div>
 
 	<div class="_header text-3xl text-center mb-16" style="margin-top: -100px;">
-		We believe that every company is a media company. <br />
+		Here we believe that every company is a media company. <br />
 		You are no longer a CEO, you are Chief Executive Producer. <br />
 	</div>
 
@@ -252,7 +252,7 @@
 			<div class="mx-2">🥳</div>
 			<div class="mx-2">🥳</div>
 		</div>
-		And it seems people love this "media" thing<br />
+		And it seems people love this "media" thing!<br />
 	</div>
 
 	<div
@@ -300,11 +300,11 @@
 	</div>
 
 	<div class="_header text-3xl text-center mb-16 mt-32">
-		Don't jump into tech and building your product early
+		Don't jump into tech early.
 
 		<br />
 
-		Launch startups the modern way and make yourself easy to follow
+		Launch your startup the modern way.
 	</div>
 
 	<div class="container text-center w-full text-2xl mb-16 mx-auto" style="max-width: 1200px; ">
@@ -319,7 +319,7 @@
 			</div>
 			<div class="p-8 bg-zinc-900 rounded-xl">
 				<div class="mb-2">🤝</div>
-				Learn, network, partner
+				Learn, network, partner and build
 			</div>
 			<div class="p-8 bg-zinc-900 rounded-xl">
 				<div class="mb-2">💰</div>
