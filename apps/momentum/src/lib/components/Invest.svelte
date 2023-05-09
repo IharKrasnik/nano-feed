@@ -345,7 +345,7 @@
 				muted
 				autoplay
 				loop
-				src={'https://fra1.digitaloceanspaces.com/ship-app-assets/stream/rec4sLfwGXzHxLy54/1683564658097-down point.mp4'}
+				src={'https://fra1.digitaloceanspaces.com/ship-app-assets/stream/rec4sLfwGXzHxLy54/1683668604759-1683564658097-down point.mp4'}
 				class="rounded-xl"
 			/>
 		</div>
