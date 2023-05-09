@@ -337,13 +337,14 @@
 
 			<br />
 
-			Choose your path below 👇
+			Choose your pill 👇
 		</div>
 
 		<div class="max-w-[600px] mx-auto">
 			<video
 				muted
 				autoplay
+				loop
 				src={'https://fra1.digitaloceanspaces.com/ship-app-assets/stream/rec4sLfwGXzHxLy54/1683564658097-down point.mp4'}
 				class="rounded-xl"
 			/>
