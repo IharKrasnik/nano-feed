@@ -1,5 +1,6 @@
 <script>
 	import Modal from 'lib/components/Modal.svelte';
+	import { browser } from '$app/environment';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
 	import { post } from 'lib/api';
@@ -46,14 +47,16 @@
 
 	let upvote = async () => {
 		await post(`projects/${stream._id}/upvotes`, {
-			fingerprint: WAVE_FINGERPRINT
+			fingerprint: window.WAVE_FINGERPRINT
 		});
 
 		stream.isUpvoted = true;
 	};
 
 	stream.isUpvoted =
-		stream.upvotes && stream.upvotes.filter((u) => u.fingerprint === WAVE_FINGERPRINT).length;
+		browser &&
+		stream.upvotes &&
+		stream.upvotes.filter((u) => u.fingerprint === window.WAVE_FINGERPRINT).length;
 </script>
 
 {#if isPitchOpen}
