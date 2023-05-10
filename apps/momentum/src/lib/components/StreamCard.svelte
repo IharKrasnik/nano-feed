@@ -2,6 +2,7 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import SourceLogo from '$lib/components/SourceLogo.svelte';
+	import { post } from 'lib/api';
 	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import currentUser from 'lib/stores/currentUser';
@@ -42,6 +43,17 @@
 	onDestroy(() => {
 		clearInterval(shuffleInterval);
 	});
+
+	let upvote = async () => {
+		await post(`projects/${stream._id}/upvotes`, {
+			fingerprint: WAVE_FINGERPRINT
+		});
+
+		stream.isUpvoted = true;
+	};
+
+	stream.isUpvoted =
+		stream.upvotes && stream.upvotes.filter((u) => u.fingerprint === WAVE_FINGERPRINT).length;
 </script>
 
 {#if isPitchOpen}
@@ -189,6 +201,19 @@
 									</a>
 								{/if}
 							{/key}
+						</div>
+					{/if}
+					{#if stream._id}
+						<div class="mt-4">
+							{#if stream.isUpvoted}
+								<div class="text-center">💯 Upvoted</div>
+							{:else}
+								<button
+									class="small w-full"
+									style="background-color: rgb(121, 0, 217);"
+									on:click|stopPropagation|preventDefault={upvote}>🔥 Upvote {stream.title}</button
+								>
+							{/if}
 						</div>
 					{/if}
 				</div>
