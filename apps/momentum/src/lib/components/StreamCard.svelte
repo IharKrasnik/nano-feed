@@ -206,7 +206,7 @@
 					{#if stream._id}
 						<div class="mt-4">
 							{#if stream.isUpvoted}
-								<div class="text-center">💯 Upvoted</div>
+								<div class="text-center">✅ {stream?.upvotes?.length || 1} upvotes</div>
 							{:else}
 								<button
 									class="small w-full"
