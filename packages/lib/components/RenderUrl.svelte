@@ -66,7 +66,7 @@
 					<VimeoIcon class="w-[45px] opacity-50" />
 				{/if}
 			{:else if url.includes('.mp4') || url.includes('mov')}
-				<video class="max-w-[600px] mx-auto {imgClass}" autoplay muted loop src={url} />
+				<video class="max-w-[600px] w-full mx-auto {imgClass}" autoplay muted loop src={url} />
 			{:else}
 				{#key url}
 					<img class="rounded-xl {imgClass}" src={url} />
