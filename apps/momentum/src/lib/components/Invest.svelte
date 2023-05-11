@@ -176,123 +176,172 @@
 	</Modal>
 {/if}
 
-<div class="relative m-4 sm:m-auto" style="margin-bottom: 200px;">
-	<div
-		class="relative my-8 flex-col sm:flex-row flex justify-between p-8 rounded-2xl text-white max-w-[1200px] mx-auto"
-		style="background: url('/backgrounds/gradient-1.svg');"
-	>
-		<div>
-			<img src={hubProject.logoUrl} class="w-[50px] h-[50px] mb-4" />
-			<div class="text-4xl font-bold mb-4">{hubProject.title}</div>
-			<div class="text-2xl mb-4">{hubProject.description}</div>
+<div class="relative mt-4 sm:m-auto">
+	<div class="mx-4">
+		<div
+			class="relative my-8 flex-col sm:flex-row flex justify-between p-8 rounded-2xl text-white max-w-[1200px] mx-auto"
+			style="background: url('/backgrounds/gradient-1.svg');"
+		>
+			<div>
+				<img src={hubProject.logoUrl} class="w-[50px] h-[50px] mb-4" />
+				<div class="text-4xl font-bold mb-4">{hubProject.title}</div>
+				<div class="text-2xl mb-4">{hubProject.description}</div>
 
-			<a class="flex mt-6 overflow-hidden" style="max-width: 100%;" href="/creators">
-				{#if streamCreators}
-					{#each streamCreators as creator}
-						<Avatar style="margin-right: -15px;" size="30px" user={creator} />
-					{/each}
-				{/if}
-			</a>
-		</div>
-
-		<div class="max-w-[350px] flex-1 h-full flex flex-col justify-center items-center py-8 sm:p-8">
-			<h2 class="text-4xl">$3,000</h2>
-			<h3 class="text-2xl">May Fund</h3>
-			<button
-				class="mt-8 rounded-xl text-xl w-full"
-				on:click={() => {
-					isInvestModalOpen = true;
-				}}>Invest in open startups</button
-			>
-			<!-- <video muted controls autoplay src={hubProject.pinnedUrl} class="rounded-xl" /> -->
-			<!-- <RenderUrl url={hubProject.pinnedUrl} /> -->
-			<!-- <img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" /> -->
-		</div>
-	</div>
-	<div class="_header font-bold text-center mt-16 mx-auto" style="max-width:540px;">
-		Watch as {projects.length} early-stage startups grow their traction together, daily...
-	</div>
-
-	<div class="mt-8 mb-16">
-		<Calendar class="w-full" />
-	</div>
-
-	<div class="mt-4 mx-8 flex overflow-y-scroll px-[1px]">
-		{#each projects as project}
-			<div class="min-w-[300px] mr-6">
-				<StreamCard isIncludeGoal isIncludeChart={true} isLink isWithDescription stream={project} />
+				<a class="flex mt-6 overflow-hidden" style="max-width: 100%;" href="/creators">
+					{#if streamCreators}
+						{#each streamCreators as creator}
+							<Avatar style="margin-right: -15px;" size="30px" user={creator} />
+						{/each}
+					{/if}
+				</a>
 			</div>
-		{/each}
+
+			<div
+				class="max-w-[350px] flex-1 h-full flex flex-col justify-center items-center py-8 sm:p-8"
+			>
+				<h2 class="text-4xl">$3,000</h2>
+				<h3 class="text-2xl">May Fund</h3>
+				<button
+					class="mt-8 rounded-xl text-xl w-full"
+					on:click={() => {
+						isInvestModalOpen = true;
+					}}>Invest in open startups</button
+				>
+				<!-- <video muted controls autoplay src={hubProject.pinnedUrl} class="rounded-xl" /> -->
+				<!-- <RenderUrl url={hubProject.pinnedUrl} /> -->
+				<!-- <img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" /> -->
+			</div>
+		</div>
+	</div>
+
+	<img
+		class="mx-auto"
+		style="margin-bottom: -180px; margin-top: -90px; transform: scale(.5);"
+		src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683827850258-image.png"
+	/>
+
+	<!-- style="background: radial-gradient(circle at 50% 51.2%, rgb(26 29 70) 0%, rgb(0 0 0) 15.9%, rgb(0 0 0) 15.9%, rgb(38 33 50) 24.4%, rgb(19, 30, 37) 24.5%, rgb(30 26 34) 66%)" -->
+
+	<div
+		style="background: radial-gradient(circle at 50% 51.2%,  rgb(8 6 15) 24.5%, rgb(30, 26, 34) 66%)"
+		class="pt-16 pb-8 mb-16"
+	>
+		<div class="_header font-bold text-center mx-auto" style="max-width:540px;">
+			Watch as {projects.length} early-stage startups grow their traction together, daily... <br />
+			<!-- <div class="mb-8">🍿</div> -->
+		</div>
+
+		<div class="mt-8 mb-16">
+			<Calendar class="w-full" />
+		</div>
+
+		<div
+			class="_header relative flex justify-between font-bold text-left sm:mx-8 ml-4 mr-4 mt-16 opacity-80"
+		>
+			<div class="mb-4">Startups 👉</div>
+			<div class="mb-4">Scroll 👉</div>
+
+			<hr
+				class="absolute w-full left-0 bottom-0"
+				style="border: .5px rgba(255, 255, 255, .5) solid;"
+			/>
+		</div>
+
+		<div class="mt-4 sm:pl-8 flex overflow-y-scroll px-[1px]">
+			{#each projects as project}
+				<div class="min-w-[300px] mr-6 ml-4 sm:ml-0">
+					<StreamCard
+						isIncludeGoal
+						isIncludeChart={true}
+						isLink
+						isWithDescription
+						stream={project}
+					/>
+				</div>
+			{/each}
+		</div>
 	</div>
 
 	<div class="_header font-bold text-center my-8 mt-16">
-		Everyone of us here is building in public. <br />
+		Everyone of us here builds in public. <br />
 		We share our goals, learnings and metrics in Social Media.
 	</div>
 
-	<div class="container max-w-[1200px] mx-auto relative pt-16 shrink-0 w-full">
-		<div class="shrink-0 ml-16  overflow-y-scroll">
+	<div class="container relative max-w-[1200px] mx-auto relative pt-16 shrink-0 w-full">
+		<img
+			class="absolute"
+			style="bottom: 50%; left: 50%; transform: translateX(-50%) translateY(-50%) scale(5); opacity: 0.1;"
+			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683829719307-nano-logo-big.png"
+		/>
+		<div class="shrink-0 sm:mx-16 mx-4 overflow-y-scroll">
 			<Stream projectSlug={'nano'} maxPagesCount={2} />
 		</div>
 	</div>
 
-	<div class="_header text-center mb-16" style="margin-top: -100px;">
-		Here we believe that every company is a media company. <br />
-		You are no longer a CEO, you are Chief Executive Producer. <br />
-	</div>
-
-	<div class="w-full flex justify-center my-8 mx-auto" style="max-width: 1200px;">
-		<RenderUrl url="https://www.youtube.com/watch?v=2zE7uWxA95s" />
-	</div>
-
-	<div class="_header text-center mb-16 mt-32">
-		<div class="flex justify-center my-4">
-			<div class="mx-2">🥳</div>
-			<div class="mx-2">🥳</div>
-			<div class="mx-2">🥳</div>
+	<div style="background: rgba(0,0,0, .3);" class="py-16 pb-32">
+		<div class="_header text-center py-16">
+			<div class="mb-4">⚡️🕺💥</div>
+			Here we believe that every company is a media company.<br />
+			You are no longer a CEO, you are Chief Executive Producer. <br />
 		</div>
-		And it seems people love this "media" thing!<br />
+
+		<div class="w-full flex justify-center my-8 mx-8 mx-auto" style="max-width: 1200px;">
+			<RenderUrl url="https://www.youtube.com/watch?v=2zE7uWxA95s" />
+		</div>
 	</div>
-
 	<div
-		class="grid grid-cols-2 gap-4 text-center w-full mb-16 mx-auto p-8 rounded-2xl "
-		style="max-width: 1200px;"
+		class="py-4 px-4 mx-4 sm:mx-16 mt-16 mb-32 rounded-3xl"
+		style="background: radial-gradient(circle at 50% 51.2%,  rgb(8 6 15) 24.5%, rgb(30, 26, 34) 66%)"
 	>
-		<div class="flex flex-col items-center px-8 bg-zinc-900 rounded-xl py-8">
-			<img
-				class="max-w-[200px] h-[150px] mr-4 rounded-xl"
-				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683560688826-image.png"
-			/>
-			<div>
-				<div class="font-bold text-xl mb-2 mt-8">
-					<a href="https://www.linkedin.com/in/norris-panton-82a064b/" target="_blank"
-						>Norris Panton</a
-					>, <a href="https://www.carouselboxing.com" target="_blank">CarouselBoxing</a>
-				</div>
+		<div class="_header text-center mb-16 mt-32">
+			<div class="flex justify-center my-4">
+				<div class="mx-2">🥳</div>
+				<div class="mx-2">🥳</div>
+				<div class="mx-2">🥳</div>
+			</div>
+			And it seems people love this "media" thing!<br />
+		</div>
 
-				<div class="text-xl">
-					Some people do yoga to relax, whereas I really need to work out on high intensity. <br
-					/><br />
-					Nano is more boxing, than it is yoga.
+		<div
+			class="grid sm:grid-cols-2 gap-4 text-center w-full mb-16 mx-auto p-8 rounded-2xl"
+			style="max-width: 1200px;"
+		>
+			<div class="flex flex-col items-center px-8 bg-zinc-900 rounded-xl py-8">
+				<img
+					class="max-w-[200px] h-[150px] mr-4 rounded-xl"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683560688826-image.png"
+				/>
+				<div>
+					<div class="font-bold text-xl mb-2 mt-8">
+						<a href="https://www.linkedin.com/in/norris-panton-82a064b/" target="_blank"
+							>Norris Panton</a
+						>, <a href="https://www.carouselboxing.com" target="_blank">CarouselBoxing</a>
+					</div>
+
+					<div class="text-xl">
+						Some people do yoga to relax, whereas I really need to work out on high intensity. <br
+						/><br />
+						Nano is more boxing, than it is yoga.
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="flex flex-col items-center px-8 text-xl bg-zinc-900 rounded-xl py-8">
-			<img
-				class="max-w-[200px] h-[150px] object-cover mr-4 rounded-xl"
-				src="https://cameronwestland.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FCameron.f4e94b79.jpg&w=384&q=75"
-			/>
-			<div>
-				<div class="font-bold text-xl mb-2 mt-8">
-					<a href="https://www.tiktok.com/@fforwardai/video/7227119467535273222" target="_blank"
-						>Cameron Westland</a
-					>, <a href="https://fforward.ai" target="_blank">FForward</a>
-				</div>
-
+			<div class="flex flex-col items-center px-8 text-xl bg-zinc-900 rounded-xl py-8">
+				<img
+					class="max-w-[200px] h-[150px] object-cover mr-4 rounded-xl"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683828380405-image.png"
+				/>
 				<div>
-					My last startup raised $80M to date, it never was featured on HackerNews. <br /><br />
-					I wrote 10 blog posts and my new startup was front-paged yesterday.
+					<div class="font-bold text-xl mb-2 mt-8">
+						<a href="https://www.tiktok.com/@fforwardai/video/7227119467535273222" target="_blank"
+							>Cameron Westland</a
+						>, <a href="https://fforward.ai" target="_blank">FForward</a>
+					</div>
+
+					<div>
+						My last startup raised $80M to date, it never was featured on HackerNews. <br /><br />
+						I wrote 10 blog posts and my new startup was front-paged yesterday.
+					</div>
 				</div>
 			</div>
 		</div>
@@ -306,32 +355,32 @@
 		Launch your startup the modern way.
 	</div>
 
-	<div class="container text-center w-full text-2xl mb-16 mx-auto" style="max-width: 1200px; ">
-		<div class="columns-4">
-			<div class="p-8 bg-zinc-900 rounded-xl">
+	<div class="container text-center w-full text-2xl mb-32 mx-auto" style="max-width: 1200px; ">
+		<div class="mx-4 sm:columns-4">
+			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
 				<div class="mb-2">🦸‍♂️</div>
 				Discover genuine founders with grit
 			</div>
-			<div class="p-8 bg-zinc-900 rounded-xl">
+			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
 				<div class="mb-2">📈</div>
 				Keep track of other's progress
 			</div>
-			<div class="p-8 bg-zinc-900 rounded-xl">
+			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
 				<div class="mb-2">🤝</div>
 				Learn, network, partner and build
 			</div>
-			<div class="p-8 bg-zinc-900 rounded-xl">
+			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
 				<div class="mb-2">💰</div>
 				Invest early with confidence
 			</div>
 		</div>
 	</div>
 
-	<div class="py-8 pb-32">
-		<div
-			class="_header text-center  mx-auto py-16"
-			style="max-width: 600px; background-image: url(''"
-		>
+	<div
+		class="py-8 mx-4 sm:mx-16 my-4 mb-32 rounded-3xl pb-32"
+		style="background: radial-gradient(circle at 50% 51.2%,  rgb(8 6 15) 24.5%, rgb(30, 26, 34) 66%)"
+	>
+		<div class="_header text-center w-full mx-auto py-16" style="max-width: 600px;">
 			Ready to work hard and have fun?
 
 			<br />
@@ -349,23 +398,23 @@
 			/>
 		</div>
 
-		<div class="container  mx-auto rounded-xl py-16" style="max-width: 1200px;">
+		<div class="container mx-auto rounded-xl py-16" style="max-width: 1200px;">
 			<div class="grid grid-cols-2">
-				<div class="mr-16 w-full text-center max-w-[1200px] mx-auto rounded-3xl">
+				<div class="mr-2 sm:mr-16 w-full text-center max-w-[1200px] mx-auto rounded-3xl">
 					<a
-						class="block button mr-8 rounded-xl"
+						class="block button sm:mr-8 rounded-xl"
 						style="font-size: 32px; background: #7900d9;"
 						on:click={() => {
 							isGrowModalOpen = true;
 						}}
 					>
-						Grow my startup</a
+						Grow my startup in public</a
 					>
 				</div>
 
 				<div class="w-full text-center mx-auto rounded-3xl">
 					<a
-						class="block button ml-8 rounded-xl"
+						class="block button ml-2 sm:ml-8 rounded-xl"
 						style="font-size: 32px; background: #007b50;"
 						on:click={() => {
 							isInvestModalOpen = true;
@@ -374,14 +423,15 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="w-full flex flex-col items-center justify-center">
-		<img
-			style="width: 150px;"
-			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683477275194-nano-logo-big.png"
-		/>
-		<h1 class="mt-4 text-3xl">Nano</h1>
-		<h3 class="mt-2">Build your million dollars startups with media</h3>
+
+		<div class="w-full flex flex-col items-center justify-center">
+			<img
+				style="width: 150px;"
+				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683477275194-nano-logo-big.png"
+			/>
+			<h1 class="mt-4 text-3xl">Nano</h1>
+			<h3 class="mt-2">Build your million dollars startups with media</h3>
+		</div>
 	</div>
 </div>
 
@@ -414,6 +464,8 @@
 
 		font-size: 30px;
 		line-height: 36px;
+		padding-left: 16px;
+		padding-right: 16px;
 	}
 
 	@media (max-width: 640px) {

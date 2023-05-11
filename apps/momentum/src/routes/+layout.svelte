@@ -74,13 +74,22 @@
 			}
 		</style>
 	{/if}
+
+	{#if $page.url.href.includes('/invest') || $page.url.href === 'https://nanohq.co/'}
+		<style>
+			body {
+				background-color: #2d3436;
+				background-image: linear-gradient(315deg, #000000 0%, #111 74%);
+			}
+		</style>
+	{/if}
 </svelte:head>
 
 <div id="modal-portal" />
 
 <div
 	class="app overflow-y-scroll"
-	class:bg-black={!$page.url.href.includes('embed')}
+	class:bg-black={!$page.url.href.includes('embed') && !$page.url.href.includes('invest')}
 	class:_gradient={$page.url.href.toLowerCase().includes('bachrimchuk')}
 >
 	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && $page.url.href !== 'https://nanohq.co/'}
