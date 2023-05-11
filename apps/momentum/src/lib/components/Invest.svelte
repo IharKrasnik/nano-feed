@@ -176,9 +176,9 @@
 	</Modal>
 {/if}
 
-<div class="relative" style="margin-bottom: 200px;">
+<div class="relative m-4 sm:m-auto" style="margin-bottom: 200px;">
 	<div
-		class="relative my-8 flex justify-between p-8 rounded-2xl text-white max-w-[1200px] mx-auto"
+		class="relative my-8 flex-col sm:flex-row flex justify-between p-8 rounded-2xl text-white max-w-[1200px] mx-auto"
 		style="background: url('/backgrounds/gradient-1.svg');"
 	>
 		<div>
@@ -186,7 +186,7 @@
 			<div class="text-4xl font-bold mb-4">{hubProject.title}</div>
 			<div class="text-2xl mb-4">{hubProject.description}</div>
 
-			<a class="flex mt-6" href="/creators">
+			<a class="flex mt-6 overflow-hidden" style="max-width: 100%;" href="/creators">
 				{#if streamCreators}
 					{#each streamCreators as creator}
 						<Avatar style="margin-right: -15px;" size="30px" user={creator} />
@@ -195,7 +195,7 @@
 			</a>
 		</div>
 
-		<div class="max-w-[350px] flex-1 h-full flex flex-col justify-center items-center p-8">
+		<div class="max-w-[350px] flex-1 h-full flex flex-col justify-center items-center py-8 sm:p-8">
 			<h2 class="text-4xl">$3,000</h2>
 			<h3 class="text-2xl">May Fund</h3>
 			<button
@@ -209,9 +209,8 @@
 			<!-- <img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" /> -->
 		</div>
 	</div>
-	<div class="_header text-3xl font-bold text-center mt-16">
-		Watch as {projects.length} early-stage startups <br />
-		grow their traction together, daily...
+	<div class="_header font-bold text-center mt-16 mx-auto" style="max-width:540px;">
+		Watch as {projects.length} early-stage startups grow their traction together, daily...
 	</div>
 
 	<div class="mt-8 mb-16">
@@ -226,7 +225,7 @@
 		{/each}
 	</div>
 
-	<div class="_header text-3xl font-bold text-center my-8 mt-16">
+	<div class="_header font-bold text-center my-8 mt-16">
 		Everyone of us here is building in public. <br />
 		We share our goals, learnings and metrics in Social Media.
 	</div>
@@ -237,7 +236,7 @@
 		</div>
 	</div>
 
-	<div class="_header text-3xl text-center mb-16" style="margin-top: -100px;">
+	<div class="_header text-center mb-16" style="margin-top: -100px;">
 		Here we believe that every company is a media company. <br />
 		You are no longer a CEO, you are Chief Executive Producer. <br />
 	</div>
@@ -246,7 +245,7 @@
 		<RenderUrl url="https://www.youtube.com/watch?v=2zE7uWxA95s" />
 	</div>
 
-	<div class="_header text-3xl text-center mb-16 mt-32">
+	<div class="_header text-center mb-16 mt-32">
 		<div class="flex justify-center my-4">
 			<div class="mx-2">🥳</div>
 			<div class="mx-2">🥳</div>
@@ -299,7 +298,7 @@
 		</div>
 	</div>
 
-	<div class="_header text-3xl text-center mb-16 mt-32">
+	<div class="_header text-center mb-16 mt-32">
 		Don't jump into tech early.
 
 		<br />
@@ -330,7 +329,7 @@
 
 	<div class="py-8 pb-32">
 		<div
-			class="_header text-3xl text-center  mx-auto py-16"
+			class="_header text-center  mx-auto py-16"
 			style="max-width: 600px; background-image: url(''"
 		>
 			Ready to work hard and have fun?
@@ -412,5 +411,15 @@
 	._header {
 		font-family: Archivo;
 		line-height: 1.4;
+
+		font-size: 30px;
+		line-height: 36px;
+	}
+
+	@media (max-width: 640px) {
+		._header {
+			font-size: 24px;
+			line-height: 30px;
+		}
 	}
 </style>
