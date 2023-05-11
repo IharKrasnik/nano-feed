@@ -43,7 +43,7 @@
 			/>
 
 			{#each feed as feedItem}
-				<FeedItem bgColor={'rgba(20,20,20,.9)'} {feedItem} />
+				<FeedItem bgColor={'rgba(20,20,20,.9)'} hideLikes {feedItem} />
 			{/each}
 		</div>
 	{/if}
