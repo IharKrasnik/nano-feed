@@ -109,7 +109,7 @@
 			isGrowModalOpen = false;
 		}}
 	>
-		<div class="p-16">
+		<div class="p-8 sm:p-16">
 			<div class="mb-8">
 				<h1>Grow your startup 🕺</h1>
 
@@ -134,7 +134,7 @@
 			isInvestModalOpen = false;
 		}}
 	>
-		<div class="p-16">
+		<div class="p-8 sm:p-16">
 			<div class="mb-8">
 				<h1>Invest in Nano startups 💥</h1>
 
@@ -236,15 +236,15 @@
 		</div>
 
 		<div
-			class="_header relative flex justify-between font-bold text-left sm:mx-8 ml-4 mr-4 mt-16 opacity-80"
+			class="_header relative flex justify-between items-center font-bold text-left sm:mx-8 ml-4 mr-4 mt-16 opacity-80"
 		>
-			<div class="mb-4">Startups 👉</div>
-			<div class="mb-4">Scroll 👉</div>
+			<div class="">Startups</div>
+			<div class="text-base font-base">Scroll 👉</div>
 
-			<hr
-				class="absolute w-full left-0 bottom-0"
-				style="border: .5px rgba(255, 255, 255, .5) solid;"
-			/>
+			<!-- <hr
+				class="absolute w-full left-0"
+				style="border: .5px rgba(255, 255, 255, .5) solid; bottom: -16px;"
+			/> -->
 		</div>
 
 		<div class="mt-4 sm:pl-8 flex overflow-y-scroll px-[1px]">
@@ -268,11 +268,11 @@
 	</div>
 
 	<div class="container relative max-w-[1200px] mx-auto relative pt-16 shrink-0 w-full">
-		<img
-			class="absolute"
-			style="bottom: 50%; left: 50%; transform: translateX(-50%) translateY(-50%) scale(5); opacity: 0.1;"
+		<!-- <img
+			class="fixed"
+			style="top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%) scale(5); opacity: 0.1;"
 			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683829719307-nano-logo-big.png"
-		/>
+		/> -->
 		<div class="shrink-0 sm:mx-16 mx-4 overflow-y-scroll">
 			<Stream projectSlug={'nano'} maxPagesCount={2} />
 		</div>
@@ -286,14 +286,14 @@
 		</div>
 
 		<div class="w-full flex justify-center my-8 mx-8 mx-auto" style="max-width: 1200px;">
-			<RenderUrl url="https://www.youtube.com/watch?v=2zE7uWxA95s" />
+			<RenderUrl class="px-4" url="https://www.youtube.com/watch?v=2zE7uWxA95s" />
 		</div>
 	</div>
 	<div
 		class="py-4 px-4 mx-4 sm:mx-16 mt-16 mb-32 rounded-3xl"
 		style="background: radial-gradient(circle at 50% 51.2%,  rgb(8 6 15) 24.5%, rgb(30, 26, 34) 66%)"
 	>
-		<div class="_header text-center mb-16 mt-32">
+		<div class="_header text-center mb-4 sm:mb-16 mt-4 sm:mt-32">
 			<div class="flex justify-center my-4">
 				<div class="mx-2">🥳</div>
 				<div class="mx-2">🥳</div>
@@ -303,10 +303,10 @@
 		</div>
 
 		<div
-			class="grid sm:grid-cols-2 gap-4 text-center w-full mb-16 mx-auto p-8 rounded-2xl"
+			class="grid sm:grid-cols-2 gap-4 text-center w-full mb-16 mx-auto py-8 px-0 sm:px-8 rounded-2xl"
 			style="max-width: 1200px;"
 		>
-			<div class="flex flex-col items-center px-8 bg-zinc-900 rounded-xl py-8">
+			<div class="flex flex-col items-center sm:px-8 bg-zinc-900 rounded-xl py-8">
 				<img
 					class="max-w-[200px] h-[150px] mr-4 rounded-xl"
 					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683560688826-image.png"
@@ -388,7 +388,7 @@
 			Choose your pill 👇
 		</div>
 
-		<div class="max-w-[600px] mx-auto">
+		<div class="max-w-[600px] mx-auto px-4">
 			<video
 				muted
 				autoplay
@@ -399,7 +399,7 @@
 		</div>
 
 		<div class="container mx-auto rounded-xl py-16" style="max-width: 1200px;">
-			<div class="grid grid-cols-2">
+			<div class="grid sm:grid-cols-2 px-4 sm:px-0">
 				<div class="mr-2 sm:mr-16 w-full text-center max-w-[1200px] mx-auto rounded-3xl">
 					<a
 						class="block button sm:mr-8 rounded-xl"
@@ -412,9 +412,9 @@
 					>
 				</div>
 
-				<div class="w-full text-center mx-auto rounded-3xl">
+				<div class="mt-4 sm:mt-0 sm:ml-2 w-full text-center mx-auto rounded-3xl">
 					<a
-						class="block button ml-2 sm:ml-8 rounded-xl"
+						class="block button sm:ml-8 rounded-xl"
 						style="font-size: 32px; background: #007b50;"
 						on:click={() => {
 							isInvestModalOpen = true;
@@ -430,7 +430,7 @@
 				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683477275194-nano-logo-big.png"
 			/>
 			<h1 class="mt-4 text-3xl">Nano</h1>
-			<h3 class="mt-2">Build your million dollars startups with media</h3>
+			<h3 class="mt-2 text-center">Build your million dollars startups with media</h3>
 		</div>
 	</div>
 </div>
