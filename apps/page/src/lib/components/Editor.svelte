@@ -554,7 +554,7 @@ See you!
 	</Modal>
 {/if}
 
-{#if true || isTutorialShown}
+{#if isTutorialShown}
 	<Modal isShown>
 		<div class="p-8 bg-[#fafafa]">
 			<h1 class="text-xl mb-4 font-bold">Get started with Momentum Page ✨</h1>
