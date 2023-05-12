@@ -37,9 +37,8 @@
 </script>
 
 <svelte:head>
-	<title>{$page.data.ogTitle}</title>
-
 	{#if $page.url.href.includes('/invest') || $page.url.href.includes('nanohq.co')}
+		<title>Nano Fund</title>
 		<style>
 			body {
 				background-color: #2d3436;
@@ -55,6 +54,7 @@
 			content="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683893482903-nano_banner.png"
 		/>
 	{:else}
+		<title>{$page.data.ogTitle}</title>
 		<meta name="title" content={$page.data.ogTitle} />
 		<meta name="description" content={$page.data.ogDescription} />
 		<meta name="og:description" content={$page.data.ogDescription} />
