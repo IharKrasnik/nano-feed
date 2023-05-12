@@ -38,14 +38,32 @@
 
 <svelte:head>
 	<title>{$page.data.ogTitle}</title>
-	<meta name="title" content={$page.data.ogTitle} />
-	<meta name="description" content={$page.data.ogDescription} />
-	<meta name="og:description" content={$page.data.ogDescription} />
-	<meta
-		name="og:image"
-		content={$page.data.ogImage ||
-			'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
-	/>
+
+	{#if $page.url.href.includes('/invest') || $page.url.href === 'https://nanohq.co/'}
+		<style>
+			body {
+				background-color: #2d3436;
+				background-image: linear-gradient(315deg, #000000 0%, #111 74%);
+			}
+		</style>
+
+		<meta name="title" content="Nano Fund" />
+		<meta name="description" content="Invest in authentic open early-stage startups" />
+		<meta name="og:description" content="Invest in authentic open early-stage startups" />
+		<meta
+			name="og:image"
+			content="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683893482903-nano_banner.png"
+		/>
+	{:else}
+		<meta name="title" content={$page.data.ogTitle} />
+		<meta name="description" content={$page.data.ogDescription} />
+		<meta name="og:description" content={$page.data.ogDescription} />
+		<meta
+			name="og:image"
+			content={$page.data.ogImage ||
+				'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
+		/>
+	{/if}
 
 	<!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>  -->
 	<!-- <script src="https://www.tiktok.com/embed.js"></script> -->
@@ -71,15 +89,6 @@
 		<style>
 			body {
 				background: black;
-			}
-		</style>
-	{/if}
-
-	{#if $page.url.href.includes('/invest') || $page.url.href === 'https://nanohq.co/'}
-		<style>
-			body {
-				background-color: #2d3436;
-				background-image: linear-gradient(315deg, #000000 0%, #111 74%);
 			}
 		</style>
 	{/if}

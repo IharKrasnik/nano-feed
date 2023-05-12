@@ -98,7 +98,7 @@
 </script>
 
 <svelte:head>
-	<title>Nano — Invest</title>
+	<title>Nano Fund</title>
 </svelte:head>
 
 {#if isGrowModalOpen}

@@ -8,7 +8,13 @@ import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser'
 const allProjectsStore = writable(null);
 
 export const update = async ({} = {}) => {
-	await get('projects').then(({ results }) => {
+	let query = {};
+
+	if (document.URL.includes('/invest')) {
+		query.hubProjectSlug = 'nano';
+	}
+
+	await get('projects', query).then(({ results }) => {
 		allProjectsStore.set(results);
 	});
 };
