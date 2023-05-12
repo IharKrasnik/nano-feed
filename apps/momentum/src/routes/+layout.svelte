@@ -39,7 +39,7 @@
 <svelte:head>
 	<title>{$page.data.ogTitle}</title>
 
-	{#if $page.url.href.includes('/invest') || $page.url.href === 'https://nanohq.co/'}
+	{#if $page.url.href.includes('/invest') || $page.url.includes('nanohq.co')}
 		<style>
 			body {
 				background-color: #2d3436;
