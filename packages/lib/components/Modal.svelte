@@ -1,6 +1,7 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import portal from 'lib/use/portal';
+	import CrossSvg from 'lib/icons/cross.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 
 	export let isShown;
@@ -47,9 +48,9 @@
 					style={maxWidth ? `max-width: ${maxWidth}px;` : ''}
 				>
 					{#if isClosable}
-						<!-- <div class="_cross" on:click={closeModal}>
+						<div class="_cross" on:click={closeModal}>
 							<CrossSvg />
-						</div> -->
+						</div>
 					{/if}
 					<div class="_modal-contents bg-[#fff]">
 						<slot />
@@ -70,12 +71,12 @@
 	}
 	._cross {
 		cursor: pointer;
-		opacity: 0.4;
+		opacity: 0.7;
 		transition: opacity 0.3;
 		position: absolute;
 		top: 20px;
 		right: 20px;
-		width: 15px;
+		width: 25px;
 	}
 	._cross:hover {
 		opacity: 1;

@@ -34,6 +34,11 @@ input[type='checkbox'] {
 	background: white;
 }
 
+.modal-content ._cross {
+	/* color: #222; */
+	stroke: #000 !important;
+}
+
 ._modal-backdrop {
 	/* display: none; */
 	background: rgba(255, 255, 255, 0.8);

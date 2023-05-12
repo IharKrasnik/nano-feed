@@ -230,7 +230,7 @@
 			{/if}
 		{/if}
 	</main>
-	{#if !$page.url.href.includes('/embed')}
+	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && $page.url.href !== 'https://nanohq.co/'}
 		<Dock activeIcon="momentum" />
 	{/if}
 

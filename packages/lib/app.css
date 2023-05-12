@@ -16,6 +16,11 @@ body.dark ._modal-backdrop {
 	opacity: 0.5;
 }
 
+body.dark .modal-content ._cross svg {
+	/* color: #222; */
+	stroke: #fff;
+}
+
 h1,
 h2,
 h3 {
