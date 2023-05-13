@@ -14,6 +14,7 @@
 	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
 
 	import TwitterIcon from '$lib/icons/Twitter.svelte';
+	import PageBadge from '$lib/components/PageBadge.svelte';
 	import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
 
@@ -28,6 +29,8 @@
 		callToAction: 'Join Waitlist',
 		bgColor: '#D98324'
 	};
+
+	export let isNoBadge = false;
 
 	export let maxHeight;
 
@@ -457,6 +460,10 @@
 					</form>
 				</div>
 			</div>
+		{/if}
+
+		{#if !isNoBadge && !page.isNoBadge}
+			<PageBadge />
 		{/if}
 	</div>
 </div>

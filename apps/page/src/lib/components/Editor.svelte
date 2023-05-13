@@ -1354,7 +1354,7 @@ See you!
 								<BrowserFrame
 									frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'}
 								>
-									<SitePreview noStickyHeader={true} bind:page />
+									<SitePreview noStickyHeader={true} isNoBadge={true} bind:page />
 								</BrowserFrame>
 							</div>
 						{/key}
