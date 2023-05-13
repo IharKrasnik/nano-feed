@@ -36,16 +36,17 @@
 			sectionBackgroundColor: '#FFFFFF'
 		},
 		{
-			backgroundColor: '#F4B647',
-			textColor: '#0C120C',
-			accentColor: '#0C120C',
-			sectionBackgroundColor: '#FFFFFF'
-		},
-		{
 			backgroundColor: '#F5DCCA',
 			textColor: '#000000',
 			accentColor: '#000000',
 			sectionBackgroundColor: '#FFFFFF'
+		},
+		{
+			backgroundColor: '#6733ff',
+			textColor: '#fffdfc',
+			accentColor: '#fff9e5',
+			sectionBackgroundColor: '#fff',
+			theme: 'dark'
 		}
 	];
 

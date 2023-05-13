@@ -247,6 +247,9 @@ See you!
 	let broadcastEmails = null;
 
 	let refreshSubmissions = async () => {
+		if (!$currentUser) {
+			return;
+		}
 		submissions = null;
 
 		submissions = await get(`pages/${page._id}/submissions`, {});
