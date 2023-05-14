@@ -9,6 +9,7 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
+	import RenderPricing from '$lib/components/render/Pricing.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 
 	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
@@ -219,7 +220,7 @@
 
 				<div class="_root bg-site">
 					<div
-						class="_content pb-16 pt-32 {!page.testimonials?.length ? 'sm:h-screen' : ''}"
+						class="_content pb-16 pt-32 {!page.testimonials?.length ? 'h-screen' : ''}"
 						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
 						<div
@@ -342,6 +343,8 @@
 				</div>
 			</div>
 		{/if}
+
+		<!-- <RenderPricing /> -->
 
 		<RenderFAQ bind:page />
 

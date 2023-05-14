@@ -74,13 +74,39 @@
 								{item.description || ''}
 							</h3>
 
+							{#if item.pricing}
+								<div class="flex items-end mt-2 mb-4">
+									<div class="text-3xl font-bold mr-2">${item.pricing.price}</div>
+									<div class="text-lg">
+										/{item.pricing.pricePer}
+									</div>
+								</div>
+								{#if item.pricing.benefits}
+									<div class="mb-4">
+										{#each item.pricing.benefits as benefit}
+											<div class="my-2">
+												<span class="inline-block mr-1">✅</span>
+												{benefit.name}
+											</div>
+										{/each}
+									</div>
+								{/if}
+							{/if}
 							{#if item.url}
-								<a href={item.url} target="_blank" class="block mt-4 text-[#8B786D] text-sm"
-									>Learn More</a
-								>
+								<a
+									href={item.url}
+									target="_blank"
+									class="button w-full text-center block mt-4 text-[#8B786D] text-sm"
+									>{item.callToActionText || 'Learn More'}
+								</a>
 							{/if}
 						</div>
-						<div class="order-none {section.columns === 1 && i % 2 === 0 ? 'sm:order-last' : ''}">
+						<div
+							class="{section.pricing ? 'order-none' : 'order-first'} {section.columns === 1 &&
+							i % 2 === 0
+								? 'sm:order-last'
+								: ''}"
+						>
 							<RenderUrl
 								class="rounded-xl"
 								imgClass="mx-auto {section.columns === 1 ? '' : 'max-h-[200px]'}  {section.items
@@ -96,3 +122,16 @@
 		</div>
 	</div>
 {/if}
+
+<style>
+	button,
+	.button {
+		display: inline-block;
+		border-radius: 20px;
+		padding: 8px 16px;
+		font-size: 18px;
+
+		color: white;
+		background-color: var(--accent-color);
+	}
+</style>

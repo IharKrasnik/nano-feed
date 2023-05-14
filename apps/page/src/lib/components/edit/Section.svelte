@@ -1,5 +1,6 @@
 <script>
 	import _ from 'lodash';
+	import tooltip from 'lib/use/tooltip';
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
 	import { fly } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
@@ -66,8 +67,13 @@
 			<div class="p-4 pb-0 flex justify-between items-center">
 				<div class="_title" style="margin: 0;">Section</div>
 
-				<div class="text-right w-full text-sm">
-					<a class="cursor-pointer text-[#8B786D]" on:click={onRemove}>Remove Section</a>
+				<div class="opacity-70 hover:opacity-100 transition text-right w-full text-sm">
+					<a
+						class="cursor-pointer text-[#8B786D]"
+						use:tooltip
+						title="Remove Whole Section"
+						on:click={onRemove}>🗑</a
+					>
 				</div>
 			</div>
 
@@ -172,8 +178,13 @@
 
 						<EditUrl bind:url={item.url} />
 					</div>
-					<div class="text-sm cursor-pointer text-[#8B786D]" on:click={() => removeItem(item)}>
-						Remove Item
+					<div
+						class="opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
+						use:tooltip
+						title="Remove Item"
+						on:click={() => removeItem(item)}
+					>
+						🗑
 					</div>
 				</div>
 
@@ -211,3 +222,9 @@
     </div> -->
 	</div>
 {/if}
+
+<style>
+	.bg-section {
+		background: #fafafa;
+	}
+</style>

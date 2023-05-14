@@ -888,7 +888,7 @@ See you!
 											{#if !page.sections?.length}
 												<div>
 													<button
-														class="_secondary small w-full text-center cursor-pointer text-[#8B786D]"
+														class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
 														on:click={addNewSection}
 													>
 														Add section
@@ -923,9 +923,9 @@ See you!
 								{/if}
 
 								{#if !isOrdering && page.sections?.length}
-									<a
-										class="w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-										on:click={addNewSection}>Add Section</a
+									<button
+										class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+										on:click={addNewSection}>Add Section</button
 									>
 								{/if}
 
