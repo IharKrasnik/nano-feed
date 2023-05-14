@@ -5,15 +5,21 @@
 	import { fly } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
+	import Modal from 'lib/components/Modal.svelte';
 	import EditUrl from '$lib/components/edit/URL.svelte';
+	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
+	import sectionToEdit from '$lib/stores/sectionToEdit';
 
 	export let section;
 
 	export let page;
 
 	export let onRemove = () => {};
-	export let isShort = false;
+	export let onEditStarted = () => {};
+	export let onEditEnded = () => {};
+
+	export let isShort = true;
 
 	let innerSection;
 
@@ -51,28 +57,51 @@
 	}
 </script>
 
+<!-- {#if !isShort}
+	<Modal isShown={!isShort}>
+		<div>
+			<EditSection bind:section />
+		</div>
+	</Modal>
+{/if} -->
+
 {#if isShort}
-	<div class="_section">
+	<div
+		class="_section cursor-pointer"
+		on:click={() => {
+			// isShort = false;
+			$sectionToEdit = section;
+			// onEditStarted(section);
+		}}
+	>
 		<div>
 			{#each section.items as item}
 				<div>
-					{item.title}
+					{item.title || 'empty'}
 				</div>
 			{/each}
 		</div>
 	</div>
 {:else}
-	<div class="_section rounded-xl" style="padding: 0px;">
+	<div
+		class="_section rounded-xl"
+		style="padding: 0px;"
+		use:clickOutside
+		on:clickOutside={() => {
+			// isShort = true;
+			// section = { ...section };
+			// $sectionToEdit = null;
+			// section = null;
+			// onEditEnded(section);
+		}}
+	>
 		<div class="bg-white top-[60px] rounded-xl">
 			<div class="p-4 pb-0 flex justify-between items-center">
 				<div class="_title" style="margin: 0;">Section</div>
 
 				<div class="opacity-70 hover:opacity-100 transition text-right w-full text-sm">
-					<a
-						class="cursor-pointer text-[#8B786D]"
-						use:tooltip
-						title="Remove Whole Section"
-						on:click={onRemove}>🗑</a
+					<a class="cursor-pointer text-[#8B786D]" title="Remove Whole Section" on:click={onRemove}
+						>🗑</a
 					>
 				</div>
 			</div>
@@ -180,7 +209,6 @@
 					</div>
 					<div
 						class="opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
-						use:tooltip
 						title="Remove Item"
 						on:click={() => removeItem(item)}
 					>
@@ -220,6 +248,13 @@
 		<!-- <div class="flex items-center mt-2 text-[14px]">
       <input type="checkbox" class="mr-2"  /> Collect Emails
     </div> -->
+	</div>
+	<div>
+		<div class="p-4">
+			<!-- {#if $sectionToEdit}
+				<RenderSection bind:section={$sectionToEdit} />
+			{/if} -->
+		</div>
 	</div>
 {/if}
 

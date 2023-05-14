@@ -11,6 +11,8 @@
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import RenderPricing from '$lib/components/render/Pricing.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
+	import sectionToEdit from '$lib/stores/sectionToEdit';
+	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 
 	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
 
@@ -103,6 +105,18 @@
 	if ($sveltePage.params.pageSlug) {
 		window.document.body.style['background-color'] = page.theme?.backgroundColor || 'white';
 	}
+
+	let editEl;
+
+	let focusEditEl = () => {
+		setTimeout(() => {
+			try {
+				editEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+			} catch (err) {
+				console.error(err);
+			}
+		}, 0);
+	};
 </script>
 
 <svelte:head>
@@ -220,6 +234,7 @@
 
 				<div class="_root bg-site">
 					<div
+						bind:this={$aboveTheFoldEl}
 						class="_content pb-16 pt-32 {!page.testimonials?.length ? 'h-screen' : ''}"
 						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
@@ -336,7 +351,18 @@
 					{#if page.sections?.length}
 						<div class={page.streamSlug ? '' : 'pb-[200px]'}>
 							{#each page.sections as section}
-								<RenderSection bind:section />
+								{#if $sectionToEdit && $sectionToEdit.id === section.id}
+									<div bind:this={editEl}>
+										<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧</div>
+										<div>
+											<RenderSection bind:section={$sectionToEdit} />
+										</div>
+										<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
+									</div>
+									{focusEditEl() || ''}
+								{:else}
+									<RenderSection bind:section />
+								{/if}
 							{/each}
 						</div>
 					{/if}

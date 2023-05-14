@@ -7,6 +7,7 @@
 	import allPages from '$lib/stores/allPages';
 	import Dock from 'lib/components/Dock.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
+	import sectionToEdit from '$lib/stores/sectionToEdit';
 </script>
 
 <svelte:head>
@@ -45,6 +46,6 @@
 	</div>
 {/if}
 
-{#if $currentUser && !$page.params.pageSlug}
+{#if $currentUser && !$page.params.pageSlug && !$sectionToEdit}
 	<Dock activeIcon="page" />
 {/if}
