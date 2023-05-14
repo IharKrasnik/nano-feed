@@ -19,6 +19,7 @@
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
+	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
 
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
@@ -683,21 +684,8 @@ See you!
 									$sectionToEdit = null;
 								}}
 							>
-								<svg
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										fill-rule="evenodd"
-										clip-rule="evenodd"
-										d="M10.114 4.04508L2.95451 11.2045C2.51517 11.6439 2.51517 12.3562 2.95451 12.7955L10.114 19.955C10.5533 20.3943 11.2656 20.3943 11.705 19.955C12.1443 19.5156 12.1443 18.8033 11.705 18.364L6.46599 13.125H20.25C20.8713 13.125 21.375 12.6214 21.375 12C21.375 11.3787 20.8713 10.875 20.25 10.875H6.46599L11.705 5.63607C12.1443 5.19673 12.1443 4.48442 11.705 4.04508C11.2656 3.60574 10.5533 3.60574 10.114 4.04508Z"
-										fill="#8B786D"
-									/>
-								</svg>
-								Back to Editor
+								<BackArrowSvg />
+								Back
 							</div>
 
 							<div in:fly={{ y: 50, duration: 150 }}>
@@ -712,330 +700,329 @@ See you!
 							</div>
 						</div>
 					{/if}
+					{#if isOrdering}
+						<div class="bg-white p-4 z-30 fixed h-screen w-[426px]">
+							<div
+								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
+								on:click={() => (isOrdering = false)}
+							>
+								<BackArrowSvg />
+								Back
+							</div>
+							{#if page._id}
+								{addGuids(page.sections) && ''}
+								<div
+									use:dndzone={{ items: page.sections, flipDurationMs }}
+									on:consider={handleDndConsider}
+									on:finalize={handleDndFinalize}
+								>
+									{#each page.sections || [] as section (section.id)}
+										<div animate:flip={{ duration: flipDurationMs }}>
+											<EditSection
+												isShort
+												bind:section
+												onRemove={() => {
+													page.sections = page.sections.filter((s) => s !== section);
+												}}
+											/>
+										</div>
+									{/each}
+								</div>
+								<div class="text-center py-4 text-sm">Drag & Drop sections to reorder</div>
+							{/if}
+						</div>
+					{/if}
 
 					{#if !isMetricsOpen && !isSubmissionsOpen}
 						<div class="py-4">
-							{#if !isOrdering}
-								{#if page._id}
-									<div class="w-full flex justify-between items-center mb-4">
-										<div class="flex">
-											<div class="mr-4">
-												<EmojiPicker bind:icon={page.logo} />
-											</div>
-											<ColorPicker bind:page />
+							{#if page._id}
+								<div class="w-full flex justify-between items-center mb-4">
+									<div class="flex">
+										<div class="mr-4">
+											<EmojiPicker bind:icon={page.logo} />
 										</div>
-										<div class="flex">
-											<div class="flex items-center cursor-pointer" on:click={toggleSubmissions}>
-												<svg
-													width="18"
-													height="16"
-													viewBox="0 0 18 16"
-													fill="none"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path
-														d="M18 1V6H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0H17C17.2652 0 17.5196 0.105357 17.7071 0.292893C17.8946 0.48043 18 0.734784 18 1ZM17 9H1C0.734784 9 0.48043 9.10536 0.292893 9.29289C0.105357 9.48043 0 9.73478 0 10C0 10.2652 0.105357 10.5196 0.292893 10.7071C0.48043 10.8946 0.734784 11 1 11H17C17.2652 11 17.5196 10.8946 17.7071 10.7071C17.8946 10.5196 18 10.2652 18 10C18 9.73478 17.8946 9.48043 17.7071 9.29289C17.5196 9.10536 17.2652 9 17 9ZM17 14H1C0.734784 14 0.48043 14.1054 0.292893 14.2929C0.105357 14.4804 0 14.7348 0 15C0 15.2652 0.105357 15.5196 0.292893 15.7071C0.48043 15.8946 0.734784 16 1 16H17C17.2652 16 17.5196 15.8946 17.7071 15.7071C17.8946 15.5196 18 15.2652 18 15C18 14.7348 17.8946 14.4804 17.7071 14.2929C17.5196 14.1054 17.2652 14 17 14Z"
-														fill="#8B786D"
-													/>
-												</svg>
-												<span class="ml-2 mr-8 text-[#8B786D]">
-													Audience ({submissions?.results?.length || 0})
-												</span>
-											</div>
+										<ColorPicker bind:page />
+									</div>
+									<div class="flex">
+										<div class="flex items-center cursor-pointer" on:click={toggleSubmissions}>
+											<svg
+												width="18"
+												height="16"
+												viewBox="0 0 18 16"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M18 1V6H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0H17C17.2652 0 17.5196 0.105357 17.7071 0.292893C17.8946 0.48043 18 0.734784 18 1ZM17 9H1C0.734784 9 0.48043 9.10536 0.292893 9.29289C0.105357 9.48043 0 9.73478 0 10C0 10.2652 0.105357 10.5196 0.292893 10.7071C0.48043 10.8946 0.734784 11 1 11H17C17.2652 11 17.5196 10.8946 17.7071 10.7071C17.8946 10.5196 18 10.2652 18 10C18 9.73478 17.8946 9.48043 17.7071 9.29289C17.5196 9.10536 17.2652 9 17 9ZM17 14H1C0.734784 14 0.48043 14.1054 0.292893 14.2929C0.105357 14.4804 0 14.7348 0 15C0 15.2652 0.105357 15.5196 0.292893 15.7071C0.48043 15.8946 0.734784 16 1 16H17C17.2652 16 17.5196 15.8946 17.7071 15.7071C17.8946 15.5196 18 15.2652 18 15C18 14.7348 17.8946 14.4804 17.7071 14.2929C17.5196 14.1054 17.2652 14 17 14Z"
+													fill="#8B786D"
+												/>
+											</svg>
+											<span class="ml-2 mr-8 text-[#8B786D]">
+												Audience ({submissions?.results?.length || 0})
+											</span>
+										</div>
 
-											<div class="flex items-center cursor-pointer" on:click={toggleMetrics}>
-												<svg
-													width="24"
-													height="24"
-													viewBox="0 0 24 24"
-													fill="none"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path
-														d="M18 2H22V22H18V2ZM10 7V22H14V7H10ZM6 12H2V22H6V12Z"
-														fill="#8B786D"
-													/>
-												</svg>
-												<span class="ml-2 text-[#8B786D]">
-													Views ({metrics?.totalViewsCount || 0})
-												</span>
-											</div>
+										<div class="flex items-center cursor-pointer" on:click={toggleMetrics}>
+											<svg
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M18 2H22V22H18V2ZM10 7V22H14V7H10ZM6 12H2V22H6V12Z"
+													fill="#8B786D"
+												/>
+											</svg>
+											<span class="ml-2 text-[#8B786D]">
+												Views ({metrics?.totalViewsCount || 0})
+											</span>
 										</div>
 									</div>
-								{/if}
+								</div>
+							{/if}
 
-								{#if !page._id}
+							{#if !page._id}
+								<div class="_section">
+									<div class="_title">Brand Name</div>
+									<input class="w-full" bind:value={page.name} placeholder="Momentum" />
+								</div>
+							{/if}
+
+							<!-- <div class="my-4">
+								<ABToggle></ABToggle>
+								</div> -->
+
+							<div
+								on:click={() => {
+									$aboveTheFoldEl.scrollIntoView({
+										behavior: 'smooth',
+										block: 'center',
+										inline: 'nearest'
+									});
+
+									// $sectionToEdit = null;
+								}}
+							>
+								{#if page.name}
 									<div class="_section">
-										<div class="_title">Brand Name</div>
-										<input class="w-full" bind:value={page.name} placeholder="Momentum" />
+										<div class="_title">Tagline</div>
+										<input
+											class="w-full"
+											bind:value={page.title}
+											on:focus={() => (focuses.title = true)}
+											on:blur={() => (focuses.title = false)}
+											placeholder="Build a better product in public and grow your audience."
+										/>
+
+										{#if focuses.title || (page.name && (!page.title || !page._id))}
+											<div
+												class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
+												in:fly={{ y: 50, duration: 150 }}
+											>
+												Start with a bold tagline
+
+												<div class="font-normal mt-2">
+													Make a big promise to your customer. Start with a verb. Spark curiosity
+													and hook their attention.
+												</div>
+											</div>
+										{/if}
 									</div>
 								{/if}
 
-								<!-- <div class="my-4">
-            	<ABToggle></ABToggle>
-          		</div> -->
-
-								<div
-									on:click={() => {
-										$aboveTheFoldEl.scrollIntoView({
-											behavior: 'smooth',
-											block: 'center',
-											inline: 'nearest'
-										});
-
-										// $sectionToEdit = null;
-									}}
-								>
-									{#if page.name}
+								{#if page.title}
+									{#if page._id}
 										<div class="_section">
-											<div class="_title">Tagline</div>
-											<input
+											<div class="_title">Subtitle</div>
+
+											<textarea
+												bind:value={page.subtitle}
+												on:focus={() => (focuses.subtitle = true)}
+												on:blur={() => (focuses.subtitle = false)}
+												rows="4"
 												class="w-full"
-												bind:value={page.title}
-												on:focus={() => (focuses.title = true)}
-												on:blur={() => (focuses.title = false)}
-												placeholder="Build a better product in public and grow your audience."
+												placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
 											/>
 
-											{#if focuses.title || (page.name && (!page.title || !page._id))}
+											{#if focuses.subtitle || (page._id && page.title && !page.subtitle)}
 												<div
-													class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
+													class="p-4 transition {page.subtitle
+														? 'bg-green-600'
+														: 'bg-orange-400'} mt-4 rounded-xl text-white font-bold"
 													in:fly={{ y: 50, duration: 150 }}
 												>
-													Start with a bold tagline
+													Explain your value propositon
 
 													<div class="font-normal mt-2">
-														Make a big promise to your customer. Start with a verb. Spark curiosity
-														and hook their attention.
+														What change do you bring to the customer's life? Get specific. Avoid
+														self-explaining. Talk to them.
 													</div>
 												</div>
 											{/if}
 										</div>
 									{/if}
 
-									{#if page.title}
-										{#if page._id}
-											<div class="_section">
-												<div class="_title">Subtitle</div>
+									{#if page._id}
+										<div class="_section">
+											<div class="_title">
+												Product Demo
 
-												<textarea
-													bind:value={page.subtitle}
-													on:focus={() => (focuses.subtitle = true)}
-													on:blur={() => (focuses.subtitle = false)}
-													rows="4"
-													class="w-full"
-													placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
-												/>
-
-												{#if focuses.subtitle || (page._id && page.title && !page.subtitle)}
-													<div
-														class="p-4 transition {page.subtitle
-															? 'bg-green-600'
-															: 'bg-orange-400'} mt-4 rounded-xl text-white font-bold"
-														in:fly={{ y: 50, duration: 150 }}
-													>
-														Explain your value propositon
-
-														<div class="font-normal mt-2">
-															What change do you bring to the customer's life? Get specific. Avoid
-															self-explaining. Talk to them.
-														</div>
-													</div>
-												{/if}
+												<div class="font-normal text-sm opacity-70 mb-4">
+													Screenshot, live GIF or a <a
+														href="//loom.com"
+														class="underline"
+														target="_blank"
+														use:tooltip
+														title="We recommend using Loom or YouTube">video demo</a
+													> <br />
+												</div>
 											</div>
-										{/if}
 
-										{#if page._id}
-											<div class="_section">
-												<div class="_title">
-													Product Demo
+											<div class="flex items-center">
+												<FileInput
+													class="w-full"
+													bind:url={page.demoUrl}
+													theme="light"
+													isCanSearch
+												/>
+											</div>
 
-													<div class="font-normal text-sm opacity-70 mb-4">
-														Screenshot, live GIF or a <a
-															href="//loom.com"
-															class="underline"
-															target="_blank"
-															use:tooltip
-															title="We recommend using Loom or YouTube">video demo</a
-														> <br />
+											{#if !page.demoUrl && page.subtitle && page.title}
+												<div
+													class="p-4 bg-orange-400 mt-4 rounded-xl text-white font-bold"
+													in:fly={{ y: 50, duration: 150 }}
+												>
+													Add your product demo
+
+													<div class="font-normal mt-2">
+														A picture is worth a thousand words. But video works even better. Show
+														how the future product will look like or translate emotion through GIF.
 													</div>
 												</div>
+											{/if}
+										</div>
+									{/if}
 
-												<div class="flex items-center">
-													<FileInput
-														class="w-full"
-														bind:url={page.demoUrl}
-														theme="light"
-														isCanSearch
+									{#if page._id}
+										<div class="_section">
+											<div class="_title flex justify-between w-full">
+												Call To Action
+
+												<div class="flex font-normal items-center">
+													Collect Emails <input
+														bind:checked={page.isCollectEmails}
+														class="ml-2"
+														type="checkbox"
 													/>
 												</div>
-
-												{#if !page.demoUrl && page.subtitle && page.title}
-													<div
-														class="p-4 bg-orange-400 mt-4 rounded-xl text-white font-bold"
-														in:fly={{ y: 50, duration: 150 }}
-													>
-														Add your product demo
-
-														<div class="font-normal mt-2">
-															A picture is worth a thousand words. But video works even better. Show
-															how the future product will look like or translate emotion through
-															GIF.
-														</div>
-													</div>
-												{/if}
 											</div>
-										{/if}
 
-										{#if page._id}
-											<div class="_section">
-												<div class="_title flex justify-between w-full">
-													Call To Action
+											<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
 
-													<div class="flex font-normal items-center">
-														Collect Emails <input
-															bind:checked={page.isCollectEmails}
-															class="ml-2"
-															type="checkbox"
-														/>
-													</div>
-												</div>
+											<input
+												class="mb-4 w-full"
+												bind:value={page.callToAction}
+												placeholder="Join Waitlist"
+											/>
 
-												<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
+											<div class="font-normal text-sm opacity-70 mb-2">
+												URL to open {page.isCollectEmails
+													? 'once email submitted (optional)'
+													: 'on click'}
+											</div>
 
-												<input
-													class="mb-4 w-full"
-													bind:value={page.callToAction}
-													placeholder="Join Waitlist"
-												/>
+											<input
+												class="w-full mb-4"
+												bind:value={page.actionUrl}
+												placeholder="Action Url"
+											/>
 
-												<div class="font-normal text-sm opacity-70 mb-2">
-													URL to open {page.isCollectEmails
-														? 'once email submitted (optional)'
-														: 'on click'}
-												</div>
-
-												<input
-													class="w-full mb-4"
-													bind:value={page.actionUrl}
-													placeholder="Action Url"
-												/>
-
-												<!-- <div class="flex items-center mt-2 text-[14px]">
+											<!-- <div class="flex items-center mt-2 text-[14px]">
 											<input type="checkbox" class="mr-2"  /> Collect Emails
 										</div> -->
-											</div>
-										{/if}
+										</div>
+									{/if}
 
-										<EditTestimonials bind:page />
+									<EditTestimonials bind:page />
 
-										{#if page._id}
-											<hr class="my-8 border-[#8B786D] opacity-30" />
+									{#if page._id}
+										<hr class="my-8 border-[#8B786D] opacity-30" />
 
-											<div
-												class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
-											>
-												<div class="flex items-center">
-													<div class="font-bold">🧱 Sections</div>
+										<div
+											class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
+										>
+											<div class="flex items-center">
+												<div class="font-bold">🧱 Sections</div>
 
-													{#if page.sections?.length}
-														<div class="ml-4 number-tag">
-															{page.sections?.length || 0}
-														</div>
-													{/if}
-												</div>
-
-												{#if !isOrdering}
-													{#if !page.sections?.length}
-														<div>
-															<button
-																class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
-																on:click={addNewSection}
-															>
-																Add section
-															</button>
-														</div>
-													{/if}
-
-													{#if page.sections?.length > 1}
-														<div
-															class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
-															on:click={() => (isOrdering = true)}
-														>
-															💫 Reorder Sections
-														</div>
-													{/if}
+												{#if page.sections?.length}
+													<div class="ml-4 number-tag">
+														{page.sections?.length || 0}
+													</div>
 												{/if}
 											</div>
-										{/if}
 
-										{#if !isOrdering}
-											<div>
-												{#each page.sections || [] as section}
-													<EditSection
-														bind:page
-														bind:section
-														onRemove={() => {
-															page.sections = page.sections.filter((s) => s !== section);
-														}}
-													/>
-												{/each}
-											</div>
-										{/if}
+											{#if !isOrdering}
+												{#if !page.sections?.length}
+													<div>
+														<button
+															class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
+															on:click={addNewSection}
+														>
+															Add section
+														</button>
+													</div>
+												{/if}
 
-										{#if !isOrdering && page.sections?.length}
-											<button
-												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={addNewSection}>Add Section</button
-											>
-										{/if}
-
-										{#if page._id}
-											<hr class="my-8 border-[#8B786D] opacity-30" />
-										{/if}
-
-										{#if page._id && page.name && page.title}
-											<hr class="my-8 border-[#8B786D] opacity-30" />
-										{/if}
-
-										{#if page._id && !isOrdering}
-											<EditFAQ bind:page />
-										{/if}
+												{#if page.sections?.length > 1}
+													<div
+														class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+														on:click={() => (isOrdering = true)}
+													>
+														💫 Reorder Sections
+													</div>
+												{/if}
+											{/if}
+										</div>
 									{/if}
-								</div>
-							{/if}
 
-							{#if page._id}
-								{addGuids(page.sections) && ''}
-								{#if isOrdering}
-									<div
-										use:dndzone={{ items: page.sections, flipDurationMs }}
-										on:consider={handleDndConsider}
-										on:finalize={handleDndFinalize}
-									>
-										{#each page.sections || [] as section (section.id)}
-											<div animate:flip={{ duration: flipDurationMs }}>
+									{#if !isOrdering}
+										<div>
+											{#each page.sections || [] as section}
 												<EditSection
-													isShort
+													bind:page
 													bind:section
 													onRemove={() => {
 														page.sections = page.sections.filter((s) => s !== section);
 													}}
 												/>
-											</div>
-										{/each}
-									</div>
-								{/if}
-							{/if}
+											{/each}
+										</div>
+									{/if}
 
-							{#if isOrdering}
-								<button
-									class="mt-8 _secondary {isLoading ? 'loading' : ''}"
-									on:click={() => (isOrdering = false)}
-								>
-									✅ Save Sections Order
-								</button>
-							{:else}
+									{#if !isOrdering && page.sections?.length}
+										<button
+											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+											on:click={addNewSection}>Add Section</button
+										>
+									{/if}
+
+									{#if page._id}
+										<hr class="my-8 border-[#8B786D] opacity-30" />
+									{/if}
+
+									{#if page._id && page.name && page.title}
+										<hr class="my-8 border-[#8B786D] opacity-30" />
+									{/if}
+
+									{#if page._id}
+										<EditFAQ bind:page />
+									{/if}
+								{/if}
+							</div>
+
+							{#if !isOrdering}
 								<div class="flex items-center w-full justify-between mt-8 mb-32">
 									{#if page.name}
 										<Button class="_primary" onClick={publishPage}>Publish</Button>
@@ -1099,20 +1086,7 @@ See you!
 								isMetricsOpen = false;
 							}}
 						>
-							<svg
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									fill-rule="evenodd"
-									clip-rule="evenodd"
-									d="M10.114 4.04508L2.95451 11.2045C2.51517 11.6439 2.51517 12.3562 2.95451 12.7955L10.114 19.955C10.5533 20.3943 11.2656 20.3943 11.705 19.955C12.1443 19.5156 12.1443 18.8033 11.705 18.364L6.46599 13.125H20.25C20.8713 13.125 21.375 12.6214 21.375 12C21.375 11.3787 20.8713 10.875 20.25 10.875H6.46599L11.705 5.63607C12.1443 5.19673 12.1443 4.48442 11.705 4.04508C11.2656 3.60574 10.5533 3.60574 10.114 4.04508Z"
-									fill="#8B786D"
-								/>
-							</svg>
+							<BackArrowSvg />
 							Back to Editor
 						</div>
 						{#if isMetricsOpen}
