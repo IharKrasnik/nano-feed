@@ -1,5 +1,6 @@
 <script>
 	import { post } from 'lib/api';
+	import getPageMetaTags from 'lib/helpers/getPageMetaTags';
 
 	import Button from 'lib/components/Button.svelte';
 
@@ -9,7 +10,7 @@
 	export let page;
 
 	if (!page.openGraph) {
-		page.openGraph = {};
+		page.openGraph = getPageMetaTags({ page });
 	}
 
 	let updateOpenGraph = async () => {
@@ -26,7 +27,9 @@
 				<img
 					class="rounded-xl w-full"
 					style="aspect-ratio: 1200/630;"
-					src={page.openGraph.imageUrl || `${PAGE_URL}/og.png?pageSlug=${page.slug}`}
+					src={page.openGraph.imageUrl ||
+						page.demoUrl ||
+						`${PAGE_URL}/og.png?pageSlug=${page.slug}`}
 				/>
 			{/key}
 		</div>
