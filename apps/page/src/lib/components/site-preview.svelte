@@ -448,7 +448,7 @@
 				<div
 					class="_input_container flex items-center mx-auto 
 				{page.isCollectEmails
-						? 'w-full _border' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
+						? 'w-full _border ' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
 						: ''}"
 				>
 					<form
