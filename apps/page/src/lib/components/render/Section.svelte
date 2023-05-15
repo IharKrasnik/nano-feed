@@ -1,6 +1,7 @@
 <script>
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
+	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 
@@ -66,8 +67,11 @@
 		{/if}
 	</div>
 {/if}
+
 {#if section.type === 'faq'}
 	<RenderFAQ bind:section />
+{:else if section.type === 'testimonials'}
+	<RenderTestimonials bind:section />
 {:else if section.items?.length}
 	<div class="w-full {clazz}">
 		<div
@@ -115,7 +119,9 @@
 
 							{#if item.pricing}
 								<div class="flex items-end mt-4 mb-4">
-									<div class="text-3xl font-bold mr-2">${item.pricing.amount || '0'}</div>
+									<div class="text-3xl font-bold mr-2">
+										${item.pricing.amount?.toFixed(2) || '0'}
+									</div>
 									<div class="text-lg">
 										/{item.pricing.per}
 									</div>

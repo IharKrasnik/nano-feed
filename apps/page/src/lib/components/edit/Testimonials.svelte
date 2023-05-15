@@ -1,12 +1,12 @@
 <script>
-	export let page;
+	export let section;
 
 	import FileInput from 'lib/components/FileInput.svelte';
 
 	let addNewTestimonial = () => {
-		page.testimonials = page.testimonials || [];
+		section.testimonials = section.testimonials || [];
 
-		page.testimonials.push({
+		section.testimonials.push({
 			name: '',
 			comment: '',
 			avatarUrl: ''
@@ -14,30 +14,30 @@
 	};
 
 	let removeTestimonial = (testimonial) => {
-		page.testimonials = page.testimonials.filter((t) => t !== testimonial);
+		section.testimonials = section.testimonials.filter((t) => t !== testimonial);
 	};
 </script>
 
-{#if page._id}
+{#if section}
 	<div class="_section">
 		<div class="flex justify-between items-center">
 			<div class="_title" style="margin: 0;">Testimonials</div>
 
-			{#if !page.testimonials?.length}
+			{#if !section.testimonials?.length}
 				<div class="text-right w-full">
 					<a class="cursor-pointer text-[#8B786D]" on:click={addNewTestimonial}>Add Testimonial</a>
 				</div>
 			{/if}
 		</div>
 
-		{#each page.testimonials || [] as testimonial}
+		{#each section.testimonials || [] as testimonial}
 			<div class="flex justify-between items-center">
 				<div class="font-normal text-sm opacity-70 mb-2 mt-4">Name</div>
 				<div
 					class="text-sm cursor-pointer text-[#8B786D]"
 					on:click={() => removeTestimonial(testimonial)}
 				>
-					Remove
+					🗑
 				</div>
 			</div>
 
@@ -63,12 +63,12 @@
 
 			<hr class="my-4 border-[#8B786D] opacity-30" />
 		{/each}
-	</div>
 
-	{#if page.testimonials?.length > 0}
-		<a
-			class="w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
-			on:click={addNewTestimonial}>Add Testimonial</a
-		>
-	{/if}
+		{#if section.testimonials?.length > 0}
+			<a
+				class="w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
+				on:click={addNewTestimonial}>Add Testimonial</a
+			>
+		{/if}
+	</div>
 {/if}

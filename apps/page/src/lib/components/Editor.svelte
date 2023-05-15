@@ -313,8 +313,6 @@ See you!
 		});
 	};
 
-	let isOrdering = false;
-
 	let addNewSection = ({ type } = {}) => {
 		let newSection = {
 			id: uuidv4(),
@@ -345,10 +343,10 @@ See you!
 					}
 				},
 				{
-					title: 'Creator',
+					title: 'Growth',
 					description: 'For growing businesses (capped at 10k emails)',
 					pricing: {
-						amount: 6.99,
+						amount: 4.2,
 						per: 'month',
 						benefits: [
 							{
@@ -376,7 +374,24 @@ See you!
 					answer: 'Yes, all subscriptions refunded no-questions-asked the first 2 weeks.'
 				}
 			];
-		} else {
+		} else if (type === 'testimonials') {
+			newSection.title = `Don't just trust our words...`;
+			newSection.description = `Here's what people say about ${page.name}!`;
+
+			newSection.testimonials = [
+				{
+					name: 'Igor Krasnik, Momentum',
+					comment: `${page.name} is awesome!`,
+					avatarUrl:
+						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156297060-image.png'
+				},
+				{
+					name: 'Elon Musk, Twitter',
+					comment: `${page.name} is the future, to the moon 🚀`,
+					avatarUrl:
+						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156478852-image.png'
+				}
+			];
 		}
 
 		$sectionToEdit = newSection;
@@ -745,6 +760,7 @@ See you!
 							<div
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 								on:click={() => {
+									debugger;
 									$sectionToEdit = null;
 								}}
 							>
@@ -772,6 +788,7 @@ See you!
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 								on:click={() => {
 									$sectionToEdit = null;
+									debugger;
 								}}
 							>
 								<BackArrowSvg />
@@ -792,7 +809,7 @@ See you!
 						</div>
 					{/if}
 
-					{#if isOrdering}
+					<!-- {#if isOrdering}
 						<div class="bg-white p-4 z-30 fixed h-screen overflow-y-scroll pb-32 w-[426px]">
 							<div
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
@@ -822,7 +839,7 @@ See you!
 								<div class="text-center py-4 text-sm">Drag & Drop sections to reorder</div>
 							{/if}
 						</div>
-					{/if}
+					{/if} -->
 
 					{#if !isMetricsOpen && !isSubmissionsOpen}
 						<div class="py-4">
@@ -1036,7 +1053,7 @@ See you!
 										</div>
 									{/if}
 
-									<EditTestimonials bind:page />
+									<!-- <EditTestimonials bind:page /> -->
 
 									{#if page._id}
 										<hr class="my-8 border-[#8B786D] opacity-30" />
@@ -1054,17 +1071,15 @@ See you!
 												{/if}
 											</div>
 
-											{#if !isOrdering}
-												{#if !page.sections?.length}
-													<div>
-														<button
-															class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
-															on:click={addNewSection}
-														>
-															Add Section
-														</button>
-													</div>
-												{/if}
+											{#if !page.sections?.length}
+												<div>
+													<button
+														class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
+														on:click={addNewSection}
+													>
+														Add Section
+													</button>
+												</div>
 
 												{#if page.sections?.length > 1}
 													<div
@@ -1078,21 +1093,27 @@ See you!
 										</div>
 									{/if}
 
-									{#if !isOrdering}
+									{#if page.sections?.length}
 										<div>
-											{#each page.sections || [] as section}
-												<EditSection
-													bind:page
-													bind:section
-													onRemove={() => {
-														page.sections = page.sections.filter((s) => s !== section);
-													}}
-												/>
-											{/each}
+											<div
+												use:dndzone={{ items: page.sections, flipDurationMs }}
+												on:consider={handleDndConsider}
+												on:finalize={handleDndFinalize}
+											>
+												{#each page.sections || [] as section (section.id)}
+													<div animate:flip={{ duration: flipDurationMs }}>
+														<EditSection
+															bind:page
+															bind:section
+															onRemove={() => {
+																page.sections = page.sections.filter((s) => s !== section);
+															}}
+														/>
+													</div>
+												{/each}
+											</div>
 										</div>
-									{/if}
 
-									{#if !isOrdering && page.sections?.length}
 										<button
 											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 											on:click={addNewSection}>Add Section</button
@@ -1101,6 +1122,12 @@ See you!
 										<button
 											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 											on:click={() => addNewSection({ type: 'faq' })}>Add FAQ</button
+										>
+
+										<button
+											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+											on:click={() => addNewSection({ type: 'testimonials' })}
+											>Add Testimonials</button
 										>
 
 										{#if !page.sections.filter((s) => s.type === 'pricing').length}
@@ -1126,11 +1153,10 @@ See you!
 								{/if}
 							</div>
 
-							{#if !isOrdering}
-								<div class="flex items-center w-full justify-between mt-8 mb-32">
-									{#if page.name}
-										<Button class="_primary" onClick={publishPage}>Publish</Button>
-										<!-- 
+							<div class="flex items-center w-full justify-between mt-8 mb-32">
+								{#if page.name}
+									<Button class="_primary" onClick={publishPage}>Publish</Button>
+									<!-- 
 									<button
 										class="relative _primary {isLoading ? 'loading' : ''}"
 										on:click={publishPage}
@@ -1146,28 +1172,27 @@ See you!
 											Publish
 										{/if}
 									</button> -->
-									{/if}
+								{/if}
 
-									{#if page._id && page.isDirty}
-										<div
-											class="cursor-pointer text-sm opacity-70"
-											on:click={() => {
-												setPageAndDraft(
-													{
-														...(page._id
-															? { ..._.cloneDeep($allPages.find((p) => p.slug === page.slug)) }
-															: { ...defaultPage }),
-														welcomeEmail: page.welcomeEmail
-													},
-													{ force: true }
-												);
-											}}
-										>
-											Reset Page
-										</div>
-									{/if}
-								</div>
-							{/if}
+								{#if page._id && page.isDirty}
+									<div
+										class="cursor-pointer text-sm opacity-70"
+										on:click={() => {
+											setPageAndDraft(
+												{
+													...(page._id
+														? { ..._.cloneDeep($allPages.find((p) => p.slug === page.slug)) }
+														: { ...defaultPage }),
+													welcomeEmail: page.welcomeEmail
+												},
+												{ force: true }
+											);
+										}}
+									>
+										Reset Page
+									</div>
+								{/if}
+							</div>
 						</div>
 					{/if}
 				</div>
@@ -1344,7 +1369,7 @@ See you!
 
 			<!-- END SUBMISSIONS & METRICS -->
 
-			{#if page._id && !isOrdering}
+			{#if page._id}
 				<hr class="my-8 border-[#8B786D] opacity-30" />
 			{/if}
 

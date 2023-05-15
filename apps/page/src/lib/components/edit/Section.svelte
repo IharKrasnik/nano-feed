@@ -11,6 +11,7 @@
 	import EditUrl from '$lib/components/edit/URL.svelte';
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
+	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
@@ -68,14 +69,6 @@
 	}
 </script>
 
-<!-- {#if !isShort}
-	<Modal isShown={!isShort}>
-		<div>
-			<EditSection bind:section />
-		</div>
-	</Modal>
-{/if} -->
-
 {#if isShort}
 	<div
 		class="_section cursor-pointer"
@@ -91,11 +84,23 @@
 			<div class="text-lg font-bold">⁉️ FAQ</div>
 		{/if}
 		<div>
-			{#each section.items as item}
+			{section.title || ''}{section.description || ''}
+
+			{#if section.type === 'testimonials'}
 				<div>
-					{item.title || 'empty'}
+					{(section.testimonials || []).map((f) => f.name).join(', ')}
 				</div>
-			{/each}
+			{:else if section.type === 'faq'}
+				<div>
+					{(section.faqs || []).map((f) => f.question).join(', ')}
+				</div>
+			{:else}
+				{#each section.items as item}
+					<div>
+						{item.title || 'empty'}
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
 {:else}
@@ -113,6 +118,8 @@
 
 	{#if section.type === 'faq'}
 		<EditFAQ bind:section />
+	{:else if section.type === 'testimonials'}
+		<EditTestimonials bind:section />
 	{:else}
 		<div
 			class="_section rounded-xl"
