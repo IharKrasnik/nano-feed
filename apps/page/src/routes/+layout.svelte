@@ -21,6 +21,10 @@
 			'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
 	/>
 
+	{#if $page.data?.page?.customCode}
+		{@html $page.data.page.customCode}
+	{/if}
+
 	{#if $page.data?.page?.logo}
 		{#if isUrl($page.data.page.logo)}
 			<link rel="icon" href={$page.data.page.logo} />
