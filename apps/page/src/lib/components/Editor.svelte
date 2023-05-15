@@ -761,6 +761,15 @@ See you!
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 								on:click={() => {
 									debugger;
+
+									page.sections = page.sections.map((s) => {
+										if (s.id === $sectionToEdit.id) {
+											return { ...$sectionToEdit };
+										} else {
+											return s;
+										}
+									});
+
 									$sectionToEdit = null;
 								}}
 							>
@@ -787,8 +796,17 @@ See you!
 							<div
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 								on:click={() => {
-									$sectionToEdit = null;
 									debugger;
+
+									page.sections = page.sections.map((s) => {
+										if (s.id === $sectionToEdit.id) {
+											return { ...$sectionToEdit };
+										} else {
+											return s;
+										}
+									});
+
+									$sectionToEdit = null;
 								}}
 							>
 								<BackArrowSvg />
