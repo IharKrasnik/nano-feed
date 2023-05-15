@@ -1434,7 +1434,9 @@ See you!
 								style="padding: 6px 10px;"
 							>
 								<a
-									href="{PAGE_URL}/{page.slug}"
+									href={page.domains?.length && page.domains.filter((d) => d.isConfigured).length
+										? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
+										: `${PAGE_URL}/${page.slug}`}
 									class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
 									style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
 									target="_blank"
@@ -1453,7 +1455,11 @@ See you!
 									</div>
 
 									<div>
-										/{page.slug}
+										{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
+											{page.domains.filter((d) => d.isConfigured)[0].url}
+										{:else}
+											/{page.slug}
+										{/if}
 									</div>
 								</a>
 
