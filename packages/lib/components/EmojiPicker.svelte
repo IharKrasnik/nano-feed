@@ -43,14 +43,30 @@
 					isEmojiPickerShown = false;
 				}}
 			/>
-			<div
-				class="{theme === 'light'
-					? 'bg-white'
-					: 'bg-black'} p-4 border border-[#e0dede] rounded-bl-xl rounded-br-xl"
-			>
+
+			<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede]">
 				<h3 class="font-bold mb-2">Custom Logo</h3>
 				<FileInput {theme} class="w-full" bind:url />
 			</div>
+
+			{#if icon}
+				<div
+					class="{theme === 'light'
+						? 'bg-white'
+						: 'bg-black'} p-4 border border-[#e0dede] rounded-bl-xl rounded-br-xl"
+				>
+					<div
+						class="w-full text-center cursor-pointer bg-white"
+						on:click={() => {
+							icon = null;
+							url = null;
+							isEmojiPickerShown = false;
+						}}
+					>
+						Remove Icon
+					</div>
+				</div>
+			{/if}
 		</div>
 	{/if}
 </div>

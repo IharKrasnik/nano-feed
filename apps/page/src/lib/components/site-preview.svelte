@@ -8,8 +8,7 @@
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
-	import RenderFAQ from '$lib/components/render/FAQ.svelte';
-	import RenderPricing from '$lib/components/render/Pricing.svelte';
+
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
@@ -281,7 +280,7 @@
 										{#if !isSubmitted}
 											{#if page.isCollectEmails}
 												<input
-													class="_input w-full"
+													class="_input _email-input w-full"
 													placeholder="Your Email"
 													type="email"
 													required
@@ -353,15 +352,15 @@
 							{#each page.sections as section}
 								{#if $sectionToEdit && $sectionToEdit.id === section.id}
 									<div bind:this={editEl}>
-										<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧</div>
+										<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧</div>
 										<div>
-											<RenderSection bind:section={$sectionToEdit} />
+											<RenderSection bind:page bind:section={$sectionToEdit} />
 										</div>
 										<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
 									</div>
 									{focusEditEl() || ''}
 								{:else}
-									<RenderSection bind:section />
+									<RenderSection bind:page bind:section />
 								{/if}
 							{/each}
 						</div>
@@ -372,7 +371,7 @@
 
 		<!-- <RenderPricing /> -->
 
-		<RenderFAQ bind:page />
+		<!-- <RenderFAQ bind:page /> -->
 
 		{#if page.streamSlug}
 			<div>
@@ -459,7 +458,7 @@
 						{#if !isSubmitted}
 							{#if page.isCollectEmails}
 								<input
-									class="_input w-full"
+									class="_input _email-input w-full"
 									placeholder="Your Email"
 									type="email"
 									required

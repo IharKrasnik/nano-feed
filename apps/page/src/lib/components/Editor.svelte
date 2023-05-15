@@ -15,6 +15,7 @@
 
 	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
+	import EditPricing from '$lib/components/edit/Pricing.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
@@ -314,8 +315,69 @@ See you!
 
 	let isOrdering = false;
 
-	let addNewSection = () => {
-		let newSection = { columns: 1, items: [{ title: '', description: '' }], isShort: false };
+	let addNewSection = ({ type } = {}) => {
+		let newSection = {
+			id: uuidv4(),
+			columns: 2,
+			items: [{ title: '', description: '' }],
+			type
+		};
+
+		if (type === 'pricing') {
+			newSection.columns = 2;
+
+			newSection.title = 'Pricing';
+			newSection.description = 'Simple plans that fit your needs';
+
+			newSection.items = [
+				{
+					title: 'Free',
+					description: 'Start from free (capped at 1000 emails)',
+					pricing: {
+						amount: 0,
+						per: 'month',
+						benefits: [
+							{
+								name: 'collect emails',
+								name: 'broadcast emails'
+							}
+						]
+					}
+				},
+				{
+					title: 'Creator',
+					description: 'For growing businesses (capped at 10k emails)',
+					pricing: {
+						amount: 6.99,
+						per: 'month',
+						benefits: [
+							{
+								name: 'everything in free'
+							},
+							{
+								name: 'custom domain'
+							},
+							{
+								name: 'priority support'
+							}
+						]
+					}
+				}
+			];
+		} else if (type === 'faq') {
+			newSection.title = 'Frequently Asked Questions';
+			newSection.description = 'Answers summarized';
+
+			// delete newSection.items;
+
+			newSection.faqs = [
+				{
+					question: 'Do you offer a refund?',
+					answer: 'Yes, all subscriptions refunded no-questions-asked the first 2 weeks.'
+				}
+			];
+		} else {
+		}
 
 		$sectionToEdit = newSection;
 
@@ -673,11 +735,39 @@ See you!
 
 				{#if !page._id}
 					<div class="mt-8">Launch your landing page in seconds 👇</div>
+				{:else if page.sections}
+					{addGuids(page.sections) && ''}
 				{/if}
 
 				<div class="w-[426px] px-4 pl-0 mr-4">
 					{#if $sectionToEdit}
-						<div class="bg-white py-4 z-40 fixed h-screen w-[426px]">
+						<div class="bg-white p-4 pl-0 z-40 fixed pb-32 h-screen overflow-y-scroll w-[426px]">
+							<div
+								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
+								on:click={() => {
+									$sectionToEdit = null;
+								}}
+							>
+								<BackArrowSvg />
+								Back
+							</div>
+
+							<div in:fly={{ y: 50, duration: 150 }}>
+								<EditSection
+									isShort={false}
+									bind:page
+									bind:section={$sectionToEdit}
+									onRemove={() => {
+										page.sections = page.sections.filter((s) => s.id !== $sectionToEdit.id);
+										$sectionToEdit = null;
+									}}
+								/>
+							</div>
+						</div>
+					{/if}
+
+					{#if $sectionToEdit}
+						<div class="bg-white p-4 pl-0 z-40 fixed pb-32 h-screen overflow-y-scroll w-[426px]">
 							<div
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 								on:click={() => {
@@ -692,6 +782,7 @@ See you!
 								<EditSection
 									isShort={false}
 									bind:section={$sectionToEdit}
+									bind:page
 									onRemove={() => {
 										page.sections = page.sections.filter((s) => s.id !== $sectionToEdit.id);
 										$sectionToEdit = null;
@@ -700,8 +791,9 @@ See you!
 							</div>
 						</div>
 					{/if}
+
 					{#if isOrdering}
-						<div class="bg-white p-4 z-30 fixed h-screen w-[426px]">
+						<div class="bg-white p-4 z-30 fixed h-screen overflow-y-scroll pb-32 w-[426px]">
 							<div
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 								on:click={() => (isOrdering = false)}
@@ -710,7 +802,6 @@ See you!
 								Back
 							</div>
 							{#if page._id}
-								{addGuids(page.sections) && ''}
 								<div
 									use:dndzone={{ items: page.sections, flipDurationMs }}
 									on:consider={handleDndConsider}
@@ -970,7 +1061,7 @@ See you!
 															class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
 															on:click={addNewSection}
 														>
-															Add section
+															Add Section
 														</button>
 													</div>
 												{/if}
@@ -1006,6 +1097,18 @@ See you!
 											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 											on:click={addNewSection}>Add Section</button
 										>
+
+										<button
+											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+											on:click={() => addNewSection({ type: 'faq' })}>Add FAQ</button
+										>
+
+										{#if !page.sections.filter((s) => s.type === 'pricing').length}
+											<button
+												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
+											>
+										{/if}
 									{/if}
 
 									{#if page._id}
@@ -1017,7 +1120,8 @@ See you!
 									{/if}
 
 									{#if page._id}
-										<EditFAQ bind:page />
+										<!-- <EditPricing bind:page /> -->
+										<!-- <EditFAQ bind:page /> -->
 									{/if}
 								{/if}
 							</div>

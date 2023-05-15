@@ -1,9 +1,12 @@
 <script>
-	export let section;
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import RenderFAQ from '$lib/components/render/FAQ.svelte';
+	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 
 	let clazz = 'py-4 sm:py-16';
+	export let section;
+	export let page;
 
 	export { clazz as class };
 
@@ -29,9 +32,43 @@
 		3: 'text-2xl mb-2',
 		4: 'text-xl mb-2'
 	};
+
+	let focusEmailInput = () => {
+		let inputs = document.getElementsByClassName('_email-input');
+		inputs[inputs.length - 1].focus();
+	};
 </script>
 
-{#if section.items?.length}
+{#if section.title || section.description || section.imageUrl || section.emoji}
+	<div class="w-full flex flex-col items-center py-4 sm:py-16">
+		{#if section.emoji}
+			<div class={emojiStyle[1]}>
+				<Emoji bind:emoji={section.emoji} />
+			</div>
+		{/if}
+
+		<h2 class="{headerTextStyle(section)[1]} font-bold mb-4">
+			{section.title || ''}
+		</h2>
+
+		<h3 class="{descriptionStyle[1]} whitespace-pre-wrap">
+			{section.description || ''}
+		</h3>
+
+		{#if section.imageUrl}
+			<div class="my-8">
+				<RenderUrl
+					class="rounded-xl"
+					imgClass="mx-auto  {isGif(section.imageUrl) ? 'w-full object-cover' : ''} max-h-[350px]"
+					url={section.imageUrl}
+				/>
+			</div>
+		{/if}
+	</div>
+{/if}
+{#if section.type === 'faq'}
+	<RenderFAQ bind:section />
+{:else if section.items?.length}
 	<div class="w-full {clazz}">
 		<div
 			class="grid grid-cols-1 sm:grid-cols-{section.columns} gap-4 {section.columns > 1
@@ -64,7 +101,9 @@
 							class:order-last={i % 2 === 0}
 						>
 							{#if item.emoji}
-								<div class={emojiStyle[section.columns]}>{item.emoji}</div>
+								<div class={emojiStyle[section.columns]}>
+									<Emoji bind:emoji={item.emoji} />
+								</div>
 							{/if}
 
 							<h2 class="{headerTextStyle(item)[section.columns]} font-bold mb-4">
@@ -75,10 +114,10 @@
 							</h3>
 
 							{#if item.pricing}
-								<div class="flex items-end mt-2 mb-4">
-									<div class="text-3xl font-bold mr-2">${item.pricing.price}</div>
+								<div class="flex items-end mt-4 mb-4">
+									<div class="text-3xl font-bold mr-2">${item.pricing.amount || '0'}</div>
 									<div class="text-lg">
-										/{item.pricing.pricePer}
+										/{item.pricing.per}
 									</div>
 								</div>
 								{#if item.pricing.benefits}
@@ -92,13 +131,24 @@
 									</div>
 								{/if}
 							{/if}
+
 							{#if item.url}
 								<a
 									href={item.url}
 									target="_blank"
-									class="button w-full text-center block mt-4 text-[#8B786D] text-sm"
+									class="button w-full text-center block text-[#8B786D]"
 									>{item.callToActionText || 'Learn More'}
 								</a>
+							{:else if section.type === 'pricing'}
+								{#if page.isCollectEmails}
+									<button class="w-full" on:click={focusEmailInput}
+										>{item.callToActionText || page.callToAction}</button
+									>
+								{:else}
+									<a class="button text-center block w-full" target="_blank" href={page.actionUrl}>
+										{item.callToActionText || page.callToAction}
+									</a>
+								{/if}
 							{/if}
 						</div>
 						<div

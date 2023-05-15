@@ -5,6 +5,7 @@
 	import clickOutside from 'lib/use/clickOutside';
 
 	export let url;
+	export let callToActionText = '';
 	export let placeholder = 'Insert URL';
 	export let isShown = false;
 
@@ -49,8 +50,10 @@
 		use:clickOutside
 		on:clickOutside={close}
 	>
-		<div class="text-sm opacity-70 mb-2">URL to open on section click (optional)</div>
+		<div class="text-sm opacity-70 mt-4 mb-2">Button text</div>
+		<input class="w-full" bind:value={callToActionText} placeholder="Learn More" type="text" />
 
+		<div class="text-sm opacity-70 mt-4 mb-2">URL to open on section click</div>
 		<input class="w-full" bind:value={innerUrl} {placeholder} type="url" />
 
 		<div class="mt-4">

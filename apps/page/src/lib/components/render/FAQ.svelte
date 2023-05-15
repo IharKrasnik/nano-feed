@@ -1,12 +1,12 @@
 <script>
-	export let page;
+	export let section;
 </script>
 
-{#if page.faqs?.length}
+{#if section.faqs?.length}
 	<div class="sticky bg-site z-20">
 		<div class="flex justify-center">
 			<div class="max-w-[600px] w-full my-8 p-4">
-				{#each page.faqs as faq}
+				{#each section.faqs as faq}
 					<div class="text-lg font-bold">
 						{faq.question}
 					</div>
