@@ -35,6 +35,7 @@
 	import ColorPicker from '$lib/components/ColorPicker.svelte';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
+	import Settings from '$lib/components/Settings.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -499,7 +500,23 @@ See you!
 			...(broadcastEmails.results || [])
 		];
 	};
+
+	let isSettingsModalShown = false;
 </script>
+
+{#if isSettingsModalShown}
+	<Modal
+		isShown
+		maxWidth={600}
+		onClosed={() => {
+			isSettingsModalShown = false;
+		}}
+	>
+		<div class="p-4 sm:p-8">
+			<Settings bind:page />
+		</div>
+	</Modal>
+{/if}
 
 {#if isBroadcastEmailModalShown}
 	<Modal
@@ -863,11 +880,20 @@ See you!
 						<div class="py-4">
 							{#if page._id}
 								<div class="w-full flex justify-between items-center mb-4">
-									<div class="flex">
+									<div class="flex items-center">
 										<div class="mr-4">
 											<EmojiPicker bind:icon={page.logo} />
 										</div>
 										<ColorPicker bind:page />
+
+										<div
+											class="text-2xl ml-4 cursor-pointer"
+											on:click={() => {
+												isSettingsModalShown = true;
+											}}
+										>
+											⚙️
+										</div>
 									</div>
 									<div class="flex">
 										<div class="flex items-center cursor-pointer" on:click={toggleSubmissions}>
