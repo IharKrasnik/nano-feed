@@ -262,9 +262,9 @@
 								{/if}
 
 								<div
-									class="_input_container flex items-center {page.demoUrl
-										? ''
-										: 'mx-auto'} {page.isCollectEmails
+									class="_input_container {page.isCollectEmails
+										? '_border'
+										: ''} flex items-center {page.demoUrl ? '' : 'mx-auto'} {page.isCollectEmails
 										? 'w-full ' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
 										: ''}"
 								>
@@ -448,7 +448,7 @@
 				<div
 					class="_input_container flex items-center mx-auto 
 				{page.isCollectEmails
-						? 'w-full ' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
+						? 'w-full _border' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
 						: ''}"
 				>
 					<form
@@ -551,7 +551,7 @@
 	}
 
 	@media (min-width: 640px) {
-		._input_container {
+		._input_container._border {
 			border: 3px white solid;
 		}
 	}
