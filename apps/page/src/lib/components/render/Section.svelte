@@ -36,7 +36,10 @@
 
 	let focusEmailInput = () => {
 		let inputs = document.getElementsByClassName('_email-input');
-		inputs[inputs.length - 1].focus();
+		let input = inputs[0];
+
+		input.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+		input.focus();
 	};
 </script>
 
