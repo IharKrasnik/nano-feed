@@ -14,7 +14,7 @@
 	};
 </script>
 
-<h3 class="text-xl font-bold mb-4">Custom Graph</h3>
+<h3 class="text-xl font-bold mb-4">Custom Code</h3>
 
 <div class="mt-4">
 	<div class="mb-4">
