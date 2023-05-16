@@ -35,7 +35,7 @@
 		images = null;
 	};
 
-	let type = 'gif';
+	let type = 'jpg';
 
 	const setType = (newType) => {
 		type = newType;
@@ -63,18 +63,18 @@
 
 				<div class="mt-4 flex">
 					<div
-						class:font-bold={type === 'gif'}
-						class="_section cursor-pointer mr-2 px-4"
-						on:click={() => setType('gif')}
-					>
-						GIF
-					</div>
-					<div
-						class="_section cursor-pointer px-4"
+						class="_section cursor-pointer px-4 mr-2"
 						class:font-bold={type === 'jpg'}
 						on:click={() => setType('jpg')}
 					>
 						JPG
+					</div>
+					<div
+						class="_section cursor-pointer mr-2 px-4"
+						class:font-bold={type === 'gif'}
+						on:click={() => setType('gif')}
+					>
+						GIF
 					</div>
 				</div>
 
@@ -84,20 +84,55 @@
 							<Loader theme="light" />
 						</div>
 					{:else if images?.length}
-						<div class="text-sm opacity-70 mb-4">🫵 Click to select</div>
+						<div class="flex justify-between">
+							<div class="text-sm opacity-70 mb-4">Click to select</div>
+						</div>
+
 						<div class="columns-3 gap-4">
 							{#each images as image}
-								<img
-									class="w-full mb-4 cursor-pointer transition hover:scale-125"
-									src={image.url}
-									use:autofocus
-									on:click={() => {
-										onSelected(image.url);
-										close();
-									}}
-								/>
+								<div>
+									<img
+										class="w-full mb-4 cursor-pointer transition hover:scale-125"
+										src={image.url}
+										use:autofocus
+										on:click={() => {
+											if (image.downloadUrl) {
+												get('unsplash/download', { downloadUrl: image.downloadUrl });
+											}
+											onSelected(image.url);
+											close();
+										}}
+									/>
+
+									{#if image.user}
+										<div class="mb-4 text-sm opacity-80">
+											By
+											<a
+												target="_blank"
+												href="https://unsplash.com/@{image.user
+													.username}?utm_source=momentum&utm_medium=referral ">{image.user.name}</a
+											>
+										</div>
+									{/if}
+								</div>
 							{/each}
 						</div>
+
+						{#if type === 'jpg'}
+							<div class="text-sm font-bold w-full mt-8 text-center opacity-60">
+								Powered by
+								<a
+									href="https://unsplash.com?utm_source=your_app_name&amp;utm_medium=referral"
+									target="_blank">Unsplash</a
+								>
+							</div>
+						{:else if type === 'gif'}
+							<div class="max-w-[100px] mx-auto mt-8">
+								<a href="https://giphy.com/" target="_blank">
+									<img src="/giphy.png" />
+								</a>
+							</div>
+						{/if}
 					{/if}
 
 					{#if !images?.length}
