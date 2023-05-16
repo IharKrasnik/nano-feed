@@ -2,7 +2,8 @@
 	export let page;
 
 	import { slide, fly, scale, fade } from 'svelte/transition';
-	import { post, put } from 'lib/api';
+	import { get, post, put } from 'lib/api';
+	import { GOOGLE_LOGIN_URL, LINKEDIN_LOGIN_URL, TWITTER_LOGIN_URL, PAGE_URL } from 'lib/env';
 
 	import Button from 'lib/components/Button.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
@@ -70,7 +71,8 @@
 			content: newMoment.content,
 			attachments: [{ type: 'image', url: newMoment.imageUrl }],
 			projects: [{ slug: page.streamSlug }],
-			isSyncToTwitter: true
+			isSyncToTwitter: newMoment.isSyncToTwitter,
+			isSyncToLinkedIn: newMoment.isSyncToLinkedIn
 		});
 
 		newMoment = {};
@@ -78,6 +80,28 @@
 		$feedLastUpdatedOn = new Date();
 		isCollapsed = true;
 		showSuccessMessage('Congrats! Your post is published on your page.');
+	};
+
+	let linkedInLogin = async () => {
+		const { url } = await get(LINKEDIN_LOGIN_URL);
+		window.document.location.href = url;
+	};
+
+	let twitterLogin = async () => {};
+
+	let onSyncToTwitterClick = async () => {
+		debugger;
+		if (!$currentUser.oauth?.twitter) {
+			const { url } = await get(TWITTER_LOGIN_URL);
+			window.document.location.href = url;
+		}
+	};
+
+	let onSyncToLinkedInClick = async () => {
+		if (!$currentUser.oauth?.linkedin) {
+			const { url } = await get(LINKEDIN_LOGIN_URL);
+			window.document.location.href = url;
+		}
 	};
 </script>
 
@@ -209,6 +233,20 @@
 				<div class="mt-4 mb-2 font-bold">Attachment</div>
 				<FileInput class="_dark w-full" theme="dark" bind:url={newMoment.imageUrl} />
 
+				<div class="mt-8">
+					<input
+						class="mr-2"
+						type="checkbox"
+						on:click={onSyncToTwitterClick}
+						bind:checked={newMoment.isSyncToTwitter}
+					/>Sync to Twitter
+					<input
+						class="ml-4 mr-2"
+						type="checkbox"
+						on:click={onSyncToLinkedInClick}
+						bind:checked={newMoment.isSyncToLinkedIn}
+					/>Sync to LinkedIn
+				</div>
 				<Button class="_primary _small mt-8" onClick={publishNewMoment}>Publish Update</Button>
 			{/if}
 
