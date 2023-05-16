@@ -31,9 +31,12 @@
 	let isMounted;
 
 	onMount(() => {
-		setTimeout(() => {
-			isMounted = true;
-		}, 0);
+		setTimeout(
+			() => {
+				isMounted = true;
+			},
+			isFile ? 0 : 1000
+		);
 	});
 </script>
 
