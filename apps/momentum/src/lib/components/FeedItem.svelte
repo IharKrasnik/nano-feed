@@ -132,8 +132,8 @@
 				{#each feedItem.attachments as attachment}
 					{#if attachment.type === 'image'}
 						<img
-							src={attachment.url}
-							class="w-full "
+							data-src={attachment.url}
+							class="w-full lazyload"
 							style="max-height: 300px; object-fit: cover;"
 						/>
 					{/if}

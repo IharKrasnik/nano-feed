@@ -8,6 +8,10 @@
 	import Dock from 'lib/components/Dock.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
+
+	import 'lazysizes';
+	// import a plugin
+	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 </script>
 
 <svelte:head>
@@ -15,6 +19,7 @@
 	<meta name="title" content={$page.data.ogTitle} />
 	<meta name="description" content={$page.data.ogDescription} />
 	<meta name="og:description" content={$page.data.ogDescription} />
+
 	<meta
 		name="og:image"
 		content={$page.data.ogImage ||

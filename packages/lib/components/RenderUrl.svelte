@@ -31,7 +31,6 @@
 	let isMounted;
 
 	onMount(() => {
-		debugger;
 		setTimeout(
 			() => {
 				isMounted = true;
@@ -41,14 +40,15 @@
 	});
 </script>
 
-{#if isMounted && url}
+{#if url}
 	{#if isUrl()}
 		<div class="w-full {clazz}" {style}>
 			{#if url.includes('loom.com')}
 				{#if !isFilesOnly}
 					<iframe
+						class="lazyload"
 						style="width: 100%; aspect-ratio: 536/300;"
-						src={url.replace('share/', 'embed/')}
+						data-src={url.replace('share/', 'embed/')}
 					/>
 				{:else}
 					<LoomIcon class="w-[45px] opacity-50" />
@@ -57,9 +57,9 @@
 				{#if !isFilesOnly}
 					<iframe
 						loading="lazy"
-						class="w-full mt-2"
+						class="w-full mt-2 lazyload"
 						style="aspect-ratio: 536/300;"
-						src="https://www.youtube.com/embed/{new URL(url).searchParams.get('v')}"
+						data-src="https://www.youtube.com/embed/{new URL(url).searchParams.get('v')}"
 						title="YouTube video player"
 						frameborder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -71,8 +71,8 @@
 			{:else if url.includes('vimeo.com')}
 				{#if !isFilesOnly}
 					<iframe
-						src="https://player.vimeo.com/video/{new URL(url).pathname.replace('/', '')}"
-						class="w-full mt-2 aspect-video"
+						data-src="https://player.vimeo.com/video/{new URL(url).pathname.replace('/', '')}"
+						class="w-full mt-2 aspect-video lazyload"
 						frameborder="0"
 						allow="autoplay; fullscreen; picture-in-picture"
 						allowfullscreen
@@ -84,7 +84,7 @@
 				<video class="max-w-[600px] w-full mx-auto {imgClass}" autoplay muted loop src={url} />
 			{:else}
 				{#key url}
-					<img class="rounded-xl {imgClass}" src={url} />
+					<img class="rounded-xl {imgClass} lazyload" data-src={url} />
 				{/key}
 			{/if}
 		</div>
