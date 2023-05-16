@@ -44,6 +44,8 @@
 	};
 
 	const load = async () => {
+		feedItem.url = feedItem.url || '';
+
 		if (
 			feedItem.url &&
 			![
@@ -233,7 +235,7 @@
 		{#if !feedItem.hideAttachments && feedItem.attachments}
 			{#each feedItem.attachments as attachment}
 				<div>
-					{#if attachment.url.includes('.mov') || attachment.url.includes('.mp4')}
+					{#if attachment.url?.includes('.mov') || attachment.url?.includes('.mp4')}
 						<video src={attachment.url} controls autoplay class="w-full" />
 					{:else}
 						<img src={attachment.url} class="w-full" />

@@ -99,7 +99,7 @@
 				<!-- <img src="https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png" class="w-full rounded-xl"/> -->
 
 				{#if stream.bannerUrl}
-					<div class="relative">
+					<div>
 						{#if stream.bannerUrl.includes('.mov') || stream.bannerUrl.includes('.mp4')}
 							<video
 								autoplay
@@ -206,7 +206,8 @@
 							{/key}
 						</div>
 					{/if}
-					{#if stream._id}
+
+					{#if stream._id && !stream.fullName}
 						<div class="mt-4">
 							{#if stream.isUpvoted}
 								<div class="text-center">✅ {stream?.upvotes?.length || 1} upvotes</div>
