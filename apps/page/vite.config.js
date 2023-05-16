@@ -4,6 +4,9 @@ import fs from 'fs';
 /** @type {import('vite').UserConfig} */
 const config = {
 	plugins: [sveltekit(), rawFonts(['.ttf'])],
+	build: {
+		minify: 'esbuild'
+	}
 };
 
 function rawFonts(ext) {

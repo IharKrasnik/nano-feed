@@ -3,6 +3,9 @@ import fs from 'fs';
 
 const config = {
 	plugins: [sveltekit(), rawFonts(['.ttf'])],
+	build: {
+		minify: 'esbuild'
+	},
 	optimizeDeps: {
 		exclude: ['@vercel/og']
 	}
