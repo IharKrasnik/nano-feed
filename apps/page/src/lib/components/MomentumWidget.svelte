@@ -60,6 +60,11 @@
 	};
 
 	let publishNewMoment = async () => {
+		if (!page.streamSlug) {
+			const { streamSlug } = await put(`pages/${page._id}/embed-stream`);
+			page.streamSlug = streamSlug;
+		}
+
 		await post('feed', {
 			title: newMoment.title,
 			content: newMoment.content,
