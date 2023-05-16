@@ -3,6 +3,8 @@
 	import YouTubeIcon from 'lib/icons/youtube.svelte';
 	import VimeoIcon from 'lib/icons/vimeo.svelte';
 
+	import { onMount } from 'svelte';
+
 	// let clazz = '';
 	// export { clazz as class };
 	let clazz = '';
@@ -25,9 +27,17 @@
 	} else {
 		isFile = false;
 	}
+
+	let isMounted;
+
+	onMount(() => {
+		setTimeout(() => {
+			isMounted = true;
+		}, 0);
+	});
 </script>
 
-{#if url}
+{#if isMounted && url}
 	{#if isUrl()}
 		<div class="w-full {clazz}" {style}>
 			{#if url.includes('loom.com')}
