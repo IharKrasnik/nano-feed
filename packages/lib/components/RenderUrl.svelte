@@ -31,6 +31,7 @@
 	let isMounted;
 
 	onMount(() => {
+		debugger;
 		setTimeout(
 			() => {
 				isMounted = true;
@@ -55,6 +56,7 @@
 			{:else if url.includes('youtube.com') || url.includes('youtu.be')}
 				{#if !isFilesOnly}
 					<iframe
+						loading="lazy"
 						class="w-full mt-2"
 						style="aspect-ratio: 536/300;"
 						src="https://www.youtube.com/embed/{new URL(url).searchParams.get('v')}"

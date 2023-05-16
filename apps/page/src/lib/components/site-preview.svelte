@@ -412,6 +412,7 @@
 				{#key $feedLastUpdatedOn}
 					<iframe
 						id="iframeResize"
+						loading="lazy"
 						on:load={resize}
 						class="w-full sticky z-20 pb-[200px] bg-site"
 						src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.theme ||
