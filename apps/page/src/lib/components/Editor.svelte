@@ -1210,12 +1210,10 @@ See you!
 											>💚 Add Testimonials</button
 										>
 
-										{#if !page.sections.filter((s) => s.type === 'pricing').length}
-											<button
-												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
-											>
-										{/if}
+										<button
+											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+											on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
+										>
 
 										<button
 											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
