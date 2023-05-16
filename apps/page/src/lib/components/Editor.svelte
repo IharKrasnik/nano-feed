@@ -317,12 +317,51 @@ See you!
 	let addNewSection = ({ type } = {}) => {
 		let newSection = {
 			id: uuidv4(),
-			columns: 2,
-			items: [{ title: '', description: '' }],
+			columns: 1,
+			items: [],
 			type
 		};
 
-		if (type === 'pricing') {
+		if (type === 'benefits') {
+			newSection.emoji = '🙌';
+			newSection.title = 'Tell the audience how they will benefit';
+			newSection.description =
+				'Show your features below, talk to the audience. Start features titles with verb.';
+
+			newSection.columns = 1;
+			newSection.items = [
+				{
+					emoji: '🖼',
+					title: 'Attach Images',
+					description:
+						'Paste image from clipboard, insert a link to input or upload from your computer.',
+					imageUrl:
+						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
+				},
+				{
+					emoji: '📼',
+					title: 'Use Videos',
+					description: 'Simply insert a link to YouTube, Loom or Vimeo.',
+					imageUrl:
+						'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D'
+				},
+				{
+					emoji: '💥',
+					title: 'Use GIFs',
+					description:
+						'Use animated GIFs to catch their attention (use search icon near file input)',
+					imageUrl:
+						'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
+				},
+				{
+					emoji: '⚒️',
+					title: 'Customize The Grid',
+					description: 'Select the number of columns you want to show in your section (1—4)',
+					imageUrl:
+						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243758302-image.png'
+				}
+			];
+		} else if (type === 'pricing') {
 			newSection.columns = 2;
 
 			newSection.title = 'Pricing';
@@ -1117,12 +1156,12 @@ See you!
 
 											{#if !page.sections?.length}
 												<div>
-													<button
+													<!-- <button
 														class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
 														on:click={addNewSection}
 													>
-														Add Section
-													</button>
+														Add Empty Section
+													</button> -->
 												</div>
 
 												{#if page.sections?.length > 1}
@@ -1157,21 +1196,18 @@ See you!
 												{/each}
 											</div>
 										</div>
+									{/if}
 
+									{#if page?._id}
 										<button
 											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-											on:click={addNewSection}>Add Section</button
-										>
-
-										<button
-											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-											on:click={() => addNewSection({ type: 'faq' })}>Add FAQ</button
+											on:click={() => addNewSection({ type: 'benefits' })}>🙌 Add Benefits</button
 										>
 
 										<button
 											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 											on:click={() => addNewSection({ type: 'testimonials' })}
-											>Add Testimonials</button
+											>💚 Add Testimonials</button
 										>
 
 										{#if !page.sections.filter((s) => s.type === 'pricing').length}
@@ -1180,8 +1216,17 @@ See you!
 												on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
 											>
 										{/if}
-									{/if}
 
+										<button
+											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+											on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
+										>
+
+										<button
+											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+											on:click={addNewSection}>🧱 Add Empty Section</button
+										>
+									{/if}
 									{#if page._id}
 										<hr class="my-8 border-[#8B786D] opacity-30" />
 									{/if}

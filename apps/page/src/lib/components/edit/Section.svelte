@@ -82,9 +82,14 @@
 			<div class="text-lg font-bold">🤑 Pricing</div>
 		{:else if section.type === 'faq'}
 			<div class="text-lg font-bold">⁉️ FAQ</div>
+		{:else if section.type === 'testimonials'}
+			<div class="text-lg font-bold">💚 Testimonials</div>
+		{:else if section.type === 'benefits'}
+			<div class="text-lg font-bold">🙌 Benefits</div>
 		{/if}
 		<div>
-			{section.title || ''}{section.description || ''}
+			{section.title || ''}
+			{section.description || ''}
 
 			{#if section.type === 'testimonials'}
 				<div>
