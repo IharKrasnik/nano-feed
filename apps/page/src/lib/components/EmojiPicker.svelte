@@ -8,7 +8,7 @@
 
 	export let icon = '✨';
 
-	let url = icon.startsWith('http') ? icon : null;
+	let url = icon?.startsWith('http') ? icon : null;
 
 	$: if (url && url.startsWith('http')) {
 		icon = url;
