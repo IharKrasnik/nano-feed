@@ -33,13 +33,13 @@
 
 		<div class="flex" style="margin-top: 30px;">
 			<img
-				src={feedItem.creator.avatarUrl}
+				src={feedItem.creators[0].avatarUrl}
 				class="rounded-full"
 				style="width: 55px; height: 55px; filter: grayscale(100%); border: 2px black solid;"
 			/>
 			<div class="ml-[15px]">
 				<div style="font-size: 18px; font-weight: bold;">
-					{feedItem.creator.fullName.split(' ')[0]}
+					{feedItem.creators[].fullName.split(' ')[0]}
 				</div>
 			</div>
 		</div>
