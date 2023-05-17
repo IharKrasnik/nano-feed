@@ -240,7 +240,7 @@
 						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
 						<div
-							class="flex h-full {page.demoUrl
+							class="flex h-full w-full {page.demoUrl
 								? `flex-col ${
 										page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
 								  } justify-between items-center`
