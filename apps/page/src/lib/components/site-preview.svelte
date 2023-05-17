@@ -234,7 +234,9 @@
 				<div class="_root bg-site">
 					<div
 						bind:this={$aboveTheFoldEl}
-						class="_content pb-16 pt-32 {!page.testimonials?.length ? 'h-screen' : ''}"
+						class="_content pb-16 pt-32 {!page.testimonials?.length
+							? 'min-h-screen flex items-center'
+							: ''}"
 						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
 						<div
@@ -425,10 +427,8 @@
 		{/if}
 
 		{#if page.streamSlug || page.sections?.length}
-			<!-- <div class="h-screen sticky"></div> -->
-
 			<div
-				class="w-full text-center bg-[#fafafa] h-screen max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center p-4"
+				class="w-full text-center bg-[#fafafa] min-h-screen max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center p-4"
 				style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page
 					.theme?.theme === 'dark'
 					? '#222'
