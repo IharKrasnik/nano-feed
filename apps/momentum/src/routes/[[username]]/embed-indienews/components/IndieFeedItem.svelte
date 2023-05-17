@@ -39,7 +39,7 @@
 			/>
 			<div class="ml-[15px]">
 				<div style="font-size: 18px; font-weight: bold;">
-					{feedItem.creators[].fullName.split(' ')[0]}
+					{feedItem.creators[0].fullName.split(' ')[0]}
 				</div>
 			</div>
 		</div>
