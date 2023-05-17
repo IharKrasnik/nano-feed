@@ -102,7 +102,14 @@
 			body {
 				background: #111;
 			}
+
+			body main {
+				max-width: 1000px;
+				margin: 0 auto;
+			}
 		</style>
+
+		<link rel="https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/Gilroy-Black.ttf" />
 	{/if}
 </svelte:head>
 
