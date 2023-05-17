@@ -41,6 +41,13 @@
 				<div style="font-size: 18px; font-weight: bold;">
 					{feedItem.creators[0].fullName.split(' ')[0]}
 				</div>
+				{#if feedItem.creators[0].twitterUsername}
+					<div
+						style="font-weight: bold; color: rgb(153, 153, 153); letter-spacing: -0.7px; font-size: 16px;"
+					>
+						@{feedItem.creators[0].twitterUsername}
+					</div>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -49,5 +56,7 @@
 <style>
 	._root {
 		font-family: 'Gilroy';
+		margin-bottom: 20px;
+		break-inside: avoid;
 	}
 </style>

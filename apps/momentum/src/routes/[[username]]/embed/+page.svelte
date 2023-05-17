@@ -65,6 +65,7 @@
 </svelte:head>
 
 <div class="hidden lg:columns-1 lg:columns-3 lg:columns-2 lg:columns-4" />
+
 <div class="container mx-auto">
 	{#key feed}
 		{#if feed?.length > 0}

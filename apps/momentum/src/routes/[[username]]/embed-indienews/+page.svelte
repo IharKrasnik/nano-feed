@@ -69,10 +69,10 @@
 <div class="container mx-auto">
 	{#key feed}
 		{#if feed?.length > 0}
-			<div class="pt-[20px] grid sm:grid-cols-1 md:grid-2 lg:grid-cols-3">
+			<div class="pt-[20px] sm:columns-1 md:columns-2 lg:columns-3" style="column-gap: 20px;">
 				{#each feed as feedItem}
 					<div
-						class="px-2 w-full {isHorizontal
+						class="w-full {isHorizontal
 							? 'w-[90%]'
 							: ''} md:w-auto mx-auto shrink-0 md:w-auto max-w-[600px] _feed-item md:block"
 					>
