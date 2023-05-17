@@ -5,3 +5,14 @@
 ._modal-contents {
 	background: red;
 }
+
+@font-face {
+	font-family: 'Chillax';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/Chillax-Bold.otf');
+}
+
+@font-face {
+	font-family: 'Gilroy';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/Gilroy-Medium.ttf')
+		format('truetype');
+}

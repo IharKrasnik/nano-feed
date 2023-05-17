@@ -96,6 +96,14 @@
 			}
 		</style>
 	{/if}
+
+	{#if $page.url.href.includes('/embed-indie')}
+		<style>
+			body {
+				background: #111;
+			}
+		</style>
+	{/if}
 </svelte:head>
 
 <div id="modal-portal" />
