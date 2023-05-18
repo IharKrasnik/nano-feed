@@ -46,10 +46,22 @@
 			<input type="text" class="block" bind:value={creator.twitterUsername} />
 		</div>
 
+		<div class="mb-8">
+			<label> Bio </label>
+			<textarea type="text" class="block" bind:value={creator.longDescription} />
+		</div>
+
 		{#if creator}
 			<div class="mb-8">
 				<label>Avatar </label>
 				<FileInput bind:url={creator.avatarUrl} />
+			</div>
+		{/if}
+
+		{#if creator}
+			<div class="mb-8">
+				<label>Banner </label>
+				<FileInput bind:url={creator.bannerUrl} />
 			</div>
 		{/if}
 
