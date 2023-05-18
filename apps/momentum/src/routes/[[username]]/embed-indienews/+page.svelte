@@ -15,7 +15,7 @@
 	let limit = $page.url.searchParams.get('limit') || 30;
 	let columns = $page.url.searchParams.get('columns') || 3;
 
-	let isAutoConfig = $page.url.searchParams.get('isAutoConfig') || false;
+	let isAutoConfig = true;
 
 	let bgColor = $page.url.searchParams.get('bgColor') || '';
 	let isHorizontal = $page.url.searchParams.get('isHorizontal') || false;
