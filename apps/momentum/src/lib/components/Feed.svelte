@@ -380,7 +380,7 @@
 		class="fixed top-0 left-0 md:left-auto md:ml-[-325px] w-full md:w-[250px] bg-black {isExploreModeOn
 			? 'visible opacity-100'
 			: 'invisible md:visible opacity-0 md:opacity-100'}"
-		style="height: 100vh; overflow-y: scroll; padding-left: 5px; z-index: {isExploreModeOn
+		style="height: 100vh; overflow-y: auto; padding-left: 5px; z-index: {isExploreModeOn
 			? 1200
 			: 0}; transition: all 0.1s linear;"
 	>
