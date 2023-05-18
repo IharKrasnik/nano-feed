@@ -145,7 +145,7 @@
 								<a
 									href={item.url}
 									target="_blank"
-									class="button w-full text-center block text-[#8B786D]"
+									class="button w-full text-center block text-[#8B786D] mt-4"
 									>{item.callToActionText || 'Learn More'}
 								</a>
 							{:else if section.type === 'pricing'}
