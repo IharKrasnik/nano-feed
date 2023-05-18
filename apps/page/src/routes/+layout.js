@@ -18,7 +18,7 @@ export async function load({ url, params, session, cookies }) {
 	if (!pageSlug) {
 		if (url.href.includes('.mmntm.live')) {
 			pageSlug = currentDomain;
-		} else if (currentDomain !== getDomain(PAGE_URL) && !currentDomain.includes('localhost')) {
+		} else if (currentDomain !== 'page.mmntm.build' && !currentDomain.includes('localhost')) {
 			pageSlug = currentDomain;
 		}
 	}
@@ -34,7 +34,7 @@ export async function load({ url, params, session, cookies }) {
 			page,
 			ogTitle: metaTags.title,
 			ogDescription: metaTags.description,
-			ogImage: metaTags.image
+			ogImage: metaTags
 		};
 	}
 
