@@ -13,6 +13,13 @@
 
 @font-face {
 	font-family: 'Gilroy';
-	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/Gilroy-Medium.ttf')
-		format('truetype');
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/gilroy/Radomir%20Tinkov%20-%20Gilroy-Regular.otf');
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: 'Gilroy';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/gilroy/Radomir%20Tinkov%20-%20Gilroy-Bold.otf');
+
+	font-weight: bold;
 }
