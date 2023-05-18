@@ -44,7 +44,7 @@
 </script>
 
 {#if section.title || section.description || section.imageUrl || section.emoji}
-	<div class="w-full flex flex-col items-center py-4 sm:py-16">
+	<div class="w-full flex flex-col items-center py-4 sm:py-16 text-center">
 		{#if section.emoji}
 			<div class={emojiStyle[1]}>
 				<Emoji bind:emoji={section.emoji} />
