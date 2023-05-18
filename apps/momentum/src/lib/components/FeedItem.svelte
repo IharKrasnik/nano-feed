@@ -197,7 +197,7 @@
 						{#each feedItem.creators as creator, i}
 							<a
 								href="/@{creator.username}"
-								class="shrink-0 w-[40px] mr-[-20px]"
+								class="shrink-0 w-[40px] mr-[-25px]"
 								style="z-index: {100 - i};"
 								on:click|stopPropagation={() => {}}
 							>
