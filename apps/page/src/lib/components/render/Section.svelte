@@ -63,7 +63,7 @@
 			<div class="my-8">
 				<RenderUrl
 					class="rounded-xl"
-					imgClass="mx-auto  {isGif(section.imageUrl) ? 'w-full object-cover' : ''} max-h-[350px]"
+					imgClass="mx-auto  {isGif(section.imageUrl) ? 'w-full object-cover' : ''} max-h-[500px]"
 					url={section.imageUrl}
 				/>
 			</div>
