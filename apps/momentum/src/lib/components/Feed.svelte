@@ -550,7 +550,7 @@
 </div>
 
 <div
-	class="hidden md:block fixed w-[300px] top-0 h-screen pb-32"
+	class="hidden md:block fixed w-[300px] top-0 overflow-auto h-screen pb-32"
 	style="margin-left: 605px; padding: 5px;"
 >
 	<div class="mt-24 xl:mt-6">
