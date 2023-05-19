@@ -90,7 +90,6 @@
 	let twitterLogin = async () => {};
 
 	let onSyncToTwitterClick = async () => {
-		debugger;
 		if (!$currentUser.oauth?.twitter) {
 			const { url } = await get(TWITTER_LOGIN_URL);
 			window.document.location.href = url;

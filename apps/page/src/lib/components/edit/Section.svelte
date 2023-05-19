@@ -109,6 +109,14 @@
 		</div>
 	</div>
 {:else}
+	<div
+		class="absolute right-0 top-0 p-4 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
+		title="Remove Item"
+		on:click={onRemove}
+	>
+		🗑
+	</div>
+
 	<div class="_section rounded-xl" style="padding:0;">
 		<div class="flex justify-between items-center">
 			<div class="_title p-4" style="margin: 0;">Header</div>
@@ -117,7 +125,13 @@
 		<hr class="border-[#8B786D] opacity-30" />
 
 		<div class="p-4">
-			<EditSectionItem class="p-0" isWithUrl={false} {onRemove} bind:section bind:item={section} />
+			<EditSectionItem
+				class="p-0"
+				isWithUrl={false}
+				onRemove={null}
+				bind:section
+				bind:item={section}
+			/>
 		</div>
 	</div>
 

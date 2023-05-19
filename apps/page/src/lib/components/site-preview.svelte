@@ -177,7 +177,7 @@
 							{page.name}
 						</span>
 						<div class="ml-4 opacity-70 hidden sm:block">
-							&nbsp; {page.title}
+							&nbsp; {@html page.title}
 						</div>
 					</a>
 
@@ -256,11 +256,15 @@
 									: 'flex flex-col items-center w-full sm:w-auto sm:max-w-[600px] mx-auto'}
 							>
 								<h1 class="_title" style={page.title ? '' : 'opacity: 20%;'}>
-									{page.title || 'Type Tagline...'}
+									{#if page.title}
+										<div>{@html page.title}</div>
+									{:else}
+										{'Type Tagline...'}
+									{/if}
 								</h1>
 
 								{#if page.subtitle}
-									<h2 class="_subtitle whitespace-pre-wrap">{page.subtitle}</h2>
+									<h2 class="_subtitle whitespace-pre-wrap">{@html page.subtitle}</h2>
 								{/if}
 
 								<div
@@ -337,7 +341,7 @@
 												</div>
 											{/if}
 											<div>
-												<SvelteMarkdown source={testimonial.name} />
+												<SvelteMarkdown class="test" source={testimonial.name} />
 												<div class="mt-1 opacity-80">
 													<SvelteMarkdown source={testimonial.comment} />
 												</div>
@@ -537,6 +541,12 @@
 		font-size: 36px;
 		line-height: 1.2;
 		margin-bottom: 32px;
+	}
+
+	:global(._title b, ._title em) {
+		background-color: var(--accent-color);
+		opacity: 0.9;
+		color: white;
 	}
 
 	._subtitle {

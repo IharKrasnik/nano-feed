@@ -44,20 +44,24 @@
 </script>
 
 {#if section.title || section.description || section.imageUrl || section.emoji}
-	<div class="w-full flex flex-col items-center py-4 sm:py-16 text-center">
+	<div class="w-full text-center py-4 sm:py-16 text-center">
 		{#if section.emoji}
 			<div class={emojiStyle[1]}>
 				<Emoji bind:emoji={section.emoji} />
 			</div>
 		{/if}
 
-		<h2 class="{headerTextStyle(section)[1]} font-bold mb-4">
-			{section.title || ''}
-		</h2>
+		{#if section.title}
+			<h2 class="_title sm:text-4xl text-3xl font-bold mb-4">
+				{@html section.title}
+			</h2>
+		{/if}
 
-		<h3 class="{descriptionStyle[1]} whitespace-pre-wrap">
-			{section.description || ''}
-		</h3>
+		{#if section.description}
+			<h3 class="{descriptionStyle[1]} whitespace-pre-wrap">
+				{@html section.description}
+			</h3>
+		{/if}
 
 		{#if section.imageUrl}
 			<div class="my-8">
@@ -113,12 +117,16 @@
 								</div>
 							{/if}
 
-							<h2 class="{headerTextStyle(item)[section.columns]} font-bold mb-4">
-								{item.title || ''}
-							</h2>
-							<h3 class="{descriptionStyle[section.columns]} whitespace-pre-wrap">
-								{item.description || ''}
-							</h3>
+							{#if item.title}
+								<h2 class="{headerTextStyle(item)[section.columns]} _title font-bold mb-4">
+									{@html item.title}
+								</h2>
+							{/if}
+							{#if item.description}
+								<h3 class="{descriptionStyle[section.columns]} whitespace-pre-wrap">
+									{@html item.description}
+								</h3>
+							{/if}
 
 							{#if item.pricing}
 								<div class="flex items-end mt-4 mb-4">

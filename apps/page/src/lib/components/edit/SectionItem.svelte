@@ -93,20 +93,28 @@
 				<EditUrl bind:url={item.url} bind:callToActionText={item.callToActionText} />
 			{/if}
 		</div>
-		<div
-			class="opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
-			title="Remove Item"
-			on:click={onRemove}
-		>
-			🗑
-		</div>
+
+		{#if onRemove}
+			<div
+				class="opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
+				title="Remove Item"
+				on:click={onRemove}
+			>
+				🗑
+			</div>
+		{/if}
 	</div>
 
 	<div class="flex w-full items-center mb-4">
-		<input class="w-full" bind:value={item.title} placeholder="Title" />
+		<div contenteditable bind:innerHTML={item.title} data-placeholder="Title" />
 	</div>
 
-	<textarea class="w-full mb-4" bind:value={item.description} placeholder="Description" rows="3" />
+	<div
+		class="w-full mb-4 textarea"
+		contenteditable
+		bind:innerHTML={item.description}
+		data-placeholder="Description"
+	/>
 
 	{#if section.type === 'pricing' && item.pricing}
 		<div class="flex items-center">

@@ -816,8 +816,6 @@ See you!
 							<div
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 								on:click={() => {
-									debugger;
-
 									page.sections = page.sections.map((s) => {
 										if (s.id === $sectionToEdit.id) {
 											return { ...$sectionToEdit };
@@ -852,8 +850,6 @@ See you!
 							<div
 								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 								on:click={() => {
-									debugger;
-
 									page.sections = page.sections.map((s) => {
 										if (s.id === $sectionToEdit.id) {
 											return { ...$sectionToEdit };
@@ -999,12 +995,14 @@ See you!
 								{#if page.name}
 									<div class="_section">
 										<div class="_title">Tagline</div>
-										<input
-											class="w-full"
-											bind:value={page.title}
+
+										<div
+											class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
+											contenteditable
+											data-placeholder="Build a better product in public."
+											bind:innerHTML={page.title}
 											on:focus={() => (focuses.title = true)}
 											on:blur={() => (focuses.title = false)}
-											placeholder="Build a better product in public and grow your audience."
 										/>
 
 										{#if focuses.title || (page.name && (!page.title || !page._id))}
@@ -1028,14 +1026,23 @@ See you!
 										<div class="_section">
 											<div class="_title">Subtitle</div>
 
-											<textarea
+											<div
+												class="min-h-[100px]"
+												contenteditable="true"
+												bind:innerHTML={page.subtitle}
+												on:focus={() => (focuses.subtitle = true)}
+												on:blur={() => (focuses.subtitle = false)}
+												data-placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
+											/>
+
+											<!-- <textarea
 												bind:value={page.subtitle}
 												on:focus={() => (focuses.subtitle = true)}
 												on:blur={() => (focuses.subtitle = false)}
 												rows="4"
 												class="w-full"
 												placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
-											/>
+											/> -->
 
 											{#if focuses.subtitle || (page._id && page.title && !page.subtitle)}
 												<div
