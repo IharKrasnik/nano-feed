@@ -169,7 +169,7 @@
 		<a
 			href="https://feed.mmntm.build"
 			target="_blank"
-			class="text-white"
+			class="text-white mt-8 block pb-4"
 			class:text-black={theme === 'light'}
 			class:text-white={theme === 'dark'}
 		>
