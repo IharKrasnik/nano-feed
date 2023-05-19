@@ -3,7 +3,7 @@
 	import _ from 'lodash';
 	import { page } from '$app/stores';
 	import { STREAM_URL } from 'lib/env';
-	import { fly } from 'svelte/transition';
+	import { fly, fade } from 'svelte/transition';
 
 	import { get } from 'lib/api';
 	import { browser } from '$app/environment';
@@ -106,79 +106,66 @@
 
 <div class="container mx-auto">
 	{#if grouppedFeed?.length > 0}
-		{#each grouppedFeed as group}
-			<div class="flex justify-center my-8 font-xl">
-				<div
-					class="flex flex-col justify-center items-center"
-					style="background: rgba(255, 242, 197, 0.01); border-radius: 8px; padding: 18px; color: white; box-shadow: 0 0 40px #e1ffef0d;"
-				>
-					<div style="text-transform: uppercase; font-size: 13px;">
-						{group.month}
-					</div>
-					<div style="font-size: 35px">
-						{group.day}
-					</div>
-				</div>
-			</div>
-
-			<div
-				class="pt-[20px] sm:columns-1 md:columns-2 lg:columns-3"
-				in:fly={{ y: 50, duration: 150, delay: 150 }}
-				style="column-gap: 20px;"
-			>
-				{#each group.feed as feedItem (feedItem._id)}
+		<div in:fade>
+			{#each grouppedFeed as group}
+				<div class="flex justify-center my-8 font-xl">
 					<div
-						class="w-full {isHorizontal
-							? 'w-[90%]'
-							: ''} md:w-auto mx-auto shrink-0 md:w-auto max-w-[600px] _feed-item md:block"
+						class="flex flex-col justify-center items-center"
+						style="background: rgba(255, 242, 197, 0.01); border-radius: 8px; padding: 18px; color: white; box-shadow: 0 0 40px #e1ffef0d;"
 					>
-						<a href={feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`} target="_blank">
-							<div class="pointer-events-none">
-								<IndieFeedItem {feedItem} />
-							</div>
-						</a>
+						<div style="text-transform: uppercase; font-size: 13px;">
+							{group.month}
+						</div>
+						<div style="font-size: 35px">
+							{group.day}
+						</div>
 					</div>
-				{/each}
-			</div>
-		{/each}
-
-		{#if isLoading}
-			<div class="w-full flex justify-center">
-				<Loader />
-			</div>
-		{:else}
-			<div class="w-full text-center mt-8">
-				<button
-					class:text-white={theme === 'light'}
-					class:text-black={theme === 'dark'}
-					on:click={loadMore}
-					class="rounded-xl"
-					style="background-color: {theme === 'light'
-						? '#000'
-						: '#fff'}; border: 1px rgba(0,0,0,.3) solid; padding: 8px 16px;"
-				>
-					Load More News
-				</button>
-			</div>
-		{/if}
-		<!-- 
-			{#if isViewAll && feed?.length === parseInt(limit)}
-				<div class="w-full text-center mt-8">
-					<a href="{STREAM_URL}/{$page.params.username}" target="_blank">
-						<button
-							class:text-white={theme === 'light'}
-							class:text-black={theme === 'dark'}
-							class="rounded-xl"
-							style="background-color: {theme === 'light'
-								? '#000'
-								: '#fff'}; border: 1px rgba(0,0,0,.3) solid;"
-						>
-							View Full Feed
-						</button>
-					</a>
 				</div>
-			{/if} -->
 
+				<div
+					class="pt-[20px] sm:columns-1 md:columns-2 lg:columns-3"
+					in:fly={{ y: 50, duration: 150, delay: 150 }}
+					style="column-gap: 20px;"
+				>
+					{#each group.feed as feedItem (feedItem._id)}
+						<div
+							class="w-full {isHorizontal
+								? 'w-[90%]'
+								: ''} md:w-auto mx-auto shrink-0 md:w-auto max-w-[600px] _feed-item md:block"
+						>
+							<a href={feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`} target="_blank">
+								<div class="pointer-events-none">
+									<IndieFeedItem {feedItem} />
+								</div>
+							</a>
+						</div>
+					{/each}
+				</div>
+			{/each}
+		</div>
+	{/if}
+
+	{#if isLoading}
+		<div class="w-full flex justify-center my-4">
+			<Loader />
+		</div>
+	{:else}
+		<div class="w-full text-center mt-8">
+			<button
+				class:text-white={theme === 'light'}
+				class:text-black={theme === 'dark'}
+				on:click={loadMore}
+				class="rounded-xl"
+				style="background-color: {theme === 'light'
+					? '#000'
+					: '#fff'}; border: 1px rgba(0,0,0,.3) solid; padding: 8px 16px;"
+			>
+				Load More News
+			</button>
+		</div>
+	{/if}
+
+	{#if feed?.length}
 		<a
 			href="https://feed.mmntm.build"
 			target="_blank"
