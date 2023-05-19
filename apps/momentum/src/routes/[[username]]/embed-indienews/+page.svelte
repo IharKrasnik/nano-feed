@@ -4,7 +4,9 @@
 	import { fly } from 'svelte/transition';
 
 	import { get } from 'lib/api';
+	import { browser } from '$app/environment';
 
+	import Loader from 'lib/components/Loader.svelte';
 	import IndieFeedItem from './components/IndieFeedItem.svelte';
 	import InfiniteScroll from 'lib/components/InfiniteScroll.svelte';
 
@@ -14,7 +16,7 @@
 	let feed;
 
 	let theme = $page.url.searchParams.get('theme') || 'dark';
-	let limit = $page.url.searchParams.get('limit') || 30;
+	let limit = $page.url.searchParams.get('limit') || 15;
 	let columns = $page.url.searchParams.get('columns') || 3;
 
 	let isAutoConfig = true;
@@ -33,7 +35,11 @@
 
 	let groupFeed = () => {};
 
+	let isLoading = false;
+
 	let loadMore = async () => {
+		isLoading = true;
+
 		pageNumber++;
 
 		const feedPage = await fetchFeed({
@@ -44,8 +50,14 @@
 
 		feed = [...(feed || []), ...feedPage];
 
-		debugger;
+		isLoading = false;
 	};
+
+	if (browser) {
+		if ('parentIFrame' in window) {
+			// window.parentIFrame.autoResize(false);
+		}
+	}
 
 	if (!feed) {
 		loadMore();
@@ -65,14 +77,6 @@
 
 <div class="container mx-auto">
 	{#if feed?.length > 0}
-		<InfiniteScroll
-			hasMore={true}
-			threshold={100}
-			elementScroll={'body'}
-			onLoadMore={() => {
-				loadMore();
-			}}
-		/>
 		<div
 			class="pt-[20px] sm:columns-1 md:columns-2 lg:columns-3"
 			in:fly={{ y: 50, duration: 150, delay: 150 }}
@@ -92,6 +96,26 @@
 				</div>
 			{/each}
 		</div>
+
+		{#if isLoading}
+			<div class="w-full flex justify-center">
+				<Loader />
+			</div>
+		{:else}
+			<div class="w-full text-center mt-8">
+				<button
+					class:text-white={theme === 'light'}
+					class:text-black={theme === 'dark'}
+					on:click={loadMore}
+					class="rounded-xl"
+					style="background-color: {theme === 'light'
+						? '#000'
+						: '#fff'}; border: 1px rgba(0,0,0,.3) solid; padding: 8px 16px;"
+				>
+					Load More News
+				</button>
+			</div>
+		{/if}
 		<!-- 
 			{#if isViewAll && feed?.length === parseInt(limit)}
 				<div class="w-full text-center mt-8">
@@ -111,7 +135,7 @@
 			{/if} -->
 
 		<a
-			href="https://mmntm.build"
+			href="https://feed.mmntm.build"
 			target="_blank"
 			class="text-white"
 			class:text-black={theme === 'light'}
@@ -150,6 +174,6 @@
 	}
 
 	._feed-item:hover {
-		transform: translateY(-20px);
+		transform: translateY(-10px);
 	}
 </style>
