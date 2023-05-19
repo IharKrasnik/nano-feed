@@ -1,4 +1,6 @@
 <script>
+	import moment from 'moment';
+	import _ from 'lodash';
 	import { page } from '$app/stores';
 	import { STREAM_URL } from 'lib/env';
 	import { fly } from 'svelte/transition';
@@ -16,7 +18,7 @@
 	let feed;
 
 	let theme = $page.url.searchParams.get('theme') || 'dark';
-	let limit = $page.url.searchParams.get('limit') || 15;
+	let limit = $page.url.searchParams.get('limit') || 20;
 	let columns = $page.url.searchParams.get('columns') || 3;
 
 	let isAutoConfig = true;
@@ -33,7 +35,33 @@
 
 	let grouppedFeed = [];
 
-	let groupFeed = () => {};
+	let groupFeed = (feedPage) => {
+		feedPage.forEach((feedItem) => {
+			let dateM = moment(feedItem.publishedOn).startOf('day');
+			let date = dateM.format('MMM DD');
+
+			let day = dateM.format('DD');
+			let month = dateM.format('MMM');
+
+			let dateFeed = grouppedFeed.find((g) => g.date === date);
+
+			if (!dateFeed) {
+				dateFeed = { date, day, month, feed: [] };
+				grouppedFeed.push(dateFeed);
+			}
+
+			if (!dateFeed.feed.find((f) => f._id === feedItem._id)) {
+				debugger;
+				console.log('push', feedItem, dateFeed.feed);
+
+				dateFeed.feed.push(feedItem);
+
+				dateFeed.feed = [...dateFeed.feed];
+			}
+
+			grouppedFeed = [...grouppedFeed];
+		});
+	};
 
 	let isLoading = false;
 
@@ -49,6 +77,7 @@
 		});
 
 		feed = [...(feed || []), ...feedPage];
+		groupFeed(feedPage);
 
 		isLoading = false;
 	};
@@ -76,26 +105,42 @@
 <div class="hidden lg:columns-1 lg:columns-3 lg:columns-2 lg:columns-4" />
 
 <div class="container mx-auto">
-	{#if feed?.length > 0}
-		<div
-			class="pt-[20px] sm:columns-1 md:columns-2 lg:columns-3"
-			in:fly={{ y: 50, duration: 150, delay: 150 }}
-			style="column-gap: 20px;"
-		>
-			{#each feed as feedItem}
+	{#if grouppedFeed?.length > 0}
+		{#each grouppedFeed as group}
+			<div class="flex justify-center my-8 font-xl">
 				<div
-					class="w-full {isHorizontal
-						? 'w-[90%]'
-						: ''} md:w-auto mx-auto shrink-0 md:w-auto max-w-[600px] _feed-item md:block"
+					class="flex flex-col justify-center items-center"
+					style="background: rgba(255, 242, 197, 0.01); border-radius: 8px; padding: 18px; color: white; box-shadow: 0 0 40px #e1ffef0d;"
 				>
-					<a href={feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`} target="_blank">
-						<div class="pointer-events-none">
-							<IndieFeedItem {feedItem} />
-						</div>
-					</a>
+					<div style="text-transform: uppercase; font-size: 13px;">
+						{group.month}
+					</div>
+					<div style="font-size: 35px">
+						{group.day}
+					</div>
 				</div>
-			{/each}
-		</div>
+			</div>
+
+			<div
+				class="pt-[20px] sm:columns-1 md:columns-2 lg:columns-3"
+				in:fly={{ y: 50, duration: 150, delay: 150 }}
+				style="column-gap: 20px;"
+			>
+				{#each group.feed as feedItem (feedItem._id)}
+					<div
+						class="w-full {isHorizontal
+							? 'w-[90%]'
+							: ''} md:w-auto mx-auto shrink-0 md:w-auto max-w-[600px] _feed-item md:block"
+					>
+						<a href={feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`} target="_blank">
+							<div class="pointer-events-none">
+								<IndieFeedItem {feedItem} />
+							</div>
+						</a>
+					</div>
+				{/each}
+			</div>
+		{/each}
 
 		{#if isLoading}
 			<div class="w-full flex justify-center">
