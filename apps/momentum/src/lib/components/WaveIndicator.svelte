@@ -126,7 +126,6 @@
 						<select
 							bind:value={timeframe}
 							on:change={() => {
-								debugger;
 								loadMetrics({
 									projectId: prevWaveProjectId,
 									subProjectId: prevSubProjectId,

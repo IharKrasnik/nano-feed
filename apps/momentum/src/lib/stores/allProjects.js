@@ -25,11 +25,15 @@ if (browser) {
 	currentUser.subscribe((user) => {
 		if (user) {
 			if (prevUser?._id !== user._id) {
-				update();
+				if (!document.URL.includes('/embed')) {
+					update();
+				}
 				prevUser = user;
 			}
 		} else if (!getFromStore(isUserLoading)) {
-			update();
+			if (!document.URL.includes('/embed')) {
+				update();
+			}
 		}
 	});
 }

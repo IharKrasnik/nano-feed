@@ -108,8 +108,6 @@
 				margin: 0 auto;
 			}
 		</style>
-
-		<link rel="https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/Gilroy-Black.ttf" />
 	{/if}
 </svelte:head>
 
@@ -241,14 +239,15 @@
 			</a>
 		{/if}
 
-		{#if $allProjects}
+		{#if $allProjects || $page.url.href.includes('/embed')}
 			{#if $page.url.href === 'https://nanohq.co/'}
 				<Invest />
-			{:else if $allProjects}
+			{:else if $allProjects || $page.url.href.includes('/embed')}
 				<slot />
 			{/if}
 		{/if}
 	</main>
+
 	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && $page.url.href !== 'https://nanohq.co/'}
 		<Dock activeIcon="momentum" />
 	{/if}

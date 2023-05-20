@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { get } from 'lib/api';
+import { browser } from '$app/environment';
 
 const projectsStore = writable([]);
 
@@ -46,7 +47,11 @@ export const update = ({
 		.finally(() => isLoading.set(false));
 };
 
-update();
+if (browser) {
+	if (!document.URL.includes('/embed')) {
+		update();
+	}
+}
 
 export default projectsStore;
 

@@ -1,74 +1,84 @@
 <script>
 	import AutoCompleteInput from 'lib/components/AutoCompleteInput.svelte';
-  import projects from '$lib/stores/projects'; 
-  import creators, { update as updateCreators, filterQuery as creatorsFilterQuery } from '$lib/stores/creators'; 
+	import projects from '$lib/stores/projects';
+	import creators, {
+		update as updateCreators,
+		filterQuery as creatorsFilterQuery
+	} from '$lib/stores/creators';
 
-  let selectedProject = null;
+	let selectedProject = null;
 
-  $: if ($creatorsFilterQuery?.projectSlug && $projects.length) {
-    selectedProject = $projects.find(c => c.slug === $creatorsFilterQuery?.projectSlug);
-  }
+	$: if ($creatorsFilterQuery?.projectSlug && $projects.length) {
+		selectedProject = $projects.find((c) => c.slug === $creatorsFilterQuery?.projectSlug);
+	}
 
-  let isCreatorsLoading = false;
+	let isCreatorsLoading = false;
 
-  let onProjectSelected = async (newProject) => {
-    selectedProject = newProject;
-    isCreatorsLoading = true;
-    await updateCreators({ projectSlug: selectedProject?.slug });
-    isCreatorsLoading = false;
-  }
+	let onProjectSelected = async (newProject) => {
+		selectedProject = newProject;
+		isCreatorsLoading = true;
+		await updateCreators({ projectSlug: selectedProject?.slug });
+		isCreatorsLoading = false;
+	};
+
+	let init = async () => {
+		isCreatorsLoading = true;
+		await updateCreators();
+		isCreatorsLoading = false;
+	};
+
+	if ($creators.length === 0) {
+		init();
+	}
 </script>
 
 <h2 class="mb-4">Momentum Creators</h2>
 
 {#if $projects.length}
-  <div class="mb-8">
-    <label>Stream</label>
+	<div class="mb-8">
+		<label>Stream</label>
 
-    <AutoCompleteInput
-      onChange={onProjectSelected}
-      placeholder="All Streams"
-      valueField="slug"
-      searchField="title"
-      autofocusOnRemove={false}
-      allSuggestions={$projects}
-      initialSelectedItem={selectedProject}
-    >
-      <!-- <div slot="item" let:item={item}>
+		<AutoCompleteInput
+			onChange={onProjectSelected}
+			placeholder="All Streams"
+			valueField="slug"
+			searchField="title"
+			autofocusOnRemove={false}
+			allSuggestions={$projects}
+			initialSelectedItem={selectedProject}
+		>
+			<!-- <div slot="item" let:item={item}>
         hey {item.label}
       </div> -->
-    </AutoCompleteInput>
-  </div>
+		</AutoCompleteInput>
+	</div>
 {/if}
 
 <div class="mb-8">
-  <label>Creators
-    <div class="inline number-tag">{$creators.length}</div>
-  </label>
-  
-  {#if $creators.length && !isCreatorsLoading}
-    {#key selectedProject?.slug}
-    <AutoCompleteInput
-      searchField="fullName"
-      placeholder="Search creators.."
-      limitItemsCount={0}
-      isMulti
-      isAlwaysShown={false}
-      allSuggestions={$creators.map(c => ({ ...c, href: `/@${c.username}`}))}
-      autofocus
-      class="mb-4"
-    >
-      <div slot="item" let:item={item}>
-        <div class="flex items-center">
-          <img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full"/>
-          {item.fullName}
-        </div>
-      </div>
-    </AutoCompleteInput>
-    
-    {/key}
-  {/if}
+	<label
+		>Creators
+		<div class="inline number-tag">{$creators.length}</div>
+	</label>
 
-   
+	{#if $creators.length}
+		{#key selectedProject?.slug}
+			<AutoCompleteInput
+				searchField="fullName"
+				placeholder="Search creators.."
+				limitItemsCount={0}
+				isMulti
+				isAlwaysShown={false}
+				allSuggestions={$creators.map((c) => ({ ...c, href: `/@${c.username}` }))}
+				autofocus
+				class="mb-4"
+			>
+				<div slot="item" let:item>
+					<div class="flex items-center">
+						<img src={item.avatarUrl} class="w-[40px] h-[40px] mr-2 rounded-full" />
+						{item.fullName}
+					</div>
+				</div>
+			</AutoCompleteInput>
+		{/key}
+	{/if}
 </div>
-

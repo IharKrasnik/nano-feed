@@ -36,7 +36,6 @@
 				elementScroll={'body'}
 				onLoadMore={() => {
 					if (maxPagesCount && maxPagesCount <= pageNumber) {
-						debugger;
 						loadMore();
 					}
 				}}

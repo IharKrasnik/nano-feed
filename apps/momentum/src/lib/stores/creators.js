@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 import { get } from 'lib/api';
 
@@ -26,7 +27,5 @@ export const update = async ({
 		creatorsStore.set(creators);
 	});
 };
-
-update();
 
 export default creatorsStore;

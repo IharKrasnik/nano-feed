@@ -14,7 +14,7 @@ export default async ({ url }, title = 'Momentum') => {
 		const cookies = cookie.parse(document.cookie);
 		let accessToken = cookies.access_token;
 
-		if (!user && accessToken) {
+		if (!user && accessToken && !url.href.includes('/embed')) {
 			let api = apiServerSide({ accessToken });
 			isUserLoading.set(true);
 

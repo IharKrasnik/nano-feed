@@ -51,9 +51,6 @@
 			}
 
 			if (!dateFeed.feed.find((f) => f._id === feedItem._id)) {
-				debugger;
-				console.log('push', feedItem, dateFeed.feed);
-
 				dateFeed.feed.push(feedItem);
 
 				dateFeed.feed = [...dateFeed.feed];
