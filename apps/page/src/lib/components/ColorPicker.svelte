@@ -2,6 +2,7 @@
 	import _ from 'lodash';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import { fly } from 'svelte/transition';
+	import { lighten, darken, getLuminance } from 'lib/helpers/color';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import SitePreview from '$lib/components/site-preview.svelte';
@@ -24,6 +25,10 @@
 			p.id = p.title + ' + ' + p.text;
 		}
 	});
+
+	let sectionBackgroundColors = {
+		'#ffffff': 'rgba(0,0,0, .3)'
+	};
 
 	let colors = {
 		all: [
@@ -48,6 +53,26 @@
 		light: []
 	};
 
+	let isTooLight = (color) => {
+		return getLuminance(color) > 0.8;
+		// color = color.toLowerCase();
+
+		// let a = ['d', 'e', 'f'].includes(color[1]) ? 1 : 0;
+		// let b = ['d', 'e', 'f'].includes(color[3]) ? 1 : 0;
+		// let c = ['d', 'e', 'f'].includes(color[5]) ? 1 : 0;
+
+		// return a + b + c >= 2;
+	};
+
+	if (window) {
+		window.getLuminance = getLuminance;
+	}
+	let isTooDark = (color) => {
+		return getLuminance(color) < 0.2;
+		// color = color.toLowerCase();
+		// return color.startsWith('#0') && parseInt(color[3]) < 2;
+	};
+
 	colors.all.forEach((color) => {
 		if (isDarkColor(color)) {
 			colors.dark.push(color);
@@ -57,6 +82,9 @@
 	});
 
 	let themes;
+
+	let LIGHT_SECTION_COLOR = 'rgba(255, 255, 255, 0.3)';
+	let DARK_SECTION_COLOR = 'rgba(0, 0, 0, 0.3)';
 
 	let generateThemes = () => {
 		let limit = 6;
@@ -74,8 +102,16 @@
 					// textColor: lightColors[limit - i - 1],
 					accentColor: lightColors[i],
 					buttonColor: '#111111',
-					sectionBackgroundColor: '#212121',
-					sectionTheme: 'dark'
+
+					...(isTooDark(darkColors[i])
+						? {
+								sectionBackgroundColor: 'rgba(255,255,255,0.1)',
+								sectionTheme: 'light'
+						  }
+						: {
+								sectionBackgroundColor: DARK_SECTION_COLOR,
+								sectionTheme: 'dark'
+						  })
 				});
 			} else {
 				result.push({
@@ -83,9 +119,17 @@
 					textColor: '#111111',
 					// textColor: darkColors[limit - i - 1],
 					accentColor: darkColors[i],
-					buttonColor: '#f5f5f5',
-					sectionBackgroundColor: 'rgb(128, 127, 128, 0.05)',
-					sectionTheme: 'light'
+					...(isTooLight(lightColors[i])
+						? {
+								sectionBackgroundColor: 'rgba(0,0,0,0.07)',
+								sectionTheme: 'dark'
+						  }
+						: {
+								sectionBackgroundColor: LIGHT_SECTION_COLOR,
+								sectionTheme: 'light'
+						  }),
+
+					buttonColor: '#f5f5f5'
 				});
 			}
 		}

@@ -324,7 +324,7 @@ See you!
 
 		if (type === 'benefits') {
 			newSection.emoji = '🙌';
-			newSection.title = 'Tell the audience how they will benefit';
+			newSection.title = 'Tell the audience how <b>they</b> will benefit';
 			newSection.description =
 				'Show your features below, talk to the audience. Start features titles with verb.';
 
