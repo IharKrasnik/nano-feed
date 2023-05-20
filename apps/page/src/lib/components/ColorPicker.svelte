@@ -1,4 +1,5 @@
 <script>
+	import ColorPicker from 'svelte-awesome-color-picker';
 	import { fly } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Modal from 'lib/components/Modal.svelte';
@@ -95,6 +96,7 @@
 		page.theme = themes[0];
 	}
 
+	page.theme = page.theme || {};
 	let selectedFontPairId = page.theme.fontPairId;
 
 	let updateFonts = () => {
@@ -108,6 +110,8 @@
 			return t;
 		});
 	};
+
+	let bgColorRGB;
 </script>
 
 {#key page._id}
@@ -138,6 +142,11 @@
 								<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
 							{/each}
 						</select>
+					</div>
+
+					<div>
+						<!-- <input type="color" id="head" name="head" value="#e66465" /> -->
+						<!-- <ColorPicker bind:rgb={bgColorRGB} /> -->
 					</div>
 
 					<h2 class="text-2xl mb-4 font-bold _title">Color Themes</h2>
