@@ -54,7 +54,7 @@
 	};
 
 	let isTooLight = (color) => {
-		return getLuminance(color) > 0.8;
+		return getLuminance(color) > 0.9;
 		// color = color.toLowerCase();
 
 		// let a = ['d', 'e', 'f'].includes(color[1]) ? 1 : 0;
@@ -106,7 +106,7 @@
 					...(isTooDark(darkColors[i])
 						? {
 								sectionBackgroundColor: 'rgba(255,255,255,0.1)',
-								sectionTheme: 'light'
+								sectionTheme: 'dark'
 						  }
 						: {
 								sectionBackgroundColor: DARK_SECTION_COLOR,
@@ -121,8 +121,8 @@
 					accentColor: darkColors[i],
 					...(isTooLight(lightColors[i])
 						? {
-								sectionBackgroundColor: 'rgba(0,0,0,0.07)',
-								sectionTheme: 'dark'
+								sectionBackgroundColor: 'rgba(0,0,0,0.05)',
+								sectionTheme: 'light'
 						  }
 						: {
 								sectionBackgroundColor: LIGHT_SECTION_COLOR,
@@ -200,14 +200,14 @@
 	export let page;
 
 	let setTheme = (theme) => {
-		page.theme = theme;
+		page.theme = { ...theme };
 
 		setTimeout(() => {
 			isColorPickerShown = false;
 		}, 0);
 	};
 
-	if (page.theme?.textColor) {
+	if (!page.theme?.textColor) {
 		page.theme = {
 			textColor: '#111111',
 			accentColor: '#000000',
@@ -216,6 +216,7 @@
 	}
 
 	$: if (!page.theme) {
+		degugger;
 		page.theme = themes[0];
 	}
 

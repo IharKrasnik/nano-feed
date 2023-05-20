@@ -443,7 +443,7 @@
 						{/if}
 					</div>
 
-					{#key $feedLastUpdatedOn}
+					{#key $feedLastUpdatedOn + page.theme?.sectionTheme}
 						<iframe
 							id="iframeResize"
 							loading="lazy"

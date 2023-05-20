@@ -80,7 +80,6 @@ pSBC.pSBCr = (d) => {
 };
 
 export let lighten = (color, percentage) => {
-	debugger;
 	return pSBC(percentage, color);
 };
 
