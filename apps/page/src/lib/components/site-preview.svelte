@@ -446,7 +446,7 @@
 						</span>
 					</div>
 					<div class="text-3xl font-bold mb-8">
-						{page.title}
+						{@html page.title}
 					</div>
 				</div>
 
