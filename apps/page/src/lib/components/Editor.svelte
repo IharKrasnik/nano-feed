@@ -1470,7 +1470,11 @@ See you!
 			<!-- PREVIEW -->
 
 			{#if page.name || page.title}
-				<div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
+				<div
+					class="relative ml-[426px] _preview p-4 mx-4"
+					in:fade={{ delay: 150 }}
+					style="padding-left: 75px;"
+				>
 					{#if page._id}
 						<div class="sticky top-[20px] w-full z-50 h-[0px]">
 							<div class="mx-auto">
