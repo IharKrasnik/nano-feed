@@ -163,11 +163,17 @@
 		}, 0);
 	};
 
+	if (page.theme?.textColor) {
+		page.theme = {
+			textColor: '#111111',
+			accentColor: '#000000',
+			backgroundColor: '#ffffff'
+		};
+	}
+
 	$: if (!page.theme) {
 		page.theme = themes[0];
 	}
-
-	page.theme = page.theme || {};
 
 	let updateFonts = () => {
 		let fontPair = fontPairs.find((p) => p.id === page.theme.fontPairId);
