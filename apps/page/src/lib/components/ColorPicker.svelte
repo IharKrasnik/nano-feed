@@ -216,7 +216,6 @@
 	}
 
 	$: if (!page.theme) {
-		degugger;
 		page.theme = themes[0];
 	}
 
