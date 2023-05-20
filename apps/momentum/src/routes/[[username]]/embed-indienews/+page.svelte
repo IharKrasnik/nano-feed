@@ -1,4 +1,6 @@
 <script>
+	export const ssr = false;
+
 	import moment from 'moment';
 	import _ from 'lodash';
 	import { page } from '$app/stores';

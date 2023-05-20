@@ -1,4 +1,6 @@
 <script>
+	export const ssr = false;
+
 	import { page } from '$app/stores';
 	import { STREAM_URL } from 'lib/env';
 
