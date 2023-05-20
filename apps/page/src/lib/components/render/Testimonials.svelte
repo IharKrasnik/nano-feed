@@ -5,7 +5,7 @@
 	export let section;
 </script>
 
-<div class="w-full flex flex-col sm:flex-row justify-center py-4 sm:py-8">
+<div class="p-4 sm:p-8 w-full flex flex-col sm:flex-row justify-center">
 	{#each section.testimonials || [] as testimonial, i}
 		<div
 			class="p-4 rounded-2xl w-full sm:max-w-[350px] mr-4 mb-4 sm:mb-0 bg-section"

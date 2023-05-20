@@ -350,7 +350,9 @@
 						</div>
 
 						{#if isMounted && page.testimonials?.length}
-							<div class="w-full flex flex-col sm:flex-row justify-center mt-16 sm:mt-32">
+							<div
+								class="p-4 sm:p-8 w-full flex flex-col sm:flex-row justify-center mt-16 sm:mt-32"
+							>
 								{#each page.testimonials as testimonial, i}
 									<div
 										class="p-4 rounded-2xl w-full sm:max-w-[350px] mr-4 mb-4 sm:mb-0 bg-section"
@@ -380,7 +382,7 @@
 
 					{#if !isAboveTheFold}
 						{#if page.sections?.length}
-							<div class={page.streamSlug ? '' : 'pb-[200px]'}>
+							<div class={page.streamSlug ? '' : ''}>
 								{#each page.sections as section, i}
 									{#if $sectionToEdit && $sectionToEdit.id === section.id}
 										<div bind:this={editEl}>
@@ -392,7 +394,15 @@
 										</div>
 										{focusEditEl() || ''}
 									{:else}
-										<RenderSection bind:page bind:section />
+										<RenderSection
+											bind:page
+											bind:section
+											style={page.theme?.isZebra && i % 2 === 0
+												? page.theme.theme === 'dark'
+													? `background-color: ${lighten(styles['background-color'], 0.01)};`
+													: `background-color: ${darken(styles['background-color'], 0.08)};`
+												: ''}
+										/>
 									{/if}
 								{/each}
 							</div>

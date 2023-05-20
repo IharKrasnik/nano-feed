@@ -79,7 +79,7 @@ pSBC.pSBCr = (d) => {
 	return x;
 };
 
-export let lighten = (color, percentage) => {
+export let lighten = (color, percentage = 0.1) => {
 	return pSBC(percentage, color);
 };
 

@@ -97,6 +97,7 @@
 		for (let i = 0; i < limit; i++) {
 			if (i % 2) {
 				result.push({
+					isZebra: true,
 					backgroundColor: darkColors[i],
 					textColor: '#f5f5f5',
 					// textColor: lightColors[limit - i - 1],
@@ -115,6 +116,7 @@
 				});
 			} else {
 				result.push({
+					isZebra: true,
 					backgroundColor: lightColors[i],
 					textColor: '#111111',
 					// textColor: darkColors[limit - i - 1],
@@ -133,6 +135,25 @@
 				});
 			}
 		}
+
+		result.forEach((t) => {
+			t.theme = isDarkColor(t.backgroundColor) ? 'dark' : 'light';
+			t.buttonTheme = isDarkColor(t.accentColor) ? 'dark' : 'light';
+
+			if (t.theme === 'dark') {
+				t.inputBackground = 'transparent';
+				t.inputColor = '#ffffff';
+			} else {
+				t.inputBackground = '#f5f5f5';
+				t.inputColor = '#222222';
+			}
+
+			if (t.buttonTheme === 'dark') {
+				t.buttonColor = '#ffffff';
+			} else {
+				t.buttonColor = '#222222';
+			}
+		});
 
 		themes = result;
 	};
@@ -178,25 +199,6 @@
 	// 	}
 	// ];
 
-	themes.forEach((t) => {
-		t.theme = isDarkColor(t.backgroundColor) ? 'dark' : 'light';
-		t.buttonTheme = isDarkColor(t.accentColor) ? 'dark' : 'light';
-
-		if (t.theme === 'dark') {
-			t.inputBackground = 'transparent';
-			t.inputColor = '#ffffff';
-		} else {
-			t.inputBackground = '#f5f5f5';
-			t.inputColor = '#222222';
-		}
-
-		if (t.buttonTheme === 'dark') {
-			t.buttonColor = '#ffffff';
-		} else {
-			t.buttonColor = '#222222';
-		}
-	});
-
 	export let page;
 
 	let setTheme = (theme) => {
@@ -209,6 +211,7 @@
 
 	if (!page.theme?.textColor) {
 		page.theme = {
+			isZebra: true,
 			textColor: '#111111',
 			accentColor: '#000000',
 			backgroundColor: '#ffffff'
