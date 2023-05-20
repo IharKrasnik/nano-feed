@@ -5,6 +5,7 @@
 	import { page as sveltePage } from '$app/stores';
 	import { fly, fade, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import { darken, lighten } from 'lib/helpers/color';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
@@ -104,7 +105,7 @@
 		styles = {
 			'title-font': page.theme?.titleFont || fontPairs[0].title,
 			'text-font': page.theme?.textFont || fontPairs[0].text,
-			'background-color': page.theme?.backgroundColor || 'white',
+			'background-color': page.theme?.backgroundColor || '#ffffff',
 			'text-color': page.theme?.textColor || '#111',
 			'accent-color': page.theme?.accentColor || '#000',
 			'section-background-color': page.theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)',
@@ -220,8 +221,8 @@
 		{/if}
 
 		{#if isMounted}
-			<div class="sticky bg-site z-20 w-full sm:p-4 p-8" in:fade={{ duration: 150 }}>
-				<div class="_header flex md:justify-between items-center justify-center">
+			<div class="sticky bg-site z-20 w-full" in:fade={{ duration: 150 }}>
+				<div class="sm:p-4 p-8 _header flex md:justify-between items-center justify-center">
 					<a class="flex items-center shrink-0 _logo" href="">
 						<Emoji class="mr-2" emoji={page.logo} />
 
@@ -257,7 +258,7 @@
 						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
 						<div
-							class="flex h-full w-full {page.demoUrl
+							class="sm:p-4 p-8 flex h-full w-full {page.demoUrl
 								? `flex-col ${
 										page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
 								  } justify-between items-center`
@@ -373,7 +374,7 @@
 					{#if !isAboveTheFold}
 						{#if page.sections?.length}
 							<div class={page.streamSlug ? '' : 'pb-[200px]'}>
-								{#each page.sections as section}
+								{#each page.sections as section, i}
 									{#if $sectionToEdit && $sectionToEdit.id === section.id}
 										<div bind:this={editEl}>
 											<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧</div>
@@ -452,9 +453,9 @@
 
 			{#if page.streamSlug || page.sections?.length}
 				<div
-					class="w-full text-center bg-[#fafafa] {isAboveTheFold
+					class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold
 						? ''
-						: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center p-4"
+						: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
 					style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page
 						.theme?.theme === 'dark'
 						? '#222'

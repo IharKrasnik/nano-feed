@@ -97,10 +97,12 @@
 	}
 
 	page.theme = page.theme || {};
-	let selectedFontPairId = page.theme.fontPairId;
 
 	let updateFonts = () => {
-		let fontPair = fontPairs.find((p) => p.id === selectedFontPairId);
+		let fontPair = fontPairs.find((p) => p.id === page.theme.fontPairId);
+
+		page.theme.titleFont = fontPair.title;
+		page.theme.textFont = fontPair.text;
 
 		themes = themes.map((t) => {
 			t.titleFont = fontPair.title;
@@ -121,7 +123,6 @@
 			.backgroundColor}; color: {page.theme.textColor}"
 		on:click={() => {
 			isColorPickerShown = true;
-			selectedFontPairId = page.theme.fontPairId;
 		}}
 	>
 		<div class="text-xs">Aa</div>
@@ -134,24 +135,78 @@
 				}}
 			>
 				<div class="p-8">
-					<h2 class="text-2xl mb-4 font-bold _title">Fonts</h2>
+					<h2 class="text-2xl mb-4 font-bold _title">Styles</h2>
 
-					<div class="mt-2 mb-8">
-						<select bind:value={selectedFontPairId} on:change={updateFonts}>
-							{#each fontPairs as fontPair}
-								<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
-							{/each}
-						</select>
-					</div>
+					<div class="flex justify-between mb-16">
+						<div>
+							<div class="mt-2 mb-8">
+								<select bind:value={page.theme.fontPairId} on:change={updateFonts}>
+									{#each fontPairs as fontPair}
+										<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
+									{/each}
+								</select>
+							</div>
 
-					<div>
-						<!-- <input type="color" id="head" name="head" value="#e66465" /> -->
-						<!-- <ColorPicker bind:rgb={bgColorRGB} /> -->
+							<div>
+								<div class="text-sm mb-2">Background Color</div>
+
+								<input
+									type="color"
+									id="head"
+									name="head"
+									bind:value={page.theme.backgroundColor}
+									on:input={() => {
+										let newTheme = isDarkColor(page.theme.backgroundColor) ? 'dark' : 'light';
+
+										if (page.theme.theme !== newTheme) {
+											page.theme = {
+												...page.theme,
+												theme: newTheme,
+												textColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
+											};
+										}
+									}}
+								/>
+							</div>
+
+							<div>
+								<div class="text-sm mb-2">Accent Color (buttons and highlight)</div>
+
+								<input
+									type="color"
+									id="head"
+									name="head"
+									bind:value={page.theme.accentColor}
+									on:input={() => {
+										let newTheme = isDarkColor(page.theme.accentColor) ? 'dark' : 'light';
+
+										if (page.theme.buttonTheme !== newTheme) {
+											page.theme = {
+												...page.theme,
+												buttonTheme: newTheme,
+												buttonColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
+											};
+										}
+									}}
+								/>
+							</div>
+						</div>
+
+						<div
+							class="p-4 bg-[#f5f5f5] overflow-hidden w-full max-h-[300px] overflow-y-hidden pointer-events-none max-w-[600px] rounded-xl"
+						>
+							<!-- <BrowserFrame scale={'0.4'}> -->
+							<div style="zoom: .5;" class="rounded-2xl transition" on:click={() => setTheme(t)}>
+								<SitePreview isAboveTheFold={true} maxHeight="350px;" page={{ ...page }} />
+							</div>
+							<!-- </BrowserFrame> -->
+						</div>
 					</div>
 
 					<h2 class="text-2xl mb-4 font-bold _title">Color Themes</h2>
+					<div>Choose from prepared schemes</div>
 
-					{#key selectedFontPairId}
+					{#key page.theme.fontPairId}
 						<div class="bg-white mt-8" in:fly={{ y: 50, duration: 150 }}>
 							<div class="w-full grid grid-cols-3 gap-4">
 								{#each themes as t}
