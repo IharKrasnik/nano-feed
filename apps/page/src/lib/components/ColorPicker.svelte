@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import { fly } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
@@ -24,44 +25,114 @@
 		}
 	});
 
-	let themes = [
-		{
-			backgroundColor: '#ffffff',
-			textColor: '#111',
-			accentColor: '#000000',
-			sectionBackgroundColor: 'rgb(128, 127, 128, 0.05)'
-		},
-		{
-			backgroundColor: '#0C120C',
-			textColor: '#eeeeee',
-			accentColor: '#eeeeee',
-			sectionBackgroundColor: '#212121'
-		},
-		{
-			backgroundColor: '#0C1020',
-			textColor: '#D5CCB2',
-			accentColor: '#A4368D',
-			sectionBackgroundColor: '#222'
-		},
-		{
-			backgroundColor: '#F4FCFC',
-			textColor: '#000000',
-			accentColor: '#4350D1',
-			sectionBackgroundColor: '#FFFFFF'
-		},
-		{
-			backgroundColor: '#F5DCCA',
-			textColor: '#000000',
-			accentColor: '#000000',
-			sectionBackgroundColor: '#FFFFFF'
-		},
-		{
-			backgroundColor: '#6733ff',
-			textColor: '#fffdfc',
-			accentColor: '#fff9e5',
-			sectionBackgroundColor: '#fff'
+	let colors = {
+		all: [
+			'#ffffff',
+			'#000000',
+			'#0C120C',
+			'#0C1020',
+			'#A4368D',
+			'#F5DCCA',
+			'#6733ff',
+			'#41d8ce',
+			'#29e783',
+			'#283fe6',
+			'#e6e027',
+			'#03005c',
+			'#c6ffad',
+			'#fb00ff',
+			'#00474d',
+			'#00ebff'
+		],
+		dark: [],
+		light: []
+	};
+
+	colors.all.forEach((color) => {
+		if (isDarkColor(color)) {
+			colors.dark.push(color);
+		} else {
+			colors.light.push(color);
 		}
-	];
+	});
+
+	let themes;
+
+	let generateThemes = () => {
+		let limit = 6;
+
+		let lightColors = _.take(_.shuffle(colors.light), limit);
+		let darkColors = _.take(_.shuffle(colors.dark), limit);
+
+		let result = [];
+
+		for (let i = 0; i < limit; i++) {
+			if (i % 2) {
+				result.push({
+					backgroundColor: darkColors[i],
+					textColor: '#f5f5f5',
+					// textColor: lightColors[limit - i - 1],
+					accentColor: lightColors[i],
+					buttonColor: '#111111',
+					sectionBackgroundColor: '#212121',
+					sectionTheme: 'dark'
+				});
+			} else {
+				result.push({
+					backgroundColor: lightColors[i],
+					textColor: '#111111',
+					// textColor: darkColors[limit - i - 1],
+					accentColor: darkColors[i],
+					buttonColor: '#f5f5f5',
+					sectionBackgroundColor: 'rgb(128, 127, 128, 0.05)',
+					sectionTheme: 'light'
+				});
+			}
+		}
+
+		themes = result;
+	};
+
+	generateThemes();
+
+	// let themes = [
+	// 	{
+	// 		backgroundColor: '#ffffff',
+	// 		textColor: '#111111',
+	// 		accentColor: '#000000',
+	// 		sectionBackgroundColor: 'rgb(128, 127, 128, 0.05)'
+	// 	},
+	// 	{
+	// 		backgroundColor: '#0C120C',
+	// 		textColor: '#eeeeee',
+	// 		accentColor: '#eeeeee',
+	// 		sectionBackgroundColor: '#212121'
+	// 	},
+	// 	{
+	// 		backgroundColor: '#0C1020',
+	// 		textColor: '#D5CCB2',
+	// 		accentColor: '#A4368D',
+	// 		sectionBackgroundColor: '#222'
+	// 	},
+	// 	{
+	// 		backgroundColor: '#F4FCFC',
+	// 		textColor: '#000000',
+	// 		accentColor: '#4350D1',
+	// 		sectionBackgroundColor: '#FFFFFF'
+	// 	},
+	// 	{
+	// 		backgroundColor: '#F5DCCA',
+	// 		textColor: '#000000',
+	// 		accentColor: '#000000',
+	// 		sectionBackgroundColor: '#FFFFFF'
+	// 	},
+	// 	{
+	// 		backgroundColor: '#6733ff',
+	// 		textColor: '#fffdfc',
+	// 		accentColor: '#fff9e5',
+	// 		sectionBackgroundColor: '#fff'
+	// 	}
+	// ];
 
 	themes.forEach((t) => {
 		t.theme = isDarkColor(t.backgroundColor) ? 'dark' : 'light';
@@ -123,6 +194,7 @@
 			.backgroundColor}; color: {page.theme.textColor}"
 		on:click={() => {
 			isColorPickerShown = true;
+			generateThemes();
 		}}
 	>
 		<div class="text-xs">Aa</div>
@@ -139,78 +211,97 @@
 
 					<div class="flex justify-between mb-16">
 						<div>
-							<div class="mt-2 mb-8">
+							<div class="flex">
+								<div class="_section">
+									<div class="text-sm font-bold">Background Color</div>
+									<div class="text-sm mb-2 opacity-80">Page background color</div>
+
+									<input
+										type="color"
+										id="head"
+										name="head"
+										bind:value={page.theme.backgroundColor}
+										on:input={() => {
+											let newTheme = isDarkColor(page.theme.backgroundColor) ? 'dark' : 'light';
+
+											if (page.theme.theme !== newTheme) {
+												page.theme = {
+													...page.theme,
+													theme: newTheme,
+													textColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
+												};
+											}
+										}}
+									/>
+								</div>
+
+								<div class="ml-2 _section">
+									<div class="text-sm font-bold">Accent Color</div>
+									<div class="text-sm mb-2 opacity-80">Buttons and highlight color</div>
+
+									<input
+										type="color"
+										id="head"
+										name="head"
+										bind:value={page.theme.accentColor}
+										on:input={() => {
+											let newTheme = isDarkColor(page.theme.accentColor) ? 'dark' : 'light';
+
+											if (page.theme.buttonTheme !== newTheme) {
+												page.theme = {
+													...page.theme,
+													buttonTheme: newTheme,
+													buttonColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
+												};
+											}
+										}}
+									/>
+								</div>
+							</div>
+							<div class="_section mt-2 mb-8">
+								<div class="text-sm font-bold">Fonts</div>
+								<div class="text-sm mb-4 opacity-80">Select your font below</div>
+
 								<select bind:value={page.theme.fontPairId} on:change={updateFonts}>
 									{#each fontPairs as fontPair}
 										<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
 									{/each}
 								</select>
 							</div>
-
-							<div>
-								<div class="text-sm mb-2">Background Color</div>
-
-								<input
-									type="color"
-									id="head"
-									name="head"
-									bind:value={page.theme.backgroundColor}
-									on:input={() => {
-										let newTheme = isDarkColor(page.theme.backgroundColor) ? 'dark' : 'light';
-
-										if (page.theme.theme !== newTheme) {
-											page.theme = {
-												...page.theme,
-												theme: newTheme,
-												textColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
-											};
-										}
-									}}
-								/>
-							</div>
-
-							<div>
-								<div class="text-sm mb-2">Accent Color (buttons and highlight)</div>
-
-								<input
-									type="color"
-									id="head"
-									name="head"
-									bind:value={page.theme.accentColor}
-									on:input={() => {
-										let newTheme = isDarkColor(page.theme.accentColor) ? 'dark' : 'light';
-
-										if (page.theme.buttonTheme !== newTheme) {
-											page.theme = {
-												...page.theme,
-												buttonTheme: newTheme,
-												buttonColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
-											};
-										}
-									}}
-								/>
-							</div>
 						</div>
 
-						<div
-							class="p-4 bg-[#f5f5f5] overflow-hidden w-full max-h-[300px] overflow-y-hidden pointer-events-none max-w-[600px] rounded-xl"
-						>
+						<div class="overflow-hidden w-full overflow-y-hidden max-w-[500px] rounded-xl">
 							<!-- <BrowserFrame scale={'0.4'}> -->
 							<div style="zoom: .5;" class="rounded-2xl transition" on:click={() => setTheme(t)}>
-								<SitePreview isAboveTheFold={true} maxHeight="350px;" page={{ ...page }} />
+								<BrowserFrame>
+									<div class="max-h-[500px] overflow-y-scroll">
+										<SitePreview isEmbed maxHeight="450px;" page={{ ...page }} />
+									</div>
+								</BrowserFrame>
 							</div>
 							<!-- </BrowserFrame> -->
 						</div>
 					</div>
 
-					<h2 class="text-2xl mb-4 font-bold _title">Color Themes</h2>
-					<div>Choose from prepared schemes</div>
+					<div class="flex justify-between items-center">
+						<div>
+							<h2 class="text-2xl font-bold _title">Design Library</h2>
+
+							<div class="flex w-full flex justify-between items-center mb-4">
+								<div>Update your design in 1 click. Or generate more 👉</div>
+							</div>
+						</div>
+
+						<button class="_button _primary cursor-pointer" on:click={generateThemes}
+							>💥 Generate more designs</button
+						>
+					</div>
 
 					{#key page.theme.fontPairId}
 						<div class="bg-white mt-8" in:fly={{ y: 50, duration: 150 }}>
 							<div class="w-full grid grid-cols-3 gap-4">
 								{#each themes as t}
-									<div class="p-2 w-full max-h-[200px] overflow-y-hidden cursor-pointer">
+									<div class="p-2 w-full max-h-[250px] overflow-y-hidden cursor-pointer">
 										<!-- <BrowserFrame scale={'0.4'}> -->
 										<div
 											style="zoom: .5;"

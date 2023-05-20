@@ -33,6 +33,8 @@
 		bgColor: '#D98324'
 	};
 
+	export let isEmbed = false;
+
 	export let isNoBadge = false;
 
 	export let maxHeight;
@@ -253,7 +255,7 @@
 					<div
 						bind:this={$aboveTheFoldEl}
 						class="_content pb-16 pt-32 {!page.testimonials?.length
-							? `${isAboveTheFold ? '' : 'min-h-screen'} flex items-center`
+							? `${isAboveTheFold || isEmbed ? '' : 'min-h-screen'} flex items-center`
 							: ''}"
 						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
@@ -337,7 +339,12 @@
 
 							{#if page.demoUrl}
 								<div class="w-full sm:max-w-[600px] mt-16 sm:mt-0 sm:ml-8">
-									<RenderUrl class="w-full flex justify-end" url={page.demoUrl} imgClass="" />
+									<RenderUrl
+										isLazy={false}
+										class="w-full flex justify-end"
+										url={page.demoUrl}
+										imgClass=""
+									/>
 								</div>
 							{/if}
 						</div>
@@ -442,10 +449,10 @@
 							loading="lazy"
 							on:load={resize}
 							class="w-full sticky z-20 pb-[200px] bg-site"
-							src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.theme ||
+							src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.sectionTheme ||
 								'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
 								'section-background-color'
-							]}"
+							].replace('#', '%23')}"
 						/>
 					{/key}
 				</div>
@@ -453,7 +460,7 @@
 
 			{#if page.streamSlug || page.sections?.length}
 				<div
-					class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold
+					class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
 						? ''
 						: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
 					style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page

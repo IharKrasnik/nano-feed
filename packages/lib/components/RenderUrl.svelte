@@ -11,6 +11,7 @@
 	export let style = '';
 
 	export { clazz as class };
+	export let isLazy = true;
 	export let url;
 	export let imgClass = '';
 
@@ -84,7 +85,11 @@
 				<video class="max-w-[600px] w-full mx-auto {imgClass}" autoplay muted loop src={url} />
 			{:else}
 				{#key url}
-					<img class="rounded-xl {imgClass} lazyload" data-src={url} />
+					{#if isLazy}
+						<img class="rounded-xl {imgClass} lazyload" data-src={url} />
+					{:else}
+						<img class="rounded-xl {imgClass}" src={url} />
+					{/if}
 				{/key}
 			{/if}
 		</div>
