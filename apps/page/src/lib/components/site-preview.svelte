@@ -88,12 +88,29 @@
 	let cssVarStyles;
 	let styles;
 
+	export let isAboveTheFold = false;
+
+	let fontPairs = [
+		{ title: 'Archivo', text: 'Inter' },
+		{ title: 'Calistoga', text: 'IBM Plex Sans' },
+		{ title: 'Chillax', text: 'Gilroy' },
+		{ title: 'Fraunces', text: 'Poppins' },
+		{ title: 'Syne', text: 'Syne' },
+		{ title: 'Quattrocento', text: 'Questrial' },
+		{ title: 'Albert Sans', text: 'Barlow' }
+	];
+
 	$: if (page) {
 		styles = {
+			'title-font': page.theme?.titleFont || fontPairs[0].title,
+			'text-font': page.theme?.textFont || fontPairs[0].text,
 			'background-color': page.theme?.backgroundColor || 'white',
 			'text-color': page.theme?.textColor || '#111',
 			'accent-color': page.theme?.accentColor || '#000',
-			'section-background-color': page.theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)'
+			'section-background-color': page.theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)',
+			'input-background': page.theme?.inputBackground || '#f5f5f5',
+			'input-color': page.theme?.inputColor || '#222222',
+			'button-color': page.theme?.buttonColor || '#fff'
 		};
 
 		cssVarStyles = Object.entries(styles)
@@ -235,7 +252,7 @@
 					<div
 						bind:this={$aboveTheFoldEl}
 						class="_content pb-16 pt-32 {!page.testimonials?.length
-							? 'min-h-screen flex items-center'
+							? `${isAboveTheFold ? '' : 'min-h-screen'} flex items-center`
 							: ''}"
 						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
@@ -268,8 +285,8 @@
 								{/if}
 
 								<div
-									class="_input_container {page.isCollectEmails
-										? '_border'
+									class="_input_container {page.isCollectEmails && !isSubmitted
+										? '_border '
 										: ''} flex items-center {page.demoUrl ? '' : 'mx-auto'} {page.isCollectEmails
 										? 'w-full ' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
 										: ''}"
@@ -353,23 +370,25 @@
 						{/if}
 					</div>
 
-					{#if page.sections?.length}
-						<div class={page.streamSlug ? '' : 'pb-[200px]'}>
-							{#each page.sections as section}
-								{#if $sectionToEdit && $sectionToEdit.id === section.id}
-									<div bind:this={editEl}>
-										<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧</div>
-										<div>
-											<RenderSection bind:page bind:section={$sectionToEdit} />
+					{#if !isAboveTheFold}
+						{#if page.sections?.length}
+							<div class={page.streamSlug ? '' : 'pb-[200px]'}>
+								{#each page.sections as section}
+									{#if $sectionToEdit && $sectionToEdit.id === section.id}
+										<div bind:this={editEl}>
+											<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧</div>
+											<div>
+												<RenderSection bind:page bind:section={$sectionToEdit} />
+											</div>
+											<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
 										</div>
-										<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
-									</div>
-									{focusEditEl() || ''}
-								{:else}
-									<RenderSection bind:page bind:section />
-								{/if}
-							{/each}
-						</div>
+										{focusEditEl() || ''}
+									{:else}
+										<RenderSection bind:page bind:section />
+									{/if}
+								{/each}
+							</div>
+						{/if}
 					{/if}
 				</div>
 			</div>
@@ -379,124 +398,129 @@
 
 		<!-- <RenderFAQ bind:page /> -->
 
-		{#if page.streamSlug}
-			<div>
-				<div class="sticky z-20 py-4 sm:py-16 bg-site">
-					<RenderSection
-						class="p-0"
-						section={{
-							columns: 1,
-							items: [
-								{
-									title: 'We Build In Public',
-									description: 'Follow our journey in social network and blogs.'
-								}
-							]
-						}}
-					/>
+		{#if !isAboveTheFold}
+			{#if page.streamSlug}
+				<div>
+					<div class="sticky z-20 py-4 sm:py-16 bg-site">
+						<RenderSection
+							class="p-0"
+							section={{
+								columns: 1,
+								items: [
+									{
+										title: 'We Build In Public',
+										description: 'Follow our journey in social network and blogs.'
+									}
+								]
+							}}
+						/>
 
-					{#if page.links}
-						<div class="flex justify-center w-full my-4">
-							{#if page.links.twitter}
-								<div class="w-[35px] h-[35px] mr-2">
-									<a href={page.links.twitter} class="scale-110" target="_blank">
-										<TwitterIcon />
-									</a>
-								</div>
-							{/if}
-							{#if page.links.linkedin}
-								<div class="w-[35px] h-[35px] mr-2">
-									<a href={page.links.linkedin} target="_blank">
-										<LinkedInIcon />
-									</a>
-								</div>
-							{/if}
-						</div>
-					{/if}
-				</div>
-
-				{#key $feedLastUpdatedOn}
-					<iframe
-						id="iframeResize"
-						loading="lazy"
-						on:load={resize}
-						class="w-full sticky z-20 pb-[200px] bg-site"
-						src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.theme ||
-							'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
-							'section-background-color'
-						]}"
-					/>
-				{/key}
-			</div>
-		{/if}
-
-		{#if page.streamSlug || page.sections?.length}
-			<div
-				class="w-full text-center bg-[#fafafa] min-h-screen max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center p-4"
-				style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page
-					.theme?.theme === 'dark'
-					? '#222'
-					: '#fafafa'}"
-			>
-				<div class="mx-auto max-w-[600px] flex flex-col items-center justify-center">
-					<div class="flex items-center text-lg my-4">
-						<Emoji class="mr-2" emoji={page.logo} />
-						<span>
-							{page.name}
-						</span>
-					</div>
-					<div class="text-3xl font-bold mb-8">
-						{@html page.title}
-					</div>
-				</div>
-
-				<div
-					class="_input_container flex items-center mx-auto 
-				{page.isCollectEmails
-						? 'w-full _border ' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
-						: ''}"
-				>
-					<form
-						class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
-						on:submit|preventDefault={submitEmail}
-					>
-						{#if !isSubmitted}
-							{#if page.isCollectEmails}
-								<input
-									class="_input _email-input w-full"
-									placeholder="Your Email"
-									type="email"
-									required
-									bind:this={inputEl}
-									bind:value={email}
-									disabled={isSubmitted}
-									in:fade={{ duration: 150 }}
-								/>
-								<button
-									type="submit"
-									class="_input_button justify-center {page.isCollectEmails
-										? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-										: ''}">{page.callToAction}</button
-								>
-							{:else}
-								<a href={page.actionUrl} target="_blank" class="button _input_button">
-									{page.callToAction}
-								</a>
-							{/if}
-						{:else}
-							<div>💥 Thank you!</div>
-
-							{#if page.actionUrl}
-								<div class="mt-8 opacity-70">Redirecting...</div>
-							{/if}
+						{#if page.links}
+							<div class="flex justify-center w-full my-4">
+								{#if page.links.twitter}
+									<div class="w-[35px] h-[35px] mr-2">
+										<a href={page.links.twitter} class="scale-110" target="_blank">
+											<TwitterIcon />
+										</a>
+									</div>
+								{/if}
+								{#if page.links.linkedin}
+									<div class="w-[35px] h-[35px] mr-2">
+										<a href={page.links.linkedin} target="_blank">
+											<LinkedInIcon />
+										</a>
+									</div>
+								{/if}
+							</div>
 						{/if}
-					</form>
-				</div>
-			</div>
-		{/if}
+					</div>
 
-		{#if !isNoBadge && !page.isNoBadge}
-			<PageBadge />
+					{#key $feedLastUpdatedOn}
+						<iframe
+							id="iframeResize"
+							loading="lazy"
+							on:load={resize}
+							class="w-full sticky z-20 pb-[200px] bg-site"
+							src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.theme ||
+								'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
+								'section-background-color'
+							]}"
+						/>
+					{/key}
+				</div>
+			{/if}
+
+			{#if page.streamSlug || page.sections?.length}
+				<div
+					class="w-full text-center bg-[#fafafa] {isAboveTheFold
+						? ''
+						: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center p-4"
+					style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page
+						.theme?.theme === 'dark'
+						? '#222'
+						: '#fafafa'}"
+				>
+					<div class="mx-auto max-w-[600px] flex flex-col items-center justify-center">
+						<div class="flex items-center text-lg my-4">
+							<Emoji class="mr-2" emoji={page.logo} />
+							<span>
+								{page.name}
+							</span>
+						</div>
+						<div class="_title text-3xl font-bold mb-8">
+							{@html page.title}
+						</div>
+					</div>
+
+					<div
+						class="_input_container flex items-center mx-auto 
+				{page.isCollectEmails
+							? `w-full ${isSubmitted ? '' : '_border '}` +
+							  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
+							: ''}"
+					>
+						<form
+							class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
+							on:submit|preventDefault={submitEmail}
+						>
+							{#if !isSubmitted}
+								{#if page.isCollectEmails}
+									<input
+										class="_input _email-input w-full"
+										placeholder="Your Email"
+										type="email"
+										required
+										bind:this={inputEl}
+										bind:value={email}
+										disabled={isSubmitted}
+										in:fade={{ duration: 150 }}
+									/>
+									<button
+										type="submit"
+										class="_input_button justify-center {page.isCollectEmails
+											? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
+											: ''}">{page.callToAction}</button
+									>
+								{:else}
+									<a href={page.actionUrl} target="_blank" class="button _input_button">
+										{page.callToAction}
+									</a>
+								{/if}
+							{:else}
+								<div>💥 Thank you!</div>
+
+								{#if page.actionUrl}
+									<div class="mt-8 opacity-70">Redirecting...</div>
+								{/if}
+							{/if}
+						</form>
+					</div>
+				</div>
+			{/if}
+
+			{#if !isNoBadge && !page.isNoBadge}
+				<PageBadge />
+			{/if}
 		{/if}
 	</div>
 </div>
@@ -512,6 +536,7 @@
 
 	.color-site {
 		color: var(--text-color, black);
+		font-family: var(--text-font);
 	}
 
 	._root {
@@ -526,7 +551,7 @@
 	}
 
 	._logo {
-		font-family: Archivo;
+		font-family: var(--title-font);
 		font-weight: bold;
 		font-size: 18px;
 		margin-top: 12px;
@@ -536,6 +561,10 @@
 		margin-top: -40px;
 	}
 
+	:global(._title) {
+		font-family: Archivo;
+	}
+
 	._title {
 		font-family: Archivo;
 		font-size: 36px;
@@ -543,10 +572,14 @@
 		margin-bottom: 32px;
 	}
 
+	:global(._root ._title) {
+		font-family: var(--title-font) !important;
+	}
+
 	:global(._title b, ._title em) {
 		background-color: var(--accent-color);
+		color: var(--button-color);
 		opacity: 0.9;
-		color: white;
 	}
 
 	._subtitle {
@@ -574,8 +607,8 @@
 	}
 
 	._input {
-		background: #f5f5f5;
-		color: #222;
+		background: var(--input-background);
+		color: var(--input-color);
 		width: 100%;
 		padding: 10px 18px;
 		border-radius: 20px;
@@ -587,8 +620,8 @@
 		border-radius: 20px;
 		padding: 5px 20px;
 
-		color: white;
 		background-color: var(--accent-color);
+		color: var(--button-color);
 	}
 
 	._input_button {

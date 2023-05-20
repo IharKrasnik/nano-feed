@@ -134,4 +134,20 @@ a.button.tab.selected {
 	color: gray;
 }
 
-white-space: pre-wrap;
+@font-face {
+	font-family: 'Chillax';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/Chillax-Bold.otf');
+}
+
+@font-face {
+	font-family: 'Gilroy';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/gilroy/Radomir%20Tinkov%20-%20Gilroy-Regular.otf');
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: 'Gilroy';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/gilroy/Radomir%20Tinkov%20-%20Gilroy-Bold.otf');
+
+	font-weight: bold;
+}
