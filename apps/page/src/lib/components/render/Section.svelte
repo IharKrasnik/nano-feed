@@ -54,13 +54,13 @@
 			{/if}
 
 			{#if section.title}
-				<h2 class="_title sm:text-4xl text-3xl font-bold mb-4">
+				<h2 class="_title sm:text-4xl text-3xl font-bold mb-4 sm:max-w-[750px] sm:mx-auto">
 					{@html section.title}
 				</h2>
 			{/if}
 
 			{#if section.description}
-				<h3 class="{descriptionStyle[1]} whitespace-pre-wrap">
+				<h3 class="{descriptionStyle[1]} whitespace-pre-wrap sm:max-w-[600px] sm:mx-auto">
 					{@html section.description}
 				</h3>
 			{/if}

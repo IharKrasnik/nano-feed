@@ -1475,7 +1475,7 @@ See you!
 					in:fade={{ delay: 150 }}
 					style="padding-left: 75px;"
 				>
-					{#if page._id}
+					{#if page._id && !$sectionToEdit}
 						<div class="sticky top-[20px] w-full z-50 h-[0px]">
 							<div class="mx-auto">
 								{#if isJustCreated}

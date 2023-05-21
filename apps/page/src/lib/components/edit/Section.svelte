@@ -17,6 +17,8 @@
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 
+	import striptags from 'striptags';
+
 	export let section;
 
 	export let page;
@@ -85,24 +87,28 @@
 		{:else if section.type === 'testimonials'}
 			<div class="text-lg font-bold">💚 Testimonials</div>
 		{:else if section.type === 'benefits'}
-			<div class="text-lg font-bold">🙌 Benefits</div>
+			<div class="text-lg font-bold" />
 		{/if}
 		<div>
-			{section.title || ''}
-			{section.description || ''}
+			{#if section.title}
+				<div>
+					<b>{@html striptags(section.title || '')}</b>
+				</div>
+			{/if}
+			{@html striptags(section.description || '')}
 
 			{#if section.type === 'testimonials'}
 				<div>
-					{(section.testimonials || []).map((f) => f.name).join(', ')}
+					{striptags((section.testimonials || []).map((f) => f.name).join(', '))}
 				</div>
 			{:else if section.type === 'faq'}
 				<div>
-					{(section.faqs || []).map((f) => f.question).join(', ')}
+					{striptags((section.faqs || []).map((f) => f.question).join(', '))}
 				</div>
 			{:else}
 				{#each section.items as item}
 					<div>
-						{item.title || 'empty'}
+						{striptags(item.title || 'empty')}
 					</div>
 				{/each}
 			{/if}

@@ -17,6 +17,7 @@
     "hotkeys-js": "^3.10.1",
     "lodash": "^4.17.21",
     "socket.io-client": "^4.6.0",
+    "striptags": "^3.2.0",
     "svelte": "^3.55.1",
     "svelte-file-dropzone": "^1.0.0",
     "svelte-highlight": "^7.2.0",
