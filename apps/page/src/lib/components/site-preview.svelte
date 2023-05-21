@@ -469,7 +469,7 @@
 							</div>
 						{/if}
 					</div>
-					<!-- 
+
 					{#key $feedLastUpdatedOn + page.theme?.sectionTheme}
 						<iframe
 							id="iframeResize"
@@ -481,7 +481,7 @@
 								'section-background-color'
 							].replace('#', '%23')}"
 						/>
-					{/key} -->
+					{/key}
 				</div>
 			{/if}
 
