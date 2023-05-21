@@ -97,7 +97,7 @@
 		for (let i = 0; i < limit; i++) {
 			if (i % 2) {
 				result.push({
-					isZebra: false,
+					isZebra: true,
 					backgroundColor: darkColors[i],
 					textColor: '#f5f5f5',
 					// textColor: lightColors[limit - i - 1],
@@ -116,7 +116,7 @@
 				});
 			} else {
 				result.push({
-					isZebra: false,
+					isZebra: true,
 					backgroundColor: lightColors[i],
 					textColor: '#111111',
 					// textColor: darkColors[limit - i - 1],

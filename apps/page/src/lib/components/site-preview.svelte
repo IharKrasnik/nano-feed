@@ -176,7 +176,7 @@
 <svelte:window bind:scrollY />
 
 <div
-	class="sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4"
+	class="hidden sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4 sm:min-h-screen"
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
@@ -255,7 +255,7 @@
 					<div
 						bind:this={$aboveTheFoldEl}
 						class="_content pb-16 pt-32 {!page.testimonials?.length
-							? `${isAboveTheFold || isEmbed ? '' : 'min-h-screen'} flex items-center`
+							? `${isAboveTheFold || isEmbed ? '' : 'sm:min-h-screen'} flex items-center`
 							: ''}"
 						style={maxHeight ? `max-height: ${maxHeight}` : ''}
 					>
@@ -472,7 +472,7 @@
 				<div
 					class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
 						? ''
-						: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
+						: 'sm:min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
 					style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page
 						.theme?.theme === 'dark'
 						? '#222'
@@ -619,7 +619,7 @@
 	}
 
 	@media (max-width: 640px) {
-		._input_container button {
+		._input_container input {
 			border: 2px rgba(255, 255, 255, 0.8) solid;
 		}
 	}
