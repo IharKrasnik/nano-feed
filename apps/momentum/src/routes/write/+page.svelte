@@ -12,6 +12,7 @@
 	import AutoCompleteInput from 'lib/components/AutoCompleteInput.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
 	import Loader from 'lib/components/Loader.svelte';
+	import Button from 'lib/components/Button.svelte';
 
 	import sources from '$lib/stores/sources';
 	import currentUser from 'lib/stores/currentUser';
@@ -445,6 +446,11 @@
 						</div>
 					{/if}
 
+					{#if feedItem.url?.includes('twitter.com') && feedItem.url?.includes('/status')}
+						<input class="mr-2" type="checkbox" bind:checked={feedItem.isParseCreator} />Parse
+						Twitter Creator
+					{/if}
+
 					{#if isFullUrlEdit}
 						{#if currentPage !== 'update'}
 							<div class="mb-8">
@@ -480,14 +486,14 @@
 
 					<!-- <hr class="my-8" style="border-color: rgba(255, 255, 255, 0.3)"/> -->
 
-					<button class="p-4 mt-8" type="submit" on:click={postToFeed}>
+					<Button class="p-4 mt-8" type="submit" onClick={postToFeed}>
 						{feedId ? 'Update' : 'Publish'} Moment
-					</button>
+					</Button>
 
 					{#if feedId}
-						<button class="danger ml-8 p-4 mt-8" type="submit" on:click={deleteFeed}>
+						<Button class="danger ml-8 p-4 mt-8" type="submit" onClick={deleteFeed}>
 							Delete Moment
-						</button>
+						</Button>
 					{/if}
 				{/if}
 			</form>
