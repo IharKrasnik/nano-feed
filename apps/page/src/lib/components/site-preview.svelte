@@ -472,7 +472,7 @@
 				<div
 					class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
 						? ''
-						: 'sm:min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
+						: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
 					style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page
 						.theme?.theme === 'dark'
 						? '#222'
