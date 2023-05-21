@@ -195,7 +195,15 @@
 					<div>
 						{#each isShowAll ? stats.pageStats : stats.pageStats.slice(0, 4) as pageStat, i}
 							<div class="flex justify-between py-1 my-1">
-								<div class="relative w-full">
+								<div
+									class="relative w-full"
+									style="white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
+								flex-shrink: 1;
+								max-width: 100%;
+								min-width: 0;"
+								>
 									<div
 										class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20"
 										style="width: {(pageStat.count / maxViewsCount) * 100}%;"
@@ -234,7 +242,15 @@
 				<div>
 					{#each isShowAll ? stats.referralStats : stats.referralStats.slice(0, 4) as referralStat, i}
 						<div class="flex justify-between py-1 my-1">
-							<div class="relative w-full">
+							<div
+								class="relative w-full"
+								style="white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							flex-shrink: 1;
+							max-width: 100%;
+							min-width: 0;"
+							>
 								<div
 									class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20"
 									style="width: {(referralStat.count / maxReferralCount) * 100}%;"
