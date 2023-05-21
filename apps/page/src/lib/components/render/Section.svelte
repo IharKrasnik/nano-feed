@@ -2,12 +2,14 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
+	import RenderMomentumFeed from '$lib/components/render/MomentumFeed.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 
 	let clazz = 'py-4 sm:py-16';
 	export let section;
 	export let page;
+	export let themeStyles = {};
 
 	export { clazz as class };
 	export let style = null;
@@ -81,6 +83,8 @@
 		<RenderFAQ bind:section />
 	{:else if section.type === 'testimonials'}
 		<RenderTestimonials bind:section />
+	{:else if section.type === 'momentum_feed'}
+		<RenderMomentumFeed bind:page bind:themeStyles />
 	{:else if section.items?.length}
 		<div class="w-full {clazz}">
 			<div class="sm:columns-{section.columns} gap-4 {section.columns > 1 ? 'items-start' : ''}">

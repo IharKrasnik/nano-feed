@@ -86,6 +86,23 @@
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
+		debugger;
+		if (
+			page.streamSlug &&
+			(!page.sections || page.sections.find((s) => s.type === 'momentum_feed'))
+		) {
+			page.sections = page.sections || [];
+
+			page.sections.push({
+				id: uuidv4(),
+				type: 'momentum_feed',
+				title: 'We Build In Public',
+				description: 'Follow our journey in social media and blogs',
+				items: []
+			});
+
+			page.sections = [...page.sections];
+		}
 
 		if (
 			!force &&
@@ -329,6 +346,7 @@ See you!
 				'Show your features below, talk to the audience. Start features titles with verb.';
 
 			newSection.columns = 1;
+
 			newSection.items = [
 				{
 					emoji: '🖼',

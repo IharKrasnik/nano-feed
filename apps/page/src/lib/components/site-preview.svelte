@@ -400,7 +400,11 @@
 										<div bind:this={editEl}>
 											<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧</div>
 											<div>
-												<RenderSection bind:page bind:section={$sectionToEdit} />
+												<RenderSection
+													bind:page
+													bind:themeStyles={styles}
+													bind:section={$sectionToEdit}
+												/>
 											</div>
 											<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
 										</div>
@@ -409,6 +413,7 @@
 										<RenderSection
 											bind:page
 											bind:section
+											bind:themeStyles={styles}
 											style={false && page.theme?.isZebra && i % 2 === 0
 												? page.theme.theme === 'dark'
 													? `background-color: ${lighten(styles['background-color'], 0.01)};`
@@ -429,7 +434,7 @@
 		<!-- <RenderFAQ bind:page /> -->
 
 		{#if !isAboveTheFold}
-			{#if page.streamSlug}
+			{#if page.streamSlug && (!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))}
 				<div>
 					<div class="sticky z-20 py-4 sm:py-16 bg-site">
 						<RenderSection
@@ -464,7 +469,7 @@
 							</div>
 						{/if}
 					</div>
-
+					<!-- 
 					{#key $feedLastUpdatedOn + page.theme?.sectionTheme}
 						<iframe
 							id="iframeResize"
@@ -476,7 +481,7 @@
 								'section-background-color'
 							].replace('#', '%23')}"
 						/>
-					{/key}
+					{/key} -->
 				</div>
 			{/if}
 
