@@ -16,7 +16,7 @@
 		id="iframeResize"
 		loading="lazy"
 		on:load={resize}
-		class="w-full sticky z-20 pb-[200px] bg-site"
+		class="w-full sticky z-20 bg-site"
 		src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.sectionTheme ||
 			'light'}&isHorizontal=true&limit=9&isViewAll=true&bgColor={themeStyles[
 			'section-background-color'
