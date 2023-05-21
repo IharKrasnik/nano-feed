@@ -3,6 +3,7 @@ import { Resvg } from '@resvg/resvg-js';
 import { html as toReactNode } from 'satori-html';
 import { get } from 'lib/api';
 import OGImage from '$lib/components/OGImage.svelte';
+import striptags from 'striptags';
 
 import Inter from '$lib/Inter-Regular.ttf';
 import ArchivoBold from '$lib/Archivo-Bold.ttf';
@@ -17,9 +18,9 @@ function unEntity(str) {
 export const GET = async ({ url }) => {
 	const pageSlug = url.searchParams.get('pageSlug') ?? undefined;
 
-	const name = url.searchParams.get('name') ?? undefined;
-	const title = url.searchParams.get('title') ?? undefined;
-	const description = url.searchParams.get('description') ?? undefined;
+	const name = striptags(url.searchParams.get('name') ?? undefined);
+	const title = striptags(url.searchParams.get('title') ?? undefined);
+	const description = striptags(url.searchParams.get('description') ?? undefined);
 
 	let componentResult;
 

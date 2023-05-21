@@ -1,6 +1,7 @@
 <script>
 	import { post } from 'lib/api';
 	import getPageMetaTags from 'lib/helpers/getPageMetaTags';
+	import striptags from 'striptags';
 
 	import Button from 'lib/components/Button.svelte';
 
@@ -10,7 +11,8 @@
 	export let page;
 
 	if (!page.openGraph) {
-		page.openGraph = getPageMetaTags({ page });
+		page.openGraph = {};
+		page.openGraph.image = getPageMetaTags({ page }).image;
 	}
 
 	let updateOpenGraph = async () => {
@@ -35,8 +37,8 @@
 		</div>
 
 		<div class="mt-4">
-			<div class="font-bold">{page.openGraph.title || page.name}</div>
-			<div>{page.openGraph.description || page.title}</div>
+			<div class="font-bold">{striptags(page.openGraph.title || page.name)}</div>
+			<div>{striptags(page.openGraph.description || page.title)}</div>
 		</div>
 	</div>
 </div>
