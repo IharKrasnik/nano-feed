@@ -29,7 +29,7 @@ export async function load({ url, params, session, cookies }) {
 		let page = await get(`pages/${pageSlug}`);
 
 		let metaTags = getPageMetaTags({ page });
-
+		//s
 		extend = {
 			page,
 			ogTitle: metaTags.title,
