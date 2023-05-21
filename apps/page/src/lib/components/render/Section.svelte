@@ -83,11 +83,7 @@
 		<RenderTestimonials bind:section />
 	{:else if section.items?.length}
 		<div class="w-full {clazz}">
-			<div
-				class="grid grid-cols-1 sm:grid-cols-{section.columns} gap-4 {section.columns > 1
-					? 'items-start'
-					: ''}"
-			>
+			<div class="sm:columns-{section.columns} gap-4 {section.columns > 1 ? 'items-start' : ''}">
 				{#each section.items || [] as item, i}
 					<div class="mb-8">
 						<div
@@ -182,7 +178,7 @@
 							>
 								<RenderUrl
 									class="rounded-xl"
-									imgClass="mx-auto {section.columns === 1 ? '' : 'max-h-[200px]'}  {section.items
+									imgClass="mx-auto {section.columns === 1 ? '' : 'max-h-[600px]'}  {section.items
 										.length === 1
 										? ''
 										: ''} {isGif(item.imageUrl) ? 'w-full object-cover' : ''} max-h-[350px]"

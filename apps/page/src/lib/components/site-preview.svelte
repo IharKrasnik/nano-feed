@@ -176,7 +176,7 @@
 <svelte:window bind:scrollY />
 
 <div
-	class="sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px]"
+	class="sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4"
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
