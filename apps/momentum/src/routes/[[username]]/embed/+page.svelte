@@ -1,6 +1,4 @@
 <script>
-	export const ssr = false;
-
 	import { page } from '$app/stores';
 	import { STREAM_URL } from 'lib/env';
 
@@ -103,8 +101,8 @@
 							class:text-black={theme === 'dark'}
 							class="rounded-xl"
 							style="background-color: {theme === 'light'
-								? '#000'
-								: '#fff'}; border: 1px rgba(0,0,0,.3) solid;"
+								? 'rgba(0,0, 0,.8)'
+								: 'rgba(255,255,255,.8)'}; border: 1px rgba(0,0,0,.3) solid;"
 						>
 							View Full Feed
 						</button>
