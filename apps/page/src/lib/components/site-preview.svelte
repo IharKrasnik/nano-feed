@@ -273,9 +273,14 @@
 												? 'flex flex-col items-center mb-8'
 												: 'sm:text-left'
 									  } sm:max-w-[500px] items-center`
-									: 'flex flex-col items-center w-full sm:w-auto sm:max-w-[600px] mx-auto'}
+									: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
 							>
-								<h1 class="_title" style={page.title ? '' : 'opacity: 20%;'}>
+								<h1
+									class="_title {!page.demoUrl || page.theme?.hero === 'vertical'
+										? 'sm:max-w-[750px]'
+										: ''}"
+									style={page.title ? '' : 'opacity: 20%;'}
+								>
 									{#if page.title}
 										<div>{@html page.title}</div>
 									{:else}
@@ -284,7 +289,14 @@
 								</h1>
 
 								{#if page.subtitle}
-									<h2 class="_subtitle whitespace-pre-wrap">{@html page.subtitle}</h2>
+									<h2
+										class="_subtitle whitespace-pre-wrap  {!page.demoUrl ||
+										page.theme?.hero === 'vertical'
+											? 'max-w-[600px]'
+											: ''}"
+									>
+										{@html page.subtitle}
+									</h2>
 								{/if}
 
 								<div
@@ -478,7 +490,7 @@
 						? '#222'
 						: '#fafafa'}"
 				>
-					<div class="mx-auto max-w-[600px] flex flex-col items-center justify-center">
+					<div class="mx-auto max-w-[750px] flex flex-col items-center justify-center">
 						<div class="flex items-center text-lg my-4">
 							<Emoji class="mr-2" emoji={page.logo} />
 							<span>
