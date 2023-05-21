@@ -429,10 +429,6 @@
 			</div>
 		{/if}
 
-		<!-- <RenderPricing /> -->
-
-		<!-- <RenderFAQ bind:page /> -->
-
 		{#if !isAboveTheFold}
 			{#if page.streamSlug && (!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))}
 				<div>

@@ -86,10 +86,10 @@
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
-		debugger;
+
 		if (
 			page.streamSlug &&
-			(!page.sections || page.sections.find((s) => s.type === 'momentum_feed'))
+			(!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))
 		) {
 			page.sections = page.sections || [];
 
