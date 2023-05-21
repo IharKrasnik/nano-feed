@@ -397,7 +397,7 @@
 										<RenderSection
 											bind:page
 											bind:section
-											style={page.theme?.isZebra && i % 2 === 0
+											style={false && page.theme?.isZebra && i % 2 === 0
 												? page.theme.theme === 'dark'
 													? `background-color: ${lighten(styles['background-color'], 0.01)};`
 													: `background-color: ${darken(styles['background-color'], 0.08)};`
