@@ -34,7 +34,7 @@ export async function load({ url, params, session, cookies }) {
 			page,
 			ogTitle: metaTags.title,
 			ogDescription: metaTags.description,
-			ogImage: metaTags
+			ogImage: metaTags.image
 		};
 	}
 
