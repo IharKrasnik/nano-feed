@@ -12,7 +12,7 @@
 	let loadNextPage = async () => {
 		currentPageNum++;
 
-		let { results } = await get('pages', { perPage: 10, page: currentPageNum });
+		let { results } = await get('pages', { perPage: 20, page: currentPageNum });
 		pages = [...pages, ...results];
 	};
 
