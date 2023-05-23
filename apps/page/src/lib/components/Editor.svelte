@@ -1501,79 +1501,91 @@ See you!
 								{/if}
 							</div>
 
-							<div
-								class="relative _published-label flex justify-between items-center mt-4"
-								style="padding: 6px 10px;"
-							>
-								<a
-									href={page.domains?.length && page.domains.filter((d) => d.isConfigured).length
-										? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
-										: `${PAGE_URL}/${page.slug}`}
-									class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
-									style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
-									target="_blank"
-									rel="noreferrer"
+							<div>
+								<div
+									class="relative _published-label flex justify-between items-center mt-4"
+									style="padding: 6px 10px;"
 								>
-									<div
-										class="mr-2 z-20"
-										use:tooltip
-										title={page.isDirty ? 'Pending Changes' : 'Published'}
+									<a
+										href={page.domains?.length && page.domains.filter((d) => d.isConfigured).length
+											? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
+											: `${PAGE_URL}/${page.slug}`}
+										class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
+										style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
+										target="_blank"
+										rel="noreferrer"
 									>
-										{#if !page.isDirty}
-											✅
-										{:else}
-											🌝
-										{/if}
-									</div>
-
-									<div>
-										{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
-											{page.domains.filter((d) => d.isConfigured)[0].url}
-										{:else}
-											/{page.slug}
-										{/if}
-									</div>
-								</a>
-
-								{#if page.isDirty}
-									<div transition:fly={{ x: 50, duration: 150 }}>
-										<Button
-											class="bg-yellow-500 right-0 _primary flex justify-center w-full"
-											onClick={publishPage}
-											style="margin-left: 78px;
-                  border-radius: 30px;
-                  padding: 4px 45px;
-									right: 3px;
-									width: auto;
-									margin: -4px -10px -4px 0px;
-									"
+										<div
+											class="mr-2 z-20"
+											use:tooltip
+											title={page.isDirty ? 'Pending Changes' : 'Published'}
 										>
-											Publish
-										</Button>
+											{#if !page.isDirty}
+												✅
+											{:else}
+												🌝
+											{/if}
+										</div>
+
+										<div>
+											{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
+												{page.domains.filter((d) => d.isConfigured)[0].url}
+											{:else}
+												/{page.slug}
+											{/if}
+										</div>
+									</a>
+
+									{#if page.isDirty}
+										<div transition:fly={{ x: 50, duration: 150 }}>
+											<Button
+												class="bg-yellow-500 right-0 _primary flex justify-center w-full"
+												onClick={publishPage}
+												style="margin-left: 78px;
+										border-radius: 30px;
+										padding: 4px 45px;
+										right: 3px;
+										width: auto;
+										margin: -4px -10px -4px 0px;
+										"
+											>
+												Publish
+											</Button>
+										</div>
+									{/if}
+								</div>
+								{#if metrics?.conversion}
+									<div class="flex justify-center mt-1 absolute top-0 right-2">
+										<div
+											class="mr-4 opacity-80 text-center px-4 rounded-xl"
+											style="background-color: {getConversionColor(
+												metrics.conversion
+											)}; color:white; left:50%;"
+											use:tooltip
+											title="Conversion rate. Target 10+%"
+										>
+											{metrics.conversion}%
+										</div>
 									</div>
 								{/if}
 							</div>
-							{#if metrics?.conversion}
-								<div class="flex w-full justify-center mt-2">
-									<div
-										class="left-[10px] mr-4 opacity-80 text-center px-4 rounded-xl"
-										style="background-color: {getConversionColor(
-											metrics.conversion
-										)}; color:white; left:50%;"
-										use:tooltip
-										title="Conversion rate. Target 10+%"
-									>
-										{metrics.conversion}%
-									</div>
-								</div>
-							{/if}
 						</div>
 					{/if}
 
+					<!-- {#if page}
+						<div class="w-full flex justify-center">
+							<a href="{PAGE_URL}/explore">Explore</a>
+						</div>
+					{/if} -->
 					{#if page}
 						{#key page._id}
-							<div in:fly={{ y: 50, duration: 300 }}>
+							<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
 								<BrowserFrame
+									class="max-h-screen overflow-y-scroll"
+									links={[
+										{ url: `explore`, title: 'Explore Pages', emoji: '🙌' },
+										{ url: 'about', title: 'About', emoji: '📄' }
+									]}
 									frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'}
 								>
 									<!-- {#if $sectionToEdit}
@@ -1582,7 +1594,7 @@ See you!
 										</div>
 									{/if} -->
 
-									<SitePreview noStickyHeader={true} isNoBadge={true} bind:page />
+									<SitePreview class="pt-8" noStickyHeader={true} isNoBadge={true} bind:page />
 								</BrowserFrame>
 							</div>
 						{/key}

@@ -18,6 +18,7 @@
 	export let url;
 	export let favicon;
 	export let title;
+	export let links = null;
 </script>
 
 <div
@@ -43,6 +44,7 @@
 				<div class="w-[10px] h-[10px] bg-[#27ca42] rounded-full mr-2" />
 			</a>
 		</div>
+
 		{#if url}
 			<div class="w-full flex justify-center items-center">
 				<div
@@ -50,6 +52,22 @@
 				>
 					{url}
 				</div>
+			</div>
+		{/if}
+
+		{#if links}
+			<div
+				class="mt-[75px] p-2 bg-[#fafafa] w-full flex text-white opacity-80 pl-4"
+				style="background-color: {frameBgColor};"
+			>
+				{#each links as link}
+					<a class="text-sm flex block items-center mr-6" href={link.url}>
+						{link.emoji}
+						<div class="ml-2">
+							{link.title}
+						</div>
+					</a>
+				{/each}
 			</div>
 		{/if}
 	</div>

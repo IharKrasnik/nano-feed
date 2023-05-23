@@ -3,6 +3,7 @@
 	import striptags from 'striptags';
 	import { PAGE_URL } from 'lib/env';
 	import Emoji from 'lib/components/Emoji.svelte';
+	import currentUser from 'lib/stores/currentUser';
 
 	import InfiniteScroll from 'lib/components/InfiniteScroll.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
@@ -106,6 +107,16 @@
 							</div>
 						</div>
 					</a>
+
+					{#if $currentUser?.isAdmin}
+						<div>
+							{#if page.isFeatured}
+								<a>Unfeature</a>
+							{:else}
+								<a>Feature</a>
+							{/if}
+						</div>
+					{/if}
 				{/each}
 			</div>
 		{/each}
