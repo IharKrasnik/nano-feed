@@ -1,6 +1,8 @@
 <script>
+	import _ from 'lodash';
 	import striptags from 'striptags';
 	import { PAGE_URL } from 'lib/env';
+	import Emoji from 'lib/components/Emoji.svelte';
 
 	import InfiniteScroll from 'lib/components/InfiniteScroll.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
@@ -8,15 +10,34 @@
 
 	let pages = [];
 	let currentPageNum = 0;
+	let allPages = [];
 
 	let loadNextPage = async () => {
 		currentPageNum++;
 
 		let { results } = await get('pages', { perPage: 20, page: currentPageNum });
 		pages = [...pages, ...results];
+		results.id = currentPageNum;
+		allPages.push(results);
+		allPages = [...allPages];
 	};
 
 	loadNextPage();
+
+	let getStyles = (page) => {
+		let theme = page.theme || {};
+
+		theme = _.defaults(theme, {
+			titleFont: 'Archivo',
+			textFont: 'Inter',
+			backgroundColor: '#ffffff',
+			theme: 'light'
+		});
+
+		return `background-color: ${theme.backgroundColor}; color: ${
+			theme.theme === 'dark' ? '#ffffff' : '#111111'
+		}; font-family: ${theme.textFont};`;
+	};
 </script>
 
 <div>
@@ -32,31 +53,61 @@
 			}}
 		/>
 
-		<div class="columns-4 gap-4">
-			{#each pages as page (page._id)}
-				<a
-					href={(page.domains?.length && `//${page.domains[0].url}`) || `${PAGE_URL}/${page.slug}`}
-					target="_blank"
-				>
-					<div class="_section" style="padding: 0; break-inside: avoid; margin-bottom: 16px;">
-						{#if page.demoUrl || page.openGraph?.imageUrl}
-							<RenderUrl url={page.demoUrl || page.openGraph.imageUrl} />
-						{/if}
-						<div class="p-2 sm:p-4">
-							<div class="_title text-xl font-bold">{page.name}</div>
-							<div class="_title font-bold">{@html striptags(page.title)}</div>
-							<div>{@html striptags(page.subtitle)}</div>
-
-							{#if page.creator}
-								<div class="flex mt-4 items-center">
-									<img class="mr-2 w-[30px] h-[30px] rounded-full" src={page.creator.avatarUrl} />
-									{page.creator.fullName.split(' ')[0]}
+		{#each allPages as pagesPage (pagesPage.id)}
+			<div class="columns-4 gap-4 mb-8">
+				{#each pagesPage as page (page._id)}
+					<a
+						href={(page.domains?.length && `//${page.domains[0].url}`) ||
+							`${PAGE_URL}/${page.slug}`}
+						target="_blank"
+					>
+						<div
+							class="_section opacity-90 hover:opacity-100 hover:scale-105 transition"
+							style="padding: 0; break-inside: avoid; margin-bottom: 16px; {getStyles(page)}"
+						>
+							<div class="p-2 sm:p-4">
+								<!-- <div class="_title text-xl font-bold text-center">{page.name}</div> -->
+								<div class="text-center mb-2">
+									<Emoji class="flex justify-center" emoji={page.logo} />
 								</div>
-							{/if}
+								<div
+									class="_title text-xl font-bold text-center"
+									style="font-family: {page.theme?.titleFont || 'Archivo'}"
+								>
+									{@html striptags(page.title)}
+								</div>
+								<div class="text-center">{@html striptags(page.subtitle)}</div>
+								{#if page.demoUrl || page.openGraph?.imageUrl}
+									<RenderUrl
+										imgClass="my-4 mx-auto max-h-[200px]"
+										url={page.demoUrl || page.openGraph.imageUrl}
+									/>
+								{/if}
+								<hr
+									class="my-8 {page.theme?.theme === 'dark'
+										? 'border-[#fafafa]'
+										: 'border-[#aaaaaa]'} opacity-30"
+								/>
+
+								<div class="flex items-center justify-between mt-4">
+									<div>
+										{#if page.creator}
+											<div class="flex justify-center items-center">
+												<img
+													class="mr-2 w-[30px] h-[30px] rounded-full"
+													src={page.creator.avatarUrl}
+												/>
+												{page.creator.fullName.split(' ')[0]}
+											</div>
+										{/if}
+									</div>
+									<div>{page.name}</div>
+								</div>
+							</div>
 						</div>
-					</div>
-				</a>
-			{/each}
-		</div>
+					</a>
+				{/each}
+			</div>
+		{/each}
 	</div>
 </div>
