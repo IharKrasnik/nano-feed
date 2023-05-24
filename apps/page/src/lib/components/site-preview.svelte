@@ -127,6 +127,8 @@
 
 	if ($sveltePage.params.pageSlug) {
 		window.document.body.style['background-color'] = page.theme?.backgroundColor || 'white';
+	} else {
+		window.document.body.style['background-color'] = null;
 	}
 
 	let editEl;
@@ -184,381 +186,384 @@
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
-<div>
-	<div class="color-site" style="{cssVarStyles};">
-		{#if !noStickyHeader && scrollY > 300}
-			<div
-				class="fixed top-0 z-30 bg-site w-full"
-				in:fly={{ y: -150, duration: 150, delay: 150 }}
-				out:fade={{ duration: 150, delay: 150 }}
-			>
+
+{#key page?._id}
+	<div>
+		<div class="color-site" style="{cssVarStyles};">
+			{#if !noStickyHeader && scrollY > 300}
 				<div
-					class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 sm:px-0"
+					class="fixed top-0 z-30 bg-site w-full"
+					in:fly={{ y: -150, duration: 150, delay: 150 }}
+					out:fade={{ duration: 150, delay: 150 }}
 				>
-					<a class="flex items-center shrink-0" href="">
-						<Emoji class="mr-2" emoji={page.logo} />
-						<span class="font-bold  ">
-							{page.name}
-						</span>
-						<div class="ml-4 opacity-70 hidden sm:block">
-							&nbsp; {@html page.title}
-						</div>
-					</a>
-
-					<div class="shrink-0">
-						{#if !isSubmitted}
-							{#if page.isCollectEmails}
-								<button
-									class="cursor-pointer"
-									style="border: 2px rgba(255, 255, 255, .8) solid;"
-									on:click={onButtonClick}>{page.callToAction}</button
-								>
-							{:else}
-								<a href={page.actionUrl} target="_blank" class="button">
-									{page.callToAction}
-								</a>
-							{/if}
-						{/if}
-					</div>
-				</div>
-
-				<hr class="border-[#8B786D] opacity-30 w-full" />
-			</div>
-		{/if}
-
-		{#if isMounted}
-			<div class="sticky bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
-				<div class="sm:p-4 p-8 _header flex md:justify-between items-center justify-center">
-					<a class="flex items-center shrink-0 _logo" href="">
-						<Emoji class="mr-2" emoji={page.logo} />
-
-						<span class="font-bold">
-							{page.name}
-						</span>
-					</a>
-
-					<div class="shrink-0 mt-2 hidden md:block">
-						{#if !isSubmitted}
-							{#if page.isCollectEmails}
-								<button
-									class="cursor-pointer"
-									style="border: 2px rgba(255, 255, 255, .8) solid;"
-									on:click={onButtonClick}>{page.callToAction}</button
-								>
-							{:else}
-								<a href={page.actionUrl} target="_blank" class="button">
-									{page.callToAction}
-								</a>
-							{/if}
-						{/if}
-					</div>
-					<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
-				</div>
-
-				<div class="_root bg-site">
 					<div
-						bind:this={$aboveTheFoldEl}
-						class="_content pb-16 pt-32 {!page.testimonials?.length
-							? `${isAboveTheFold || isEmbed ? '' : 'sm:min-h-screen'} flex items-center`
-							: ''}"
-						style={maxHeight ? `max-height: ${maxHeight}` : ''}
+						class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 sm:px-0"
 					>
-						<div
-							class="sm:p-4 p-8 flex h-full w-full {page.demoUrl
-								? `flex-col ${
-										page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
-								  } justify-between items-center`
-								: 'text-center items-center'}"
-						>
-							<div
-								class={page.demoUrl
-									? `w-full text-center ${
-											page.theme?.hero === 'vertical'
-												? 'flex flex-col items-center mb-8'
-												: 'sm:text-left'
-									  } sm:max-w-[500px] items-center`
-									: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-							>
-								<h1
-									class="_title {!page.demoUrl || page.theme?.hero === 'vertical'
-										? 'sm:max-w-[750px]'
-										: ''}"
-									style={page.title ? '' : 'opacity: 20%;'}
-								>
-									{#if page.title}
-										<div>{@html page.title}</div>
-									{:else}
-										{'Type Tagline...'}
-									{/if}
-								</h1>
-
-								{#if page.subtitle}
-									<h2
-										class="_subtitle whitespace-pre-wrap  {!page.demoUrl ||
-										page.theme?.hero === 'vertical'
-											? 'max-w-[600px]'
-											: ''}"
-									>
-										{@html page.subtitle}
-									</h2>
-								{/if}
-
-								<div
-									class="_input_container {page.isCollectEmails && !isSubmitted
-										? '_border '
-										: ''} flex items-center {page.demoUrl ? '' : 'mx-auto'} {page.isCollectEmails
-										? 'w-full ' + (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
-										: ''}"
-								>
-									<form
-										class="{page.isCollectEmails
-											? `w-full flex flex-col ${
-													page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
-											  } items-center justify-center`
-											: 'mx-auto sm:mx-0'} "
-										style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
-										on:submit|preventDefault={submitEmail}
-									>
-										{#if !isSubmitted}
-											{#if page.isCollectEmails}
-												<input
-													class="_input _email-input w-full"
-													placeholder="Your Email"
-													type="email"
-													required
-													bind:this={inputEl}
-													bind:value={email}
-													disabled={isSubmitted}
-													in:fade={{ duration: 150 }}
-												/>
-												<button
-													type="submit"
-													class="_input_button justify-center {page.isCollectEmails
-														? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-														: ''}">{page.callToAction}</button
-												>
-											{:else}
-												<a href={page.actionUrl} target="_blank" class="button _input_button">
-													{page.callToAction}
-												</a>
-											{/if}
-										{:else}
-											<div>💥 Thank you!</div>
-
-											{#if page.actionUrl}
-												<div class="mt-8 opacity-70">Redirecting...</div>
-											{/if}
-										{/if}
-									</form>
-								</div>
-							</div>
-
-							{#if page.demoUrl}
-								<div class="w-full sm:max-w-[600px] mt-16 sm:mt-0 sm:ml-8">
-									<RenderUrl
-										isLazy={false}
-										class="w-full flex justify-end"
-										url={page.demoUrl}
-										imgClass=""
-									/>
-								</div>
-							{/if}
-						</div>
-
-						{#if isMounted && page.testimonials?.length}
-							<div
-								class="p-4 sm:p-8 w-full flex flex-col sm:flex-row justify-center mt-16 sm:mt-32"
-							>
-								{#each page.testimonials as testimonial, i}
-									<div
-										class="p-4 rounded-2xl w-full sm:max-w-[350px] mr-4 mb-4 sm:mb-0 bg-section"
-										in:fly={{ x: -50, y: -50, duration: 150, delay: 150 * (i + 1) }}
-									>
-										<div class="flex flex-col sm:flex-row">
-											{#if testimonial.avatarUrl}
-												<div class="mr-4 mb-4 sm:mb-0">
-													<img
-														src={testimonial.avatarUrl}
-														class="max-w-[50px] aspect-square rounded-full"
-													/>
-												</div>
-											{/if}
-											<div>
-												<SvelteMarkdown class="test" source={testimonial.name} />
-												<div class="mt-1 opacity-80">
-													<SvelteMarkdown source={testimonial.comment} />
-												</div>
-											</div>
-										</div>
-									</div>
-								{/each}
-							</div>
-						{/if}
-					</div>
-
-					{#if !isAboveTheFold}
-						{#if page.sections?.length}
-							<div class={page.streamSlug ? '' : ''}>
-								{#each page.sections as section, i}
-									{#if $sectionToEdit && $sectionToEdit.id === section.id}
-										<div bind:this={editEl}>
-											<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧</div>
-											<div>
-												<RenderSection
-													bind:page
-													bind:themeStyles={styles}
-													bind:section={$sectionToEdit}
-												/>
-											</div>
-											<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
-										</div>
-										{focusEditEl() || ''}
-									{:else}
-										<RenderSection
-											bind:page
-											bind:section
-											bind:themeStyles={styles}
-											style={false && page.theme?.isZebra && i % 2 === 0
-												? page.theme.theme === 'dark'
-													? `background-color: ${lighten(styles['background-color'], 0.01)};`
-													: `background-color: ${darken(styles['background-color'], 0.08)};`
-												: ''}
-										/>
-									{/if}
-								{/each}
-							</div>
-						{/if}
-					{/if}
-				</div>
-			</div>
-		{/if}
-
-		{#if !isAboveTheFold}
-			{#if page.streamSlug && (!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))}
-				<div>
-					<div class="sticky z-20 py-4 sm:py-16 bg-site">
-						<RenderSection
-							class="p-0"
-							section={{
-								columns: 1,
-								items: [
-									{
-										title: 'We Build In Public',
-										description: 'Follow our journey in social network and blogs.'
-									}
-								]
-							}}
-						/>
-
-						{#if page.links}
-							<div class="flex justify-center w-full my-4">
-								{#if page.links.twitter}
-									<div class="w-[35px] h-[35px] mr-2">
-										<a href={page.links.twitter} class="scale-110" target="_blank">
-											<TwitterIcon />
-										</a>
-									</div>
-								{/if}
-								{#if page.links.linkedin}
-									<div class="w-[35px] h-[35px] mr-2">
-										<a href={page.links.linkedin} target="_blank">
-											<LinkedInIcon />
-										</a>
-									</div>
-								{/if}
-							</div>
-						{/if}
-					</div>
-
-					{#key $feedLastUpdatedOn + page.theme?.sectionTheme}
-						<iframe
-							id="iframeResize"
-							loading="lazy"
-							on:load={resize}
-							class="w-full sticky z-20 pb-[200px] bg-site"
-							src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.sectionTheme ||
-								'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
-								'section-background-color'
-							].replace('#', '%23')}"
-						/>
-					{/key}
-				</div>
-			{/if}
-
-			{#if page.streamSlug || page.sections?.length}
-				<div
-					class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
-						? ''
-						: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
-					style="color: {page.theme?.theme === 'dark' ? '#fafafa' : '#222'}; background-color: {page
-						.theme?.theme === 'dark'
-						? '#222'
-						: '#fafafa'}"
-				>
-					<div class="mx-auto max-w-[750px] flex flex-col items-center justify-center">
-						<div class="flex items-center text-lg my-4">
+						<a class="flex items-center shrink-0" href="">
 							<Emoji class="mr-2" emoji={page.logo} />
-							<span>
+							<span class="font-bold  ">
 								{page.name}
 							</span>
-						</div>
-						<div class="_title text-3xl font-bold mb-8">
-							{@html page.title}
-						</div>
-					</div>
+							<div class="ml-4 opacity-70 hidden sm:block">
+								{@html page.title}
+							</div>
+						</a>
 
-					<div
-						class="_input_container flex items-center mx-auto 
-				{page.isCollectEmails
-							? `w-full ${isSubmitted ? '' : '_border '}` +
-							  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
-							: ''}"
-					>
-						<form
-							class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
-							on:submit|preventDefault={submitEmail}
-						>
+						<div class="shrink-0">
 							{#if !isSubmitted}
 								{#if page.isCollectEmails}
-									<input
-										class="_input _email-input w-full"
-										placeholder="Your Email"
-										type="email"
-										required
-										bind:this={inputEl}
-										bind:value={email}
-										disabled={isSubmitted}
-										in:fade={{ duration: 150 }}
-									/>
 									<button
-										type="submit"
-										class="_input_button justify-center {page.isCollectEmails
-											? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-											: ''}">{page.callToAction}</button
+										class="cursor-pointer"
+										style="border: 2px rgba(255, 255, 255, .8) solid;"
+										on:click={onButtonClick}>{page.callToAction}</button
 									>
 								{:else}
-									<a href={page.actionUrl} target="_blank" class="button _input_button">
+									<a href={page.actionUrl} target="_blank" class="button">
 										{page.callToAction}
 									</a>
 								{/if}
-							{:else}
-								<div>💥 Thank you!</div>
+							{/if}
+						</div>
+					</div>
 
-								{#if page.actionUrl}
-									<div class="mt-8 opacity-70">Redirecting...</div>
+					<hr class="border-[#8B786D] opacity-30 w-full" />
+				</div>
+			{/if}
+
+			{#if isMounted}
+				<div class="sticky bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
+					<div class="sm:p-4 p-8 _header flex md:justify-between items-center justify-center">
+						<a class="flex items-center shrink-0 _logo" href="">
+							<Emoji class="mr-2" emoji={page.logo} />
+
+							<span class="font-bold">
+								{page.name}
+							</span>
+						</a>
+
+						<div class="shrink-0 mt-2 hidden md:block">
+							{#if !isSubmitted}
+								{#if page.isCollectEmails}
+									<button
+										class="cursor-pointer"
+										style="border: 2px rgba(255, 255, 255, .8) solid;"
+										on:click={onButtonClick}>{page.callToAction}</button
+									>
+								{:else}
+									<a href={page.actionUrl} target="_blank" class="button">
+										{page.callToAction}
+									</a>
 								{/if}
 							{/if}
-						</form>
+						</div>
+						<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
+					</div>
+
+					<div class="_root bg-site">
+						<div
+							bind:this={$aboveTheFoldEl}
+							class="_content pb-16 pt-8 sm:pt-32 {!page.testimonials?.length
+								? `${isAboveTheFold || isEmbed ? '' : 'sm:min-h-screen'} flex items-center`
+								: ''}"
+							style={maxHeight ? `max-height: ${maxHeight}` : ''}
+						>
+							<div
+								class="sm:p-8 p-4 flex h-full w-full {page.demoUrl
+									? `flex-col ${
+											page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
+									  } justify-between items-center`
+									: 'text-center items-center'}"
+							>
+								<div
+									class={page.demoUrl
+										? `w-full text-center ${
+												page.theme?.hero === 'vertical'
+													? 'flex flex-col items-center mb-8'
+													: 'sm:text-left'
+										  } sm:max-w-[500px] items-center`
+										: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+								>
+									<h1
+										class="_title {!page.demoUrl || page.theme?.hero === 'vertical'
+											? 'sm:max-w-[750px]'
+											: ''}"
+										style={page.title ? '' : 'opacity: 20%;'}
+									>
+										{#if page.title}
+											<div>{@html page.title}</div>
+										{:else}
+											{'Type Tagline...'}
+										{/if}
+									</h1>
+
+									{#if page.subtitle}
+										<h2
+											class="_subtitle whitespace-pre-wrap  {!page.demoUrl ||
+											page.theme?.hero === 'vertical'
+												? 'max-w-[600px]'
+												: ''}"
+										>
+											{@html page.subtitle}
+										</h2>
+									{/if}
+
+									<div
+										class="_input_container {page.isCollectEmails && !isSubmitted
+											? '_border '
+											: ''} flex items-center {page.demoUrl ? '' : 'mx-auto'} {page.isCollectEmails
+											? 'w-full ' +
+											  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
+											: ''}"
+									>
+										<form
+											class="{page.isCollectEmails
+												? `w-full flex flex-col ${
+														page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
+												  } items-center justify-center`
+												: 'mx-auto sm:mx-0'} "
+											style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
+											on:submit|preventDefault={submitEmail}
+										>
+											{#if !isSubmitted}
+												{#if page.isCollectEmails}
+													<input
+														class="_input _email-input w-full"
+														placeholder="Your Email"
+														type="email"
+														required
+														bind:this={inputEl}
+														bind:value={email}
+														disabled={isSubmitted}
+														in:fade={{ duration: 150 }}
+													/>
+													<button
+														type="submit"
+														class="_input_button justify-center {page.isCollectEmails
+															? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
+															: ''}">{page.callToAction}</button
+													>
+												{:else}
+													<a href={page.actionUrl} target="_blank" class="button _input_button">
+														{page.callToAction}
+													</a>
+												{/if}
+											{:else}
+												<div>💥 Thank you!</div>
+
+												{#if page.actionUrl}
+													<div class="mt-8 opacity-70">Redirecting...</div>
+												{/if}
+											{/if}
+										</form>
+									</div>
+								</div>
+
+								{#if page.demoUrl}
+									<div class="w-full sm:max-w-[600px] mt-16 sm:mt-0 sm:ml-8">
+										<RenderUrl
+											isLazy={false}
+											class="w-full flex justify-end"
+											url={page.demoUrl}
+											imgClass=""
+										/>
+									</div>
+								{/if}
+							</div>
+
+							{#if isMounted && page.testimonials?.length}
+								<div
+									class="p-4 sm:p-8 w-full flex flex-col sm:flex-row justify-center mt-16 sm:mt-32"
+								>
+									{#each page.testimonials as testimonial, i}
+										<div
+											class="p-4 rounded-2xl w-full sm:max-w-[350px] mr-4 mb-4 sm:mb-0 bg-section"
+											in:fly={{ x: -50, y: -50, duration: 150, delay: 150 * (i + 1) }}
+										>
+											<div class="flex flex-col sm:flex-row">
+												{#if testimonial.avatarUrl}
+													<div class="mr-4 mb-4 sm:mb-0">
+														<img
+															src={testimonial.avatarUrl}
+															class="max-w-[50px] aspect-square rounded-full"
+														/>
+													</div>
+												{/if}
+												<div>
+													<SvelteMarkdown class="test" source={testimonial.name} />
+													<div class="mt-1 opacity-80">
+														<SvelteMarkdown source={testimonial.comment} />
+													</div>
+												</div>
+											</div>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						</div>
+
+						{#if !isAboveTheFold}
+							{#if page.sections?.length}
+								<div class={page.streamSlug ? '' : ''}>
+									{#each page.sections as section, i}
+										{#if $sectionToEdit && $sectionToEdit.id === section.id}
+											<div bind:this={editEl}>
+												<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧</div>
+												<div>
+													<RenderSection
+														bind:page
+														bind:themeStyles={styles}
+														bind:section={$sectionToEdit}
+													/>
+												</div>
+												<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
+											</div>
+											{focusEditEl() || ''}
+										{:else}
+											<RenderSection
+												bind:page
+												bind:section
+												bind:themeStyles={styles}
+												style={false && page.theme?.isZebra && i % 2 === 0
+													? page.theme.theme === 'dark'
+														? `background-color: ${lighten(styles['background-color'], 0.01)};`
+														: `background-color: ${darken(styles['background-color'], 0.08)};`
+													: ''}
+											/>
+										{/if}
+									{/each}
+								</div>
+							{/if}
+						{/if}
 					</div>
 				</div>
 			{/if}
 
-			{#if !isNoBadge && !page.isNoBadge}
-				<PageBadge />
+			{#if !isAboveTheFold}
+				{#if page.streamSlug && (!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))}
+					<div>
+						<div class="sticky z-20 py-4 sm:py-16 bg-site">
+							<RenderSection
+								class="p-0"
+								section={{
+									columns: 1,
+									items: [
+										{
+											title: 'We Build In Public',
+											description: 'Follow our journey in social network and blogs.'
+										}
+									]
+								}}
+							/>
+
+							{#if page.links}
+								<div class="flex justify-center w-full my-4">
+									{#if page.links.twitter}
+										<div class="w-[35px] h-[35px] mr-2">
+											<a href={page.links.twitter} class="scale-110" target="_blank">
+												<TwitterIcon />
+											</a>
+										</div>
+									{/if}
+									{#if page.links.linkedin}
+										<div class="w-[35px] h-[35px] mr-2">
+											<a href={page.links.linkedin} target="_blank">
+												<LinkedInIcon />
+											</a>
+										</div>
+									{/if}
+								</div>
+							{/if}
+						</div>
+
+						{#key $feedLastUpdatedOn + page.theme?.sectionTheme}
+							<iframe
+								id="iframeResize"
+								loading="lazy"
+								on:load={resize}
+								class="w-full sticky z-20 pb-[200px] bg-site"
+								src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.sectionTheme ||
+									'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
+									'section-background-color'
+								].replace('#', '%23')}"
+							/>
+						{/key}
+					</div>
+				{/if}
+
+				{#if page.streamSlug || page.sections?.length}
+					<div
+						class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
+							? ''
+							: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
+						style="color: {page.theme?.theme === 'dark'
+							? '#fafafa'
+							: '#222'}; background-color: {page.theme?.theme === 'dark' ? '#222' : '#fafafa'}"
+					>
+						<div class="mx-auto max-w-[750px] flex flex-col items-center justify-center">
+							<div class="flex items-center text-lg my-4">
+								<Emoji class="mr-2" emoji={page.logo} />
+								<span>
+									{page.name}
+								</span>
+							</div>
+							<div class="_title text-3xl font-bold mb-8">
+								{@html page.title}
+							</div>
+						</div>
+
+						<div
+							class="_input_container flex items-center mx-auto 
+				{page.isCollectEmails
+								? `w-full ${isSubmitted ? '' : '_border '}` +
+								  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
+								: ''}"
+						>
+							<form
+								class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
+								on:submit|preventDefault={submitEmail}
+							>
+								{#if !isSubmitted}
+									{#if page.isCollectEmails}
+										<input
+											class="_input _email-input w-full"
+											placeholder="Your Email"
+											type="email"
+											required
+											bind:this={inputEl}
+											bind:value={email}
+											disabled={isSubmitted}
+											in:fade={{ duration: 150 }}
+										/>
+										<button
+											type="submit"
+											class="_input_button justify-center {page.isCollectEmails
+												? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
+												: ''}">{page.callToAction}</button
+										>
+									{:else}
+										<a href={page.actionUrl} target="_blank" class="button _input_button">
+											{page.callToAction}
+										</a>
+									{/if}
+								{:else}
+									<div>💥 Thank you!</div>
+
+									{#if page.actionUrl}
+										<div class="mt-8 opacity-70">Redirecting...</div>
+									{/if}
+								{/if}
+							</form>
+						</div>
+					</div>
+				{/if}
+
+				{#if !isNoBadge && !page.isNoBadge}
+					<PageBadge />
+				{/if}
 			{/if}
-		{/if}
+		</div>
 	</div>
-</div>
+{/key}
 
 <style>
 	:global(.bg-site) {
