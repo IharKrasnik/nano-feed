@@ -259,7 +259,7 @@
 						<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
 					</div>
 
-					<div class="_root bg-site">
+					<div class="_root bg-site" style="margin-top: -70px;">
 						<div
 							bind:this={$aboveTheFoldEl}
 							class="_content pb-16 pt-8 sm:pt-32 {!page.testimonials?.length
