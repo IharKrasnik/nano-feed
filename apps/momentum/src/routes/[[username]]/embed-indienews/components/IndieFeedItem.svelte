@@ -12,13 +12,13 @@
 		{#if feedItem.title}
 			<div
 				class="text-[24px]"
-				style=" font-family: 'Chillax'; line-height: 1.4em; margin-bottom: 24px;"
+				style="font-family: 'Chillax'; line-height: 25.6px; margin-bottom: 10px; color: #111111;"
 			>
 				{feedItem.title}
 			</div>
 		{/if}
 
-		<div class="text-[16px] whitespace-pre-wrap" style="line-height: 1.4em;">
+		<div class="text-[16px] whitespace-pre-wrap" style="line-height: 25.6px; color: #474747;">
 			{feedItem.content}
 		</div>
 
@@ -38,11 +38,11 @@
 				style="width: 55px; height: 55px; filter: grayscale(100%); border: 2px black solid;"
 			/>
 			<div class="ml-[15px]">
-				<div style="font-size: 18px; font-weight: bold;">
+				<div style="color: #333333; font-size: 18px; font-weight: bold;">
 					{feedItem.creators.map((c) => c.fullName.split(' ')[0]).join(', ')}
 				</div>
 				{#if feedItem.creators[0].twitterUsername}
-					<div style="color: rgb(153, 153, 153); letter-spacing: -0.7px; font-size: 16px;">
+					<div style="color: #999999; letter-spacing: -0.7px; font-size: 16px;">
 						{#each feedItem.creators as creator}
 							@{creator.twitterUsername} &nbsp;
 						{/each}
