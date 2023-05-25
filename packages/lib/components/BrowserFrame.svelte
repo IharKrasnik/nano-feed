@@ -61,7 +61,11 @@
 				style="background-color: {frameBgColor};"
 			>
 				{#each links as link}
-					<a class="text-sm flex block items-center mr-6" href={link.url}>
+					<a
+						class="text-sm flex block items-center mr-6"
+						href={link.url}
+						target={link.target || ''}
+					>
 						{link.emoji}
 						<div class="ml-2">
 							{link.title}

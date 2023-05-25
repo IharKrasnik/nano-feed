@@ -18,9 +18,9 @@ function unEntity(str) {
 export const GET = async ({ url }) => {
 	const pageSlug = url.searchParams.get('pageSlug') ?? undefined;
 
-	const name = striptags(url.searchParams.get('name') ?? undefined);
-	const title = striptags(url.searchParams.get('title') ?? undefined);
-	const description = striptags(url.searchParams.get('description') ?? undefined);
+	const name = url.searchParams.get('name') ?? undefined;
+	const title = url.searchParams.get('title') ?? undefined;
+	const description = url.searchParams.get('description') ?? undefined;
 
 	let componentResult;
 
@@ -35,6 +35,9 @@ export const GET = async ({ url }) => {
 			description
 		};
 	}
+
+	page.title = striptags(page.title);
+	page.description = striptags(page.description);
 
 	componentResult = OGImage.render({
 		page

@@ -6,13 +6,13 @@
 
 	import SitePreview from '$lib/components/site-preview.svelte';
 
-	let slug;
+	export let slug;
 
-	let currentPage = $page.data.page;
+	export let currentPage = $page.data.page;
 
 	if (browser && currentPage) {
 		window.WAVE_SUBPROJECT_ID = currentPage._id;
-		slug = $page.params.pageSlug;
+		slug = $page.params.pageSlug || slug;
 	}
 </script>
 
