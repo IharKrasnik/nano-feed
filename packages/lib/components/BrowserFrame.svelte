@@ -61,7 +61,7 @@
 
 		{#if links}
 			<div
-				class="mt-[75px] p-2 bg-[#fafafa] w-full flex text-white opacity-80 pl-4"
+				class="absolute mt-[75px] p-2 bg-[#fafafa] w-full flex text-white opacity-80 pl-4"
 				style="background-color: {frameBgColor};"
 			>
 				{#each links as link}
