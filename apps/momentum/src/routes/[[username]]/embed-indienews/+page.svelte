@@ -201,8 +201,4 @@
 		cursor: pointer;
 		transition: all 0.1s linear;
 	}
-
-	._feed-item:hover {
-		transform: translateY(-10px);
-	}
 </style>
