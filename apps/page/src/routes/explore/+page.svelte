@@ -118,17 +118,17 @@
 		/>
 
 		{#each allPages as pagesPage (pagesPage.id)}
-			<div class="columns-4 gap-4 mb-8 mt-8">
+			<div class="sm:columns-4 gap-4 mb-8 mt-8">
 				{#each pagesPage as page (page._id)}
-					<div style="break-inside:avoid;">
+					<div class="sm:p-0 p-4" style="break-inside:avoid;">
 						<a
 							href={(page.domains?.length && `//${page.domains[0].url}`) ||
 								`${PAGE_URL}/${page.slug}`}
 							target="_blank"
 						>
 							<div
-								class="_section opacity-90 hover:opacity-100 hover:scale-105 transition"
-								style="padding: 0; break-inside: avoid; margin-bottom: 16px; {getStyles(page)}"
+								class="_section opacity-90 hover:opacity-100 hover:scale-105 transition p-4 sm:p-0"
+								style="break-inside: avoid; margin-bottom: 16px; {getStyles(page)}"
 							>
 								<div class="p-2 sm:p-4">
 									<!-- <div class="_title text-xl font-bold text-center">{page.name}</div> -->
