@@ -39,11 +39,13 @@
 			/>
 			<div class="ml-[15px]">
 				<div style="font-size: 18px; font-weight: bold;">
-					{feedItem.creators[0].fullName.split(' ')[0]}
+					{feedItem.creators.map((c) => c.fullName.split(' ')[0]).join(', ')}
 				</div>
 				{#if feedItem.creators[0].twitterUsername}
 					<div style="color: rgb(153, 153, 153); letter-spacing: -0.7px; font-size: 16px;">
-						@{feedItem.creators[0].twitterUsername}
+						{#each feedItem.creators as creator}
+							@{creator.twitterUsername} &nbsp;
+						{/each}
 					</div>
 				{/if}
 			</div>

@@ -15,6 +15,7 @@
 	import FeedItem from '$lib/components/FeedItem.svelte';
 	import IndieFeedItem from '../[[username]]/embed-indienews/components/IndieFeedItem.svelte';
 	import Loader from 'lib/components/Loader.svelte';
+	import Button from 'lib/components/Button.svelte';
 
 	import sources from '$lib/stores/sources';
 	import currentUser from 'lib/stores/currentUser';
@@ -162,13 +163,27 @@
 		let splitsHandle = s.split(/\n@/g);
 
 		splitsHandle.forEach((splitHandle) => {
-			splitHandle.split('* ').forEach((msg, i) => {
-				if (i === 0) {
-					let [twitterUsername, ...msgs] = msg.split(' ');
-					results.push({ twitterUsername: twitterUsername.toLowerCase(), message: msgs.join(' ') });
-				} else {
-					results.push({ twitterUsername: 'aliszu', message: msg });
-				}
+			let twitterUsernames = [];
+
+			let [twitterUsername, ...msgs] = splitHandle.split(' ');
+			twitterUsername = twitterUsername.toLowerCase();
+
+			twitterUsername && twitterUsernames.push(twitterUsername);
+
+			while (msgs[0]?.startsWith('@')) {
+				let [addTwitterUsername, ...newMsgs] = msgs;
+				addTwitterUsername = addTwitterUsername.toLowerCase().replace('@', '');
+
+				addTwitterUsername && twitterUsernames.push(addTwitterUsername);
+				msgs = newMsgs;
+			}
+
+			let [title, ...textMsgs] = msgs.join(' ').split('\n');
+
+			results.push({
+				title,
+				twitterUsernames,
+				message: textMsgs.join(' ')
 			});
 		});
 
@@ -180,23 +195,36 @@
 	let parseFromTweet = async () => {
 		let splits = processStr(tweetText);
 
-		let distinctTwitterUsernames = _.uniq(splits.map((s) => s.twitterUsername.toLowerCase()));
+		let allTwitterUsernames = [];
+
+		splits.forEach((split) => {
+			split.twitterUsernames.forEach((username) => {
+				allTwitterUsernames.push(username.toLowerCase());
+			});
+		});
+
+		let distinctTwitterUsernames = _.uniq(allTwitterUsernames);
 
 		let users = await post('creators/by-twitter', { twitterUsernames: distinctTwitterUsernames });
 
-		feedItems = splits.map((s) => {
-			let user =
-				users.find((u) => u.twitterUsername.toLowerCase() === s.twitterUsername.toLowerCase()) ||
-				$currentUser;
+		feedItems = [];
 
-			return {
+		splits.forEach((s) => {
+			feedItems.push({
 				publishedOn: new Date(),
-				title: '',
+				title: s.title || null,
 				content: `${s.message}`,
-				creators: [user],
+				creators: s.twitterUsernames.map((twitterUsername) => {
+					return (
+						users.find((u) => u.twitterUsername.toLowerCase() === twitterUsername.toLowerCase()) ||
+						$currentUser
+					);
+				}),
 				attachments: []
-			};
+			});
 		});
+
+		return feedItems;
 	};
 
 	let publishAll = async () => {
@@ -249,7 +277,7 @@
 		<div class="mb-8">
 			<div class="font-bold">Parse from tweet</div>
 			<textarea placeholder="@that_igor did something" bind:value={tweetText} />
-			<button class="small mt-2" on:click={parseFromTweet}>Parse</button>
+			<Button class="small mt-2" onClick={parseFromTweet}>Parse</Button>
 		</div>
 
 		<div class="py-4">
