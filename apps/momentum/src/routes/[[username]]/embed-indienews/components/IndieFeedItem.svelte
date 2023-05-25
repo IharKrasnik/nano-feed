@@ -57,5 +57,6 @@
 		margin-bottom: 20px;
 		break-inside: avoid;
 		color: rgb(71, 71, 71);
+		-webkit-column-break-inside: avoid;
 	}
 </style>

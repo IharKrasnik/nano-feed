@@ -1,6 +1,4 @@
 <script>
-	export const ssr = false;
-
 	import moment from 'moment';
 	import _ from 'lodash';
 	import { page } from '$app/stores';
@@ -103,7 +101,7 @@
 
 <div class="hidden lg:columns-1 lg:columns-3 lg:columns-2 lg:columns-4" />
 
-<div class="container mx-auto">
+<div class="container mx-auto px-12 sm:px-0">
 	{#if grouppedFeed?.length > 0}
 		<div in:fade>
 			{#each grouppedFeed as group}
