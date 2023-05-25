@@ -127,7 +127,7 @@
 							target="_blank"
 						>
 							<div
-								class="_section opacity-90 hover:opacity-100 hover:scale-105 transition p-4 sm:p-0"
+								class="_section opacity-90 hover:opacity-100 hover:scale-105 transition px-4 py-4 sm:px-0"
 								style="break-inside: avoid; margin-bottom: 16px; {getStyles(page)}"
 							>
 								<div class="p-2 sm:p-4">
