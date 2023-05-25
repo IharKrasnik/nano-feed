@@ -72,6 +72,11 @@
 						</div>
 					</a>
 				{/each}
+				<div class="absolute flex items-center right-4">
+					<a href="https://www.producthunt.com/products/momentum-page" target="_blank">
+						💜 Support on ProductHunt
+					</a>
+				</div>
 			</div>
 		{/if}
 	</div>

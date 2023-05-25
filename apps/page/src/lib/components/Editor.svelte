@@ -1587,8 +1587,8 @@ See you!
 									<BrowserFrame
 										class="max-h-screen overflow-y-scroll"
 										links={[
-											{ url: `explore`, title: 'Explore Momentum', emoji: '🙌' },
-											{ url: 'about', title: 'About Page', emoji: '📄', target: '_blank' }
+											{ url: `explore`, title: 'Explore Pages', emoji: '🙌' },
+											{ url: 'about', title: 'About Momentum', emoji: '📄', target: '_blank' }
 										]}
 										frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'}
 									>
