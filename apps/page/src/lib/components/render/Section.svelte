@@ -46,7 +46,7 @@
 	};
 </script>
 
-<div class="sm:p-0 p-4" style={style || ''}>
+<div class="p-4" style={style || ''}>
 	{#if section.title || section.description || section.imageUrl || section.emoji}
 		<div class="w-full text-center py-4 sm:py-16 text-center">
 			{#if section.emoji}

@@ -196,9 +196,7 @@
 					in:fly={{ y: -150, duration: 150, delay: 150 }}
 					out:fade={{ duration: 150, delay: 150 }}
 				>
-					<div
-						class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-2 px-4 sm:px-0"
-					>
+					<div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-4">
 						<a class="flex items-center shrink-0" href="">
 							<Emoji class="mr-2" emoji={page.logo} />
 							<span class="font-bold  ">
@@ -232,9 +230,7 @@
 
 			{#if isMounted}
 				<div class="sticky bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
-					<div
-						class="py-2 px-4 sm:px-0 _header flex md:justify-between items-center justify-center"
-					>
+					<div class="p-4 _header flex md:justify-between items-center justify-center">
 						<a class="flex items-center shrink-0 _logo" href="">
 							<Emoji class="mr-2" emoji={page.logo} />
 
@@ -261,7 +257,7 @@
 						<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
 					</div>
 
-					<div class="_root bg-site" style="margin-top: -70px;">
+					<div class="_root bg-site">
 						<div
 							bind:this={$aboveTheFoldEl}
 							class="_content pb-16 pt-8 sm:pt-32 {!page.testimonials?.length
@@ -270,7 +266,7 @@
 							style={maxHeight ? `max-height: ${maxHeight}` : ''}
 						>
 							<div
-								class="sm:p-0 p-4 flex h-full w-full {page.demoUrl
+								class="p-4 flex h-full w-full {page.demoUrl
 									? `flex-col ${
 											page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
 									  } justify-between items-center`
@@ -515,7 +511,7 @@
 
 						<div
 							class="_input_container flex items-center mx-auto 
-				{page.isCollectEmails
+							{page.isCollectEmails
 								? `w-full ${isSubmitted ? '' : '_border '}` +
 								  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
 								: ''}"

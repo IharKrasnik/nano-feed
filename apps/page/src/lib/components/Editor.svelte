@@ -1598,7 +1598,7 @@ See you!
 										</div>
 									{/if} -->
 
-										<SitePreview class="pt-4" noStickyHeader={true} isNoBadge={true} bind:page />
+										<SitePreview class="pt-8" noStickyHeader={true} isNoBadge={true} bind:page />
 									</BrowserFrame>
 								</div>
 							{/key}
