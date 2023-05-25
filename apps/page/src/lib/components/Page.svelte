@@ -8,6 +8,10 @@
 
 	export let slug;
 
+	export let isNoBadge;
+
+	export let noStickyHeader;
+
 	export let currentPage = $page.data.page;
 
 	if (browser && currentPage) {
@@ -17,5 +21,5 @@
 </script>
 
 {#if page}
-	<SitePreview bind:page={currentPage} />
+	<SitePreview bind:isNoBadge bind:page={currentPage} bind:noStickyHeader />
 {/if}

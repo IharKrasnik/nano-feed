@@ -9,6 +9,8 @@
 
 	export { clazz as class };
 	export let browserClass = '';
+	export let browserStyle = '';
+	export let tabbarClass = '';
 	export let onClose;
 	export let fullscreenUrl = { STREAM_URL };
 
@@ -28,10 +30,10 @@
 		: bgColor}; border: 1px rgba(128, 128, 128, .3) solid;"
 >
 	<div
-		class="sticky z-30 h-[40px] w-full top-0 left-0 flex items-center rounded-tl-xl rounded-tr-xl"
+		class="{tabbarClass} sticky z-30 h-[40px] w-full top-0 left-0 flex items-center rounded-tl-xl rounded-tr-xl"
 		style="background-color: {frameBgColor};"
 	>
-		<div class="absolute top-0 left-[15px] flex z-10 h-full flex items-center">
+		<div class="px-4 flex z-10 h-full flex items-center">
 			<div
 				class="cursor-pointer w-[10px] h-[10px] bg-[#fe6152] rounded-full mr-2"
 				on:click={onClose}
@@ -47,11 +49,13 @@
 
 		{#if url}
 			<div class="w-full flex justify-center items-center">
-				<div
+				<a
+					target="_blank"
+					href={url}
 					class="text-black w-[300px] bg-white h-[20px] rounded-2xl flex justify-center items-center text-black text-xs"
 				>
 					{url}
-				</div>
+				</a>
 			</div>
 		{/if}
 
@@ -101,7 +105,11 @@
 		</div>
 	{/if}
 
-	<div class={browserClass} class:text-black={theme === 'light'}>
+	<div
+		class="{browserClass} overflow-y-scroll"
+		style={browserStyle}
+		class:text-black={theme === 'light'}
+	>
 		<slot />
 	</div>
 </div>

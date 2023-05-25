@@ -7,7 +7,7 @@
 	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import currentUser from 'lib/stores/currentUser';
-	import WaveIndicator from '$lib/components/WaveIndicator.svelte';
+	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 
 	import _ from 'lodash';
 

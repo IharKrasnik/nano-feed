@@ -5,7 +5,7 @@
 	import Loader from 'lib/components/Loader.svelte';
 
 	import currentUser from 'lib/stores/currentUser';
-	import allProjects from '$lib/stores/allProjects';
+	// import allProjects from '$lib/stores/allProjects';
 
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import WaveShortStats from 'lib/components/wave/ShortStats.svelte';
@@ -21,6 +21,8 @@
 	export let project;
 	export let isChart = true;
 
+	export let isNoTimeframeLabel = false;
+
 	let isLoading = false;
 
 	export let isUseCache = false;
@@ -32,13 +34,15 @@
 	let addWaveProject = async () => {
 		let waveProject = await post(`projects/${project._id}/wave`);
 
-		$allProjects = $allProjects.map((p) => {
-			if (p._id === project._id) {
-				p.waveProject = waveProject;
-			}
+		project.waveProject = waveProject;
 
-			return p;
-		});
+		// $allProjects = $allProjects.map((p) => {
+		// 	if (p._id === project._id) {
+		// 		p.waveProject = waveProject;
+		// 	}
+
+		// 	return p;
+		// });
 
 		window.open(`${WAVE_URL}/p/${waveProject.url}`, '_blank');
 	};
@@ -107,6 +111,9 @@
 
 		if (!metrics) {
 			loadMetrics({ projectId: 'mmntm.build' });
+		} else {
+			debugger;
+			loadMetrics({ projectId: 'page.mmntm.build', subProjectId: project.page?._id });
 		}
 	};
 </script>
@@ -182,7 +189,13 @@
 {#if project && (project?.waveProject?._id || project?.page?._id)}
 	<button class="{clazz} w-full small" on:click={openModal}>
 		{#if project?.waveProject?._id || project?.page?._id}
-			<WaveShortStats bind:isChart bind:isLoading bind:metrics bind:timeframe />
+			<WaveShortStats
+				bind:isChart
+				bind:isLoading
+				bind:metrics
+				bind:timeframe
+				bind:isNoTimeframeLabel
+			/>
 		{:else if $currentUser?.isAdmin || project.creator?._id === $currentUser?._id}
 			👋 Add Wave Analytics
 		{/if}

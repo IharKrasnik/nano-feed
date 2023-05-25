@@ -6,6 +6,7 @@
 	export let timeframe;
 	export let isChart;
 	export let isLoading;
+	export let isNoTimeframeLabel = false;
 
 	import processStats from './processStats';
 
@@ -29,10 +30,12 @@
 </script>
 
 {#if metrics || isLoading}
-	<div class="flex w-full justify-between mb-2 items-end">
+	<div class="flex w-full justify-between items-end">
 		<div class="flex items-end">
 			<h1 class="text-base">Users</h1>
-			<h3 class="ml-2 text-sm text-left">{timeframeLabel[timeframe]}</h3>
+			{#if !isNoTimeframeLabel}
+				<h3 class="ml-2 text-sm text-left">{timeframeLabel[timeframe]}</h3>
+			{/if}
 		</div>
 		<div class="flex items-start">
 			{#if isLoading}

@@ -1,6 +1,7 @@
 <script>
 	import _ from 'lodash';
-	import moment from 'moment';
+	import moment from 'moment-timezone';
+	import { get } from 'lib/api';
 	import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
 	import SingleStat from 'lib/components/wave/SingleStat.svelte';
 	import { fade, fly } from 'svelte/transition';
@@ -8,6 +9,7 @@
 	import countryCodeLoockup from 'country-code-lookup';
 
 	export let stats;
+	export let project;
 	export let timeframe = '7_days';
 	export let isShowSignups = false;
 	export let isSingleColumn;
@@ -76,6 +78,12 @@
 				isFirstTime = false;
 			}
 		}, 0);
+	} else {
+		get(`waveProjects/${project.url}/stats`, {
+			timeframe: timeframe,
+			timezone: moment.tz.guess(),
+			subProjectId: project.page?._id
+		}).then((res) => (stats = res));
 	}
 </script>
 
