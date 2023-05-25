@@ -232,7 +232,9 @@
 
 			{#if isMounted}
 				<div class="sticky bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
-					<div class="sm:p-0 p-8 _header flex md:justify-between items-center justify-center">
+					<div
+						class="py-2 px-4 sm:px-0 _header flex md:justify-between items-center justify-center"
+					>
 						<a class="flex items-center shrink-0 _logo" href="">
 							<Emoji class="mr-2" emoji={page.logo} />
 
