@@ -12,7 +12,7 @@
 	export let browserStyle = '';
 	export let tabbarClass = '';
 	export let onClose;
-	export let fullscreenUrl = { STREAM_URL };
+	export let fullscreenUrl = 'https://www.producthunt.com/products/momentum-page';
 
 	export let bgColor = '#fafafa';
 	export let frameBgColor = '#494949';
