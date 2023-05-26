@@ -668,7 +668,10 @@
 
 		{#if $currentUser && selectedProject?.page?._id && ($currentUser.isAdmin || selectedProject?.creator?._id === $currentUser._id)}
 			<div class="cursor-pointer w-full flex justify-center my-2">
-				<a class="button w-full small flex items-center justify-center" href={PAGE_URL}>
+				<a
+					class="button w-full small flex items-center justify-center"
+					href="https://page.mmntm.build"
+				>
 					📄 Edit Page
 				</a>
 			</div>
