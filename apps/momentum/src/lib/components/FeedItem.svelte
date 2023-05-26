@@ -57,9 +57,11 @@
 	};
 </script>
 
-<Modal isShown={isPreview} onClosed={() => (isPreview = false)}>
-	<FeedItemPreview {feedItem} />
-</Modal>
+{#if isPreview}
+	<Modal isShown={isPreview} onClosed={() => (isPreview = false)}>
+		<FeedItemPreview {feedItem} />
+	</Modal>
+{/if}
 
 <a
 	class="{theme === 'dark'

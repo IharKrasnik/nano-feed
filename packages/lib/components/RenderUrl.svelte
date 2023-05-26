@@ -24,8 +24,10 @@
 	let isFile;
 
 	$: if (url) {
+		console.log('if 1');
 		isFile = !(url.includes('loom.com') || url.includes('youtube.com') || url.includes('youtu.be'));
 	} else {
+		console.log('if 2');
 		isFile = false;
 	}
 
@@ -91,7 +93,7 @@
 				<video
 					class="rounded-xl max-w-[600px] w-full mx-auto {imgClass}"
 					autoplay
-					muted
+					muted={true}
 					loop
 					src={url}
 				/>
