@@ -760,7 +760,7 @@
 				}}
 			/>
 
-			{#each feed as feedItem}
+			{#each feed as feedItem (feedItem._id)}
 				<FeedItem {feedItem} />
 			{/each}
 		</div>

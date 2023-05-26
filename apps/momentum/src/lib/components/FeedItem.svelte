@@ -144,7 +144,7 @@
 						<video
 							src={attachment.url}
 							style="width: 100%; max-height: 300px;"
-							muted={true}
+							muted
 							loop
 							autoplay
 							bind:this={videoEl}
