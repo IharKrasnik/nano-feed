@@ -14,6 +14,7 @@
 	export let isLazy = true;
 	export let url;
 	export let imgClass = '';
+	export let isAutoplay = true;
 
 	export let isFilesOnly = false;
 
@@ -96,7 +97,7 @@
 				{log()}
 				<video
 					class="rounded-xl max-w-[600px] w-full mx-auto {imgClass}"
-					autoplay
+					autoplay={isAutoplay}
 					muted={true}
 					loop
 					bind:this={videoEl}

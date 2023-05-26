@@ -164,6 +164,7 @@
 												<div class="text-center">{@html page.subtitle}</div>
 												{#if page.demoUrl || page.openGraph?.imageUrl}
 													<RenderUrl
+														isAutoplay={false}
 														imgClass="my-4 mx-auto max-h-[200px]"
 														url={page.demoUrl || page.openGraph.imageUrl}
 													/>
