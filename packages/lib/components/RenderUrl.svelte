@@ -32,11 +32,15 @@
 	}
 
 	let isMounted;
+	let videoEl;
 
 	onMount(() => {
 		setTimeout(
 			() => {
 				isMounted = true;
+				if (videoEl) {
+					videoEl.setAttribute('muted', 'true');
+				}
 			},
 			isFile ? 0 : 1000
 		);
@@ -95,6 +99,7 @@
 					autoplay
 					muted={true}
 					loop
+					bind:this={videoEl}
 					src={url}
 				/>
 			{:else}
