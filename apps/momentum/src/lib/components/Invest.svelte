@@ -390,7 +390,7 @@
 
 		<div class="max-w-[600px] mx-auto px-4">
 			<video
-				muted
+				muted={true}
 				autoplay
 				loop
 				src={'https://fra1.digitaloceanspaces.com/ship-app-assets/stream/rec4sLfwGXzHxLy54/1683843864994-down_no_sound.mp4'}

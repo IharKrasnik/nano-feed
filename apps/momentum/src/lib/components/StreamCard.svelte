@@ -103,7 +103,7 @@
 						{#if stream.bannerUrl.includes('.mov') || stream.bannerUrl.includes('.mp4')}
 							<video
 								autoplay
-								muted
+								muted={true}
 								src={stream.bannerUrl}
 								class="w-full rounded-xl max-h-[180px] object-cover"
 								style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;"

@@ -147,7 +147,7 @@
 						{#each feedItem.attachments as attachment}
 							<div on:click={removeAttachments}>
 								{#if attachment.type === 'video'}
-									<video class="max-w-[400px]" src={attachment.url} muted autoplay />
+									<video class="max-w-[400px]" src={attachment.url} muted={true} autoplay />
 								{:else}
 									<img class="max-w-[400px]" src={attachment.url} />
 								{/if}
