@@ -28,6 +28,7 @@
 	onMount(() => {
 		if (videoEl) {
 			videoEl.play();
+			videoEl.setAttribute('muted', 'true');
 		}
 	});
 
