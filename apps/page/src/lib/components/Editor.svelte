@@ -195,7 +195,7 @@ See you!
 				isJustCreated = true;
 
 				if ($allPages.length === 1) {
-					isTutorialShown = true;
+					// isTutorialShown = true;
 				}
 			} else {
 				$allPages = $allPages.map((p) => {
