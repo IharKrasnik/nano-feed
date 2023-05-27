@@ -1,18 +1,16 @@
 <script>
 	let isHover = false;
+
+	export let isFixed = true;
 </script>
 
 <a
-	on:mouseenter={() => {
-		isHover = true;
-	}}
-	on:mouseleave={() => {
-		isHover = false;
-	}}
 	href="https://page.mmntm.build"
 	target="_blank"
-	class="block flex fixed left-2/4 sm:left-auto bottom-[50px] sm:right-[50px] z-1000 p-3 bg-[#fafafa] opacity-70 hover:opacity-100 hover:scale-105 transition text-black rounded-xl items-center"
-	style="z-index: 1000; transform: translate(-50%);"
+	class="block flex {isFixed
+		? 'fixed bottom-[50px] left-2/4 sm:left-[200px]'
+		: 'max-w-[250px] mx-auto'} z-1000 p-3 bg-[#fafafa] opacity-70 hover:opacity-100 hover:scale-105 transition text-black rounded-xl items-center"
+	style="z-index: 1000;"
 >
 	<svg
 		width="34"
@@ -33,9 +31,9 @@
 			fill="white"
 		/>
 	</svg>
-	{#if isHover}
-		Launch Now
-	{:else}
-		Built In Page
-	{/if}
+
+	Built In Momentum
 </a>
+
+<style>
+</style>

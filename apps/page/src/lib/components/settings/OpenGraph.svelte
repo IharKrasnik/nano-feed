@@ -20,7 +20,10 @@
 	};
 </script>
 
-<h3 class="text-xl font-bold mb-4">Open Graph</h3>
+<h3 class="text-xl font-bold mb-2">Open Graph</h3>
+<div class="text-sm mb-4">
+	Customize how your link will be shown when shared in social networks and web.
+</div>
 
 <div class="bg-[#fafafa]" style="padding: 32px 100px;">
 	<div class="bg-zinc-900 text-white rounded-xl p-4">

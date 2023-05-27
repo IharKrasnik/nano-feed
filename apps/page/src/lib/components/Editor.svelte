@@ -1592,6 +1592,18 @@ See you!
 										]}
 										frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'}
 									>
+										<div
+											slot="header"
+											class="px-4 mr-4 text-white rounded-xl opacity-90"
+											class:bg-zinc-900={!page.subscription}
+											class:bg-green-900={page.subscription}
+										>
+											{#if page.subscription}
+												🚀 To The Moon
+											{:else}
+												🔨 Build in Public
+											{/if}
+										</div>
 										<!-- {#if $sectionToEdit}
 										<div class="h-screen bg-white flex flex-col justify-center">
 											<RenderSection bind:section={$sectionToEdit} />
