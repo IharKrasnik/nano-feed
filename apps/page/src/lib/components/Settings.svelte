@@ -46,7 +46,7 @@
 				<div class="mb-4">Show the branded Momentum badge on your page</div>
 			</div>
 			<div>
-				<button class="_primary _small _green" on:click={subscribe}>⚡️ Hide Badge</button>
+				<Button class="_primary _small _green" onClick={subscribe}>⚡️ Hide Badge</Button>
 			</div>
 		</div>
 		<div class="bg-zinc-700 p-4">
@@ -64,7 +64,7 @@
 			</div>
 
 			<div>
-				<button class="_primary _small _green" on:click={subscribe}>⚡️ Make Private</button>
+				<Button class="_primary _small _green" onClick={subscribe}>⚡️ Make Private</Button>
 			</div>
 		</div>
 
