@@ -196,7 +196,7 @@
 					in:fly={{ y: -150, duration: 150, delay: 150 }}
 					out:fade={{ duration: 150, delay: 150 }}
 				>
-					<div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto py-4">
+					<div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto p-4">
 						<a class="flex items-center shrink-0" href="">
 							<Emoji class="mr-2" emoji={page.logo} />
 							<span class="font-bold  ">
@@ -262,7 +262,7 @@
 							bind:this={$aboveTheFoldEl}
 							class="_content pb-16 pt-8 sm:pt-32 {!page.testimonials?.length
 								? `${isAboveTheFold || isEmbed ? '' : 'sm:min-h-screen'} flex items-center`
-								: ''}"
+								: ''} {page.sections?.length ? '' : 'min-h-screen'}"
 							style={maxHeight ? `max-height: ${maxHeight}` : ''}
 						>
 							<div

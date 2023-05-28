@@ -1,4 +1,5 @@
 import authClientGuard from 'lib/guards/auth.client';
+import { redirect } from '@sveltejs/kit';
 
 import { PAGE_URL } from 'lib/env';
 import { get } from 'lib/api';
@@ -14,6 +15,10 @@ export async function load({ url, params, session, cookies }) {
 	let { pageSlug } = params;
 
 	let currentDomain = getDomain(url.href);
+
+	if (currentDomain === 'mmntm.me' && !pageSlug) {
+		throw redirect(302, '/');
+	}
 
 	if (!pageSlug) {
 		if (url.href.includes('.mmntm.live')) {

@@ -8,7 +8,7 @@
 	href="https://page.mmntm.build"
 	target="_blank"
 	class="block flex {isFixed
-		? 'fixed bottom-[50px] left-2/4 sm:left-[200px]'
+		? 'hidden sm:flex fixed bottom-[50px] left-2/4 sm:left-[200px]'
 		: 'max-w-[250px] mx-auto'} z-1000 p-3 bg-[#fafafa] opacity-70 hover:opacity-100 hover:scale-105 transition text-black rounded-xl items-center"
 	style="z-index: 1000;"
 >
