@@ -33,18 +33,22 @@
 		class="{tabbarClass} sticky z-30 h-[40px] w-full top-0 left-0 flex items-center rounded-tl-xl rounded-tr-xl"
 		style="background-color: {frameBgColor};"
 	>
-		<div class="px-4 flex z-10 h-full flex items-center">
-			<div
-				class="cursor-pointer w-[10px] h-[10px] bg-[#fe6152] rounded-full mr-2"
-				on:click={onClose}
-			/>
-			<div
-				class="cursor-pointer w-[10px] h-[10px] bg-[#ffbe2d] rounded-full mr-2"
-				on:click={onClose}
-			/>
-			<a href={fullscreenUrl} target="_blank">
-				<div class="w-[10px] h-[10px] bg-[#27ca42] rounded-full mr-2" />
-			</a>
+		<div class="w-full flex justify-between items-center">
+			<div class="px-4 flex z-10 h-full flex items-center">
+				<div
+					class="cursor-pointer w-[10px] h-[10px] bg-[#fe6152] rounded-full mr-2"
+					on:click={onClose}
+				/>
+				<div
+					class="cursor-pointer w-[10px] h-[10px] bg-[#ffbe2d] rounded-full mr-2"
+					on:click={onClose}
+				/>
+				<a href={fullscreenUrl} target="_blank">
+					<div class="w-[10px] h-[10px] bg-[#27ca42] rounded-full mr-2" />
+				</a>
+			</div>
+
+			<slot name="header" />
 		</div>
 
 		{#if url}
