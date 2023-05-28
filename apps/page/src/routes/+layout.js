@@ -17,7 +17,7 @@ export async function load({ url, params, session, cookies }) {
 	let currentDomain = getDomain(url.href);
 
 	if (currentDomain === 'mmntm.me' && !pageSlug) {
-		throw redirect(302, '/');
+		throw redirect(302, 'https://page.mmntm.build');
 	}
 
 	if (!pageSlug) {
