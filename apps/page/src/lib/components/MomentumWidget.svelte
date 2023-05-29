@@ -111,7 +111,7 @@
 		on:clickOutside={() => {
 			isCollapsed = true;
 		}}
-		class="fixed right-0 bottom-0 {isCollapsed
+		class="fixed right-12 bottom-0 {isCollapsed
 			? 'p-4'
 			: 'p-8'} bg-[#222] m-8 text-white {isCollapsed
 			? 'rounded-xl'
