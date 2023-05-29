@@ -37,6 +37,11 @@
 	<EditOpenGraph bind:page />
 	<hr class="my-8 border-[#8B786D] opacity-30" />
 	<EditDomains bind:page />
+
+	<hr class="my-8 border-[#8B786D] opacity-30" />
+
+	<EditCustomCode bind:page />
+
 	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<div>
@@ -95,8 +100,4 @@
 			</div>
 		</div>
 	</div>
-	<!-- 	
-	<hr class="my-8 border-[#8B786D] opacity-30" />
-
-	<EditCustomCode bind:page /> -->
 </div>

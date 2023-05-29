@@ -20,6 +20,10 @@ export async function load({ url, params, session, cookies }) {
 		throw redirect(302, 'https://page.mmntm.build');
 	}
 
+	if (currentDomain === 'page.mmntm.build' && pageSlug) {
+		throw redirect(302, `https://mmntm.me/${pageSlug}`);
+	}
+
 	if (!pageSlug) {
 		if (url.href.includes('.mmntm.live')) {
 			pageSlug = currentDomain;

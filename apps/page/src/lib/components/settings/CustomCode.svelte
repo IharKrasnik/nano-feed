@@ -14,7 +14,8 @@
 	};
 </script>
 
-<h3 class="text-xl font-bold mb-4">Custom Code</h3>
+<h3 class="text-xl font-bold mb-2">Custom Code</h3>
+<h3 class="text-sm mb-4">Embed custom HTML code to integrate widgets and customize page appearance.</h3>
 
 <div class="mt-4">
 	<div class="mb-4">
