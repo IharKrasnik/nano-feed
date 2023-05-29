@@ -42,6 +42,7 @@
 
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
+	import preventStylesPaste from 'lib/use/preventStylesPaste';
 
 	import currentUser from 'lib/stores/currentUser';
 	import allPages from '$lib/stores/allPages';
@@ -68,6 +69,11 @@
 
 	let isLoading = false;
 	let isSignupFormShown = false;
+	let isJustPaid;
+
+	if ($sveltePage.url.searchParams.get('thank-you')) {
+		isJustPaid = true;
+	}
 
 	let defaultPage = {
 		_id: undefined,
@@ -610,6 +616,7 @@ See you!
 					class="w-full p-4 bg-[#f6f5f5] min-h-[200px] rounded-xl"
 					bind:innerHTML={broadcastEmail.html}
 					contenteditable
+					use:preventStylesPaste
 				/>
 
 				<hr class="my-8 border-[#8B786D] opacity-30" />
@@ -1019,6 +1026,7 @@ See you!
 											<div
 												class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
 												contenteditable
+												use:preventStylesPaste
 												data-placeholder="Build a better product in public."
 												bind:innerHTML={page.title}
 												on:focus={() => (focuses.title = true)}
@@ -1049,6 +1057,7 @@ See you!
 												<div
 													class="min-h-[100px]"
 													contenteditable="true"
+													use:preventStylesPaste
 													bind:innerHTML={page.subtitle}
 													on:focus={() => (focuses.subtitle = true)}
 													on:blur={() => (focuses.subtitle = false)}
@@ -1452,6 +1461,7 @@ See you!
 								<div class="text-sm opacity-70 mb-2">Email</div>
 								<div
 									contenteditable="true"
+									use:preventStylesPaste
 									bind:innerHTML={page.welcomeEmail.html}
 									class="w-full p-4 bg-[#fafafa]"
 								/>
@@ -1499,7 +1509,7 @@ See you!
 						{#if page._id && !$sectionToEdit}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
 								<div class="mx-auto">
-									{#if isJustCreated}
+									{#if isJustCreated || isJustPaid}
 										<ConfettiExplosion particleCount={200} force={0.3} />
 									{/if}
 								</div>
@@ -1559,7 +1569,7 @@ See you!
 										{/if}
 									</div>
 									{#if metrics?.conversion}
-										<div class="flex justify-center mt-1 absolute top-0 right-2">
+										<div class="flex justify-center mt-1 absolute top-0 left-20">
 											<div
 												class="mr-4 opacity-80 text-center px-4 rounded-xl"
 												style="background-color: {getConversionColor(
@@ -1597,6 +1607,8 @@ See you!
 											class="px-4 mr-4 text-white rounded-xl opacity-90"
 											class:bg-zinc-900={!page.subscription}
 											class:bg-green-900={page.subscription}
+											use:tooltip
+											title="Current Plan"
 										>
 											{#if page.subscription}
 												🚀 To The Moon

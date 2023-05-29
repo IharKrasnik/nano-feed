@@ -10,6 +10,7 @@
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
+	import preventStylesPaste from 'lib/use/preventStylesPaste';
 
 	let clazz = 'p-4';
 	export { clazz as class };
@@ -106,12 +107,18 @@
 	</div>
 
 	<div class="flex w-full items-center mb-4">
-		<div contenteditable bind:innerHTML={item.title} data-placeholder="Title" />
+		<div
+			contenteditable
+			bind:innerHTML={item.title}
+			data-placeholder="Title"
+			use:preventStylesPaste
+		/>
 	</div>
 
 	<div
 		class="w-full mb-4 textarea"
 		contenteditable
+		use:preventStylesPaste
 		bind:innerHTML={item.description}
 		data-placeholder="Description"
 	/>

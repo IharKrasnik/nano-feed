@@ -80,6 +80,8 @@
 				<div class=" w-full my-4">
 					<WaveIndicator
 						class="w-full _section text-white"
+						pageTitle="Your public analytics"
+						pageSubtitle="This data is available to founders from Momentum community"
 						isUseCache={true}
 						isChart={false}
 						timeframe="7_days"

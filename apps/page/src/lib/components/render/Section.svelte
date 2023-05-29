@@ -160,7 +160,7 @@
 									</a>
 								{:else if section.type === 'pricing'}
 									{#if page.isCollectEmails}
-										<button class="w-full" on:click={focusEmailInput}
+										<button class="button w-full" on:click={focusEmailInput}
 											>{item.callToActionText || page.callToAction}</button
 										>
 									{:else}
@@ -205,7 +205,7 @@
 		padding: 8px 16px;
 		font-size: 18px;
 
-		color: white;
+		color: var(--button-color);
 		background-color: var(--accent-color);
 	}
 </style>
