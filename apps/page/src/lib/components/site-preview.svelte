@@ -262,7 +262,7 @@
 							bind:this={$aboveTheFoldEl}
 							class="_content pb-16 pt-8 sm:pt-32 {!page.testimonials?.length
 								? `${isAboveTheFold || isEmbed ? '' : 'sm:min-h-screen'} flex items-center`
-								: ''} {page.sections?.length ? '' : 'min-h-screen'}"
+								: ''} {page.sections?.length || isEmbed ? '' : 'min-h-screen'}"
 							style={maxHeight ? `max-height: ${maxHeight}` : ''}
 						>
 							<div

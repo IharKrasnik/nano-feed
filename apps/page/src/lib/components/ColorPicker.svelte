@@ -328,7 +328,7 @@
 							<div style="zoom: .5;" class="rounded-2xl transition" on:click={() => setTheme(t)}>
 								<BrowserFrame>
 									<div class="max-h-[500px] overflow-y-scroll">
-										<SitePreview isEmbed maxHeight="450px;" page={{ ...page }} />
+										<SitePreview isEmbed isNoBadge maxHeight="450px;" page={{ ...page }} />
 									</div>
 								</BrowserFrame>
 							</div>
@@ -364,6 +364,8 @@
 											<SitePreview
 												isAboveTheFold={true}
 												maxHeight="350px;"
+												isEmbed
+												isNoBadge
 												page={{ ...page, theme: { ...t } }}
 											/>
 										</div>
