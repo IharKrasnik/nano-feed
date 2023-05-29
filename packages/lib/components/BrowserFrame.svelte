@@ -47,7 +47,6 @@
 					<div class="w-[10px] h-[10px] bg-[#27ca42] rounded-full mr-2" />
 				</a>
 			</div>
-
 			<slot name="header" />
 		</div>
 
@@ -66,7 +65,7 @@
 		{#if links}
 			<div
 				class="absolute mt-[75px] p-2 bg-[#fafafa] w-full flex text-white opacity-80 pl-4"
-				style="background-color: {frameBgColor};"
+				style="background-color: rgba(0,0,0,0.6);"
 			>
 				{#each links as link}
 					<a

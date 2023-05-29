@@ -21,6 +21,9 @@
 	export let project;
 	export let isChart = true;
 
+	export let pageTitle = '';
+	export let pageSubtitle = '';
+
 	export let isNoTimeframeLabel = false;
 
 	let isLoading = false;
@@ -121,13 +124,25 @@
 {#if isModalOpen}
 	<Modal isShown onClosed={() => (isModalOpen = false)} maxWidth={900}>
 		<div class="p-8">
-			<h2>{project?.page?._id || project?.waveProject?._id ? '' : 'Add '}Wave Analytics</h2>
-			<h3>Wave is a stupid-simple web analytics dashboard.</h3>
+			<h2 class="text-xl font-bold mb-2">
+				{#if pageTitle}
+					{pageTitle}
+				{:else}
+					{project?.page?._id || project?.waveProject?._id ? '' : 'Add '}Wave Analytics
+				{/if}
+			</h2>
+			<h3>
+				{#if pageSubtitle}
+					{pageSubtitle}
+				{:else}
+					Wave is a stupid-simple web analytics dashboard.
+				{/if}
+			</h3>
 
 			{#if project.waveProject?._id || project.page?._id}
 				<div class="flex justify-between">
 					<div class="mt-4 text-lg opacity-70">
-						{project.waveProject?.url || project.url}
+						{project.waveProject?.url || project.url || ''}
 					</div>
 					<div>
 						<select
