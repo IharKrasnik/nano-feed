@@ -1105,6 +1105,11 @@ See you!
 											</div>
 										{/if}
 
+										<div class="text-sm opacity-90 my-4">
+											Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word
+											or two.
+										</div>
+
 										{#if page._id}
 											<div class="_section">
 												<div class="_title">
