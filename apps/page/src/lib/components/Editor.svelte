@@ -42,7 +42,7 @@
 
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
-	import preventStylesPaste from 'lib/use/preventStylesPaste';
+	import contenteditable from 'lib/use/contenteditable';
 
 	import currentUser from 'lib/stores/currentUser';
 	import allPages from '$lib/stores/allPages';
@@ -599,7 +599,7 @@ See you!
 {#if isBroadcastEmailModalShown}
 	<Modal
 		isShown
-		maxWidth={600}
+		maxWidth={900}
 		onClosed={() => {
 			isBroadcastEmailModalShown = false;
 		}}
@@ -630,7 +630,7 @@ See you!
 					class="w-full p-4 bg-[#f6f5f5] min-h-[200px] rounded-xl"
 					bind:innerHTML={broadcastEmail.html}
 					contenteditable
-					use:preventStylesPaste
+					use:contenteditable
 				/>
 
 				<hr class="my-8 border-[#8B786D] opacity-30" />
@@ -666,10 +666,9 @@ See you!
 			{/if}
 
 			{#if isBroadcastTestSent}
-				<div class="p-4 bg-[#fafafa] rounded-xl mb-2">
-					<div class="text-lg font-bold mb-2">{broadcastEmail.subject}</div>
-
-					<div class="mt-2">
+				<!-- <div class="p-4 bg-[#fafafa] rounded-xl mb-2">
+					<div class="mt-2 p-16">
+						<div class="text-lg font-bold mb-4">{broadcastEmail.subject}</div>
 						{@html broadcastEmail.html}
 					</div>
 
@@ -689,7 +688,7 @@ See you!
 							class="rounded-xl mt-4 max-h-[150px] max-w-[300px]"
 						/>
 					{/if}
-				</div>
+				</div> -->
 
 				{#if broadcastEmail.isSent}
 					<div class="my-8 mt-16 text-lg">
@@ -703,8 +702,11 @@ See you!
 						>
 					</div>
 				{:else}
-					The test email was sent to&nbsp;<b> {$currentUser.email}</b>. <br />
-					Does it look good? Ready to send it to your subscribers? <br />
+					<h3 class="text-lg mb-4">
+						The test email was sent to&nbsp;<b> {$currentUser.email}</b>. <br />
+					</h3>
+
+					Does it look good? Ready to send it to your subscribers?<br />
 
 					<div class="mt-4 bg-[#fafafa] p-4 rounded-xl">
 						<b>🙅‍♀️ No Spam Area</b> <br />
@@ -1040,7 +1042,7 @@ See you!
 											<div
 												class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
 												contenteditable
-												use:preventStylesPaste
+												use:contenteditable
 												data-placeholder="Build a better product in public."
 												bind:innerHTML={page.title}
 												on:focus={() => (focuses.title = true)}
@@ -1071,7 +1073,7 @@ See you!
 												<div
 													class="min-h-[100px]"
 													contenteditable="true"
-													use:preventStylesPaste
+													use:contenteditable
 													bind:innerHTML={page.subtitle}
 													on:focus={() => (focuses.subtitle = true)}
 													on:blur={() => (focuses.subtitle = false)}
@@ -1404,25 +1406,27 @@ See you!
 										Share your page around to get your first signups.
 									{/if}
 
-									{#each submissions.results as submission}
-										<div class="flex my-2 opacity-90 w-full justify-between items-center">
-											<div>
-												{submission.email}
-												{#if submission.isVerified}
-													<div
-														class="inline"
-														use:tooltip
-														title="Email address is verified; Welcome email sent"
-													>
-														✅
-													</div>
-												{/if}
+									<div class="max-h-[250px] overflow-y-auto">
+										{#each submissions.results as submission}
+											<div class="flex my-2 opacity-90 w-full justify-between items-center">
+												<div>
+													{submission.email}
+													{#if submission.isVerified}
+														<div
+															class="inline"
+															use:tooltip
+															title="Email address is verified; Welcome email sent"
+														>
+															✅
+														</div>
+													{/if}
+												</div>
+												<div class="text-sm opacity-70">
+													{moment(submission.createdOn).format('MMM DD HH:MM')}
+												</div>
 											</div>
-											<div class="text-sm opacity-70">
-												{moment(submission.createdOn).format('MMM DD HH:MM')}
-											</div>
-										</div>
-									{/each}
+										{/each}
+									</div>
 
 									{#if submissions?.results?.length}
 										<div class="font-bold mt-8 mb-4">Broadcast Emails</div>
@@ -1480,7 +1484,7 @@ See you!
 								<div class="text-sm opacity-70 mb-2">Email</div>
 								<div
 									contenteditable="true"
-									use:preventStylesPaste
+									use:contenteditable
 									bind:innerHTML={page.welcomeEmail.html}
 									class="w-full p-4 bg-[#fafafa]"
 								/>
