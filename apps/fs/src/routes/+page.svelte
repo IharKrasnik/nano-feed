@@ -149,11 +149,74 @@
 			]
 		},
 		{
+			type: 'database',
+			dirs: [
+				{
+					name: 'Core',
+					files: [
+						{
+							name: 'Website analytics',
+							url: 'https://wave.mmntm.build/p/mmntm.build'
+						}
+					]
+				},
+				{
+					name: 'Feed',
+					files: [
+						{
+							name: 'App analytics',
+							url: 'https://wave.mmntm.build/p/feed.mmntm.build'
+						}
+					]
+				},
+				{
+					name: 'Page',
+					files: [
+						{
+							name: 'App analytics',
+							url: 'https://wave.mmntm.build/p/page.mmntm.build'
+						}
+					]
+				},
+				{
+					name: 'Wave',
+					files: [
+						{
+							name: 'App analytics',
+							url: 'https://wave.mmntm.build/p/wave.mmntm.build'
+						}
+					]
+				}
+			]
+		},
+		{
+			type: 'coderepo',
+			dirs: [
+				{
+					name: 'Momentum',
+					files: [
+						{
+							name: 'Monorepo',
+							url: 'https://github.com/iharkrasnik/nano-feed'
+						}
+					]
+				}
+			]
+		},
+		{
 			type: 'social',
 			dirs: [
 				{
 					name: 'All Social',
 					files: [
+						{
+							name: 'Momentum Feed',
+							url: 'https://feed.mmntm.build/momentum'
+						},
+						{
+							name: 'Momentum Testimonials',
+							url: 'https://feed.mmntm.build/momentum-testimonials'
+						},
 						{
 							name: 'Twitter MMNTM',
 							url: 'https://twitter.com/mmntm_build'
