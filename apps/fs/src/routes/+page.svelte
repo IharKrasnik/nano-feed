@@ -126,6 +126,29 @@
 			]
 		},
 		{
+			type: 'mediakit',
+			dirs: [
+				{
+					name: 'Core',
+					files: [
+						{
+							name: 'OG Image',
+							url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/6474f9e871da5400157f545a/1689795249889-image.png'
+						}
+					]
+				},
+				{
+					name: 'Page',
+					files: [
+						{
+							name: 'OG Image',
+							url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/6474f9e871da5400157f545a/1689795249889-image.png'
+						}
+					]
+				}
+			]
+		},
+		{
 			type: 'social',
 			dirs: [
 				{
