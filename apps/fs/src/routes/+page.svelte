@@ -21,7 +21,7 @@
 
 	let fileTypes = [
 		{ type: 'website', name: 'Website Pages' },
-		{ type: 'micro-saas', name: 'Micro-Products' },
+		{ type: 'micro-product', name: 'Micro-Products' },
 		{ type: 'saas', name: 'SaaS products' },
 		{ type: 'blog', name: 'Blog Articles' },
 		{ type: 'newsletter', name: 'Newsletter Emails' },
@@ -102,6 +102,24 @@
 						{
 							name: 'Home',
 							url: 'https://wave.mmntm.build'
+						}
+					]
+				}
+			]
+		},
+		{
+			type: 'micro-product',
+			dirs: [
+				{
+					name: 'All',
+					files: [
+						{
+							name: 'Momentum Playbook',
+							url: 'https://play.nanohq.co'
+						},
+						{
+							name: 'Grit',
+							url: 'https://grit.nanohq.co'
 						}
 					]
 				}
