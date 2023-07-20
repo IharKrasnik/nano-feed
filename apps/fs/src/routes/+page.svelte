@@ -186,6 +186,24 @@
 							url: 'https://wave.mmntm.build/p/wave.mmntm.build'
 						}
 					]
+				},
+				{
+					name: 'Momentum Playbook',
+					files: [
+						{
+							name: 'Page analytics',
+							url: 'https://wave.mmntm.build/p/play.nanohq.co'
+						}
+					]
+				},
+				{
+					name: 'Nano Grit',
+					files: [
+						{
+							name: 'Page analytics',
+							url: 'https://wave.mmntm.build/p/grit.nanohq.co'
+						}
+					]
 				}
 			]
 		},
@@ -230,36 +248,58 @@
 		// 	name: ''
 		// }
 	];
+
+	let previewUrl;
+
+	let setUrl = (url) => {
+		previewUrl = url;
+	};
 </script>
 
-<div class="container mx-auto mt-8">
-	{#each dirs as parentdir}
-		<div class="flex items-center  mt-4">
-			<div class="text-lg font-bold">📁 {parentdir.type}s</div>
-			<a class="ml-2 text-lg opacity-80 cursor-pointer">+</a>
-		</div>
-		<div class="px-4" style="border-left: 1px rgba(255,255,255,.3) solid;">
-			{#each parentdir.dirs as dir}
-				<div class="flex items-center mt-2">
-					<div>📁 {dir.name}</div>
+<div class="flex container mx-auto mt-8">
+	<div class="w-full">
+		<div>
+			{#each dirs as parentdir}
+				<div class="flex items-center  mt-4">
+					<div class="text-lg font-bold">📁 {parentdir.type}s</div>
 					<a class="ml-2 text-lg opacity-80 cursor-pointer">+</a>
 				</div>
+				<div class="px-4" style="border-left: 1px rgba(255,255,255,.3) solid;">
+					{#each parentdir.dirs as dir}
+						<div class="flex items-center mt-2">
+							<div>📁 {dir.name}</div>
+							<a class="ml-2 text-lg opacity-80 cursor-pointer">+</a>
+						</div>
 
-				{#each dir.files as file}
-					<div class="px-4" style="border-left: 1px rgba(255,255,255,.3) solid;">
-						📄 {file.name}: <a href={file.url} target="_blank">{file.url}</a>
-					</div>
-				{/each}
+						{#each dir.files as file}
+							<div class="px-4" style="border-left: 1px rgba(255,255,255,.3) solid;">
+								📄 {file.name}:
+								<a on:click|preventDefault={() => setUrl(file.url)} href={file.url} target="_blank"
+									>{file.url}</a
+								>
+							</div>
+						{/each}
+					{/each}
+				</div>
 			{/each}
 		</div>
-	{/each}
-</div>
-<div class="container mx-auto mt-8">
-	<div class="grid grid-cols-4 cursor-pointer">
-		{#each fileTypes as fileType}
-			<div class="p-4 m-4" style="border: 1px rgba(255,255,255, .3) solid;">
-				📁 {fileType.name}
+		<div class="container mx-auto mt-8">
+			<div class="grid grid-cols-4 cursor-pointer">
+				{#each fileTypes as fileType}
+					<div class="p-4 m-4" style="border: 1px rgba(255,255,255, .3) solid;">
+						📁 {fileType.name}
+					</div>
+				{/each}
 			</div>
-		{/each}
+		</div>
+	</div>
+	<div class="w-full">
+		<BrowserFrame>
+			{#key previewUrl}
+				{#if previewUrl}
+					<iframe class="w-full h-screen" src={previewUrl} />
+				{/if}
+			{/key}
+		</BrowserFrame>
 	</div>
 </div>
