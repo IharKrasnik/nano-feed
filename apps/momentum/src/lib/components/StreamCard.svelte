@@ -209,7 +209,7 @@
 
 					{#if stream._id && !stream.fullName}
 						<div class="mt-4">
-							{#if stream.isUpvoted}
+							{#if ($currentUser && stream.creator && stream.creator._id === $currentUser._id) || stream.isUpvoted}
 								<div class="text-center">✅ {stream?.upvotes?.length || 1} upvotes</div>
 							{:else}
 								<button

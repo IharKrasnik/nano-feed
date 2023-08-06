@@ -1,6 +1,6 @@
 <script>
+	import _ from 'lodash';
 	import { get, post } from 'lib/api';
-
 	import allProjects from '$lib/stores/allProjects';
 	import StreamCard from '$lib/components/StreamCard.svelte';
 	import Stream from '$lib/components/Stream.svelte';
@@ -9,6 +9,7 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Calendar from './Calendar.svelte';
 	import creators from '$lib/stores/creators';
+	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 
 	let streamCreators;
 
@@ -27,10 +28,10 @@
 		},
 		page: null,
 		slug: 'nano',
-		title: 'Nano',
+		title: 'Nano Community & Fund',
 		emoji: null,
 		color: '#a263d9',
-		description: 'Start and grow your startup to $1M+ with media.',
+		description: 'We help decent makers to build $1M',
 		url: 'https://nanohq.co',
 		bannerUrl:
 			'https://assets.website-files.com/64246fe509498c27897c2eaa/6425acab275655043392fea7_OpenGraph%20(1).png',
@@ -121,7 +122,7 @@
 				<input bind:value={request.email} type="text" placeholder="igor@paralect.com" />
 			</div>
 
-			<button class="mt-8" on:click={launchStream}>Launch a stream</button>
+			<button class="mt-8" on:click={launchStream}>Launch my stream</button>
 		</div>
 	</Modal>
 {/if}
@@ -177,7 +178,52 @@
 {/if}
 
 <div class="relative mt-4 sm:m-auto">
-	<div class="mx-4">
+	<div class="container mx-auto flex flex-col justify-center" style="height: calc(100vh-150px)">
+		<div class="flex justify-center mt-8">
+			<img
+				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683477275194-nano-logo-big.png"
+				class="w-[50px] h-[50px] mb-4"
+			/>
+		</div>
+		<h1 class="text-5xl text-center font-bold mb-4 ">Nano Fund</h1>
+
+		<h2 class="text-3xl text-center">
+			We help decent makers grow their startups to $1M+ with media
+		</h2>
+		<h3 class="text-2xl mt-4 text-center">Nano is an internet accelerator, community and fund</h3>
+
+		<div class="flex justify-center my-8">
+			{#if streamCreators}
+				{#each streamCreators as creator}
+					<Avatar style="margin-right: -15px;" size="30px" user={creator} />
+				{/each}
+			{/if}
+		</div>
+
+		<div class="flex justify-between w-[600px] mx-auto my-8">
+			<button
+				class="rounded-xl text-lg w-full mx-2"
+				on:click={() => {
+					isGrowModalOpen = true;
+				}}>📈 Grow My Startup</button
+			>
+
+			<button
+				class="rounded-xl text-lg w-full mx-2"
+				on:click={() => {
+					isInvestModalOpen = true;
+				}}>🤑 Invest In Startup</button
+			>
+		</div>
+
+		<!-- <div class="text-center text-xl mt-4">
+			Not every startup should grow to billions. <br /> There are tons of opportunities around us to
+			build sustainable and profitable businesses worth $1M+. <br /> Start from a nano niche, get traction
+			with content, build a nano product and grow with your audience.
+		</div> -->
+	</div>
+
+	<!-- <div class="mx-4">
 		<div
 			class="relative my-8 flex-col sm:flex-row flex justify-between p-8 rounded-2xl text-white max-w-[1200px] mx-auto"
 			style="background: url('/backgrounds/gradient-1.svg');"
@@ -199,20 +245,20 @@
 			<div
 				class="max-w-[350px] flex-1 h-full flex flex-col justify-center items-center py-8 sm:p-8"
 			>
-				<h2 class="text-4xl">$3,000</h2>
-				<h3 class="text-2xl">May Fund</h3>
+				<h2 class="text-4xl">$50,000</h2>
+				<h3 class="text-2xl">July Fund</h3>
 				<button
 					class="mt-8 rounded-xl text-xl w-full"
 					on:click={() => {
 						isInvestModalOpen = true;
 					}}>Invest in open startups</button
 				>
-				<!-- <video muted controls autoplay src={hubProject.pinnedUrl} class="rounded-xl" /> -->
-				<!-- <RenderUrl url={hubProject.pinnedUrl} /> -->
-				<!-- <img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" /> -->
+				<video muted controls autoplay src={hubProject.pinnedUrl} class="rounded-xl" />
+				<RenderUrl url={hubProjec.pinnedUrl} />
+				<img src={hubProject.bannerUrl} class="w-full max-h-[200px] object-cover rounded-lg" />
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<img
 		class="mx-auto"
@@ -226,9 +272,93 @@
 		style="background: radial-gradient(circle at 50% 51.2%,  rgb(8 6 15) 24.5%, rgb(30, 26, 34) 66%)"
 		class="pt-16 pb-8 mb-16"
 	>
+		<h1 class="text-3xl font-bold text-center mx-auto" style="max-width:540px;">Nano Startups</h1>
+
+		<h3 class="container mx-auto max-w-[800px] text-center mt-2">
+			Startups are <a
+				class="underline"
+				target="_blank"
+				href="https://www.notion.so/How-Nano-measures-startup-performance-How-can-I-grow-faster-4e35bb3e5cf447b29be8d38536393b9a"
+				>ranked</a
+			> by traction, activity and support from the community
+		</h3>
+
+		<div class="container mx-auto max-w-[1000px]">
+			<div class="p-4 mt-8 w-full" style="border: 1px rgba(255,255,255, .3) solid;">
+				<table class="p-4 rounded-xl w-full">
+					<thead>
+						<tr style="border-bottom: 1px rgba(255,255,255, .3) solid;">
+							<td class="py-2 pr-2"><h3>Name</h3></td>
+							<!-- <td>Age</td> -->
+							<td class="py-2 pr-2"><h3>Views/Week</h3></td>
+							<td class="py-2 pr-2"><h3>Total Users</h3></td>
+							<td class="py-2 pr-2"><h3>Revenue</h3></td>
+							<td class="py-2" />
+						</tr>
+					</thead>
+
+					<tbody>
+						{#each _.take(projects, 7) as project}
+							<tr>
+								<td class="py-4 pr-8">
+									<div class="flex text-lg font-bold items-center">
+										<a target="_blank" href={project.url}>{project.title}</a>
+										<img
+											class="ml-2 rounded-full w-[20px] h-[20px]"
+											src={project.creator?.avatarUrl}
+										/>
+									</div>
+									<div class="text-sm max-w-[350px]">
+										<div class="text-ellipsis overflow-hidden">
+											{project.description}
+										</div>
+									</div>
+								</td>
+								<!-- <td>
+
+						</td> -->
+								<td class="p-2 mx-8">
+									{#if project.statsCache && project.statsCache['7_days']}
+										<!-- {project.statsCache['7_days'].totalUsersCount} -->
+
+										<WaveIndicator
+											class="my-4 w-auto"
+											isUseCache={true}
+											isNoTimeframeLabel={true}
+											isChart={false}
+											timeframe="7_days"
+											{project}
+										/>
+									{:else}
+										N/A
+									{/if}
+								</td>
+
+								<td class="p-2 mx-4"> <h1>{project.totalUsers || ''}</h1></td>
+								<td class="p-2 mx-4">
+									<h1>
+										{project?.revenue?.total
+											? `$${(project?.revenue?.total / 100).toFixed(2)}`
+											: ''}
+									</h1>
+								</td>
+								<td class="p-2 mx-4"
+									><button on:click={() => (isInvestModalOpen = true)}>Invest</button></td
+								>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- <div
+		style="background: radial-gradient(circle at 50% 51.2%,  rgb(8 6 15) 24.5%, rgb(30, 26, 34) 66%)"
+		class="pt-16 pb-8 mb-16"
+	>
 		<div class="_header font-bold text-center mx-auto" style="max-width:540px;">
 			Watch as {projects.length} early-stage startups grow their traction together, daily... <br />
-			<!-- <div class="mb-8">🍿</div> -->
 		</div>
 
 		<div class="mt-8 mb-16">
@@ -241,10 +371,6 @@
 			<div class="">Startups</div>
 			<div class="text-base font-base">Scroll 👉</div>
 
-			<!-- <hr
-				class="absolute w-full left-0"
-				style="border: .5px rgba(255, 255, 255, .5) solid; bottom: -16px;"
-			/> -->
 		</div>
 
 		<div class="mt-4 sm:pl-8 flex overflow-y-scroll px-[1px]">
@@ -260,7 +386,7 @@
 				</div>
 			{/each}
 		</div>
-	</div>
+	</div> -->
 
 	<div class="_header font-bold text-center my-8 mt-16">
 		Everyone of us here builds in public. <br />

@@ -31,12 +31,12 @@
 
 {#if metrics || isLoading}
 	<div class="flex w-full justify-between items-end">
-		<div class="flex items-end">
-			<h1 class="text-base">Users</h1>
-			{#if !isNoTimeframeLabel}
+		{#if !isNoTimeframeLabel}
+			<div class="flex items-end">
+				<h1 class="text-base">Users</h1>
 				<h3 class="ml-2 text-sm text-left">{timeframeLabel[timeframe]}</h3>
-			{/if}
-		</div>
+			</div>
+		{/if}
 		<div class="flex items-start">
 			{#if isLoading}
 				<Loader />
