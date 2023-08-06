@@ -488,6 +488,45 @@
 		</div>
 	</div>
 
+	<div class="container max-w-[1200px] mx-auto">
+		<h1 class="text-3xl text-center">Grow with content. We'll show how!</h1>
+		<h3 class="mt-4 text-center">Check out free public playbooks validated by Nano Community</h3>
+
+		<div class="sm:columns-2 columns-1 sm:gap-8 gap-4 mt-16">
+			<div class="mb-4 break-inside-avoid">
+				<h1 class="mb-4">Momentum Playbook</h1>
+
+				<FeedItem feedItem={momentumPlaybook} />
+			</div>
+
+			<div class="mb-4 break-inside-avoid">
+				<h1 class="mb-4">Nano Grit</h1>
+
+				<FeedItem feedItem={nanoGrit} />
+			</div>
+
+			<div class="mb-4 break-inside-avoid">
+				<h1 class="mb-4">ClipWing Journal (Case Study)</h1>
+
+				<FeedItem feedItem={clipWingJournal} />
+			</div>
+
+			<div class="mb-4 break-inside-avoid">
+				<h1 class="mb-4">Welcome To The Internet</h1>
+
+				<FeedItem feedItem={welcomeToTheInternet} />
+			</div>
+		</div>
+
+		<h3 class="mt-4 mb-16 text-center">
+			To go in line with our mission our goal is to create a $1M startup playbook and prove it
+			works, in public. It won't be quick and easy playbook. But it will be the process you can
+			understand, follow and repeat. Join and create with us!
+		</h3>
+
+		<hr style="border: 1px rgba(255, 255,255, .3) solid;" />
+	</div>
+
 	<div class="_header text-center mb-16 mt-32">
 		Don't jump into tech early.
 
@@ -515,44 +554,6 @@
 				Invest early in proven resourceful makers
 			</div>
 		</div>
-	</div>
-
-	<div class="container max-w-[800px] mx-auto">
-		<h1 class="text-3xl text-center">Grow with content. We'll show how!</h1>
-		<h3 class="mt-4 text-center">Check out free public playbooks validated by Nano Community</h3>
-
-		<div class="sm:columns-2 columns-1 sm:gap-8 gap-4 mt-16">
-			<div class="break-inside-avoid">
-				<h1 class="mb-4">Momentum Playbook</h1>
-				<h3>Release more valuable content daily</h3>
-
-				<FeedItem feedItem={momentumPlaybook} />
-			</div>
-
-			<div class="break-inside-avoid">
-				<h1 class="mb-4">Nano Grit</h1>
-
-				<FeedItem feedItem={nanoGrit} />
-			</div>
-
-			<div class="break-inside-avoid">
-				<h1 class="mb-4">ClipWing Journal (Case Study)</h1>
-
-				<FeedItem feedItem={clipWingJournal} />
-			</div>
-
-			<div class="break-inside-avoid">
-				<h1 class="mb-4">Welcome To The Internet</h1>
-
-				<FeedItem feedItem={welcomeToTheInternet} />
-			</div>
-		</div>
-
-		<h3 class="mt-4 mb-16 text-center">
-			To go in line with our mission our goal is to create a $1M startup playbook and prove it
-			works, in public. It won't be quick and easy playbook. But it will be the process you can
-			understand, follow and repeat. Join and create with us!
-		</h3>
 	</div>
 	<div
 		class="py-8 mx-4 sm:mx-16 my-4 mb-32 rounded-3xl pb-32"
