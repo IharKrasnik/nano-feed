@@ -53,10 +53,12 @@
 		stream.isUpvoted = true;
 	};
 
-	stream.isUpvoted =
-		browser &&
-		stream.upvotes &&
-		stream.upvotes.filter((u) => u.fingerprint === window.WAVE_FINGERPRINT).length;
+	if (stream) {
+		stream.isUpvoted =
+			browser &&
+			stream.upvotes &&
+			stream.upvotes.filter((u) => u.fingerprint === window.WAVE_FINGERPRINT).length;
+	}
 </script>
 
 {#if isPitchOpen}

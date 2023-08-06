@@ -12,7 +12,12 @@
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
 
-	import { momentumPlaybook, nanoGrit } from '$lib/components/db';
+	import {
+		momentumPlaybook,
+		nanoGrit,
+		welcomeToTheInternet,
+		clipWingJournal
+	} from '$lib/components/db';
 	let streamCreators;
 
 	let loadMore = () => {};
@@ -300,7 +305,7 @@
 					</thead>
 
 					<tbody>
-						{#each _.take(projects, 7) as project}
+						{#each _.take(projects, 8) as project}
 							<tr>
 								<td class="py-4 pr-8">
 									<div class="flex text-lg font-bold items-center">
@@ -351,6 +356,14 @@
 						{/each}
 					</tbody>
 				</table>
+			</div>
+			<div class="flex justify-center">
+				<button
+					class="mt-8"
+					on:click={() => {
+						isGrowModalOpen = true;
+					}}>List my Startup 📈</button
+				>
 			</div>
 		</div>
 	</div>
@@ -505,24 +518,37 @@
 	</div>
 
 	<div class="container max-w-[800px] mx-auto">
-		<h1 class="text-3xl text-center">Grow with content. We'll show how</h1>
-		<h3 class="mt-4 text-center">Check out free public playbooks by Nano Community</h3>
+		<h1 class="text-3xl text-center">Grow with content. We'll show how!</h1>
+		<h3 class="mt-4 text-center">Check out free public playbooks validated by Nano Community</h3>
 
-		<div class="flex mt-16">
-			<div class="mr-4">
+		<div class="sm:columns-2 columns-1 sm:gap-8 gap-4 mt-16">
+			<div class="break-inside-avoid">
 				<h1 class="mb-4">Momentum Playbook</h1>
+				<h3>Release more valuable content daily</h3>
 
 				<FeedItem feedItem={momentumPlaybook} />
 			</div>
 
-			<div class="ml-4">
+			<div class="break-inside-avoid">
 				<h1 class="mb-4">Nano Grit</h1>
 
 				<FeedItem feedItem={nanoGrit} />
 			</div>
+
+			<div class="break-inside-avoid">
+				<h1 class="mb-4">ClipWing Journal (Case Study)</h1>
+
+				<FeedItem feedItem={clipWingJournal} />
+			</div>
+
+			<div class="break-inside-avoid">
+				<h1 class="mb-4">Welcome To The Internet</h1>
+
+				<FeedItem feedItem={welcomeToTheInternet} />
+			</div>
 		</div>
 
-		<h3 class="mt-4 mb-8 text-center">
+		<h3 class="mt-4 mb-16 text-center">
 			To go in line with our mission our goal is to create a $1M startup playbook and prove it
 			works, in public. It won't be quick and easy playbook. But it will be the process you can
 			understand, follow and repeat. Join and create with us!
@@ -551,7 +577,7 @@
 		</div>
 
 		<div class="container mx-auto rounded-xl py-16" style="max-width: 1200px;">
-			<div class="grid sm:grid-cols-2 px-4 sm:px-0">
+			<div class="grid sm:grid-cols-2 gap-8 px-4 sm:px-0">
 				<div class="mr-2 sm:mr-16 w-full text-center max-w-[1200px] mx-auto rounded-3xl">
 					<a
 						class="block button sm:mr-8 rounded-xl"
