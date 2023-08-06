@@ -10,7 +10,9 @@
 	import Calendar from './Calendar.svelte';
 	import creators from '$lib/stores/creators';
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
+	import FeedItem from '$lib/components/FeedItem.svelte';
 
+	import { momentumPlaybook, nanoGrit } from '$lib/components/db';
 	let streamCreators;
 
 	let loadMore = () => {};
@@ -400,7 +402,7 @@
 			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683829719307-nano-logo-big.png"
 		/> -->
 		<div class="shrink-0 sm:mx-16 mx-4 overflow-y-scroll">
-			<Stream projectSlug={'nano'} maxPagesCount={2} />
+			<Stream limit={9} projectSlug={'nano'} maxPagesCount={2} />
 		</div>
 	</div>
 
@@ -412,7 +414,7 @@
 		</div>
 
 		<div class="w-full flex justify-center my-8 mx-8 mx-auto" style="max-width: 1200px;">
-			<RenderUrl class="px-4" url="https://www.youtube.com/watch?v=2zE7uWxA95s" />
+			<RenderUrl class="px-4" url="https://www.youtube.com/watch?v=ekieA4-RS8k" />
 		</div>
 	</div>
 	<div
@@ -478,30 +480,54 @@
 
 		<br />
 
-		Launch your startup the modern way.
+		Launch your startup like it's 2030. Invest like it's 2030.
 	</div>
 
 	<div class="container text-center w-full text-2xl mb-32 mx-auto" style="max-width: 1200px; ">
 		<div class="mx-4 sm:columns-4">
 			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
-				<div class="mb-2">🦸‍♂️</div>
-				Discover genuine founders with grit
+				<div class="mb-2">📈</div>
+				Focus profits and cashflow-positive startups
 			</div>
 			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
 				<div class="mb-2">📈</div>
-				Keep track of other's progress
+				See the progress of other startups and learn
 			</div>
 			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
 				<div class="mb-2">🤝</div>
-				Learn, network, partner and build
+				Discover founders, network, partner and build
 			</div>
 			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
 				<div class="mb-2">💰</div>
-				Invest early with confidence
+				Invest early in proven resourceful makers
 			</div>
 		</div>
 	</div>
 
+	<div class="container max-w-[800px] mx-auto">
+		<h1 class="text-3xl text-center">Grow with content. We'll show how</h1>
+		<h3 class="mt-4 text-center">Check out free public playbooks by Nano Community</h3>
+
+		<div class="flex mt-16">
+			<div class="mr-4">
+				<h1 class="mb-4">Momentum Playbook</h1>
+
+				<FeedItem feedItem={momentumPlaybook} />
+			</div>
+
+			<div class="ml-4">
+				<h1 class="mb-4">Nano Grit</h1>
+
+				<FeedItem feedItem={nanoGrit} />
+			</div>
+		</div>
+
+		<h3 class="mt-4 mb-8 text-center">
+			To go in line with our mission our goal is to create a $1M startup playbook and prove it
+			works, in public. It won't be quick and easy playbook. But it will be the process you can
+			understand, follow and repeat. Join and create with us!
+		</h3>
+	</div>
 	<div
 		class="py-8 mx-4 sm:mx-16 my-4 mb-32 rounded-3xl pb-32"
 		style="background: radial-gradient(circle at 50% 51.2%,  rgb(8 6 15) 24.5%, rgb(30, 26, 34) 66%)"

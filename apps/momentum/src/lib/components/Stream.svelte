@@ -6,6 +6,7 @@
 
 	export let projectSlug;
 	export let maxPagesCount = null;
+	export let limit = 15;
 
 	let feed = [];
 	let pageNumber = 0;
@@ -14,7 +15,7 @@
 		return fetchFeed({
 			project: projectSlug,
 			page,
-			perPage: 15
+			perPage: limit
 		});
 	};
 
