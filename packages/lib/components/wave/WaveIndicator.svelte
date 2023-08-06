@@ -115,8 +115,11 @@
 		if (!metrics) {
 			loadMetrics({ projectId: 'mmntm.build' });
 		} else {
-			debugger;
-			loadMetrics({ projectId: 'page.mmntm.build', subProjectId: project.page?._id });
+			if (project.waveProject) {
+				loadMetrics({ projectId: project.waveProject._id });
+			} else {
+				loadMetrics({ projectId: 'page.mmntm.build', subProjectId: project.page?._id });
+			}
 		}
 	};
 </script>
