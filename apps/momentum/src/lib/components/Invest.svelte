@@ -1,5 +1,6 @@
 <script>
 	import _ from 'lodash';
+	import { fade } from 'svelte/transition';
 	import { get, post } from 'lib/api';
 	import allProjects from '$lib/stores/allProjects';
 	import StreamCard from '$lib/components/StreamCard.svelte';
@@ -11,6 +12,8 @@
 	import creators from '$lib/stores/creators';
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 	import FeedItem from '$lib/components/FeedItem.svelte';
+	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
+	import clickOutside from 'lib/use/clickOutside';
 
 	import {
 		momentumPlaybook,
@@ -103,6 +106,8 @@
 		isRequestSubmitted = true;
 		document.location.href = 'https://feed.mmntm.build/launch';
 	};
+
+	let previewUrl;
 </script>
 
 <svelte:head>
@@ -309,7 +314,14 @@
 							<tr>
 								<td class="py-4 pr-8">
 									<div class="flex text-lg font-bold items-center">
-										<a target="_blank" href={project.url}>{project.title}</a>
+										<a
+											target="_blank"
+											on:click|preventDefault={() => {
+												debugger;
+												previewUrl = project.url;
+											}}
+											href={project.url}>{project.title}</a
+										>
 										<img
 											class="ml-2 rounded-full w-[20px] h-[20px]"
 											src={project.creator?.avatarUrl}
@@ -356,6 +368,34 @@
 						{/each}
 					</tbody>
 				</table>
+
+				{#if previewUrl}
+					<!-- links={[
+					{ title: 'Website' },
+					{ title: 'Analytics' },
+					{ title: 'Feed' },
+					{ title: 'Pitch' }
+				]} -->
+					<div
+						class="fixed w-full pt-4"
+						style="width: 50%; right: 0; top: 0; z-index: 101; max-height: calc(100vh-200px);"
+						use:clickOutside
+						on:clickOutside={() => (previewUrl = null)}
+						in:fade={{ duration: 100 }}
+					>
+						<BrowserFrame
+							onClose={() => {
+								previewUrl = null;
+							}}
+						>
+							{#key previewUrl}
+								{#if previewUrl}
+									<iframe class="w-full h-screen" src={previewUrl} />
+								{/if}
+							{/key}
+						</BrowserFrame>
+					</div>
+				{/if}
 			</div>
 			<div class="flex justify-center">
 				<button
