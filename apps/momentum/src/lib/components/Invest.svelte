@@ -359,6 +359,10 @@
 										{project?.revenue?.total
 											? `$${(project?.revenue?.total / 100).toFixed(2)}`
 											: ''}
+
+										{project?.revenue?.monthly
+											? `$${parseInt(project?.revenue?.monthly / 100)} MRR`
+											: ''}
 									</h1>
 								</td>
 								<td class="p-2 mx-4"
