@@ -586,7 +586,7 @@
 				Focus profits and cashflow-positive startups
 			</div>
 			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
-				<div class="mb-2">📈</div>
+				<div class="mb-2">🔬</div>
 				See the progress of other startups and learn
 			</div>
 			<div class="p-8 bg-zinc-900 rounded-xl mb-4">
