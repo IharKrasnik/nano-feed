@@ -77,16 +77,13 @@
 					: 'flex justify-center'}"
 			>
 				{#each feed as feedItem}
+					{(feedItem.url = feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`) && ''}
 					<div
 						class="px-2 {isHorizontal
 							? 'w-[90%]'
 							: ''} md:w-auto mx-auto shrink-0 md:w-auto max-w-[600px] _feed-item md:block"
 					>
-						<a href={feedItem.url || `${STREAM_URL}/feed/${feedItem._id}`} target="_blank">
-							<div class="pointer-events-none">
-								<FeedItem class="" {theme} {feedItem} {bgColor} hideLikes />
-							</div>
-						</a>
+						<FeedItem class="" {theme} {feedItem} {bgColor} hideLikes />
 					</div>
 				{/each}
 			</div>
