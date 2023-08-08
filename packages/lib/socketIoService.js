@@ -36,6 +36,8 @@ export const disconnected = () => socket.disconnected;
 let currentUserId;
 
 socket.on('connect', () => {
+	emit('subscribe', 'global');
+
 	currentUser.subscribe((user) => {
 		if (user) {
 			if (user._id !== currentUserId) {

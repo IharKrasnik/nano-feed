@@ -1,5 +1,10 @@
 let getDomain = (href) => {
-	return /:\/\/([^\/]+)/.exec(href)[1];
+	let match = /:\/\/([^\/]+)/.exec(href);
+	if (match) {
+		return match[1];
+	} else {
+		return href;
+	}
 };
 
 export default getDomain;

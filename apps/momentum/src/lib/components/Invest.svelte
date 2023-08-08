@@ -1,5 +1,7 @@
 <script>
 	import _ from 'lodash';
+	import axios from 'axios';
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { get, post } from 'lib/api';
 	import allProjects from '$lib/stores/allProjects';
@@ -14,6 +16,9 @@
 	import FeedItem from '$lib/components/FeedItem.svelte';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import clickOutside from 'lib/use/clickOutside';
+	import Highlight from 'lib/components/Highlight.svelte';
+	import * as socketIoService from 'lib/socketIoService';
+	import getDomain from 'lib/helpers/getDomain';
 
 	import {
 		momentumPlaybook,
@@ -96,18 +101,52 @@
 		}
 	};
 
-	let launchStream = () => {
-		if (request.email) {
+	let streamProject;
+	let waveProject;
+
+	let listStartup = async () => {
+		if (request.contactLink) {
 			post('nanoRequests', {
 				...request,
 				type: 'grow'
 			});
 		}
+
+		waveProject = await post('waveProjects', { url: request.startupUrl });
+
+		// let project = {};
+
+		// const { data } = await axios({
+		// 	url: 'https://igor.npkn.net/fetch-meta-tags',
+		// 	params: { url: request.startupUrl }
+		// });
+
+		// let metatags = data;
+
+		// project.title = (metatags.titleTag || metatags.title || '').split(' ')[0];
+		// project.description = metatags.description;
+		// project.bannerUrl = metatags.image;
+		// project.icon = metatags.favicon;
+
+		// streamProject = await post('projects', project);
+
 		isRequestSubmitted = true;
-		document.location.href = 'https://feed.mmntm.build/launch';
+
+		// document.location.href = 'https://feed.mmntm.build/launch';
 	};
 
 	let previewUrl;
+	let isAnalyticsConfigured = false;
+
+	let highlightCode = `<script async src="https://wave.mmntm.build/wave.js"><\/script>`;
+
+	onMount(() => {
+		socketIoService.on('waveProject:activated', (project) => {
+			if (getDomain(project.url) === getDomain(request.startupUrl)) {
+				isAnalyticsConfigured = true;
+			}
+		});
+	});
 </script>
 
 <svelte:head>
@@ -126,15 +165,53 @@
 			<div class="mb-8">
 				<h1>Grow your startup 🕺</h1>
 
-				<div class="mb-2">Join a public community of genuine builders.</div>
+				<div class="mb-2">
+					Join a public community of genuine builders. Get exposure. Learn from other makers.
+					Attract investors and partners.
+				</div>
 			</div>
 
-			<div>
-				<div class="text-lg mb-2">What's your email?</div>
-				<input bind:value={request.email} type="text" placeholder="igor@paralect.com" />
-			</div>
+			{#if isRequestSubmitted}
+				{#if isAnalyticsConfigured}
+					<div class="text-5xl my-8">🥳</div>
+					<div class="text-xl mt-8">
+						Thank you for listing your startup on Nano! <br />
 
-			<button class="mt-8" on:click={launchStream}>Launch my stream</button>
+						Now, it's time to grow {getDomain(request.startupUrl)}!
+					</div>
+				{:else}
+					<div class="text-lg mb-2">Add this script to your page ({request.startupUrl})</div>
+					<Highlight code={highlightCode} />
+
+					<div class="mt-8 opacity-90">
+						Waiting for incoming requests from {getDomain(request.startupUrl)}...
+					</div>
+				{/if}
+			{:else}
+				<div>
+					<div class="text-lg mb-2">What's your twitter profile (or other link to contact)?</div>
+					<input
+						bind:value={request.contactLink}
+						type="text"
+						required
+						placeholder="https://twitter.com/that_igor_"
+					/>
+				</div>
+
+				<div class="mt-8">
+					<div class="text-lg mb-2">What's your Startup Url?</div>
+					<input bind:value={request.startupUrl} type="text" placeholder="https://nanohq.co" />
+					<div class="mt-2">Leave blank if you don't have a landing page yet</div>
+				</div>
+			{/if}
+
+			{#if isAnalyticsConfigured}
+				<a href="https://grit.nanohq.co/" target="_blank"
+					><button class="mt-8">Grow my startup</button></a
+				>
+			{:else if !isRequestSubmitted}
+				<button class="mt-8" on:click={listStartup}>List my startup on Nano</button>
+			{/if}
 		</div>
 	</Modal>
 {/if}
@@ -317,7 +394,6 @@
 										<a
 											target="_blank"
 											on:click|preventDefault={() => {
-												debugger;
 												previewUrl = project.url;
 											}}
 											href={project.url}>{project.title}</a
