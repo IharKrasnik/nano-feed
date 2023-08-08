@@ -72,10 +72,8 @@
 			<div
 				class="pt-[20px] {feed.length > 0
 					? `${
-							isHorizontal ? 'flex flex-row max-w-[100%] overflow-x-scroll' : ''
-					  } sm:block sm:columns-1 md:columns-2 lg:columns-${
-							columns > feed.length ? feed.length : columns
-					  }`
+							isHorizontal ? 'flex flex-row max-w-[100%] overflow-x-scroll' : 'sm-block'
+					  } sm:columns-1 md:columns-2 lg:columns-${columns > feed.length ? feed.length : columns}`
 					: 'flex justify-center'}"
 			>
 				{#each feed as feedItem}
