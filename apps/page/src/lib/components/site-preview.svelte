@@ -480,7 +480,7 @@
 								on:load={resize}
 								class="w-full sticky z-20 pb-[200px] bg-site"
 								src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.sectionTheme ||
-									'light'}&isHorizontal=true&limit=15&isViewAll=true&bgColor={styles[
+									'light'}&limit=15&isViewAll=true&bgColor={styles[
 									'section-background-color'
 								].replace('#', '%23')}"
 							/>
