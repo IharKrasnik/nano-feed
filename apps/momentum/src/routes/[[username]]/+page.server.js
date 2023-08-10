@@ -14,7 +14,7 @@ export async function load({ params }) {
 			return {
 				ogTitle: `${creator.fullName} — Momentum Stream`,
 				ogDescription: creator.description || description,
-				ogImage: image
+				ogImage: creator.avatarUrl
 			};
 		} else {
 			let project = await get(`projects/${username}`);

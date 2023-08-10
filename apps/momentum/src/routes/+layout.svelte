@@ -35,13 +35,21 @@
 		}
 	}
 
+	let isNanoRoute = () => {
+		return (
+			$page.url.href.includes('/invest') ||
+			$page.url.href.includes('/grow') ||
+			$page.url.href.includes('nanohq.co')
+		);
+	};
+
 	import 'lazysizes';
 	// import a plugin
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 </script>
 
 <svelte:head>
-	{#if $page.url.href.includes('/invest') || $page.url.href.includes('nanohq.co')}
+	{#if isNanoRoute()}
 		<title>Nano Fund</title>
 		<style>
 			body {
@@ -62,9 +70,12 @@
 		<meta name="title" content={$page.data.ogTitle} />
 		<meta name="description" content={$page.data.ogDescription} />
 		<meta name="og:description" content={$page.data.ogDescription} />
+
 		<meta
 			name="og:image"
 			content={$page.data.ogImage ||
+				($page.params.username &&
+					`https://feed.mmnntm.build/og.png?streamName=${$page.params.username}`) ||
 				'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
 		/>
 	{/if}
@@ -72,23 +83,9 @@
 	<!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>  -->
 	<!-- <script src="https://www.tiktok.com/embed.js"></script> -->
 
-	<!-- <title>Momentum</title>
-	<meta name="description" content="Momentum is a tool to build in public and grow audience early." />
-	<meta name="og:description" content="Momentum is a tool to build in public and grow audience early." /> -->
-
-	{#if $page.params.username}
-		<meta
-			property="og:image"
-			content="https://app.mmnntm.build/og.png?streamName={$page.params.username}"
-		/>
-		<meta
-			property="image"
-			content="https://app.mmnntm.build/og.png?streamName={$page.params.username}"
-		/>
-	{/if}
-
 	{#if !$page.url.href.includes('/embed')}
 		<script async src="https://wave.mmntm.build/wave.js"></script>
+
 		<script>
 			!(function (t, e) {
 				var o, n, p, r;
@@ -164,7 +161,7 @@
 	class:bg-black={!$page.url.href.includes('embed') && !$page.url.href.includes('invest')}
 	class:_gradient={$page.url.href.toLowerCase().includes('bachrimchuk')}
 >
-	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && $page.url.href !== 'https://nanohq.co/'}
+	{#if !$page.url.href.includes('/embed') && !isNanoRoute()}
 		<div class="container xl:mx-auto px-8 xl:px-0 max-w-[600px]">
 			<div
 				class="
@@ -246,20 +243,12 @@
 
 	<main
 		class="
-			{$page.url.href.includes('/embed') ||
-		$page.url.href.includes('/invest') ||
-		$page.url.href === 'https://nanohq.co/'
+			{$page.url.href.includes('/embed') || isNanoRoute()
 			? 'w-full'
 			: 'container relative p-8 mx-0 xl:mx-auto'} mt-[45px] sm:mt-[65px] xl:mt-0
 			{$page.url.href.includes('/feed/') || $page.url.href.includes('/write-editor')
 			? 'max-w-[1200px]'
-			: `${
-					$page.url.href.includes('/embed') ||
-					$page.url.href.includes('/invest') ||
-					$page.url.href === 'https://nanohq.co/'
-						? ''
-						: 'max-w-[600px]'
-			  }`}
+			: `${$page.url.href.includes('/embed') || isNanoRoute() ? '' : 'max-w-[600px]'}`}
 			"
 	>
 		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch') && !$page.url.href.includes('/embed')}
@@ -294,7 +283,7 @@
 		{/if}
 	</main>
 
-	{#if !$page.url.href.includes('/embed') && !$page.url.href.includes('/invest') && $page.url.href !== 'https://nanohq.co/'}
+	{#if !$page.url.href.includes('/embed') && !isNanoRoute()}
 		<Dock activeIcon="momentum" />
 	{/if}
 
