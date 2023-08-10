@@ -18,8 +18,9 @@
 		on:load={resize}
 		class="w-full sticky z-20 bg-site"
 		src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.sectionTheme ||
-			'light'}&isHorizontal=true&limit=9&isViewAll=true&bgColor={themeStyles[
-			'section-background-color'
-		].replace('#', '%23')}"
+			'light'}&limit=9&isViewAll=true&bgColor={themeStyles['section-background-color'].replace(
+			'#',
+			'%23'
+		)}"
 	/>
 {/key}
