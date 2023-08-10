@@ -262,6 +262,9 @@
 		const { url } = await get(TWITTER_LOGIN_URL);
 		window.document.location.href = url;
 	};
+
+	const communityStreams = $allProjects.filter((p) => p.isNano);
+	const learnStreams = $allProjects.filter((p) => p.isKnowledgeBase);
 </script>
 
 <svelte:head>
@@ -456,7 +459,46 @@
 						</h2>
 					{/if}
 
-					<div class="flex justify-between items-center font-bold block mt-8 mb-4">
+					{#if !creator}
+						<h2 class="font-bold mb-4">Nano Community</h2>
+						{#each communityStreams as communityStream}
+							<a
+								class="cursor-pointer _menu_item flex items-center py-1 ml-[-10px]"
+								class:_selected={communityStream?.slug === selectedProject?.slug}
+								href={communityStream.slug}
+								style="border-color: {communityStream.color}"
+							>
+								<div
+									class="_emoji p-2 mr-2 rounded-full font-bold"
+									style="color: {communityStream.color}; opacity: .7;"
+								>
+									#
+								</div>
+								{communityStream.title}
+							</a>
+						{/each}
+
+						<h2 class="font-bold mb-4 mt-8">Knowledge Base</h2>
+
+						{#each learnStreams as learnStream}
+							<a
+								class="cursor-pointer _menu_item flex items-center py-1 ml-[-10px]"
+								class:_selected={learnStream?.slug === selectedProject?.slug}
+								href={learnStream.slug}
+								style="border-color: {learnStream.color}"
+							>
+								<div
+									class="_emoji p-2 mr-2 rounded-full font-bold"
+									style="color: {learnStream.color}; opacity: .7;"
+								>
+									#
+								</div>
+								{learnStream.title}
+							</a>
+						{/each}
+					{/if}
+
+					<h2 class="flex justify-between items-center font-bold block mt-8 mb-4">
 						<div>
 							{$currentUser && !creator ? 'All Streams' : ''}
 							{creator ? `Contributions` : ''}
@@ -465,7 +507,7 @@
 								<span class="number-tag">{creator ? $projects.length : $allProjects.length}</span>
 							{/if}
 						</div>
-					</div>
+					</h2>
 				</div>
 
 				{#if creator && creator._id !== $currentUser?._id}
@@ -515,9 +557,11 @@
 					<div class="pb-[200px]">
 						{#if $projects?.length}
 							<div in:fade>
-								{#each (creator?.username ? $projects : $allProjects).filter((p) => p.title
-										.toLowerCase()
-										.startsWith(searchText.toLowerCase())) as project}
+								{#each (creator?.username ? $projects : $allProjects)
+									.filter((p) => !creator || (!p.isNano && !p.isKnowledgeBase))
+									.filter((p) => p.title
+											.toLowerCase()
+											.startsWith(searchText.toLowerCase())) as project}
 									<a
 										class="cursor-pointer _menu_item flex items-center py-1 ml-[-10px]"
 										class:_selected={selectedProject?.slug === project.slug}
