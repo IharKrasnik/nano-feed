@@ -558,7 +558,7 @@
 						{#if $projects?.length}
 							<div in:fade>
 								{#each (creator?.username ? $projects : $allProjects)
-									.filter((p) => !creator || (!p.isNano && !p.isKnowledgeBase))
+									.filter((p) => (creator ? true : !p.isNano && !p.isKnowledgeBase))
 									.filter((p) => p.title
 											.toLowerCase()
 											.startsWith(searchText.toLowerCase())) as project}
