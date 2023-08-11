@@ -20,9 +20,11 @@
 	};
 
 	let loadMore = async () => {
-		pageNumber++;
-		const feedPage = await fetchFeedPage({ page: pageNumber });
-		feed = [...feed, ...feedPage];
+		if (feed?.length < limit) {
+			pageNumber++;
+			const feedPage = await fetchFeedPage({ page: pageNumber });
+			feed = [...feed, ...feedPage];
+		}
 	};
 
 	loadMore();
@@ -30,7 +32,7 @@
 
 <div>
 	{#if feed.length > 0}
-		<div in:fly={{ y: 50, duration: 150, delay: 150 }} style="padding: 2px;" class="sm:columns-3">
+		<div in:fly={{ y: 50, duration: 150, delay: 150 }} style="padding: 2px;">
 			<InfiniteScroll
 				hasMore={true}
 				threshold={100}
@@ -41,10 +43,18 @@
 					}
 				}}
 			/>
+			<h3 class="sm:hidden mb-4 w-full text-center">Scroll Right →</h3>
 
-			{#each feed as feedItem}
-				<FeedItem bgColor={'rgba(20,20,20,.9)'} hideLikes {feedItem} />
-			{/each}
+			<div class="flex items-start overflow-x-auto sm:block sm:columns-3">
+				{#each feed as feedItem}
+					<FeedItem
+						class="flex-shrink-0 mr-4 sm:mr-0"
+						bgColor={'rgba(20,20,20,.9)'}
+						hideLikes
+						{feedItem}
+					/>
+				{/each}
+			</div>
 		</div>
 	{/if}
 </div>

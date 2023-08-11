@@ -11,8 +11,13 @@
 
 	import _ from 'lodash';
 
+	let clazz;
+	export { clazz as class };
+
 	export let project;
 	export let creators;
+	export let isWithUpvote = true;
+	export let isWithPitch = true;
 
 	export let stream;
 
@@ -72,7 +77,7 @@
 	</Modal>
 {/if}
 
-<div>
+<div class={clazz}>
 	{#if stream}
 		{#if isIncludeChart}
 			<WaveIndicator
@@ -209,7 +214,7 @@
 						</div>
 					{/if}
 
-					{#if stream._id && !stream.fullName}
+					{#if isWithUpvote && stream._id && !stream.fullName}
 						<div class="mt-4">
 							{#if ($currentUser && stream.creator && stream.creator._id === $currentUser._id) || stream.isUpvoted}
 								<div class="text-center">✅ {stream?.upvotes?.length || 1} upvotes</div>
@@ -232,7 +237,7 @@
 			</div>
 		{/if}
 
-		{#if stream.pitchUrl}
+		{#if isWithPitch && stream.pitchUrl}
 			<div
 				class="cursor-pointer w-full my-4"
 				on:click={() => {
