@@ -157,7 +157,7 @@
 <div id="modal-portal" />
 
 <div
-	class="app overflow-y-scroll"
+	class="app overflow-y-auto"
 	class:bg-black={!$page.url.href.includes('embed') && !$page.url.href.includes('invest')}
 	class:_gradient={$page.url.href.toLowerCase().includes('bachrimchuk')}
 >
