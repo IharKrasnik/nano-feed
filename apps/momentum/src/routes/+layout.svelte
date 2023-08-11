@@ -252,10 +252,11 @@
 			"
 	>
 		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch') && !$page.url.href.includes('/embed')}
-			<a
-				href="/write"
-				class="md:hidden flex items-center justify-center"
-				style="
+			{#if !isNanoRoute()}
+				<a
+					href="/write"
+					class="md:hidden flex items-center justify-center"
+					style="
 			position: fixed;
 			bottom: 40px;
 			width: 60px;
@@ -269,9 +270,10 @@
 			right: 20px;
     	opacity: .95;
 			"
-			>
-				+
-			</a>
+				>
+					+
+				</a>
+			{/if}
 		{/if}
 
 		{#if $allProjects || $page.url.href.includes('/embed')}
