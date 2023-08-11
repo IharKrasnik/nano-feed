@@ -277,7 +277,7 @@
 		<h1 class="text-5xl text-center font-bold mb-4 ">Nano Fund</h1>
 
 		<h2 class="text-3xl text-center">
-			We help decent makers grow their startups to $1M+ with media
+			We help decent makers grow their startups to $1M+ with social media
 		</h2>
 		<h3 class="text-2xl mt-4 text-center">Nano is an internet accelerator, community and fund</h3>
 
@@ -398,10 +398,12 @@
 											}}
 											href={project.url}>{project.title}</a
 										>
-										<img
-											class="ml-2 rounded-full w-[20px] h-[20px]"
-											src={project.creator?.avatarUrl}
-										/>
+										<a href={project.slug}>
+											<img
+												class="ml-2 rounded-full w-[20px] h-[20px]"
+												src={project.creator?.avatarUrl}
+											/>
+										</a>
 									</div>
 									<div class="text-sm max-w-[350px]">
 										<div class="text-ellipsis overflow-hidden">
@@ -537,6 +539,12 @@
 		<div class="shrink-0 sm:mx-16 mx-4 overflow-y-scroll">
 			<Stream limit={9} projectSlug={'nano'} maxPagesCount={2} />
 		</div>
+
+		<div class="flex justify-center">
+			<a href="nano" target="_blank">
+				<button class="mt-8">🫶 Browse Community</button>
+			</a>
+		</div>
 	</div>
 
 	<div style="background: rgba(0,0,0, .3);" class="py-16 pb-32">
@@ -638,11 +646,17 @@
 			</div>
 		</div>
 
-		<h3 class="mt-4 mb-16 text-center">
+		<h3 class="mt-4 mb-8 text-center">
 			To go in line with our mission our goal is to create a $1M startup playbook and prove it
 			works, in public. It won't be quick and easy playbook. But it will be the process you can
 			understand, follow and repeat. Join and create with us!
 		</h3>
+
+		<div class="flex justify-center mb-8">
+			<a href="knowledge-base" target="_blank">
+				<button class="mt-8">🤓 See Knowledge Base</button>
+			</a>
+		</div>
 
 		<hr style="border: 1px rgba(255, 255,255, .3) solid;" />
 	</div>

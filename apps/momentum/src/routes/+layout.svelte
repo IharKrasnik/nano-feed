@@ -39,7 +39,7 @@
 		return (
 			$page.url.href.includes('/invest') ||
 			$page.url.href.includes('/grow') ||
-			$page.url.href.includes('nanohq.co')
+			($page.url.href.includes('nanohq.co') && $page.url.pathname === '/')
 		);
 	};
 
