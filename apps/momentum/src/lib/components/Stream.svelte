@@ -10,6 +10,7 @@
 
 	let feed = [];
 	let pageNumber = 0;
+	let isHorizontal = false;
 
 	let fetchFeedPage = async ({ page = 1 } = {}) => {
 		return fetchFeed({
@@ -45,7 +46,7 @@
 			/>
 			<h3 class="sm:hidden mb-4 w-full text-center">Scroll Right →</h3>
 
-			<div class="flex items-start overflow-x-auto sm:block sm:columns-3">
+			<div class="{isHorizontal ? 'flex items-start overflow-x-auto' : ''} sm:columns-3">
 				{#each feed as feedItem}
 					<FeedItem
 						class="flex-shrink-0 mr-4 sm:mr-0"
