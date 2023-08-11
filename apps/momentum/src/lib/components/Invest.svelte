@@ -583,7 +583,7 @@
 			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1683829719307-nano-logo-big.png"
 		/> -->
 		<div class="shrink-0 sm:mx-16 mx-4">
-			<Stream limit={9} projectSlug={'nano'} maxPagesCount={2} />
+			<Stream isHorizontal={isMobileSize} limit={9} projectSlug={'nano'} maxPagesCount={2} />
 		</div>
 
 		<div class="flex justify-center">
