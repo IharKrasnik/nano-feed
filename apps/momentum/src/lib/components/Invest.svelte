@@ -150,7 +150,7 @@
 
 		isRequestSubmitted = true;
 
-		// document.location.href = 'https://feed.mmntm.build/launch';
+		document.location.href = 'https://nanohq.co/grow';
 	};
 
 	let previewUrl;
@@ -189,23 +189,7 @@
 				</div>
 			</div>
 
-			{#if isRequestSubmitted}
-				{#if isAnalyticsConfigured}
-					<div class="text-5xl my-8">🥳</div>
-					<div class="text-xl mt-8">
-						Thank you for listing your startup on Nano! <br />
-
-						Now, it's time to grow {getDomain(request.startupUrl)}!
-					</div>
-				{:else}
-					<div class="text-lg mb-2">Add this script to your page ({request.startupUrl})</div>
-					<Highlight code={highlightCode} />
-
-					<div class="mt-8 opacity-90">
-						Waiting for incoming requests from {getDomain(request.startupUrl)}...
-					</div>
-				{/if}
-			{:else}
+			{#if isRequestSubmitted}{:else}
 				<div>
 					<div class="text-lg mb-2">What's your twitter profile (or other link to contact)?</div>
 					<input
@@ -223,13 +207,9 @@
 				</div>
 			{/if}
 
-			{#if isAnalyticsConfigured}
-				<a href="https://grit.nanohq.co/" target="_blank"
-					><button class="mt-8">Grow my startup</button></a
-				>
-			{:else if !isRequestSubmitted}
-				<button class="mt-8" on:click={listStartup}>List my startup on Nano</button>
-			{/if}
+			<a href="/grow">
+				<button class="mt-8">Grow my startup</button>
+			</a>
 		</div>
 	</Modal>
 {/if}
@@ -317,13 +297,9 @@
 		{/if}
 
 		<div class="sm:flex sm:flex-row sm:justify-between w-full px-2 sm:w-[600px] mx-auto my-8">
-			<button
-				class="rounded-xl text-lg w-full sm:mb-0 mb-4"
-				on:click={() => {
-					isGrowModalOpen = true;
-				}}>📈 Grow My Startup</button
-			>
-
+			<a class="w-full sm:mb-0 mb-4" href="/grow">
+				<button class="rounded-xl text-lg w-full">📈 Grow My Startup</button>
+			</a>
 			<button
 				class="rounded-xl text-lg w-full sm:mx-2"
 				on:click={() => {
@@ -765,9 +741,7 @@
 					<a
 						class="block button sm:mr-8 rounded-xl"
 						style="font-size: 32px; background: #7900d9;"
-						on:click={() => {
-							isGrowModalOpen = true;
-						}}
+						href="/grow"
 					>
 						Grow my startup in public</a
 					>

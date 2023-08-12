@@ -37,7 +37,8 @@ label {
 }
 
 input[type='text'],
-input[type='datetime-local'] {
+input[type='datetime-local'],
+input[type='date'] {
 	width: 100%;
 	background: none;
 	padding: 16px;

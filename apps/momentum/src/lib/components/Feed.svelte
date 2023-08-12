@@ -264,7 +264,9 @@
 	};
 
 	const communityStreams = $allProjects.filter((p) => p.isNano);
-	const learnStreams = $allProjects.filter((p) => p.isKnowledgeBase);
+	const learnStreams = $allProjects
+		.filter((p) => p.isKnowledgeBase)
+		.sort((p) => (p.slug === 'knowledge-base' ? -1 : 1));
 </script>
 
 <svelte:head>
@@ -413,6 +415,21 @@
 						{$currentUser ? 'My Feed' : 'Momentum Feed'}
 					</a>
 
+					<a class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]" href="/grow">
+						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
+							🚀
+						</div>
+
+						My Startups
+
+						{#if $currentUser}
+							<span class="ml-4 number-tag font-bold shrink-0"
+								>{$allProjects.filter((p) => p.creator && p.creator._id === $currentUser._id)
+									.length}</span
+							>
+						{/if}
+					</a>
+
 					{#if $currentUser}
 						<a
 							class="cursor-pointer _menu_item flex items-center py-2 ml-[-10px]"
@@ -442,11 +459,13 @@
 					</a> -->
 				</div>
 
-				<div class="mt-16 w-full" in:fly>
-					<a href="/launch" class="w-full">
-						<button class="small w-full"> 🚀 Launch Your #Stream </button>
-					</a>
-				</div>
+				{#if !$currentUser || !$allProjects.filter((p) => p.creator && p.creator._id === $currentUser._id).length}
+					<div class="w-full mt-8 mb-16">
+						<a href="/grow">
+							<button class="small w-full"> 🚀 Grow My Startup </button>
+						</a>
+					</div>
+				{/if}
 
 				<div class="mt-16">
 					{#if creator}
@@ -460,24 +479,25 @@
 					{/if}
 
 					{#if !creator}
-						<h2 class="font-bold mb-4">Nano Community</h2>
-						{#each communityStreams as communityStream}
-							<a
-								class="cursor-pointer _menu_item flex items-center py-1 ml-[-10px]"
-								class:_selected={communityStream?.slug === selectedProject?.slug}
-								href={communityStream.slug}
-								style="border-color: {communityStream.color}"
-							>
-								<div
-									class="_emoji p-2 mr-2 rounded-full font-bold"
-									style="color: {communityStream.color}; opacity: .7;"
+						{#if $currentUser}
+							<h2 class="font-bold mb-4">Nano Community</h2>
+							{#each communityStreams as communityStream}
+								<a
+									class="cursor-pointer _menu_item flex items-center py-1 ml-[-10px]"
+									class:_selected={communityStream?.slug === selectedProject?.slug}
+									href={communityStream.slug}
+									style="border-color: {communityStream.color}"
 								>
-									#
-								</div>
-								{communityStream.title}
-							</a>
-						{/each}
-
+									<div
+										class="_emoji p-2 mr-2 rounded-full font-bold"
+										style="color: {communityStream.color}; opacity: .7;"
+									>
+										#
+									</div>
+									{communityStream.title}
+								</a>
+							{/each}
+						{/if}
 						<h2 class="font-bold mb-4 mt-8">Knowledge Base</h2>
 
 						{#each learnStreams as learnStream}
@@ -729,18 +749,22 @@
 			</div>
 		{/if}
 
-		<WaveIndicator bind:project={selectedProject} class="mt-4" />
+		{#if selectedProject && !selectedProject.isKnowledgeBase}
+			<WaveIndicator bind:project={selectedProject} class="mt-4" />
+		{/if}
 	</div>
 
-	<div class="mt-8">
-		<div class="font-bold mb-4">Cadence</div>
+	{#if selectedProject && !selectedProject.isKnowledgeBase}
+		<div class="mt-8">
+			<div class="font-bold mb-4">Cadence</div>
 
-		{#key selectedProject}
-			<div in:fade>
-				<CadenceGrid projectSlug={selectedProject?.slug} creatorUsername={creator?.username} />
-			</div>
-		{/key}
-	</div>
+			{#key selectedProject}
+				<div in:fade>
+					<CadenceGrid projectSlug={selectedProject?.slug} creatorUsername={creator?.username} />
+				</div>
+			{/key}
+		</div>
+	{/if}
 	<!-- {#if feed?.length}
 			<FeedItem feedItem={feed[0]} />
 		{/if} -->

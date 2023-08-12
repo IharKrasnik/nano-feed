@@ -7,6 +7,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { countryCodeEmoji } from 'country-code-emoji';
 	import countryCodeLoockup from 'country-code-lookup';
+	import getDomain from 'lib/helpers/getDomain';
 
 	export let stats;
 	export let project;
@@ -34,6 +35,19 @@
 	};
 
 	let isFirstTime = true;
+
+	let loadMetrics = () => {
+		return get(
+			`waveProjects/${
+				project.page ? 'page.mmntm.build' : project.waveProject._id || project.url
+			}/stats`,
+			{
+				timeframe: timeframe,
+				timezone: moment.tz.guess(),
+				...(project.page ? { subProjectId: project.page?._id } : {})
+			}
+		).then((res) => (stats = res));
+	};
 
 	$: if (stats) {
 		isShowAll = false;
@@ -79,13 +93,28 @@
 			}
 		}, 0);
 	} else {
-		get(`waveProjects/${project.url}/stats`, {
-			timeframe: timeframe,
-			timezone: moment.tz.guess(),
-			subProjectId: project.page?._id
-		}).then((res) => (stats = res));
+		loadMetrics();
 	}
 </script>
+
+<div class="flex justify-between items-center mb-4">
+	<div>
+		<h2 class="text-lg mb-4">Website Analytics</h2>
+		<h3>
+			<a target="_blank" href={project.url}>
+				{project.page?.url ? project.page.url.replace('https://', '') : getDomain(project.url)}
+			</a>
+		</h3>
+	</div>
+
+	<div>
+		<select class="small" bind:value={timeframe} on:change={loadMetrics}>
+			<option value="24_hours">24 hours</option>
+			<option value="7_days">7 days</option>
+			<option value="30_days">30 days</option>
+		</select>
+	</div>
+</div>
 
 {#key stats}
 	{#if stats}

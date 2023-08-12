@@ -10,6 +10,8 @@
 
 	let isLoading = false;
 	let isJustDone = false;
+	let isJustFailed = false;
+	let errMessage;
 
 	let load = async () => {
 		isLoading = true;
@@ -20,6 +22,13 @@
 
 			setTimeout(() => {
 				isJustDone = false;
+			}, 1000);
+		} catch (err) {
+			isJustFailed = true;
+			errMessage = err.message;
+
+			setTimeout(() => {
+				isJustFailed = false;
 			}, 1000);
 		} finally {
 			isLoading = false;
@@ -36,9 +45,17 @@
 
 	{#if isJustDone}
 		<div class="" in:scale={{ duration: 150 }}>👌</div>
+	{:else if isJustFailed}
+		<div class="" in:scale={{ duration: 150 }}>❌</div>
 	{:else}
 		<div class:invisible={isLoading}>
 			<slot />
 		</div>
 	{/if}
 </button>
+
+{#if isJustFailed && errMessage}
+	<div class="mt-4 text-lg">
+		{errMessage}
+	</div>
+{/if}

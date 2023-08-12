@@ -42,7 +42,6 @@ export default (node) => {
 		e.preventDefault();
 
 		let text = e.clipboardData.getData('text/plain');
-		debugger;
 
 		if (text.startsWith('http')) {
 			createLink(text);

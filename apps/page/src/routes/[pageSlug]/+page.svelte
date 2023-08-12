@@ -17,7 +17,6 @@
 			get(`pages/${$page.params.pageSlug}`).then((loadedPage) => {
 				currentPage = loadedPage;
 				if (browser && $page.data.page) {
-					debugger;
 					$page.data.page = null;
 				}
 			});
