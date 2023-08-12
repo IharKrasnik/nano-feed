@@ -95,17 +95,17 @@
 
 		let isFollowersLoaded = false;
 
-		// if ($currentUser?.oauth.twitter && !isFollowersLoaded) {
-		// 	get('twitter/my-stats').then((stats) => {
-		// 		$currentUser.twitterStats = stats;
-		// 	});
-		// }
+		if ($currentUser?.oauth.twitter && !isFollowersLoaded) {
+			get('twitter/my-stats').then((stats) => {
+				$currentUser.twitterStats = stats;
+			});
+		}
 
-		// if ($currentUser?.oauth.linkedin && !isFollowersLoaded) {
-		// 	get('linkedin/my-stats').then((stats) => {
-		// 		$currentUser.linkedinStats = stats;
-		// 	});
-		// }
+		if ($currentUser?.oauth.linkedin && !isFollowersLoaded) {
+			get('linkedin/my-stats').then((stats) => {
+				$currentUser.linkedinStats = stats;
+			});
+		}
 
 		isFollowersLoaded = true;
 	});
