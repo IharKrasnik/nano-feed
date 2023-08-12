@@ -100,11 +100,13 @@
 <div class="flex justify-between items-center mb-4">
 	<div>
 		<h2 class="text-lg mb-4">Website Analytics</h2>
-		<h3>
-			<a target="_blank" href={project.url}>
-				{project.page?.url ? project.page.url.replace('https://', '') : getDomain(project.url)}
-			</a>
-		</h3>
+		{#if project}
+			<h3>
+				<a target="_blank" href={project.url}>
+					{project.page?.url ? project.page.url.replace('https://', '') : getDomain(project.url)}
+				</a>
+			</h3>
+		{/if}
 	</div>
 
 	<div>
