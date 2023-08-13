@@ -25,10 +25,8 @@
 	let isFile;
 
 	$: if (url) {
-		console.log('if 1');
 		isFile = !(url.includes('loom.com') || url.includes('youtube.com') || url.includes('youtu.be'));
 	} else {
-		console.log('if 2');
 		isFile = false;
 	}
 
