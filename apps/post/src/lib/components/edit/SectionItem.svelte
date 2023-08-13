@@ -6,7 +6,7 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
-	import EditUrl from '$lib/components/edit/UrlL.svelte';
+	import EditUrl from '$lib/components/edit/Url.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
