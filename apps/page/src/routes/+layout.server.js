@@ -16,8 +16,14 @@ export async function load({ url, params, session, cookies }) {
 			ogDescription: `${page.subtitle || page.callToAction}`,
 			ogImage: page.demoUrl || `${PAGE_URL}/og.png?pageSlug=${pageSlug}`
 		};
+	} else {
+		extend = {
+			ogTitle: `Momentum Page`,
+			ogDescription: `Grow your startup: launch landing pages, collect waitlist, create, connect with your audience, sell.`,
+			ogImage:
+				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
+		};
 	}
-	console.log('extend', extend);
 
 	let authData = await authServerGuard({ url, params, session, cookies }, 'Momentum Page');
 
