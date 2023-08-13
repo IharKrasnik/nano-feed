@@ -17,8 +17,8 @@
 
 	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
 
-	import TwitterIcon from 'lib/icons/Twitter.svelte';
-	import LinkedInIcon from 'lib/icons/LinkedIn.svelte';
+	import TwitterIcon from 'lib/icons/twitter.svelte';
+	import LinkedInIcon from 'lib/icons/linkedin.svelte';
 	import PostBadge from '$lib/components/PostBadge.svelte';
 
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
