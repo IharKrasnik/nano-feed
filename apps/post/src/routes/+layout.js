@@ -22,7 +22,7 @@ export async function load({ url, params, session, cookies }) {
 	if (currentDomain === 'post.mmntm.build') {
 		if (postSlug) {
 			throw redirect(302, `https://mmntm.blog/${blogSlug}/${postSlug}`);
-		} else {
+		} else if (blogSlug) {
 			throw redirect(302, `https://mmntm.blog/${blogSlug}`);
 		}
 	}
