@@ -3,13 +3,52 @@
 	import { page } from '$app/stores';
 	import isUrl from 'lib/helpers/isUrl';
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
+	import blogDraft from '$lib/stores/blogDraft';
 	import Dock from 'lib/components/Dock.svelte';
 	import ContentEditableMenu from 'lib/components/ContentEditableMenu.svelte';
+	import styles from '$lib/stores/styles';
 
 	import { browser } from '$app/environment';
 
 	if (browser && $page.data.blog) {
 		window.WAVE_SUBPROJECT_ID = $page.data.blog._id;
+	}
+
+	let cssVarStyles;
+
+	let fontPairs = [
+		{ title: 'Archivo', text: 'Inter' },
+		{ title: 'Calistoga', text: 'IBM Plex Sans' },
+		{ title: 'Chillax', text: 'Gilroy' },
+		{ title: 'Fraunces', text: 'Poppins' },
+		{ title: 'Syne', text: 'Syne' },
+		{ title: 'Quattrocento', text: 'Questrial' },
+		{ title: 'Albert Sans', text: 'Barlow' }
+	];
+
+	export let blog = $page.data.blog || $blogDraft;
+
+	$: if (blog) {
+		let stylesObj = {
+			'title-font': blog.theme?.titleFont || fontPairs[0].title,
+			'text-font': blog.theme?.textFont || fontPairs[0].text,
+			'background-color': blog.theme?.backgroundColor || '#ffffff',
+			'text-color': blog.theme?.textColor || '#111',
+			'accent-color': blog.theme?.accentColor || '#000',
+			'section-background-color': blog.theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)',
+			'input-background': blog.theme?.inputBackground || '#f5f5f5',
+			'input-color': blog.theme?.inputColor || '#222222',
+			'button-color': blog.theme?.buttonColor || '#fff'
+		};
+
+		cssVarStyles = Object.entries(stylesObj)
+			.map(([key, value]) => `--${key}:${value}`)
+			.join(';');
+
+		$styles = {
+			obj: stylesObj,
+			css: cssVarStyles
+		};
 	}
 </script>
 
@@ -38,3 +77,6 @@
 {#if $currentUser && !$page.params.postSlug && !$page.params.blogSlug}
 	<Dock />
 {/if}
+
+<style global>
+</style>

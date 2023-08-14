@@ -8,7 +8,6 @@
 	let clazz = 'py-4 sm:py-16';
 	export let section;
 	export let blog;
-	export let themeStyles = {};
 
 	export { clazz as class };
 	export let style = null;
@@ -79,7 +78,7 @@
 	{/if}
 
 	{#if section.type === 'momentum_feed'}
-		<RenderMomentumFeed bind:blog bind:streamSlug={blog.streamSlug} bind:themeStyles />
+		<RenderMomentumFeed bind:blog bind:streamSlug={blog.streamSlug} />
 	{:else if section.items?.length}
 		<div class="w-full {clazz}">
 			<div class="sm:columns-{section.columns} gap-4 {section.columns > 1 ? 'items-start' : ''}">

@@ -12,7 +12,7 @@ if (browser) {
 		currentDomain !== 'mmntm.blog' &&
 		!currentDomain.includes('localhost')
 	) {
-		isCustomDomainStore.set(true);
+		isCustomDomainStore.set(currentDomain);
 	}
 }
 

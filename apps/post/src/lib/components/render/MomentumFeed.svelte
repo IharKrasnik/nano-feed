@@ -4,8 +4,8 @@
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
 
 	export let blog;
-	export let themeStyles;
 	export let streamSlug;
+	import styles from '$lib/stores/styles';
 
 	let resize = () => {
 		iframeResize({ log: true }, '#iframeResize');
@@ -19,7 +19,7 @@
 		on:load={resize}
 		class="w-full sticky z-20 bg-site"
 		src="{STREAM_URL}/{streamSlug}/embed?theme={blog.theme?.sectionTheme ||
-			'light'}&limit=9&isViewAll=true&bgColor={themeStyles['section-background-color'].replace(
+			'light'}&limit=9&isViewAll=true&bgColor={$styles.obj['section-background-color'].replace(
 			'#',
 			'%23'
 		)}"

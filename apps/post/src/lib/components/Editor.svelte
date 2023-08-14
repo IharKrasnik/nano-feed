@@ -55,9 +55,9 @@
 
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 
-	// onMount(async () => {
-	// 	await import('emoji-picker-element/svelte');
-	// });
+	onMount(async () => {
+		await import('emoji-picker-element/svelte');
+	});
 
 	const flipDurationMs = 300;
 
@@ -1150,6 +1150,48 @@ See you!
 					</div>
 				</div>
 
+				{#if isSubmissionsOpen || isMetricsOpen}
+					<div
+						class="fixed w-[426px] pb-[150px] pr-4 pt-4 overflow-y-scroll mt-[70px]"
+						in:fly={{ x: -50, duration: 150, delay: 150 }}
+						style="height: calc(100vh - 60px);"
+					>
+						<div class="flex justify-between">
+							<div
+								class="flex items-center cursor-pointer text-[#8B786D]"
+								on:click={() => {
+									isSubmissionsOpen = false;
+									isMetricsOpen = false;
+								}}
+							>
+								<BackArrowSvg />
+								Back to Editor
+							</div>
+							{#if isMetricsOpen}
+								<div>
+									<select bind:value={timeframe} on:change={refreshMetrics}>
+										<option value="24_hours">24 hours</option>
+										<option value="7_days">7 days</option>
+										<option value="30_days">30 days</option>
+									</select>
+								</div>
+							{/if}
+						</div>
+
+						{#if isMetricsOpen}
+							{#if metrics}
+								<div class="mt-8 w-full">
+									<WaveDashboard bind:timeframe stats={metrics} isSingleColumn />
+								</div>
+							{:else}
+								<Loader />
+							{/if}
+						{/if}
+
+						{#if isSubmissionsOpen}{/if}
+					</div>
+				{/if}
+
 				<!-- END SUBMISSIONS & METRICS -->
 
 				{#if blog._id}
@@ -1248,7 +1290,7 @@ See you!
 							{#key blog._id}
 								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
 									{#if $postDraft}
-										<PostPreview bind:post={$postDraft} />
+										<PostPreview bind:post={$postDraft} isDraft={true}/>
 									{:else}
 										<BrowserFrame
 											class="max-h-screen overflow-y-scroll"

@@ -156,3 +156,26 @@ a.button.tab.selected {
 
 	font-weight: bold;
 }
+
+.content {
+	@apply text-xl;
+	line-height: 1.6;
+}
+
+.content a {
+	text-decoration: underline !important;
+	cursor: pointer;
+}
+
+.content h1 {
+	font-family: Archivo;
+	@apply text-2xl font-bold mb-4 mt-8;
+}
+
+.content h2 {
+	@apply text-xl font-bold mb-2 mt-4;
+}
+
+.content h3 {
+	@apply text-lg font-bold mb-2 mt-4;
+}

@@ -39,12 +39,17 @@
 	let loadMetrics = () => {
 		return get(
 			`waveProjects/${
-				project.page ? 'page.mmntm.build' : project.waveProject._id || project.url
+				project.page
+					? 'page.mmntm.build'
+					: project.blog
+					? 'post.mmntm.build'
+					: project.waveProject._id || project.url
 			}/stats`,
 			{
 				timeframe: timeframe,
 				timezone: moment.tz.guess(),
-				...(project.page ? { subProjectId: project.page?._id } : {})
+				...(project.page ? { subProjectId: project.page?._id } : {}),
+				...(project.blog ? { subProjectId: project.blog?._id } : {})
 			}
 		).then((res) => (stats = res));
 	};

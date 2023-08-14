@@ -35,6 +35,7 @@ export async function load({ url, params, session, cookies }) {
 		if (blogSlug && !postSlug) {
 			postSlug = blogSlug;
 		}
+
 		blogSlug = currentDomain;
 	}
 
@@ -47,6 +48,7 @@ export async function load({ url, params, session, cookies }) {
 
 		extend = {
 			post,
+			blog: post.blog,
 			ogTitle: metaTags.title,
 			ogDescription: metaTags.description,
 			ogImage: metaTags.image

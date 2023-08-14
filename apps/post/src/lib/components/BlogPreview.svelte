@@ -1,4 +1,5 @@
 <script>
+	import moment from 'moment';
 	import SvelteMarkdown from 'svelte-markdown';
 	import striptags from 'striptags';
 
@@ -7,14 +8,19 @@
 	import { fly, fade, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { darken, lighten } from 'lib/helpers/color';
+	import Avatar from 'lib/components/Avatar.svelte';
+	import EndSubmitForm from '$lib/components/EndSubmitForm.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 
 	import Emoji from 'lib/components/Emoji.svelte';
+	import Header from '$lib/components/Header.svelte';
+	import PostShortPreview from '$lib/components/PostShortPreview.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import isCustomDomain from '$lib/stores/isCustomDomain';
+	import styles from '$lib/stores/styles';
 
 	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
 
@@ -29,6 +35,8 @@
 	let clazz = '';
 
 	export { clazz as class };
+
+	let isAboveTheFold;
 
 	export let blog = {
 		name: 'momentum',
@@ -95,41 +103,6 @@
 		iframeResize({ log: true }, '#iframeResize');
 	};
 
-	let scrollY;
-
-	let cssVarStyles;
-	let styles;
-
-	export let isAboveTheFold = false;
-
-	let fontPairs = [
-		{ title: 'Archivo', text: 'Inter' },
-		{ title: 'Calistoga', text: 'IBM Plex Sans' },
-		{ title: 'Chillax', text: 'Gilroy' },
-		{ title: 'Fraunces', text: 'Poppins' },
-		{ title: 'Syne', text: 'Syne' },
-		{ title: 'Quattrocento', text: 'Questrial' },
-		{ title: 'Albert Sans', text: 'Barlow' }
-	];
-
-	$: if (blog) {
-		styles = {
-			'title-font': blog.theme?.titleFont || fontPairs[0].title,
-			'text-font': blog.theme?.textFont || fontPairs[0].text,
-			'background-color': blog.theme?.backgroundColor || '#ffffff',
-			'text-color': blog.theme?.textColor || '#111',
-			'accent-color': blog.theme?.accentColor || '#000',
-			'section-background-color': blog.theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)',
-			'input-background': blog.theme?.inputBackground || '#f5f5f5',
-			'input-color': blog.theme?.inputColor || '#222222',
-			'button-color': blog.theme?.buttonColor || '#fff'
-		};
-
-		cssVarStyles = Object.entries(styles)
-			.map(([key, value]) => `--${key}:${value}`)
-			.join(';');
-	}
-
 	if ($sveltePage.params.pageSlug) {
 		window.document.body.style['background-color'] = blog.theme?.backgroundColor || 'white';
 	} else {
@@ -149,8 +122,6 @@
 	};
 </script>
 
-<svelte:window bind:scrollY />
-
 <div
 	class="hidden sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4 sm:min-h-screen"
 />
@@ -159,45 +130,7 @@
 
 {#key blog?._id}
 	<div>
-		<div class="color-site" style="{cssVarStyles};">
-			{#if !noStickyHeader && scrollY > 300}
-				<div
-					class="fixed top-0 z-30 bg-site w-full"
-					in:fly={{ y: -150, duration: 150, delay: 150 }}
-					out:fade={{ duration: 150, delay: 150 }}
-				>
-					<div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto p-4">
-						<a class="flex items-center shrink-0" href="">
-							<Emoji class="mr-2" emoji={blog.logo} />
-							<span class="font-bold  ">
-								{blog.name}
-							</span>
-							<div class="ml-4 opacity-70 hidden sm:block">
-								{@html blog.title}
-							</div>
-						</a>
-
-						<div class="shrink-0">
-							{#if !isSubmitted}
-								{#if blog.isCollectEmails}
-									<button
-										class="cursor-pointer"
-										style="border: 2px rgba(255, 255, 255, .8) solid;"
-										on:click={onButtonClick}>{blog.callToAction}</button
-									>
-								{:else}
-									<a href={blog.actionUrl} target="_blank" class="button">
-										{blog.callToAction}
-									</a>
-								{/if}
-							{/if}
-						</div>
-					</div>
-
-					<hr class="border-[#8B786D] opacity-30 w-full" />
-				</div>
-			{/if}
-
+		<div class="color-site" style={$styles.css}>
 			{#if isMounted}
 				<div class="sticky bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
 					<div class="p-4 _header flex md:justify-between items-center justify-center">
@@ -357,15 +290,9 @@
 							{/if}
 						</div>
 
-						<div class="grid sm:grid-cols-2 gap-4 grid-cols-1 mb-16 p-4">
+						<div class="grid sm:grid-cols-2 gap-8 grid-cols-1 mb-16 p-4">
 							{#each posts || [] as post}
-								<a href={$isCustomDomain ? `/${post.slug}` : `/${post.blog.slug}/${post.slug}`}>
-									{#if post.imageUrl}
-										<img class="max-h-[200px] object-cover w-full mb-2" src={post.imageUrl} />
-									{/if}
-									<h3 class="text-xl font-bold mb-2">{post.title}</h3>
-									<div class="text-lg">{@html striptags(post.description)}</div>
-								</a>
+								<PostShortPreview {post} />
 							{/each}
 						</div>
 
@@ -377,11 +304,7 @@
 											<div bind:this={editEl}>
 												<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
 												<div>
-													<RenderSection
-														bind:blog
-														bind:themeStyles={styles}
-														bind:section={$sectionToEdit}
-													/>
+													<RenderSection bind:blog bind:section={$sectionToEdit} />
 												</div>
 												<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
 											</div>
@@ -390,11 +313,10 @@
 											<RenderSection
 												bind:blog
 												bind:section
-												bind:themeStyles={styles}
 												style={false && blog.theme?.isZebra && i % 2 === 0
 													? blog.theme.theme === 'dark'
-														? `background-color: ${lighten(styles['background-color'], 0.01)};`
-														: `background-color: ${darken(styles['background-color'], 0.08)};`
+														? `background-color: ${lighten($styles.obj['background-color'], 0.01)};`
+														: `background-color: ${darken($styles.obj['background-color'], 0.08)};`
 													: ''}
 											/>
 										{/if}
@@ -450,7 +372,7 @@
 								on:load={resize}
 								class="w-full sticky z-20 pb-[200px] bg-site"
 								src="{STREAM_URL}/{blog.streamSlug}/embed?theme={blog.theme?.sectionTheme ||
-									'light'}&limit=15&isViewAll=true&bgColor={styles[
+									'light'}&limit=15&isViewAll=true&bgColor={$styles[
 									'section-background-color'
 								].replace('#', '%23')}"
 							/>
@@ -458,69 +380,8 @@
 					</div>
 				{/if}
 
-				{#if blog.streamSlug || blog.sections?.length}
-					<div
-						class="p-4 sm:p-8 w-full text-center bg-[#fafafa] max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
-						style="color: {blog.theme?.theme === 'dark'
-							? '#fafafa'
-							: '#222'}; background-color: {blog.theme?.theme === 'dark' ? '#222' : '#fafafa'}"
-					>
-						<div class="mx-auto max-w-[750px] flex flex-col items-center justify-center">
-							<div class="flex items-center text-lg my-4">
-								<Emoji class="mr-2" emoji={blog.logo} />
-								<span>
-									{blog.name}
-								</span>
-							</div>
-							<div class="_title text-3xl font-bold mb-8">
-								{@html blog.title}
-							</div>
-						</div>
-
-						<div
-							class="_input_container flex items-center mx-auto 
-							{blog.isCollectEmails
-								? `w-full ${isSubmitted ? '' : '_border '}` +
-								  (blog.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
-								: ''}"
-						>
-							<form
-								class="w-full {blog.isCollectEmails ? '' : 'flex justify-center'}"
-								on:submit|preventDefault={submitEmail}
-							>
-								{#if !isSubmitted}
-									{#if blog.isCollectEmails}
-										<input
-											class="_input _email-input w-full"
-											placeholder="Your Email"
-											type="email"
-											required
-											bind:this={inputEl}
-											bind:value={email}
-											disabled={isSubmitted}
-											in:fade={{ duration: 150 }}
-										/>
-										<button
-											type="submit"
-											class="_input_button justify-center {blog.isCollectEmails
-												? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-												: ''}">{blog.callToAction}</button
-										>
-									{:else}
-										<a href={blog.actionUrl} target="_blank" class="button _input_button">
-											{blog.callToAction}
-										</a>
-									{/if}
-								{:else}
-									<div>💥 Thank you!</div>
-
-									{#if blog.actionUrl}
-										<div class="mt-8 opacity-70">Redirecting...</div>
-									{/if}
-								{/if}
-							</form>
-						</div>
-					</div>
+				{#if posts?.length}
+					<EndSubmitForm bind:blog />
 				{/if}
 
 				{#if !isNoBadge && !blog.isNoBadge}
@@ -531,120 +392,5 @@
 	</div>
 {/key}
 
-<style>
-	:global(.bg-site) {
-		background-color: var(--background-color, white);
-	}
-
-	:global(.bg-section) {
-		background-color: var(--section-background-color);
-	}
-
-	.color-site {
-		color: var(--text-color, black);
-		font-family: var(--text-font);
-	}
-
-	._root {
-		width: 100%;
-		max-width: 1080px;
-		margin: 0 auto;
-	}
-
-	._header {
-		max-width: 1080px;
-		margin: 0 auto;
-	}
-
-	._logo {
-		font-family: var(--title-font);
-		font-weight: bold;
-		font-size: 18px;
-		margin-top: 12px;
-	}
-
-	._content {
-		margin-top: -40px;
-	}
-
-	:global(._title) {
-		font-family: Archivo;
-	}
-
-	._title {
-		font-family: Archivo;
-		font-size: 36px;
-		line-height: 1.2;
-		margin-bottom: 32px;
-	}
-
-	:global(._root ._title) {
-		font-family: var(--title-font) !important;
-	}
-
-	:global(._title b, ._title em) {
-		background-color: var(--accent-color);
-		color: var(--button-color);
-		opacity: 0.9;
-	}
-
-	._subtitle {
-		font-size: 18px;
-		line-height: 26px;
-		margin-bottom: 40px;
-	}
-
-	._input_container {
-		position: relative;
-
-		border-radius: 25px;
-	}
-
-	@media (min-width: 640px) {
-		._input_container._border {
-			border: 3px white solid;
-		}
-	}
-
-	@media (max-width: 640px) {
-		._input_container input {
-			border: 2px rgba(255, 255, 255, 0.8) solid;
-		}
-	}
-
-	._input {
-		background: var(--input-background);
-		color: var(--input-color);
-		width: 100%;
-		padding: 10px 18px;
-		border-radius: 20px;
-		font-size: 16px;
-	}
-
-	button,
-	.button {
-		border-radius: 20px;
-		padding: 5px 20px;
-
-		background-color: var(--accent-color);
-		color: var(--button-color);
-	}
-
-	._input_button {
-		padding: 13px 30px;
-		display: flex;
-		align-items: center;
-		z-index: 100;
-		height: 100%;
-		right: 0;
-		top: 0;
-	}
-
-	._momentum-stream {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		width: 500px;
-		height: 600px;
-	}
+<style src="./app-site.css">
 </style>

@@ -22,6 +22,7 @@
 	export let blog;
 
 	let saveDraft = async () => {
+		debugger;
 		if (post._id) {
 			post = await apiPut(`blogs/${blog._id}/posts/${post._id}`, post);
 		} else {

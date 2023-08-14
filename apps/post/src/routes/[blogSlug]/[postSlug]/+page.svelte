@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 	import PostPreview from '$lib/components/PostPreview.svelte';
 	import { get } from 'lib/api';
 	import { page } from '$app/stores';
@@ -8,7 +8,7 @@
 
 	let currentPost;
 
-	$: if ($page.params.postSlug && $page.params.postSlug !== prevSlug) {
+	$: if ($page.params.postSlug !== prevSlug) {
 		prevSlug = $page.params.postSlug;
 
 		if ($page.params.post) {
@@ -18,15 +18,12 @@
 
 			get(`blogs/${$page.params.blogSlug}/posts/${$page.params.postSlug}`).then((loadedPost) => {
 				currentPost = loadedPost;
-
-				if (browser && $page.data.post) {
-					$page.data.post = null;
-				}
 			});
 		}
 	}
 </script>
 
+wtf {currentPost}
 {#if currentPost}
-	<PostPreview isEdit={false} post={currentPost} />
-{/if}
+	<PostPreview isEdit={false} bind:post={currentPost} />
+{/if} -->

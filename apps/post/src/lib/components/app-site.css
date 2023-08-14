@@ -1,0 +1,131 @@
+h1 {
+	font-family: Archivo;
+	@apply text-3xl font-bold mb-4 mt-8;
+}
+
+h2 {
+	font-family: Archivo;
+	@apply text-2xl font-bold mb-2 mt-4;
+}
+
+h3 {
+	font-family: Archivo;
+	@apply text-xl font-bold mb-2 mt-4;
+}
+
+.bg-site {
+	background-color: var(--background-color, white);
+}
+
+.bg-section {
+	background-color: var(--section-background-color);
+}
+
+.color-site {
+	color: var(--text-color, black);
+	font-family: var(--text-font);
+}
+
+._root {
+	width: 100%;
+	max-width: 1080px;
+	margin: 0 auto;
+}
+
+._header {
+	max-width: 1080px;
+	margin: 0 auto;
+}
+
+._logo {
+	font-family: var(--title-font);
+	font-weight: bold;
+	font-size: 18px;
+	margin-top: 12px;
+}
+
+._content {
+	margin-top: -40px;
+}
+
+._title {
+	font-family: Archivo;
+}
+
+._title {
+	font-family: Archivo;
+	font-size: 36px;
+	line-height: 1.2;
+	margin-bottom: 32px;
+}
+
+._root ._title {
+	font-family: var(--title-font) !important;
+}
+
+._title b,
+._title em {
+	background-color: var(--accent-color);
+	color: var(--button-color);
+	opacity: 0.9;
+}
+
+._subtitle {
+	font-size: 18px;
+	line-height: 26px;
+	margin-bottom: 40px;
+}
+
+._input_container {
+	position: relative;
+
+	border-radius: 25px;
+}
+
+@media (min-width: 640px) {
+	._input_container._border {
+		border: 3px white solid;
+	}
+}
+
+@media (max-width: 640px) {
+	._input_container input {
+		border: 2px rgba(255, 255, 255, 0.8) solid;
+	}
+}
+
+._input {
+	background: var(--input-background);
+	color: var(--input-color);
+	width: 100%;
+	padding: 10px 18px;
+	border-radius: 20px;
+	font-size: 16px;
+}
+
+button,
+.button {
+	border-radius: 20px;
+	padding: 5px 20px;
+
+	background-color: var(--accent-color);
+	color: var(--button-color);
+}
+
+._input_button {
+	padding: 13px 30px;
+	display: flex;
+	align-items: center;
+	z-index: 100;
+	height: 100%;
+	right: 0;
+	top: 0;
+}
+
+._momentum-stream {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 500px;
+	height: 600px;
+}
