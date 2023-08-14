@@ -67,7 +67,7 @@ export async function load({ url, params, session, cookies }) {
 			ogTitle: `Momentum Post`,
 			ogDescription: `Launch your blog in seconds.`,
 			ogImage:
-				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
+				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691972941195-blog-opne.png'
 		};
 	}
 
