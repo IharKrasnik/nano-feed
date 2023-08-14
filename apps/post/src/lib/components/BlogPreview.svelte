@@ -14,6 +14,7 @@
 	import Emoji from 'lib/components/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
+	import isCustomDomain from '$lib/stores/isCustomDomain';
 
 	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
 
@@ -368,7 +369,7 @@
 
 						<div class="grid sm:grid-cols-2 gap-4 grid-cols-1 mb-16 p-4">
 							{#each posts || [] as post}
-								<a href="/{post.blog.slug}/{post.slug}">
+								<a href={$isCustomDomain ? `/${post.slug}` : `/${post.blog.slug}/${post.slug}`}>
 									{#if post.imageUrl}
 										<img class="max-h-[200px] object-cover w-full mb-2" src={post.imageUrl} />
 									{/if}
