@@ -7,8 +7,7 @@
 	let newDomainUrl;
 
 	let addDomain = async () => {
-		let domains = await post(`domains`, {
-			blogId: blog._id,
+		let domains = await post(`blogs/${blog._id}/domains`, {
 			url: newDomainUrl
 		});
 
@@ -20,9 +19,9 @@
 	let domainToEdit = null;
 
 	let refreshDomainStatus = async (domain) => {
-		let { isConfigured } = await get(`domains?blogId=${blog._id}&url=${domain.url}`);
+		let { isConfigured } = await get(`blogs/${blog._id}/domains/${domain.url}`);
 
-		pablogge.domains = blog.domains.map((d) => {
+		blog.domains = page.domains.map((d) => {
 			if (d.url === domain.url) {
 				d.isConfigured = isConfigured;
 				return d;

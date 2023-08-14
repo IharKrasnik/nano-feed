@@ -24,7 +24,7 @@
 	<div class="font-bold text-lg">Your Plan</div>
 
 	<div class="my-4 mb-8">
-		{#if page.subscription?.plan}
+		{#if blog.subscription?.plan}
 			<div>To The Moon</div>
 		{:else}
 			<div>Build In Public</div>
@@ -46,14 +46,14 @@
 		<div class="flex justify-between w-full">
 			<div>
 				<h3 class="text-xl font-bold mb-2">Momentum Badge</h3>
-				<div class="mb-4">Show the branded Momentum badge on your page</div>
+				<div class="mb-4">Show the branded Momentum badge on your blog</div>
 			</div>
 			<div>
 				<Button class="_primary _small _green" onClick={subscribe}>⚡️ Hide Badge</Button>
 			</div>
 		</div>
 		<div class="bg-zinc-700 p-4">
-			<div class="my-4"><BlogBadge isFixed={false} /></div>
+			<div class="my-4"><PostBadge isFixed={false} /></div>
 		</div>
 	</div>
 

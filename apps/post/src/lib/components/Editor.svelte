@@ -25,6 +25,7 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from 'lib/icons/back-arrow.svelte';
+	import Settings from '$lib/components/Settings.svelte';
 
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
