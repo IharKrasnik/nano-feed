@@ -1,6 +1,6 @@
 <script>
 	import { get, post } from 'lib/api';
-	import { GOOGLE_LOGIN_URL } from 'lib/env';
+	import { getGoogleLoginUrl } from 'lib/env';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -17,7 +17,7 @@
 	import Emoji from 'lib/components/Emoji.svelte';
 
 	if (browser && !$currentUser) {
-		goto(GOOGLE_LOGIN_URL);
+		goto(getGoogleLoginUrl());
 	}
 
 	let myProjects;
