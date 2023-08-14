@@ -233,13 +233,7 @@
 								: ''} "
 							style={maxHeight ? `max-height: ${maxHeight}` : ''}
 						>
-							<div
-								class="p-4 flex h-full w-full {blog.demoUrl
-									? `flex-col ${
-											blog.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
-									  } justify-between items-center`
-									: 'text-center items-center'}"
-							>
+							<div class="p-4 flex h-full w-full flex-col">
 								<div
 									class={blog.demoUrl
 										? `w-full text-center ${
@@ -247,7 +241,7 @@
 													? 'flex flex-col items-center mb-8'
 													: 'sm:text-left'
 										  } sm:max-w-[500px] items-center`
-										: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+										: 'flex flex-col items-start w-full sm:w-auto'}
 								>
 									<h1
 										class="_title {!blog.demoUrl || blog.theme?.hero === 'vertical'
@@ -276,17 +270,13 @@
 									<div
 										class="_input_container {blog.isCollectEmails && !isSubmitted
 											? '_border '
-											: ''} flex items-center {blog.demoUrl ? '' : 'mx-auto'} {blog.isCollectEmails
+											: ''} flex items-center {blog.isCollectEmails
 											? 'w-full ' +
 											  (blog.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
 											: ''}"
 									>
 										<form
-											class="{blog.isCollectEmails
-												? `w-full flex flex-col ${
-														blog.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
-												  } items-center justify-center`
-												: 'mx-auto sm:mx-0'} "
+											class="{blog.isCollectEmails ? `w-full flex flex-col` : 'sm:mx-0'} "
 											style={!blog.isCollectEmails && !blog.demoUrl ? 'margin: 0 auto;' : ''}
 											on:submit|preventDefault={submitEmail}
 										>
