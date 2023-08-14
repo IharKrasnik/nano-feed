@@ -27,7 +27,11 @@ export async function load({ url, params, session, cookies }) {
 		}
 	}
 
-	if (currentDomain !== 'post.mmntm.build' && !currentDomain.includes('localhost')) {
+	if (
+		currentDomain !== 'post.mmntm.build' &&
+		currentDomain !== 'mmntm.blog' &&
+		!currentDomain.includes('localhost')
+	) {
 		if (blogSlug && !postSlug) {
 			postSlug = blogSlug;
 		}
