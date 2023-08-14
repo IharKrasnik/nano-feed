@@ -5,6 +5,12 @@
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import Dock from 'lib/components/Dock.svelte';
 	import ContentEditableMenu from 'lib/components/ContentEditableMenu.svelte';
+
+	import { browser } from '$app/environment';
+
+	if (browser && $page.data.blog) {
+		window.WAVE_SUBPROJECT_ID = $page.data.blog._id;
+	}
 </script>
 
 <svelte:head>
