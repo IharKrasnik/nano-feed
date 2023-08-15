@@ -17,14 +17,14 @@
 	<div
 		in:fly={{ y: 50, delay: 300, duration: 150 }}
 		class="fixed opacity-40 transition hover:opacity-100 flex items-center justify-center bottom-[30px] left-[50%] z-50 max-w-[400px] bg-zinc-900 rounded-xl p-2 flex gap-2"
-		style="z-index: 1000; transform: translateX(-50%); transform-origin: top center;"
+		style="z-index: 1000; transform: translateX(-50%); transform-origin: top center; border: 1px rgba(255, 255, 255, .3) solid;"
 	>
 		<div
 			class="relative {activeIcon === 'momentum'
 				? 'pointer-events-none'
 				: 'transition hover:scale-110'}"
 		>
-			<a class="" href={STREAM_URL} target="_blank" use:tooltip title="Feed: publish content daily">
+			<a class="" href={STREAM_URL} use:tooltip title="Feed: publish content daily">
 				<svg
 					width="40"
 					height="40"
@@ -54,13 +54,7 @@
 				? 'pointer-events-none'
 				: 'transition hover:scale-110'}"
 		>
-			<a
-				class=""
-				href={PAGE_URL}
-				target="_blank"
-				use:tooltip
-				title="Page: launch your startup in seconds"
-			>
+			<a class="" href={PAGE_URL} use:tooltip title="Page: launch your startup in seconds">
 				<svg
 					width="40"
 					height="40"
@@ -97,7 +91,6 @@
 			<a
 				class="transition hover:scale-125"
 				href={POST_URL}
-				target="_blank"
 				use:tooltip
 				title="Post: launch your blog in seconds"
 			>
@@ -138,7 +131,6 @@
 			<a
 				class="transition hover:scale-125"
 				href={WAVE_URL}
-				target="_blank"
 				use:tooltip
 				title="Wave: add analytics in seconds"
 			>
