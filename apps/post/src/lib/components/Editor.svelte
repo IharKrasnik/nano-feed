@@ -454,8 +454,6 @@ See you!
 	};
 </script>
 
-<SupportTwitter />
-
 {#if isSettingsModalShown}
 	<Modal
 		isShown
@@ -653,8 +651,8 @@ See you!
 		<SignupForm />
 	{/if} -->
 
-		<div class="container mx-auto relative">
-			<div class="flex relative">
+		<div class="xl:max-w-[1600px] mx-auto relative px-16 sm:px-0">
+			<div class="flex relative ml-4 2xl:ml-0">
 				<!-- EDITOR-->
 				<div class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white">
 					<div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
@@ -1091,9 +1089,14 @@ See you!
 															</div>
 														{/each}
 													</div>
-													<div class="absolute bottom-0 h-[40px] bg-white opacity-70 w-full">
-														&nbsp;
-													</div>
+													{#if $blogPosts.length > 2}
+														<div
+															class="absolute bottom-0 h-[40px] bg-white w-full"
+															style="filter: blur(3px);"
+														>
+															&nbsp;
+														</div>
+													{/if}
 												</div>
 											</div>
 										{/if}
@@ -1409,11 +1412,7 @@ See you!
 				<!-- PREVIEW -->
 
 				{#if blog.name || blog.title}
-					<div
-						class="relative ml-[426px] _preview p-4 mx-4"
-						in:fade={{ delay: 150 }}
-						style="padding-left: 75px;"
-					>
+					<div class="relative ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]" in:fade={{ delay: 150 }}>
 						{#if blog._id && !$sectionToEdit && !$postDraft}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
 								<div class="mx-auto">

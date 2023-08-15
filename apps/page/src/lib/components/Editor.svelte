@@ -583,7 +583,6 @@ See you!
 		</div>
 	</Modal>
 {/if}
-<SupportTwitter />
 
 <!-- <svelte:head>
 	<script type="text/javascript">
@@ -776,8 +775,8 @@ See you!
 		<SignupForm />
 	{/if} -->
 
-		<div class="container mx-auto relative">
-			<div class="flex relative">
+		<div class="xl:max-w-[1600px] mx-auto relative px-16 sm:px-0">
+			<div class="flex relative ml-4">
 				<!-- EDITOR-->
 				<div class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white">
 					<div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
@@ -990,7 +989,7 @@ See you!
 														fill="#8B786D"
 													/>
 												</svg>
-												<span class="ml-2 mr-8 text-[#8B786D]">
+												<span class="ml-2 mr-4 text-[#8B786D]">
 													Audience ({submissions?.results?.length || 0})
 												</span>
 											</div>
@@ -1533,11 +1532,7 @@ See you!
 				<!-- PREVIEW -->
 
 				{#if page.name || page.title}
-					<div
-						class="relative ml-[426px] _preview p-4 mx-4"
-						in:fade={{ delay: 150 }}
-						style="padding-left: 75px;"
-					>
+					<div class="relative ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]" in:fade={{ delay: 150 }}>
 						{#if page._id && !$sectionToEdit}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
 								<div class="mx-auto">
@@ -1642,11 +1637,12 @@ See you!
 											use:tooltip
 											title="Current Plan"
 										>
-											{#if page.subscription}
+											<button class="_small _primary">Upgrade</button>
+											<!-- {#if page.subscription}
 												🚀 To The Moon
 											{:else}
 												🔨 Build in Public
-											{/if}
+											{/if} -->
 										</div>
 										<!-- {#if $sectionToEdit}
 										<div class="h-screen bg-white flex flex-col justify-center">
