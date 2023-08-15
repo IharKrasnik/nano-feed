@@ -113,12 +113,13 @@
 			page.sections = [...page.sections];
 		}
 
+		debugger;
 		if (
 			!force &&
 			$pageDraft[page.slug] &&
 			new Date(page.updatedOn) < new Date($pageDraft[page.slug].updatedOn)
 		) {
-			page = _.cloneDeep($pageDraft[page.slug]);
+			page = { ..._.cloneDeep($pageDraft[page.slug]), totalSignupsCount: page.totalSignupsCount };
 		} else {
 			$pageDraft = {
 				..._.cloneDeep($pageDraft),
@@ -471,7 +472,10 @@ See you!
 	$: if (page) {
 		if (
 			!$pageDraft[page.slug] ||
-			!_.isEqual(_.omit(page, ['welcomeEmail']), _.omit($pageDraft[page.slug], ['welcomeEmail']))
+			!_.isEqual(
+				_.omit(page, ['welcomeEmail', 'totalSignupsCount']),
+				_.omit($pageDraft[page.slug], ['welcomeEmail', 'totalSignupsCount'])
+			)
 		) {
 			if (page.isDirty === false) {
 				delete page.isDirty;
@@ -568,6 +572,11 @@ See you!
 	};
 
 	let isSettingsModalShown = false;
+
+	let subscribe = async () => {
+		let { url } = await get('stripe/subscribe', { pageId: page._id });
+		window.location.href = url;
+	};
 </script>
 
 {#if isSettingsModalShown}
@@ -1541,7 +1550,7 @@ See you!
 									{/if}
 								</div>
 
-								<div>
+								<div class="max-w-[400px] mx-auto">
 									<div
 										class="relative _published-label flex justify-between items-center mt-4"
 										style="padding: 6px 10px;"
@@ -1618,6 +1627,8 @@ See you!
 							<a href="{PAGE_URL}/explore">Explore</a>
 						</div>
 					{/if} -->
+						<!-- frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'} -->
+
 						{#if page}
 							{#key page._id}
 								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
@@ -1627,16 +1638,26 @@ See you!
 											{ url: `explore`, title: 'Explore Pages', emoji: '🙌' },
 											{ url: 'about', title: 'About Momentum', emoji: '📄', target: '_blank' }
 										]}
-										frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'}
+										frameBgColor="#494949"
 									>
-										<div
-											slot="header"
-											class="px-4 mr-4 text-white rounded-xl opacity-90"
-											class:bg-zinc-900={!page.subscription}
-											class:bg-green-900={page.subscription}
-											use:tooltip
-											title="Current Plan"
-										>
+										<div class="flex cursor-pointer" slot="header">
+											<div
+												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100"
+												use:tooltip
+												title="Free plan includes 300 subscribers"
+											>
+												{page.totalSignupsCount || 0}/300
+											</div>
+
+											<div
+												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-green-900"
+												on:click={subscribe}
+												use:tooltip
+												title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
+											>
+												🫶 Upgrade
+											</div>
+
 											<!-- <button class="_small _primary">Upgrade</button> -->
 											<!-- {#if page.subscription}
 												🚀 To The Moon

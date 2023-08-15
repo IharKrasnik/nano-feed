@@ -31,7 +31,7 @@
 >
 	<div
 		class="{tabbarClass} sticky z-30 h-[40px] w-full top-0 left-0 flex items-center rounded-tl-xl rounded-tr-xl"
-		style="background-color: {frameBgColor};"
+		style="background-color: {frameBgColor}; z-index: 900;"
 	>
 		<div class="w-full flex justify-between items-center">
 			<div class="px-4 flex z-10 h-full flex items-center">
