@@ -2,6 +2,7 @@
 	import SvelteMarkdown from 'svelte-markdown';
 
 	import { post } from 'lib/api';
+	import { POST_URL } from 'lib/env';
 	import { page as sveltePage } from '$app/stores';
 	import { fly, fade, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
@@ -36,6 +37,18 @@
 		callToAction: 'Join Waitlist',
 		bgColor: '#D98324'
 	};
+
+	if (page.blog) {
+		if (!page.blog.url) {
+			let domain = (page.blog.domains || []).filter((d) => d.isConfigured)[0];
+
+			if (domain) {
+				page.blog.url = domain.url;
+			} else {
+				page.blog.url = `${POST_URL}/${page.blog.slug}`;
+			}
+		}
+	}
 
 	export let isEmbed = false;
 
@@ -207,7 +220,12 @@
 							</div>
 						</a>
 
-						<div class="shrink-0">
+						<div class="shrink-0 flex items-center">
+							{#if page.blog}
+								<div class="mr-8">
+									<a href={page.blog.url}>Blog</a>
+								</div>
+							{/if}
 							{#if !isSubmitted}
 								{#if page.isCollectEmails}
 									<button
@@ -239,7 +257,13 @@
 							</span>
 						</a>
 
-						<div class="shrink-0 mt-2 hidden md:block">
+						<div class="shrink-0 mt-2 hidden md:flex items-center">
+							{#if page.blog}
+								<div class="mr-8">
+									<a href={page.blog.url}>Blog</a>
+								</div>
+							{/if}
+
 							{#if !isSubmitted}
 								{#if page.isCollectEmails}
 									<button
@@ -552,6 +576,11 @@
 								{/if}
 							</form>
 						</div>
+						{#if page.blog}
+							<div class="mt-8">
+								<a href={page.blog.url}>Or read our Blog 🙌</a>
+							</div>
+						{/if}
 					</div>
 				{/if}
 

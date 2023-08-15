@@ -10,6 +10,8 @@
 	import { goto } from '$app/navigation';
 	import { page as sveltePage } from '$app/stores';
 	import striptags from 'striptags';
+	import getOtpAndOpen from 'lib/helpers/getOtpAndOpen';
+
 	import { GOOGLE_LOGIN_URL, PAGE_URL, POST_URL, STREAM_URL, BRAND_URL } from 'lib/env';
 	import Emoji from 'lib/components/Emoji.svelte';
 
@@ -22,6 +24,7 @@
 	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditPost from '$lib/components/edit/Post.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import MomentumHub from 'lib/components/MomentumHub.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
@@ -447,47 +450,6 @@ See you!
 			creator: $currentUser,
 			blog
 		};
-	};
-
-	let pages;
-	let isPageEditMode;
-
-	let createPage = async () => {
-		let page = await post('pages', {
-			name: blog.name,
-			title: blog.title,
-			subtitle: blog.subtitle,
-			blogId: blog._id
-		});
-
-		goto(PAGE_URL);
-	};
-
-	let editPage = async () => {
-		let results = await get('pages/my');
-
-		pages = results;
-		isPageEditMode = true;
-
-		if (pages.length === 0) {
-			await createPage();
-		} else {
-			if (!blog.page) {
-				blog.page = pages[0];
-			}
-		}
-	};
-
-	let updatePage = async () => {
-		if (blog.page._id === '_new') {
-			await createPage();
-		} else {
-			blog = await put(`blogs/${blog._id}/page`, {
-				pageId: blog.page._id === '_del' ? null : blog.page._id
-			});
-		}
-		isPageEditMode = false;
-		pages = [];
 	};
 </script>
 
@@ -1156,115 +1118,7 @@ See you!
 											</div>
 										</div>
 
-										<div class="mb-16">
-											<div class="flex justify-between mb-4">
-												<div>
-													<div class="text-lg font-bold mb-2">Gain your Momentum</div>
-													<div>
-														Momentum tools are stupid-simple yet surprisingly efficient. We target
-														content, distribution and traction.
-													</div>
-												</div>
-
-												<!-- <button class="_secondary _small" on:click={createNewPost}
-													>✍️ Write New Post</button
-												> -->
-											</div>
-											<hr class="my-8 border-[#8B786D] opacity-30" />
-
-											{#if isPageEditMode}
-												<select class="p-4 w-full text-lg mb-4" bind:value={blog.page._id}>
-													{#if pages?.length}
-														{#each pages as page}
-															<option value={page._id}
-																><Emoji emoji={page.icon} /> {page.name} — {page.title}</option
-															>
-														{/each}
-													{/if}
-													<option value="_new">➕ New Page</option>
-
-													{#if pages?.length}
-														<option value="_del">🙅‍♂️ Disconnect Page</option>
-													{/if}
-												</select>
-
-												<Button class="_primary mb-4" onClick={updatePage}>
-													{blog.page._id === '_new' ? 'Create Page' : ''}
-													{blog.page._id === '_del' ? 'Disconnect Page' : ''}
-													{blog.page._id !== '_del' && blog.page._id !== '_new'
-														? 'Update Page'
-														: ''}
-												</Button>
-											{/if}
-
-											{#if blog.page}
-												{#if !pages?.length}
-													<Button class="_secondary w-full mb-2" onClick={editPage}
-														>✅ Page — {blog.page.name}</Button
-													>
-												{/if}
-											{:else}
-												<Button class="_secondary w-full mb-2" onClick={editPage}
-													>📄 {blog.page ? 'Edit' : 'Connect'} Page</Button
-												>
-											{/if}
-											Connect a landing page to your blog to collect more leads, grow with social media
-											and sell your products and services.
-
-											<div class="mt-8">
-												<button
-													class="_secondary w-full mb-2"
-													on:click={() => {
-														isBroadcastEmailModalShown = true;
-													}}>✉️ Send Newsletter</button
-												>
-
-												Engage with your mail list regularly to grow and launch products and
-												services.
-											</div>
-
-											<div class="mt-8">
-												<Button
-													class="_secondary w-full mb-2"
-													onClick={() => {
-														goto(BRAND_URL);
-													}}>💐 Create Brand</Button
-												>
-
-												Create nice-looking images for your social media and content. <br />
-												Alfa Version.
-											</div>
-
-											<div class="mt-8">
-												<a href="https://nanohq.co" target="_blank">
-													<button class="_secondary w-full mb-2">⚫️ Join Nano Community</button>
-
-													Build your startup in public, connect with other founders, create content
-													regularly and win startup prizes. Get exposure and funding.
-												</a>
-											</div>
-
-											<div class="mt-8">
-												<a href="https://feed.mmntm.build" target="_blank">
-													<button class="_secondary w-full mb-2" on:click={createNewPost}
-														>🌀 Open Stream</button
-													>
-												</a>
-
-												Feature your best content links and attach live content feed to your
-												websites. Grow with community.
-											</div>
-
-											<div class="mt-8">
-												<a href="https://wave.mmntm.build" target="_blank">
-													<button class="_secondary w-full mb-2" on:click={createNewPost}
-														>📈 Open Wave</button
-													>
-												</a>
-
-												Your website and product analytics dashboard.
-											</div>
-										</div>
+										<MomentumHub bind:blog bind:isBroadcastEmailModalShown/>
 									{:else}
 										<div class="my-8">
 											<Button

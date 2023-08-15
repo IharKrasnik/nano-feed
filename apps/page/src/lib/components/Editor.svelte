@@ -28,6 +28,7 @@
 	import WaveSingleStat from 'lib/components/wave/SingleStat.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
+	import MomentumHub from 'lib/components/MomentumHub.svelte';
 
 	import SitePreview from '$lib/components/site-preview.svelte';
 	import SignupForm from '$lib/components/signup-form.svelte';
@@ -1339,6 +1340,10 @@ See you!
 									{/if}
 								</div>
 							</div>
+
+							{#if page._id}
+								<MomentumHub bind:page bind:isBroadcastEmailModalShown />
+							{/if}
 						{/if}
 					</div>
 				</div>
