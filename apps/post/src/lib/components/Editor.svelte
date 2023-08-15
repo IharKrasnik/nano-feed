@@ -10,7 +10,8 @@
 	import { goto } from '$app/navigation';
 	import { page as sveltePage } from '$app/stores';
 	import striptags from 'striptags';
-	import { GOOGLE_LOGIN_URL, PAGE_URL, POST_URL, STREAM_URL } from 'lib/env';
+	import { GOOGLE_LOGIN_URL, PAGE_URL, POST_URL, STREAM_URL, BRAND_URL } from 'lib/env';
+	import Emoji from 'lib/components/Emoji.svelte';
 
 	import { get, post, put } from 'lib/api';
 
@@ -447,6 +448,47 @@ See you!
 			blog
 		};
 	};
+
+	let pages;
+	let isPageEditMode;
+
+	let createPage = async () => {
+		let page = await post('pages', {
+			name: blog.name,
+			title: blog.title,
+			subtitle: blog.subtitle,
+			blogId: blog._id
+		});
+
+		goto(PAGE_URL);
+	};
+
+	let editPage = async () => {
+		let results = await get('pages/my');
+
+		pages = results;
+		isPageEditMode = true;
+
+		if (pages.length === 0) {
+			await createPage();
+		} else {
+			if (!blog.page) {
+				blog.page = pages[0];
+			}
+		}
+	};
+
+	let updatePage = async () => {
+		if (blog.page._id === '_new') {
+			await createPage();
+		} else {
+			blog = await put(`blogs/${blog._id}/page`, {
+				pageId: blog.page._id === '_del' ? null : blog.page._id
+			});
+		}
+		isPageEditMode = false;
+		pages = [];
+	};
 </script>
 
 {#if isSettingsModalShown}
@@ -486,64 +528,70 @@ See you!
 		}}
 	>
 		<div class="p-8 w-full">
-			<div class="text-xl font-bold mb-4">Broadcast emails to your audience</div>
+			<div class="text-xl font-bold mb-4">Send newsletter to your audience</div>
 
-			{#if !isBroadcastTestSent}
-				<div class="mt-4 mb-2">Email Subject</div>
-				<div class="text-sm mt-2 mb-4">
-					Subject is very important! <br /> Spark reader's curiosity and make them want to open your
-					email.
-				</div>
-				<input
-					placeholder="{moment().format('MMMM')} Update 🔥"
-					class="w-full"
-					bind:value={broadcastEmail.subject}
-				/>
-
-				<div class="mt-4 mb-2">Message</div>
-				<div class="text-sm mt-2 mb-4">
-					What's in your email for them? <br />
-					Talk to your audience and solve their problems. <br />
-					Genuinly lead them to call to action through storytelling.
-				</div>
-
-				<div
-					class="w-full p-4 bg-[#f6f5f5] min-h-[200px] rounded-xl"
-					bind:innerHTML={broadcastEmail.html}
-					contenteditable
-					use:contenteditable
-				/>
-
-				<hr class="my-8 border-[#8B786D] opacity-30" />
-
-				<div class="mt-4">Call To Action (optional)</div>
-				<div class="text-sm mb-2 opacity-70">
-					Text & link for the button at the bottom of your email.
-				</div>
-
-				<div class="flex w-full">
-					<div class="w-full">
-						<div class="text-sm mb-2">Title</div>
-						<input
-							class="w-full"
-							placeholder="Join discovery call"
-							bind:value={broadcastEmail.callToAction.title}
-						/>
+			{#if blog.signupsCount > 1}
+				{#if !isBroadcastTestSent}
+					<div class="mt-4 mb-2">Email Subject</div>
+					<div class="text-sm mt-2 mb-4">
+						Subject is very important! <br /> Spark reader's curiosity and make them want to open your
+						email.
 					</div>
-					<div class="ml-4 w-full">
-						<div class="text-sm mb-2">URL</div>
-						<input
-							class="w-full"
-							type="text"
-							placeholder="https://cal.com/igor-krasnik-7uhewy/30min"
-							bind:value={broadcastEmail.callToAction.url}
-						/>
-					</div>
-				</div>
+					<input
+						placeholder="{moment().format('MMMM')} Update 🔥"
+						class="w-full"
+						bind:value={broadcastEmail.subject}
+					/>
 
-				<div class="mt-4 mb-2">Image (optional)</div>
-				<div class="text-sm mt-2 mb-4">Add friendly photo or product demo to the end of email.</div>
-				<FileInput class="w-full" bind:url={broadcastEmail.imageUrl} />
+					<div class="mt-4 mb-2">Message</div>
+					<div class="text-sm mt-2 mb-4">
+						What's in your email for them? <br />
+						Talk to your audience and solve their problems. <br />
+						Genuinly lead them to call to action through storytelling.
+					</div>
+
+					<div
+						class="w-full p-4 bg-[#f6f5f5] min-h-[200px] rounded-xl"
+						bind:innerHTML={broadcastEmail.html}
+						contenteditable
+						use:contenteditable
+					/>
+
+					<hr class="my-8 border-[#8B786D] opacity-30" />
+
+					<div class="mt-4">Call To Action (optional)</div>
+					<div class="text-sm mb-2 opacity-70">
+						Text & link for the button at the bottom of your email.
+					</div>
+
+					<div class="flex w-full">
+						<div class="w-full">
+							<div class="text-sm mb-2">Title</div>
+							<input
+								class="w-full"
+								placeholder="Join discovery call"
+								bind:value={broadcastEmail.callToAction.title}
+							/>
+						</div>
+						<div class="ml-4 w-full">
+							<div class="text-sm mb-2">URL</div>
+							<input
+								class="w-full"
+								type="text"
+								placeholder="https://cal.com/igor-krasnik-7uhewy/30min"
+								bind:value={broadcastEmail.callToAction.url}
+							/>
+						</div>
+					</div>
+
+					<div class="mt-4 mb-2">Image (optional)</div>
+					<div class="text-sm mt-2 mb-4">
+						Add friendly photo or product demo to the end of email.
+					</div>
+					<FileInput class="w-full" bind:url={broadcastEmail.imageUrl} />
+				{/if}
+			{:else}
+				whoops, it doesn't look you have signups yet?
 			{/if}
 
 			{#if isBroadcastTestSent}
@@ -607,7 +655,7 @@ See you!
 						>
 					</div>
 				{/if}
-			{:else}
+			{:else if blog.signupsCount}
 				<div class="mt-8">
 					<Button class="mt-4 _secondary" onClick={sendTestBroadcastEmail}
 						>🔬 Send Test Email</Button
@@ -1055,7 +1103,7 @@ See you!
 											<div class="mb-16">
 												<div class="flex justify-between mb-4">
 													<div class="text-lg font-bold mb-2">Posts</div>
-													<button class="_secondary _small" on:click={() => ($postDraft = {})}
+													<button class="_secondary _small" on:click={createNewPost}
 														>✍️ Write New Post</button
 													>
 												</div>
@@ -1065,7 +1113,9 @@ See you!
 														{#each $blogPosts as post}
 															<div
 																class="_section cursor-pointer"
-																on:click={() => ($postDraft = _.cloneDeep(post))}
+																on:click={() => {
+																	$postDraft = _.cloneDeep(post);
+																}}
 															>
 																<b class="text-lg mb-2">{post.title}</b>
 																<div class="truncate">{striptags(post.description)}</div>
@@ -1096,6 +1146,125 @@ See you!
 												</div>
 											</div>
 										{/if}
+										<div class="mb-16">
+											<div class="flex justify-between mb-4">
+												<div class="text-lg font-bold mb-2">Topics</div>
+												Coming Soon
+												<!-- <button class="_secondary _small" on:click={createNewPost}
+													>✍️ Write New Post</button
+												> -->
+											</div>
+										</div>
+
+										<div class="mb-16">
+											<div class="flex justify-between mb-4">
+												<div>
+													<div class="text-lg font-bold mb-2">Gain your Momentum</div>
+													<div>
+														Momentum tools are stupid-simple yet surprisingly efficient. We target
+														content, distribution and traction.
+													</div>
+												</div>
+
+												<!-- <button class="_secondary _small" on:click={createNewPost}
+													>✍️ Write New Post</button
+												> -->
+											</div>
+											<hr class="my-8 border-[#8B786D] opacity-30" />
+
+											{#if isPageEditMode}
+												<select class="p-4 w-full text-lg mb-4" bind:value={blog.page._id}>
+													{#if pages?.length}
+														{#each pages as page}
+															<option value={page._id}
+																><Emoji emoji={page.icon} /> {page.name} — {page.title}</option
+															>
+														{/each}
+													{/if}
+													<option value="_new">➕ New Page</option>
+
+													{#if pages?.length}
+														<option value="_del">🙅‍♂️ Disconnect Page</option>
+													{/if}
+												</select>
+
+												<Button class="_primary mb-4" onClick={updatePage}>
+													{blog.page._id === '_new' ? 'Create Page' : ''}
+													{blog.page._id === '_del' ? 'Disconnect Page' : ''}
+													{blog.page._id !== '_del' && blog.page._id !== '_new'
+														? 'Update Page'
+														: ''}
+												</Button>
+											{/if}
+
+											{#if blog.page}
+												{#if !pages?.length}
+													<Button class="_secondary w-full mb-2" onClick={editPage}
+														>✅ Page — {blog.page.name}</Button
+													>
+												{/if}
+											{:else}
+												<Button class="_secondary w-full mb-2" onClick={editPage}
+													>📄 {blog.page ? 'Edit' : 'Connect'} Page</Button
+												>
+											{/if}
+											Connect a landing page to your blog to collect more leads, grow with social media
+											and sell your products and services.
+
+											<div class="mt-8">
+												<button
+													class="_secondary w-full mb-2"
+													on:click={() => {
+														isBroadcastEmailModalShown = true;
+													}}>✉️ Send Newsletter</button
+												>
+
+												Engage with your mail list regularly to grow and launch products and
+												services.
+											</div>
+
+											<div class="mt-8">
+												<Button
+													class="_secondary w-full mb-2"
+													onClick={() => {
+														goto(BRAND_URL);
+													}}>💐 Create Brand</Button
+												>
+
+												Create nice-looking images for your social media and content. <br />
+												Alfa Version.
+											</div>
+
+											<div class="mt-8">
+												<a href="https://nanohq.co" target="_blank">
+													<button class="_secondary w-full mb-2">⚫️ Join Nano Community</button>
+
+													Build your startup in public, connect with other founders, create content
+													regularly and win startup prizes. Get exposure and funding.
+												</a>
+											</div>
+
+											<div class="mt-8">
+												<a href="https://feed.mmntm.build" target="_blank">
+													<button class="_secondary w-full mb-2" on:click={createNewPost}
+														>🌀 Open Stream</button
+													>
+												</a>
+
+												Feature your best content links and attach live content feed to your
+												websites. Grow with community.
+											</div>
+
+											<div class="mt-8">
+												<a href="https://wave.mmntm.build" target="_blank">
+													<button class="_secondary w-full mb-2" on:click={createNewPost}
+														>📈 Open Wave</button
+													>
+												</a>
+
+												Your website and product analytics dashboard.
+											</div>
+										</div>
 									{:else}
 										<div class="my-8">
 											<Button
@@ -1202,7 +1371,7 @@ See you!
 									</button> -->
 										{/if}
 
-										{#if blog._id && blog.isDirty}
+										<!-- {#if blog._id && blog.isDirty}
 											<div
 												class="cursor-pointer text-sm opacity-70"
 												on:click={() => {
@@ -1219,7 +1388,7 @@ See you!
 											>
 												Reset Blog
 											</div>
-										{/if}
+										{/if} -->
 									</div>
 								{/if}
 							</div>
@@ -1302,7 +1471,7 @@ See you!
 									</div>
 
 									{#if submissions?.results?.length}
-										<div class="font-bold mt-8 mb-4">Broadcast Emails</div>
+										<div class="font-bold mt-8 mb-4">Newsletter</div>
 
 										{#if broadcastEmails?.results?.length}
 											{#each broadcastEmails.results as email}
@@ -1334,7 +1503,7 @@ See you!
 											class="mt-4 _primary"
 											on:click={() => {
 												isBroadcastEmailModalShown = true;
-											}}>📢 Broadcast Emails</button
+											}}>📢 Send Newsletter</button
 										>
 									{/if}
 								</div>
