@@ -17,8 +17,8 @@
 	{/if}
 
 	<div class="flex items-center my-4">
-		<Avatar user={post.creator} size="20px" class="mr-2" />
-		<b class="mx-1">{post.creator.fullName}</b>
+		<Avatar user={post?.creator} size="20px" class="mr-2" />
+		<b class="mx-1">{post?.creator?.fullName}</b>
 		<div class="px-1 opacity-70">/</div>
 		<div class="opacity-70">{moment(post.publishedOn).format('MMM DD, YYYY')}</div>
 	</div>

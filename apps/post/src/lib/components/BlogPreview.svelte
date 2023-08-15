@@ -83,7 +83,8 @@
 	let isSubmitted = false;
 
 	let submitEmail = async () => {
-		await post(`audiences?audienceId=${blog._id}&blogId=${blog._id}`, { email });
+		await post(`blogs/${blog.slug}/submissions`, { email });
+
 		isSubmitted = true;
 
 		if (blog.actionUrl) {
@@ -130,35 +131,9 @@
 
 {#key blog?._id}
 	<div>
-		<div class="color-site" style={$styles.css}>
+		<div class="color-site sm:mt-32 mt-16" style={$styles.css}>
 			{#if isMounted}
 				<div class="sticky bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
-					<div class="p-4 _header flex md:justify-between items-center justify-center">
-						<a class="flex items-center shrink-0 _logo" href="">
-							<Emoji class="mr-2" emoji={blog.logo} />
-
-							<span class="font-bold">
-								{blog.name}
-							</span>
-						</a>
-
-						<div class="shrink-0 mt-2 hidden md:block">
-							{#if !isSubmitted}
-								{#if blog.isCollectEmails}
-									<button
-										class="cursor-pointer"
-										style="border: 2px rgba(255, 255, 255, .8) solid;"
-										on:click={onButtonClick}>{blog.callToAction}</button
-									>
-								{:else}
-									<a href={blog.actionUrl} target="_blank" class="button">
-										{blog.callToAction}
-									</a>
-								{/if}
-							{/if}
-						</div>
-					</div>
-
 					<div class="_root bg-site">
 						<div
 							bind:this={$aboveTheFoldEl}
@@ -290,7 +265,11 @@
 							{/if}
 						</div>
 
-						<div class="grid sm:grid-cols-2 gap-8 grid-cols-1 mb-16 p-4">
+						<div
+							class="grid {posts?.length > 1
+								? 'sm:grid-cols-2'
+								: 'max-w-[600px] mx-auto'} gap-8 grid-cols-1 mb-16 p-4"
+						>
 							{#each posts || [] as post}
 								<PostShortPreview {post} />
 							{/each}
@@ -380,7 +359,7 @@
 					</div>
 				{/if}
 
-				{#if posts?.length}
+				{#if posts?.length > 2}
 					<EndSubmitForm bind:blog />
 				{/if}
 

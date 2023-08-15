@@ -59,6 +59,8 @@
 		await import('emoji-picker-element/svelte');
 	});
 
+	let isEditHeader = false;
+
 	const flipDurationMs = 300;
 
 	function handleDndConsider(e) {
@@ -100,7 +102,11 @@
 		$blogPosts = null;
 
 		isPostsLoading = true;
-		let data = await get(`blogs/${blog._id}/posts`);
+
+		let data = await get(`blogs/${blog._id}/posts`, {
+			isWithDrafts: true
+		});
+
 		$blogPosts = data.results;
 		isPostsLoading = false;
 	};
@@ -164,7 +170,7 @@ See you!
 		`;
 	};
 
-	const publishBlog = async () => {
+	const saveOrUpdateBlog = async () => {
 		let isNewBlog = !blog._id;
 
 		if (!isNewBlog && blog.creator && !$currentUser) {
@@ -209,6 +215,7 @@ See you!
 		} finally {
 			isLoading = false;
 			isJustPublished = true;
+			isEditHeader = false;
 
 			setTimeout(() => {
 				isJustPublished = false;
@@ -275,7 +282,7 @@ See you!
 		}
 		submissions = null;
 
-		submissions = await get(`submissions?audienceId=${blog._id}&blogId=${blog._id}`, {});
+		submissions = await get(`blogs/${blog._id}/submissions`);
 
 		calculateConversion();
 	};
@@ -431,7 +438,14 @@ See you!
 	let isSettingsModalShown = false;
 
 	let createNewPost = async () => {
-		$postDraft = {};
+		if (!blog._id) {
+			await saveOrUpdateBlog();
+		}
+
+		$postDraft = {
+			creator: $currentUser,
+			blog
+		};
 	};
 </script>
 
@@ -678,7 +692,7 @@ See you!
 							</a>
 
 							{#if $currentUser}
-								<!-- {#if $allBlogs}
+								{#if $allBlogs}
 									<select
 										class="ml-8 w-[275px]"
 										bind:value={blogSlug}
@@ -687,6 +701,7 @@ See you!
 
 											if (slug === '_new') {
 												blog = { ..._.cloneDeep($blogDraft['_new'] || defaultBlog) };
+												$blogPosts = null;
 												blogSlug = blog.slug;
 											} else {
 												setBlogAndDraft({
@@ -703,7 +718,7 @@ See you!
 									</select>
 								{:else}
 									<Loader />
-								{/if} -->
+								{/if}
 							{:else}
 								<button class="_primary" on:click={loginWithGoogle}> Log In </button>
 							{/if}
@@ -851,61 +866,51 @@ See you!
 
 								{#if !blog._id}
 									<div class="_section">
-										<div class="_title">Brand Name</div>
+										<div class="_title">Blog Name</div>
 										<input class="w-full" bind:value={blog.name} placeholder="Momentum" />
 									</div>
-								{/if}
 
-								{#if $postDraft}
-									<EditPost
-										onUpdated={() => ($postDraft = null)}
-										bind:post={$postDraft}
-										bind:blog
-									/>
-								{:else}
-									{#if $blogPosts?.length}
-										<div class="mb-16">
-											<div class="flex justify-between mb-4">
-												<div class="text-lg font-bold mb-2">Posts</div>
-												<button class="_secondary _small" on:click={() => ($postDraft = {})}
-													>✍️ Write New Post</button
-												>
-											</div>
+									{#if blog.name}
+										<div class="_section">
+											<div class="_title">Blog Title</div>
 
-											{#each $blogPosts as post}
+											<div
+												class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
+												contenteditable
+												use:contenteditable
+												data-placeholder="Build a better product in public."
+												bind:innerHTML={blog.title}
+												on:focus={() => (focuses.title = true)}
+												on:blur={() => (focuses.title = false)}
+											/>
+
+											{#if focuses.title || (blog.name && (!blog.title || !blog._id))}
 												<div
-													class="_section cursor-pointer"
-													on:click={() => ($postDraft = _.cloneDeep(post))}
+													class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
+													in:fly={{ y: 50, duration: 150 }}
 												>
-													<b class="text-lg mb-2">{post.title}</b>
-													<div class="truncate">{striptags(post.description)}</div>
-													<div class="flex justify-between mt-2">
-														<div class="opacity-70">{moment(post.createdOn).format('MMM DD')}</div>
+													Describe the goal of your blog with a bold title
 
-														<div
-															class="px-2 bg-gray-400 rounded-xl"
-															class:bg-gray-400={!post.publishedOn || post.draft}
-															class:bg-green-800={post.publishedOn}
-															class:text-white={post.publishedOn}
-														>
-															{#if post.publishedOn}
-																published
-															{:else}
-																draft
-															{/if}
-														</div>
+													<div class="font-normal mt-2">
+														Tell what the reader will achieve by reading your blog. Spark curiosity
+														and hook their attention.
 													</div>
 												</div>
-											{/each}
-										</div>
-									{:else}
-										<div class="my-8">
-											<button
-												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={createNewPost}>✍️ Write First Post</button
-											>
+											{/if}
 										</div>
 									{/if}
+								{/if}
+
+								{#if isEditHeader}
+									<div
+										class="flex items-center cursor-pointer text-[#8B786D] mb-4"
+										on:click={() => {
+											isEditHeader = false;
+										}}
+									>
+										<BackArrowSvg />
+										Back to Editor
+									</div>
 
 									<div
 										on:click={() => {
@@ -947,7 +952,6 @@ See you!
 												{/if}
 											</div>
 										{/if}
-
 										{#if blog.title}
 											{#if blog._id}
 												<div class="_section">
@@ -1019,94 +1023,167 @@ See you!
 														bind:value={blog.actionUrl}
 														placeholder="Action Url"
 													/>
-
-													<!-- <div class="flex items-center mt-2 text-[14px]">
-											<input type="checkbox" class="mr-2"  /> Collect Emails
-										</div> -->
 												</div>
 											{/if}
+										{/if}
+									</div>
+								{:else if blog._id && !$postDraft}
+									<div class="mb-8">
+										<div class="text-lg font-bold mb-2">Blog Header</div>
 
-											<!-- <EditTestimonials bind:page /> -->
+										<div class="_section cursor-pointer" on:click={() => (isEditHeader = true)}>
+											<b>{striptags(blog.title)}</b>
+											{#if blog.subtitle}
+												{striptags(blog.subtitle)}
+											{/if}
+										</div>
+									</div>
+								{/if}
 
-											{#if blog._id}
-												<hr class="my-8 border-[#8B786D] opacity-30" />
+								{#if $postDraft}
+									<EditPost
+										onUpdated={({ post, isJustPublished }) => {
+											isJustCreated = isJustPublished;
+											$postDraft = null;
+										}}
+										bind:post={$postDraft}
+										bind:blog
+									/>
+								{:else}
+									{#if $blogPosts?.length}
+										{#if !isEditHeader}
+											<div class="mb-16">
+												<div class="flex justify-between mb-4">
+													<div class="text-lg font-bold mb-2">Posts</div>
+													<button class="_secondary _small" on:click={() => ($postDraft = {})}
+														>✍️ Write New Post</button
+													>
+												</div>
 
-												<div
-													class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
-												>
-													<div class="flex items-center">
-														<div class="font-bold">🧱 Sections</div>
+												<div class="relative">
+													<div class="max-h-[350px] overflow-y-auto">
+														{#each $blogPosts as post}
+															<div
+																class="_section cursor-pointer"
+																on:click={() => ($postDraft = _.cloneDeep(post))}
+															>
+																<b class="text-lg mb-2">{post.title}</b>
+																<div class="truncate">{striptags(post.description)}</div>
+																<div class="flex justify-between mt-2">
+																	<div class="opacity-70">
+																		{moment(post.createdOn).format('MMM DD')}
+																	</div>
 
-														{#if blog.sections?.length}
-															<div class="ml-4 number-tag">
-																{blog.sections?.length || 0}
+																	<div
+																		class="px-2 bg-gray-400 rounded-xl"
+																		class:bg-gray-400={!post.publishedOn || post.draft}
+																		class:bg-green-800={post.publishedOn}
+																		class:text-white={post.publishedOn}
+																	>
+																		{#if post.publishedOn}
+																			published
+																		{:else}
+																			draft
+																		{/if}
+																	</div>
+																</div>
 															</div>
-														{/if}
+														{/each}
 													</div>
+													<div class="absolute bottom-0 h-[40px] bg-white opacity-70 w-full">
+														&nbsp;
+													</div>
+												</div>
+											</div>
+										{/if}
+									{:else}
+										<div class="my-8">
+											<Button
+												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												onClick={createNewPost}>✍️ Write First Post</Button
+											>
+										</div>
+									{/if}
 
-													{#if !blog.sections?.length}
-														<div>
-															<!-- <button
+									<!-- {#if blog._id && !isEditHeader && !$postDraft}
+										<hr class="my-8 border-[#8B786D] opacity-30" />
+
+										<div
+											class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
+										>
+											<div class="flex items-center">
+												<div class="font-bold">🧱 Sections</div>
+
+												{#if blog.sections?.length}
+													<div class="ml-4 number-tag">
+														{blog.sections?.length || 0}
+													</div>
+												{/if}
+											</div>
+
+											{#if !blog.sections?.length}
+												<div>
+													<button
 														class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
 														on:click={addNewSection}
 													>
 														Add Empty Section
-													</button> -->
-														</div>
-
-														{#if blog.sections?.length > 1}
-															<div
-																class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
-																on:click={() => (isOrdering = true)}
-															>
-																💫 Reorder Sections
-															</div>
-														{/if}
-													{/if}
+													</button>
 												</div>
-											{/if}
 
-											{#if blog.sections?.length}
-												<div>
+												{#if blog.sections?.length > 1}
 													<div
-														use:dndzone={{ items: blog.sections, flipDurationMs }}
-														on:consider={handleDndConsider}
-														on:finalize={handleDndFinalize}
+														class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+														on:click={() => (isOrdering = true)}
 													>
-														{#each blog.sections || [] as section (section.id)}
-															<div animate:flip={{ duration: flipDurationMs }}>
-																<EditSection
-																	bind:blog
-																	bind:section
-																	onRemove={() => {
-																		blog.sections = blog.sections.filter((s) => s !== section);
-																	}}
-																/>
-															</div>
-														{/each}
+														💫 Reorder Sections
 													</div>
-												</div>
+												{/if}
 											{/if}
+										</div>
+									{/if}
 
-											{#if blog?._id}
-												<button
-													class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={addNewSection}>🧱 Add Empty Section</button
-												>
-											{/if}
-											{#if blog._id}
-												<hr class="my-8 border-[#8B786D] opacity-30" />
-											{/if}
+									{#if blog.sections?.length}
+										<div>
+											<div
+												use:dndzone={{ items: blog.sections, flipDurationMs }}
+												on:consider={handleDndConsider}
+												on:finalize={handleDndFinalize}
+											>
+												{#each blog.sections || [] as section (section.id)}
+													<div animate:flip={{ duration: flipDurationMs }}>
+														<EditSection
+															bind:blog
+															bind:section
+															onRemove={() => {
+																blog.sections = blog.sections.filter((s) => s !== section);
+															}}
+														/>
+													</div>
+												{/each}
+											</div>
+										</div>
+									{/if}
 
-											{#if blog._id && blog.name && blog.title}
-												<hr class="my-8 border-[#8B786D] opacity-30" />
-											{/if}
-										{/if}
-									</div>
+									{#if blog?._id && !isEditHeader}
+										<button
+											class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+											on:click={addNewSection}>🧱 Add Empty Section</button
+										>
+									{/if}
+
+									{#if blog._id}
+										<hr class="my-8 border-[#8B786D] opacity-30" />
+									{/if}
+
+									{#if blog._id && blog.name && blog.title}
+										<hr class="my-8 border-[#8B786D] opacity-30" />
+									{/if} -->
 
 									<div class="flex items-center w-full justify-between mt-8 mb-32">
-										{#if blog.name}
-											<Button class="_primary" onClick={publishBlog}>Publish</Button>
+										{#if isEditHeader}
+											<Button class="_primary" onClick={saveOrUpdateBlog}>Update Blog</Button>
+
 											<!-- 
 									<button
 										class="relative _primary {isLoading ? 'loading' : ''}"
@@ -1188,7 +1265,126 @@ See you!
 							{/if}
 						{/if}
 
-						{#if isSubmissionsOpen}{/if}
+						{#if isSubmissionsOpen}
+							<div class="mt-4 text-lg mb-2 font-bold">Your Audience</div>
+
+							{#if submissions}
+								<div class="mt-4">
+									{#if submissions.results.length}
+										<div class="font-bold">
+											Forms Submissions: {submissions.results.length}
+										</div>
+									{:else}
+										You don't have form submissions yet. <br />
+										Share your page around to get your first signups.
+									{/if}
+
+									<div class="max-h-[250px] overflow-y-auto">
+										{#each submissions.results as submission}
+											<div class="flex my-2 opacity-90 w-full justify-between items-center">
+												<div>
+													{submission.email}
+													{#if submission.isVerified}
+														<div
+															class="inline"
+															use:tooltip
+															title="Email address is verified; Welcome email sent"
+														>
+															✅
+														</div>
+													{/if}
+												</div>
+												<div class="text-sm opacity-70">
+													{moment(submission.createdOn).format('MMM DD HH:MM')}
+												</div>
+											</div>
+										{/each}
+									</div>
+
+									{#if submissions?.results?.length}
+										<div class="font-bold mt-8 mb-4">Broadcast Emails</div>
+
+										{#if broadcastEmails?.results?.length}
+											{#each broadcastEmails.results as email}
+												<div class="flex justify-between items-center mb-4">
+													<div>
+														<div>
+															{email.subject}
+														</div>
+													</div>
+													<div class="flex">
+														<div class="mr-4 number-tag">{email.sentToEmails.length}</div>
+
+														<div class="opacity-70">
+															{moment(email.createdOn).format('MMM DD HH:MM')}
+														</div>
+													</div>
+												</div>
+											{/each}
+										{/if}
+
+										<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
+											<b> Keep your audience engaged </b> <br />
+
+											Stay in touch with them, keep them updated, share useful content, prepare them
+											for the launch.
+										</div>
+
+										<button
+											class="mt-4 _primary"
+											on:click={() => {
+												isBroadcastEmailModalShown = true;
+											}}>📢 Broadcast Emails</button
+										>
+									{/if}
+								</div>
+							{/if}
+
+							<hr class="my-8 border-[#8B786D] opacity-30" />
+
+							<div class="mt-4 font-bold">Your Welcome Email</div>
+
+							<div class="mt-4">
+								<div class="text-sm opacity-70 mb-2">Subject</div>
+								<input
+									type="text"
+									class="w-full"
+									placeholder="Welcome to {blog.name}!"
+									bind:value={blog.welcomeEmail.subject}
+								/>
+							</div>
+							<div class="mt-2 w-full">
+								<div class="text-sm opacity-70 mb-2">Email</div>
+								<div
+									contenteditable="true"
+									use:contenteditable
+									bind:innerHTML={blog.welcomeEmail.html}
+									class="w-full p-4 bg-[#fafafa]"
+								/>
+							</div>
+
+							<div class="text-sm opacity-70 mt-4 mb-2">Demo Image</div>
+							<div class="text-sm mb-2">
+								Attach your friendly selfie or image relevant to your product.
+							</div>
+							<FileInput class="w-full" bind:url={blog.welcomeEmail.imageUrl} theme="light" />
+
+							<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
+								Welcome email is sent once a user <b>verified</b> their email. <br />
+
+								🤝 Make it friendly and personal <br />
+								⏳ Keep it short and sweet <br />
+								⚡️ Stimulate reader to take action: book a call, check out the link, reply to email,
+								share in social media <br />
+							</div>
+
+							<div class="flex items-center">
+								<Button class="_primary my-8 mr-4" onClick={updateEmailHtml}
+									>Update Welcome Email</Button
+								>
+								<Button class="_secondary my-8" onClick={sendTestEmail}>🔬 Send Test Email</Button>
+							</div>
+						{/if}
 					</div>
 				{/if}
 
@@ -1254,7 +1450,7 @@ See you!
 											<div transition:fly={{ x: 50, duration: 150 }}>
 												<Button
 													class="bg-yellow-500 right-0 _primary flex justify-center w-full"
-													onClick={publishBlog}
+													onClick={saveOrUpdateBlog}
 													style="margin-left: 78px;
 										border-radius: 30px;
 										padding: 4px 45px;
@@ -1290,7 +1486,7 @@ See you!
 							{#key blog._id}
 								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
 									{#if $postDraft}
-										<PostPreview bind:post={$postDraft} isDraft={true}/>
+										<PostPreview bind:post={$postDraft} isDraft={true} />
 									{:else}
 										<BrowserFrame
 											class="max-h-screen overflow-y-scroll"

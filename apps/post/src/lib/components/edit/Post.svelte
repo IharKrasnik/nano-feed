@@ -8,6 +8,7 @@
 	import { fly } from 'svelte/transition';
 	import { post as apiPost, put as apiPut } from 'lib/api';
 	import FileInput from 'lib/components/FileInput.svelte';
+	import Button from 'lib/components/Button.svelte';
 	import BackArrowSvg from 'lib/icons/back-arrow.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import contenteditable from 'lib/use/contenteditable';
@@ -21,8 +22,7 @@
 	export let post;
 	export let blog;
 
-	let saveDraft = async () => {
-		debugger;
+	let saveDraft = async ({ isNoEvent = false } = {}) => {
 		if (post._id) {
 			post = await apiPut(`blogs/${blog._id}/posts/${post._id}`, post);
 		} else {
@@ -33,17 +33,23 @@
 
 		$blogPosts = [post, ...$blogPosts.filter((p) => p._id !== post._id)];
 
-		onUpdated(post);
+		if (!isNoEvent) {
+			onUpdated(post);
+		}
 	};
 
 	let publish = async () => {
+		let wasPublished = !!post.publishedOn;
+
+		await saveDraft({ isNoEvent: true });
+
 		post = await apiPost(`blogs/${blog._id}/posts/${post._id}/publish`);
 
 		$blogPosts = $blogPosts || [];
 
 		$blogPosts = [post, ...$blogPosts.filter((p) => p._id !== post._id)];
 
-		onUpdated(post);
+		onUpdated({ post, isJustPublished: !wasPublished });
 	};
 </script>
 
@@ -98,8 +104,8 @@
 		/>
 	</div>
 
-	<div class="mt-4">
-		<button class="_primary" on:click={saveDraft}>Save Draft</button>
-		<button class="_primary" on:click={publish}>Publish </button>
+	<div class="mt-8 flex">
+		<Button class="_primary" onClick={publish}>🚀 Publish Post</Button>
+		<Button class="_secondary ml-2" onClick={saveDraft}>💾 Save Draft</Button>
 	</div>
 </div>

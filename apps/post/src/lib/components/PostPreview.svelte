@@ -34,7 +34,7 @@
 </script>
 
 {#if post}
-	<div style={$styles.css}>
+	<div style={$styles.css} class="sm:mt-16 mt-8">
 		<div class="sticky bg-site z-20 w-full">
 			<div class="max-w-[700px] py-16 px-2 mx-auto">
 				<h1 class="mb-4">{@html post.title}</h1>
@@ -45,14 +45,14 @@
 
 				<div class="flex items-center my-4">
 					<Avatar user={post.creator} size="20px" class="mr-2" />
-					<b class="mx-1">{post.creator.fullName}</b>
+					<b class="mx-1">{post.creator?.fullName}</b>
 					<div class="px-1 opacity-70">/</div>
 					<div class="opacity-70">{moment(post.publishedOn).format('MMM DD, YYYY')}</div>
 				</div>
 
 				{#if post.imageUrl}
 					<RenderUrl
-						imgClass="object-cover w-full max-h-[300px] my-4"
+						imgClass="object-cover w-full h-[300px] my-4"
 						isLazy={false}
 						url={post.imageUrl}
 					/>
@@ -71,9 +71,8 @@
 					</div>
 				{/if}
 
-				<h3>Related Posts</h3>
-
 				{#if similarPosts?.length}
+					<h3>Related Posts</h3>
 					<div class="grid sm:grid-cols-2 gap-8 grid-cols-1 mb-16 sticky bg-site z-20">
 						{#each similarPosts as post}
 							<PostShortPreview {post} />
@@ -84,7 +83,9 @@
 		</div>
 	</div>
 
-	<EndSubmitForm bind:post />
+	{#if !isEdit}
+		<EndSubmitForm bind:post />
+	{/if}
 {/if}
 
 <style src="./app-site.css">
