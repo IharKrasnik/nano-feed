@@ -1637,7 +1637,7 @@ See you!
 											use:tooltip
 											title="Current Plan"
 										>
-											<button class="_small _primary">Upgrade</button>
+											<!-- <button class="_small _primary">Upgrade</button> -->
 											<!-- {#if page.subscription}
 												🚀 To The Moon
 											{:else}
