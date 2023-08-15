@@ -39,7 +39,9 @@
 		return (
 			$page.url.href.includes('/invest') ||
 			$page.url.href.includes('/grow') ||
-			($page.url.href.includes('nanohq.co') && $page.url.pathname === '/')
+			($page.url.href.includes('nanohq.co') &&
+				$page.url.pathname === '/' &&
+				!$page.url.searchParams.get('stream'))
 		);
 	};
 

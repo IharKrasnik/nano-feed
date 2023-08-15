@@ -264,6 +264,8 @@
 	};
 
 	const communityStreams = $allProjects.filter((p) => p.isNano);
+
+	debugger;
 	const learnStreams = $allProjects
 		.filter((p) => p.isKnowledgeBase)
 		.sort((p) => (p.slug === 'knowledge-base' ? -1 : 1));
