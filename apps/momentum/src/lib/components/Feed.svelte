@@ -409,7 +409,7 @@
 							!isExploreProjectsModeOn &&
 							!isCreatorLoading &&
 							!creator}
-						href="/?stream"
+						href="/?stream=all"
 					>
 						<div class="_emoji p-2 mr-2 rounded-full font-bold" style="color: gray; opacity: .7;">
 							🌀
