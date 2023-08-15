@@ -104,10 +104,10 @@
 	};
 </script>
 
-<div class="mb-16">
+<div class="mb-16 p-4 bg-purple-100 p-8 rounded-xl">
 	<div class="flex justify-between mb-4">
 		<div>
-			<div class="text-lg font-bold mb-2">Gain your Momentum</div>
+			<div class="text-lg font-bold mb-4">Gain your Momentum</div>
 			<div>
 				Momentum tools are stupid-simple yet surprisingly efficient. We target content, distribution
 				and traction.
@@ -196,10 +196,11 @@
 		Connect a landing page to your blog to collect more leads, grow with social media and sell your products
 		and services.
 	{/if}
+	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<div class="mt-8">
 		<button
-			class="_secondary w-full mb-2"
+			class="_secondary w-full mb-4"
 			on:click={() => {
 				isBroadcastEmailModalShown = true;
 			}}>✉️ Send Newsletter</button
@@ -207,10 +208,11 @@
 
 		Engage with your mail list regularly to grow and launch products and services.
 	</div>
+	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<div class="mt-8">
 		<Button
-			class="_secondary w-full mb-2"
+			class="_secondary w-full mb-4"
 			onClick={() => {
 				goto(BRAND_URL);
 			}}>💐 Create Brand</Button
@@ -219,28 +221,31 @@
 		Create nice-looking images for your social media and content. <br />
 		Alfa Version.
 	</div>
+	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<div class="mt-8">
-		<Button onClick={() => getOtpAndOpen(`https://nanohq.co`)} class="_secondary w-full mb-2"
+		<Button onClick={() => getOtpAndOpen(`https://nanohq.co`)} class="_secondary w-full mb-4"
 			>⚫️ Join Nano Community</Button
 		>
 
 		Build your startup in public, connect with other founders, create content regularly and win
 		startup prizes. Get exposure and funding.
 	</div>
+	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<div class="mt-8">
 		<a href="https://feed.mmntm.build" target="_blank">
-			<button class="_secondary w-full mb-2">🌀 Open Stream</button>
+			<button class="_secondary w-full mb-4">🌀 Open Stream</button>
 		</a>
 
 		Feature your best content links and attach live content feed to your websites. Grow with
 		community.
 	</div>
+	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<div class="mt-8">
 		<a href="https://wave.mmntm.build" target="_blank">
-			<button class="_secondary w-full mb-2">📈 Open Wave</button>
+			<button class="_secondary w-full mb-4">📈 Open Wave</button>
 		</a>
 
 		Your website and product analytics dashboard.

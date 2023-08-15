@@ -29,6 +29,7 @@
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import MomentumHub from 'lib/components/MomentumHub.svelte';
+	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
 
 	import SitePreview from '$lib/components/site-preview.svelte';
 	import SignupForm from '$lib/components/signup-form.svelte';
@@ -582,8 +583,9 @@ See you!
 		</div>
 	</Modal>
 {/if}
+<SupportTwitter />
 
-<svelte:head>
+<!-- <svelte:head>
 	<script type="text/javascript">
 		window.$crisp = [];
 		window.CRISP_WEBSITE_ID = '33f4a015-8ff6-44c4-bbc9-2d5c30825fdc';
@@ -595,7 +597,7 @@ See you!
 			d.getElementsByTagName('head')[0].appendChild(s);
 		})();
 	</script>
-</svelte:head>
+</svelte:head> -->
 
 {#if isBroadcastEmailModalShown}
 	<Modal
@@ -1342,7 +1344,9 @@ See you!
 							</div>
 
 							{#if page._id}
-								<MomentumHub bind:page bind:isBroadcastEmailModalShown />
+								<div class="mb-8">
+									<MomentumHub bind:page bind:isBroadcastEmailModalShown />
+								</div>
 							{/if}
 						{/if}
 					</div>

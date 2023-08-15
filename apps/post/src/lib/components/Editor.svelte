@@ -25,6 +25,7 @@
 	import EditPost from '$lib/components/edit/Post.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import MomentumHub from 'lib/components/MomentumHub.svelte';
+	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
@@ -453,6 +454,8 @@ See you!
 	};
 </script>
 
+<SupportTwitter />
+
 {#if isSettingsModalShown}
 	<Modal
 		isShown
@@ -466,20 +469,6 @@ See you!
 		</div>
 	</Modal>
 {/if}
-
-<svelte:head>
-	<script type="text/javascript">
-		window.$crisp = [];
-		window.CRISP_WEBSITE_ID = '33f4a015-8ff6-44c4-bbc9-2d5c30825fdc';
-		(function () {
-			d = document;
-			s = d.createElement('script');
-			s.src = 'https://client.crisp.chat/l.js';
-			s.async = 1;
-			d.getElementsByTagName('head')[0].appendChild(s);
-		})();
-	</script>
-</svelte:head>
 
 {#if isBroadcastEmailModalShown}
 	<Modal
@@ -1118,7 +1107,7 @@ See you!
 											</div>
 										</div>
 
-										<MomentumHub bind:blog bind:isBroadcastEmailModalShown/>
+										<MomentumHub bind:blog bind:isBroadcastEmailModalShown />
 									{:else}
 										<div class="my-8">
 											<Button
