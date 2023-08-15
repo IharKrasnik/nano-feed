@@ -43,7 +43,7 @@
 			let domain = (page.blog.domains || []).filter((d) => d.isConfigured)[0];
 
 			if (domain) {
-				page.blog.url = domain.url;
+				page.blog.url = `https://${domain.url}`;
 			} else {
 				page.blog.url = `${POST_URL}/${page.blog.slug}`;
 			}
