@@ -7,6 +7,7 @@
 	import Header from '$lib/components/Header.svelte';
 	import PostPreview from '$lib/components/PostPreview.svelte';
 	import BlogPreview from '$lib/components/BlogPreview.svelte';
+	import Editor from '$lib/components/Editor.svelte';
 
 	let currentPost;
 
@@ -45,9 +46,12 @@
 		<PostPreview isEdit={false} bind:post={currentPost} />
 	{/if}
 {:else}
-	abcdefg
 	<Header class="bg-site" blog={$page.data.blog} />
 	<BlogPreview blog={$page.data.blog} posts={$page.data.blog?.posts || []} />
+{/if}
+
+{#if !$page.data.post && !$page.data.blog}
+	<Editor />
 {/if}
 
 <slot />

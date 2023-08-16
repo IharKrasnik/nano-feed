@@ -58,20 +58,16 @@
 					{/if}
 				</div>
 
-				<div class="flex items-center my-4">
+				{#if post.imageUrl}
+					<RenderUrl imgClass="w-full my-4 aspect-[1200/630]" isLazy={false} url={post.imageUrl} />
+				{/if}
+
+				<div class="flex items-center my-4 mb-16">
 					<Avatar user={post.creator} size="20px" class="mr-2" />
 					<b class="mx-1">{post.creator?.fullName}</b>
 					<div class="px-1 opacity-70">/</div>
 					<div class="opacity-70">{moment(post.publishedOn).format('MMM DD, YYYY')}</div>
 				</div>
-
-				{#if post.imageUrl}
-					<RenderUrl
-						imgClass="object-cover w-full h-[300px] my-4"
-						isLazy={false}
-						url={post.imageUrl}
-					/>
-				{/if}
 
 				{#if isEdit}
 					<ContentEditable

@@ -18,15 +18,15 @@
 	href={$isCustomDomain ? `/${post.slug}` : `/${post.blog.slug}/${post.slug}`}
 >
 	{#if post.imageUrl}
-		<img class="max-h-[200px] object-cover w-full mb-2 rounded-xl" src={post.imageUrl} />
+		<img class="object-cover w-full mb-2 rounded-xl aspect-[1200/630]" src={post.imageUrl} />
 	{/if}
 
+	<h3 class="text-xl font-bold mb-2">{@html striptags(post.title)}</h3>
+	<div class="text-lg">{@html striptags(post.description)}</div>
 	<div class="flex items-center my-4">
 		<Avatar user={post?.creator} size="20px" class="mr-2" />
 		<b class="mx-1">{post?.creator?.fullName}</b>
 		<div class="px-1 opacity-70">/</div>
 		<div class="opacity-70">{moment(post.publishedOn).format('MMM DD, YYYY')}</div>
 	</div>
-	<h3 class="text-xl font-bold mb-2">{@html striptags(post.title)}</h3>
-	<div class="text-lg">{@html striptags(post.description)}</div>
 </a>
