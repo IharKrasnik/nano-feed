@@ -13,11 +13,11 @@
 	let colors = [
 		{
 			type: 'plain',
-			value: '#A339F7'
+			value: '#D091FF'
 		},
 		{
 			type: 'plain',
-			value: '#FFC600'
+			value: '#FBC82E'
 		},
 		{
 			type: 'plain',

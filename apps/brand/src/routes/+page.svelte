@@ -13,6 +13,7 @@
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
+
 	import EditOpenGraphImage from '$lib/components/edit/OpenGraphImage.svelte';
 	import EditColorPicker from '$lib/components/edit/ColorPicker.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
@@ -65,19 +66,13 @@
 	let addOpenGraphImage = () => {
 		brand = {
 			...brand,
-			openGraphImages: [...brand.openGraphImages, {}]
+			openGraphImages: [
+				...brand.openGraphImages,
+				{
+					guid: uuidv4()
+				}
+			]
 		};
-	};
-
-	let defaultPage = {
-		_id: undefined,
-		name: '',
-		title: '',
-		subtitle: '',
-		callToAction: 'Join Waitlist',
-		bgColor: '',
-		slug: '_new',
-		isCollectEmails: true
 	};
 
 	let brand = { ..._.cloneDeep($brandDraft['_new'] || defaultBrand()) };
@@ -118,6 +113,27 @@
 			openGraphImages: [...brand.openGraphImages.filter((image) => image !== openGraphImage)]
 		};
 	};
+
+	$: if (brand) {
+		if (!$brandDraft[brand.slug] || !_.isEqual(brand, $brandDraft[brand.slug])) {
+			if (brand.isDirty === false) {
+				delete brand.isDirty;
+			} else {
+				brand.isDirty = true;
+			}
+			if (!$brandDraft[brand.slug]) {
+				$brandDraft = {
+					..._.cloneDeep($brandDraft),
+					[brand.slug || '_new']: { ..._.cloneDeep(brand) }
+				};
+			} else {
+				$brandDraft = {
+					..._.cloneDeep($brandDraft),
+					[brand.slug || '_new']: { ..._.cloneDeep(brand), updatedOn: new Date().toISOString() }
+				};
+			}
+		}
+	}
 </script>
 
 {#if !$currentUser || $allBrands}
