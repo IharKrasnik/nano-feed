@@ -26,6 +26,7 @@
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import MomentumHub from 'lib/components/MomentumHub.svelte';
 	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
+	import PublishedLabel from '$lib/components/PublishedLabel.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
@@ -451,6 +452,11 @@ See you!
 			creator: $currentUser,
 			blog
 		};
+	};
+
+	let subscribe = async () => {
+		let { url } = await get('stripe/subscribe', { pageId: blog._id });
+		window.location.href = url;
 	};
 </script>
 
@@ -1031,10 +1037,12 @@ See you!
 										<div class="text-lg font-bold mb-2">Blog Header</div>
 
 										<div class="_section cursor-pointer" on:click={() => (isEditHeader = true)}>
-											<b>{striptags(blog.title)}</b>
-											{#if blog.subtitle}
-												{striptags(blog.subtitle)}
-											{/if}
+											<b>{@html striptags(blog.title)}</b>
+											<div>
+												{#if blog.subtitle}
+													{@html striptags(blog.subtitle)}
+												{/if}
+											</div>
 										</div>
 									</div>
 								{/if}
@@ -1068,8 +1076,8 @@ See you!
 																	$postDraft = _.cloneDeep(post);
 																}}
 															>
-																<b class="text-lg mb-2">{post.title}</b>
-																<div class="truncate">{striptags(post.description)}</div>
+																<b class="text-lg mb-2">{@html striptags(post.title)}</b>
+																<div class="truncate">{@html striptags(post.description)}</div>
 																<div class="flex justify-between mt-2">
 																	<div class="opacity-70">
 																		{moment(post.createdOn).format('MMM DD')}
@@ -1102,17 +1110,19 @@ See you!
 												</div>
 											</div>
 										{/if}
-										<div class="mb-16">
-											<div class="flex justify-between mb-4">
-												<div class="text-lg font-bold mb-2">Topics</div>
-												Coming Soon
-												<!-- <button class="_secondary _small" on:click={createNewPost}
+										{#if !isEditHeader}
+											<div class="my-16">
+												<div class="flex justify-between mb-4">
+													<div class="text-lg font-bold mb-2">Topics</div>
+													Coming Soon
+													<!-- <button class="_secondary _small" on:click={createNewPost}
 													>✍️ Write New Post</button
 												> -->
+												</div>
 											</div>
-										</div>
 
-										<MomentumHub bind:blog bind:isBroadcastEmailModalShown />
+											<MomentumHub bind:blog bind:isBroadcastEmailModalShown />
+										{/if}
 									{:else}
 										<div class="my-8">
 											<Button
@@ -1423,8 +1433,9 @@ See you!
 									{/if}
 								</div>
 
-								<div>
-									<div
+								<div class="max-w-[400px] mx-auto">
+									<PublishedLabel bind:blog />
+									<!-- <div
 										class="relative _published-label flex justify-between items-center mt-4"
 										style="padding: 6px 10px;"
 									>
@@ -1476,7 +1487,7 @@ See you!
 												</Button>
 											</div>
 										{/if}
-									</div>
+									</div> -->
 									{#if metrics?.conversion}
 										<div class="flex justify-center mt-1 absolute top-0 left-20">
 											<div
@@ -1501,26 +1512,29 @@ See you!
 									{#if $postDraft}
 										<PostPreview bind:post={$postDraft} isDraft={true} />
 									{:else}
-										<BrowserFrame
-											class="max-h-screen overflow-y-scroll"
-											links={[
-												{ url: `explore`, title: 'Explore Blogs', emoji: '🙌' },
-												{ url: 'about', title: 'About Momentum', emoji: '📄', target: '_blank' }
-											]}
-											frameBgColor={blog._id ? (blog.isDirty ? '#fb923c' : '#494949') : '#494949'}
-										>
-											<div
-												slot="header"
-												class="px-4 mr-4 text-white rounded-xl opacity-90"
-												class:bg-zinc-900={!blog.subscription}
-												class:bg-green-900={blog.subscription}
-												use:tooltip
-												title="Current Plan"
-											/>
+										<BrowserFrame class="max-h-screen overflow-y-scroll" frameBgColor={'#494949'}>
+											<div class="flex cursor-pointer" slot="header">
+												<div
+													class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100"
+													use:tooltip
+													title="Free plan includes 300 subscribers"
+												>
+													{blog.totalSignupsCount || 0}/300
+												</div>
+
+												<div
+													class="px-4 mr-4 text-white rounded-xl bg-green-700"
+													on:click={subscribe}
+													use:tooltip
+													title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
+												>
+													🫶 Upgrade
+												</div>
+											</div>
 
 											<BlogPreview
 												class="pt-8"
-												noStickyHeader={true}
+												isEdit={true}
 												isNoBadge={true}
 												bind:blog
 												bind:posts={$blogPosts}
@@ -1586,18 +1600,5 @@ See you!
 		width: 100%;
 		height: 100%;
 		border-left: 1px #e0dede solid;
-	}
-
-	._published-label {
-		max-width: 400px;
-		margin: 0 auto;
-		/* left: 50%; */
-		/* transform: translateX(-50%); */
-		font-size: 14px;
-		text-align: center;
-		border-radius: 30px;
-		background-color: #f5f5f5;
-		padding: 3px 10px;
-		color: #828282;
 	}
 </style>

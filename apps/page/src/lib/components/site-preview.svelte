@@ -222,7 +222,7 @@
 
 						<div class="shrink-0 flex items-center">
 							{#if page.blog}
-								<div class="mr-8">
+								<div class="mr-4 sm:mr-8">
 									<a href={page.blog.url}>Blog</a>
 								</div>
 							{/if}
@@ -578,7 +578,7 @@
 						</div>
 						{#if page.blog}
 							<div class="mt-8">
-								<a href={page.blog.url}>Or read our Blog 🙌</a>
+								<a href={page.blog.url}>Or read our Blog</a>
 							</div>
 						{/if}
 					</div>

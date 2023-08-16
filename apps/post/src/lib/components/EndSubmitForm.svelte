@@ -1,6 +1,7 @@
 <script>
 	import { fly, fade, slide } from 'svelte/transition';
 	import { post as apiPost } from 'lib/api';
+	import { PAGE_URL } from 'lib/env';
 
 	export let isSubmitted;
 	import Emoji from 'lib/components/Emoji.svelte';
@@ -20,6 +21,18 @@
 			}, 2000);
 		}
 	};
+
+	if (blog.page) {
+		if (!blog.page.url) {
+			let domain = (blog.page.domains || []).filter((d) => d.isConfigured)[0];
+
+			if (domain) {
+				blog.page.url = `https://${domain.url}`;
+			} else {
+				blog.page.url = `${PAGE_URL}/${blog.page.slug}`;
+			}
+		}
+	}
 </script>
 
 <div
@@ -83,6 +96,11 @@
 			{/if}
 		</form>
 	</div>
+	{#if blog.page}
+		<div class="mt-8">
+			<a class="cursor-pointer" href={blog.page.url}>Or check product website</a>
+		</div>
+	{/if}
 </div>
 
 <style src="./app-site.css">

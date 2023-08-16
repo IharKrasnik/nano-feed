@@ -3,11 +3,12 @@
 
 	import { get } from 'lib/api';
 	import Avatar from 'lib/components/Avatar.svelte';
-	import Header from '$lib/components/Header.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import contenteditable from 'lib/use/contenteditable';
 	import EndSubmitForm from '$lib/components/EndSubmitForm.svelte';
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
+	import PublishedLabel from '$lib/components/PublishedLabel.svelte';
+	import PostShortPreview from '$lib/components/PostShortPreview.svelte';
 
 	import styles from '$lib/stores/styles';
 
@@ -34,14 +35,28 @@
 </script>
 
 {#if post}
-	<div style={$styles.css} class="sm:mt-16 mt-8">
-		<div class="sticky bg-site z-20 w-full">
-			<div class="max-w-[700px] py-16 px-2 mx-auto">
-				<h1 class="mb-4">{@html post.title}</h1>
+	{#if isEdit}
+		<PublishedLabel bind:blog bind:post />
+	{/if}
 
-				{#if post.description}
-					<div class="content my-8 opacity-70 text-lg">{@html post.description}</div>
-				{/if}
+	<div style={$styles.css} class="sm:mt-16 mt-8">
+		<div class="sticky bg-site z-20 w-full min-h-screen">
+			<div class="max-w-[700px] py-16 px-2 mx-auto">
+				<h1 class="mb-4">
+					{@html post.title}
+
+					{#if !post.title && isEdit}
+						<div class="opacity-40">👈 Add post title...</div>
+					{/if}
+				</h1>
+
+				<div class="content my-8 opacity-70 text-lg">
+					{@html post.description}
+
+					{#if !post.description && isEdit}
+						<div class="opacity-60">👈 Add short post description...</div>
+					{/if}
+				</div>
 
 				<div class="flex items-center my-4">
 					<Avatar user={post.creator} size="20px" class="mr-2" />
@@ -59,7 +74,11 @@
 				{/if}
 
 				{#if isEdit}
-					<ContentEditable class="content" bind:value={post.contentHtml} isWithMenu={true} />
+					<ContentEditable
+						class="content min-h-screen"
+						bind:value={post.contentHtml}
+						isWithMenu={true}
+					/>
 					<!-- <div
 						bind:innerHTML={post.contentHtml}
 						contenteditable

@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import { postFile } from 'lib/api';
 	import { onMount } from 'svelte';
 
@@ -6,10 +7,12 @@
 	import clickOutside from 'lib/use/clickOutside';
 	import ContentEditableMenu from 'lib/components/ContentEditableMenu.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import usePlaceholder from 'lib/use/placeholder';
 
 	let isLoading;
 	let control;
 	let clazz = '';
+	export let placeholder = 'Start typing...';
 
 	export let value;
 	export { clazz as class };
@@ -133,9 +136,20 @@
 		} else if (type === 'regular') {
 			let selection = window.getSelection();
 
-			selection.anchorNode.parentNode.replaceWith(selection.anchorNode);
-			// document.execCommand('formatBlock', false, 'span');
-			// document.execCommand('insertText', false, window.getSelection());
+			console.log('selection.anchorNode.parentNode.tagName', selection.anchorNode);
+			window.parentNode = selection.anchorNode.parentNode;
+
+			debugger;
+
+			if (_.includes(['H1', 'H2', 'H3'], selection.anchorNode.parentNode.tagName)) {
+				selection.anchorNode.parentNode.replaceWith(selection.anchorNode);
+			} else if (
+				_.includes(['H1', 'H2', 'H3'], selection.anchorNode.parentNode.parentNode.tagName)
+			) {
+				selection.anchorNode.parentNode.parentNode.replaceWith(selection.anchorNode);
+			} else {
+				document.execCommand('insertHTML', false, `<div>${selection.toString()}</div>`);
+			}
 		}
 
 		$isShowContentEditableMenu = false;
@@ -149,39 +163,40 @@
 	let menuStyle;
 
 	let onpointerup = () => {
-		// if (isWithMenu) {
-		// 	onMount(() => {
-		// 		// document.onpointerdown = () => {
-		// 		// 	if (control !== null) {
-		// 		// 		control.remove();
-		// 		// 		document.getSelection().removeAllRanges();
-		// 		// 	}
-		// 		// };
-		// 	});
-		// }
+		$isShowContentEditableMenu = false;
+		setTimeout(() => {
+			console.log('onselect');
+			// if (isWithMenu) {
+			// 	onMount(() => {
+			// 		// document.onpointerdown = () => {
+			// 		// 	if (control !== null) {
+			// 		// 		control.remove();
+			// 		// 		document.getSelection().removeAllRanges();
+			// 		// 	}
+			// 		// };
+			// 	});
+			// }
 
-		let selection = document.getSelection(),
-			text = selection.toString();
+			let selection = document.getSelection(),
+				text = selection.toString();
 
-		if (text !== '') {
-			window.range = selection.getRangeAt(0);
-			let rect = range.getBoundingClientRect();
+			console.log('text', text);
+			if (_.trim(text)) {
+				window.range = selection.getRangeAt(0);
+				let rect = range.getBoundingClientRect();
 
-			console.log('rect', rect);
+				menuPosition.top = `calc(${rect.top}px + 40px)`;
+				menuPosition.left = `calc(${rect.left}px - 30px)`;
 
-			menuPosition.top = `calc(${rect.top}px + 40px)`;
-			menuPosition.left = `calc(${rect.left}px - 30px)`;
+				menuStyle = `top: ${menuPosition.top}; left: ${menuPosition.left};`;
 
-			menuStyle = `top: ${menuPosition.top}; left: ${menuPosition.left};`;
-			console.log('menuStyle', menuStyle);
-			// control.text = text;
+				savedSelection = saveSelection();
 
-			savedSelection = saveSelection();
-
-			setTimeout(() => {
-				$isShowContentEditableMenu = true;
-			});
-		}
+				setTimeout(() => {
+					$isShowContentEditableMenu = true;
+				});
+			}
+		});
 	};
 
 	let onPaste = async (e) => {
@@ -218,7 +233,9 @@
 	<div
 		class={clazz}
 		contenteditable
+		use:usePlaceholder={placeholder}
 		bind:innerHTML={value}
+		on:keyup={onpointerup}
 		on:pointerup={onpointerup}
 		on:paste={onPaste}
 	/>

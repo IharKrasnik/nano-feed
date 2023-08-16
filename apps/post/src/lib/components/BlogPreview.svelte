@@ -35,6 +35,7 @@
 	let clazz = '';
 
 	export { clazz as class };
+	export let isEdit = false;
 
 	let isAboveTheFold;
 
@@ -129,11 +130,15 @@
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
 
+{#if isEdit}
+	<Header class="bg-site" isFixed={false} {blog} />
+{/if}
+
 {#key blog?._id}
 	<div>
-		<div class="color-site sm:mt-32 mt-16" style={$styles.css}>
+		<div class="color-site" style={$styles.css}>
 			{#if isMounted}
-				<div class="sticky bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
+				<div class="sticky sm:pt-32 pt-16 bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
 					<div class="_root bg-site">
 						<div
 							bind:this={$aboveTheFoldEl}
@@ -165,13 +170,10 @@
 									</h1>
 
 									{#if blog.subtitle}
-										<h2
-											class="_subtitle whitespace-pre-wrap  {!blog.demoUrl ||
-											blog.theme?.hero === 'vertical'
-												? 'max-w-[600px]'
-												: ''}"
-										>
-											{@html blog.subtitle}
+										<h2 class="whitespace-pre-wrap">
+											<div class="max-w-[600px] mb-8">
+												{@html blog.subtitle}
+											</div>
 										</h2>
 									{/if}
 
@@ -271,7 +273,7 @@
 								: 'max-w-[600px] mx-auto'} gap-8 grid-cols-1 mb-16 p-4"
 						>
 							{#each posts || [] as post}
-								<PostShortPreview {post} />
+								<PostShortPreview linkTarget={isEdit ? '_blank' : ''} {post} />
 							{/each}
 						</div>
 

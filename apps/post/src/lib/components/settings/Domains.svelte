@@ -21,7 +21,7 @@
 	let refreshDomainStatus = async (domain) => {
 		let { isConfigured } = await get(`blogs/${blog._id}/domains/${domain.url}`);
 
-		blog.domains = page.domains.map((d) => {
+		blog.domains = blog.domains.map((d) => {
 			if (d.url === domain.url) {
 				d.isConfigured = isConfigured;
 				return d;
