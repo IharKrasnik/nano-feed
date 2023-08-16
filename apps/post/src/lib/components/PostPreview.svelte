@@ -7,7 +7,7 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import contenteditable from 'lib/use/contenteditable';
 	import EndSubmitForm from '$lib/components/EndSubmitForm.svelte';
-	import PostShortPreview from '$lib/components/PostShortPreview.svelte';
+	import ContentEditable from 'lib/components/ContentEditable.svelte';
 
 	import styles from '$lib/stores/styles';
 
@@ -59,12 +59,13 @@
 				{/if}
 
 				{#if isEdit}
-					<div
+					<ContentEditable class="content" bind:value={post.contentHtml} isWithMenu={true} />
+					<!-- <div
 						bind:innerHTML={post.contentHtml}
 						contenteditable
 						use:contenteditable={{ isWithMenu: true }}
 						class="content"
-					/>
+					/> -->
 				{:else}
 					<div class="content mb-16">
 						{@html post.contentHtml}

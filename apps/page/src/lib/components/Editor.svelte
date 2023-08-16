@@ -1650,7 +1650,7 @@ See you!
 											</div>
 
 											<div
-												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-green-900"
+												class="px-4 mr-4 text-white rounded-xl bg-green-700"
 												on:click={subscribe}
 												use:tooltip
 												title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
