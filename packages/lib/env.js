@@ -8,6 +8,8 @@ export const API_URL = dev
 	? 'https://ship-627ed08f489a970013572f5d.paralect.net'
 	: 'https://momentum-api.paralect.com';
 
+//1
+
 // export const API_URL = 'https://ship-prod-627ed08f489a970013572f5d.paralect.net';
 
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
