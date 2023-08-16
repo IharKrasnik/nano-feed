@@ -39,14 +39,13 @@
 	let blog = $page.data.blog;
 </script>
 
-{#if $page.data.blog}{/if}
-
 {#if $page.params.postSlug || ($isCustomDomain && $page.params.blogSlug)}
 	{#if currentPost}
 		<Header class="bg-site" blog={currentPost.blog} />
 		<PostPreview isEdit={false} bind:post={currentPost} />
 	{/if}
 {:else}
+	abcdefg
 	<Header class="bg-site" blog={$page.data.blog} />
 	<BlogPreview blog={$page.data.blog} posts={$page.data.blog?.posts || []} />
 {/if}
