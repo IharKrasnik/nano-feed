@@ -15,7 +15,7 @@
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 
 	import EditOpenGraphImage from '$lib/components/edit/OpenGraphImage.svelte';
-	import EditColorPicker from '$lib/components/edit/ColorPicker.svelte';
+	import EditColorPicker from 'lib/components/ColorPicker.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import OpenGraphPreview from '$lib/components/OpenGraphPreview.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';

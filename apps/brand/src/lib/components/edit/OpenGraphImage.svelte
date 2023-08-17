@@ -3,7 +3,7 @@
 
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
-	import EditColorPicker from '$lib/components/edit/ColorPicker.svelte';
+	import EditColorPicker from 'lib/components/ColorPicker.svelte';
 
 	export let openGraphImage;
 	export let brand;
