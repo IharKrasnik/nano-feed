@@ -5,6 +5,7 @@
 	export let isHorizontalImage;
 	export let imageEl;
 	export let brand;
+	export let onImageLoaded;
 
 	import { lighten, darken, getLuminance } from 'lib/helpers/color';
 	export let bgColor;
@@ -34,7 +35,10 @@ background-image:
   linear-gradient(to bottom, rgba(255, 255, 255, .3) 1px, transparent 1px);"
 >
 	<div class="justify-center {isHorizontalImage ? '' : 'flex flex-row'} items-center h-full ">
-		<div class="w-full" style={isHorizontalImage ? 'height: 50%;' : ''}>
+		<div
+			class="w-full {openGraphImage.imageUrl ? 'ml-4' : ''}"
+			style={isHorizontalImage ? 'height: 50%;' : ''}
+		>
 			<div
 				class="text-center w-full whitespace-pre-wrap"
 				style="font-size: 40px; font-weight: bold; "

@@ -107,13 +107,17 @@
 			: ''} {bgColor?.type === 'plain' ? `background: ${bgColor.value}` : ''}"
 		bind:this={previewEl}
 	>
-		<!-- <OpenGraphBasic bind:brand bind:openGraphImage bind:isHorizontalImage bind:imageEl /> -->
+		<!-- <OpenGraphBasic bind:brand bind:openGraphImage bind:isHorizontalImage bind:imageEl
+			bind:onImageLoaded
+			
+			/> -->
 		<OpenGraphModern
 			bind:bgColor
 			bind:brand
 			bind:openGraphImage
 			bind:isHorizontalImage
 			bind:imageEl
+			bind:onImageLoaded
 		/>
 	</div>
 
