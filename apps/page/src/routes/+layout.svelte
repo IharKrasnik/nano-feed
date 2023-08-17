@@ -10,7 +10,7 @@
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 
 	import 'lazysizes';
-	// import a plugin
+	// import a plugin 1
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 </script>
 
