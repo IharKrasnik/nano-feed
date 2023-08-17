@@ -6,7 +6,7 @@
 	import blogDraft from '$lib/stores/blogDraft';
 	import Dock from 'lib/components/Dock.svelte';
 	import ContentEditableMenu from 'lib/components/ContentEditableMenu.svelte';
-	import styles from '$lib/stores/styles';
+	import { updateStylesFromTheme } from '$lib/stores/styles';
 
 	import 'lazysizes';
 	// import a plugin
@@ -32,29 +32,9 @@
 
 	export let blog = $page.data.blog || $blogDraft;
 
-	$: if (blog) {
-		let stylesObj = {
-			'title-font': blog.theme?.titleFont || fontPairs[0].title,
-			'text-font': blog.theme?.textFont || fontPairs[0].text,
-			'background-color': blog.theme?.backgroundColor || '#ffffff',
-			'text-color': blog.theme?.textColor || '#111',
-			'accent-color': blog.theme?.accentColor || '#000',
-			'section-background-color': blog.theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)',
-			'input-background': blog.theme?.inputBackground || '#f5f5f5',
-			'input-color': blog.theme?.inputColor || '#222222',
-			'button-color': blog.theme?.buttonColor || '#fff'
-		};
-
-		cssVarStyles = Object.entries(stylesObj)
-			.map(([key, value]) => `--${key}:${value}`)
-			.join(';');
-
-		$styles = {
-			obj: stylesObj,
-			css: cssVarStyles
-		};
+	if (blog) {
+		updateStylesFromTheme(blog.theme);
 	}
-	//
 </script>
 
 <svelte:head>

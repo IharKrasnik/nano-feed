@@ -12,6 +12,8 @@
 	import striptags from 'striptags';
 	import getOtpAndOpen from 'lib/helpers/getOtpAndOpen';
 
+	import ColorPicker from '$lib/components/ColorPicker.svelte';
+
 	import { GOOGLE_LOGIN_URL, PAGE_URL, POST_URL, STREAM_URL, BRAND_URL } from 'lib/env';
 	import Emoji from 'lib/components/Emoji.svelte';
 
@@ -97,6 +99,7 @@
 	};
 
 	let blog = { ..._.cloneDeep($blogDraft['_new'] || defaultBlog) };
+	blog.theme = blog.theme || {};
 
 	let blogSlug = '_new';
 
@@ -119,6 +122,7 @@
 
 	let setBlogAndDraft = (b, { force = false } = {}) => {
 		blog = { ..._.cloneDeep(b) };
+		blog.theme = blog.theme || {};
 
 		if (
 			!force &&
@@ -820,8 +824,11 @@ See you!
 												{/if}
 											</div>
 
+											{#if blog.theme}
+												<ColorPicker bind:blog />
+											{/if}
 											<div
-												class="text-2xl cursor-pointer"
+												class="text-2xl cursor-pointer ml-4"
 												on:click={() => {
 													isSettingsModalShown = true;
 												}}
@@ -907,130 +914,132 @@ See you!
 								{/if}
 
 								{#if isEditHeader}
-									<div
-										class="flex items-center cursor-pointer text-[#8B786D] mb-4"
-										on:click={() => {
-											isEditHeader = false;
-										}}
-									>
-										<BackArrowSvg />
-										Back to Editor
-									</div>
+									<div in:fade={{ duraton: 150 }}>
+										<div
+											class="flex items-center cursor-pointer text-[#8B786D] mb-4"
+											on:click={() => {
+												isEditHeader = false;
+											}}
+										>
+											<BackArrowSvg />
+											Back to Editor
+										</div>
 
-									<div
-										on:click={() => {
-											$aboveTheFoldEl.scrollIntoView({
-												behavior: 'smooth',
-												block: 'center',
-												inline: 'nearest'
-											});
+										<div
+											on:click={() => {
+												$aboveTheFoldEl.scrollIntoView({
+													behavior: 'smooth',
+													block: 'center',
+													inline: 'nearest'
+												});
 
-											// $sectionToEdit = null;
-										}}
-									>
-										{#if blog.name}
-											<div class="_section">
-												<div class="_title">Blog Title</div>
-
-												<div
-													class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
-													contenteditable
-													use:contenteditable
-													data-placeholder="Build a better product in public."
-													bind:innerHTML={blog.title}
-													on:focus={() => (focuses.title = true)}
-													on:blur={() => (focuses.title = false)}
-												/>
-
-												{#if focuses.title || (blog.name && (!blog.title || !blog._id))}
-													<div
-														class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
-														in:fly={{ y: 50, duration: 150 }}
-													>
-														Start with a bold title
-
-														<div class="font-normal mt-2">
-															Tell what the reader will achieve by reading your blog. Spark
-															curiosity and hook their attention.
-														</div>
-													</div>
-												{/if}
-											</div>
-										{/if}
-										{#if blog.title}
-											{#if blog._id}
+												// $sectionToEdit = null;
+											}}
+										>
+											{#if blog.name}
 												<div class="_section">
-													<div class="_title">Blog Description</div>
+													<div class="_title">Blog Title</div>
 
 													<div
-														class="min-h-[100px]"
-														contenteditable="true"
+														class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
+														contenteditable
 														use:contenteditable
-														bind:innerHTML={blog.subtitle}
-														on:focus={() => (focuses.subtitle = true)}
-														on:blur={() => (focuses.subtitle = false)}
-														data-placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
+														data-placeholder="Build a better product in public."
+														bind:innerHTML={blog.title}
+														on:focus={() => (focuses.title = true)}
+														on:blur={() => (focuses.title = false)}
 													/>
 
-													{#if focuses.subtitle || (blog._id && blog.title && !blog.subtitle)}
+													{#if focuses.title || (blog.name && (!blog.title || !blog._id))}
 														<div
-															class="p-4 transition {blog.subtitle
-																? 'bg-green-600'
-																: 'bg-orange-400'} mt-4 rounded-xl text-white font-bold"
+															class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
 															in:fly={{ y: 50, duration: 150 }}
 														>
-															Explain your value propositon
+															Start with a bold title
 
 															<div class="font-normal mt-2">
-																Describe your blog in detail. Focus value and transformation for
-																your specific target audience.
+																Tell what the reader will achieve by reading your blog. Spark
+																curiosity and hook their attention.
 															</div>
 														</div>
 													{/if}
 												</div>
 											{/if}
+											{#if blog.title}
+												{#if blog._id}
+													<div class="_section">
+														<div class="_title">Blog Description</div>
 
-											<div class="text-sm opacity-90 my-4">
-												Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a
-												word or two.
-											</div>
+														<div
+															class="min-h-[100px]"
+															contenteditable="true"
+															use:contenteditable
+															bind:innerHTML={blog.subtitle}
+															on:focus={() => (focuses.subtitle = true)}
+															on:blur={() => (focuses.subtitle = false)}
+															data-placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
+														/>
 
-											{#if blog._id}
-												<div class="_section">
-													<div class="_title flex justify-between w-full">
-														Call To Action
+														{#if focuses.subtitle || (blog._id && blog.title && !blog.subtitle)}
+															<div
+																class="p-4 transition {blog.subtitle
+																	? 'bg-green-600'
+																	: 'bg-orange-400'} mt-4 rounded-xl text-white font-bold"
+																in:fly={{ y: 50, duration: 150 }}
+															>
+																Explain your value propositon
 
-														<div class="flex font-normal items-center">
-															Collect Emails <input
-																bind:checked={blog.isCollectEmails}
-																class="ml-2"
-																type="checkbox"
-															/>
-														</div>
+																<div class="font-normal mt-2">
+																	Describe your blog in detail. Focus value and transformation for
+																	your specific target audience.
+																</div>
+															</div>
+														{/if}
 													</div>
+												{/if}
 
-													<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
-
-													<input
-														class="mb-4 w-full"
-														bind:value={blog.callToAction}
-														placeholder="Join Waitlist"
-													/>
-
-													<div class="font-normal text-sm opacity-70 mb-2">
-														URL to open {blog.isCollectEmails
-															? 'once email submitted (optional)'
-															: 'on click'}
-													</div>
-
-													<input
-														class="w-full mb-4"
-														bind:value={blog.actionUrl}
-														placeholder="Action Url"
-													/>
+												<div class="text-sm opacity-90 my-4">
+													Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize
+													a word or two.
 												</div>
+
+												{#if blog._id}
+													<div class="_section">
+														<div class="_title flex justify-between w-full">
+															Call To Action
+
+															<div class="flex font-normal items-center">
+																Collect Emails <input
+																	bind:checked={blog.isCollectEmails}
+																	class="ml-2"
+																	type="checkbox"
+																/>
+															</div>
+														</div>
+
+														<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
+
+														<input
+															class="mb-4 w-full"
+															bind:value={blog.callToAction}
+															placeholder="Join Waitlist"
+														/>
+
+														<div class="font-normal text-sm opacity-70 mb-2">
+															URL to open {blog.isCollectEmails
+																? 'once email submitted (optional)'
+																: 'on click'}
+														</div>
+
+														<input
+															class="w-full mb-4"
+															bind:value={blog.actionUrl}
+															placeholder="Action Url"
+														/>
+													</div>
+												{/if}
 											{/if}
-										{/if}
+										</div>
 									</div>
 								{:else if blog._id && !$postDraft}
 									<div class="mb-8">
@@ -1048,14 +1057,16 @@ See you!
 								{/if}
 
 								{#if $postDraft}
-									<EditPost
-										onUpdated={({ post, isJustPublished }) => {
-											isJustCreated = isJustPublished;
-											$postDraft = null;
-										}}
-										bind:post={$postDraft}
-										bind:blog
-									/>
+									<div in:fade={{ duraton: 150 }}>
+										<EditPost
+											onUpdated={({ post, isJustPublished }) => {
+												isJustCreated = isJustPublished;
+												$postDraft = null;
+											}}
+											bind:post={$postDraft}
+											bind:blog
+										/>
+									</div>
 								{:else}
 									{#if $blogPosts?.length}
 										{#if !isEditHeader}
@@ -1434,7 +1445,7 @@ See you!
 								</div>
 
 								<div class="max-w-[400px] mx-auto">
-									<PublishedLabel bind:blog />
+									<PublishedLabel bind:blog onPublish={saveOrUpdateBlog} />
 									<!-- <div
 										class="relative _published-label flex justify-between items-center mt-4"
 										style="padding: 6px 10px;"

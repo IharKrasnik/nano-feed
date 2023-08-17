@@ -3,6 +3,8 @@
 	import SvelteMarkdown from 'svelte-markdown';
 	import striptags from 'striptags';
 
+	import { BRAND_URL } from 'lib/env';
+
 	import Avatar from 'lib/components/Avatar.svelte';
 
 	import PostShortPreview from '$lib/components/PostShortPreview.svelte';
@@ -17,9 +19,10 @@
 	target={linkTarget}
 	href={$isCustomDomain ? `/${post.slug}` : `/${post.blog.slug}/${post.slug}`}
 >
-	{#if post.imageUrl}
-		<img class="object-cover w-full mb-2 rounded-xl aspect-[1200/630]" src={post.imageUrl} />
-	{/if}
+	<img
+		class="object-cover w-full mb-2 rounded-xl aspect-[1200/630]"
+		src={post.imageUrl || `${BRAND_URL}/og.png?postId=${post._id}`}
+	/>
 
 	<h3 class="text-xl font-bold mb-2">{@html striptags(post.title)}</h3>
 	<div class="text-lg">{@html striptags(post.description)}</div>

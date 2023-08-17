@@ -1,6 +1,8 @@
 <script>
 	import moment from 'moment';
+	import getPostMetaTags from 'lib/helpers/getPostMetaTags';
 
+	import { BRAND_URL } from 'lib/env';
 	import { get } from 'lib/api';
 	import Avatar from 'lib/components/Avatar.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
@@ -32,18 +34,25 @@
 			}
 		);
 	}
+
+	if (post?._id) {
+		let defaultTags = getPostMetaTags({ post });
+		post.defaultImageUrl = defaultTags.image || `${BRAND_URL}/og.png?postId=${post._id}`;
+	}
+
+	debugger;
 </script>
 
 {#if post}
-	{#if isEdit}
+	{#if post._id && isEdit}
 		<PublishedLabel bind:blog bind:post />
 	{/if}
 
 	<div style={$styles.css} class="sm:mt-16 mt-8">
-		<div class="sticky bg-site z-20 w-full min-h-screen">
+		<div class="sticky bg-site color-site z-20 w-full min-h-screen">
 			<div class="max-w-[700px] py-16 px-2 mx-auto">
 				<h1 class="mb-4">
-					{@html post.title}
+					{post.title || ''}
 
 					{#if !post.title && isEdit}
 						<div class="opacity-40">👈 Add post title...</div>
@@ -51,15 +60,19 @@
 				</h1>
 
 				<div class="content my-8 opacity-70 text-lg">
-					{@html post.description}
+					{post.description || ''}
 
 					{#if !post.description && isEdit}
 						<div class="opacity-60">👈 Add short post description...</div>
 					{/if}
 				</div>
 
-				{#if post.imageUrl}
-					<RenderUrl imgClass="w-full my-4 aspect-[1200/630]" isLazy={false} url={post.imageUrl} />
+				{#if post.imageUrl || post.defaultImageUrl}
+					<RenderUrl
+						imgClass="w-full my-4 aspect-[1200/630]"
+						isLazy={false}
+						url={post.imageUrl || post.defaultImageUrl}
+					/>
 				{/if}
 
 				<div class="flex items-center my-4 mb-16">
@@ -71,7 +84,7 @@
 
 				{#if isEdit}
 					<ContentEditable
-						class="content min-h-screen"
+						class="content min-h-screen bg-site color-site"
 						bind:value={post.contentHtml}
 						isWithMenu={true}
 					/>
@@ -89,7 +102,7 @@
 
 				{#if similarPosts?.length}
 					<h3>Related Posts</h3>
-					<div class="grid sm:grid-cols-2 gap-8 grid-cols-1 mb-16 sticky bg-site z-20">
+					<div class="grid sm:grid-cols-2 gap-8 grid-cols-1 mb-16 sticky bg-site static z-20">
 						{#each similarPosts as post}
 							<PostShortPreview {post} />
 						{/each}

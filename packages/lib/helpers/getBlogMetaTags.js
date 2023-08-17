@@ -5,7 +5,7 @@ const getBlogMetaTags = ({ blog }) => {
 	return {
 		title: striptags(blog.openGraph?.title || `${blog.name} — ${blog.title}`),
 		description: striptags(blog.openGraph?.description || `${blog.subtitle || blog.callToAction}`),
-		image: blog.openGraph?.imageUrl || `${BRAND_URL}/og.png?blogSlug=${blog.slug}`
+		image: blog.openGraph?.imageUrl || `${BRAND_URL}/og.png?blogId=${blog._id}`
 	};
 };
 

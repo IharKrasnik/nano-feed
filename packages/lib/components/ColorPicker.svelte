@@ -85,7 +85,7 @@
 	};
 
 	let setColor = (newColor) => {
-		color = { ...newColor };
+		color = newColor.value;
 		close();
 	};
 </script>

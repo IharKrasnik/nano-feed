@@ -10,9 +10,10 @@
 
 	export let blog;
 
-	if (!blog.openGraph) {
-		blog.openGraph = {};
-		blog.openGraph.image = getBlogMetaTags({ blog }).image;
+	let defaultTags = {};
+
+	if (!blog.openGraph.imageUrl) {
+		defaultTags = { image: getBlogMetaTags({ blog }).image };
 	}
 
 	let updateOpenGraph = async () => {
@@ -32,7 +33,7 @@
 				<img
 					class="rounded-xl w-full"
 					style="aspect-ratio: 1200/630;"
-					src={blog.openGraph.imageUrl}
+					src={blog.openGraph.imageUrl || defaultTags.image}
 				/>
 			{/key}
 		</div>

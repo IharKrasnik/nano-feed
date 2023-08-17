@@ -39,7 +39,9 @@
 
 <div style={$styles.css}>
 	<div
-		class="{isFixed ? 'fixed top-0 ' : ''} z-40 bg-site w-full ${clazz}"
+		class="{isFixed ? 'fixed top-0 ' : ''} z-40 transition {scrollY > 100
+			? 'bg-header color-header'
+			: 'bg-site color-site'} w-full ${clazz}"
 		in:fly={{ y: -150, duration: 150, delay: 150 }}
 	>
 		<div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto p-4">

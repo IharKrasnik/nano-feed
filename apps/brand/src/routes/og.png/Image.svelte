@@ -4,7 +4,7 @@
 
 	let getFontSize = (title) => {
 		if (title.length < 60) {
-			return 'font-size: 80px; line-height: 80%;';
+			return 'font-size: 90px; line-height: 80%;';
 		} else if (title.length < 100) {
 			return 'font-size: 64px; line-height: 80%;';
 		} else {
@@ -34,8 +34,8 @@
 	imageUrl =
 		'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1692277307178-image.png';
 
-	let isVertical = page.demoImageSize && page.demoImageSize.width > page.demoImageSize.height;
-	console.log('demoImageSize', page.demoImageSize);
+	let isVertical = !page.demoImageSize || page.demoImageSize.width > page.demoImageSize.height;
+
 	let imageStyles = isVertical ? `width: 1200px; height: 230px; ` : `width: 500px; height: 600px;`;
 
 	if (page) {
@@ -93,14 +93,16 @@
 					>
 						{#if page.logo}
 							{#if page.logo.startsWith('http') || page.logo.startsWith('//')}
-								<img style="width: 40px;" src={page.logo} />
+								<img style="width: 40px; margin-right: 20px" src={page.logo} />
 							{:else}
 								{page.logo}
 							{/if}
 						{/if}
 						{#if page.name}
 							<div
-								class="_title flex items-center justify-start font-bold opacity-90"
+								class="_title flex items-center font-bold opacity-90 shrink-0 {isVertical
+									? 'justify-center w-full'
+									: ''}"
 								style="font-size: 32px; color: {textColor}; max-width: 95%; {isVertical
 									? 'text-align: center; margin: 0 auto;'
 									: 'text-align: left;'};"
@@ -111,7 +113,7 @@
 					</div>
 
 					<div
-						class="_title flex items-center justify-start"
+						class="_title flex items-center {isVertical ? 'justify-center' : 'justify-start'}"
 						style="{getFontSize(page.title)} {isVertical
 							? 'text-align: center; margin: 0 auto;'
 							: 'text-align: left;'}; max-width: 95%; margin: 0 auto; {isVertical

@@ -133,6 +133,12 @@ a.button.tab.selected {
 	font-size: 14px;
 }
 
+.content[contenteditable] {
+	background: none;
+	color: var(--text-color, black);
+	font-family: var(--text-font);
+}
+
 [contenteditable][data-placeholder]:empty:before {
 	content: attr(data-placeholder);
 	position: block;

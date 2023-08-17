@@ -20,7 +20,7 @@
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import isCustomDomain from '$lib/stores/isCustomDomain';
-	import styles from '$lib/stores/styles';
+	import styles, { updateStylesFromTheme } from '$lib/stores/styles';
 
 	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
 
@@ -105,7 +105,7 @@
 		iframeResize({ log: true }, '#iframeResize');
 	};
 
-	if ($sveltePage.params.pageSlug) {
+	if ($sveltePage.params.blogSlug) {
 		window.document.body.style['background-color'] = blog.theme?.backgroundColor || 'white';
 	} else {
 		window.document.body.style['background-color'] = null;
@@ -122,6 +122,10 @@
 			}
 		}, 0);
 	};
+
+	$: if (blog) {
+		updateStylesFromTheme(blog.theme);
+	}
 </script>
 
 <div
@@ -142,7 +146,7 @@
 					<div class="_root bg-site">
 						<div
 							bind:this={$aboveTheFoldEl}
-							class="_content pb-16 pt-8 sm:pt-32 flex items-center`
+							class="_content pb-16 pt-8 sm:pt-16 flex items-center`
 								: ''} "
 							style={maxHeight ? `max-height: ${maxHeight}` : ''}
 						>
@@ -270,7 +274,7 @@
 						<div
 							class="grid {posts?.length > 1
 								? 'sm:grid-cols-2'
-								: 'max-w-[600px] mx-auto'} gap-8 grid-cols-1 mb-16 p-4"
+								: 'max-w-[600px] mx-auto'} gap-8 grid-cols-1 pb-16 p-4 sm:pt-32"
 						>
 							{#each posts || [] as post}
 								<PostShortPreview linkTarget={isEdit ? '_blank' : ''} {post} />

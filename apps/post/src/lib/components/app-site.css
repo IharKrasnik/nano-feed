@@ -21,6 +21,14 @@ h3 {
 	background-color: var(--section-background-color);
 }
 
+.bg-header {
+	background-color: var(--header-background-color);
+}
+
+.color-header {
+	color: var(--header-text-color);
+}
+
 .color-site {
 	color: var(--text-color, black);
 	font-family: var(--text-font);

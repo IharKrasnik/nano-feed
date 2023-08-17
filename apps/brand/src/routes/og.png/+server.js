@@ -17,8 +17,9 @@ function unEntity(str) {
 }
 
 export const GET = async ({ url }) => {
-	const pageSlug = url.searchParams.get('pageSlug') ?? undefined;
-	const blogSlug = url.searchParams.get('pageSlug') ?? undefined;
+	const pageId = url.searchParams.get('pageId') ?? undefined;
+	const blogId = url.searchParams.get('blogId') ?? undefined;
+	const postId = url.searchParams.get('postId') ?? undefined;
 
 	const name = url.searchParams.get('name') ?? undefined;
 	const title = url.searchParams.get('title') ?? undefined;
@@ -28,10 +29,15 @@ export const GET = async ({ url }) => {
 
 	let page;
 
-	if (pageSlug) {
-		page = await get(`pages/${pageSlug}`);
-	} else if (blogSlug) {
-		page = await get(`blogs/${blogSlug}`);
+	if (pageId) {
+		page = await get(`pages/${pageId}`);
+	} else if (blogId) {
+		page = await get(`blogs/${blogId}`);
+	} else if (postId) {
+		page = await get(`posts/${postId}`);
+
+		page.name = page.blog.name;
+		page.logo = page.blog.logo;
 	} else {
 		page = {
 			name,
@@ -43,8 +49,14 @@ export const GET = async ({ url }) => {
 	let demoImageSize;
 
 	if (page.demoUrl) {
-		if (page.demoUrl.includes('ship-app')) {
+		if (
+			(page.demoUrl.includes('ship-app') && page.demoUrl.includes('.jpeg')) ||
+			page.demoUrl.includes('.png') ||
+			page.demoUrl.includes('.gif')
+		) {
 			demoImageSize = await get('files/size', { imageUrl: page.demoUrl });
+		} else {
+			page.demoUrl = null;
 		}
 	}
 
