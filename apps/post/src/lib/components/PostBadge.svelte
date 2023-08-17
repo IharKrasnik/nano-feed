@@ -13,7 +13,7 @@
 	target="_blank"
 	class=" block flex {isFixed
 		? 'hidden sm:flex fixed bottom-[50px] left-2/4 sm:left-[50px]'
-		: 'max-w-[250px] mx-auto'} z-1000 p-2 {$styles.obj.theme.theme === 'dark'
+		: 'max-w-[250px] mx-auto'} z-1000 p-2 {$styles.obj?.theme?.theme === 'dark'
 		? 'bg-black text-white'
 		: 'bg-[#fafafa] text-black'} opacity-70 hover:opacity-100 hover:scale-105 transition text-black rounded-xl items-center"
 	style="z-index: 1000;"
