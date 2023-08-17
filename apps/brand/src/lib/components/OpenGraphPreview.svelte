@@ -49,18 +49,24 @@
 	let style = `background-image: url('/grain2.svg');`;
 	console.log('style', style);
 
-	let isScale = true;
+	let isScale = false;
 
 	let screenshotUrl;
 	let uploadUrl;
 	let previewEl;
 
 	let makeScreenshot = () => {
-		isScale = false;
+		// isScale = false;
 
 		htmlToImage
 			.toPng(previewEl, {
-				bgcolor: openGraphImage.bgColor.type === 'plain' ? openGraphImage.bgColor.value : '#111'
+				bgcolor: openGraphImage.bgColor.type === 'plain' ? openGraphImage.bgColor.value : '#111',
+				width: 1200,
+				height: 630,
+				style: {
+					width: '1200px',
+					height: '630px'
+				}
 			})
 			.then(async function (dataUrl) {
 				screenshotUrl = dataUrl;
@@ -69,7 +75,7 @@
 				let res = await postFile('files', file);
 				uploadUrl = res.url;
 
-				isScale = true;
+				// isScale = true;
 			})
 			.catch(function (error) {
 				console.error('oops, something went wrong!', error);
@@ -99,7 +105,7 @@
 
 <div>
 	<div
-		class="absolute top-0 left-0 bg-black overflow-hidden {isScale ? 'transition' : ''}"
+		class="bg-black overflow-hidden {isScale ? 'transition' : ''}"
 		style="width: 1200px; height: 630px; {isScale
 			? 'transform: scale(0.5); transform-origin: top left;'
 			: ''}background-size: cover; {bgColor?.type === 'file'
@@ -121,7 +127,8 @@
 		/>
 	</div>
 
-	<button class="mt-8" style="margin-top: 320px;" on:click={makeScreenshot}>Generate URL</button>
+	<button class="mt-8" on:click={makeScreenshot}>Copy Image to Clipboard</button>
+	<button class="mt-8" on:click={makeScreenshot}>Generate Screenshot URL</button>
 
 	{#if screenshotUrl}
 		<div class="mt-2">

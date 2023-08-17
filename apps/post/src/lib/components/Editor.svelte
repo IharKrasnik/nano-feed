@@ -1068,7 +1068,7 @@ See you!
 												</div>
 
 												<div class="relative">
-													<div class="max-h-[350px] overflow-y-auto">
+													<div class="max-h-[450px] overflow-y-auto">
 														{#each $blogPosts as post}
 															<div
 																class="_section cursor-pointer"

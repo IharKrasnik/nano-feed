@@ -6,7 +6,7 @@
 	import Button from 'lib/components/Button.svelte';
 
 	import FileInput from 'lib/components/FileInput.svelte';
-	import { PAGE_URL } from 'lib/env';
+	import { BRAND_URL } from 'lib/env';
 
 	export let page;
 
@@ -32,9 +32,7 @@
 				<img
 					class="rounded-xl w-full"
 					style="aspect-ratio: 1200/630;"
-					src={page.openGraph.imageUrl ||
-						page.demoUrl ||
-						`${PAGE_URL}/og.png?pageSlug=${page.slug}`}
+					src={page.openGraph.imageUrl || `${BRAND_URL}/og.png?pageSlug=${page.slug}`}
 				/>
 			{/key}
 		</div>

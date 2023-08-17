@@ -1,5 +1,5 @@
 import authServerGuard from 'lib/guards/auth.server';
-import { POST_URL } from 'lib/env';
+import { BRAND_URL } from 'lib/env';
 import { get } from 'lib/api';
 
 export async function load({ url, params, session, cookies }) {
@@ -14,7 +14,7 @@ export async function load({ url, params, session, cookies }) {
 			blog,
 			ogTitle: `${blog.title}`,
 			ogDescription: `${blog.subtitle || blog.callToAction}`,
-			ogImage: `${POST_URL}/og.png?pageSlug=${pageSlug}`
+			ogImage: `${BRAND_URL}/og.png?blogSlug=${blogSlug}`
 		};
 	} else {
 		extend = {

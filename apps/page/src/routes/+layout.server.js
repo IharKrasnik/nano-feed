@@ -1,5 +1,5 @@
 import authServerGuard from 'lib/guards/auth.server';
-import { PAGE_URL } from 'lib/env';
+import { BRAND_URL } from 'lib/env';
 import { get } from 'lib/api';
 
 export async function load({ url, params, session, cookies }) {
@@ -14,7 +14,7 @@ export async function load({ url, params, session, cookies }) {
 			page,
 			ogTitle: `${page.name} — ${page.title}`,
 			ogDescription: `${page.subtitle || page.callToAction}`,
-			ogImage: page.demoUrl || `${PAGE_URL}/og.png?pageSlug=${pageSlug}`
+			ogImage: page.demoUrl || `${BRAND_URL}/og.png?pageSlug=${pageSlug}`
 		};
 	} else {
 		extend = {

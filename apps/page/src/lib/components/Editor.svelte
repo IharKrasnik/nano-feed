@@ -51,7 +51,7 @@
 	import pageDraft from '$lib/stores/pageDraft';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
-
+	//
 	onMount(async () => {
 		await import('emoji-picker-element/svelte');
 	});
