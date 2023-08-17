@@ -27,6 +27,7 @@
 			disconnectSocketIo();
 		});
 	}
+	//
 </script>
 
 <svelte:head>
