@@ -160,45 +160,6 @@
 
 	generateThemes();
 
-	// let themes = [
-	// 	{
-	// 		backgroundColor: '#ffffff',
-	// 		textColor: '#111111',
-	// 		accentColor: '#000000',
-	// 		sectionBackgroundColor: 'rgb(128, 127, 128, 0.05)'
-	// 	},
-	// 	{
-	// 		backgroundColor: '#0C120C',
-	// 		textColor: '#eeeeee',
-	// 		accentColor: '#eeeeee',
-	// 		sectionBackgroundColor: '#212121'
-	// 	},
-	// 	{
-	// 		backgroundColor: '#0C1020',
-	// 		textColor: '#D5CCB2',
-	// 		accentColor: '#A4368D',
-	// 		sectionBackgroundColor: '#222'
-	// 	},
-	// 	{
-	// 		backgroundColor: '#F4FCFC',
-	// 		textColor: '#000000',
-	// 		accentColor: '#4350D1',
-	// 		sectionBackgroundColor: '#FFFFFF'
-	// 	},
-	// 	{
-	// 		backgroundColor: '#F5DCCA',
-	// 		textColor: '#000000',
-	// 		accentColor: '#000000',
-	// 		sectionBackgroundColor: '#FFFFFF'
-	// 	},
-	// 	{
-	// 		backgroundColor: '#6733ff',
-	// 		textColor: '#fffdfc',
-	// 		accentColor: '#fff9e5',
-	// 		sectionBackgroundColor: '#fff'
-	// 	}
-	// ];
-
 	export let page;
 
 	let setTheme = (theme) => {

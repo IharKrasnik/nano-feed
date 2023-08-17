@@ -12,7 +12,7 @@
 
 	if (!page.openGraph) {
 		page.openGraph = {};
-		page.openGraph.image = getPageMetaTags({ page }).image;
+		page.openGraph.imageUrl = getPageMetaTags({ page }).image;
 	}
 
 	let updateOpenGraph = async () => {
@@ -32,7 +32,7 @@
 				<img
 					class="rounded-xl w-full"
 					style="aspect-ratio: 1200/630;"
-					src={page.openGraph.imageUrl || `${BRAND_URL}/og.png?pageSlug=${page.slug}`}
+					src={page.openGraph.imageUrl || `${BRAND_URL}/og.png?pageId=${page._id}`}
 				/>
 			{/key}
 		</div>

@@ -14,7 +14,7 @@ export async function load({ url, params, session, cookies }) {
 			page,
 			ogTitle: `${page.name} — ${page.title}`,
 			ogDescription: `${page.subtitle || page.callToAction}`,
-			ogImage: page.demoUrl || `${BRAND_URL}/og.png?pageSlug=${pageSlug}`
+			ogImage: page.demoUrl || `${BRAND_URL}/og.png?pageId=${page._id}`
 		};
 	} else {
 		extend = {
