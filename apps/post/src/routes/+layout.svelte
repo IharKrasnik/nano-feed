@@ -54,6 +54,7 @@
 			css: cssVarStyles
 		};
 	}
+	//
 </script>
 
 <svelte:head>

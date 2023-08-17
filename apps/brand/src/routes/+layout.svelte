@@ -4,6 +4,7 @@
 	import isUrl from 'lib/helpers/isUrl';
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import Dock from 'lib/components/Dock.svelte';
+	//
 </script>
 
 <svelte:head>
