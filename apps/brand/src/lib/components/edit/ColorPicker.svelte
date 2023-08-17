@@ -94,7 +94,7 @@
 	<div
 		on:click={() => (isOpen = true)}
 		class="rounded-full w-[25px] h-[25px] cursor-pointer shrink-0 _color"
-		style="background: {color.bgColor || color.value};"
+		style="background: {color?.bgColor || color?.value};"
 	>
 		<span />
 	</div>
