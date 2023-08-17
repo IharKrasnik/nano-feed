@@ -46,7 +46,7 @@
 	};
 
 	import 'lazysizes';
-	// import a plugin
+	// import a plugin 2
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 </script>
 
