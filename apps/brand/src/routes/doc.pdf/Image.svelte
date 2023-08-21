@@ -176,8 +176,8 @@
 
 							{#if page.name}
 								<div
-									class="_title flex items-center font-bold opacity-90 shrink-0"
-									style="font-size: 32px; color: {textColor}; max-width: 95%; margin-left: 20px;"
+									class="_title flex items-center font-bold opacity-90 shrink-0 mb-0"
+									style="font-size: 32px; color: {textColor}; max-width: 95%; margin-left: 20px; margin-bottom: 0;"
 								>
 									{page.name}
 								</div>

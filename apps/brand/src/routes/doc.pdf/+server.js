@@ -86,10 +86,10 @@ export const GET = async ({ url }) => {
 	// 		page: {
 	// 			title: `✅ Maker-Generalist`,
 	// 			subtitle: `
-	// Don't discuss this front-end/back-end/DevOps bullsh*t.
-	// Tech is a commodity on the early-stage.
-	// Hire a resourceful CTO who can build alone fast.
-	// They should be obsessed with product and growth, not just tech.`
+	Don't discuss this front-end/back-end/DevOps bullsh*t.
+	Tech is a commodity on the early-stage.
+	Hire a resourceful CTO who can build alone fast.
+	They should be obsessed with product and growth, not just tech.`
 	// 		}
 	// 	});
 
@@ -104,46 +104,46 @@ export const GET = async ({ url }) => {
 	// 	await addImage(doc, {
 	// 		page: {
 	// 			title: '✅ Speaks simple language',
-	// 			subtitle: `Not every engineer speak nonsense that's hard to understand.
+				subtitle: `Not every engineer speak nonsense that's hard to understand.
 
-	// 			Your cofounder should speak simple language and explain what’s going on. Those who write well also think well.
+				Your cofounder should speak simple language and explain what’s going on. Those who write well also think well.
 
-	// 			Don’t let the tech to be a blackbox for you.`
+				Don’t let the tech to be a blackbox for you.`
 	// 		}
 	// 	});
 
 	// 	await addImage(doc, {
 	// 		page: {
 	// 			title: '✅ Meets short deadlines',
-	// 			subtitle: `You should be impressed by the speed of building.
+				subtitle: `You should be impressed by the speed of building.
 
-	// 			You should see changes released daily to retain your first users.
+				You should see changes released daily to retain your first users.
 
-	// 			Speed of execution is very important for your startup, so don’t let tech to be a blocker.`
-	// 		}
+				Speed of execution is very important for your startup, so don’t let tech to be a blocker.`
+			}
 	// 	});
 
 	// 	await addImage(doc, {
 	// 		page: {
-	// 			title: '✅ Runs side projects',
-	// 			subtitle: `Partner with an indiehacker who already runs their own project.
+				title: '✅ Runs side projects',
+				subtitle: `Partner with an indiehacker who already runs their own project.
 
-	// 			You'll get a cofounder with skin in the game.
+				You'll get a cofounder with skin in the game.
 
-	// 			Most of indiehackers are coders. You’ll build a better product with a person who figured out how to attract users and payments.`
-	// 		}
+				Most of indiehackers are coders. You’ll build a better product with a person who figured out how to attract users and payments.`
+			}
 	// 	});
 
 	// 	await addImage(doc, {
 	// 		page: {
 	// 			title: '✅ Can-Do Attitude',
-	// 			subtitle: `Search for the person who believes that everything is possible.
+				subtitle: `Search for the person who believes that everything is possible.
 
-	// 			Don’t rely on the years of experience.
+				Don’t rely on the years of experience.
 
-	// 			Hire passionate young engineers who build their own stuff. Give them a try and grow together.
+				Hire passionate young engineers who build their own stuff. Give them a try and grow together.
 
-	// 			You can train skill quickly. But you don't change mindset.`
+				You can train skill quickly. But you don't change mindset.`
 	// 		}
 	// 	});
 

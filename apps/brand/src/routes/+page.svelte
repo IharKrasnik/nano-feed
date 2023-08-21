@@ -13,6 +13,9 @@
 	import brandDraft from '$lib/stores/brandDraft';
 	import fileToEdit from '$lib/stores/fileToEdit';
 	import fileSizes from '$lib/stores/fileSizes';
+	import fileFonts from '$lib/stores/fileFonts';
+
+	import colors from 'lib/stores/colors';
 
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
@@ -45,14 +48,23 @@
 
 	let defaultBrand = () => {
 		return {
-			logo: '💯',
-			slug: '_new',
+			logo: '🚀',
 			name: '',
+			slug: '_new',
 			title: '',
 			imageUrl: '',
 			theme: {},
 			files: []
 		};
+	};
+
+	let defaultPng = {
+		name: 'my awesome brand',
+		type: 'png',
+		title: 'Create nice looking image 🤩',
+		subtitle: 'Use it for social media, blog articles or OpenGraph tags',
+		size: $fileSizes.find((size) => size.name === 'horizontal'),
+		theme: _.sample($colors).getTheme()
 	};
 
 	let publishBrand = async () => {
@@ -70,16 +82,34 @@
 			brand = await post('brands', brand);
 			isJustCreated = true;
 			$allBrands = [brand, ...$allBrands];
-			await addFile();
+			await addFile(defaultPng);
 		}
 	};
 
-	let addFile = async ({ type = 'png', size = null, files = null } = {}) => {
+	let addFile = async ({
+		name = 'your awesome brand',
+		logo = '🚀',
+		title,
+		subtitle,
+		type = 'png',
+		theme,
+		size = null,
+		files = null
+	} = defaultPng) => {
 		brand.files = brand.files || [];
 
+		_.each(files || [], (f) => {
+			f.name = f.name || name;
+			f.logo = f.logo || logo;
+		});
+
 		let newFile = await post(`brands/${brand._id}/files`, {
+			name,
+			logo,
+			title,
+			subtitle,
 			type,
-			theme: brand.theme || { backgroundColor: '#fefefe', textColot: '#111111' },
+			theme: theme || brand.theme || { backgroundColor: '#fefefe', textColot: '#111111' },
 			size,
 			files
 		});
@@ -389,9 +419,15 @@
 						{#if brand?._id}
 							<Button
 								class="w-full flex items-center justify-center cursor-pointer"
-								onClick={() => addFile()}
-								>🎆 Create Image
+								onClick={() => addFile(defaultPng)}
+								>🎆 Create Single Image
 							</Button>
+
+							<div class="py-4 opacity-80">
+								Use static images for: <br />
+								• Social media posts <br />• OpenGraph images (meta tags) <br />• Blog Articles
+								Covers
+							</div>
 
 							<div class="mt-8">
 								<Button
@@ -401,16 +437,63 @@
 											type: 'gif',
 											size: $fileSizes.find((f) => f.name === 'square'),
 											files: [
-												{ title: 'First frame', theme: brand.theme },
-												{ title: 'Second frame', theme: brand.theme }
+												{ title: 'First frame', theme: _.sample($colors).getTheme() },
+												{ title: 'Second frame', theme: _.sample($colors).getTheme() }
 											]
 										})}
-									>🎬 Create GIF or PDF
+									>🍿 Create GIF
 								</Button>
+
+								<div class="py-4 opacity-80">
+									Stand out in social media and emphasize your message with eye-catching animated
+									GIFs.
+								</div>
+							</div>
+
+							<div class="mt-8">
+								<Button
+									class="w-full flex items-center justify-center cursor-pointer"
+									onClick={() => {
+										let font = 'gaegu';
+
+										return addFile({
+											type: 'pdf',
+											size: $fileSizes.find((f) => f.name === 'square'),
+											theme: {
+												..._.sample($colors).getTheme(),
+												font
+											},
+											files: [
+												{
+													title: 'How to create a great LinkedIn carousel',
+													subtitle: 'And win your true fans'
+												},
+												{
+													title: 'Repurpose your best-performing articles',
+													subtitle:
+														'LinkedIn carousel is a different way to present your long-form content.'
+												},
+												{
+													title: 'Prepare 5-6 titles with 2-sentence description',
+													subtitle: 'Just like you reading now'
+												},
+												{
+													title: 'End up with call to action',
+													subtitle: `Should they follow you, leave a comment, subscribe to waitlist, check full article?
+See? It's up to you decide! 
+👈 Now go and create your carousel!`
+												}
+											]
+										});
+									}}
+									>🎠 Create LinkedIn Carousel
+								</Button>
+
+								<div class="py-4 opacity-80">Create PDF to use as LinkedIn Carousel.</div>
 							</div>
 						{:else}
 							<div class="mt-8">
-								<button on:click={publishBrand}>Publish</button>
+								<button on:click={publishBrand}>Create first image</button>
 							</div>
 						{/if}
 					{/if}

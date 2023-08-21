@@ -24,7 +24,7 @@
 	};
 
 	let addFile = async () => {
-		file.files = [...file.files, _.cloneDeep(_.last(file.files))];
+		file.files = [...(file.files || []), _.cloneDeep(_.last(file.files) || {})];
 	};
 
 	let removeFile = async (fileToRemove, { isChild = false } = {}) => {
@@ -39,7 +39,7 @@
 
 {#if file.type === 'png'}
 	<EditPng bind:file bind:brand onRemove={() => removeFile(file, { isChild: false })} />
-{:else if file.type === 'gif'}
+{:else}
 	<h3 class="w-full my-4 opacity-80">File Theme 👇</h3>
 
 	<EditPng bind:file isParent bind:brand onRemove={() => removeFile(file, { isChild: false })} />
@@ -60,4 +60,7 @@
 
 <div class="mt-8 w-full">
 	<Button onClick={updateFile}>💾 Save File</Button>
+	<div class="mt-4 opacity-80">
+		This will save file and close it. <br /> To download and share file use buttons above the preview.
+	</div>
 </div>
