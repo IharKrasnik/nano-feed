@@ -292,23 +292,21 @@
 							<div
 								class="p-4 flex h-full w-full {page.demoUrl
 									? `flex-col ${
-											page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
+											page.theme?.isHeroVertical ? '' : 'sm:flex-row'
 									  } justify-between items-center`
 									: 'text-center items-center'}"
 							>
 								<div
 									class={page.demoUrl
 										? `w-full text-center ${
-												page.theme?.hero === 'vertical'
+												page.theme?.isHeroVertical
 													? 'flex flex-col items-center mb-8'
 													: 'sm:text-left'
 										  } sm:max-w-[500px] items-center`
 										: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
 								>
 									<h1
-										class="_title {!page.demoUrl || page.theme?.hero === 'vertical'
-											? 'sm:max-w-[750px]'
-											: ''}"
+										class="_title {!page.demoUrl || page.isHeroVertical ? 'sm:max-w-[750px]' : ''}"
 										style={page.title ? '' : 'opacity: 20%;'}
 									>
 										{#if page.title}
@@ -321,7 +319,7 @@
 									{#if page.subtitle}
 										<h2
 											class="_subtitle whitespace-pre-wrap  {!page.demoUrl ||
-											page.theme?.hero === 'vertical'
+											page.theme?.isHeroVertical
 												? 'max-w-[600px]'
 												: ''}"
 										>
@@ -340,7 +338,7 @@
 										<form
 											class="{page.isCollectEmails
 												? `w-full flex flex-col ${
-														page.theme?.hero === 'vertical' ? '' : 'sm:flex-row'
+														page.isHeroVertical ? '' : 'sm:flex-row'
 												  } items-center justify-center`
 												: 'mx-auto sm:mx-0'} "
 											style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
@@ -381,12 +379,18 @@
 								</div>
 
 								{#if page.demoUrl}
-									<div class="w-full sm:max-w-[600px] mt-16 sm:mt-0 sm:ml-8">
+									<div
+										class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
+											? 'max-w-[800px] max-h-[600px]'
+											: 'sm:ml-8 sm:max-w-[600px]'}"
+									>
 										<RenderUrl
 											isLazy={false}
-											class="w-full flex justify-end"
+											class="w-full flex justify-end {page.theme?.isHeroVertical
+												? 'max-h-[600px] mt-8'
+												: ''}"
 											url={page.demoUrl}
-											imgClass=""
+											imgClass="w-full object-cover"
 										/>
 									</div>
 								{/if}
@@ -446,7 +450,7 @@
 												bind:section
 												bind:themeStyles={styles}
 												style={false && page.theme?.isZebra && i % 2 === 0
-													? page.theme.theme === 'dark'
+													? page.theme?.theme === 'dark'
 														? `background-color: ${lighten(styles['background-color'], 0.01)};`
 														: `background-color: ${darken(styles['background-color'], 0.08)};`
 													: ''}

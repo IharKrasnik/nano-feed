@@ -1125,17 +1125,27 @@ See you!
 
 										{#if page._id}
 											<div class="_section">
-												<div class="_title">
-													Product Demo
+												<div class="flex justify-between">
+													<div class="_title">
+														Product Demo
 
-													<div class="font-normal text-sm opacity-70 mb-4">
-														Screenshot, live GIF or a <a
-															href="//loom.com"
-															class="underline"
-															target="_blank"
-															use:tooltip
-															title="We recommend using Loom or YouTube">video demo</a
-														> <br />
+														<div class="font-normal text-sm opacity-70 mb-4">
+															Screenshot, live GIF or a <a
+																href="//loom.com"
+																class="underline"
+																target="_blank"
+																use:tooltip
+																title="We recommend using Loom or YouTube">video demo</a
+															> <br />
+														</div>
+													</div>
+													<div>
+														{#if page.demoUrl}
+															Vertical <input
+																type="checkbox"
+																bind:checked={page.theme.isHeroVertical}
+															/>
+														{/if}
 													</div>
 												</div>
 
