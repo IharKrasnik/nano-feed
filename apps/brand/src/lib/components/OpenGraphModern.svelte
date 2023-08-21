@@ -7,6 +7,8 @@
 	export let brand;
 	export let onImageLoaded;
 
+	import ImagePreview from '../../routes/og.png/_Image.svelte';
+
 	import { lighten, darken, getLuminance } from 'lib/helpers/color';
 	export let bgColor;
 
@@ -27,6 +29,18 @@
   linear-gradient(to right, rgba(0, 0, 0, .3) 1px, transparent 1px),
   linear-gradient(to bottom, rgba(0, 0, 0, .3) 1px, transparent 1px);" -->
 
+<ImagePreview
+	page={{
+		imageUrl: openGraphImage.imageUrl,
+		title: openGraphImage.title,
+		theme: brand.theme
+	}}
+	bgUrl={bgColor?.type === 'file' ? bgColor.value : ''}
+	width={1200}
+	height={630}
+/>
+
+<!-- 
 <div
 	class="h-full overflow-hidden; _root"
 	style="  background-size: 80px 80px;
@@ -68,9 +82,6 @@ background-image:
 			>
 				{openGraphImage.title || brand?.title}
 			</div>
-			<!-- <div class="mt-4 text-center" style="font-size: 48px;">
-        {openGraphImage.description || ''}
-      </div> -->
 		</div>
 		{#if openGraphImage.imageUrl || brand?.imageUrl}
 			<div
@@ -93,8 +104,7 @@ background-image:
 			</div>
 		{/if}
 	</div>
-</div>
-
+</div> -->
 <style>
 	._root {
 		font-family: Bowlby One;

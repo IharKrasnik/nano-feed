@@ -1,6 +1,7 @@
 <script>
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
+	import { BRAND_URL } from 'lib/env';
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
@@ -10,15 +11,24 @@
 	import currentUser from 'lib/stores/currentUser';
 	import allBrands from '$lib/stores/allBrands';
 	import brandDraft from '$lib/stores/brandDraft';
+	import fileToEdit from '$lib/stores/fileToEdit';
+	import fileSizes from '$lib/stores/fileSizes';
+
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
+	import Button from 'lib/components/Button.svelte';
 
 	import EditOpenGraphImage from '$lib/components/edit/OpenGraphImage.svelte';
+	import EditPng from '$lib/components/edit/Png.svelte';
+	import EditBrandFile from '$lib/components/edit/BrandFile.svelte';
 	import EditColorPicker from 'lib/components/ColorPicker.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import OpenGraphPreview from '$lib/components/OpenGraphPreview.svelte';
+	import BrandFilePreview from '$lib/components/BrandFilePreview.svelte';
+	import BrandFile from '$lib/components/BrandFile.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import BackArrowSvg from 'lib/icons/back-arrow.svelte';
 
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 
@@ -41,7 +51,7 @@
 			title: '',
 			imageUrl: '',
 			theme: {},
-			openGraphImages: []
+			files: []
 		};
 	};
 
@@ -60,29 +70,35 @@
 			brand = await post('brands', brand);
 			isJustCreated = true;
 			$allBrands = [brand, ...$allBrands];
+			await addFile();
 		}
 	};
 
-	let addOpenGraphImage = () => {
-		brand = {
-			...brand,
-			openGraphImages: [
-				...brand.openGraphImages,
-				{
-					guid: uuidv4()
-				}
-			]
-		};
+	let addFile = async ({ type = 'png', size = null, files = null } = {}) => {
+		brand.files = brand.files || [];
+
+		let newFile = await post(`brands/${brand._id}/files`, {
+			type,
+			theme: brand.theme || { backgroundColor: '#fefefe', textColot: '#111111' },
+			size,
+			files
+		});
+
+		brand.files = [newFile, ...brand.files];
+		$fileToEdit = newFile;
 	};
 
 	let brand = { ..._.cloneDeep($brandDraft['_new'] || defaultBrand()) };
-
 	let isBrandSet = false;
 
 	let refreshData = () => {};
 
 	let setBrandAndDraft = (p, { force = false } = {}) => {
 		brand = { ..._.cloneDeep(p) };
+
+		if (!brand.files) {
+			brand.files = [];
+		}
 
 		if (
 			!force &&
@@ -107,13 +123,6 @@
 		isBrandSet = true;
 	}
 
-	let removeOpenGraphImage = (openGraphImage) => {
-		brand = {
-			...brand,
-			openGraphImages: [...brand.openGraphImages.filter((image) => image !== openGraphImage)]
-		};
-	};
-
 	$: if (brand) {
 		if (!$brandDraft[brand.slug] || !_.isEqual(brand, $brandDraft[brand.slug])) {
 			if (brand.isDirty === false) {
@@ -134,6 +143,62 @@
 			}
 		}
 	}
+
+	let updateFile = async () => {
+		let updatedFile = await put(`brands/files/${$fileToEdit._id}`, $fileToEdit);
+	};
+
+	let fetchFile = ({ type = 'png' } = {}) => {
+		let url;
+
+		if (type === 'png') {
+			url = `${BRAND_URL}/og.png?fileId=${$fileToEdit._id}`;
+		} else if (type === 'gif') {
+			url = `${BRAND_URL}/doc.gif?fileId=${$fileToEdit._id}`;
+		} else if (type === 'pdf') {
+			url = `${BRAND_URL}/doc.pdf?fileId=${$fileToEdit._id}`;
+		}
+
+		return fetch(url)
+			.then((response) => response.blob())
+			.catch(console.error);
+	};
+
+	let download = async ({ type = 'png' } = {}) => {
+		await updateFile();
+		let blob = await fetchFile({ type });
+
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(blob);
+		link.download = 'file';
+		link.click();
+	};
+
+	let copyClipboard = async ({ type = 'png' } = {}) => {
+		await updateFile();
+		let blob = await fetchFile({ type });
+
+		navigator.clipboard.write([
+			new ClipboardItem({
+				[type === 'png' ? 'image/png' : 'image/gif(not working)']: blob
+			})
+		]);
+	};
+
+	let copyUrl = () => {
+		let url;
+		let type = $fileToEdit.type;
+
+		if (type === 'png') {
+			url = `${BRAND_URL}/og.png?fileId=${$fileToEdit._id}`;
+		} else if (type === 'gif') {
+			url = `${BRAND_URL}/doc.gif?fileId=${$fileToEdit._id}`;
+		} else if (type === 'pdf') {
+			url = `${BRAND_URL}/doc.pdf?fileId=${$fileToEdit._id}`;
+		}
+
+		navigator.clipboard.writeText(url);
+	};
 </script>
 
 {#if !$currentUser || $allBrands}
@@ -157,21 +222,24 @@
 								style="font-family: Archivo; font-size: 20px;"
 							>
 								<svg
-									width="34"
-									height="34"
-									viewBox="0 0 34 34"
+									width="35"
+									height="35"
+									viewBox="0 0 35 35"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
 								>
 									<path
 										fill-rule="evenodd"
 										clip-rule="evenodd"
-										d="M1.13635 4.00622C0 5.92768 0 8.52138 0 13.7088V20.2912C0 25.4786 0 28.0723 1.13635 29.9938C1.836 31.1768 2.82316 32.164 4.00622 32.8637C5.92768 34 8.52138 34 13.7088 34H20.2912C25.4786 34 28.0723 34 29.9938 32.8637C31.1768 32.164 32.164 31.1768 32.8637 29.9938C34 28.0723 34 25.4786 34 20.2912V13.7088C34 8.52138 34 5.92768 32.8637 4.00622C32.164 2.82316 31.1768 1.836 29.9938 1.13635C28.0723 0 25.4786 0 20.2912 0H13.7088C8.52138 0 5.92768 0 4.00622 1.13635C2.82316 1.836 1.836 2.82316 1.13635 4.00622Z"
+										d="M1.16977 4.12405C0 6.10202 0 8.77201 0 14.112V20.888C0 26.228 0 28.898 1.16977 30.8759C1.89 32.0938 2.9062 33.11 4.12405 33.8302C6.10202 35 8.77201 35 14.112 35H20.888C26.228 35 28.898 35 30.8759 33.8302C32.0938 33.11 33.11 32.0938 33.8302 30.8759C35 28.898 35 26.228 35 20.888V14.112C35 8.77201 35 6.10202 33.8302 4.12405C33.11 2.9062 32.0938 1.89 30.8759 1.16977C28.898 0 26.228 0 20.888 0H14.112C8.77201 0 6.10202 0 4.12405 1.16977C2.9062 1.89 1.89 2.9062 1.16977 4.12405Z"
 										fill="white"
 									/>
-									<rect x="6" y="9" width="22" height="13" rx="2" fill="#0C120C" />
-									<rect x="14" y="14" width="12" height="2" rx="1" fill="white" />
-									<rect x="9" y="19" width="6" height="6" rx="2" fill="#0C120C" />
+									<path
+										fill-rule="evenodd"
+										clip-rule="evenodd"
+										d="M17.4703 9C17.4703 8.44771 17.918 8 18.4703 8H19.2941C19.8464 8 20.2941 8.44772 20.2941 9V11.5752L25.5933 17.9358C25.6466 17.9999 25.6923 18.0674 25.7303 18.1373C25.8731 18.3042 25.9725 18.5071 26.0102 18.7351C26.063 19.0543 26.1063 19.429 26.1055 19.7964C26.1048 20.1328 26.1781 20.4008 26.2723 20.606C26.3973 20.8787 26.636 21.0586 26.8773 21.2406L26.8774 21.2406L26.8774 21.2406C26.9951 21.3294 27.1134 21.4186 27.2196 21.5193C27.6986 21.9739 28.0017 22.651 28 23.4067C27.997 24.7724 26.9997 25.8776 25.7726 25.8752C24.5454 25.8727 23.553 24.7636 23.556 23.3978C23.5573 22.7939 23.753 22.241 24.0771 21.8122C24.2354 21.6028 24.4367 21.4244 24.636 21.248C24.977 20.9461 25.3117 20.6496 25.4138 20.2123C25.4436 20.0849 25.4618 19.9456 25.4621 19.7952C25.4623 19.7313 25.4592 19.6694 25.4533 19.6096C25.4337 19.6264 25.4133 19.6428 25.3923 19.6587L24.0534 20.6705L16.6893 26.2353C16.1347 26.6544 15.3255 26.5625 14.8819 26.03L9.25953 19.2814C8.81594 18.749 8.90593 17.9776 9.46053 17.5585L17.4703 11.5059V9ZM18.88 13C18.4658 13 18.13 13.3358 18.13 13.75C18.13 14.1642 18.4658 14.5 18.88 14.5C19.2942 14.5 19.63 14.1642 19.63 13.75C19.63 13.3358 19.2942 13 18.88 13Z"
+										fill="#0C120C"
+									/>
 								</svg>
 
 								<div class="ml-2">brand</div>
@@ -222,41 +290,91 @@
 
 				<div class="w-[426px] p-4 pl-0 mr-4">
 					<div class="flex items-center mb-2">
-						{#if brand._id}
+						<!-- {#if brand._id}
 							<EmojiPicker theme="dark" bind:icon={brand.logo} />
 							<div class="ml-2">
-								<EditColorPicker bind:color={brand.bgColor} />
-							</div>
-						{/if}
-					</div>
-					{#if !brand._id}
-						<div class="_section">
-							<div class="_title">Brand Name</div>
-
-							<div>
-								<input
-									type="text"
-									class="w-full mb-4"
-									bind:value={brand.name}
-									placeholder="Momentum"
+								<EditColorPicker
+									bind:color={brand.bgColor}
+									onUpdated={(color) => {
+										if (color.isDarkColor) {
+											brand.theme = {
+												theme: 'dark',
+												textColor: '#fefefe'
+											};
+										} else {
+											brand.theme = {
+												theme: 'light',
+												textColor: '#111111'
+											};
+										}
+									}}
 								/>
 							</div>
-						</div>
-					{/if}
-					<div class="_section">
-						<div class="_title">Tagline</div>
-
-						<div>
-							<textarea
-								type="text"
-								rows="4"
-								class="w-full mb-4"
-								bind:value={brand.title}
-								placeholder="Build a better product in public and grow your audience early"
-							/>
-						</div>
+						{/if} -->
 					</div>
 
+					{#if !$fileToEdit}
+						{#if !brand._id}
+							<div class="_section">
+								<div class="_title">Brand Name</div>
+
+								<div>
+									<input
+										type="text"
+										class="w-full mb-4"
+										bind:value={brand.name}
+										placeholder="Momentum"
+									/>
+								</div>
+							</div>
+						{/if}
+					{:else}
+						<!-- <div class="_section">
+							<div class="_title">Title</div>
+
+							<div>
+								<textarea
+									type="text"
+									rows="4"
+									class="w-full mb-4"
+									bind:value={brand.title}
+									placeholder="Build a better product in public and grow your audience early"
+								/>
+							</div>
+						</div> -->
+
+						<div
+							class="flex items-center cursor-pointer text-[#8B786D] mb-4"
+							on:click={() => {
+								$fileToEdit = null;
+							}}
+						>
+							<BackArrowSvg />
+							Back to All Files
+						</div>
+
+						<EditBrandFile
+							bind:file={$fileToEdit}
+							bind:brand
+							onUpdated={(updatedFile) => {
+								brand.files = brand.files.map((f) => {
+									if (f._id === updatedFile._id) {
+										return updatedFile;
+									} else {
+										return f;
+									}
+								});
+
+								$fileToEdit = null;
+							}}
+							onRemoved={() => {
+								brand.files = brand.files.filter((f) => f._id !== $fileToEdit._id);
+
+								$fileToEdit = null;
+							}}
+						/>
+					{/if}
+					<!-- 
 					{#if brand._id}
 						<div class="_section">
 							<div class="_title">Image</div>
@@ -265,37 +383,72 @@
 								<FileInput class="w-full" bind:url={brand.imageUrl} />
 							</div>
 						</div>
+					{/if} -->
+
+					{#if !$fileToEdit}
+						{#if brand?._id}
+							<Button
+								class="w-full flex items-center justify-center cursor-pointer"
+								onClick={() => addFile()}
+								>🎆 Create Image
+							</Button>
+
+							<div class="mt-8">
+								<Button
+									class="w-full flex items-center justify-center cursor-pointer"
+									onClick={() =>
+										addFile({
+											type: 'gif',
+											size: $fileSizes.find((f) => f.name === 'square'),
+											files: [
+												{ title: 'First frame', theme: brand.theme },
+												{ title: 'Second frame', theme: brand.theme }
+											]
+										})}
+									>🎬 Create GIF
+								</Button>
+							</div>
+						{:else}
+							<div class="mt-8">
+								<button on:click={publishBrand}>Publish</button>
+							</div>
+						{/if}
 					{/if}
-
-					{#if brand.openGraphImages.length}
-						<div class="py-8">Open Graph Images</div>
-					{/if}
-
-					{#each brand.openGraphImages as openGraphImage}
-						<EditOpenGraphImage
-							bind:brand
-							bind:openGraphImage
-							onRemove={() => removeOpenGraphImage(openGraphImage)}
-						/>
-					{/each}
-
-					{#if brand._id}
-						<div
-							class="p-8 flex items-center justify-center cursor-pointer _link"
-							on:click={addOpenGraphImage}
-						>
-							Add Open Graph Image
-						</div>
-					{/if}
-
-					<div class="mt-8">
-						<button on:click={publishBrand}>Publish</button>
-					</div>
 				</div>
 			</div>
 
+			{#if $fileToEdit}
+				<div
+					class="fixed pl-8 flex items-center ml-[426px] mx-16 top-[0px] bg-[#0a120b] z-10 opacity-95 transition hover:opacity-100 h-[68px] w-full"
+					style="border-bottom: 1px rgba(255,255,255,.5) solid;"
+				>
+					{#if $fileToEdit.type === 'png'}
+						<div class="mr-4">
+							<Button onClick={copyClipboard} class="w-full">⌨️ Copy Image To Clipboard</Button>
+						</div>
+						<div class="mr-4">
+							<Button onClick={download} class="w-full">🗳 Download As PNG</Button>
+						</div>
+						<div>
+							<Button onClick={copyUrl} class="w-full">🔗 Copy URL</Button>
+						</div>
+					{:else}
+						<div class="mr-4">
+							<Button onClick={() => download({ type: 'gif' })} class="w-full"
+								>🗳 Download As GIF</Button
+							>
+						</div>
+						<div class="mr-4">
+							<Button onClick={() => download({ type: 'pdf' })} class="w-full"
+								>🗳 Download As PDF</Button
+							>
+						</div>
+					{/if}
+				</div>
+			{/if}
+
 			{#if brand.name || brand.description}
-				<div class="relative ml-[426px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
+				<div class="relative ml-[426px] pb-[300px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
 					{#if brand._id}
 						<div class="sticky top-[20px] w-full z-50 h-[0px]">
 							<div class="mx-auto">
@@ -303,73 +456,37 @@
 									<ConfettiExplosion particleCount={200} force={0.3} />
 								{/if}
 							</div>
-
-							<!-- <div
-								class="relative _published-label flex items-center mt-4"
-								style="padding: 6px 10px;"
-							>
-								<a
-									href="{PAGE_URL}/{brand.slug}"
-									class="flex justify-center {brand.isDirty ? 'max-w-[240px]' : 'w-full'}"
-									style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
-									target="_blank"
-									rel="noreferrer"
-								>
-									<div
-										class="mr-2 ml-4 z-20"
-										use:tooltip
-										title={brand.isDirty ? 'Pending Changes' : 'Published'}
-									>
-										{#if !brand.isDirty}
-											✅
-										{:else}
-											🌝
-										{/if}
-									</div>
-
-									<div>
-										/{brand.slug}
-									</div>
-								</a>
-
-								{#if brand.isDirty}
-									<button
-										class="absolute right-0 _primary flex justify-center w-full {isLoading
-											? 'loading'
-											: ''}"
-										style="margin-left: 78px;
-                  border-radius: 30px;
-                  width: auto;
-                  padding: 4px 45px;
-									right: 3px;"
-										transition:fly={{ x: 50, duration: 150 }}
-										on:click={() => {}}
-									>
-										{#if isLoading}
-											<div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
-												<Loader />
-											</div>
-											Publish
-										{:else if isJustPublished}
-											<div class="" in:scale={{ duration: 150 }}>👌</div>
-										{:else}
-											Publish
-										{/if}
-									</button>
-								{/if}
-							</div> -->
 						</div>
 					{/if}
 
-					<div class="mt-8 relative">
+					<!-- <div class="mt-8 relative">
 						<OpenGraphPreview bind:openGraphImage={brand} bind:brand />
-					</div>
+					</div> -->
 
-					{#each brand.openGraphImages as openGraphImage}
-						<div class="mt-8 relative">
-							<OpenGraphPreview bind:openGraphImage bind:brand />
+					{#if $fileToEdit}
+						<div class="mx-16 mt-[120px]">
+							{#if $fileToEdit.type === 'png'}
+								<BrandFilePreview bind:file={$fileToEdit} bind:brand />
+							{:else}
+								{#each $fileToEdit.files as innerFile}
+									<div class="mb-8">
+										<BrandFilePreview bind:file={innerFile} bind:parentFile={$fileToEdit} />
+									</div>
+								{/each}
+							{/if}
 						</div>
-					{/each}
+					{:else}
+						<div class="mt-8 relative grid grid-cols-3">
+							{#each brand.files || [] as file}
+								<BrandFile
+									bind:file
+									sizeAuto={true}
+									bind:brand
+									onClick={(file) => ($fileToEdit = file)}
+								/>
+							{/each}
+						</div>
+					{/if}
 				</div>
 			{:else}
 				<div

@@ -43,6 +43,7 @@
 
 	const uploadFile = async (file) => {
 		isLoading = true;
+
 		try {
 			const newFile = await postFile('files', file);
 
@@ -51,10 +52,10 @@
 			url = fileUrl;
 			innerUrlValue = url;
 
-			// dispatch('fileUploaded', {
-			// 	type: newFile.url.includes('.mp4') || newFile.url.includes('.mov') ? 'video' : 'image',
-			// 	url: fileUrl
-			// });
+			dispatch('fileUploaded', {
+				type: newFile.url.includes('.mp4') || newFile.url.includes('.mov') ? 'video' : 'image',
+				url: fileUrl
+			});
 		} finally {
 			isLoading = false;
 		}

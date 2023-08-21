@@ -8,16 +8,10 @@ export async function load({ url, params, session, cookies }) {
 
 	let extend = {};
 
-	if (pageSlug) {
-		let page = await get(`pages/${pageSlug}`);
-
-		extend = {
-			page,
-			ogTitle: `${page.name} — ${page.title}`,
-			ogDescription: `${page.subtitle || page.callToAction}`,
-			ogImage: page.demoUrl || `${PAGE_URL}/og.png?pageId=${page._id}`
-		};
-	}
+	extend = {
+		ogTitle: `Momentum Brand`,
+		ogDescription: `Create your brand visual assets in seconds`
+	};
 
 	let authData = await authClientGuard({ url, params, session });
 

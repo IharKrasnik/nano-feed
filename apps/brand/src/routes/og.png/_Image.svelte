@@ -3,16 +3,21 @@
 	export let page;
 
 	let getFontSize = (title) => {
-		if (title.length < 60) {
-			return 'font-size: 90px; line-height: 80%;';
-		} else if (title.length < 100) {
-			return 'font-size: 64px; line-height: 80%;';
+		if (title?.length < 60) {
+			return 'font-size: 90px; line-height: 90%;';
+		} else if (title?.length < 100) {
+			return 'font-size: 64px; line-height: 100%;';
 		} else {
-			return 'font-size: 48px; line-height: 80%;';
+			return 'font-size: 48px; line-height: 120%;';
 		}
 	};
 
 	export let bgColor = 'rgb(208, 145, 255)';
+	let bgUrl;
+
+	export let width;
+	export let height;
+
 	export let accentColor;
 	let isTest;
 	bgColor = 'rgb(251, 200, 46)';
@@ -38,11 +43,16 @@
 
 	let imageStyles = isVertical ? `width: 1200px; height: 230px; ` : `width: 500px; height: 600px;`;
 
-	if (page) {
-		bgColor = page?.theme?.backgroundColor || 'white';
+	$: if (page) {
+		if (page?.theme?.backgroundColor && page?.theme?.backgroundColor.startsWith('url')) {
+			bgUrl = page?.theme?.backgroundColor;
+			bgColor = 'transparent';
+		} else {
+			bgColor = page?.theme?.backgroundColor || 'white';
+		}
 		textColor = page?.theme?.textColor || 'black';
 		accentColor = page?.theme?.accentColor || 'black';
-		imageUrl = page.demoUrl;
+		imageUrl = page.demoUrl || page.imageUrl;
 	}
 
 	let styles = {
@@ -75,17 +85,26 @@
 						</div>
 					{/if} -->
 
-<div style="display: flex; flex-direction: column;">
+<div
+	style="display: flex; flex-direction: column; {bgUrl
+		? `background-image: ${bgUrl};`
+		: ''}; min-width: {width}px; min-height: {height}px;"
+	class="h-full w-full"
+>
 	<div
 		class="og"
-		style="background-color: {bgColor}; color: {textColor}; background: url('https://i.stack.imgur.com/GySvQ.png');
-		"
+		style="background-color: {bgColor ||
+			'transparent'}; color: {textColor}; background: url('https://i.stack.imgur.com/GySvQ.png'); min-width: {width}px; min-height: {height}px;"
 	>
 		<div class="flex justify-between items-center" style="width: 1200px;">
 			<div class="flex {isVertical ? 'flex-col' : 'flex-row'} justify-between items-center w-full">
 				<div
 					class="flex flex-col"
-					style={isVertical ? `width:1200px; height: 400px` : `width: 700px; height: 630px;`}
+					style={imageUrl
+						? isVertical
+							? `width:1200px; height: 400px`
+							: `width: 700px; height: 630px;`
+						: 'w-full h-full'}
 				>
 					<div
 						class="flex {isVertical ? 'justify-center' : 'justify-between'} items-center"
@@ -112,23 +131,24 @@
 						{/if}
 					</div>
 
-					<div
-						class="_title flex items-center {isVertical ? 'justify-center' : 'justify-start'}"
-						style="{getFontSize(page.title)} {isVertical
-							? 'text-align: center; margin: 0 auto;'
-							: 'text-align: left;'}; max-width: 95%; margin: 0 auto; {isVertical
-							? 'width: 1200px; height: 400px;'
-							: 'height: 630px;'}"
-					>
-						{page.title}
-					</div>
+					{#if page.title}
+						<div
+							class="_title flex items-center {isVertical ? 'justify-center' : 'justify-start'}"
+							style="{getFontSize(page.title)} {isVertical
+								? 'text-align: center; margin: 0 auto;'
+								: 'text-align: left;'}; max-width: 95%; margin: 0 auto; {imageUrl
+								? isVertical
+									? 'width: 1200px; height: 400px;'
+									: 'height: 630px;'
+								: ''}"
+						>
+							{page.title}
+						</div>
+					{/if}
 				</div>
 
 				{#if imageUrl}
-					<div
-						class="flex"
-						style="{imageStyles} overflow: hidden; border: 3px {darken(bgColor, 0.8)} solid;"
-					>
+					<div class="flex" style="{imageStyles} overflow: hidden; border: 3px {hite} solid;">
 						<img src={imageUrl} bind:this={imageEl} style="width: 1200px; object-fit: contain;" />
 					</div>
 				{/if}

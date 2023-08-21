@@ -12,6 +12,10 @@
 
 	let defaultTags = {};
 
+	if (!blog.openGraph) {
+		blog.openGraph = {};
+	}
+
 	if (!blog.openGraph.imageUrl) {
 		defaultTags = { image: getBlogMetaTags({ blog }).image };
 	}

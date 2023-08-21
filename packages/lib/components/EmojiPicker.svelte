@@ -8,6 +8,7 @@
 
 	export let icon;
 	export let defaultIcon;
+	export let onUpdated = () => {};
 
 	if (!icon && defaultIcon) {
 		icon = defaultIcon;
@@ -41,12 +42,21 @@
 					icon = evt.detail.unicode;
 					url = null;
 					isEmojiPickerShown = false;
+					onUpdated(icon);
 				}}
 			/>
 
 			<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede]">
 				<h3 class="font-bold mb-2">Custom Logo</h3>
-				<FileInput {theme} class="w-full" bind:url />
+				<FileInput
+					{theme}
+					class="w-full"
+					bind:url
+					on:fileUploaded={({ detail }) => {
+						console.log('detail', detail);
+						return onUpdated(detail.url);
+					}}
+				/>
 			</div>
 
 			{#if icon}
@@ -61,6 +71,7 @@
 							icon = null;
 							url = null;
 							isEmojiPickerShown = false;
+							onUpdated(null);
 						}}
 					>
 						Remove Icon

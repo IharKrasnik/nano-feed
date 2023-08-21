@@ -71,7 +71,6 @@ export default (node, { isWithMenu = false } = {}) => {
 					);
 				} else if (type === 'regular') {
 					let selection = window.getSelection();
-					debugger;
 					selection.anchorNode.parentNode.replaceWith(selection.anchorNode);
 					// document.execCommand('formatBlock', false, 'span');
 					// document.execCommand('insertText', false, window.getSelection());

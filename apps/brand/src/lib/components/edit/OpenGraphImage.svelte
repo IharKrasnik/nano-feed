@@ -16,9 +16,26 @@
 			<EmojiPicker theme="dark" bind:icon={openGraphImage.logo} bind:defaultIcon={brand.logo} />
 
 			<div class="ml-2">
-				<EditColorPicker bind:color={openGraphImage.bgColor} bind:defaultColor={brand.bgColor} />
+				<EditColorPicker
+					bind:color={openGraphImage.bgColor}
+					bind:defaultColor={brand.bgColor}
+					onUpdated={(color) => {
+						if (color.isDarkColor) {
+							openGraphImage.theme = {
+								theme: 'dark',
+								textColor: '#fefefe'
+							};
+						} else {
+							openGraphImage.theme = {
+								theme: 'light',
+								textColor: '#111111'
+							};
+						}
+					}}
+				/>
 			</div>
 		</div>
+
 		<div class="text-sm _link" on:click={onRemove}>Remove</div>
 	</div>
 	<div>

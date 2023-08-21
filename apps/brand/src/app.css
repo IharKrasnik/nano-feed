@@ -10,8 +10,10 @@ body {
 
 	--input-background-color: #181a18;
 	--accent-color: #8b786d;
-	--button-background-color: rgba(255, 255, 255, 0.8);
-	--button-color: #0c120c;
+
+	--button-background-color: rgb(33 33 33);
+	--button-color: #fefefe;
+
 	--border-color: rgba(255, 255, 255, 0.3);
 
 	background: var(--background-color);

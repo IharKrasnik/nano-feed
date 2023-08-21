@@ -12,6 +12,8 @@
 	<meta name="title" content={$page.data.ogTitle} />
 	<meta name="description" content={$page.data.ogDescription} />
 	<meta name="og:description" content={$page.data.ogDescription} />
+	<link rel="icon" href="logo.svg" />
+
 	<meta
 		name="og:image"
 		content={$page.data.ogImage ||

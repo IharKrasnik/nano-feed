@@ -4,7 +4,7 @@
 	export let width = 600;
 	export let title = 'Share Content';
 	export let placeholderTitle = `We've got 20 new signups last week 🎉`;
-	export let contentTextareaRows = 4;
+	export let contentTextareaRows = 14;
 	export let placeholderContent = `It was a busy and nervous week but results looks good! After sleepless nights and hustling hours on Twitter I've got 20 new sign ups. Targeting 40 this week!`;
 	export let description = '';
 	export let isPostOnly = false;
@@ -270,14 +270,14 @@
 					<!-- <div>Get $165k in tech discounts</div> -->
 				</div>
 			{:else if activeTab === 'new'}
-				<div class="mt-4 mb-2 font-bold">Title</div>
+				<!-- <div class="mt-4 mb-2 font-bold">Title</div>
 				<input
 					class="_dark w-full"
 					type="text"
 					bind:this={titleEl}
 					placeholder={placeholderTitle}
 					bind:value={newMoment.title}
-				/>
+				/> -->
 
 				<div class="mt-4 mb-2 font-bold">Content</div>
 				<textarea

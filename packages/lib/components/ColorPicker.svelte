@@ -1,83 +1,20 @@
 <script>
 	import _ from 'lodash';
+	import { BRAND_URL } from 'lib/env';
 	import { fly } from 'svelte/transition';
 	import clickOutside from 'lib/use/clickOutside';
+	import colors from 'lib/stores/colors';
 
 	export let color;
 	export let defaultColor;
+	export let onUpdated = () => {};
 
 	let gradients = {};
 
 	let isOpen = false;
 
-	let colors = [
-		{
-			type: 'plain',
-			value: '#D091FF'
-		},
-		{
-			type: 'plain',
-			value: '#FBC82E'
-		},
-		{
-			type: 'plain',
-			value: '#25CED1'
-		},
-		{
-			type: 'plain',
-			value: '#EA526F'
-		},
-		{
-			type: 'plain',
-			value: '#7FB069'
-		},
-		{
-			type: 'plain',
-			value: '#222222'
-		},
-		{
-			type: 'plain',
-			value: '#000000'
-		},
-		{
-			type: 'file',
-			value: '/backgrounds/gradient-1.svg',
-			bgColor: "url('/backgrounds/gradient-1.svg')"
-		},
-		{
-			type: 'file',
-			value: '/backgrounds/gradient-2.svg',
-			bgColor: "url('/backgrounds/gradient-2.svg')"
-		},
-		{
-			type: 'file',
-			value: '/backgrounds/gradient-3.svg',
-			bgColor: "url('/backgrounds/gradient-3.svg')"
-		},
-		{
-			type: 'file',
-			value: '/backgrounds/gradient-4.svg',
-			bgColor: "url('/backgrounds/gradient-4.svg')"
-		},
-		{
-			type: 'file',
-			value: '/backgrounds/gradient-5.svg',
-			bgColor: "url('/backgrounds/gradient-5.svg')"
-		},
-		{
-			type: 'file',
-			value: '/backgrounds/gradient-6.svg',
-			bgColor: "url('/backgrounds/gradient-6.svg')"
-		},
-		{
-			type: 'file',
-			value: '/backgrounds/gradient-7.svg',
-			bgColor: "url('/backgrounds/gradient-7.svg')"
-		}
-	];
-
 	if (!color) {
-		color = defaultColor || _.sample(colors);
+		color = defaultColor || _.sample($colors).value;
 	}
 
 	let close = () => {
@@ -86,6 +23,12 @@
 
 	let setColor = (newColor) => {
 		color = newColor.value;
+
+		onUpdated({
+			color,
+			isDarkColor: newColor.isDarkColor
+		});
+
 		close();
 	};
 </script>
@@ -94,7 +37,9 @@
 	<div
 		on:click={() => (isOpen = true)}
 		class="rounded-full w-[25px] h-[25px] cursor-pointer shrink-0 _color"
-		style="background: {color?.bgColor || color?.value};"
+		style="background: {color.startsWith('http')
+			? `url(${color})`
+			: color}; border: 1px rgba(255, 255, 255, .3) solid;"
 	>
 		<span />
 	</div>
@@ -105,10 +50,10 @@
 			in:fly={{ duration: 150, y: 20 }}
 		>
 			<div class="grid grid-cols-7 gap-4">
-				{#each colors as clr}
+				{#each $colors as clr}
 					<div
 						class="rounded-full w-[25px] h-[25px] cursor-pointer shrink-0 _color"
-						style="background: {clr.bgColor || clr.value};"
+						style="background: {clr.type === 'file' ? `url(${clr.value})` : clr.value};"
 						on:click={() => setColor(clr)}
 					/>
 				{/each}

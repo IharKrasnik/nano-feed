@@ -1,12 +1,11 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { html as toReactNode } from 'satori-html';
-import { get } from 'lib/api';
-import OGImage from '$lib/components/OGImage.svelte';
-import striptags from 'striptags';
+import Image from './_Image.svelte';
 
 import Inter from '$lib/Inter-Regular.ttf';
 import ArchivoBold from '$lib/Archivo-Bold.ttf';
+import Bowlby from '$lib/BowlbyOne-Regular.ttf';
 
 const height = 630;
 const width = 1200;
@@ -15,31 +14,8 @@ function unEntity(str) {
 	return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 }
 
-export const GET = async ({ url }) => {
-	const pageSlug = url.searchParams.get('pageSlug') ?? undefined;
-
-	const name = url.searchParams.get('name') ?? undefined;
-	const title = url.searchParams.get('title') ?? undefined;
-	const description = url.searchParams.get('description') ?? undefined;
-
-	let componentResult;
-
-	let page;
-
-	if (pageSlug) {
-		page = await get(`pages/${pageSlug}`);
-	} else {
-		page = {
-			name,
-			title,
-			description
-		};
-	}
-
-	page.title = striptags(page.title);
-	page.description = striptags(page.description);
-
-	componentResult = OGImage.render({
+export default async ({ page }) => {
+	let componentResult = Image.render({
 		page
 	});
 
@@ -62,9 +38,14 @@ export const GET = async ({ url }) => {
 				data: Buffer.from(Inter),
 				weight: 400,
 				style: 'normal'
+			},
+			{
+				name: 'Bowlby One',
+				data: Buffer.from(Bowlby),
+				weight: 400,
+				style: 'normal'
 			}
 		],
-
 		height,
 		width
 	});
@@ -78,9 +59,5 @@ export const GET = async ({ url }) => {
 
 	const image = resvg.render();
 
-	return new Response(image.asPng(), {
-		headers: {
-			'content-type': 'image/png'
-		}
-	});
+	return image.asPng();
 };
