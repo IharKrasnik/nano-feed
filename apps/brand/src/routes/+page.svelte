@@ -65,6 +65,7 @@
 		subtitle: 'Use it for social media, blog articles or OpenGraph tags',
 		size: $fileSizes.find((size) => size.name === 'horizontal'),
 		theme: _.sample($colors).getTheme()
+		//
 	};
 
 	let publishBrand = async () => {
