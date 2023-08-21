@@ -1125,11 +1125,11 @@ See you!
 
 										{#if page._id}
 											<div class="_section">
-												<div class="flex justify-between">
+												<div class="flex justify-between  mb-4">
 													<div class="_title">
 														Product Demo
 
-														<div class="font-normal text-sm opacity-70 mb-4">
+														<div class="font-normal text-sm opacity-70">
 															Screenshot, live GIF or a <a
 																href="//loom.com"
 																class="underline"
@@ -1139,9 +1139,12 @@ See you!
 															> <br />
 														</div>
 													</div>
-													<div>
+
+													<div class="_title flex items-center">
 														{#if page.demoUrl}
-															Vertical <input
+															<div>Vertical</div>
+															<input
+																class="ml-2"
 																type="checkbox"
 																bind:checked={page.theme.isHeroVertical}
 															/>
