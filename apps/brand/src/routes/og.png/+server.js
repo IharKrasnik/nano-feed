@@ -17,12 +17,14 @@ export const GET = async ({ url }) => {
 
 	if (pageId) {
 		page = await get(`pages/${pageId}`);
+		delete page.subtitle;
 		page.size = {
 			width: 1200,
 			height: 630
 		};
 	} else if (blogId) {
 		page = await get(`blogs/${blogId}`);
+		delete page.subtitle;
 
 		page.size = {
 			width: 1200,
@@ -30,6 +32,7 @@ export const GET = async ({ url }) => {
 		};
 	} else if (postId) {
 		page = await get(`posts/${postId}`);
+		delete page.subtitle;
 
 		page.name = page.blog.name;
 		page.logo = page.blog.logo;
