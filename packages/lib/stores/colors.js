@@ -65,6 +65,16 @@ colors.forEach((c) => {
 	c.isDarkColor = c.value.startsWith('http') ? true : isDarkColor(c.value);
 });
 
+colors.forEach((c) => {
+	c.getTheme = () => {
+		return {
+			backgroundColor: c.value,
+			textColor: c.isDarkColor ? '#fefefe§' : '#111111',
+			theme: c.isDarkColor ? 'dark' : 'light'
+		};
+	};
+});
+
 const store = writable(colors);
 
 export default store;
