@@ -481,7 +481,9 @@
 													title: 'End up with call to action',
 													subtitle: `Should they follow you, leave a comment, subscribe to waitlist, check full article?
 See? It's up to you decide! 
-👈 Now go and create your carousel!`
+Now go and create your carousel!
+⬅️`,
+													theme: { font, ...$colors.find((c) => c.value === '#FBC82E').getTheme() }
 												}
 											]
 										});
