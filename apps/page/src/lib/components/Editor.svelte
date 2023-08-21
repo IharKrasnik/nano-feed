@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
+	import autofocus from 'lib/use/autofocus';
 	import { goto } from '$app/navigation';
 	import { page as sveltePage } from '$app/stores';
 
@@ -143,6 +144,8 @@
 
 	let isTutorialShown = false;
 
+	let isBrandNameEdit = false;
+
 	let isBroadcastEmailModalShown;
 
 	let broadcastEmail = { callToAction: {} };
@@ -219,6 +222,7 @@ See you!
 		} finally {
 			isLoading = false;
 			isJustPublished = true;
+			isBrandNameEdit = false;
 
 			setTimeout(() => {
 				isJustPublished = false;
@@ -1024,10 +1028,22 @@ See you!
 									</div>
 								{/if}
 
-								{#if !page._id}
+								{#if !page._id || isBrandNameEdit}
 									<div class="_section">
 										<div class="_title">Brand Name</div>
-										<input class="w-full" bind:value={page.name} placeholder="Momentum" />
+										<input
+											class="w-full"
+											bind:value={page.name}
+											placeholder="Momentum"
+											use:autofocus
+										/>
+									</div>
+								{:else}
+									<div
+										class="text-lg font-bold mb-4 block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
+										on:click={() => (isBrandNameEdit = true)}
+									>
+										{page.name}
 									</div>
 								{/if}
 
