@@ -405,7 +405,7 @@
 												{ title: 'Second frame', theme: brand.theme }
 											]
 										})}
-									>🎬 Create GIF
+									>🎬 Create GIF or PDF
 								</Button>
 							</div>
 						{:else}
