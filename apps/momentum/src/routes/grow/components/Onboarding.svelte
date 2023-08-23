@@ -353,14 +353,26 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 			}}
 		/>
 
-		<div class="my-8 flex items-center">
-			<h2 class="mr-2">Stuck?</h2>
-			<a
-				class="cursor-pointer  button small"
+		<div class="my-8 flex items-center justify-between">
+			<div class="flex items-center">
+				<h2 class="mr-2">Stuck?</h2>
+				<a
+					class="cursor-pointer  button small"
+					on:click={() => {
+						isWhatToWriteAboutShown = true;
+					}}>✍️ Generate Content Ideas</a
+				>
+			</div>
+			<div
+				class="flex items-center justify-end cursor-pointer my-2"
 				on:click={() => {
-					isWhatToWriteAboutShown = true;
-				}}>✍️ Generate Content Ideas</a
+					isKickstartModalShown = true;
+				}}
 			>
+				<div class="mr-2 flex-shrink-0">🥾 Kickstart:</div>
+				<h2 class="mr-2 flex-shrink-0">0/15</h2>
+				days
+			</div>
 		</div>
 	</div>
 
@@ -556,7 +568,7 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 	</div>
 </div>
 
-<div class="p-8 bg-zinc-900 rounded-xl">
+<div class="p-8 bg-zinc-900 rounded-xl mt-16">
 	<div class="flex justify-between">
 		<div class="flex">
 			<h2
