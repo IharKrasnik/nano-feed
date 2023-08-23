@@ -271,17 +271,6 @@
 						{/if}
 					</div>
 
-					<div
-						class="flex items-center cursor-pointer my-2"
-						on:click={() => {
-							isKickstartModalShown = true;
-						}}
-					>
-						<div class="mr-2 flex-shrink-0">🥾 Kickstart:</div>
-						<h2 class="mr-2 flex-shrink-0">0/15</h2>
-						days
-					</div>
-
 					<!-- <div>Get $165k in tech discounts</div> -->
 				</div>
 			{:else if activeTab === 'new'}
@@ -400,4 +389,14 @@
 		</div> -->
 		{/if}
 	</div>
+	<!-- <div
+		class="flex items-center justify-end cursor-pointer my-2"
+		on:click={() => {
+			isKickstartModalShown = true;
+		}}
+	>
+		<div class="mr-2 flex-shrink-0">🥾 Kickstart:</div>
+		<h2 class="mr-2 flex-shrink-0">0/15</h2>
+		days
+	</div> -->
 {/if}
