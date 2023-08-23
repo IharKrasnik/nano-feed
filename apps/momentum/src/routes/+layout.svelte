@@ -253,7 +253,7 @@
 			: `${$page.url.href.includes('/embed') || isNanoRoute() ? '' : 'max-w-[600px]'}`}
 			"
 	>
-		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch') && !$page.url.href.includes('/embed') && !isNanoRoute()}
+		{#if !$page.url.href.includes('/write') && !$page.url.href.includes('/launch') && !$page.url.href.includes('/embed')}
 			{#if !isNanoRoute()}
 				<a
 					href="/write"

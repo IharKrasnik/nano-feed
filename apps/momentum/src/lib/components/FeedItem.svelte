@@ -17,6 +17,7 @@
 	export let theme = 'dark';
 	export let bgColor = '';
 	export let hideLikes = false;
+	export let onClick = null;
 
 	export let feedItem = {};
 
@@ -72,6 +73,10 @@
 	class:_release={feedItem.isRelease}
 	href={feedItem.url}
 	on:click={(e) => {
+		if (onClick) {
+			e.preventDefault();
+			return onClick(e);
+		}
 		if (!feedItem.url || ['youtube', 'loom'].includes(feedItem.source)) {
 			showPreview();
 			e.preventDefault();

@@ -40,7 +40,7 @@
 
 	let activeTab;
 
-	let newMoment;
+	export let newMoment;
 
 	const setTab = (selectedTab) => {
 		activeTab = selectedTab;
