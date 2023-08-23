@@ -53,7 +53,7 @@
 		}
 	};
 
-	setTab(isPostOnly ? 'new' : 'url');
+	setTab('new');
 
 	let submitLink = async () => {
 		if (urlToSubmitToStream && isUrl(urlToSubmitToStream)) {
@@ -184,7 +184,7 @@
 				</div>
 			</div>
 		{:else}
-			<div class="justify-between">
+			<!-- <div class="justify-between">
 				<div class="mb-2">
 					<svg
 						style="width: 150px; height: 30px; margin-left: -13px;"
@@ -202,7 +202,7 @@
 						/>
 					</svg>
 				</div>
-			</div>
+			</div> -->
 
 			<h2 class="text-lg font-bold">{title}</h2>
 
@@ -214,13 +214,24 @@
 				<div class="flex mt-4 mb-8">
 					<button
 						class="tab p-2 mr-2"
-						class:selected={activeTab === 'url'}
-						on:click={() => setTab('url')}>Submit URL</button
+						class:selected={activeTab === 'new'}
+						on:click={() => setTab('new')}>📢 Post</button
+					>
+
+					<!-- <button
+						class="tab p-2 mr-2"
+						class:selected={activeTab === 'article'}
+						on:click={() => setTab('article')}>🧑‍💻 Article</button
 					>
 					<button
+						class="tab p-2 mr-2"
+						class:selected={activeTab === 'newsletter'}
+						on:click={() => setTab('newsletter')}>✉️ Newsletter</button
+					> -->
+					<button
 						class="tab p-2"
-						class:selected={activeTab === 'new'}
-						on:click={() => setTab('new')}>Write new post</button
+						class:selected={activeTab === 'url'}
+						on:click={() => setTab('url')}>🔗 URL</button
 					>
 				</div>
 			{/if}
@@ -279,6 +290,26 @@
 					bind:value={newMoment.title}
 				/> -->
 
+				{#if !$currentUser.oauth?.twitter && !$currentUser.oauth?.linkedin}
+					<div class="p-4 rounded-lg text-center" style="border: orange 2px solid;">
+						<h3>Connect your social accounts to distribute.</h3>
+
+						<div class="flex sm:flex-row flex-col justify-center mt-2">
+							<button
+								class="small sm:mr-4 shrink-0 flex items-center"
+								on:click={onSyncToTwitterClick}
+							>
+								<div class="w-[20px] h-[20px] mr-2"><TwitterIcon /></div>
+								Connect Twitter</button
+							>
+							<button class="small shrink-0 flex items-center " on:click={onSyncToLinkedInClick}>
+								<div class="w-[20px] h-[20px] mr-2"><LinkedInIcon /></div>
+								Connect LinkedIn</button
+							>
+						</div>
+					</div>
+				{/if}
+
 				<div class="mt-4 mb-2 font-bold">Content</div>
 				<textarea
 					class="_dark w-full"
@@ -291,21 +322,28 @@
 				<div class="mt-4 mb-2 font-bold">Attachment</div>
 				<FileInput class="_dark w-full" theme="dark" bind:url={newMoment.imageUrl} />
 
-				<div class="mt-8">
-					<input
-						class="mr-2"
-						type="checkbox"
-						on:click={onSyncToTwitterClick}
-						bind:checked={newMoment.isSyncToTwitter}
-					/>Sync to Twitter
-					<input
-						class="ml-4 mr-2"
-						type="checkbox"
-						on:click={onSyncToLinkedInClick}
-						bind:checked={newMoment.isSyncToLinkedIn}
-					/>Sync to LinkedIn
-				</div>
-				<Button class="_primary _small mt-8" onClick={publishNewMoment}>Publish Update</Button>
+				{#if $currentUser.oauth?.linkedin || $currentUser.oauth?.twitter}
+					<div class="mt-8">
+						<input
+							class="mr-2"
+							type="checkbox"
+							on:click={onSyncToTwitterClick}
+							bind:checked={newMoment.isSyncToTwitter}
+						/>Sync to Twitter
+
+						<input
+							class="ml-4 mr-2"
+							type="checkbox"
+							on:click={onSyncToLinkedInClick}
+							bind:checked={newMoment.isSyncToLinkedIn}
+						/>Sync to LinkedIn
+					</div>
+
+					<div class="flex items-center mt-8">
+						<Button class="_primary _small mr-8" onClick={publishNewMoment}>Publish Update</Button>
+						<div class="cursor-pointer" on:click={() => setTab('url')}>Post URL instead</div>
+					</div>
+				{:else}{/if}
 			{/if}
 
 			<!-- <hr class="my-8 border-[#8B786D] opacity-30" />

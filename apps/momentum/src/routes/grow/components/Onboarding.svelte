@@ -211,7 +211,7 @@
 	>
 </h3>
 
-<div class="left-0 w-full z-100 grid grid-cols-2 rounded-xl mb-4 mt-8">
+<div class="left-0 w-full z-100 grid grid-cols-2 rounded-xl mb-4 mt-8 items-start">
 	<div class="w-full">
 		<!-- <div class="flex">
 			<a
@@ -268,8 +268,8 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 		/> -->
 
 		<MomentumWidget
-			title="Share Content & Grow"
-			description="Share useful content about your product and journey"
+			title="Publish Content & Grow"
+			description="Share useful content about your product and journey. Create daily. Build trust and grow your metrics."
 			isCollapsed={false}
 			streamSlug={project.slug}
 			onSent={() => {
@@ -288,7 +288,7 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 		</div>
 	</div>
 
-	<div class="ml-8 p-8 bg-zinc-900 rounded-xl w-full">
+	<div class="ml-8 p-8 bg-[#222222] rounded-xl w-full">
 		<div class="flex items-center">
 			<h2>Traction Dashboard</h2>
 		</div>
@@ -406,7 +406,13 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 					{#if $currentUser?.twitterStats}
 						<h2 class="text-2xl mr-2 py-4">{$currentUser.twitterStats.followerCount}</h2>
 					{:else}
-						<button class="small" on:click={twitterLogin}>Connect Twitter</button>
+						<div>
+							<h3 class="mb-2">
+								Track your followers growth. Tweet from Nano interface. Get retweets and exposure.
+							</h3>
+
+							<button class="small" on:click={twitterLogin}>Connect Twitter</button>
+						</div>
 					{/if}
 				</div>
 			</div>
@@ -424,7 +430,10 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 					{#if $currentUser?.linkedinStats}
 						<h2 class="text-2xl mr-2 py-4">{$currentUser.linkedinStats.firstDegreeSize}</h2>
 					{:else}
-						<button class="small" on:click={linkedInLogin}>Connect Linkedin</button>
+						<div>
+							<h3 class="mb-2">Track your connections growth.</h3>
+							<button class="small" on:click={linkedInLogin}>Connect Linkedin</button>
+						</div>
 					{/if}
 				</div>
 			</div>
@@ -476,7 +485,9 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 		</h2>
 	</div>
 
-	<!-- <a class="mb-4 small text-green-400"> Grow 15 days and win $165k in discounts 🚀</a> -->
+	<a class="mb-4 small button" href="https://twitter.com/nano_fund" target="_blank"
+		>💡 Tag @nano_fund in Twitter for support</a
+	>
 </div>
 <hr style="border: 1px rgba(255, 255, 255, .3) solid;" class="mb-8" />
 

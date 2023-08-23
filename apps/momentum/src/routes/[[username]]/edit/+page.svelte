@@ -147,19 +147,13 @@
 			{#if creator}
 				<div class="mb-8">
 					<label>Avatar </label>
-					<FileInput
-						bind:url={stream.avatarUrl}
-						on:fileUploaded={(evt) => fileUploaded(evt.detail, 'avatarUrl')}
-					/>
+					<FileInput bind:url={stream.avatarUrl} />
 				</div>
 			{/if}
 
 			<div class="mb-8">
 				<label>Banner </label>
-				<FileInput
-					bind:url={stream.bannerUrl}
-					on:fileUploaded={(evt) => fileUploaded(evt.detail, 'bannerUrl')}
-				/>
+				<FileInput bind:url={stream.bannerUrl} />
 			</div>
 
 			<div class="mb-8">
@@ -180,10 +174,7 @@
 			<div class="mb-8">
 				<label> Video Pitch </label>
 
-				<FileInput
-					bind:url={stream.pitchUrl}
-					on:fileUploaded={(evt) => fileUploaded(evt.detail, 'pitchUrl')}
-				/>
+				<FileInput bind:url={stream.pitchUrl} />
 			</div>
 
 			{#if $currentUser.isAdmin}

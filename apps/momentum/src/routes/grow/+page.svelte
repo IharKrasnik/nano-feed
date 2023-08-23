@@ -1,6 +1,6 @@
 <script>
 	import { get, post } from 'lib/api';
-	import { getGoogleLoginUrl } from 'lib/env';
+	import { isDev, getGoogleLoginUrl } from 'lib/env';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -95,13 +95,13 @@
 
 		let isFollowersLoaded = false;
 
-		if ($currentUser?.oauth.twitter && !isFollowersLoaded) {
+		if (!isDev && $currentUser?.oauth.twitter && !isFollowersLoaded) {
 			get('twitter/my-stats').then((stats) => {
 				$currentUser.twitterStats = stats;
 			});
 		}
 
-		if ($currentUser?.oauth.linkedin && !isFollowersLoaded) {
+		if (!isDev && $currentUser?.oauth.linkedin && !isFollowersLoaded) {
 			get('linkedin/my-stats').then((stats) => {
 				$currentUser.linkedinStats = stats;
 			});
