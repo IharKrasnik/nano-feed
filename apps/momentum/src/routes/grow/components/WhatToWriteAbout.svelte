@@ -59,21 +59,27 @@
 			<div in:fade={{}} class=" w-full">
 				<h2 class="mb-8">🦸 PRO: Don't miss a day</h2>
 
-				<h2>Let the true magic happen</h2>
+				<h2 class="mb-2">Let the true magic happen</h2>
+				<h3 class="mb-2">
+					Hi, I'm <a href="https://twitter.com/that_igor_" class="underline" target="_blank">Igor</a
+					> and I ask people to post daily. Here's why:
+				</h3>
+
 				<RenderUrl
 					class="w-full"
 					url="https://www.youtube.com/watch?v=W2SExKkVx7M&ab_channel=IgorKrasnik"
 				/>
 
-				<h2 class="mt-8 mb-2">Make it your "Homework for life"</h2>
-				<h3 class="opacity-80 mt-2">
-					Matthew Dicks is an author of "Storyworthy" — the great practical book on storytelling
+				<h2 class="mt-16 mb-2">Make it your "Homework for life"</h2>
+				<h3 class="opacity-80 mb-2">
+					Matthew Dicks is an author of "Storyworthy" — one of the top practical book on
+					storytelling
 				</h3>
 
 				<RenderUrl url="https://www.youtube.com/watch?v=x7p329Z8MD0" />
 
-				<h2 class="mt-8 mb-2">Develop an "atomic habit"</h2>
-				<h3>Atomic habits is a "self-help" bestseller book</h3>
+				<h2 class="mt-16 mb-2">Develop an "atomic habit"</h2>
+				<h3 class="mb-2">Atomic habits is a "self-help" bestseller book</h3>
 				<RenderUrl
 					url="https://www.youtube.com/watch?v=PZ7lDrwYdZc&pp=ygUNYXRvbWljIGhhYmJpdA%3D%3D"
 				/>

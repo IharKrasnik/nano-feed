@@ -377,12 +377,16 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 					on:click={() => {
 						isGoalModalOpen = true;
 					}}
+					style={!project.goal && (project.waveProject?._id || project.page?._id)
+						? 'border: 1px orange solid;'
+						: ''}
 					class="small w-full mb-4 {project.goal ? 'flex justify-between items-center' : ''}"
 				>
 					{#if project.goal?.goal}
 						<div class="truncate">
 							🎯 {project.goal.goal}
 						</div>
+
 						<div class="ml-4 shrink-0">
 							{moment(project.goal.deadlineOn).format('MMM DD')}
 						</div>
@@ -406,15 +410,20 @@ We're working on SEO strategy for sustainable growth as we have bunch of validat
 				>
 					<h2 class="opacity-70">Views/Week</h2>
 
-					{#if project.statsCache && project.statsCache['7_days']}
-						<h2 class="text-2xl py-4">
-							{project.statsCache['7_days']?.totalUsersCount}
-						</h2>
+					{#if project.waveProject}
+						{#if project.statsCache && project.statsCache['7_days']?.totalUsersCount}
+							<h2 class="text-2xl py-4">
+								{project.statsCache['7_days']?.totalUsersCount}
+							</h2>
+						{:else}
+							refresh
+						{/if}
 					{:else if project.page}
 						<h2 class="text-2xl py-4">0</h2>
 					{:else}
 						<button
 							class="small mt-2"
+							style="border: 1px solid orange;"
 							on:click={() => {
 								isAnalyticsModalShown = true;
 							}}>📈 Add Analytics</button
