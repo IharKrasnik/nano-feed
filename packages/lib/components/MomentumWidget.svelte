@@ -40,13 +40,17 @@
 
 	let activeTab;
 
-	export let newMoment;
+	export let newMoment = {};
 
 	const setTab = (selectedTab) => {
 		activeTab = selectedTab;
 
 		if (selectedTab === 'new') {
-			newMoment = {};
+			newMoment = {
+				isSyncToTwitter: $currentUser.oauth?.twitter,
+				isSyncToLinkedIn: $currentUser.oauth?.linkedin
+			};
+
 			setTimeout(() => {
 				titleEl.focus();
 			}, 0);
@@ -340,7 +344,10 @@
 					</div>
 
 					<div class="flex items-center mt-8">
-						<Button class="_primary _small mr-8" onClick={publishNewMoment}>Publish Update</Button>
+						<div>
+							<Button class="_primary _small mr-8" onClick={publishNewMoment}>Publish Update</Button
+							>
+						</div>
 						<div class="cursor-pointer" on:click={() => setTab('url')}>Post URL instead</div>
 					</div>
 				{:else}{/if}
