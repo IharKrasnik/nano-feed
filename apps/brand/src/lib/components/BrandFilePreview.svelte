@@ -16,8 +16,8 @@
 
 <div
 	class="transition"
-	style="transform: scale(0.5); transform-origin: top left; max-height: {(file.size?.height ||
-		1080) / 2}px;"
+	style="transform: scale(0.25); transform-origin: top left; max-height: {(file.size?.height ||
+		1080) / 4}px;"
 >
 	{#key file}
 		<ImagePreview isPreview={true} page={file} />

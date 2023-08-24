@@ -253,13 +253,12 @@
 	<div class="fixed w-full" />
 
 	<div class="container mx-auto relative">
-		<div class="flex relative">
+		<div class="flex relative flex-col sm:flex-row">
 			<div
-				class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll"
-				style="padding-bottom: 100px;"
+				class="sm:fixed p-4 sm:p-0 sm:mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll sm:pb-[100px]"
 				in:fly={{ x: 50, duration: 150, delay: 150 }}
 			>
-				<div class="fixed top-0 z-10 w-[426px] mb-[70px]">
+				<div class="sm:fixed top-0 z-10 w-full sm:w-[426px] mb-[70px]">
 					<div
 						class="flex items-center justify-between w-full py-4 pr-4"
 						class:justify-between={!$currentUser}
@@ -336,7 +335,7 @@
 					<div class="mt-8">Launch your brand in seconds 👇</div>
 				{/if} -->
 
-				<div class="w-[426px] p-4 pl-0 mt-4 mr-4">
+				<div class="w-full sm:w-[426px] p-4 pl-0 mt-4 mr-4">
 					{#if !$fileToEdit}
 						{#if !$currentUser}
 							<h1 class="w-full text-xl mt-4" style="font-family: Montserrat">
@@ -473,10 +472,9 @@ Now go and create your carousel!
 
 			{#if $fileToEdit}
 				<div
-					class="fixed pl-8 flex items-center ml-[426px] mx-16 top-[0px] bg-[#0a120b] z-10 opacity-95 transition hover:opacity-100 h-[68px] w-full"
-					style="border-bottom: 1px rgba(255,255,255,.5) solid;"
+					class="sm:fixed sm:ml-[426px] sm:h-[70px] sm:pl-8 mt-8 py-8 sm:py-0 sm:mt-0 flex sm:flex-row flex-col items-center top-[0px] bg-[#0a120b] z-10 opacity-95 transition hover:opacity-100 w-full bg-zinc-800"
 				>
-					<div class="mr-4">
+					<div class="mr-4 py-2">
 						<Button
 							onClick={async () => {
 								await updateFile();
@@ -485,24 +483,24 @@ Now go and create your carousel!
 						>
 					</div>
 					{#if $fileToEdit.type === 'png'}
-						<div class="mr-4">
+						<div class="mr-4 py-2">
 							<Button
 								onClick={copyClipboard}
 								style="background: #27ced1; color: #111;"
 								class="w-full">⌨️ Copy Image To Clipboard</Button
 							>
 						</div>
-						<div class="mr-4">
+						<div class="mr-4 py-2">
 							<Button onClick={download} class="w-full" style="background: #c3ffc3; color: #111;"
 								>🗳 Download As PNG</Button
 							>
 						</div>
-						<div>
+						<div class="py-2">
 							<Button onClick={copyUrl} class="w-full">🔗 Copy URL</Button>
 						</div>
 					{:else}
 						{#if $fileToEdit.type === 'gif'}
-							<div class="mr-4">
+							<div class="mr-4 py-2">
 								<Button
 									onClick={() => download({ type: 'gif' })}
 									class="w-full"
@@ -510,7 +508,7 @@ Now go and create your carousel!
 								>
 							</div>
 						{/if}
-						<div class="mr-4">
+						<div class="mr-4 py-2">
 							<Button
 								onClick={() => download({ type: 'pdf' })}
 								class="w-full"
@@ -518,7 +516,7 @@ Now go and create your carousel!
 							>
 						</div>
 						{#if $fileToEdit.type === 'pdf'}
-							<div class="mr-4">
+							<div class="mr-4 py-2">
 								<Button
 									onClick={() => download({ type: 'gif' })}
 									class="w-full"
@@ -531,7 +529,10 @@ Now go and create your carousel!
 			{/if}
 
 			{#if $fileToEdit || brand?.files?.length}
-				<div class="relative ml-[426px] pb-[300px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
+				<div
+					class="relative sm:ml-[426px] pb-[300px] _preview bg-zinc-900 min-h-screen p-4 sm:mx-4"
+					in:fade={{ delay: 150 }}
+				>
 					{#if brand._id}
 						<div class="sticky top-[20px] w-full z-50 h-[0px]">
 							<div class="mx-auto">
@@ -559,7 +560,7 @@ Now go and create your carousel!
 							{/if}
 						</div>
 					{:else}
-						<div class="mt-8 relative grid grid-cols-3">
+						<div class="mt-8 relative grid grid-cols-1 sm:grid-cols-3">
 							{#each brand.files || [] as file}
 								<BrandFile
 									bind:file
@@ -620,7 +621,6 @@ Now go and create your carousel!
 	._preview {
 		width: 100%;
 		height: 100%;
-		border-left: 1px var(--border-color) solid;
 	}
 
 	._published-label {
