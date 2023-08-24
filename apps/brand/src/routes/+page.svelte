@@ -209,7 +209,7 @@
 
 		const link = document.createElement('a');
 		link.href = URL.createObjectURL(blob);
-		link.download = 'file';
+		link.download = 'momentum_brand_' + +new Date();
 		link.click();
 	};
 
