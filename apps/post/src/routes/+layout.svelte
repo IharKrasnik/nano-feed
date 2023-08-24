@@ -48,6 +48,16 @@
 			'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
 	/>
 
+	<meta name="twitter:title" content={$page.data.ogTitle} />
+	<meta name="twitter:description" content={$page.data.ogDescription} />
+	<meta name="twitter:card" content="summary_large_image" />
+
+	<meta
+		name="twitter:image"
+		content={$page.data.ogImage ||
+			'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
+	/>
+
 	{#if $page.data?.blog?.customCode}
 		{@html $page.data.blog.customCode}
 	{/if}
