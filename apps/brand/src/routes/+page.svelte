@@ -255,10 +255,10 @@
 	<div class="container mx-auto relative">
 		<div class="flex relative flex-col sm:flex-row">
 			<div
-				class="sm:fixed p-4 sm:p-0 sm:mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll sm:pb-[100px]"
+				class="sm:fixed p-4 sm:p-0 sm:mt-[70px] min-w-[426px] pt-0 sm:h-screen overflow-y-scroll sm:pb-[100px]"
 				in:fly={{ x: 50, duration: 150, delay: 150 }}
 			>
-				<div class="sm:fixed top-0 z-10 w-full sm:w-[426px] mb-[70px]">
+				<div class="sm:fixed top-0 z-10 w-full sm:w-[426px] sm:mb-[70px]">
 					<div
 						class="flex items-center justify-between w-full py-4 pr-4"
 						class:justify-between={!$currentUser}
@@ -573,7 +573,7 @@ Now go and create your carousel!
 					{/if}
 				</div>
 			{:else}
-				<div class="ml-[426px] w-full">
+				<div class="hidden sm:visible sm:ml-[426px] w-full">
 					<div
 						class="w-full h-screen self-stretch flex-col flex items-center justify-center"
 						in:slide

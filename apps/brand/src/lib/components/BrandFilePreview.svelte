@@ -25,9 +25,8 @@
 	class="transition"
 	style="transform: scale({isMobile
 		? '0.25'
-		: '0.5'}); transform-origin: top left; max-height: {(file.size?.height || 1080) / isMobile
-		? 4
-		: 2}px;"
+		: '0.5'}); transform-origin: top left; max-height: {(file.size?.height || 1080) /
+		(isMobile ? 4 : 2)}px;"
 >
 	{#key file}
 		<ImagePreview isPreview={true} page={file} />
