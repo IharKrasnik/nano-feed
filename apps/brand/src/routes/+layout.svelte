@@ -14,6 +14,7 @@
 	<meta name="description" content={$page.data.ogDescription} />
 	<meta name="twitter:description" content={$page.data.ogDescription} />
 	<meta name="og:description" content={$page.data.ogDescription} />
+	<meta name="twitter:card" content="summary_large_image" />
 
 	<link rel="icon" href="logo.svg" />
 
