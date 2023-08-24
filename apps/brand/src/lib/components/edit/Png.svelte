@@ -132,8 +132,15 @@
 
 			<select
 				bind:value={file.size.name}
-				on:change={(fileSizeName) => {
-					file.size = _.cloneDeep($fileSizes.find((f) => f.name === file.size.name));
+				on:change={(evt) => {
+					file.size = _.cloneDeep($fileSizes.find((f) => f.name === evt.target.value));
+
+					if (isParent && file.files) {
+						file.files = file.files.map((f) => {
+							f.size = file.size;
+							return f;
+						});
+					}
 				}}
 			>
 				{#each $fileSizes as fileSize}

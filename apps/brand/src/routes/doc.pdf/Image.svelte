@@ -142,10 +142,15 @@
 					{/if} -->
 
 <div
+	class="relative"
 	style="display: flex; flex-direction: column; {bgUrl
-		? `background-image: url(${bgUrl}); background-size: cover;`
+		? ``
 		: ''}; {cssStyles}; font-family: {textFontName};  min-width: {width}px; min-height: {height}px;"
 >
+	{#if bgUrl}
+		<img src={bgUrl} class="absolute w-full h-full object-cover" style="z-index: -1;" />
+	{/if}
+
 	<div
 		class="og transition"
 		style=" background: url('https://i.stack.imgur.com/GySvQ.png'); background-color: {bgColor}; color: {textColor};"

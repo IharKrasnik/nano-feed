@@ -19,7 +19,7 @@
 
 	let updateFile = async () => {
 		let updatedFile = await put(`brands/files/${file._id}`, file);
-
+		updatedFile.updatedOn = new Date();
 		onUpdated(updatedFile);
 	};
 

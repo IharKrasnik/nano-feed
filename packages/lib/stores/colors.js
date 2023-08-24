@@ -69,7 +69,7 @@ colors.forEach((c) => {
 	c.getTheme = () => {
 		return {
 			backgroundColor: c.value,
-			textColor: c.isDarkColor ? '#fefefe§' : '#111111',
+			textColor: c.isDarkColor ? '#fefefe' : '#111111',
 			theme: c.isDarkColor ? 'dark' : 'light'
 		};
 	};

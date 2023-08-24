@@ -29,6 +29,4 @@
 	</div>
 {/if}
 
-{#if $currentUser}
-	<Dock />
-{/if}
+<Dock />

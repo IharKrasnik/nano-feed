@@ -246,6 +246,7 @@
 						bind:checked={newMoment.isSyncToLinkedIn}
 					/>Sync to LinkedIn
 				</div>
+
 				<Button class="_primary _small mt-8" onClick={publishNewMoment}>Publish Update</Button>
 			{/if}
 

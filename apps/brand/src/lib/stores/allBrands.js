@@ -17,12 +17,9 @@ let prevUser;
 
 if (browser) {
 	currentUser.subscribe((user) => {
-		if (user) {
-			if (prevUser?._id !== user._id) {
-				update();
-				prevUser = user;
-			}
-		} else if (!getFromStore(isUserLoading)) {
+		if (prevUser?._id !== user?._id) {
+			update();
+			prevUser = user;
 		}
 	});
 }

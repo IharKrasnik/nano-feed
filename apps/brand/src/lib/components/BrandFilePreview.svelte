@@ -15,8 +15,11 @@
 </script>
 
 <div
+	class="transition"
 	style="transform: scale(0.5); transform-origin: top left; max-height: {(file.size?.height ||
 		1080) / 2}px;"
 >
-	<ImagePreview isPreview={true} page={file} />
+	{#key file}
+		<ImagePreview isPreview={true} page={file} />
+	{/key}
 </div>

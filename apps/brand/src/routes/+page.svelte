@@ -2,6 +2,7 @@
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
 	import { BRAND_URL } from 'lib/env';
+	import getRandomEmoji from 'lib/services/getRandomEmoji';
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
@@ -61,7 +62,7 @@
 	let defaultPng = {
 		name: 'my awesome brand',
 		type: 'png',
-		title: 'Create nice looking image 🤩',
+		title: 'Create nice image 🤩',
 		subtitle: 'Use it for social media, blog articles or OpenGraph tags',
 		size: $fileSizes.find((size) => size.name === 'horizontal'),
 		theme: _.sample($colors).getTheme()
@@ -97,6 +98,13 @@
 		size = null,
 		files = null
 	} = defaultPng) => {
+		if ($currentUser && !brand._id) {
+			if (!brand.name) {
+				brand.name = 'default';
+			}
+			brand = await publishBrand();
+		}
+
 		brand.files = brand.files || [];
 
 		_.each(files || [], (f) => {
@@ -230,6 +238,15 @@
 
 		navigator.clipboard.writeText(url);
 	};
+
+	// $: if ($allBrands && !$allBrands.length) {
+	// 	brand = {
+	// 		title: 'Default Brand',
+	// 		logo: getRandomEmoji()
+	// 	};
+
+	// 	publishBrand();
+	// }
 </script>
 
 {#if !$currentUser || $allBrands}
@@ -319,33 +336,15 @@
 					<div class="mt-8">Launch your brand in seconds 👇</div>
 				{/if} -->
 
-				<div class="w-[426px] p-4 pl-0 mr-4">
-					<div class="flex items-center mb-2">
-						<!-- {#if brand._id}
-							<EmojiPicker theme="dark" bind:icon={brand.logo} />
-							<div class="ml-2">
-								<EditColorPicker
-									bind:color={brand.bgColor}
-									onUpdated={(color) => {
-										if (color.isDarkColor) {
-											brand.theme = {
-												theme: 'dark',
-												textColor: '#fefefe'
-											};
-										} else {
-											brand.theme = {
-												theme: 'light',
-												textColor: '#111111'
-											};
-										}
-									}}
-								/>
-							</div>
-						{/if} -->
-					</div>
-
+				<div class="w-[426px] p-4 pl-0 mt-4 mr-4">
 					{#if !$fileToEdit}
-						{#if !brand._id}
+						{#if !$currentUser}
+							<h1 class="w-full text-xl mt-4" style="font-family: Montserrat">
+								Create nice looking visuals for your startup media in seconds 👇
+							</h1>
+						{/if}
+
+						{#if $currentUser && !brand._id}
 							<div class="_section">
 								<div class="_title">Brand Name</div>
 
@@ -360,20 +359,6 @@
 							</div>
 						{/if}
 					{:else}
-						<!-- <div class="_section">
-							<div class="_title">Title</div>
-
-							<div>
-								<textarea
-									type="text"
-									rows="4"
-									class="w-full mb-4"
-									bind:value={brand.title}
-									placeholder="Build a better product in public and grow your audience early"
-								/>
-							</div>
-						</div> -->
-
 						<div
 							class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 							on:click={() => {
@@ -405,100 +390,83 @@
 							}}
 						/>
 					{/if}
-					<!-- 
-					{#if brand._id}
-						<div class="_section">
-							<div class="_title">Image</div>
-
-							<div>
-								<FileInput class="w-full" bind:url={brand.imageUrl} />
-							</div>
-						</div>
-					{/if} -->
 
 					{#if !$fileToEdit}
-						{#if brand?._id}
+						<Button
+							class="w-full flex items-center justify-center cursor-pointer mt-8"
+							onClick={() => addFile(defaultPng)}
+							>🎆 Create Single Image
+						</Button>
+
+						<div class="py-4 opacity-80">
+							Use static images for: <br />
+							• Social media posts <br />• OpenGraph images (meta tags) <br />• Blog Articles Covers
+						</div>
+
+						<div class="mt-8">
 							<Button
 								class="w-full flex items-center justify-center cursor-pointer"
-								onClick={() => addFile(defaultPng)}
-								>🎆 Create Single Image
+								onClick={() =>
+									addFile({
+										type: 'gif',
+										size: $fileSizes.find((f) => f.name === 'square'),
+										files: [
+											{ title: 'First frame', theme: _.sample($colors).getTheme() },
+											{ title: 'Second frame', theme: _.sample($colors).getTheme() }
+										]
+									})}
+								>🍿 Create GIF
 							</Button>
 
 							<div class="py-4 opacity-80">
-								Use static images for: <br />
-								• Social media posts <br />• OpenGraph images (meta tags) <br />• Blog Articles
-								Covers
+								Stand out in social media and emphasize your message with eye-catching animated
+								GIFs.
 							</div>
+						</div>
 
-							<div class="mt-8">
-								<Button
-									class="w-full flex items-center justify-center cursor-pointer"
-									onClick={() =>
-										addFile({
-											type: 'gif',
-											size: $fileSizes.find((f) => f.name === 'square'),
-											files: [
-												{ title: 'First frame', theme: _.sample($colors).getTheme() },
-												{ title: 'Second frame', theme: _.sample($colors).getTheme() }
-											]
-										})}
-									>🍿 Create GIF
-								</Button>
+						<div class="mt-8">
+							<Button
+								class="w-full flex items-center justify-center cursor-pointer"
+								onClick={() => {
+									let font = 'gaegu';
 
-								<div class="py-4 opacity-80">
-									Stand out in social media and emphasize your message with eye-catching animated
-									GIFs.
-								</div>
-							</div>
-
-							<div class="mt-8">
-								<Button
-									class="w-full flex items-center justify-center cursor-pointer"
-									onClick={() => {
-										let font = 'gaegu';
-
-										return addFile({
-											type: 'pdf',
-											size: $fileSizes.find((f) => f.name === 'square'),
-											theme: {
-												..._.sample($colors).getTheme(),
-												font
+									return addFile({
+										type: 'pdf',
+										size: $fileSizes.find((f) => f.name === 'square'),
+										theme: {
+											..._.sample($colors).getTheme(),
+											font
+										},
+										files: [
+											{
+												title: 'How to create a great LinkedIn carousel',
+												subtitle: 'And win your true fans'
 											},
-											files: [
-												{
-													title: 'How to create a great LinkedIn carousel',
-													subtitle: 'And win your true fans'
-												},
-												{
-													title: 'Repurpose your best-performing articles',
-													subtitle:
-														'LinkedIn carousel is a different way to present your long-form content.'
-												},
-												{
-													title: 'Prepare 5-6 titles with 2-sentence description',
-													subtitle: 'Just like you reading now'
-												},
-												{
-													title: 'End up with call to action',
-													subtitle: `Should they follow you, leave a comment, subscribe to waitlist, check full article?
+											{
+												title: 'Repurpose your best-performing articles',
+												subtitle:
+													'LinkedIn carousel is a different way to present your long-form content.'
+											},
+											{
+												title: 'Prepare 5-6 titles with 2-sentence description',
+												subtitle: 'Just like you reading now'
+											},
+											{
+												title: 'End up with call to action',
+												subtitle: `Should they follow you, leave a comment, subscribe to waitlist, check full article?
 See? It's up to you decide! 
 Now go and create your carousel!
 ⬅️`,
-													theme: { font, ...$colors.find((c) => c.value === '#FBC82E').getTheme() }
-												}
-											]
-										});
-									}}
-									>🎠 Create LinkedIn Carousel
-								</Button>
+												theme: { font, ...$colors.find((c) => c.value === '#FBC82E').getTheme() }
+											}
+										]
+									});
+								}}
+								>🎠 Create LinkedIn Carousel
+							</Button>
 
-								<div class="py-4 opacity-80">Create PDF to use as LinkedIn Carousel.</div>
-							</div>
-						{:else}
-							<div class="mt-8">
-								<button on:click={publishBrand}>Create first image</button>
-							</div>
-						{/if}
+							<div class="py-4 opacity-80">Create PDF to use as LinkedIn Carousel.</div>
+						</div>
 					{/if}
 				</div>
 			</div>
@@ -508,32 +476,61 @@ Now go and create your carousel!
 					class="fixed pl-8 flex items-center ml-[426px] mx-16 top-[0px] bg-[#0a120b] z-10 opacity-95 transition hover:opacity-100 h-[68px] w-full"
 					style="border-bottom: 1px rgba(255,255,255,.5) solid;"
 				>
+					<div class="mr-4">
+						<Button
+							onClick={async () => {
+								await updateFile();
+								$fileToEdit = null;
+							}}>💾 Save and Close</Button
+						>
+					</div>
 					{#if $fileToEdit.type === 'png'}
 						<div class="mr-4">
-							<Button onClick={copyClipboard} class="w-full">⌨️ Copy Image To Clipboard</Button>
+							<Button
+								onClick={copyClipboard}
+								style="background: #27ced1; color: #111;"
+								class="w-full">⌨️ Copy Image To Clipboard</Button
+							>
 						</div>
 						<div class="mr-4">
-							<Button onClick={download} class="w-full">🗳 Download As PNG</Button>
+							<Button onClick={download} class="w-full" style="background: #c3ffc3; color: #111;"
+								>🗳 Download As PNG</Button
+							>
 						</div>
 						<div>
 							<Button onClick={copyUrl} class="w-full">🔗 Copy URL</Button>
 						</div>
 					{:else}
+						{#if $fileToEdit.type === 'gif'}
+							<div class="mr-4">
+								<Button
+									onClick={() => download({ type: 'gif' })}
+									class="w-full"
+									style="background: #c3ffc3; color: #111;">🗳 Download As GIF</Button
+								>
+							</div>
+						{/if}
 						<div class="mr-4">
-							<Button onClick={() => download({ type: 'gif' })} class="w-full"
-								>🗳 Download As GIF</Button
+							<Button
+								onClick={() => download({ type: 'pdf' })}
+								class="w-full"
+								style="background: #c3ffc3; color: #111;">🗳 Download As PDF</Button
 							>
 						</div>
-						<div class="mr-4">
-							<Button onClick={() => download({ type: 'pdf' })} class="w-full"
-								>🗳 Download As PDF</Button
-							>
-						</div>
+						{#if $fileToEdit.type === 'pdf'}
+							<div class="mr-4">
+								<Button
+									onClick={() => download({ type: 'gif' })}
+									class="w-full"
+									style="background: #c3ffc3; color: #111;">🗳 Download As GIF</Button
+								>
+							</div>
+						{/if}
 					{/if}
 				</div>
 			{/if}
 
-			{#if brand.name || brand.description}
+			{#if $fileToEdit || brand?.files?.length}
 				<div class="relative ml-[426px] pb-[300px] _preview p-4 mx-4" in:fade={{ delay: 150 }}>
 					{#if brand._id}
 						<div class="sticky top-[20px] w-full z-50 h-[0px]">
@@ -575,42 +572,44 @@ Now go and create your carousel!
 					{/if}
 				</div>
 			{:else}
-				<div
-					class="w-full h-screen ml-[426px] self-stretch flex-col flex items-center justify-center"
-					in:slide
-				>
-					<svg
-						width="190"
-						height="114"
-						viewBox="0 0 190 114"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
+				<div class="ml-[426px] w-full">
+					<div
+						class="w-full h-screen self-stretch flex-col flex items-center justify-center"
+						in:slide
 					>
-						<rect width="190" height="114" rx="7" fill="#F5F5F5" />
-						<path
-							d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
-							stroke="#828282"
-							stroke-width="3"
-							stroke-linecap="round"
-						/>
-						<path
-							d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
-							stroke="#828282"
-							stroke-width="3"
-							stroke-linecap="round"
-						/>
-						<line
-							x1="89.5"
-							y1="84.5"
-							x2="100.5"
-							y2="84.5"
-							stroke="#828282"
-							stroke-width="3"
-							stroke-linecap="round"
-						/>
-					</svg>
+						<svg
+							width="190"
+							height="114"
+							viewBox="0 0 190 114"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<rect width="190" height="114" rx="7" fill="#F5F5F5" />
+							<path
+								d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
+								stroke="#828282"
+								stroke-width="3"
+								stroke-linecap="round"
+							/>
+							<path
+								d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
+								stroke="#828282"
+								stroke-width="3"
+								stroke-linecap="round"
+							/>
+							<line
+								x1="89.5"
+								y1="84.5"
+								x2="100.5"
+								y2="84.5"
+								stroke="#828282"
+								stroke-width="3"
+								stroke-linecap="round"
+							/>
+						</svg>
 
-					<div class="text-[#828282] mt-4">Your design will appear here</div>
+						<div class="text-[#828282] mt-4">Your design will appear here</div>
+					</div>
 				</div>
 			{/if}
 		</div>

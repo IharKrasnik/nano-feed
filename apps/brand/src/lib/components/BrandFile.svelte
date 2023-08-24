@@ -12,12 +12,23 @@
 	<div class="truncate opacity-80 mb-4">
 		{file.title || (file.files && file.files[0] && file.files[0].title)}.{file.type}
 	</div>
-	<div class="flex flex-grow-1 items-center">
+	<div
+		class="flex flex-grow-1 items-center bg-zinc-900 rounded-xl"
+		style="aspect-ratio: {file.size ? file.size.width / file.size.height : 1};"
+	>
 		<div class="rounded-xl">
 			{#if file.type === 'png'}
-				<img class="rounded-xl" src="og.png?fileId={file._id}" />
+				<img
+					class="rounded-xl w-full h-auto"
+					src="og.png?fileId={file._id}&date={+new Date()}"
+					style="aspect-ratio: {file.size ? file.size.width / file.size.height : 1};"
+				/>
 			{:else if file.type === 'gif'}
-				<img class="rounded-xl" src="doc.gif?fileId={file._id}" />
+				<img
+					class="rounded-xl w-full h-auto"
+					src="doc.gif?fileId={file._id}&date={+new Date()}"
+					style="aspect-ratio: {file.size ? file.size.width / file.size.height : 1};"
+				/>
 			{:else if file.type === 'pdf'}{/if}
 		</div>
 	</div>
