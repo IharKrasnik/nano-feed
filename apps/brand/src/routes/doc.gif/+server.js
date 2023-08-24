@@ -1,4 +1,5 @@
 import { get } from 'lib/api';
+import { isDev } from 'lib/env';
 import renderImage from './../doc.pdf/renderImage';
 import GifEncoder from 'gif-encoder';
 import getPixels from 'get-pixels';
@@ -37,9 +38,14 @@ export const GET = async ({ url }) => {
 		// Create a document
 		let gif = new GifEncoder(1080, 1080);
 
-		await mkdirp('./.tmp');
+		let dir = '/tmp';
 
-		let filePath = `.tmp/${parseInt(Math.random() * 1000)}-${+new Date()}.gif`;
+		if (isDev) {
+			dir = './.tmp';
+			await mkdirp(dir);
+		}
+
+		let filePath = `${dir}/${parseInt(Math.random() * 1000)}-${+new Date()}.gif`;
 
 		gif.pipe(fs.createWriteStream(filePath));
 
