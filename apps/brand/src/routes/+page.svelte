@@ -335,7 +335,7 @@
 					<div class="mt-8">Launch your brand in seconds 👇</div>
 				{/if} -->
 
-				<div class="w-full sm:w-[426px] sm:p-4 pl-0 mt-4 mr-4">
+				<div class="w-full sm:w-[426px] sm:p-8 sm:pl-0 p-0  mr-4">
 					{#if !$fileToEdit}
 						{#if !$currentUser}
 							<h1 class="w-full text-xl mt-4" style="font-family: Montserrat">
@@ -392,7 +392,7 @@
 
 					{#if !$fileToEdit}
 						<Button
-							class="w-full flex items-center justify-center cursor-pointer mt-8"
+							class="w-full flex items-center justify-center cursor-pointer mt-8 sm:mt-2"
 							onClick={() => addFile(defaultPng)}
 							>🎆 Create Single Image
 						</Button>
@@ -560,6 +560,10 @@ Now go and create your carousel!
 							{/if}
 						</div>
 					{:else}
+						<div class="flex justify-between items-center mx-4">
+							<h2 class="text-xl opacity-70">Your beautiful files</h2>
+							<a href="/explore">Explore 🤩</a>
+						</div>
 						<div class="mt-8 relative grid grid-cols-1 sm:grid-cols-3">
 							{#each brand.files || [] as file}
 								<BrandFile
@@ -573,7 +577,7 @@ Now go and create your carousel!
 					{/if}
 				</div>
 			{:else}
-				<div class="hidden sm:visible sm:ml-[426px] w-full">
+				<div class="hidden sm:block sm:ml-[426px] w-full">
 					<div
 						class="w-full h-screen self-stretch flex-col flex items-center justify-center"
 						in:slide
