@@ -5,7 +5,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
-	import { GOOGLE_LOGIN_URL } from 'lib/env';
+	import { GOOGLE_LOGIN_URL, TWITTER_LOGIN_URL } from 'lib/env';
 	import { get, post, put, del } from 'lib/api';
 	import currentUser from 'lib/stores/currentUser';
 	import tooltip from 'lib/use/tooltip';
@@ -13,6 +13,7 @@
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import Twitter from 'lib/icons/twitter.svelte';
 
 	let tasks = [];
 
@@ -24,9 +25,13 @@
 
 	let addTask = () => {
 		if (newTask.trim()) {
-			tasks = [newTask, ...tasks];
+			tasks = [...tasks, newTask];
 			newTask = '';
 		}
+	};
+
+	let removeTask = (task) => {
+		tasks = tasks.filter((t) => t !== task);
 	};
 
 	let onKeydown = (e) => {
@@ -64,7 +69,10 @@
 		let newEntry = await post('feed', {
 			title,
 			projects: [{ slug: streamSlug }],
-			content: `${tasks.map((task) => `✔️ ${task}`).join('\n')}` + '\n' + 'Report #buildinpublic',
+			content:
+				`${moment(date).format('MMM D')}, #buildinpublic report` +
+				'\n' +
+				`${tasks.map((task) => `✔️ ${task}`).join('\n')}`,
 			meta: {
 				date: moment(date).format('MMM DD, YYYY'),
 				tasks
@@ -82,75 +90,149 @@
 	};
 
 	getFeed();
+
+	let getLength = () => {
+		let message = `${moment(date).format('MMM D')}, #buildinpublic report`;
+		message += [...tasks, newTask].map((t) => `✔ ${t}`).join('\n');
+		return message.length;
+	};
+
+	let msgLength;
+
+	$: msgLength = getLength(newTask, tasks);
+
+	let syncToTwitter = async (feedId) => {
+		if (!$currentUser) {
+			goto(GOOGLE_LOGIN_URL);
+		}
+
+		if ($currentUser.oauth.twitter) {
+			let twitterData = await post(`feed/${feedId}/twitter`);
+
+			journalFeed = journalFeed.map((f) => {
+				if (f._id === feedId) {
+					f.twitterData = twitterData;
+				}
+
+				return f;
+			});
+		} else {
+			const { url } = await get(TWITTER_LOGIN_URL);
+			window.document.location.href = url;
+		}
+	};
 </script>
 
 <div class="container max-w-[700px] mx-auto">
-	{#if isShown}
+	<div class="mt-16 p-4 sm:p-0">
+		<div class="mb-4 opacity-80 text-lg">
+			{title}
+		</div>
+		<h2 class="text-3xl font-bold">What have you achieved today?</h2>
+
+		<div class="my-8">
+			<textarea
+				class="w-full text-lg"
+				rows="1"
+				placeholder="Describe one achievement shortly"
+				autofocus
+				bind:value={newTask}
+				on:keydown={onKeydown}
+			/>
+
+			<div class="flex justify-end mt-4">
+				<div>
+					{msgLength} / 280
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{#if tasks.length}
 		<div
-			class="blob bg-[#edeff6] sm:mx-0 sm:my-8 mx-4 my-8 rounded-xl sm:rounded-[40px] p-8 sm:p-16 mt-8"
-			in:fly={{ y: 50, duration: 150 }}
+			class="bg-[#edeff6] sm:mx-0 sm:my-8 mx-4 my-8 rounded-xl sm:rounded-[40px] p-8 sm:p-16 mt-8"
 		>
-			<div class="mb-4 opacity-80 text-lg">
-				{title}
-			</div>
-			<h1 class="text-3xl font-bold">What have you achieved today?</h1>
-
-			<div class="my-8">
-				<textarea
-					class="w-full text-lg"
-					rows="1"
-					placeholder="Describe one achievement shortly"
-					bind:value={newTask}
-					on:keydown={onKeydown}
-				/>
-			</div>
-
 			<div class="mb-8">
-				{#each tasks as task}
-					<div class="mb-2">
-						✔️ {task}
+				{#if tasks.length}
+					<div class="mb-4">
+						{moment(date).format('MMM D')}, #buildinpublic report
 					</div>
-				{/each}
+
+					{#each tasks as task}
+						<div class="flex mb-2 w-full justify-between">
+							<div>
+								✔️ {task}
+							</div>
+							<div on:click={() => removeTask(task)}>🗑</div>
+						</div>
+					{/each}
+				{/if}
 			</div>
 
-			<button class="mt-4 text-lg cursor-pointer" on:click={submitJournalEntry}>Publish</button>
+			<button class="mt-4 text-lg nohover" on:click={submitJournalEntry} disabled={!tasks.length}
+				>Publish</button
+			>
 		</div>
 	{/if}
 
-	<div class="my-8 p-4">
+	<div class="my-8 p-4 sm:p-0">
 		<img
 			class="max-w-[150px] mx-auto my-8"
 			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693763239679-image.png"
 		/>
 
 		{#if !$currentUser && isShown}
-			<div class="w-full flex justify-center" in:fade={{ delay: 300 }}>
+			<!-- <div class="w-full flex justify-center" in:fade={{ delay: 300 }}>
 				<a
 					class="button"
 					style="background: none; border: 3px #555 solid; color: #555;"
 					href={GOOGLE_LOGIN_URL}
 					>Log in to save and publish your diary
 				</a>
-			</div>
+			</div> -->
 
-			<img
+			<!-- <img
 				class="max-w-[150px] mx-auto my-8"
 				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693763239679-image.png"
-			/>
+			/> -->
 		{/if}
 
 		{#each journalFeed as feedItem (feedItem._id)}
+			{#if !feedItem.twitterData}
+				<div
+					class="flex items-center mb-4 grayscale hover:grayscale-0 cursor-pointer transition"
+					on:click={() => syncToTwitter(feedItem._id)}
+				>
+					<div class="w-[15px] mr-2"><Twitter /></div>
+					Sync to X
+				</div>
+			{/if}
+
 			<div class="w-full flex justify-between" in:fade>
-				<h3 class="text-2xl font-bold">{feedItem.title}</h3>
+				<h3 class="text-2xl font-bold flex items-center">
+					{feedItem.title}
+					{#if feedItem.twitterData}
+						<a
+							class="block ml-2"
+							href="https://twitter.com/nano_fund/status/{feedItem.twitterData.id}"
+							target="_blank"
+						>
+							<div class="w-[25px]">
+								<Twitter />
+							</div>
+						</a>
+					{/if}
+				</h3>
+
 				<div class="cursor-pointer" on:click={() => removeFeedItem(feedItem._id)}>🗑</div>
 			</div>
-
-			<div class="my-4 whitespace-pre-wrap text-lg opacity-70">
+			{#if feedItem.twitterData}{/if}
+			<div class="my-4 whitespace-pre-wrap text-lg">
 				{feedItem.content.replace('Report #buildinpublic', '')}
 			</div>
 
 			<img
-				class="max-w-[150px] mx-auto"
+				class="max-w-[150px] mx-auto my-4"
 				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693763239679-image.png"
 			/>
 		{/each}
