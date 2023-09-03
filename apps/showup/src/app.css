@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	font-family: Inter;
+	color: #111;
+
+	--background-color: #f8f9fb;
+
+	--input-background-color: transparent;
+
+	--accent-color: #8b786d;
+	--button-background-color: #111;
+	--button-color: #fff;
+	--border-color: rgba(255, 255, 255, 0.3);
+
+	background: var(--background-color);
+}
+
+._border-brand {
+	border: 1px var(--border-color) solid;
+}
+
+._heading {
+	font-weight: 700;
+	font-family: Archivo;
+}
+
+._section {
+	border: 1px var(--border-color) solid;
+	border-radius: 8px;
+	padding: 16px;
+	margin-bottom: 8px;
+}
+
+._title {
+	margin-bottom: 12px;
+}
+
+._link {
+	cursor: pointer;
+	color: var(--accent-color);
+}
+
+.number-tag {
+	background-color: #0c120b;
+	color: white;
+	position: relative;
+	top: -1px;
+	left: 2px;
+	padding: 1px 6px 1px 6px;
+	border-radius: 9px;
+	font-size: 13px;
+	opacity: 0.9;
+}
+
+input[type='checkbox'] {
+	accent-color: var(--accent-color);
+}
+
+._modal-content {
+	background: white;
+}
+
+._modal-backdrop {
+	display: none;
+}
+
+input {
+	background: none;
+	border-bottom: 1px #c3c5cc solid;
+	padding: 8px 0px;
+	font-size: 14px;
+}
+
+input::ou select {
+	background: var(--input-background-color);
+	padding: 8px 12px;
+	font-size: 14px;
+	border-radius: 8px;
+}
+
+textarea {
+	background: var(--input-background-color);
+	padding: 16px 0px;
+	border-bottom: 1px #c3c5cc solid;
+}
+
+textarea:focus,
+input:focus {
+	outline: none;
+}
+
+button,
+a.button {
+	background: var(--button-background-color);
+	color: var(--button-color);
+	cursor: pointer;
+	border-radius: 24px;
+	padding: 10px 24px;
+}
+
+button._small {
+	border-radius: 8px;
+	padding: 5px 9px;
+}
+
+button._primary {
+	background-color: var(--accent-color);
+	color: white;
+}
+
+button._green {
+	background: green;
+}
+
+button._secondary {
+	border: 1px var(--accent-color) solid;
+}
