@@ -15,7 +15,7 @@
 	import Avatar from 'lib/components/Avatar.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
-	import Twitter from 'lib/icons/Twitter.svelte';
+	import Twitter from 'lib/icons/twitter.svelte';
 
 	let streamSlug = 'show-up-daily';
 
