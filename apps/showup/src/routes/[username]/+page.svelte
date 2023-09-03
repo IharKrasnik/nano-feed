@@ -36,8 +36,7 @@
 	const getFeed = async () => {
 		let feedResult = await get('feed', {
 			projectSlug: streamSlug,
-			creatorUsername: $page.params.username.replace('@', ''),
-			isMyOnly: true
+			creatorUsername: $page.params.username.replace('@', '')
 		});
 
 		journalFeed = feedResult.results;
@@ -91,20 +90,11 @@
 {/if}
 
 {#if !$currentUser && isShown}
-	<img
-		class="max-w-[150px] mx-auto my-8"
-		src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693763239679-image.png"
-	/>
-
-	<div class="w-full flex justify-center" in:fade={{ delay: 300 }}>
+	<div class="w-full flex justify-center mt-16" in:fade={{ delay: 300 }}>
 		<a class="button" style="background: none; border: 3px #555 solid; color: #555;" href={'/'}
 			>Publish your journal
 		</a>
 	</div>
-	<img
-		class="max-w-[150px] mx-auto my-8"
-		src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693763239679-image.png"
-	/>
 {/if}
 
 <style>
