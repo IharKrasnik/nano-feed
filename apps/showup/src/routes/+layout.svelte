@@ -10,10 +10,8 @@
 	<title>{$page.data.ogTitle}</title>
 	<meta name="title" content={$page.data.ogTitle || 'Show Up Daily'} />
 	<meta name="description" content={$page.data.ogDescription || 'Your #buildinpublic journal'} />
-	<meta
-		name="og:description"
-		content="{$page.data.ogDescription || 'Your #buildinpublic journal'}}"
-	/>
+	<meta name="og:description" content={$page.data.ogDescription || 'Your #buildinpublic journal'} />
+
 	<meta
 		name="og:image"
 		content={$page.data.ogImage ||
