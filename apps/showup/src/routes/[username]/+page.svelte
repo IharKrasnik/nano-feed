@@ -30,13 +30,13 @@
 	let creator = null;
 
 	const getCreator = async () => {
-		creator = await get(`creators/${$page.params.username}`);
+		creator = await get(`creators/${$page.params.username.replace('@', '')}`);
 	};
 
 	const getFeed = async () => {
 		let feedResult = await get('feed', {
 			projectSlug: streamSlug,
-			creatorUsername: $page.params.username,
+			creatorUsername: $page.params.username.replace('@', ''),
 			isMyOnly: true
 		});
 
