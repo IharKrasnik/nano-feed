@@ -86,7 +86,10 @@
 
 <div class="container max-w-[700px] mx-auto">
 	{#if isShown}
-		<div class="blob bg-[#edeff6] p-16 mt-8" in:fly={{ y: 50, duration: 150 }}>
+		<div
+			class="blob bg-[#edeff6] sm:mx-0 sm:my-8 mx-4 my-8 rounded-xl sm:rounded-[40px] p-8 sm:p-16 mt-8"
+			in:fly={{ y: 50, duration: 150 }}
+		>
 			<div class="mb-4 opacity-80 text-lg">
 				{title}
 			</div>
@@ -114,7 +117,7 @@
 		</div>
 	{/if}
 
-	<div class="my-8">
+	<div class="my-8 p-4">
 		<img
 			class="max-w-[150px] mx-auto my-8"
 			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693763239679-image.png"
@@ -156,6 +159,6 @@
 
 <style>
 	.blob {
-		border-radius: 40px;
+		/* border-radius: 40px; */
 	}
 </style>
