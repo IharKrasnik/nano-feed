@@ -118,8 +118,8 @@ a.button.tab.selected {
 	/* background-color: rgba(255, 255, 255, 0.3); */
 }
 
-button:hover:not([disabled]),
-a.button:hover:not([disabled]) {
+button:hover:not([disabled]):not([.nohover]),
+a.button:hover:not([disabled]):not([.nohover]) {
 	cursor: pointer;
 	background: rgba(255, 255, 255, 0.1);
 }
