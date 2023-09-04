@@ -648,25 +648,25 @@
 			<div class="mb-4 break-inside-avoid">
 				<h1 class="mb-4">Momentum Playbook</h1>
 
-				<FeedItem feedItem={momentumPlaybook} />
+				<FeedItem feedItem={momentumPlaybook} hideLikes />
 			</div>
 
 			<div class="mb-4 break-inside-avoid">
 				<h1 class="mb-4">Nano Grit</h1>
 
-				<FeedItem feedItem={nanoGrit} />
+				<FeedItem feedItem={nanoGrit} hideLikes />
 			</div>
 
 			<div class="mb-4 break-inside-avoid">
 				<h1 class="mb-4">ClipWing Journal (Case Study)</h1>
 
-				<FeedItem feedItem={clipWingJournal} />
+				<FeedItem feedItem={clipWingJournal} hideLikes />
 			</div>
 
 			<div class="mb-4 break-inside-avoid">
 				<h1 class="mb-4">Welcome To The Internet</h1>
 
-				<FeedItem feedItem={welcomeToTheInternet} />
+				<FeedItem feedItem={welcomeToTheInternet} hideLikes />
 			</div>
 		</div>
 
