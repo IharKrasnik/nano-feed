@@ -11,15 +11,16 @@
 
 <svelte:head>
 	<title>{$page.data.ogTitle}</title>
-	<meta name="title" content={$page.data.ogTitle || 'Build in public journal'} />
-	<meta name="description" content={$page.data.ogDescription || 'Share your progress daily'} />
-	<meta name="og:description" content={$page.data.ogDescription || 'Share your progress daily'} />
+	<meta name="title" content={$page.data.ogTitle} />
+	<meta name="description" content={$page.data.ogDescription} />
+	<meta name="og:description" content={$page.data.ogDescription} />
 
-	<meta
-		name="og:image"
-		content={$page.data.ogImage ||
-			'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693764860336-image.png'}
-	/>
+	<meta name="og:image" content={$page.data.ogImage} />
+
+	<meta name="twitter:title" content={$page.data.ogTitle} />
+	<meta name="twitter:description" content={$page.data.ogDescription} />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:image" content={$page.data.ogImage} />
 </svelte:head>
 
 <div id="modal-portal" />

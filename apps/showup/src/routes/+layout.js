@@ -6,5 +6,11 @@ import { get } from 'lib/api';
 export async function load({ url, params, session, cookies }) {
 	let authData = await authClientGuard({ url, params, session }, 'Build In Public Journal');
 
-	return { ...authData };
+	return {
+		...authData,
+		ogTitle: 'Build In Public Journal',
+		ogDescription: 'Share your progress daily',
+		ogImage:
+			'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693764860336-image.png'
+	};
 }
