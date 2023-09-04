@@ -19,6 +19,9 @@
 
 	let newTask = '';
 
+	let isToday = true;
+	let isYesterday = false;
+
 	let streamSlug = 'show-up-daily';
 
 	let journalFeed = [];
@@ -56,22 +59,43 @@
 		journalFeed = feedResult.results;
 	};
 
-	let date = moment();
-	let title = moment(date).format('dddd, MMM DD');
+	let date = moment().startOf('day');
+
+	let formatDate = (d) => moment(date).format('dddd, MMM DD');
+
+	let goBack = () => {
+		date = date.clone().subtract(1, 'days');
+
+		if (isToday) {
+			isYesterday = true;
+			isToday = false;
+		} else if (isYesterday) {
+			isYesterday = false;
+		}
+	};
+
+	let goForward = () => {
+		date = date.clone().add(1, 'days');
+
+		if (isYesterday) {
+			isToday = true;
+			isYesterday = false;
+		} else {
+			isYesterday = date.format('YYYY-MM-DD') === moment().subtract(1, 'day').format('YYYY-MM-DD');
+		}
+	};
 
 	const submitJournalEntry = async () => {
-		let date = new Date();
-
 		if (newTask) {
 			addTask();
 		}
 
 		let newEntry = await post('feed', {
-			title,
+			title: formatDate(date),
 			projects: [{ slug: streamSlug }],
 			content:
-				`${moment(date).format('MMM D')}, #buildinpublic report` +
-				'\n' +
+				`${moment(date).format('MMM D')}, #buildinpublic report.` +
+				'\n\n' +
 				`${tasks.map((task) => `✔️ ${task}`).join('\n')}`,
 			meta: {
 				date: moment(date).format('MMM DD, YYYY'),
@@ -125,10 +149,30 @@
 
 <div class="container max-w-[700px] mx-auto">
 	<div class="mt-16 p-4 sm:p-0">
-		<div class="mb-4 opacity-80 text-lg">
-			{title}
+		<div class="relative mb-4 opacity-80 text-lg flex">
+			<div
+				class="absolute left-0 top-0 pr-2 cursor-pointer opacity-70"
+				style="transform: translateX(-100%);"
+				on:click={goBack}
+			>
+				←
+			</div>
+			<div>
+				{formatDate(date)}
+			</div>
+
+			{#if !isToday}
+				<div class="pl-2 cursor-pointer opacity-70" on:click={goForward}>→</div>
+			{/if}
 		</div>
-		<h2 class="text-3xl font-bold">What have you achieved today?</h2>
+
+		<h2 class="text-3xl font-bold">
+			What have you achieved {isToday
+				? 'today'
+				: isYesterday
+				? 'yesterday'
+				: date.format('ddd, MMM DD')}?
+		</h2>
 
 		<div class="my-8">
 			<textarea
@@ -155,7 +199,7 @@
 			<div class="mb-8">
 				{#if tasks.length}
 					<div class="mb-4">
-						{moment(date).format('MMM D')}, #buildinpublic report
+						{moment(date).format('MMM D')}, #buildinpublic report. <br />
 					</div>
 
 					{#each tasks as task}
