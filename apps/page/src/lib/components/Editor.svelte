@@ -114,7 +114,6 @@
 			page.sections = [...page.sections];
 		}
 
-		debugger;
 		if (
 			!force &&
 			$pageDraft[page.slug] &&
