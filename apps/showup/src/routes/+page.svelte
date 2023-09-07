@@ -14,7 +14,9 @@
 	import Button from 'lib/components/Button.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
-
+	import TrashIcon from '$lib/icons/trash.svelte';
+	import EnterIcon from '$lib/icons/enter.svelte';
+	import ArrowIcon from '$lib/icons/arrow.svelte';
 	import lastEmoji from '$lib/stores/lastEmoji';
 
 	import Twitter from 'lib/icons/twitter.svelte';
@@ -202,40 +204,115 @@
 
 <div class="container max-w-[700px] mx-auto">
 	<div class="mt-16 p-4 sm:p-0">
-		<div class="relative mb-4 opacity-80 text-lg flex">
+		<div class="relative flex items-center mb-4 opacity-80 text-lg flex mx-8 sm:mx-0">
 			<div
 				class="absolute left-0 top-0 pr-2 cursor-pointer opacity-70"
 				style="transform: translateX(-100%);"
 				on:click={goBack}
 			>
-				←
+				<ArrowIcon />
 			</div>
-			<div>
+
+			<div class="mt-[-1px]">
 				{formatDate(date)}
 			</div>
 
 			{#if !isToday}
-				<div class="pl-2 cursor-pointer opacity-70" on:click={goForward}>→</div>
+				<div class="pl-2 cursor-pointer opacity-70" on:click={goForward}>
+					<div class="rotate-180">
+						<ArrowIcon />
+					</div>
+				</div>
 			{/if}
 		</div>
 
 		<h2 class="text-3xl font-bold">
-			What have you achieved {isToday
-				? 'today'
-				: isYesterday
-				? 'yesterday'
-				: date.format('ddd, MMM DD')}?
+			{#if $currentUser}
+				Hi, {$currentUser.fullName.split(' ')[0]}!
+			{/if}
+			What have you achieved?
+
+			<!-- {isToday ? 'today' : isYesterday ? 'yesterday' : date.format('ddd, MMM DD')}? -->
 		</h2>
 
-		<div class="my-8">
-			<textarea
-				class="w-full text-lg"
-				rows="1"
-				placeholder="Describe one achievement shortly"
-				autofocus
-				bind:value={newTask.text}
-				on:keydown={onKeydown}
-			/>
+		<div class="mt-12 text-lg">
+			{moment(date).format('MMM D')}, #buildinpublic report. <br />
+		</div>
+
+		<div class="mb-8 mt-4 sm:mx-0 mx-8">
+			<div class="relative flex items-center">
+				<div
+					class="absolute top-0 left-0"
+					style="top: 50%; left: -16px; transform: translateX(-100%) translateY(-50%); z-index: 21;"
+				>
+					<EmojiPicker
+						onUpdated={(icon) => {
+							$lastEmoji = icon;
+						}}
+						isNoCustom
+						bind:icon={newTask.emoji}
+					/>
+				</div>
+
+				<input
+					class="w-full text-lg"
+					rows="1"
+					placeholder="Describe one achievement shortly..."
+					autofocus
+					bind:value={newTask.text}
+					on:keydown={onKeydown}
+				/>
+			</div>
+
+			{#each tasks as task, i}
+				<div class="relative flex items-center">
+					<div
+						class="absolute top-0 left-0"
+						style="top: 50%; left: -16px; transform: translateX(-100%) translateY(-50%); z-index: {20 -
+							i};"
+					>
+						<EmojiPicker
+							onUpdated={(icon) => {
+								$lastEmoji = icon;
+							}}
+							isNoCustom
+							bind:icon={task.emoji}
+						/>
+					</div>
+
+					<input
+						class="w-full text-lg"
+						rows="1"
+						placeholder="Describe one achievement shortly"
+						bind:value={task.text}
+						on:keydown={(e) => {
+							if (e.key === 'Enter') {
+								e.preventDefault();
+							}
+						}}
+					/>
+
+					<div
+						class="absolute top-0 right-0 cursor-pointer"
+						style="right: -16px; top: 50%; transform: translateX(100%) translateY(-50%);"
+						on:click={() => removeTask(task)}
+					>
+						<TrashIcon />
+					</div>
+				</div>
+			{/each}
+
+			{#if newTask.text}
+				<div
+					in:fade
+					class="flex items-center text-sm bg-[#e4e4e4] text-[#646972] mt-8 rounded flex-0 px-2 py-1 cursor-pointer"
+					on:click={addTask}
+					style="width: max-content;"
+				>
+					<EnterIcon />
+					<div class="ml-2">Add {tasks.length ? 'one more' : ''} achievement</div>
+				</div>
+			{/if}
 
 			<div class="flex justify-end mt-4">
 				<div>
@@ -245,8 +322,16 @@
 		</div>
 	</div>
 
+	<div class="mb-8  mx-4 sm:mx-0">
+		<button
+			class="text-lg nohover sm:w-auto w-full "
+			on:click={submitJournalEntry}
+			disabled={!tasks.length}>Publish</button
+		>
+	</div>
+
 	{#if tasks.length}
-		<div
+		<!-- <div
 			class="bg-[#edeff6] sm:mx-0 sm:my-8 mx-4 my-8 rounded-xl sm:rounded-[40px] p-8 sm:p-16 mt-8"
 		>
 			<div class="mb-8">
@@ -278,7 +363,7 @@
 			<button class="mt-4 text-lg nohover" on:click={submitJournalEntry} disabled={!tasks.length}
 				>Publish</button
 			>
-		</div>
+		</div> -->
 	{/if}
 
 	<div class="my-8 p-4 sm:p-0">
@@ -335,7 +420,9 @@
 					{/if}
 				</h3>
 
-				<div class="cursor-pointer" on:click={() => removeFeedItem(feedItem._id)}>🗑</div>
+				<div class="cursor-pointer" on:click={() => removeFeedItem(feedItem._id)}>
+					<TrashIcon />
+				</div>
 			</div>
 			{#if feedItem.twitterData}{/if}
 

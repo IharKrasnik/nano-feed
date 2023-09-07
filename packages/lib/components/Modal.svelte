@@ -42,7 +42,7 @@
 				<div class="absolute _modal-backdrop inset-0 transition-opacity" aria-hidden="true" />
 
 				<div
-					class="modal-content max-h-full overflow-y-scroll absolute inline-block align-bottom rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
+					class="modal-content max-h-full overflow-y-auto absolute inline-block align-bottom rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
 					use:clickOutside
 					on:clickOutside={closeModal}
 					style={maxWidth ? `max-width: ${maxWidth}px;` : ''}

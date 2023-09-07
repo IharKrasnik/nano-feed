@@ -21,6 +21,7 @@
 	<meta name="twitter:description" content={$page.data.ogDescription} />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content={$page.data.ogImage} />
+	<link rel="icon" href="logo.png" />
 </svelte:head>
 
 <div id="modal-portal" />

@@ -40,7 +40,7 @@
 	<Emoji bind:emoji={icon} />
 
 	{#if isEmojiPickerShown}
-		<div class="absolute top-0 mt-32 z-40" in:fly={{ y: 50, duration: 150 }}>
+		<div class="absolute top-0 mt-16" style="z-index: 100;" in:fly={{ y: 50, duration: 150 }}>
 			<emoji-picker
 				class={theme}
 				on:emoji-click={(evt) => {
