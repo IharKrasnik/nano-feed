@@ -6,7 +6,12 @@
 
 	let isEmojiPickerShown = false;
 
+	let clazz = '';
+
+	export { clazz as class };
+
 	export let icon;
+	export let isNoCustom = false;
 	export let defaultIcon;
 	export let onUpdated = () => {};
 
@@ -25,7 +30,7 @@
 </script>
 
 <div
-	class="relative cursor-pointer"
+	class="relative cursor-pointer {clazz}"
 	on:click={() => (isEmojiPickerShown = true)}
 	use:clickOutside
 	on:clickOutside={() => {
@@ -46,18 +51,20 @@
 				}}
 			/>
 
-			<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede]">
-				<h3 class="font-bold mb-2">Custom Logo</h3>
-				<FileInput
-					{theme}
-					class="w-full"
-					bind:url
-					on:fileUploaded={({ detail }) => {
-						console.log('detail', detail);
-						return onUpdated(detail.url);
-					}}
-				/>
-			</div>
+			{#if !isNoCustom}
+				<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede]">
+					<h3 class="font-bold mb-2">Custom Logo</h3>
+					<FileInput
+						{theme}
+						class="w-full"
+						bind:url
+						on:fileUploaded={({ detail }) => {
+							console.log('detail', detail);
+							return onUpdated(detail.url);
+						}}
+					/>
+				</div>
+			{/if}
 
 			{#if icon}
 				<div
@@ -66,7 +73,7 @@
 						: 'bg-black'} p-4 border border-[#e0dede] rounded-bl-xl rounded-br-xl"
 				>
 					<div
-						class="w-full text-center cursor-pointer bg-white"
+						class="w-full text-center cursor-pointer"
 						on:click={() => {
 							icon = null;
 							url = null;
