@@ -156,26 +156,28 @@
 				<FileInput bind:url={stream.bannerUrl} />
 			</div>
 
-			<div class="mb-8">
-				<label> End-Of-Month Goal </label>
+			{#if !creator}
+				<div class="mb-8">
+					<label> End-Of-Month Goal </label>
 
-				<div class="opacity-70">
-					By {moment().endOf('month').format('MMMM, DD')}, I want to get..
+					<div class="opacity-70">
+						By {moment().endOf('month').format('MMMM, DD')}, I want to get..
+					</div>
+
+					<input
+						type="text"
+						class="block mt-4"
+						bind:value={stream.goal}
+						placeholder="+100 paid users"
+					/>
 				</div>
 
-				<input
-					type="text"
-					class="block mt-4"
-					bind:value={stream.goal}
-					placeholder="+100 paid users"
-				/>
-			</div>
+				<div class="mb-8">
+					<label> Video Pitch </label>
 
-			<div class="mb-8">
-				<label> Video Pitch </label>
-
-				<FileInput bind:url={stream.pitchUrl} />
-			</div>
+					<FileInput bind:url={stream.pitchUrl} />
+				</div>
+			{/if}
 
 			{#if $currentUser.isAdmin}
 				<div class="mb-8">
