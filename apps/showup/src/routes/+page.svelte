@@ -15,6 +15,7 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Avatar from 'lib/components/Avatar.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import TrashIcon from '$lib/icons/trash.svelte';
 	import EnterIcon from '$lib/icons/enter.svelte';
 	import ArrowIcon from '$lib/icons/arrow.svelte';
@@ -236,7 +237,6 @@
 
 			<!-- {isToday ? 'today' : isYesterday ? 'yesterday' : date.format('ddd, MMM DD')}? -->
 		</h2>
-
 		<div class="mt-12 text-lg">
 			{moment(date).format('MMM D')}, #buildinpublic report. <br />
 		</div>
@@ -330,6 +330,7 @@
 			on:click={submitJournalEntry}
 			disabled={!tasks.length}>Publish</button
 		>
+		<!-- <a href="/long" class="ml-4 cursor-pointer">Write article</a> -->
 	</div>
 
 	{#if journalFeed.length}
