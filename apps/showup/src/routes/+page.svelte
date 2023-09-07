@@ -13,11 +13,13 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
+	import Avatar from 'lib/components/Avatar.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import TrashIcon from '$lib/icons/trash.svelte';
 	import EnterIcon from '$lib/icons/enter.svelte';
 	import ArrowIcon from '$lib/icons/arrow.svelte';
 	import lastEmoji from '$lib/stores/lastEmoji';
+	import creators from '$lib/stores/creators';
 
 	import Twitter from 'lib/icons/twitter.svelte';
 
@@ -330,63 +332,36 @@
 		>
 	</div>
 
-	{#if tasks.length}
-		<!-- <div
-			class="bg-[#edeff6] sm:mx-0 sm:my-8 mx-4 my-8 rounded-xl sm:rounded-[40px] p-8 sm:p-16 mt-8"
-		>
-			<div class="mb-8">
-				{#if tasks.length}
-					<div class="mb-4">
-						{moment(date).format('MMM D')}, #buildinpublic report. <br />
-					</div>
-
-					{#each tasks as task}
-						<div class="flex mb-2 w-full justify-between">
-							<div class="flex">
-								<EmojiPicker
-									onUpdated={(icon) => {
-										$lastEmoji = icon;
-									}}
-									isNoCustom
-									bind:icon={task.emoji}
-									class="mr-2"
-								/>
-								{task.text}
-							</div>
-
-							<div class="cursor-pointer" on:click={() => removeTask(task)}>🗑</div>
-						</div>
-					{/each}
-				{/if}
-			</div>
-
-			<button class="mt-4 text-lg nohover" on:click={submitJournalEntry} disabled={!tasks.length}
-				>Publish</button
-			>
-		</div> -->
+	{#if journalFeed.length}
+		<div class="flex flex-col justify-between items-center mt-16">
+			<h1 class="text-2xl text-center font-bold">My Journal</h1>
+		</div>
 	{/if}
+
+	<div
+		class="mt-2 fixed bottom-0 mb-8"
+		style="left: 50%; transform: translateX(-50%); z-index: 20;"
+	>
+		<a
+			href="/explore"
+			class="button flex justify-between w-full ml-4 bg-[#f8f9fb] mx-auto opacity-80 hover:opacity-100 transition w-full"
+			style="background: none; border: 3px #555 solid; color: #555;"
+		>
+			<div class="mr-2 shrink-0">Explore Journals</div>
+
+			<div class="flex shrink-0">
+				{#each _.take($creators, 4) as creator}
+					<Avatar user={creator} class="mr-[-10px]" />
+				{/each}
+			</div>
+		</a>
+	</div>
 
 	<div class="my-8 p-4 sm:p-0">
 		<img
 			class="max-w-[150px] mx-auto my-8"
 			src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693763239679-image.png"
 		/>
-
-		{#if !$currentUser && isShown}
-			<!-- <div class="w-full flex justify-center" in:fade={{ delay: 300 }}>
-				<a
-					class="button"
-					style="background: none; border: 3px #555 solid; color: #555;"
-					href={GOOGLE_LOGIN_URL}
-					>Log in to save and publish your diary
-				</a>
-			</div> -->
-
-			<!-- <img
-				class="max-w-[150px] mx-auto my-8"
-				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1693763239679-image.png"
-			/> -->
-		{/if}
 
 		{#each journalFeed as feedItem (feedItem._id)}
 			{#if !feedItem.twitterData}

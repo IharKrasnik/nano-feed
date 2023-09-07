@@ -7,6 +7,7 @@
 	import Dock from 'lib/components/Dock.svelte';
 	import Avatar from 'lib/components/Avatar.svelte';
 	import { GOOGLE_LOGIN_URL } from 'lib/env';
+	import creators from '$lib/stores/creators';
 </script>
 
 <svelte:head>
@@ -27,7 +28,7 @@
 <div id="modal-portal" />
 
 <div class="max-w-[700px] text-left mx-auto flex justify-between px-4 sm:p-0 my-8 ">
-	<div>
+	<div class="flex items-center">
 		<a class="text-lg font-bold block opacity-70 hover:opacity-100 transition" href="/"
 			><h1>Build In Public Journal</h1></a
 		>

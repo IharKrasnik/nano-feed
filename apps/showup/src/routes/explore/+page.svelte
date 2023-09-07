@@ -15,8 +15,8 @@
 	import Avatar from 'lib/components/Avatar.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
-	import Twitter from 'lib/icons/twitter.svelte';
 	import JournalFeedItem from '$lib/components/JournalFeedItem.svelte';
+	import Twitter from 'lib/icons/twitter.svelte';
 	import AchievedBadge from '$lib/components/AchievedBadge.svelte';
 
 	let streamSlug = 'show-up-daily';
@@ -31,14 +31,9 @@
 
 	let creator = null;
 
-	const getCreator = async () => {
-		creator = await get(`creators/${$page.params.username.replace('@', '')}`);
-	};
-
 	const getFeed = async () => {
 		let feedResult = await get('feed', {
-			projectSlug: streamSlug,
-			creatorUsername: $page.params.username.replace('@', '')
+			projectSlug: streamSlug
 		});
 
 		journalFeed = feedResult.results;
@@ -47,27 +42,16 @@
 	let date = moment();
 	let title = moment(date).format('dddd, MMM DD');
 
-	getCreator();
-
 	getFeed();
 </script>
 
-{#if creator}
-	<div class="container max-w-[700px] mx-auto">
-		<div class="px-4 sm:px-0 py-4">
-			<div class="my-8 mb-16">
-				<a class="flex flex-col items-center">
-					<Avatar size="75px" user={creator} />
-					<h3 class="text-xl opacity-80 my-4">{creator.fullName}</h3>
-				</a>
-			</div>
-
-			{#each journalFeed as feedItem (feedItem._id)}
-				<JournalFeedItem {feedItem} />
-			{/each}
-		</div>
+<div class="container max-w-[700px] mx-auto">
+	<div class="mt-8 px-4 sm:px-0 py-4">
+		{#each journalFeed as feedItem (feedItem._id)}
+			<JournalFeedItem {feedItem} />
+		{/each}
 	</div>
-{/if}
+</div>
 
 {#if !$currentUser && isShown}
 	<div class="w-full flex justify-center mt-16 mb-16" in:fade={{ delay: 300 }}>
