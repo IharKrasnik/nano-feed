@@ -345,7 +345,7 @@
 		<a
 			href="/explore"
 			class="button flex justify-between w-full ml-4 bg-[#f8f9fb] mx-auto opacity-80 hover:opacity-100 transition w-full"
-			style="background: none; border: 3px #555 solid; color: #555;"
+			style="background: #f8f9fb;; border: 3px #555 solid; color: #555;"
 		>
 			<div class="mr-2 shrink-0">Explore Journals</div>
 
