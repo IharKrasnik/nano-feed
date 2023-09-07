@@ -70,7 +70,8 @@
 						loading="lazy"
 						class="w-full mt-2 lazyload"
 						style="aspect-ratio: 536/300;"
-						data-src="https://www.youtube.com/embed/{new URL(url).searchParams.get('v') || url.replace('https://youtu.be', '')}"
+						data-src="https://www.youtube.com/embed/{new URL(url).searchParams.get('v') ||
+							url.replace('https://youtu.be', '')}"
 						title="YouTube video player"
 						frameborder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -96,6 +97,7 @@
 				<video
 					class="rounded-xl max-w-[600px] w-full mx-auto {imgClass}"
 					autoplay={isAutoplay}
+					playsinline
 					muted={true}
 					loop
 					bind:this={videoEl}
