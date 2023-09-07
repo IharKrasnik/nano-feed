@@ -10,14 +10,22 @@
 	import currentUser from 'lib/stores/currentUser';
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
-	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
+	import Modal from 'lib/components/Modal.svelte';
+	import Button from 'lib/components/Button.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+
+	import lastEmoji from '$lib/stores/lastEmoji';
+
 	import Twitter from 'lib/icons/twitter.svelte';
+
+	onMount(async () => {
+		await import('emoji-picker-element/svelte');
+	});
 
 	let tasks = [];
 
-	let newTask = '';
+	let newTask = { text: '', emoji: $lastEmoji };
 
 	let isToday = true;
 	let isYesterday = false;
@@ -27,9 +35,9 @@
 	let journalFeed = [];
 
 	let addTask = () => {
-		if (newTask.trim()) {
-			tasks = [...tasks, newTask];
-			newTask = '';
+		if (newTask.text.trim()) {
+			tasks = [...tasks, { ...newTask, emoji: $lastEmoji }];
+			newTask = { ...newTask, text: '' };
 		}
 	};
 
@@ -96,7 +104,7 @@
 			content:
 				`${moment(date).format('MMM D')}, #buildinpublic report.` +
 				'\n\n' +
-				`${tasks.map((task) => `✔️ ${task}`).join('\n')}`,
+				`${tasks.map((task) => `${task.emoji || $lastEmoji} ${task.text}`).join('\n')}`,
 			meta: {
 				date: moment(date).format('MMM DD, YYYY'),
 				tasks
@@ -117,7 +125,7 @@
 
 	let getLength = () => {
 		let message = `${moment(date).format('MMM D')}, #buildinpublic report`;
-		message += [...tasks, newTask].map((t) => `✔ ${t}`).join('\n');
+		message += [...tasks, newTask].map((t) => `${t.emoji || `✔️`} ${t.text || 's'}`).join('\n');
 		return message.length;
 	};
 
@@ -125,27 +133,72 @@
 
 	$: msgLength = getLength(newTask, tasks);
 
-	let syncToTwitter = async (feedId) => {
+	let twitterModalFeedItem = null;
+
+	let syncToTwitterNow = async (feedItem) => {
+		let twitterData = await post(`feed/${feedItem._id}/twitter`);
+
+		journalFeed = journalFeed.map((f) => {
+			if (f._id === feedItem._id) {
+				f.twitterData = twitterData;
+			}
+
+			return f;
+		});
+
+		twitterModalFeedItem = null;
+	};
+
+	let syncToTwitter = async (feedItem) => {
 		if (!$currentUser) {
 			goto(GOOGLE_LOGIN_URL);
 		}
 
 		if ($currentUser.oauth.twitter) {
-			let twitterData = await post(`feed/${feedId}/twitter`);
-
-			journalFeed = journalFeed.map((f) => {
-				if (f._id === feedId) {
-					f.twitterData = twitterData;
-				}
-
-				return f;
-			});
+			twitterModalFeedItem = feedItem;
 		} else {
 			const { url } = await get(TWITTER_LOGIN_URL);
 			window.document.location.href = url;
 		}
 	};
+
+	let scheduleTwitter = async (feedItem) => {
+		let syncToTwitterOn = moment().add(12, 'hours').toDate();
+
+		await post(`feed/${feedItem._id}/twitter`, {
+			syncToTwitterOn
+		});
+
+		journalFeed = journalFeed.map((f) => {
+			if (f._id === feedItem._id) {
+				f.syncToTwitterOn = syncToTwitterOn;
+			}
+
+			return f;
+		});
+
+		twitterModalFeedItem = null;
+	};
 </script>
+
+{#if twitterModalFeedItem}
+	<Modal isShown onClosed={() => (twitterModalFeedItem = null)} maxWidth={600}>
+		<div class="p-8">
+			<h2 class="text-lg font-bold">Share update to X</h2>
+
+			<div class="mt-8 flex">
+				<Button onClick={() => syncToTwitterNow(twitterModalFeedItem)} class="mr-2"
+					>✅ Sync Now</Button
+				>
+				{#if !twitterModalFeedItem.syncToTwitterOn}
+					<Button onClick={() => scheduleTwitter(twitterModalFeedItem)}
+						>⏰ Schedule in 12 hours</Button
+					>
+				{/if}
+			</div>
+		</div>
+	</Modal>
+{/if}
 
 <div class="container max-w-[700px] mx-auto">
 	<div class="mt-16 p-4 sm:p-0">
@@ -180,7 +233,7 @@
 				rows="1"
 				placeholder="Describe one achievement shortly"
 				autofocus
-				bind:value={newTask}
+				bind:value={newTask.text}
 				on:keydown={onKeydown}
 			/>
 
@@ -204,10 +257,19 @@
 
 					{#each tasks as task}
 						<div class="flex mb-2 w-full justify-between">
-							<div>
-								✔️ {task}
+							<div class="flex">
+								<EmojiPicker
+									onUpdated={(icon) => {
+										$lastEmoji = icon;
+									}}
+									isNoCustom
+									bind:icon={task.emoji}
+									class="mr-2"
+								/>
+								{task.text}
 							</div>
-							<div on:click={() => removeTask(task)}>🗑</div>
+
+							<div class="cursor-pointer" on:click={() => removeTask(task)}>🗑</div>
 						</div>
 					{/each}
 				{/if}
@@ -245,10 +307,15 @@
 			{#if !feedItem.twitterData}
 				<div
 					class="flex items-center mb-4 grayscale hover:grayscale-0 cursor-pointer transition"
-					on:click={() => syncToTwitter(feedItem._id)}
+					on:click={() => syncToTwitter(feedItem)}
 				>
 					<div class="w-[15px] mr-2"><Twitter /></div>
-					Sync to X
+
+					{#if !feedItem.syncToTwitterOn}
+						Sync to X
+					{:else}
+						Scheduled {moment(feedItem.syncToTwitterOn).fromNow()}
+					{/if}
 				</div>
 			{/if}
 
@@ -271,6 +338,7 @@
 				<div class="cursor-pointer" on:click={() => removeFeedItem(feedItem._id)}>🗑</div>
 			</div>
 			{#if feedItem.twitterData}{/if}
+
 			<div class="my-4 whitespace-pre-wrap text-lg">
 				{feedItem.content.replace('Report #buildinpublic', '')}
 			</div>
