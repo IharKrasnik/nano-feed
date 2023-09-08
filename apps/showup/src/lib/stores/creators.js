@@ -22,7 +22,7 @@ export const update = async ({
 		query.isExplore = isExplore;
 	}
 
-	await get('creators', query).then(({ results: creators }) => {
+	await get('creators', query).then(({ results: creators } = { results: [] }) => {
 		filterQuery.set(query);
 		creatorsStore.set(creators);
 	});
