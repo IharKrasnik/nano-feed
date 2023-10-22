@@ -87,6 +87,12 @@ button {
 	padding: 10px 18px;
 }
 
+button._inverted {
+	border: #8b796c solid !important;
+	color: black !important;
+	background: none !important;
+}
+
 button._small {
 	border-radius: 8px;
 	padding: 5px 9px;
@@ -106,9 +112,8 @@ button._secondary {
 }
 
 button._hub {
-	background: #748b6c;
-	color: white;
-	border: none;
+	border: 1px #748b6c solid;
+	background: none;
 }
 
 button._promo {

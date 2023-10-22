@@ -1245,31 +1245,28 @@ See you!
 											</div>
 										{/if}
 
-										<div class="_section bg-[#e8ffef] my-8" style="border: none;">
-											<div class="flex items-center justify-between w-full">
-												<div class="">
-													<div class="font-bold">Design your product with Momentum team</div>
+										{#if page?._id}
+											<div class="_section bg-[#e8ffef] my-8" style="border: none;">
+												<div class="flex items-center justify-between w-full">
+													<div class="">
+														<div class="font-bold">Design your product with Momentum team</div>
 
-													<div class="text-sm">
-														Working with us is as easy as using Momentum Page
+														<div class="text-sm">
+															Working with us is as easy as using Momentum Page
+														</div>
 													</div>
 												</div>
-											</div>
-											<a
-												href="https://studio.saltnbold.com/new"
-												class="w-full"
-												class:hidden={!page._id}
-												target="_blank"
-											>
-												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
-											</a>
-
-											<!-- <div
-														class="w-[40px] h-[40px] bg-gray-300 transition flex justify-center items-center rounded-full ml-4"
+												<a
+													href="https://studio.saltnbold.com/new"
+													class="w-full"
+													class:hidden={!page._id}
+													target="_blank"
+												>
+													<button class="_small _secondary _promo mt-4">Design My Product 🧂</button
 													>
-														
-													</div> -->
-										</div>
+												</a>
+											</div>
+										{/if}
 
 										<!-- <EditTestimonials bind:page /> -->
 
@@ -1333,36 +1330,33 @@ See you!
 
 										{#if page?._id}
 											<button
-												class="_primary _small w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={addNewSection}>🧱 Add Empty Section</button
 											>
 											<div class="text-sm mb-2">or use templates</div>
 											<div class="flex flex-wrap">
 												<button
-													class="_primary _small mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 													on:click={() => addNewSection({ type: 'benefits' })}
 													>🙌 Add Benefits</button
 												>
 
 												<button
-													class="_primary _small mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 													on:click={() => addNewSection({ type: 'testimonials' })}
 													>💚 Add Testimonials</button
 												>
 
 												<button
-													class="_primary _small mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 													on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
 												>
 
 												<button
-													class="_primary _small mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 													on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
 												>
 											</div>
-										{/if}
-										{#if page._id}
-											<hr class="my-8 border-[#8B786D] opacity-30" />
 										{/if}
 
 										{#if page._id && page.name && page.title}
@@ -1378,7 +1372,7 @@ See you!
 
 								<div class="flex items-center w-full justify-between mt-8 mb-32">
 									{#if page.name}
-										<Button class="_primary" onClick={publishPage}>Publish</Button>
+										<Button class="_primary" onClick={publishPage}>Publish Page</Button>
 										<!-- 
 									<button
 										class="relative _primary {isLoading ? 'loading' : ''}"
@@ -1396,6 +1390,7 @@ See you!
 										{/if}
 									</button> -->
 									{/if}
+									<hr class="my-8 border-[#8B786D] opacity-30" />
 
 									{#if page._id && page.isDirty}
 										<div
