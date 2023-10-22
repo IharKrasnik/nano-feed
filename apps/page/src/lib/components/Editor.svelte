@@ -1250,7 +1250,9 @@ See you!
 												<div class="">
 													<div class="font-bold">Design your product with Momentum team</div>
 
-													<div class="text-sm">Working with us is easy as using Momentum Page</div>
+													<div class="text-sm">
+														Working with us is as easy as using Momentum Page
+													</div>
 												</div>
 											</div>
 											<a
