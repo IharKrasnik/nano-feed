@@ -229,6 +229,18 @@ See you!
 		}
 	};
 
+	if ($sveltePage.url.searchParams.get('name')) {
+		page.name = $sveltePage.url.searchParams.get('name');
+
+		if ($sveltePage.url.searchParams.get('title')) {
+			page.title = $sveltePage.url.searchParams.get('title');
+
+			if (!$currentUser) {
+				publishPage();
+			}
+		}
+	}
+
 	let isMetricsOpen = false;
 
 	let metrics;
