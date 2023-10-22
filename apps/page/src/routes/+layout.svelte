@@ -66,6 +66,6 @@
 	</div>
 {/if}
 
-{#if $currentUser && !$page.params.pageSlug && !$sectionToEdit}
+<div class:hidden={!($currentUser && !$page.params.pageSlug && !$sectionToEdit)}>
 	<Dock activeIcon="page" />
-{/if}
+</div>

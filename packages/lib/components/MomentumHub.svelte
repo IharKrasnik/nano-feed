@@ -104,12 +104,12 @@
 	};
 </script>
 
-<div class="mb-16 p-4 bg-purple-100 p-8 rounded-xl">
+<div class="mb-16 p-4 bg-[#e8ffef] p-8 rounded-xl">
 	<div class="flex justify-between mb-4">
 		<div>
 			<div class="text-lg font-bold mb-4">Gain your Momentum</div>
 			<div>
-				Momentum tools are stupid-simple yet surprisingly efficient. We target content, distribution
+				Momentum tools are super-simple yet surprisingly efficient. We target content, distribution
 				and traction.
 			</div>
 		</div>
@@ -137,7 +137,7 @@
 				{/if}
 			</select>
 
-			<Button class="_primary mb-4" onClick={updateBlog}>
+			<Button class="_primary mb-4 _hub" onClick={updateBlog}>
 				{page.blog._id === '_new' ? 'Create Blog' : ''}
 				{page.blog._id === '_del' ? 'Disconnect Blog' : ''}
 				{page.blog._id !== '_del' && page.blog._id !== '_new' ? 'Update Blog' : ''}
@@ -146,12 +146,12 @@
 
 		{#if page.blog}
 			{#if !isBlogEditMode && !pages?.length}
-				<Button class="_secondary w-full mb-2" onClick={editBlog}
+				<Button class="_secondary w-full mb-2 _hub" onClick={editBlog}
 					>✅ Blog{page.blog.name ? ` — ${page.blog.name}` : ''}</Button
 				>
 			{/if}
 		{:else}
-			<Button class="_secondary w-full mb-2" onClick={editBlog}
+			<Button class="_secondary w-full mb-2 _hub" onClick={editBlog}
 				>✍️ {page.blog ? 'Edit' : 'Connect'} Blog</Button
 			>
 		{/if}
@@ -175,7 +175,7 @@
 				{/if}
 			</select>
 
-			<Button class="_primary mb-4" onClick={updatePage}>
+			<Button class="_primary _hub mb-4" onClick={updatePage}>
 				{blog.page._id === '_new' ? 'Create Page' : ''}
 				{blog.page._id === '_del' ? 'Disconnect Page' : ''}
 				{blog.page._id !== '_del' && blog.page._id !== '_new' ? 'Update Page' : ''}
@@ -184,12 +184,12 @@
 
 		{#if blog.page}
 			{#if !pages?.length}
-				<Button class="_secondary w-full mb-2" onClick={editPage}
+				<Button class="_secondary _hub w-full mb-2" onClick={editPage}
 					>✅ Page{blog.page.name ? ` — ${blog.page.name}` : ''}</Button
 				>
 			{/if}
 		{:else}
-			<Button class="_secondary w-full mb-2" onClick={editPage}
+			<Button class="_secondary _hub w-full mb-2" onClick={editPage}
 				>📄 {blog.page ? 'Edit' : 'Connect'} Page</Button
 			>
 		{/if}
@@ -200,7 +200,7 @@
 
 	<div class="mt-8">
 		<button
-			class="_secondary w-full mb-4"
+			class="_secondary _hub w-full mb-4"
 			on:click={() => {
 				isBroadcastEmailModalShown = true;
 			}}>✉️ Send Newsletter</button
@@ -212,7 +212,7 @@
 
 	<div class="mt-8">
 		<Button
-			class="_secondary w-full mb-4"
+			class="_secondary _hub w-full mb-4"
 			onClick={() => {
 				goto(BRAND_URL);
 			}}>💐 Create Brand</Button
@@ -224,7 +224,7 @@
 	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<div class="mt-8">
-		<Button onClick={() => getOtpAndOpen(`https://nanohq.co`)} class="_secondary w-full mb-4"
+		<Button onClick={() => getOtpAndOpen(`https://nanohq.co`)} class="_secondary _hub w-full mb-4"
 			>⚫️ Join Nano Community</Button
 		>
 
@@ -235,7 +235,7 @@
 
 	<div class="mt-8">
 		<a href="https://feed.mmntm.build" target="_blank">
-			<button class="_secondary w-full mb-4">🌀 Open Stream</button>
+			<button class="_secondary _hub w-full mb-4">🌀 Open Stream</button>
 		</a>
 
 		Feature your best content links and attach live content feed to your websites. Grow with
@@ -245,9 +245,12 @@
 
 	<div class="mt-8">
 		<a href="https://wave.mmntm.build" target="_blank">
-			<button class="_secondary w-full mb-4">📈 Open Wave</button>
+			<button class="_secondary _hub w-full mb-4">📈 Open Wave</button>
 		</a>
 
 		Your website and product analytics dashboard.
 	</div>
 </div>
+
+<style>
+</style>

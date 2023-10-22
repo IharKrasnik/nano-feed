@@ -105,6 +105,27 @@ button._secondary {
 	border: 1px #8b786d solid;
 }
 
+button._hub {
+	background: #748b6c;
+	color: white;
+	border: none;
+}
+
+button._promo {
+	background: #748b6c;
+	color: white;
+	border: none;
+}
+
+.bg-green-600,
+.bg-green-700 {
+	background: #6c8a6f;
+}
+
+.bg-orange-400 {
+	background: #736c8b;
+}
+
 button.tab,
 a.button.tab {
 	border: none;

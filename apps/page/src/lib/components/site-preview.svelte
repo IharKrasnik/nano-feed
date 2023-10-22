@@ -433,7 +433,7 @@
 									{#each page.sections as section, i}
 										{#if $sectionToEdit && $sectionToEdit.id === section.id}
 											<div bind:this={editEl}>
-												<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧</div>
+												<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
 												<div>
 													<RenderSection
 														bind:page

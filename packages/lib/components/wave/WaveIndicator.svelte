@@ -138,7 +138,7 @@
 				{#if pageSubtitle}
 					{pageSubtitle}
 				{:else}
-					Wave is a stupid-simple web analytics dashboard.
+					Wave is a super-simple web analytics dashboard.
 				{/if}
 			</h3>
 

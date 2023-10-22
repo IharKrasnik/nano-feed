@@ -771,7 +771,7 @@ See you!
 				Congrats! You just published your first page 🥳<br />
 
 				<div class="mt-2">
-					Momentum Page is a stupid-simple landing page builder that helps you get to product-market
+					Momentum Page is a super-simple landing page builder that helps you get to product-market
 					fit faster.<br />
 
 					Check out this video to learn how to see views analytics, collect emails and edit
@@ -982,6 +982,25 @@ See you!
 
 						{#if !isMetricsOpen && !isSubmissionsOpen}
 							<div class="py-4">
+								{#if !page._id || isBrandNameEdit}
+									<div class="_section">
+										<div class="_title">Brand Name</div>
+										<input
+											class="w-full"
+											bind:value={page.name}
+											placeholder="Momentum"
+											use:autofocus
+										/>
+									</div>
+								{:else}
+									<div
+										class="text-lg font-bold mb-4 block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
+										on:click={() => (isBrandNameEdit = true)}
+									>
+										{page.name}
+									</div>
+								{/if}
+
 								{#if page._id}
 									<div class="w-full flex justify-between items-center mb-4">
 										<div class="flex items-center">
@@ -1036,25 +1055,6 @@ See you!
 												</span>
 											</div>
 										</div>
-									</div>
-								{/if}
-
-								{#if !page._id || isBrandNameEdit}
-									<div class="_section">
-										<div class="_title">Brand Name</div>
-										<input
-											class="w-full"
-											bind:value={page.name}
-											placeholder="Momentum"
-											use:autofocus
-										/>
-									</div>
-								{:else}
-									<div
-										class="text-lg font-bold mb-4 block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
-										on:click={() => (isBrandNameEdit = true)}
-									>
-										{page.name}
 									</div>
 								{/if}
 
@@ -1245,11 +1245,33 @@ See you!
 											</div>
 										{/if}
 
+										<div class="_section bg-[#e8ffef] my-8" style="border: none;">
+											<div class="flex items-center justify-between w-full">
+												<div class="">
+													<div class="font-bold">Design your product with Momentum team</div>
+
+													<div class="text-sm">Working with us is easy as using Momentum Page</div>
+												</div>
+											</div>
+											<a
+												href="https://studio.saltnbold.com/new"
+												class="w-full"
+												class:hidden={!page._id}
+												target="_blank"
+											>
+												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
+											</a>
+
+											<!-- <div
+														class="w-[40px] h-[40px] bg-gray-300 transition flex justify-center items-center rounded-full ml-4"
+													>
+														
+													</div> -->
+										</div>
+
 										<!-- <EditTestimonials bind:page /> -->
 
 										{#if page._id}
-											<hr class="my-8 border-[#8B786D] opacity-30" />
-
 											<div
 												class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
 											>
@@ -1309,30 +1331,33 @@ See you!
 
 										{#if page?._id}
 											<button
-												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={() => addNewSection({ type: 'benefits' })}>🙌 Add Benefits</button
-											>
-
-											<button
-												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={() => addNewSection({ type: 'testimonials' })}
-												>💚 Add Testimonials</button
-											>
-
-											<button
-												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
-											>
-
-											<button
-												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
-											>
-
-											<button
-												class="_primary _small w-full mt-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={addNewSection}>🧱 Add Empty Section</button
 											>
+											<div class="text-sm mb-2">or use templates</div>
+											<div class="flex flex-wrap">
+												<button
+													class="_primary _small mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													on:click={() => addNewSection({ type: 'benefits' })}
+													>🙌 Add Benefits</button
+												>
+
+												<button
+													class="_primary _small mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													on:click={() => addNewSection({ type: 'testimonials' })}
+													>💚 Add Testimonials</button
+												>
+
+												<button
+													class="_primary _small mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
+												>
+
+												<button
+													class="_primary _small mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
+												>
+											</div>
 										{/if}
 										{#if page._id}
 											<hr class="my-8 border-[#8B786D] opacity-30" />
@@ -1392,7 +1417,7 @@ See you!
 							</div>
 
 							{#if page._id}
-								<div class="mb-8">
+								<div class="pb-16">
 									<MomentumHub bind:page bind:isBroadcastEmailModalShown />
 								</div>
 							{/if}
@@ -1617,7 +1642,9 @@ See you!
 												{/if}
 											</div>
 
-											<div>
+											<div
+												class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
+											>
 												{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
 													{page.domains.filter((d) => d.isConfigured)[0].url}
 												{:else}
@@ -1689,14 +1716,15 @@ See you!
 												{page.totalSignupsCount || 0}/300
 											</div>
 
-											<div
-												class="px-4 mr-4 text-white rounded-xl bg-green-700"
+											<button
+												class="px-4 mr-4 text-white bg-green-700"
+												style="padding-top: 0px; padding-bottom: 0px;"
 												on:click={subscribe}
 												use:tooltip
 												title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
 											>
-												🫶 Upgrade
-											</div>
+												🚀 Upgrade
+											</button>
 
 											<!-- <button class="_small _primary">Upgrade</button> -->
 											<!-- {#if page.subscription}

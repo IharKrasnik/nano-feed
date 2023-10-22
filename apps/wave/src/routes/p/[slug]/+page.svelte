@@ -125,7 +125,7 @@
 			<div class="p-4 md:p-8 bg-zinc-900 mb-8 rounded-xl">
 				<div class="mb-2">Hey 👋 <br /></div>
 
-				Momentum Wave is stupid-simple analytics dashboard that you can add to your website<b
+				Momentum Wave is super-simple analytics dashboard that you can add to your website<b
 					>in seconds</b
 				>.
 

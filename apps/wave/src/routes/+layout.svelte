@@ -33,8 +33,8 @@
 <svelte:head>
 	<title>{$page.data.ogTitle}</title>
 	<meta name="title" content="Wave by Momentum" />
-	<meta name="description" content="Stupid-simple web analytics" />
-	<meta name="og:description" content="Stupid-simple web analytics" />
+	<meta name="description" content="super-simple web analytics" />
+	<meta name="og:description" content="super-simple web analytics" />
 </svelte:head>
 
 <div id="modal-portal" />

@@ -633,7 +633,7 @@ See you!
 				Congrats! You just published your first article 🥳<br />
 
 				<div class="mt-2">
-					Momentum Page is a stupid-simple landing page builder that helps you get to product-market
+					Momentum Page is a super-simple landing page builder that helps you get to product-market
 					fit faster.<br />
 
 					Check out this video to learn how to see views analytics, collect emails and edit
