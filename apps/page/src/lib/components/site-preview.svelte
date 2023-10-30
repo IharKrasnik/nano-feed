@@ -284,7 +284,8 @@
 					<div class="_root bg-site">
 						<div
 							bind:this={$aboveTheFoldEl}
-							class="_content pb-16 pt-8 sm:pt-32 {!page.testimonials?.length
+							class="_content mt:[-40px] sm:mt-[-120px] pb-16 pt-8 sm:pt-32 {!page.testimonials
+								?.length
 								? `${isAboveTheFold || isEmbed ? '' : 'sm:min-h-screen'} flex items-center`
 								: ''} {page.sections?.length || isEmbed ? '' : 'min-h-screen'}"
 							style={maxHeight ? `max-height: ${maxHeight}` : ''}
@@ -626,10 +627,6 @@
 		font-weight: bold;
 		font-size: 18px;
 		margin-top: 12px;
-	}
-
-	._content {
-		margin-top: -120px;
 	}
 
 	:global(._title) {
