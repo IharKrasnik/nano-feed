@@ -629,7 +629,7 @@
 	}
 
 	._content {
-		margin-top: -40px;
+		margin-top: -120px;
 	}
 
 	:global(._title) {
