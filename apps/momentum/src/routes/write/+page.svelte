@@ -72,9 +72,8 @@
 		urlIsLoading = true;
 
 		try {
-			const { data } = await axios({
-				url: 'https://igor.npkn.net/fetch-meta-tags',
-				params: { url }
+			const data = await get('utils/fetch-meta-tags', {
+				url
 			});
 
 			feedItem.url = data.url || url;
