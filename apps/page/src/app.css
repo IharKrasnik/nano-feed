@@ -15,6 +15,44 @@
 	font-family: Archivo;
 }
 
+._section-container {
+}
+
+.section-container.callout {
+	background: red;
+	@apply rounded-2xl;
+}
+
+._section-item {
+	background: var(--section-background-color);
+	text-align: left;
+	border: 1px rgba(255, 255, 255, 0.2) solid;
+}
+
+.p-section {
+	/* @apply p-8; */
+}
+
+._section-item {
+}
+
+._section-item._color ._section-img {
+	background: #f0e1f9;
+	color: white;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.testimonials .bg-section {
+	background: none;
+	border: none;
+}
+
+._section-item._color ._section-img img {
+	width: 20px !important;
+	height: 20px !important;
+}
+
 .number-tag {
 	background-color: #0c120b;
 	color: white;
@@ -181,4 +219,12 @@ a.button.tab.selected {
 	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/gilroy/Radomir%20Tinkov%20-%20Gilroy-Bold.otf');
 
 	font-weight: bold;
+}
+
+.dense img {
+	margin-right: -25px;
+}
+
+._text-line-height {
+	line-height: var(--text-line-height);
 }

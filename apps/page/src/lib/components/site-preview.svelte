@@ -7,9 +7,14 @@
 	import { fly, fade, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { darken, lighten } from 'lib/helpers/color';
+	import striptags from 'striptags';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
+	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
+	import Scrolling from '$lib/components/animations/Scrolling.svelte';
+	import Gradients from '$lib/components/gradients/index.svelte';
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
@@ -122,12 +127,29 @@
 
 	$: if (page) {
 		styles = {
+			'container-width': page.theme?.containerWidth || '1280px',
+			'logo-font': page.theme?.logoFont || 'monospace',
 			'title-font': page.theme?.titleFont || fontPairs[0].title,
+			'subtitle-font': page.theme?.subtitleFont || page.theme?.titleFont,
+			'title-font-size': page.theme?.isHugeTitle ? '72px' : '48px',
+			'title-line-height': '1.0',
+			'title-line-height': 1,
+			'button-radius': page.theme?.buttonRadius || '24px',
 			'text-font': page.theme?.textFont || fontPairs[0].text,
+			'text-font-size': '18px',
+			'text-line-height': 1.55,
 			'background-color': page.theme?.backgroundColor || '#ffffff',
 			'text-color': page.theme?.textColor || '#111',
 			'accent-color': page.theme?.accentColor || '#000',
-			'section-background-color': page.theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)',
+			'section-background-color':
+				page.theme?.sectionBackgroundColor ||
+				(page.theme?.theme === 'dark' ? '#1a1c28' : '#f6f5f4'),
+			'section-description-text-color':
+				page.theme?.theme === 'dark' ? 'rgb(229 231 235)' : 'rgba(4, 4, 4, 1)',
+
+			'section-title-font-size': page.theme?.containerWidth ? '20px' : '24px',
+			'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',
+
 			'input-background': page.theme?.inputBackground || '#f5f5f5',
 			'input-color': page.theme?.inputColor || '#222222',
 			'button-color': page.theme?.buttonColor || '#fff'
@@ -195,28 +217,60 @@
 <svelte:window bind:scrollY />
 
 <div
-	class="hidden sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4 sm:min-h-screen"
+	class="hidden sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-12 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4 sm:min-h-screen"
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
 
 {#key page?._id}
-	<div>
-		<div class="color-site" style="{cssVarStyles};">
+	<div class="">
+		<div class="relative color-site ttt" style="{cssVarStyles};">
+			{#if page.headerAnimation?.name === 'coma'}
+				<ComaDragons />
+			{/if}
+			<!-- <img
+				class="absolute w-screen h-screen object-cover"
+				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
+			/> -->
+			{#if page?.theme?.headerBackgroundImageUrl}
+				<img
+					class="absolute w-screen h-screen object-cover"
+					src={page.theme?.headerBackgroundImageUrl}
+				/>
+			{/if}
+
+			<!-- SQUARES -->
+			<!-- <div
+				class="bg-root absolute inset-0 -z-50 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] [background-size:68px_68px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
+			/> -->
+
+			<!-- DOTS -->
+			<!-- 
+			<div
+				class="absolute h-full w-full bg-[radial-gradient(#2e2e2f_0.5px,transparent_1px)] [background-size:16px_16px]"
+			/> -->
+
+			<!-- <img
+				
+				class="absolute w-screen h-screen object-cover"
+				src="https://as2.ftcdn.net/v2/jpg/06/15/14/25/1000_F_615142554_j3WPgAOSyTX1Ri1O6pxf0s8jx37vXLbg.jpg"
+			/> -->
+
 			{#if !noStickyHeader && scrollY > 300}
 				<div
-					class="fixed top-0 z-30 bg-site w-full"
+					class="fixed top-0 bg-site w-full"
+					style="z-index: 33;"
 					in:fly={{ y: -150, duration: 150, delay: 150 }}
 					out:fade={{ duration: 150, delay: 150 }}
 				>
-					<div class="flex w-full justify-between items-center max-w-[1080px] left-0 mx-auto p-4">
+					<div class="flex w-full justify-between items-center container-width left-0 mx-auto p-4">
 						<a class="flex items-center shrink-0" href="">
-							<Emoji class="mr-2" emoji={page.logo} />
-							<span class="font-bold  ">
+							<!-- <Emoji class="mr-2" emoji={page.logo} /> -->
+							<span class="font-bold  " style="font-family: var(--logo-font)">
 								{page.name}
 							</span>
 							<div class="ml-4 opacity-70 hidden sm:block">
-								{@html page.title}
+								{@html striptags(page.title || '')}
 							</div>
 						</a>
 
@@ -230,7 +284,7 @@
 								{#if page.isCollectEmails}
 									<button
 										class="cursor-pointer"
-										style="border: 2px rgba(255, 255, 255, .8) solid;"
+										style="outline: 1px rgba(255, 255, 255, .8) solid;"
 										on:click={onButtonClick}>{page.callToAction}</button
 									>
 								{:else}
@@ -247,12 +301,18 @@
 			{/if}
 
 			{#if isMounted}
-				<div class="sticky bg-site z-20 w-full {clazz}" in:fade={{ duration: 150 }}>
+				<div
+					class="sticky bg-none z-20 w-full {clazz}"
+					style="z-index: 32;"
+					in:fade={{ duration: 150 }}
+				>
 					<div class="p-4 _header flex md:justify-between items-center justify-center">
 						<a class="flex items-center shrink-0 _logo" href="">
-							<Emoji class="mr-2" emoji={page.logo} />
+							{#if page?.logo && page.logo.startsWith('http')}
+								<Emoji class="mr-2" emoji={page.logo} />
+							{/if}
 
-							<span class="font-bold">
+							<span class="font-bold" style="font-family: var(--logo-font)">
 								{page.name}
 							</span>
 						</a>
@@ -268,7 +328,7 @@
 								{#if page.isCollectEmails}
 									<button
 										class="cursor-pointer"
-										style="border: 2px rgba(255, 255, 255, .8) solid;"
+										style="outline: 1px rgba(255, 255, 255, .8) solid;"
 										on:click={onButtonClick}>{page.callToAction}</button
 									>
 								{:else}
@@ -281,152 +341,202 @@
 						<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
 					</div>
 
-					<div class="_root bg-site">
+					<!-- <img
+						class="absolute top-0 left-0 z-0 w-full h-screen"
+						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1698794318980-image.png"
+					/>
+					 -->
+
+					{#if page.theme?.backgroundGradient}
+						<Gradients gradientType={page.theme.backgroundGradient.type} />
+					{/if}
+
+					<!-- <Gradients gradientType={'ship'} /> -->
+
+					<!-- <div
+						class="absolute top-0 left-0 z-0 w-full h-screen "
+						style="background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),
+					linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);"
+					/> -->
+
+					<!-- <div
+						class="absolute top-0 left-0 z-0 w-full h-screen opacity-20 rounded-full"
+						style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
+					/> -->
+
+					<div class="relative _root bg-site" style="background: none;">
 						<div
-							bind:this={$aboveTheFoldEl}
-							class="_content mt:[-40px] {page.theme?.isHeroVertical
+							class="{isEmbed
 								? ''
-								: 'sm:mt-[-120px]'} pb-16 pt-8 sm:pt-32 {!page.testimonials?.length
-								? `${isAboveTheFold || isEmbed ? '' : 'sm:min-h-screen'} flex items-center`
-								: ''} {page.sections?.length || isEmbed ? '' : 'min-h-screen'}"
-							style={maxHeight ? `max-height: ${maxHeight}` : ''}
+								: page.theme?.isHeroVertical
+								? ''
+								: 'min-h-screen h-screen'} mt-[-70px]"
 						>
 							<div
-								class="p-4 flex h-full w-full {page.demoUrl
-									? `flex-col ${
-											page.theme?.isHeroVertical ? '' : 'sm:flex-row'
-									  } justify-between items-center`
-									: 'text-center items-center'}"
+								bind:this={$aboveTheFoldEl}
+								class="_content {page.theme?.isHeroVertical ? '' : ''} h-full {page.sections?.length
+									? ''
+									: 'pb-16'} pt-16 {!page.testimonials?.length ? `flex items-center` : ''}"
+								style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 							>
 								<div
-									class={page.demoUrl
-										? `w-full text-center ${
-												page.theme?.isHeroVertical
-													? 'flex flex-col items-center mb-8'
-													: 'sm:text-left'
-										  } sm:max-w-[500px] items-center`
-										: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+									class="p-4 flex h-full w-full {page.demoUrl || page.theme?.isHeroLeft
+										? `flex-col ${
+												page.theme?.isHeroVertical ? '' : 'justify-between sm:flex-row'
+										  } items-center`
+										: 'text-center items-center'}"
 								>
-									<h1
-										class="_title {!page.demoUrl || page.isHeroVertical ? 'sm:max-w-[750px]' : ''}"
-										style={page.title ? '' : 'opacity: 20%;'}
-									>
-										{#if page.title}
-											<div>{@html page.title}</div>
-										{:else}
-											{'Type Tagline...'}
-										{/if}
-									</h1>
-
-									{#if page.subtitle}
-										<h2
-											class="_subtitle whitespace-pre-wrap  {!page.demoUrl ||
-											page.theme?.isHeroVertical
-												? 'max-w-[600px]'
-												: ''}"
-										>
-											{@html page.subtitle}
-										</h2>
-									{/if}
-
 									<div
-										class="_input_container {page.isCollectEmails && !isSubmitted
-											? '_border '
-											: ''} flex items-center {page.demoUrl ? '' : 'mx-auto'} {page.isCollectEmails
-											? 'w-full ' +
-											  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
-											: ''}"
+										class="{page.demoUrl || page.theme?.isHeroLeft
+											? `w-full text-center ${
+													page.theme?.isHeroVertical
+														? 'flex flex-col items-center mb-8'
+														: 'sm:text-left'
+											  }  ${page.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
+											: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+										{page.theme?.isHeroLeft ? 'sm:text-left' : ''}"
 									>
-										<form
-											class="{page.isCollectEmails
-												? `w-full flex flex-col ${
-														page.isHeroVertical ? '' : 'sm:flex-row'
-												  } items-center justify-center`
-												: 'mx-auto sm:mx-0'} "
-											style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
-											on:submit|preventDefault={submitEmail}
-										>
-											{#if !isSubmitted}
-												{#if page.isCollectEmails}
-													<input
-														class="_input _email-input w-full"
-														placeholder="Your Email"
-														type="email"
-														required
-														bind:this={inputEl}
-														bind:value={email}
-														disabled={isSubmitted}
-														in:fade={{ duration: 150 }}
-													/>
-													<button
-														type="submit"
-														class="_input_button justify-center {page.isCollectEmails
-															? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-															: ''}">{page.callToAction}</button
-													>
+										{#if isMounted}
+											<h1
+												class="{page.theme?.isGradientTitle
+													? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
+													: ''} _title 
+											{!page.demoUrl || page.theme?.isHeroVertical ? 'sm:max-w-[768px]' : ''}"
+												style={page.title ? '' : 'opacity: 20%;'}
+												in:fly={{ y: 50, duration: 800 }}
+											>
+												{#if page.title}
+													<div>{@html page.title}</div>
 												{:else}
-													<a href={page.actionUrl} target="_blank" class="button _input_button">
-														{page.callToAction}
-													</a>
+													{'Type Tagline...'}
 												{/if}
-											{:else}
-												<div>💥 Thank you!</div>
+											</h1>
+										{/if}
 
-												{#if page.actionUrl}
-													<div class="mt-8 opacity-70">Redirecting...</div>
-												{/if}
-											{/if}
-										</form>
-									</div>
-								</div>
+										{#if page.subtitle}
+											<h2
+												class="_subtitle whitespace-pre-wrap  {page.demoUrl ||
+												!page.theme?.isHeroVertical
+													? ''
+													: 'max-w-[600px]'}"
+												in:fly={{ y: 50, duration: 800 }}
+											>
+												{@html page.subtitle}
+											</h2>
+										{/if}
 
-								{#if page.demoUrl}
-									<div
-										class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
-											? 'max-w-[800px] max-h-[600px]'
-											: 'sm:ml-8 sm:max-w-[600px]'}"
-									>
-										<RenderUrl
-											isLazy={false}
-											class="w-full flex justify-end {page.theme?.isHeroVertical
-												? 'max-h-[600px] mt-8'
-												: ''}"
-											url={page.demoUrl}
-											imgClass="w-full object-cover"
-										/>
-									</div>
-								{/if}
-							</div>
-
-							{#if isMounted && page.testimonials?.length}
-								<div
-									class="p-4 sm:p-8 w-full flex flex-col sm:flex-row justify-center mt-16 sm:mt-32"
-								>
-									{#each page.testimonials as testimonial, i}
 										<div
-											class="p-4 rounded-2xl w-full sm:max-w-[350px] mr-4 mb-4 sm:mb-0 bg-section"
-											in:fly={{ x: -50, y: -50, duration: 150, delay: 150 * (i + 1) }}
+											in:fly={{ y: 50, duration: 800, delay: 200 }}
+											class="_input_container {page.isCollectEmails && !isSubmitted
+												? '_border flex'
+												: 'inline-block'} items-center {page.demoUrl || page.theme?.isHeroLeft
+												? ''
+												: 'mx-auto'} {page.isCollectEmails
+												? 'w-full ' +
+												  (page.callToAction.length < 16
+														? 'sm:w-[360px]'
+														: page.callToAction.length < 20
+														? 'sm:w-[380px]'
+														: 'sm:w-[460px]')
+												: ''}"
 										>
-											<div class="flex flex-col sm:flex-row">
-												{#if testimonial.avatarUrl}
-													<div class="mr-4 mb-4 sm:mb-0">
-														<img
-															src={testimonial.avatarUrl}
-															class="max-w-[50px] aspect-square rounded-full"
+											<form
+												class="{page.isCollectEmails
+													? `w-full flex flex-col ${
+															page.isHeroVertical ? '' : 'sm:flex-row'
+													  } items-center justify-center`
+													: 'mx-auto sm:mx-0 inline-block'} "
+												style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
+												on:submit|preventDefault={submitEmail}
+											>
+												{#if !isSubmitted}
+													{#if page.isCollectEmails}
+														<input
+															class="_input _email-input w-full"
+															placeholder="Your Email"
+															type="email"
+															required
+															bind:this={inputEl}
+															bind:value={email}
+															disabled={isSubmitted}
+															in:fade={{ duration: 150 }}
 														/>
-													</div>
+														<button
+															type="submit"
+															class="_input_button justify-center {page.isCollectEmails
+																? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
+																: ''}">{page.callToAction}</button
+														>
+													{:else}
+														<a href={page.actionUrl} target="_blank" class="button _input_button">
+															{page.callToAction}
+														</a>
+													{/if}
+												{:else}
+													<div>💥 Thank you!</div>
+
+													{#if page.actionUrl}
+														<div class="mt-8 opacity-70">Redirecting...</div>
+													{/if}
 												{/if}
-												<div>
-													<SvelteMarkdown class="test" source={testimonial.name} />
-													<div class="mt-1 opacity-80">
-														<SvelteMarkdown source={testimonial.comment} />
+											</form>
+
+											{#if page.callToAction2}
+												<a href={page.callToAction.url} class="button secondary"
+													>{page.callToAction2.title}</a
+												>
+											{/if}
+
+											{#if page.ctaExplainer}
+												<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
+											{/if}
+
+											{#if isMounted && page.socialProof}
+												<div
+													class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
+													page.theme?.isHeroLeft
+														? ''
+														: 'flex justify-center w-full'} }"
+												>
+													<div class="flex flex-col sm:flex-row ">
+														{#each page.socialProof.logos as logo}
+															<img class="w-[50px] h-[50px]" src={logo.url} />
+														{/each}
 													</div>
+
+													<div class="text-sm mt-4 opacity-80">{@html page.socialProof.title}</div>
 												</div>
-											</div>
+											{/if}
 										</div>
-									{/each}
+									</div>
+
+									{#if page.demoUrl || page.lottieUrl}
+										<div
+											class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
+												? ''
+												: 'sm:ml-8 sm:max-w-[600px]'}"
+										>
+											{#if page.lottie}
+												<lottie-player
+													src={page.lottie.jsonUrl}
+													background="transparent"
+													speed="1"
+													class="w-full h-full"
+													loop
+													autoplay
+												/>
+											{:else if page.demoUrl}
+												<RenderUrl
+													isLazy={false}
+													class="w-full flex justify-end {page.theme?.isHeroVertical ? 'mt-8' : ''}"
+													url={page.demoUrl}
+													imgClass="w-full rounded-xl shadow-md object-cover"
+												/>
+											{/if}
+										</div>
+									{/if}
 								</div>
-							{/if}
+							</div>
 						</div>
 
 						{#if !isAboveTheFold}
@@ -447,16 +557,18 @@
 											</div>
 											{focusEditEl() || ''}
 										{:else}
-											<RenderSection
-												bind:page
-												bind:section
-												bind:themeStyles={styles}
-												style={false && page.theme?.isZebra && i % 2 === 0
-													? page.theme?.theme === 'dark'
-														? `background-color: ${lighten(styles['background-color'], 0.01)};`
-														: `background-color: ${darken(styles['background-color'], 0.08)};`
-													: ''}
-											/>
+											<div class="bg-site">
+												<RenderSection
+													bind:page
+													bind:section
+													bind:themeStyles={styles}
+													style={false && page.theme?.isZebra && i % 2 === 0
+														? page.theme?.theme === 'dark'
+															? `background-color: ${lighten(styles['background-color'], 0.01)};`
+															: `background-color: ${darken(styles['background-color'], 0.08)};`
+														: ''}
+												/>
+											</div>
 										{/if}
 									{/each}
 								</div>
@@ -522,7 +634,7 @@
 					<div
 						class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
 							? ''
-							: 'min-h-screen'} max-h-[100%] sticky z-0 bottom-0 flex flex-col justify-center"
+							: 'min-h-screen'} max-h-[100%] z-0 bottom-0 flex flex-col justify-center"
 						style="color: {page.theme?.theme === 'dark'
 							? '#fafafa'
 							: '#222'}; background-color: {page.theme?.theme === 'dark' ? '#222' : '#fafafa'}"
@@ -582,6 +694,7 @@
 								{/if}
 							</form>
 						</div>
+
 						{#if page.blog}
 							<div class="mt-8">
 								<a href={page.blog.url}>Or read our Blog</a>
@@ -591,12 +704,16 @@
 				{/if}
 
 				{#if !isNoBadge && !page.isNoBadge}
-					<PageBadge />
+					<PageBadge theme={page.theme?.theme || 'light'} />
 				{/if}
 			{/if}
 		</div>
 	</div>
 {/key}
+
+{#if page?.theme?.headerBgPattern?.name === 'stars'}
+	<Background />
+{/if}
 
 <style>
 	:global(.bg-site) {
@@ -605,22 +722,31 @@
 
 	:global(.bg-section) {
 		background-color: var(--section-background-color);
+		border: 1px rgba(0, 0, 0, 0.1) solid;
 	}
 
 	.color-site {
 		color: var(--text-color, black);
 		font-family: var(--text-font);
+		font-size: var(--text-font-size, 18);
+		line-height: var(--text-line-height, 1.2);
 	}
 
 	._root {
 		width: 100%;
-		max-width: 1080px;
+		max-width: var(--container-width);
 		margin: 0 auto;
 	}
 
+	.container-width {
+		max-width: var(--container-width);
+	}
+
 	._header {
-		max-width: 1080px;
+		max-width: var(--container-width);
 		margin: 0 auto;
+		position: relative;
+		z-index: 40;
 	}
 
 	._logo {
@@ -636,9 +762,17 @@
 
 	._title {
 		font-family: Archivo;
-		font-size: 36px;
-		line-height: 1.2;
+		font-size: var(--title-font-size, 36px);
+		@apply font-bold;
+		line-height: var(--title-line-height, 1.2);
 		margin-bottom: 32px;
+		/* sm:text-[32px]; */
+	}
+
+	@media (max-width: 640px) {
+		._title {
+			font-size: 36px;
+		}
 	}
 
 	:global(._root ._title) {
@@ -646,32 +780,39 @@
 	}
 
 	:global(._title b, ._title em) {
+		/* background-color: var(--accent-color); */
+		color: var(--accent-color);
+		opacity: 0.9;
+	}
+
+	:global(._highlight-old b, ._highlight-old em) {
 		background-color: var(--accent-color);
 		color: var(--button-color);
 		opacity: 0.9;
 	}
 
 	._subtitle {
-		font-size: 18px;
-		line-height: 26px;
+		font-size: 20px;
+		line-height: 1.4;
 		margin-bottom: 40px;
+		max-width: 650px;
+		font-family: var(--subtitle-font);
 	}
 
 	._input_container {
 		position: relative;
-
-		border-radius: 25px;
+		border-radius: var(--button-radius);
 	}
 
 	@media (min-width: 640px) {
 		._input_container._border {
-			border: 3px white solid;
+			border: 2px rgba(255, 255, 255, 0.3) solid;
 		}
 	}
 
 	@media (max-width: 640px) {
 		._input_container input {
-			border: 2px rgba(255, 255, 255, 0.8) solid;
+			border: 2px rgba(255, 255, 255, 0.3) solid;
 		}
 	}
 
@@ -680,21 +821,28 @@
 		color: var(--input-color);
 		width: 100%;
 		padding: 10px 18px;
-		border-radius: 20px;
+		border-radius: var(--button-radius);
 		font-size: 16px;
 	}
 
 	button,
 	.button {
-		border-radius: 20px;
-		padding: 5px 20px;
+		border-radius: var(--button-radius);
+		padding: 8px 16px;
+		cursor: pointer;
 
 		background-color: var(--accent-color);
 		color: var(--button-color);
+		font-size: 15px;
+		font-weight: 500;
+	}
+
+	.button.secondary {
+		background: none !important;
+		color: white;
 	}
 
 	._input_button {
-		padding: 13px 30px;
 		display: flex;
 		align-items: center;
 		z-index: 100;

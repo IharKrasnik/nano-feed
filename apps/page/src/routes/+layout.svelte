@@ -1,6 +1,7 @@
 <script>
 	import '../app.css';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
 
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
@@ -61,7 +62,7 @@
 <div id="modal-portal" />
 
 {#if !$isUserLoading}
-	<div class="relative">
+	<div class="relative" style="	">
 		<slot />
 	</div>
 {/if}

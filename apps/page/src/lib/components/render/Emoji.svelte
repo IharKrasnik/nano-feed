@@ -1,10 +1,10 @@
 <script>
 	let clazz;
 	export { clazz as class };
-
+	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 	export let emoji;
 	export let width = 25;
-
+	export let color = '#111';
 	// let url;
 
 	// $: if (emoji?.startsWith('http')) {
@@ -21,6 +21,8 @@
 		{#key emoji}
 			<img style="width: {width}px; height: {width}px;" src={emoji} />
 		{/key}
+	{:else if emoji.startsWith('feather:')}
+		<FeatherIcon name={emoji.replace('feather:', '')} {color} />
 	{:else}
 		{emoji || '✨'}
 	{/if}

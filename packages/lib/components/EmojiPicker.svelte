@@ -23,7 +23,7 @@
 
 	let url = icon?.startsWith('http') ? icon : null;
 
-	$: if (url && url.startsWith('http')) {
+	$: if (url && (url.startsWith('http') || url.startsWith('feather:'))) {
 		icon = url;
 		isEmojiPickerShown = false;
 	}
@@ -41,16 +41,6 @@
 
 	{#if isEmojiPickerShown}
 		<div class="absolute top-0 mt-16" style="z-index: 100;" in:fly={{ y: 50, duration: 150 }}>
-			<emoji-picker
-				class={theme}
-				on:emoji-click={(evt) => {
-					icon = evt.detail.unicode;
-					url = null;
-					isEmojiPickerShown = false;
-					onUpdated(icon);
-				}}
-			/>
-
 			{#if !isNoCustom}
 				<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede]">
 					<h3 class="font-bold mb-2">Custom Logo</h3>
@@ -65,6 +55,16 @@
 					/>
 				</div>
 			{/if}
+
+			<emoji-picker
+				class={theme}
+				on:emoji-click={(evt) => {
+					icon = evt.detail.unicode;
+					url = null;
+					isEmojiPickerShown = false;
+					onUpdated(icon);
+				}}
+			/>
 
 			{#if icon}
 				<div

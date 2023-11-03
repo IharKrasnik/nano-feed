@@ -31,8 +31,17 @@
 		</div>
 
 		{#each section.testimonials || [] as testimonial}
+			<div class="font-normal text-sm opacity-70 mt-4 mb-2">What's the testimonial?</div>
+
+			<textarea
+				class="w-full mb-4"
+				bind:value={testimonial.comment}
+				placeholder="These action plans finally made me post daily and share the Kickstart news with a wide audience. Great to start!"
+				rows="3"
+			/>
+
 			<div class="flex justify-between items-center">
-				<div class="font-normal text-sm opacity-70 mb-2 mt-4">Name</div>
+				<div class="font-normal text-sm opacity-70 mb-2">Who said that?</div>
 				<div
 					class="text-sm cursor-pointer text-[#8B786D]"
 					on:click={() => removeTestimonial(testimonial)}
@@ -45,15 +54,6 @@
 				class="mb-4 w-full"
 				bind:value={testimonial.name}
 				placeholder="Victoriya Barovskaya, CEO, Kickstart"
-			/>
-
-			<div class="font-normal text-sm opacity-70 mb-2">Their Comment</div>
-
-			<textarea
-				class="w-full mb-4"
-				bind:value={testimonial.comment}
-				placeholder="These action plans finally made me post daily and share the Kickstart news with a wide audience. Great to start!"
-				rows="3"
 			/>
 
 			<div class="font-normal text-sm opacity-70 mb-2">Their Avatar</div>

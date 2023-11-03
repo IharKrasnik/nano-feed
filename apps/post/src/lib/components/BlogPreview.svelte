@@ -162,7 +162,7 @@
 								>
 									<h1
 										class="_title {!blog.demoUrl || blog.theme?.hero === 'vertical'
-											? 'sm:max-w-[750px]'
+											? 'sm:max-w-[768px]'
 											: ''}"
 										style={blog.title ? '' : 'opacity: 20%;'}
 									>

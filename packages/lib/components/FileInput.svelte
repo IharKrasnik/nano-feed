@@ -92,6 +92,17 @@
 		class={clazz}
 		use:dropzone={{}}
 		on:filedrop={onFileUpload}
+		on:keydown={(evt) => {
+			if (evt.key === 'Enter') {
+				if (evt.target.value.startsWith('feather:')) {
+					url = evt.target.value;
+					innerUrlValue = url;
+					dispatch('fileUploaded', {
+						url
+					});
+				}
+			}
+		}}
 	/>
 
 	{#if url}

@@ -10,7 +10,7 @@
 
 	let url = icon?.startsWith('http') ? icon : null;
 
-	$: if (url && url.startsWith('http')) {
+	$: if (url && (url.startsWith('http') || url.startsWith('feather:'))) {
 		icon = url;
 		isEmojiPickerShown = false;
 	}

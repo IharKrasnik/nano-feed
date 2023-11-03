@@ -95,7 +95,7 @@
 			{:else if url.includes('.mp4') || url.includes('mov')}
 				{log()}
 				<video
-					class="rounded-xl max-w-[600px] w-full mx-auto {imgClass}"
+					class="w-full mx-auto {imgClass}"
 					autoplay={isAutoplay}
 					playsinline
 					muted={true}
@@ -106,9 +106,9 @@
 			{:else}
 				{#key url}
 					{#if isLazy}
-						<img class="rounded-xl {imgClass} lazyload" data-src={url} />
+						<img class="{imgClass} lazyload" data-src={url} />
 					{:else}
-						<img class="rounded-xl {imgClass}" src={url} />
+						<img class={imgClass} src={url} />
 					{/if}
 				{/key}
 			{/if}

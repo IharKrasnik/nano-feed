@@ -1075,7 +1075,19 @@ See you!
 								>
 									{#if page.name}
 										<div class="_section">
-											<div class="_title">Tagline</div>
+											<div class="_title flex items-center justify-between">
+												<div>Tagline</div>
+
+												{#if page.theme}
+													<div class="flex font-normal items-center">
+														Is Huge <input
+															bind:checked={page.theme.isHugeTitle}
+															class="ml-2"
+															type="checkbox"
+														/>
+													</div>
+												{/if}
+											</div>
 
 											<div
 												class="w-full bg-[#f5f5f5] p-2 rounded-lg block"

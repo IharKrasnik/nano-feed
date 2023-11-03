@@ -133,7 +133,8 @@
 		<div class="p-4">
 			<EditSectionItem
 				class="p-0"
-				isWithUrl={false}
+				isWithGrid={false}
+				isWithSubtitle
 				onRemove={null}
 				bind:section
 				bind:item={section}
@@ -213,6 +214,15 @@
 						>
 							4
 							{#if section.columns === 4}columns{/if}
+						</div>
+						<div
+							class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+							class:aspect-square={section.columns !== 12}
+							class:px-4={section.columns === 12}
+							on:click={() => (section.columns = 12)}
+						>
+							12
+							{#if section.columns === 12}columns (grid){/if}
 						</div>
 					</div>
 				</div>

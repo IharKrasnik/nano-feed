@@ -2,6 +2,8 @@
 	let isHover = false;
 
 	export let isFixed = true;
+
+	export let theme = 'light';
 </script>
 
 <a
@@ -9,12 +11,14 @@
 	target="_blank"
 	class=" block flex {isFixed
 		? 'hidden sm:flex fixed bottom-[50px] left-2/4 sm:left-[50px]'
-		: 'max-w-[250px] mx-auto'} z-1000 p-2 bg-[#fafafa] opacity-70 hover:opacity-100 hover:scale-105 transition text-black rounded-xl items-center"
+		: 'max-w-[250px] mx-auto'} z-1000 p-2 px-2 {theme === 'light'
+		? 'bg-[#fafafa] text-black'
+		: 'bg-[#000] text-white'} opacity-50 hover:opacity-100 transition rounded-lg items-center"
 	style="z-index: 1000;"
 >
 	<svg
-		width="34"
-		height="34"
+		width="25"
+		height="25"
 		viewBox="0 0 34 34"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +36,7 @@
 		/>
 	</svg>
 
-	Built In Momentum
+	Built with Momentum
 </a>
 
 <style>

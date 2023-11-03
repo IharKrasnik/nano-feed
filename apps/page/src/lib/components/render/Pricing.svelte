@@ -112,7 +112,7 @@
 	button,
 	.button {
 		display: inline-block;
-		border-radius: 20px;
+		border-radius: var(--button-radius);
 		padding: 5px 20px;
 		font-size: 18px;
 

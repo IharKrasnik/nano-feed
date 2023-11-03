@@ -8,6 +8,7 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import EditUrl from '$lib/components/edit/URL.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
+	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import contenteditable from 'lib/use/contenteditable';
@@ -16,6 +17,8 @@
 	export { clazz as class };
 
 	export let isWithUrl = true;
+	export let isWithGrid = true;
+	export let isWithSubtitle = false;
 
 	export let item;
 	export let section;
@@ -79,19 +82,22 @@
 	}}
 >
 	<div class="relative flex justify-between items-center mb-4">
-		<div class="flex items-center ">
+		<div class="flex items-center w-full">
 			<EmojiPicker bind:icon={item.emoji} />
 
-			<!-- <div
-				class="min-w-[37px] min-h-[37px] bg-section rounded-xl flex items-center justify-center cursor-pointer"
-				on:click={() => {
-					isEmojiPickerShown = item;
-				}}
-			>
-				{item.emoji || '✨'}
-			</div> -->
 			{#if isWithUrl}
 				<EditUrl bind:url={item.url} bind:callToActionText={item.callToActionText} />
+			{/if}
+
+			{#if isWithGrid}
+				<FeatherIcon class="ml-4 mr-2" size="15" color="gray" name="grid" />
+				<input type="number" class="max-w-[60px] mr-2" placeholder="1" bind:value={item.colSpan} />
+				x
+				<input type="number" class="max-w-[60px] ml-2" placeholder="1" bind:value={item.rowSpan} />
+			{/if}
+
+			{#if isWithSubtitle}
+				<input class="ml-4 w-full" placeholder="Subtitle" bind:value={item.subtitle} />
 			{/if}
 		</div>
 

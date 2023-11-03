@@ -13,11 +13,14 @@
 	let isColorPickerShown = false;
 
 	let fontPairs = [
+		{ title: 'Inter', text: 'Inter' },
+		{ title: 'DM Sans', text: 'Inter' },
+		{ title: 'Inter', subtitle: 'Space Grotesk', text: 'Inter' },
+		{ title: 'Syne', text: 'Syne' },
 		{ title: 'Archivo', text: 'Inter' },
 		{ title: 'Calistoga', text: 'IBM Plex Sans' },
 		{ title: 'Cabin', text: 'Montserrat' },
-		{ title: 'Fraunces', text: 'Poppins' },
-		{ title: 'Syne', text: 'Syne' }
+		{ title: 'Fraunces', text: 'Poppins' }
 	];
 
 	fontPairs.forEach((p, i) => {
@@ -187,6 +190,11 @@
 		let fontPair = fontPairs.find((p) => p.id === page.theme.fontPairId);
 
 		page.theme.titleFont = fontPair.title;
+
+		if (fontPair.subtitleFont) {
+			page.theme.subtitleFont = fontPair.subtitleFont;
+		}
+
 		page.theme.textFont = fontPair.text;
 
 		themes = themes.map((t) => {

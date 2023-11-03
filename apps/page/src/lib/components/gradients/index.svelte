@@ -1,0 +1,31 @@
+<script>
+	export let gradientType;
+
+	let types = {
+		ship: {
+			className: '',
+			style: `background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);`
+		},
+		coma: { className: '', gradient: '' },
+		turborepo: {
+			className: 'opacity-20 rounded-full',
+			style:
+				'background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;'
+		}
+	};
+</script>
+
+{#if types[gradientType].style}
+	<div
+		class="absolute top-0 left-0 z-0 w-full h-screen {types[gradientType].className}"
+		style={types[gradientType].style}
+	/>
+{:else if types[gradientType].url}
+	<img
+		src="https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed.png"
+		loading="lazy"
+		alt=""
+		sizes="(max-width: 991px) 100vw, 96vw"
+		srcset="https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed-p-500.png 500w, https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed-p-800.png 800w, https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed-p-1080.png 1080w, https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed.png 1951w"
+	/>;
+{/if}
