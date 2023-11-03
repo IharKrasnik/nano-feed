@@ -1,7 +1,7 @@
 <script>
 	import _ from 'lodash';
 	import tooltip from 'lib/use/tooltip';
-	import getRandomEmoji from 'lib/services/getRandomEmoji';
+	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly } from 'svelte/transition';
 
 	import FileInput from 'lib/components/FileInput.svelte';
@@ -12,7 +12,6 @@
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
-	import EditInteractiveQuestion from '$lib/components/edit/InteractiveQuestion.svelte';
 
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
@@ -136,6 +135,7 @@
 				class="p-0"
 				isWithGrid={false}
 				isWithSubtitle
+				isWithInteractive
 				onRemove={null}
 				bind:section
 				bind:item={section}
@@ -147,8 +147,6 @@
 		<EditFAQ bind:section />
 	{:else if section.type === 'testimonials'}
 		<EditTestimonials bind:section />
-	{:else if section.type === 'interactive-question'}
-		<EditInteractiveQuestion bind:section />
 	{:else}
 		<div
 			class="_section rounded-xl"

@@ -4,6 +4,9 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 
+	let clazz;
+	export { clazz as class };
+
 	let isEmojiPickerShown = false;
 
 	export let icon = '✨';
@@ -17,7 +20,7 @@
 </script>
 
 <div
-	class="relative cursor-pointer"
+	class="{clazz} relative cursor-pointer"
 	on:click={() => (isEmojiPickerShown = true)}
 	use:clickOutside
 	on:clickOutside={() => {

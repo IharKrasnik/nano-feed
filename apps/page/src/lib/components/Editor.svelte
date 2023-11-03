@@ -476,12 +476,9 @@ See you!
 				}
 			];
 		} else if (type === 'interactive-question') {
-			newSection.title = 'A radically transparent question to you...';
-
-			newSection.question = {
-				title: 'How likely would you consider switching to our product?',
-				answers: [{ emoji: '💯' }, { emoji: '🤔' }, { emoji: '👎' }]
-			};
+			newSection.title =
+				'A radically transparent question to you... \n How likely you switched to our product?';
+			newSection.interactiveAnswers = [{ emoji: '💯' }, { emoji: '🤔' }, { emoji: '👎' }];
 		}
 
 		$sectionToEdit = newSection;

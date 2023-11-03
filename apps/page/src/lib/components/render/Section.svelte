@@ -4,7 +4,7 @@
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
 	import RenderMomentumFeed from '$lib/components/render/MomentumFeed.svelte';
-	import RenderInteractiveQuestion from '$lib/components/render/InteractiveQuestion.svelte';
+	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
@@ -139,6 +139,16 @@
 					/>
 				</div>
 			{/if}
+
+			{#if section.interactiveAnswers?.length}
+				<div class="sm:max-w-[600px] sm:mx-auto mt-8">
+					<RenderInteractiveOptions
+						class="justify-center"
+						bind:sectionItem={section}
+						bind:pageId={page._id}
+					/>
+				</div>
+			{/if}
 		</div>
 	{/if}
 
@@ -148,8 +158,6 @@
 		<RenderTestimonials bind:section />
 	{:else if section.type === 'momentum_feed'}
 		<RenderMomentumFeed bind:page bind:themeStyles />
-	{:else if section.type === 'interactive-question'}
-		<RenderInteractiveQuestion bind:page bind:section />
 	{:else if section.items?.length}
 		<div class="w-full {clazz}">
 			<div
@@ -191,12 +199,12 @@
 							<div
 								class="flex w-full h-full flex-col justify-between {page?.theme?.containerWidth
 									? 'p-4'
-									: 'p-8'} text-left self-center order-none {section.columns == 1 && i % 2 === 1
-									? 'sm:order-last'
+									: 'p-8'} text-left self-center order-none-off {section.columns == 1 && i % 2 === 1
+									? 'sm:order-last-off'
 									: ''} {section.columns === 1 &&
 									(!item.imageUrl || section.items.length === 1) &&
 									'mx-auto'}"
-								class:order-last={i % 2 === 0}
+								class:order-last-off={i % 2 === 0}
 							>
 								<div class="max-w-[600px]">
 									{#if item.title}
@@ -281,9 +289,10 @@
 
 							{#if !section.carousel && item.imageUrl}
 								<div
-									class="{section.pricing ? 'order-none' : 'order-none'} {section.columns === 1 &&
-									i % 2 === 0
-										? 'sm:order-last'
+									class="{section.pricing
+										? 'order-none-off'
+										: 'order-none-off'} {section.columns === 1 && i % 2 === 0
+										? 'sm:order-last-off'
 										: ''}"
 								>
 									<RenderUrl
@@ -293,6 +302,18 @@
 											? ''
 											: ''} {isGif(item.imageUrl) ? 'w-full object-cover' : ''}"
 										url={item.imageUrl}
+									/>
+								</div>
+							{/if}
+
+							{#if item.interactiveAnswers?.length}
+								<div class={page?.theme?.containerWidth ? 'p-4' : 'p-8'}>
+									<RenderInteractiveOptions
+										class={section.columns === 1 ? 'justify-center' : 'justify-start'}
+										bind:sectionItem={item}
+										parentSectionId={section.id}
+										bind:pageId={page._id}
+										itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
 									/>
 								</div>
 							{/if}

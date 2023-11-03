@@ -2,6 +2,7 @@
 	import _ from 'lodash';
 	import tooltip from 'lib/use/tooltip';
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
+	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
@@ -19,6 +20,7 @@
 	export let isWithUrl = true;
 	export let isWithGrid = true;
 	export let isWithSubtitle = false;
+	export let isWithInteractive = true;
 
 	export let item;
 	export let section;
@@ -32,6 +34,22 @@
 	let addBenefit = () => {
 		item.pricing.benefits = item.pricing.benefits || [];
 		item.pricing.benefits.push({ name: '' });
+	};
+
+	let addAnswer = (item) => {
+		if (!item.interactiveAnswers) {
+			item.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
+		} else {
+			item.interactiveAnswers.push({ emoji: getRandomProjectEmoji() });
+			item.interactiveAnswers = [...item.interactiveAnswers];
+		}
+
+		section = { ...section };
+	};
+
+	let removeAnswerFromItem = (item, answer) => {
+		item.interactiveAnswers = item.interactiveAnswers.filter((a) => a.emoji !== answer.emoji);
+		section = { ...section };
 	};
 </script>
 
@@ -87,6 +105,10 @@
 
 			{#if isWithUrl}
 				<EditUrl bind:url={item.url} bind:callToActionText={item.callToActionText} />
+			{/if}
+
+			{#if isWithInteractive && !item.interactiveAnswers?.length}
+				<button on:click={() => addAnswer(item)}>🕹</button>
 			{/if}
 
 			{#if isWithGrid}
@@ -167,5 +189,31 @@
 				theme="light"
 			/>
 		</div>
+	{/if}
+
+	{#if item.interactiveAnswers?.length}
+		<div class="font-normal text-sm opacity-70 mt-4 mb-2">How users can answer?</div>
+
+		<div>
+			{#each item.interactiveAnswers as answer}
+				<div class="flex justify-between">
+					<EmojiPicker
+						isNoCustom
+						class="w-full p-2 bg-[#fafafa] my-2 text-center"
+						bind:icon={answer.emoji}
+					/>
+
+					<button on:click={() => removeAnswerFromItem(item, answer)}>🗑</button>
+				</div>
+			{/each}
+		</div>
+
+		{#if item.interactiveAnswers.length === 3}
+			<div class="text-sm">You can add up to 3 answers</div>
+		{:else}
+			<button class="_small _secondary w-full" on:click={() => addAnswer(item)}
+				>Add another interactive answer</button
+			>
+		{/if}
 	{/if}
 </div>
