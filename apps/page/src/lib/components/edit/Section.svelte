@@ -12,6 +12,7 @@
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
+	import EditInteractiveQuestion from '$lib/components/edit/InteractiveQuestion.svelte';
 
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
@@ -146,6 +147,8 @@
 		<EditFAQ bind:section />
 	{:else if section.type === 'testimonials'}
 		<EditTestimonials bind:section />
+	{:else if section.type === 'interactive-question'}
+		<EditInteractiveQuestion bind:section />
 	{:else}
 		<div
 			class="_section rounded-xl"

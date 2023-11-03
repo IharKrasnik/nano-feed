@@ -475,6 +475,13 @@ See you!
 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156478852-image.png'
 				}
 			];
+		} else if (type === 'interactive-question') {
+			newSection.title = 'A radically transparent question to you...';
+
+			newSection.question = {
+				title: 'How likely would you consider switching to our product?',
+				answers: [{ emoji: '💯' }, { emoji: '🤔' }, { emoji: '👎' }]
+			};
 		}
 
 		$sectionToEdit = newSection;
@@ -1368,6 +1375,18 @@ See you!
 													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 													on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
 												>
+
+												<button
+													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													on:click={() => addNewSection({ type: 'stepper' })}
+													>💡 Add 1-2-3 stepper</button
+												>
+
+												<button
+													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													on:click={() => addNewSection({ type: 'interactive-question' })}
+													>🤩 Ask Interactive Question</button
+												>
 											</div>
 										{/if}
 
@@ -1748,7 +1767,9 @@ See you!
 										</div>
 									{/if} -->
 
-										<SitePreview class="pt-8" noStickyHeader={true} isNoBadge={true} bind:page />
+										{#if page}
+											<SitePreview class="pt-8" noStickyHeader={true} isNoBadge={true} bind:page />
+										{/if}
 									</BrowserFrame>
 								</div>
 							{/key}

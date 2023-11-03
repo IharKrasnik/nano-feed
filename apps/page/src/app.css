@@ -27,6 +27,7 @@
 	background: var(--section-background-color);
 	text-align: left;
 	border: 1px rgba(255, 255, 255, 0.2) solid;
+	@apply rounded-xl;
 }
 
 .p-section {
@@ -34,6 +35,16 @@
 }
 
 ._section-item {
+}
+
+.bg-accent {
+	background: var(--accent-color) !important;
+	color: var(--button-color) !important;
+}
+
+.bg-body {
+	background: var(--background-color);
+	color: var(--text-color);
 }
 
 ._section-item._color ._section-img {

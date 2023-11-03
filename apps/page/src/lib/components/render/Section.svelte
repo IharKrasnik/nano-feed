@@ -4,6 +4,7 @@
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
 	import RenderMomentumFeed from '$lib/components/render/MomentumFeed.svelte';
+	import RenderInteractiveQuestion from '$lib/components/render/InteractiveQuestion.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
@@ -147,6 +148,8 @@
 		<RenderTestimonials bind:section />
 	{:else if section.type === 'momentum_feed'}
 		<RenderMomentumFeed bind:page bind:themeStyles />
+	{:else if section.type === 'interactive-question'}
+		<RenderInteractiveQuestion bind:page bind:section />
 	{:else if section.items?.length}
 		<div class="w-full {clazz}">
 			<div
