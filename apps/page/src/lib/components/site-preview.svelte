@@ -150,8 +150,8 @@
 			'section-title-font-size': page.theme?.containerWidth ? '20px' : '24px',
 			'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',
 
-			'input-background': page.theme?.inputBackground || '#f5f5f5',
-			'input-color': page.theme?.inputColor || '#222222',
+			'input-background': page.theme?.inputBackground || 'transparent',
+			'input-color': page.theme?.inputColor || page.theme?.textColor || '#111',
 			'button-color': page.theme?.buttonColor || '#fff'
 		};
 
@@ -232,17 +232,44 @@
 				class="absolute w-screen h-screen object-cover"
 				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
 			/> -->
-			{#if page?.theme?.headerBackgroundImageUrl}
+			{#if page?.theme?.heroBgImage}
+				<div
+					class="absolute top-0 left-0 w-screen h-screen z-1"
+					style="background-color: rgba(0,0,0, 0.7); z-index: 1;"
+				/>
 				<img
-					class="absolute w-screen h-screen object-cover"
-					src={page.theme?.headerBackgroundImageUrl}
+					class="absolute left-0 top-0 w-screen h-screen object-cover opacity-90"
+					src={page.theme?.heroBgImage}
 				/>
 			{/if}
 
 			<!-- SQUARES -->
-			<!-- <div
-				class="bg-root absolute inset-0 -z-50 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] [background-size:68px_68px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
-			/> -->
+			{#if page?.theme?.heroPattern}
+				{#if page?.theme?.theme === 'dark'}
+					{#if page?.theme?.heroPattern === 'squares'}
+						<div
+							class="bg-root absolute z-10 inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
+						/>
+					{:else if page?.theme?.heroPattern === 'dots'}
+						<div
+							class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#ffffff_0.5px,transparent_1px)] [background-size:16px_16px]"
+						/>
+					{/if}
+				{:else if page?.theme?.heroPattern === 'squares'}
+					<div
+						class="bg-root  z-10 absolute inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
+					/>
+				{:else if page?.theme?.heroPattern === 'dots'}
+					<div
+						class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#c8c8c8.5px,transparent_1px)] [background-size:32px_32px]"
+					/>
+				{/if}
+			{/if}
+
+			<div
+				class="absolute top-0 left-0"
+				style="background-image: linear-gradient(rgba(0, 0, 0, 0) 82%, #0c120c), linear-gradient(rgba(12, 18, 12, .8), rgba(12, 18, 12, .8)), url('https://assets.website-files.com/636cf54cf20a6ac090f7deb0/636cfb105b88e07b40e1e494_hero-bg.svg')"
+			/>
 
 			<!-- DOTS -->
 			<!-- 
@@ -266,6 +293,7 @@
 					<div class="flex w-full justify-between items-center container-width left-0 mx-auto p-4">
 						<a class="flex items-center shrink-0" href="">
 							<!-- <Emoji class="mr-2" emoji={page.logo} /> -->
+
 							<span class="font-bold  " style="font-family: var(--logo-font)">
 								{page.name}
 							</span>
@@ -312,7 +340,10 @@
 								<Emoji class="mr-2" emoji={page.logo} />
 							{/if}
 
-							<span class="font-bold" style="font-family: var(--logo-font)">
+							<span
+								class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
+								style="font-family: var(--logo-font)"
+							>
 								{page.name}
 							</span>
 						</a>
@@ -348,7 +379,7 @@
 					 -->
 
 					{#if page.theme?.backgroundGradient}
-						<Gradients gradientType={page.theme.backgroundGradient.type} />
+						<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
 					{/if}
 
 					<!-- <Gradients gradientType={'ship'} /> -->
@@ -374,9 +405,13 @@
 						>
 							<div
 								bind:this={$aboveTheFoldEl}
-								class="_content {page.theme?.isHeroVertical ? '' : ''} h-full {page.sections?.length
+								class="_content {page.theme?.heroBgImage ? 'light-colors' : ''} {page.theme
+									?.isHeroVertical
 									? ''
-									: 'pb-16'} pt-16 {!page.testimonials?.length ? `flex items-center` : ''}"
+									: ''} h-full {page.sections?.length ? '' : 'pb-16'} pt-16 {!page.testimonials
+									?.length
+									? `flex items-center`
+									: ''}"
 								style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 							>
 								<div
@@ -486,28 +521,27 @@
 													>{page.callToAction2.title}</a
 												>
 											{/if}
-
-											{#if page.ctaExplainer}
-												<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
-											{/if}
-
-											{#if isMounted && page.socialProof}
-												<div
-													class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
-													page.theme?.isHeroLeft
-														? ''
-														: 'flex justify-center w-full'} }"
-												>
-													<div class="flex flex-col sm:flex-row ">
-														{#each page.socialProof.logos as logo}
-															<img class="w-[50px] h-[50px]" src={logo.url} />
-														{/each}
-													</div>
-
-													<div class="text-sm mt-4 opacity-80">{@html page.socialProof.title}</div>
-												</div>
-											{/if}
 										</div>
+										{#if page.ctaExplainer}
+											<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
+										{/if}
+
+										{#if isMounted && page.socialProof}
+											<div
+												class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
+												page.theme?.isHeroLeft
+													? ''
+													: 'flex justify-center w-full'} }"
+											>
+												<div class="flex flex-col sm:flex-row ">
+													{#each page.socialProof.logos as logo}
+														<img class="w-[50px] h-[50px]" src={logo.url} />
+													{/each}
+												</div>
+
+												<div class="text-sm mt-4 opacity-80">{@html page.socialProof.title}</div>
+											</div>
+										{/if}
 									</div>
 
 									{#if page.demoUrl || page.lottieUrl}
@@ -806,13 +840,13 @@
 
 	@media (min-width: 640px) {
 		._input_container._border {
-			border: 2px rgba(255, 255, 255, 0.3) solid;
+			border: 1px var(--text-color) solid;
 		}
 	}
 
 	@media (max-width: 640px) {
 		._input_container input {
-			border: 2px rgba(255, 255, 255, 0.3) solid;
+			border: 1px var(--text-color) solid;
 		}
 	}
 

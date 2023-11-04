@@ -1,16 +1,20 @@
 <script>
 	export let gradientType;
+	export let page;
+
+	let turborepo = ['#2a8af6', 'a853ba'];
 
 	let types = {
 		ship: {
 			className: '',
-			style: `background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);`
+			style: () =>
+				`background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);`
 		},
 		coma: { className: '', gradient: '' },
 		turborepo: {
 			className: 'opacity-20 rounded-full',
-			style:
-				'background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;'
+			style: ({ from = '#2a8af6', to = '#a853ba' }) =>
+				`background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,${from} 180deg,${to} 1turn); filter: blur(75px); will-change: filter;`
 		}
 	};
 </script>
@@ -18,7 +22,7 @@
 {#if types[gradientType].style}
 	<div
 		class="absolute top-0 left-0 z-0 w-full h-screen {types[gradientType].className}"
-		style={types[gradientType].style}
+		style={types[gradientType].style({ from: page.theme.accentColor })}
 	/>
 {:else if types[gradientType].url}
 	<img

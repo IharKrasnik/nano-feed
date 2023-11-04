@@ -476,9 +476,35 @@ See you!
 				}
 			];
 		} else if (type === 'interactive-question') {
-			newSection.title =
-				'A radically transparent question to you... \n How likely you switched to our product?';
+			newSection.title = 'A radically transparent question to you..';
+			newSection.description = 'How likely would you switch to our product?';
 			newSection.interactiveAnswers = [{ emoji: '💯' }, { emoji: '🤔' }, { emoji: '👎' }];
+		} else if (type === 'carousel') {
+			newSection.title = 'Nice images!';
+			newSection.columns = 4;
+			newSection.items = [
+				{
+					title: 'Image',
+					description: '',
+					colSpan: 2,
+					imageUrl:
+						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
+				},
+				{
+					title: 'GIF',
+					description: '',
+					imageUrl:
+						'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D'
+				},
+				{
+					title: 'Video',
+					description: '',
+					imageUrl:
+						'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
+				}
+			];
+
+			newSection.carousel = { is: true };
 		}
 
 		$sectionToEdit = newSection;
@@ -1243,6 +1269,16 @@ See you!
 													placeholder="Join Waitlist"
 												/>
 
+												<div class="flex items-center font-normal text-sm opacity-70 mb-2 w-full">
+													<div class="shrink-0">Explain CTA:</div>
+
+													<input
+														class="ml-4 w-full"
+														placeholder="No credit card required"
+														bind:value={page.ctaExplainer}
+													/>
+												</div>
+
 												<div class="font-normal text-sm opacity-70 mb-2">
 													URL to open {page.isCollectEmails
 														? 'once email submitted (optional)'
@@ -1254,10 +1290,31 @@ See you!
 													bind:value={page.actionUrl}
 													placeholder="Action Url"
 												/>
+											</div>
+										{/if}
 
-												<!-- <div class="flex items-center mt-2 text-[14px]">
-											<input type="checkbox" class="mr-2"  /> Collect Emails
-										</div> -->
+										{#if page._id}
+											<div class="_section">
+												<div class="_title flex justify-between w-full">
+													Hero Settings
+
+													<div class="flex font-normal items-center">
+														Hide Hero <input
+															bind:checked={page.isHeroHidden}
+															class="ml-2"
+															type="checkbox"
+														/>
+													</div>
+												</div>
+
+												<div class="font-normal text-sm opacity-70 mb-2">Hero background image</div>
+
+												<FileInput
+													isCanSearch
+													class="w-full"
+													theme="light"
+													bind:url={page.theme.heroBgImage}
+												/>
 											</div>
 										{/if}
 
@@ -1377,6 +1434,12 @@ See you!
 													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 													on:click={() => addNewSection({ type: 'stepper' })}
 													>💡 Add 1-2-3 stepper</button
+												>
+
+												<button
+													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													on:click={() => addNewSection({ type: 'carousel' })}
+													>🎠 Add Carousel with Menu</button
 												>
 
 												<button

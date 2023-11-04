@@ -11,6 +11,7 @@
 	import isDarkColor from 'is-dark-color';
 
 	let isColorPickerShown = false;
+	export let page;
 
 	let fontPairs = [
 		{ title: 'Inter', text: 'Inter' },
@@ -52,6 +53,29 @@
 			'#00474d',
 			'#00ebff'
 		],
+		background: [
+			'#ffffff',
+			'#fafafa',
+			'#111111',
+			'#1c1c1c',
+			'#222222',
+			lighten(page?.theme?.accentColor || '#fff', 0.8)
+		],
+		accent: [
+			'#a7d7c5',
+			'#a7c5d7',
+			'#a7b0d7',
+			'#a7c7d7',
+			'#d7a7d4',
+			'#b2a7d7',
+			'#d7a7a7',
+			'#a7d7c3',
+			'#acd7a7',
+			'#c8d7a7',
+			'#d7d2a7',
+			'#d7bca7',
+			'#d7aea7'
+		],
 		dark: [],
 		light: []
 	};
@@ -70,6 +94,7 @@
 	if (window) {
 		window.getLuminance = getLuminance;
 	}
+
 	let isTooDark = (color) => {
 		return getLuminance(color) < 0.2;
 		// color = color.toLowerCase();
@@ -163,8 +188,6 @@
 
 	generateThemes();
 
-	export let page;
-
 	let setTheme = (theme) => {
 		page.theme = { ...theme };
 
@@ -207,6 +230,50 @@
 	};
 
 	let bgColorRGB;
+
+	let setButtonRadius = (size) => {
+		page.theme.buttonRadius = size;
+	};
+
+	let setContainerWidth = (width) => {
+		page.theme.containerWidth = width;
+	};
+
+	let changeBackgroundColor = () => {
+		let newTheme = isDarkColor(page.theme.backgroundColor) ? 'dark' : 'light';
+
+		if (newTheme === 'light') {
+			page.theme.sectionBackgroundColor = '#f6f5f4';
+		} else {
+			page.theme.sectionBackgroundColor = '#1a1c28';
+		}
+
+		if (page.theme.theme !== newTheme) {
+			page.theme = {
+				...page.theme,
+				theme: newTheme,
+				textColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
+			};
+		}
+	};
+
+	let changeAccentColor = () => {
+		let newTheme = isDarkColor(page.theme.accentColor) ? 'dark' : 'light';
+
+		let bgColor = lighten(page.theme.accentColor, 0.8);
+
+		colors.background.pop();
+		colors.background.push(bgColor);
+		colors.background = [...colors.background];
+
+		if (page.theme.buttonTheme !== newTheme) {
+			page.theme = {
+				...page.theme,
+				buttonTheme: newTheme,
+				buttonColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
+			};
+		}
+	};
 </script>
 
 {#key page._id}
@@ -231,10 +298,10 @@
 				<div class="p-8">
 					<h2 class="text-2xl mb-4 font-bold _title">Styles</h2>
 
-					<div class="flex justify-between mb-16">
+					<div class="flex justify-between gap-4 mb-16">
 						<div>
-							<div class="flex">
-								<div class="_section">
+							<div class="_section grid grid-cols-2">
+								<div class="shrink-0">
 									<div class="text-sm font-bold">Background Color</div>
 									<div class="text-sm mb-2 opacity-80">Page background color</div>
 
@@ -243,21 +310,25 @@
 										id="head"
 										name="head"
 										bind:value={page.theme.backgroundColor}
-										on:input={() => {
-											let newTheme = isDarkColor(page.theme.backgroundColor) ? 'dark' : 'light';
-
-											if (page.theme.theme !== newTheme) {
-												page.theme = {
-													...page.theme,
-													theme: newTheme,
-													textColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
-												};
-											}
-										}}
+										on:input={changeBackgroundColor}
 									/>
 								</div>
+								<div class="flex flex-wrap gap-2">
+									{#each colors.background as color}
+										<div
+											class="w-[30px] h-[30px] border border-black/50 rounded-full"
+											on:click={() => {
+												page.theme.backgroundColor = color;
+												changeBackgroundColor();
+											}}
+											style="background-color: {color};"
+										/>
+									{/each}
+								</div>
+							</div>
 
-								<div class="ml-2 _section">
+							<div class="_section grid grid-cols-2">
+								<div class="shrink-0">
 									<div class="text-sm font-bold">Accent Color</div>
 									<div class="text-sm mb-2 opacity-80">Buttons and highlight color</div>
 
@@ -266,29 +337,71 @@
 										id="head"
 										name="head"
 										bind:value={page.theme.accentColor}
-										on:input={() => {
-											let newTheme = isDarkColor(page.theme.accentColor) ? 'dark' : 'light';
-
-											if (page.theme.buttonTheme !== newTheme) {
-												page.theme = {
-													...page.theme,
-													buttonTheme: newTheme,
-													buttonColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
-												};
-											}
-										}}
+										on:input={changeAccentColor}
 									/>
 								</div>
-							</div>
-							<div class="_section mt-2 mb-8">
-								<div class="text-sm font-bold">Fonts</div>
-								<div class="text-sm mb-4 opacity-80">Select your font below</div>
-
-								<select bind:value={page.theme.fontPairId} on:change={updateFonts}>
-									{#each fontPairs as fontPair}
-										<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
+								<div class="flex flex-wrap gap-2">
+									{#each colors.accent as color}
+										<div
+											class="w-[30px] h-[30px] border border-black/50 rounded-full"
+											on:click={() => {
+												page.theme.accentColor = color;
+												changeAccentColor();
+											}}
+											style="background-color: {color};"
+										/>
 									{/each}
-								</select>
+								</div>
+							</div>
+							<div class="grid grid-cols-2 gap-4  mb-8">
+								<div class="_section">
+									<div class="text-sm font-bold">Fonts</div>
+									<div class="text-sm mb-4 opacity-80">Select your font below</div>
+
+									<select bind:value={page.theme.fontPairId} on:change={updateFonts}>
+										{#each fontPairs as fontPair}
+											<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
+										{/each}
+									</select>
+								</div>
+								<div class="_section">
+									<div class="text-sm font-bold">Buttons Radius:</div>
+									<button on:click={() => setButtonRadius('8px')}>SM</button><button
+										on:click={() => setButtonRadius('16px')}>MD</button
+									><button on:click={() => setButtonRadius('24px')}>LG</button>
+									<div>
+										<div class="text-sm font-bold">Container Size:</div>
+										<button on:click={() => setContainerWidth('900px')}>SM</button><button
+											on:click={() => setContainerWidth('1080px')}>MD</button
+										><button on:click={() => setContainerWidth('1280px')}>LG</button>
+									</div>
+								</div>
+							</div>
+							<div class="grid grid-cols-2 gap-4  mb-8">
+								<div class="_section">
+									<div class="text-sm font-bold">Background patterns</div>
+									<div class="text-sm mb-4 opacity-80">
+										Nice subtle backgrounds to catch attention
+									</div>
+
+									<button on:click={() => (page.theme.heroPattern = 'squares')}>Squares</button>
+									<button on:click={() => (page.theme.heroPattern = 'dots')}>Dots</button>
+									<button on:click={() => (page.theme.heroPattern = null)}>None</button>
+								</div>
+								<div class="_section">
+									<div class="text-sm font-bold">Background gradients</div>
+									<div class="text-sm mb-4 opacity-80">
+										Nice gradients to add extra dimensions and shadow
+									</div>
+
+									<button on:click={() => (page.theme.backgroundGradient = { type: 'ship' })}
+										>Subtle</button
+									>
+									<button on:click={() => (page.theme.backgroundGradient = { type: 'turborepo' })}
+										>Bright</button
+									>
+									<button on:click={() => (page.theme.backgroundGradient = null)}>None</button>
+								</div>
 							</div>
 						</div>
 
@@ -296,62 +409,56 @@
 							<!-- <BrowserFrame scale={'0.4'}> -->
 							<div style="zoom: .5;" class="rounded-2xl transition" on:click={() => setTheme(t)}>
 								<BrowserFrame>
-									<div class="max-h-[500px] overflow-y-scroll">
-										<SitePreview isEmbed isNoBadge maxHeight="450px;" page={{ ...page }} />
+									<div class="max-h-[1000px] overflow-y-scroll">
+										<SitePreview isEmbed isNoBadge page={{ ...page }} />
 									</div>
 								</BrowserFrame>
 							</div>
 							<!-- </BrowserFrame> -->
 						</div>
 					</div>
-
-					<div class="flex justify-between items-center">
-						<div>
-							<h2 class="text-2xl font-bold _title">Design Library</h2>
-
-							<div class="flex w-full flex justify-between items-center mb-4">
-								<div>Update your design in 1 click. Or generate more 👉</div>
-							</div>
-						</div>
-
-						<button class="_button _primary cursor-pointer" on:click={generateThemes}
-							>💥 Generate more designs</button
-						>
-					</div>
-
-					{#key page.theme.fontPairId}
-						<div class="bg-white mt-8" in:fly={{ y: 50, duration: 150 }}>
-							<div class="w-full grid grid-cols-3 gap-4">
-								{#each themes as t}
-									<div class="p-2 w-full max-h-[250px] overflow-y-hidden cursor-pointer">
-										<!-- <BrowserFrame scale={'0.4'}> -->
-										<div
-											style="zoom: .5;"
-											class="rounded-2xl transition hover:scale-110"
-											on:click={() => setTheme(t)}
-										>
-											<SitePreview
-												isAboveTheFold={true}
-												maxHeight="350px;"
-												isEmbed
-												isNoBadge
-												page={{ ...page, theme: { ...t } }}
-											/>
-										</div>
-										<!-- </BrowserFrame> -->
-									</div>
-									<!-- <div
-					class="flex justify-center items-center w-[25px] h-[25px] rounded-full mr-2 text-xs"
-					style="border: 1px rgba(0,0,0,.3) solid; background-color: {t.backgroundColor}; color: {t.textColor}"
-				>
-					Aa
-				</div> -->
-								{/each}
-							</div>
-						</div>
-					{/key}
 				</div>
 			</Modal>
 		{/if}
 	</div>
 {/key}
+
+<!-- 
+<div class="flex justify-between items-center">
+	<div>
+		<h2 class="text-2xl font-bold _title">Design Library</h2>
+
+		<div class="flex w-full flex justify-between items-center mb-4">
+			<div>Update your design in 1 click. Or generate more 👉</div>
+		</div>
+	</div>
+
+	<button class="_button _primary cursor-pointer" on:click={generateThemes}
+		>💥 Generate more designs</button
+	>
+</div>
+
+{#key page.theme.fontPairId}
+	<div class="bg-white mt-8" in:fly={{ y: 50, duration: 150 }}>
+		<div class="w-full grid grid-cols-3 gap-4">
+			{#each themes as t}
+				<div class="p-2 w-full max-h-[250px] overflow-y-hidden cursor-pointer">
+					<div
+						style="zoom: .5;"
+						class="rounded-2xl transition hover:scale-110"
+						on:click={() => setTheme(t)}
+					>
+						<SitePreview
+							isAboveTheFold={true}
+							maxHeight="350px;"
+							isEmbed
+							isNoBadge
+							page={{ ...page, theme: { ...t } }}
+						/>
+					</div>
+				</div>
+			
+			{/each}
+		</div>
+	</div>
+{/key} -->

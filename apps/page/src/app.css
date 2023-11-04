@@ -23,11 +23,19 @@
 	@apply rounded-2xl;
 }
 
-._section-item {
+._section-item,
+._section-item > .flex {
 	background: var(--section-background-color);
 	text-align: left;
 	border: 1px rgba(255, 255, 255, 0.2) solid;
 	@apply rounded-xl;
+}
+
+.h-screen-plus {
+	height: calc(100vh + 300px);
+}
+
+._section-item {
 }
 
 .p-section {
@@ -52,6 +60,10 @@
 	color: white;
 	padding: 5px;
 	border-radius: 5px;
+}
+
+.light-colors {
+	color: #f6f5f4 !important;
 }
 
 .testimonials .bg-section {

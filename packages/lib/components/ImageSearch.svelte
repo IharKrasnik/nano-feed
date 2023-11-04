@@ -35,7 +35,7 @@
 		images = null;
 	};
 
-	let type = 'gif';
+	let type = 'jpg';
 
 	const setType = (newType) => {
 		type = newType;
@@ -63,18 +63,18 @@
 
 				<div class="mt-4 flex">
 					<div
-						class="_section cursor-pointer mr-2 px-4"
-						class:font-bold={type === 'gif'}
-						on:click={() => setType('gif')}
-					>
-						GIF
-					</div>
-					<div
 						class="_section cursor-pointer px-4 mr-2"
 						class:font-bold={type === 'jpg'}
 						on:click={() => setType('jpg')}
 					>
 						JPG
+					</div>
+					<div
+						class="_section cursor-pointer mr-2 px-4"
+						class:font-bold={type === 'gif'}
+						on:click={() => setType('gif')}
+					>
+						GIF
 					</div>
 				</div>
 

@@ -21,7 +21,7 @@
 		{#key emoji}
 			<img style="width: {width}px; height: {width}px;" src={emoji} />
 		{/key}
-	{:else if emoji.startsWith('feather:')}
+	{:else if emoji?.startsWith('feather:')}
 		<FeatherIcon name={emoji.replace('feather:', '')} {color} />
 	{:else}
 		{emoji || '✨'}

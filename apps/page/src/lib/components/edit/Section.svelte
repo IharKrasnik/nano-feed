@@ -29,6 +29,10 @@
 
 	export let isShort = true;
 
+	if (!section.renderType) {
+		section.renderType = 'grid';
+	}
+
 	let innerSection;
 
 	let addNewItem = () => {
@@ -148,6 +152,12 @@
 	{:else if section.type === 'testimonials'}
 		<EditTestimonials bind:section />
 	{:else}
+		<select class="w-full my-4" bind:value={section.renderType}>
+			<option value="grid">Grid Section</option>
+			<option value="carousel">Carousel Menu</option>
+			<option value="stepper">1-2-3 Stepper</option>
+		</select>
+
 		<div
 			class="_section rounded-xl"
 			style="padding: 0px;"
@@ -160,75 +170,76 @@
 				// onEditEnded(section);
 			}}
 		>
-			<div class="bg-white top-[60px] rounded-xl">
-				<div class="p-4 pb-0 flex justify-between items-center">
-					<div class="_title" style="margin: 0;">Columns</div>
+			{#if section.renderType === 'grid'}
+				<div class="bg-white top-[60px] rounded-xl">
+					<div class="p-4 pb-0 flex justify-between items-center">
+						<div class="_title" style="margin: 0;">Columns</div>
 
-					<!-- <div class="opacity-70 hover:opacity-100 transition text-right w-full text-sm">
+						<!-- <div class="opacity-70 hover:opacity-100 transition text-right w-full text-sm">
 					<a class="cursor-pointer text-[#8B786D]" title="Remove Whole Section" on:click={onRemove}
 						>🗑</a
 					>
 				</div> -->
-				</div>
+					</div>
 
-				<hr class="mt-4 border-[#8B786D] opacity-30" />
+					<hr class="mt-4 border-[#8B786D] opacity-30" />
+					<div class="relative mt-4">
+						<div class="px-4 flex items-center">
+							{#if section.type !== 'pricing'}
+								<div
+									class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									class:aspect-square={section.columns !== 1}
+									class:px-4={section.columns === 1}
+									on:click={() => (section.columns = 1)}
+								>
+									1
+									{#if section.columns === 1}column{/if}
+								</div>
+							{/if}
 
-				<div class="relative mt-4">
-					<div class="px-4 flex items-center">
-						{#if section.type !== 'pricing'}
 							<div
-								class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-								class:aspect-square={section.columns !== 1}
-								class:px-4={section.columns === 1}
-								on:click={() => (section.columns = 1)}
+								class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+								on:click={() => (section.columns = 2)}
+								class:aspect-square={section.columns !== 2}
+								class:px-4={section.columns === 2}
 							>
-								1
-								{#if section.columns === 1}column{/if}
+								2
+								{#if section.columns === 2}columns{/if}
 							</div>
-						{/if}
 
-						<div
-							class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-							on:click={() => (section.columns = 2)}
-							class:aspect-square={section.columns !== 2}
-							class:px-4={section.columns === 2}
-						>
-							2
-							{#if section.columns === 2}columns{/if}
-						</div>
+							<div
+								class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+								class:aspect-square={section.columns !== 3}
+								class:px-4={section.columns === 3}
+								on:click={() => (section.columns = 3)}
+							>
+								3
+								{#if section.columns === 3}columns{/if}
+							</div>
 
-						<div
-							class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-							class:aspect-square={section.columns !== 3}
-							class:px-4={section.columns === 3}
-							on:click={() => (section.columns = 3)}
-						>
-							3
-							{#if section.columns === 3}columns{/if}
-						</div>
-
-						<div
-							class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-							class:aspect-square={section.columns !== 4}
-							class:px-4={section.columns === 4}
-							on:click={() => (section.columns = 4)}
-						>
-							4
-							{#if section.columns === 4}columns{/if}
-						</div>
-						<div
-							class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-							class:aspect-square={section.columns !== 12}
-							class:px-4={section.columns === 12}
-							on:click={() => (section.columns = 12)}
-						>
-							12
-							{#if section.columns === 12}columns (grid){/if}
+							<div
+								class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+								class:aspect-square={section.columns !== 4}
+								class:px-4={section.columns === 4}
+								on:click={() => (section.columns = 4)}
+							>
+								4
+								{#if section.columns === 4}columns{/if}
+							</div>
+							<div
+								class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+								class:aspect-square={section.columns !== 12}
+								class:px-4={section.columns === 12}
+								on:click={() => (section.columns = 12)}
+							>
+								12
+								{#if section.columns === 12}columns (grid){/if}
+							</div>
 						</div>
 					</div>
+					<hr class="mt-4 border-[#8B786D] opacity-30" />
 				</div>
-				<hr class="mt-4 border-[#8B786D] opacity-30" />
-			</div>
+			{/if}
 
 			{#each section.items || [] as item}
 				<EditSectionItem bind:section bind:item />
