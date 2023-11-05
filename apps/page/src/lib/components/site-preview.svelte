@@ -178,7 +178,7 @@
 	];
 
 	let replaceVariable = ({ str, varName, varValue }) => {
-		return str.replace(`$${varName}`, varValue);
+		return str ? str.replace(`$${varName}`, varValue) : '';
 	};
 
 	if (localStorage.visitsCount) {
@@ -265,7 +265,7 @@
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
 
-{#key page?._id}
+{#key page._id}
 	{#if page.renderType === 'portfolio'}
 		<PortfolioPage bind:page />
 	{:else}
@@ -317,12 +317,6 @@
 					style="background-image: linear-gradient(rgba(0, 0, 0, 0) 82%, #0c120c), linear-gradient(rgba(12, 18, 12, .8), rgba(12, 18, 12, .8)), url('https://assets.website-files.com/636cf54cf20a6ac090f7deb0/636cfb105b88e07b40e1e494_hero-bg.svg')"
 				/>
 
-				<!-- DOTS -->
-				<!-- 
-			<div
-				class="absolute h-full w-full bg-[radial-gradient(#2e2e2f_0.5px,transparent_1px)] [background-size:16px_16px]"
-			/> -->
-
 				<!-- <img
 				
 				class="absolute w-screen h-screen object-cover"
@@ -334,29 +328,29 @@
 						class="fixed top-0 bg-site w-full backdrop-blur"
 						style="z-index: 33;"
 						in:fly={{ y: -150, duration: 150, delay: 150 }}
-						out:fade={{ duration: 150, delay: 150 }}
 					>
 						<div
 							class="flex w-full justify-between items-center container-width left-0 mx-auto p-4"
 						>
 							<a class="flex items-center shrink-0" href="">
-								<!-- <Emoji class="mr-2" emoji={page.logo} /> -->
+								<!-- <Emoji class="mr-2" emoji={page.parentPage?.logo || page.logo} /> -->
 
 								<span class="font-bold  " style="font-family: var(--logo-font)">
-									{page.name}
+									{page.parentPage?.name || page.name}
 								</span>
 								<div class="ml-4 opacity-70 hidden sm:block">
-									{@html striptags(page.title || '')}
+									{@html striptags(page.parentPage?.title || page.title || '')}
 								</div>
 							</a>
 
 							<div class="shrink-0 flex items-center">
-								{#if page.blog}
+								{#if page.parentPage?.blog || page.blog}
 									<div class="mr-4 sm:mr-8">
-										<a href={page.blog.url}>Blog</a>
+										<a href={(page.parentPage?.blog || page.blog).url}>Blog</a>
 									</div>
 								{/if}
-								{#if !isSubmitted}
+
+								{#if page.callToAction && !isSubmitted}
 									{#if page.isCollectEmails}
 										<button
 											class="cursor-pointer"
@@ -383,27 +377,37 @@
 						in:fade={{ duration: 150 }}
 					>
 						<div class="p-4 _header flex md:justify-between items-center justify-center">
-							<a class="flex items-center shrink-0 _logo" href="">
+							<a
+								class="flex items-center shrink-0 _logo"
+								href="/{page.parentPage?.slug || page.slug}"
+							>
 								{#if page?.logo && page.logo.startsWith('http')}
-									<Emoji class="mr-2" emoji={page.logo} />
+									<Emoji class="mr-2" emoji={page.parentPage?.logo || page.logo} />
 								{/if}
 
 								<span
 									class="font-bold {page.heroBgImage ? 'light-colors' : ''}"
 									style="font-family: var(--logo-font)"
 								>
-									{page.name}
+									{page.parentPage?.name || page.name}
 								</span>
 							</a>
 
 							<div class="shrink-0 mt-2 hidden md:flex items-center">
 								{#if page.blog}
 									<div class="mr-8">
-										<a href={page.blog.url}>Blog</a>
+										<a href={(page.parentPage?.blog || page.blog).url}>Blog</a>
 									</div>
 								{/if}
 
-								{#if !isSubmitted}
+								{#if !page.parentPage || page.parentPage?.subPages}
+									{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+										<a href="/{page.parentPage?.slug || page.slug}/{subPage.slug}">{subPage.name}</a
+										>
+									{/each}
+								{/if}
+
+								{#if page.callToAction && !isSubmitted}
 									{#if page.isCollectEmails}
 										<button
 											class="cursor-pointer"
@@ -417,7 +421,6 @@
 									{/if}
 								{/if}
 							</div>
-							<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
 						</div>
 
 						<!-- <img
@@ -489,8 +492,8 @@
 													in:fly={{ y: 50, duration: 800 }}
 												>
 													{#if page.title}
-														<div>{@html page.title}</div>
-													{:else}
+														<div>{@html page.title || ''}</div>
+													{:else if isEmbed}
 														{'Type Tagline...'}
 													{/if}
 												</h1>
@@ -508,68 +511,74 @@
 												</h2>
 											{/if}
 
-											<div
-												in:fly={{ y: 50, duration: 800, delay: 200 }}
-												class="_input_container {page.isCollectEmails && !isSubmitted
-													? '_border flex'
-													: 'inline-block'} items-center {page.demoUrl || page.theme?.isHeroLeft
-													? ''
-													: 'mx-auto'} {page.isCollectEmails
-													? 'w-full ' +
-													  (page.callToAction.length < 16
-															? 'sm:w-[360px]'
-															: page.callToAction.length < 20
-															? 'sm:w-[380px]'
-															: 'sm:w-[460px]')
-													: ''}"
-											>
-												<form
-													class="{page.isCollectEmails
-														? `w-full flex flex-col ${
-																page.isHeroVertical ? '' : 'sm:flex-row'
-														  } items-center justify-center`
-														: 'mx-auto sm:mx-0 inline-block'} "
-													style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
-													on:submit|preventDefault={submitEmail}
+											{#if page.callToAction}
+												<div
+													in:fly={{ y: 50, duration: 800, delay: 200 }}
+													class="_input_container {page.isCollectEmails && !isSubmitted
+														? '_border flex'
+														: 'inline-block'} items-center {page.demoUrl || page.theme?.isHeroLeft
+														? ''
+														: 'mx-auto'} {page.isCollectEmails
+														? 'w-full ' +
+														  (page.callToAction.length < 16
+																? 'sm:w-[360px]'
+																: page.callToAction.length < 20
+																? 'sm:w-[380px]'
+																: 'sm:w-[460px]')
+														: ''}"
 												>
-													{#if !isSubmitted}
-														{#if page.isCollectEmails}
-															<input
-																class="_input _email-input w-full"
-																placeholder="Your Email"
-																type="email"
-																required
-																bind:this={inputEl}
-																bind:value={email}
-																disabled={isSubmitted}
-																in:fade={{ duration: 150 }}
-															/>
-															<button
-																type="submit"
-																class="_input_button justify-center {page.isCollectEmails
-																	? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-																	: ''}">{page.callToAction}</button
-															>
-														{:else}
-															<a href={page.actionUrl} target="_blank" class="button _input_button">
-																{page.callToAction}
-															</a>
-														{/if}
-													{:else}
-														<div>💥 Thank you!</div>
-
-														{#if page.actionUrl}
-															<div class="mt-8 opacity-70">Redirecting...</div>
-														{/if}
-													{/if}
-												</form>
-
-												{#if page.callToAction2}
-													<a href={page.callToAction.url} class="button secondary"
-														>{page.callToAction2.title}</a
+													<form
+														class="{page.isCollectEmails
+															? `w-full flex flex-col ${
+																	page.isHeroVertical ? '' : 'sm:flex-row'
+															  } items-center justify-center`
+															: 'mx-auto sm:mx-0 inline-block'} "
+														style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
+														on:submit|preventDefault={submitEmail}
 													>
-												{/if}
-											</div>
+														{#if !isSubmitted}
+															{#if page.isCollectEmails}
+																<input
+																	class="_input _email-input w-full"
+																	placeholder="Your Email"
+																	type="email"
+																	required
+																	bind:this={inputEl}
+																	bind:value={email}
+																	disabled={isSubmitted}
+																	in:fade={{ duration: 150 }}
+																/>
+																<button
+																	type="submit"
+																	class="_input_button justify-center {page.isCollectEmails
+																		? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
+																		: ''}">{page.callToAction}</button
+																>
+															{:else}
+																<a
+																	href={page.actionUrl}
+																	target="_blank"
+																	class="button _input_button"
+																>
+																	{page.callToAction}
+																</a>
+															{/if}
+														{:else}
+															<div>💥 Thank you!</div>
+
+															{#if page.actionUrl}
+																<div class="mt-8 opacity-70">Redirecting...</div>
+															{/if}
+														{/if}
+													</form>
+
+													{#if page.callToAction2}
+														<a href={page.callToAction.url} class="button secondary"
+															>{page.callToAction2.title}</a
+														>
+													{/if}
+												</div>
+											{/if}
 											{#if page.ctaExplainer}
 												<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
 											{/if}

@@ -135,12 +135,7 @@
 />
 
 {#if section.isShown}
-	<div
-		class="_section-container {section.type} p-4"
-		style={style || ''}
-		in:fly={{ y: 50 }}
-		out:fade
-	>
+	<div class="_section-container {section.type} p-4" style={style || ''} in:fly={{ y: 50 }}>
 		{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji)}
 			<div class="w-full text-center py-4 sm:pt-16 text-center">
 				{#if section.emoji}
@@ -223,7 +218,7 @@
 				{#if section.columns === 1}
 					<div>
 						{#each section.items as item}
-							<div class="_section-item w-full grid grid-cols-3 gap-4">
+							<div class="_section-item w-full grid grid-cols-3 gap-4 mb-4">
 								<div class="p-4 sm:p-8 col-span-1">
 									<Emoji bind:emoji={item.emoji} />
 									<div class="_item-title mb-2">{@html item.title}</div>

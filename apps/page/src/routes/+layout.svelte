@@ -53,7 +53,7 @@
 			/>
 		{/if}
 	{:else}
-		<link rel="icon" href="logo.svg" />
+		<link rel="icon" href="/logo.svg" />
 	{/if}
 </svelte:head>
 

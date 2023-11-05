@@ -606,6 +606,29 @@ See you!
 		let { url } = await get('stripe/subscribe', { pageId: page._id });
 		window.location.href = url;
 	};
+
+	let isNewSubPage;
+
+	let addSubpage = () => {
+		debugger;
+		setPageAndDraft(
+			{
+				slug: '_new',
+				name: '',
+				title: '',
+				subtitle: '',
+				ctaExplainer: '',
+				parentPage: {
+					_id: page.parentPage?._id || page._id,
+					slug: page.parentPage?.slug || page.slug
+				},
+				variablesValues: page.variablesValues
+			},
+			{ force: true }
+		);
+	};
+
+	let createSubPage = () => {};
 </script>
 
 {#if isSettingsModalShown}
@@ -996,6 +1019,15 @@ See you!
 
 						{#if !isMetricsOpen && !isSubmissionsOpen}
 							<div class="py-4">
+								{#if page.parentPage}
+									<button
+										class="_secondary _small w-full mb-4"
+										on:click={() => {
+											isNewSubPage = false;
+										}}>Back to the main page</button
+									>
+								{/if}
+
 								{#if !page._id || isBrandNameEdit}
 									<div class="_section">
 										<div class="_title">Brand Name</div>
@@ -1089,6 +1121,36 @@ See you!
 									}}
 								>
 									{#if page.name}
+										{#if page._id}
+											<div class="_section">
+												<select
+													class="w-full mb-4"
+													bind:value={page._id}
+													on:change={async (evt) => {
+														setPageAndDraft(
+															await get(`pages/${evt.target.value}`, {
+																parentPageSlug: page.slug
+															}),
+															{ force: true }
+														);
+														evt.preventDefault();
+													}}
+												>
+													<option value={page._id}>Home</option>
+													{#if page.subPages?.length}
+														{#each page.subPages as subpage (subpage._id)}
+															<option value={subpage._id}>/{subpage.slug}</option>
+														{/each}
+													{/if}
+												</select>
+
+												{#if !page.parentPage}
+													<Button class="_primary _small w-full mt-4" onClick={addSubpage}
+														>Add Subpage</Button
+													>
+												{/if}
+											</div>
+										{/if}
 										<div class="_section">
 											<div class="_title flex items-center justify-between">
 												<div>Tagline</div>
@@ -1870,6 +1932,7 @@ See you!
 											<SitePreview
 												class="pt-8"
 												isNoVars
+												isEmbed
 												noStickyHeader={true}
 												isNoBadge={true}
 												bind:page

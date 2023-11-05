@@ -3,23 +3,21 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { get } from 'lib/api';
+	import currentPage from '$lib/stores/currentPage';
 
 	import SitePreview from '$lib/components/site-preview.svelte';
-
-	export let slug;
 
 	export let isNoBadge;
 
 	export let noStickyHeader;
 
-	export let currentPage = $page.data.page;
-
-	if (browser && currentPage) {
-		window.WAVE_SUBPROJECT_ID = currentPage._id;
-		slug = $page.params.pageSlug || slug;
+	if (browser && $currentPage) {
+		window.WAVE_SUBPROJECT_ID = $currentPage.parentPage?._id || $currentPage._id;
 	}
 </script>
 
-{#if page}
-	<SitePreview bind:isNoBadge bind:page={currentPage} bind:noStickyHeader />
+{#if $currentPage}
+	{#key $currentPage._refreshTimestamp}
+		<SitePreview bind:isNoBadge bind:page={$currentPage} bind:noStickyHeader />
+	{/key}
 {/if}

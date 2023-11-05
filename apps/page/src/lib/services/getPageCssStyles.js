@@ -1,5 +1,5 @@
 let fontPairs = [
-	{ title: 'Archivo', text: 'Inter' },
+	{ title: 'Inter', text: 'Inter' },
 	{ title: 'Calistoga', text: 'IBM Plex Sans' },
 	{ title: 'Chillax', text: 'Gilroy' },
 	{ title: 'Fraunces', text: 'Poppins' },

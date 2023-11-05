@@ -125,7 +125,7 @@
 	</div>
 
 	{#if myAnswer}
-		<div out:fade class="{itemClass} mt-8 text-lg">
+		<div class="{itemClass} mt-8 text-lg">
 			{sectionItem.interactiveFollowUp?.text || 'Thank you!'}
 			{myAnswer.emoji}
 

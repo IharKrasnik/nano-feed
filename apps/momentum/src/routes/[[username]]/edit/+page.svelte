@@ -113,6 +113,7 @@
 					/>
 				</div>
 			{/if}
+
 			<div class="mb-8">
 				<label> Tagline </label>
 				<input

@@ -87,13 +87,13 @@
 	let pageStreams;
 
 	let getPageStreams = async () => {
-		pageStreams = await get(`pages/${page._id}/streams`);
+		pageStreams = await get(`pages/${page.parentPage?._id || page._id}/streams`);
 	};
 
 	getPageStreams();
 
 	let createStream = async () => {
-		const { streamSlug } = await put(`pages/${page._id}/embed-stream`, {
+		const { streamSlug } = await put(`pages/${page.parentPage?._id || page._id}/embed-stream`, {
 			title: page.name,
 			hubStreamSlug: page.streamSlug || ''
 		});

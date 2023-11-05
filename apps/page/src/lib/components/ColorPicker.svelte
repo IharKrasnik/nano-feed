@@ -206,7 +206,7 @@
 	}
 
 	$: if (!page.theme) {
-		page.theme = themes[0];
+		page.theme = {};
 	}
 
 	let updateFonts = () => {
