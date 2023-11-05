@@ -23,6 +23,10 @@
 	@apply rounded-2xl;
 }
 
+.aspect-og {
+	aspect-ratio: 1200/630;
+}
+
 ._section-item,
 ._section-item > .flex {
 	background: var(--section-background-color);
@@ -35,14 +39,8 @@
 	height: calc(100vh + 300px);
 }
 
-._section-item {
-}
-
 .p-section {
 	/* @apply p-8; */
-}
-
-._section-item {
 }
 
 .bg-accent {

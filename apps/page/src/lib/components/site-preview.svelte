@@ -1,6 +1,9 @@
 <script>
 	import SvelteMarkdown from 'svelte-markdown';
+	import moment from 'moment';
+	import _ from 'lodash';
 
+	import { browser } from '$app/environment';
 	import { post } from 'lib/api';
 	import { POST_URL } from 'lib/env';
 	import { page as sveltePage } from '$app/stores';
@@ -9,6 +12,8 @@
 	import { darken, lighten } from 'lib/helpers/color';
 	import striptags from 'striptags';
 
+	import PortfolioPage from '$lib/layouts/PortfolioPage.svelte';
+	import getPageCssStyles from '$lib/services/getPageCssStyles';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
@@ -77,7 +82,7 @@
 	};
 
 	export let noStickyHeader = false;
-
+	export let isNoVars = false;
 	let isMounted = false;
 
 	onMount(() => {
@@ -85,11 +90,14 @@
 	});
 
 	let email;
-	let isSubmitted = false;
+
+	let isSubmitted = !!localStorage.submittedEmail;
 
 	let submitEmail = async () => {
 		await post(`pages/${page.slug}/submissions`, { email });
 		isSubmitted = true;
+
+		localStorage.submittedEmail = email;
 
 		if (page.actionUrl) {
 			setTimeout(() => {
@@ -114,56 +122,24 @@
 	let styles;
 
 	export let isAboveTheFold = false;
-
-	let fontPairs = [
-		{ title: 'Archivo', text: 'Inter' },
-		{ title: 'Calistoga', text: 'IBM Plex Sans' },
-		{ title: 'Chillax', text: 'Gilroy' },
-		{ title: 'Fraunces', text: 'Poppins' },
-		{ title: 'Syne', text: 'Syne' },
-		{ title: 'Quattrocento', text: 'Questrial' },
-		{ title: 'Albert Sans', text: 'Barlow' }
-	];
+	let previewEl;
 
 	$: if (page) {
-		styles = {
-			'container-width': page.theme?.containerWidth || '1280px',
-			'logo-font': page.theme?.logoFont || 'monospace',
-			'title-font': page.theme?.titleFont || fontPairs[0].title,
-			'subtitle-font': page.theme?.subtitleFont || page.theme?.titleFont,
-			'title-font-size': page.theme?.isHugeTitle ? '72px' : '48px',
-			'title-line-height': '1.0',
-			'title-line-height': 1,
-			'button-radius': page.theme?.buttonRadius || '24px',
-			'text-font': page.theme?.textFont || fontPairs[0].text,
-			'text-font-size': '18px',
-			'text-line-height': 1.55,
-			'background-color': page.theme?.backgroundColor || '#ffffff',
-			'text-color': page.theme?.textColor || '#111',
-			'accent-color': page.theme?.accentColor || '#000',
-			'section-background-color':
-				page.theme?.sectionBackgroundColor ||
-				(page.theme?.theme === 'dark' ? '#1a1c28' : '#f6f5f4'),
-			'section-description-text-color':
-				page.theme?.theme === 'dark' ? 'rgb(229 231 235)' : 'rgba(4, 4, 4, 1)',
-
-			'section-title-font-size': page.theme?.containerWidth ? '20px' : '24px',
-			'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',
-
-			'input-background': page.theme?.inputBackground || 'transparent',
-			'input-color': page.theme?.inputColor || page.theme?.textColor || '#111',
-			'button-color': page.theme?.buttonColor || '#fff'
-		};
-
-		cssVarStyles = Object.entries(styles)
-			.map(([key, value]) => `--${key}:${value}`)
-			.join(';');
+		let res = getPageCssStyles(page);
+		cssVarStyles = res.cssVarStyles;
+		styles = res.styles;
 	}
 
-	if ($sveltePage.params.pageSlug) {
-		window.document.body.style['background-color'] = page.theme?.backgroundColor || 'white';
-	} else {
-		window.document.body.style['background-color'] = null;
+	if (browser) {
+		if ($sveltePage.params.pageSlug) {
+			window.document.body.style['background-color'] = page.theme?.backgroundColor || 'white';
+		} else {
+			window.document.body.style['background-color'] = null;
+		}
+	}
+
+	$: if (previewEl) {
+		previewEl.style['background-color'] = page.theme?.backgroundColor || 'white';
 	}
 
 	let editEl;
@@ -177,6 +153,73 @@
 			}
 		}, 0);
 	};
+
+	if (window) {
+		window.moment = moment;
+	}
+
+	page.variables = [
+		{
+			name: 'timeOfDay',
+			calculateCode: `
+			var currentHour = moment().format("HH");
+
+			if (currentHour >= 3 && currentHour < 12){
+					return "morning";
+			} else if (currentHour >= 12 && currentHour < 17){
+					return "afternoon";
+			}   else if (currentHour >= 17 && currentHour < 22){
+					return "evening";
+			} else if (currentHour >= 22 || currentHour < 3){
+					return "night";
+			}
+		`
+		}
+	];
+
+	let replaceVariable = ({ str, varName, varValue }) => {
+		return str.replace(`$${varName}`, varValue);
+	};
+
+	if (localStorage.visitsCount) {
+		localStorage.visitsCount = parseInt(localStorage.visitsCount) + 1;
+	} else {
+		localStorage.visitsCount = 1;
+	}
+
+	let systemVariables = [
+		{
+			name: 'visitsCount',
+			value: localStorage.visitsCount || 1
+		},
+		{
+			name: 'totalSignupsCount',
+			value: page.totalSignupsCount || 0
+		}
+	];
+
+	if (browser) {
+		page.variablesValues = {};
+
+		[...systemVariables, ...(isNoVars ? [] : page.variables)].forEach((variable) => {
+			if (variable.calculateCode) {
+				page.variablesValues[variable.name] = eval(`(function(){${variable.calculateCode}})()`);
+				page.variablesValues[variable.name + 'Capitalised'] = _.capitalize(
+					page.variablesValues[variable.name]
+				);
+			} else {
+				page.variablesValues[variable.name] = variable.value;
+			}
+
+			['title', 'subtitle', 'ctaExplainer', 'callToAction'].forEach((fieldName) => {
+				page[fieldName] = replaceVariable({
+					str: page[fieldName],
+					varName: variable.name,
+					varValue: page.variablesValues[variable.name]
+				});
+			});
+		});
+	}
 </script>
 
 <svelte:head>
@@ -223,526 +266,508 @@
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
 
 {#key page?._id}
-	<div class="">
-		<div class="relative color-site ttt" style="{cssVarStyles};">
-			{#if page.headerAnimation?.name === 'coma'}
-				<ComaDragons />
-			{/if}
-			<!-- <img
+	{#if page.renderType === 'portfolio'}
+		<PortfolioPage bind:page />
+	{:else}
+		<div class="" bind:this={previewEl}>
+			<div class="relative color-site ttt" style="{cssVarStyles};">
+				{#if page.headerAnimation?.name === 'coma'}
+					<ComaDragons />
+				{/if}
+				<!-- <img
 				class="absolute w-screen h-screen object-cover"
 				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
 			/> -->
-			{#if page?.theme?.heroBgImage}
-				<div
-					class="absolute top-0 left-0 w-screen h-screen z-1"
-					style="background-color: rgba(0,0,0, 0.7); z-index: 1;"
-				/>
-				<img
-					class="absolute left-0 top-0 w-screen h-screen object-cover opacity-90"
-					src={page.theme?.heroBgImage}
-				/>
-			{/if}
+				{#if page?.heroBgImage}
+					<div
+						class="absolute top-0 left-0 w-screen h-screen z-1"
+						style="background-color: rgba(0,0,0, 0.7); z-index: 1;"
+					/>
+					<img
+						class="absolute left-0 top-0 w-screen h-screen object-cover opacity-90"
+						src={page?.heroBgImage}
+					/>
+				{/if}
 
-			<!-- SQUARES -->
-			{#if page?.theme?.heroPattern}
-				{#if page?.theme?.theme === 'dark'}
-					{#if page?.theme?.heroPattern === 'squares'}
+				<!-- SQUARES -->
+				{#if page?.theme?.heroPattern}
+					{#if page?.theme?.theme === 'dark'}
+						{#if page?.theme?.heroPattern === 'squares'}
+							<div
+								class="bg-root absolute z-10 inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
+							/>
+						{:else if page?.theme?.heroPattern === 'dots'}
+							<div
+								class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#ffffff_0.5px,transparent_1px)] [background-size:16px_16px]"
+							/>
+						{/if}
+					{:else if page?.theme?.heroPattern === 'squares'}
 						<div
-							class="bg-root absolute z-10 inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
+							class="bg-root  z-10 absolute inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
 						/>
 					{:else if page?.theme?.heroPattern === 'dots'}
 						<div
-							class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#ffffff_0.5px,transparent_1px)] [background-size:16px_16px]"
+							class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#c8c8c8.5px,transparent_1px)] [background-size:32px_32px]"
 						/>
 					{/if}
-				{:else if page?.theme?.heroPattern === 'squares'}
-					<div
-						class="bg-root  z-10 absolute inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
-					/>
-				{:else if page?.theme?.heroPattern === 'dots'}
-					<div
-						class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#c8c8c8.5px,transparent_1px)] [background-size:32px_32px]"
-					/>
 				{/if}
-			{/if}
 
-			<div
-				class="absolute top-0 left-0"
-				style="background-image: linear-gradient(rgba(0, 0, 0, 0) 82%, #0c120c), linear-gradient(rgba(12, 18, 12, .8), rgba(12, 18, 12, .8)), url('https://assets.website-files.com/636cf54cf20a6ac090f7deb0/636cfb105b88e07b40e1e494_hero-bg.svg')"
-			/>
+				<div
+					class="absolute top-0 left-0"
+					style="background-image: linear-gradient(rgba(0, 0, 0, 0) 82%, #0c120c), linear-gradient(rgba(12, 18, 12, .8), rgba(12, 18, 12, .8)), url('https://assets.website-files.com/636cf54cf20a6ac090f7deb0/636cfb105b88e07b40e1e494_hero-bg.svg')"
+				/>
 
-			<!-- DOTS -->
-			<!-- 
+				<!-- DOTS -->
+				<!-- 
 			<div
 				class="absolute h-full w-full bg-[radial-gradient(#2e2e2f_0.5px,transparent_1px)] [background-size:16px_16px]"
 			/> -->
 
-			<!-- <img
+				<!-- <img
 				
 				class="absolute w-screen h-screen object-cover"
 				src="https://as2.ftcdn.net/v2/jpg/06/15/14/25/1000_F_615142554_j3WPgAOSyTX1Ri1O6pxf0s8jx37vXLbg.jpg"
 			/> -->
 
-			{#if !noStickyHeader && scrollY > 300}
-				<div
-					class="fixed top-0 bg-site w-full"
-					style="z-index: 33;"
-					in:fly={{ y: -150, duration: 150, delay: 150 }}
-					out:fade={{ duration: 150, delay: 150 }}
-				>
-					<div class="flex w-full justify-between items-center container-width left-0 mx-auto p-4">
-						<a class="flex items-center shrink-0" href="">
-							<!-- <Emoji class="mr-2" emoji={page.logo} /> -->
+				{#if !noStickyHeader && scrollY > 300}
+					<div
+						class="fixed top-0 bg-site w-full backdrop-blur"
+						style="z-index: 33;"
+						in:fly={{ y: -150, duration: 150, delay: 150 }}
+						out:fade={{ duration: 150, delay: 150 }}
+					>
+						<div
+							class="flex w-full justify-between items-center container-width left-0 mx-auto p-4"
+						>
+							<a class="flex items-center shrink-0" href="">
+								<!-- <Emoji class="mr-2" emoji={page.logo} /> -->
 
-							<span class="font-bold  " style="font-family: var(--logo-font)">
-								{page.name}
-							</span>
-							<div class="ml-4 opacity-70 hidden sm:block">
-								{@html striptags(page.title || '')}
+								<span class="font-bold  " style="font-family: var(--logo-font)">
+									{page.name}
+								</span>
+								<div class="ml-4 opacity-70 hidden sm:block">
+									{@html striptags(page.title || '')}
+								</div>
+							</a>
+
+							<div class="shrink-0 flex items-center">
+								{#if page.blog}
+									<div class="mr-4 sm:mr-8">
+										<a href={page.blog.url}>Blog</a>
+									</div>
+								{/if}
+								{#if !isSubmitted}
+									{#if page.isCollectEmails}
+										<button
+											class="cursor-pointer"
+											style="outline: 1px rgba(255, 255, 255, .8) solid;"
+											on:click={onButtonClick}>{page.callToAction}</button
+										>
+									{:else}
+										<a href={page.actionUrl} target="_blank" class="button">
+											{page.callToAction}
+										</a>
+									{/if}
+								{/if}
 							</div>
-						</a>
-
-						<div class="shrink-0 flex items-center">
-							{#if page.blog}
-								<div class="mr-4 sm:mr-8">
-									<a href={page.blog.url}>Blog</a>
-								</div>
-							{/if}
-							{#if !isSubmitted}
-								{#if page.isCollectEmails}
-									<button
-										class="cursor-pointer"
-										style="outline: 1px rgba(255, 255, 255, .8) solid;"
-										on:click={onButtonClick}>{page.callToAction}</button
-									>
-								{:else}
-									<a href={page.actionUrl} target="_blank" class="button">
-										{page.callToAction}
-									</a>
-								{/if}
-							{/if}
 						</div>
+
+						<hr class="border-[#8B786D] opacity-30 w-full" />
 					</div>
+				{/if}
 
-					<hr class="border-[#8B786D] opacity-30 w-full" />
-				</div>
-			{/if}
-
-			{#if isMounted}
-				<div
-					class="sticky bg-none z-20 w-full {clazz}"
-					style="z-index: 32;"
-					in:fade={{ duration: 150 }}
-				>
-					<div class="p-4 _header flex md:justify-between items-center justify-center">
-						<a class="flex items-center shrink-0 _logo" href="">
-							{#if page?.logo && page.logo.startsWith('http')}
-								<Emoji class="mr-2" emoji={page.logo} />
-							{/if}
-
-							<span
-								class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
-								style="font-family: var(--logo-font)"
-							>
-								{page.name}
-							</span>
-						</a>
-
-						<div class="shrink-0 mt-2 hidden md:flex items-center">
-							{#if page.blog}
-								<div class="mr-8">
-									<a href={page.blog.url}>Blog</a>
-								</div>
-							{/if}
-
-							{#if !isSubmitted}
-								{#if page.isCollectEmails}
-									<button
-										class="cursor-pointer"
-										style="outline: 1px rgba(255, 255, 255, .8) solid;"
-										on:click={onButtonClick}>{page.callToAction}</button
-									>
-								{:else}
-									<a href={page.actionUrl} target="_blank" class="button">
-										{page.callToAction}
-									</a>
+				{#if isMounted}
+					<div
+						class="sticky bg-none z-20 w-full {clazz}"
+						style="z-index: 32;"
+						in:fade={{ duration: 150 }}
+					>
+						<div class="p-4 _header flex md:justify-between items-center justify-center">
+							<a class="flex items-center shrink-0 _logo" href="">
+								{#if page?.logo && page.logo.startsWith('http')}
+									<Emoji class="mr-2" emoji={page.logo} />
 								{/if}
-							{/if}
-						</div>
-						<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
-					</div>
 
-					<!-- <img
+								<span
+									class="font-bold {page.heroBgImage ? 'light-colors' : ''}"
+									style="font-family: var(--logo-font)"
+								>
+									{page.name}
+								</span>
+							</a>
+
+							<div class="shrink-0 mt-2 hidden md:flex items-center">
+								{#if page.blog}
+									<div class="mr-8">
+										<a href={page.blog.url}>Blog</a>
+									</div>
+								{/if}
+
+								{#if !isSubmitted}
+									{#if page.isCollectEmails}
+										<button
+											class="cursor-pointer"
+											style="outline: 1px rgba(255, 255, 255, .8) solid;"
+											on:click={onButtonClick}>{page.callToAction}</button
+										>
+									{:else}
+										<a href={page.actionUrl} target="_blank" class="button">
+											{page.callToAction}
+										</a>
+									{/if}
+								{/if}
+							</div>
+							<!-- <button class="mt-2 cursor-pointer" on:click={onButtonClick}>{page.callToAction}</button> -->
+						</div>
+
+						<!-- <img
 						class="absolute top-0 left-0 z-0 w-full h-screen"
 						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1698794318980-image.png"
 					/>
 					 -->
 
-					{#if page.theme?.backgroundGradient}
-						<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
-					{/if}
+						{#if page.theme?.backgroundGradient}
+							<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
+						{/if}
 
-					<!-- <Gradients gradientType={'ship'} /> -->
+						<!-- <Gradients gradientType={'ship'} /> -->
 
-					<!-- <div
+						<!-- <div
 						class="absolute top-0 left-0 z-0 w-full h-screen "
 						style="background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),
 					linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);"
 					/> -->
 
-					<!-- <div
+						<!-- <div
 						class="absolute top-0 left-0 z-0 w-full h-screen opacity-20 rounded-full"
 						style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
 					/> -->
 
-					<div class="relative _root bg-site" style="background: none;">
-						<div
-							class="{isEmbed
-								? ''
-								: page.theme?.isHeroVertical
-								? ''
-								: 'min-h-screen h-screen'} mt-[-70px]"
-						>
+						<div class="relative _root bg-site" style="background: none;">
 							<div
-								bind:this={$aboveTheFoldEl}
-								class="_content {page.theme?.heroBgImage ? 'light-colors' : ''} {page.theme
-									?.isHeroVertical
+								class="{isEmbed || page.sections?.length
 									? ''
-									: ''} h-full {page.sections?.length ? '' : 'pb-16'} pt-16 {!page.testimonials
-									?.length
-									? `flex items-center`
-									: ''}"
-								style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
+									: page.theme?.isHeroVertical
+									? ''
+									: 'min-h-screen h-screen'} mt-[-70px]"
 							>
 								<div
-									class="p-4 flex h-full w-full {page.demoUrl || page.theme?.isHeroLeft
-										? `flex-col ${
-												page.theme?.isHeroVertical ? '' : 'justify-between sm:flex-row'
-										  } items-center`
-										: 'text-center items-center'}"
+									bind:this={$aboveTheFoldEl}
+									class="_content {page.heroBgImage ? 'light-colors' : ''} {page.theme
+										?.isHeroVertical
+										? ''
+										: ''} h-full {page.sections?.length ? '' : 'pb-16'} pt-16 {!page.testimonials
+										?.length
+										? `flex items-center`
+										: ''}"
+									style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 								>
 									<div
-										class="{page.demoUrl || page.theme?.isHeroLeft
-											? `w-full text-center ${
-													page.theme?.isHeroVertical
-														? 'flex flex-col items-center mb-8'
-														: 'sm:text-left'
-											  }  ${page.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
-											: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-										{page.theme?.isHeroLeft ? 'sm:text-left' : ''}"
+										class="p-4 flex h-full w-full {page.demoUrl || page.theme?.isHeroLeft
+											? `flex-col ${
+													page.theme?.isHeroVertical ? '' : 'justify-between sm:flex-row'
+											  } items-center`
+											: 'text-center items-center'}"
 									>
-										{#if isMounted}
-											<h1
-												class="{page.theme?.isGradientTitle
-													? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
-													: ''} _title 
-											{!page.demoUrl || page.theme?.isHeroVertical ? 'sm:max-w-[768px]' : ''}"
-												style={page.title ? '' : 'opacity: 20%;'}
-												in:fly={{ y: 50, duration: 800 }}
-											>
-												{#if page.title}
-													<div>{@html page.title}</div>
-												{:else}
-													{'Type Tagline...'}
-												{/if}
-											</h1>
-										{/if}
-
-										{#if page.subtitle}
-											<h2
-												class="_subtitle whitespace-pre-wrap  {page.demoUrl ||
-												!page.theme?.isHeroVertical
-													? ''
-													: 'max-w-[600px]'}"
-												in:fly={{ y: 50, duration: 800 }}
-											>
-												{@html page.subtitle}
-											</h2>
-										{/if}
-
 										<div
-											in:fly={{ y: 50, duration: 800, delay: 200 }}
-											class="_input_container {page.isCollectEmails && !isSubmitted
-												? '_border flex'
-												: 'inline-block'} items-center {page.demoUrl || page.theme?.isHeroLeft
-												? ''
-												: 'mx-auto'} {page.isCollectEmails
-												? 'w-full ' +
-												  (page.callToAction.length < 16
-														? 'sm:w-[360px]'
-														: page.callToAction.length < 20
-														? 'sm:w-[380px]'
-														: 'sm:w-[460px]')
-												: ''}"
+											class="{page.demoUrl || page.theme?.isHeroLeft
+												? `w-full text-center ${
+														page.theme?.isHeroVertical
+															? 'flex flex-col items-center mb-8'
+															: 'sm:text-left'
+												  }  ${page.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
+												: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+										{page.theme?.isHeroLeft ? 'sm:text-left' : ''}"
 										>
-											<form
-												class="{page.isCollectEmails
-													? `w-full flex flex-col ${
-															page.isHeroVertical ? '' : 'sm:flex-row'
-													  } items-center justify-center`
-													: 'mx-auto sm:mx-0 inline-block'} "
-												style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
-												on:submit|preventDefault={submitEmail}
-											>
-												{#if !isSubmitted}
-													{#if page.isCollectEmails}
-														<input
-															class="_input _email-input w-full"
-															placeholder="Your Email"
-															type="email"
-															required
-															bind:this={inputEl}
-															bind:value={email}
-															disabled={isSubmitted}
-															in:fade={{ duration: 150 }}
-														/>
-														<button
-															type="submit"
-															class="_input_button justify-center {page.isCollectEmails
-																? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-																: ''}">{page.callToAction}</button
-														>
-													{:else}
-														<a href={page.actionUrl} target="_blank" class="button _input_button">
-															{page.callToAction}
-														</a>
-													{/if}
-												{:else}
-													<div>💥 Thank you!</div>
-
-													{#if page.actionUrl}
-														<div class="mt-8 opacity-70">Redirecting...</div>
-													{/if}
-												{/if}
-											</form>
-
-											{#if page.callToAction2}
-												<a href={page.callToAction.url} class="button secondary"
-													>{page.callToAction2.title}</a
+											{#if isMounted}
+												<h1
+													class="{page.theme?.isGradientTitle
+														? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
+														: ''} _title 
+											{!page.demoUrl || page.theme?.isHeroVertical ? 'sm:max-w-[768px]' : ''}"
+													style={page.title ? '' : 'opacity: 20%;'}
+													in:fly={{ y: 50, duration: 800 }}
 												>
+													{#if page.title}
+														<div>{@html page.title}</div>
+													{:else}
+														{'Type Tagline...'}
+													{/if}
+												</h1>
+											{/if}
+
+											{#if page.subtitle}
+												<h2
+													class="_subtitle whitespace-pre-wrap  {page.demoUrl ||
+													!page.theme?.isHeroVertical
+														? ''
+														: 'max-w-[600px]'}"
+													in:fly={{ y: 50, duration: 800 }}
+												>
+													{@html page.subtitle}
+												</h2>
+											{/if}
+
+											<div
+												in:fly={{ y: 50, duration: 800, delay: 200 }}
+												class="_input_container {page.isCollectEmails && !isSubmitted
+													? '_border flex'
+													: 'inline-block'} items-center {page.demoUrl || page.theme?.isHeroLeft
+													? ''
+													: 'mx-auto'} {page.isCollectEmails
+													? 'w-full ' +
+													  (page.callToAction.length < 16
+															? 'sm:w-[360px]'
+															: page.callToAction.length < 20
+															? 'sm:w-[380px]'
+															: 'sm:w-[460px]')
+													: ''}"
+											>
+												<form
+													class="{page.isCollectEmails
+														? `w-full flex flex-col ${
+																page.isHeroVertical ? '' : 'sm:flex-row'
+														  } items-center justify-center`
+														: 'mx-auto sm:mx-0 inline-block'} "
+													style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
+													on:submit|preventDefault={submitEmail}
+												>
+													{#if !isSubmitted}
+														{#if page.isCollectEmails}
+															<input
+																class="_input _email-input w-full"
+																placeholder="Your Email"
+																type="email"
+																required
+																bind:this={inputEl}
+																bind:value={email}
+																disabled={isSubmitted}
+																in:fade={{ duration: 150 }}
+															/>
+															<button
+																type="submit"
+																class="_input_button justify-center {page.isCollectEmails
+																	? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
+																	: ''}">{page.callToAction}</button
+															>
+														{:else}
+															<a href={page.actionUrl} target="_blank" class="button _input_button">
+																{page.callToAction}
+															</a>
+														{/if}
+													{:else}
+														<div>💥 Thank you!</div>
+
+														{#if page.actionUrl}
+															<div class="mt-8 opacity-70">Redirecting...</div>
+														{/if}
+													{/if}
+												</form>
+
+												{#if page.callToAction2}
+													<a href={page.callToAction.url} class="button secondary"
+														>{page.callToAction2.title}</a
+													>
+												{/if}
+											</div>
+											{#if page.ctaExplainer}
+												<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
+											{/if}
+
+											{#if isMounted && page.socialProof}
+												<div
+													class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
+													page.theme?.isHeroLeft
+														? ''
+														: 'flex justify-center w-full'} }"
+												>
+													<div class="flex flex-col sm:flex-row ">
+														{#each page.socialProof.logos as logo}
+															<img class="w-[50px] h-[50px]" src={logo.url} />
+														{/each}
+													</div>
+
+													<div class="text-sm mt-4 opacity-80">{@html page.socialProof.title}</div>
+												</div>
 											{/if}
 										</div>
-										{#if page.ctaExplainer}
-											<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
-										{/if}
 
-										{#if isMounted && page.socialProof}
+										{#if page.demoUrl || page.lottieUrl}
 											<div
-												class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
-												page.theme?.isHeroLeft
+												class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
 													? ''
-													: 'flex justify-center w-full'} }"
+													: 'sm:ml-8 sm:max-w-[600px]'}"
 											>
-												<div class="flex flex-col sm:flex-row ">
-													{#each page.socialProof.logos as logo}
-														<img class="w-[50px] h-[50px]" src={logo.url} />
-													{/each}
-												</div>
-
-												<div class="text-sm mt-4 opacity-80">{@html page.socialProof.title}</div>
+												{#if page.lottie}
+													<lottie-player
+														src={page.lottie.jsonUrl}
+														background="transparent"
+														speed="1"
+														class="w-full h-full"
+														loop
+														autoplay
+													/>
+												{:else if page.demoUrl}
+													<RenderUrl
+														isLazy={false}
+														class="w-full flex justify-end {page.theme?.isHeroVertical
+															? 'mt-8'
+															: ''}"
+														url={page.demoUrl}
+														imgClass="w-full rounded-xl shadow-md object-cover"
+													/>
+												{/if}
 											</div>
 										{/if}
 									</div>
-
-									{#if page.demoUrl || page.lottieUrl}
-										<div
-											class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
-												? ''
-												: 'sm:ml-8 sm:max-w-[600px]'}"
-										>
-											{#if page.lottie}
-												<lottie-player
-													src={page.lottie.jsonUrl}
-													background="transparent"
-													speed="1"
-													class="w-full h-full"
-													loop
-													autoplay
-												/>
-											{:else if page.demoUrl}
-												<RenderUrl
-													isLazy={false}
-													class="w-full flex justify-end {page.theme?.isHeroVertical ? 'mt-8' : ''}"
-													url={page.demoUrl}
-													imgClass="w-full rounded-xl shadow-md object-cover"
-												/>
-											{/if}
-										</div>
-									{/if}
 								</div>
 							</div>
-						</div>
 
-						{#if !isAboveTheFold}
-							{#if page.sections?.length}
-								<div class={page.streamSlug ? '' : ''}>
-									{#each page.sections as section, i}
-										{#if $sectionToEdit && $sectionToEdit.id === section.id}
-											<div bind:this={editEl}>
-												<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
-												<div>
+							{#if !isAboveTheFold}
+								{#if page.sections?.length}
+									<div class={page.streamSlug ? '' : ''}>
+										{#each page.sections as section, i}
+											{#if $sectionToEdit && $sectionToEdit.id === section.id}
+												<div bind:this={editEl}>
+													<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
+													<div>
+														<RenderSection
+															bind:page
+															bind:themeStyles={styles}
+															bind:section={$sectionToEdit}
+														/>
+													</div>
+													<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
+												</div>
+												{focusEditEl() || ''}
+											{:else}
+												<div class="bg-site">
 													<RenderSection
 														bind:page
+														bind:section
 														bind:themeStyles={styles}
-														bind:section={$sectionToEdit}
+														style={false && page.theme?.isZebra && i % 2 === 0
+															? page.theme?.theme === 'dark'
+																? `background-color: ${lighten(styles['background-color'], 0.01)};`
+																: `background-color: ${darken(styles['background-color'], 0.08)};`
+															: ''}
 													/>
 												</div>
-												<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
-											</div>
-											{focusEditEl() || ''}
-										{:else}
-											<div class="bg-site">
-												<RenderSection
-													bind:page
-													bind:section
-													bind:themeStyles={styles}
-													style={false && page.theme?.isZebra && i % 2 === 0
-														? page.theme?.theme === 'dark'
-															? `background-color: ${lighten(styles['background-color'], 0.01)};`
-															: `background-color: ${darken(styles['background-color'], 0.08)};`
-														: ''}
-												/>
+											{/if}
+										{/each}
+									</div>
+								{/if}
+							{/if}
+						</div>
+					</div>
+				{/if}
+
+				{#if !isAboveTheFold}
+					{#if page.streamSlug && (!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))}
+						<div>
+							<div class="sticky z-20 py-4 sm:py-16 bg-site">
+								{#if page.links}
+									<div class="flex justify-center w-full my-4">
+										{#if page.links.twitter}
+											<div class="w-[35px] h-[35px] mr-2">
+												<a href={page.links.twitter} class="scale-110" target="_blank">
+													<TwitterIcon />
+												</a>
 											</div>
 										{/if}
-									{/each}
-								</div>
-							{/if}
-						{/if}
-					</div>
-				</div>
-			{/if}
-
-			{#if !isAboveTheFold}
-				{#if page.streamSlug && (!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))}
-					<div>
-						<div class="sticky z-20 py-4 sm:py-16 bg-site">
-							<RenderSection
-								class="p-0"
-								section={{
-									columns: 1,
-									items: [
-										{
-											title: 'We Build In Public',
-											description: 'Follow our journey in social network and blogs.'
-										}
-									]
-								}}
-							/>
-
-							{#if page.links}
-								<div class="flex justify-center w-full my-4">
-									{#if page.links.twitter}
-										<div class="w-[35px] h-[35px] mr-2">
-											<a href={page.links.twitter} class="scale-110" target="_blank">
-												<TwitterIcon />
-											</a>
-										</div>
-									{/if}
-									{#if page.links.linkedin}
-										<div class="w-[35px] h-[35px] mr-2">
-											<a href={page.links.linkedin} target="_blank">
-												<LinkedInIcon />
-											</a>
-										</div>
-									{/if}
-								</div>
-							{/if}
-						</div>
-
-						{#key $feedLastUpdatedOn + page.theme?.sectionTheme}
-							<iframe
-								id="iframeResize"
-								loading="lazy"
-								on:load={resize}
-								class="w-full sticky z-20 pb-[200px] bg-site"
-								src="{STREAM_URL}/{page.streamSlug}/embed?theme={page.theme?.sectionTheme ||
-									'light'}&limit=15&isViewAll=true&bgColor={styles[
-									'section-background-color'
-								].replace('#', '%23')}"
-							/>
-						{/key}
-					</div>
-				{/if}
-
-				{#if page.streamSlug || page.sections?.length}
-					<div
-						class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
-							? ''
-							: 'min-h-screen'} max-h-[100%] z-0 bottom-0 flex flex-col justify-center"
-						style="color: {page.theme?.theme === 'dark'
-							? '#fafafa'
-							: '#222'}; background-color: {page.theme?.theme === 'dark' ? '#222' : '#fafafa'}"
-					>
-						<div class="mx-auto max-w-[750px] flex flex-col items-center justify-center">
-							<div class="flex items-center text-lg my-4">
-								<Emoji class="mr-2" emoji={page.logo} />
-								<span>
-									{page.name}
-								</span>
-							</div>
-							<div class="_title text-3xl font-bold mb-8">
-								{@html page.title}
-							</div>
-						</div>
-
-						<div
-							class="_input_container flex items-center mx-auto 
-							{page.isCollectEmails
-								? `w-full ${isSubmitted ? '' : '_border '}` +
-								  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
-								: ''}"
-						>
-							<form
-								class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
-								on:submit|preventDefault={submitEmail}
-							>
-								{#if !isSubmitted}
-									{#if page.isCollectEmails}
-										<input
-											class="_input _email-input w-full"
-											placeholder="Your Email"
-											type="email"
-											required
-											bind:this={inputEl}
-											bind:value={email}
-											disabled={isSubmitted}
-											in:fade={{ duration: 150 }}
-										/>
-										<button
-											type="submit"
-											class="_input_button justify-center {page.isCollectEmails
-												? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-												: ''}">{page.callToAction}</button
-										>
-									{:else}
-										<a href={page.actionUrl} target="_blank" class="button _input_button">
-											{page.callToAction}
-										</a>
-									{/if}
-								{:else}
-									<div>💥 Thank you!</div>
-
-									{#if page.actionUrl}
-										<div class="mt-8 opacity-70">Redirecting...</div>
-									{/if}
+										{#if page.links.linkedin}
+											<div class="w-[35px] h-[35px] mr-2">
+												<a href={page.links.linkedin} target="_blank">
+													<LinkedInIcon />
+												</a>
+											</div>
+										{/if}
+									</div>
 								{/if}
-							</form>
-						</div>
-
-						{#if page.blog}
-							<div class="mt-8">
-								<a href={page.blog.url}>Or read our Blog</a>
 							</div>
-						{/if}
-					</div>
-				{/if}
+						</div>
+					{/if}
 
-				{#if !isNoBadge && !page.isNoBadge}
-					<PageBadge theme={page.theme?.theme || 'light'} />
+					{#if page.sections?.filter((s) => s.isShown)?.length}
+						<div
+							class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
+								? ''
+								: 'min-h-screen'} max-h-[100%] z-0 bottom-0 flex flex-col justify-center"
+							style="color: {page.theme?.theme === 'dark'
+								? '#fafafa'
+								: '#222'}; background-color: {page.theme?.theme === 'dark' ? '#222' : '#fafafa'}"
+						>
+							<div class="mx-auto max-w-[750px] flex flex-col items-center justify-center">
+								<div class="flex items-center text-lg my-4">
+									<Emoji class="mr-2" emoji={page.logo} />
+									<span>
+										{page.name}
+									</span>
+								</div>
+								<div class="_title text-3xl font-bold mb-8">
+									{@html page.title}
+								</div>
+							</div>
+
+							<div
+								class="_input_container flex items-center mx-auto 
+							{page.isCollectEmails
+									? `w-full ${isSubmitted ? '' : '_border '}` +
+									  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
+									: ''}"
+							>
+								<form
+									class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
+									on:submit|preventDefault={submitEmail}
+								>
+									{#if !isSubmitted}
+										{#if page.isCollectEmails}
+											<input
+												class="_input _email-input w-full"
+												placeholder="Your Email"
+												type="email"
+												required
+												bind:this={inputEl}
+												bind:value={email}
+												disabled={isSubmitted}
+												in:fade={{ duration: 150 }}
+											/>
+											<button
+												type="submit"
+												class="_input_button justify-center {page.isCollectEmails
+													? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
+													: ''}">{page.callToAction}</button
+											>
+										{:else}
+											<a href={page.actionUrl} target="_blank" class="button _input_button">
+												{page.callToAction}
+											</a>
+										{/if}
+									{:else}
+										<div>💥 Thank you!</div>
+
+										{#if page.actionUrl}
+											<div class="mt-8 opacity-70">Redirecting...</div>
+										{/if}
+									{/if}
+								</form>
+							</div>
+
+							{#if page.blog}
+								<div class="mt-8">
+									<a href={page.blog.url}>Or read our Blog</a>
+								</div>
+							{/if}
+						</div>
+					{/if}
+
+					{#if !isNoBadge && !page.isNoBadge}
+						<PageBadge theme={page.theme?.theme || 'light'} />
+					{/if}
 				{/if}
-			{/if}
+			</div>
 		</div>
-	</div>
+	{/if}
 {/key}
 
 {#if page?.theme?.headerBgPattern?.name === 'stars'}

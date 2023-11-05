@@ -4,18 +4,23 @@
 	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly } from 'svelte/transition';
 
+	import { get, put } from 'lib/api';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 
+	import Button from 'lib/components/Button.svelte';
 	import EditUrl from '$lib/components/edit/URL.svelte';
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
+	import EditDatabase from '$lib/components/edit/Database.svelte';
+	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
+	import { getFeed } from '$lib/stores/feedCache';
 
 	import striptags from 'striptags';
 
@@ -73,7 +78,45 @@
 			});
 		}
 	}
+
+	let isDatabaseModalShown = false;
+
+	if (!section.streamSlug) {
+		section.newStreamTitle = page.name;
+	}
+	let pageStreams;
+
+	let getPageStreams = async () => {
+		pageStreams = await get(`pages/${page._id}/streams`);
+	};
+
+	getPageStreams();
+
+	let createStream = async () => {
+		const { streamSlug } = await put(`pages/${page._id}/embed-stream`, {
+			title: page.name,
+			hubStreamSlug: page.streamSlug || ''
+		});
+
+		if (!page.streamSlug) {
+			page.streamSlug = streamSlug;
+		}
+
+		section.streamSlug = streamSlug;
+	};
 </script>
+
+{#if isDatabaseModalShown}
+	<Modal
+		isShown
+		maxWidth={1200}
+		onClosed={() => {
+			isDatabaseModalShown = false;
+		}}
+	>
+		<EditDatabase bind:page bind:streamSlug={section.streamSlug} />
+	</Modal>
+{/if}
 
 {#if isShort}
 	<div
@@ -90,6 +133,10 @@
 			<div class="text-lg font-bold">⁉️ FAQ</div>
 		{:else if section.type === 'testimonials'}
 			<div class="text-lg font-bold">💚 Testimonials</div>
+		{:else if section.type === 'momentum_collection'}
+			<div class="text-lg font-bold">📚 Database</div>
+		{:else if section.type === 'interactive_question'}
+			<div class="text-lg font-bold">🕹 Interactive Question</div>
 		{:else if section.type === 'benefits'}
 			<div class="text-lg font-bold" />
 		{/if}
@@ -152,6 +199,43 @@
 	{:else if section.type === 'testimonials'}
 		<EditTestimonials bind:section />
 	{:else}
+		{#if section.type === 'momentum_collection'}
+			<div class="_section">
+				<div class="_title mt-4" style="margin: 0;">Database Name</div>
+
+				<div class="flex gap-4 items-center justify-between w-full  mb-4 mt-2">
+					{#if !section.streamSlug}
+						{#if pageStreams?.length}
+							<select bind:value={section.streamSlug}>
+								<option value="">No</option>
+
+								{#each pageStreams as stream (stream._id)}
+									<option value={stream.slug}>{stream.title}</option>
+								{/each}
+							</select>
+						{:else}
+							<Button class="shrink-0 _small _secondary" onClick={createStream}
+								>Create Database</Button
+							>
+						{/if}
+					{:else}
+						<input class="w-full" bind:value={section.streamSlug} />
+
+						<Button
+							class="shrink-0 _small _secondary"
+							onClick={() => {
+								return getFeed({ cacheId: section.id, streamSlug: section.streamSlug });
+							}}>💫 refresh</Button
+						>
+					{/if}
+				</div>
+			</div>
+			{#if section.streamSlug}
+				<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
+					>Edit Data</button
+				>
+			{/if}
+		{/if}
 		<select class="w-full my-4" bind:value={section.renderType}>
 			<option value="grid">Grid Section</option>
 			<option value="carousel">Carousel Menu</option>

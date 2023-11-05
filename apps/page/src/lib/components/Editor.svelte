@@ -1,6 +1,7 @@
 <script>
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
+	import { browser } from '$app/environment';
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
@@ -96,23 +97,6 @@
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
-
-		if (
-			page.streamSlug &&
-			(!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))
-		) {
-			page.sections = page.sections || [];
-
-			page.sections.push({
-				id: uuidv4(),
-				type: 'momentum_feed',
-				title: 'We Build In Public',
-				description: 'Follow our journey in social media and blogs',
-				items: []
-			});
-
-			page.sections = [...page.sections];
-		}
 
 		if (
 			!force &&
@@ -1094,11 +1078,12 @@ See you!
 
 								<div
 									on:click={() => {
-										$aboveTheFoldEl.scrollIntoView({
-											behavior: 'smooth',
-											block: 'center',
-											inline: 'nearest'
-										});
+										$aboveTheFoldEl &&
+											$aboveTheFoldEl.scrollIntoView({
+												behavior: 'smooth',
+												block: 'center',
+												inline: 'nearest'
+											});
 
 										// $sectionToEdit = null;
 									}}
@@ -1313,8 +1298,56 @@ See you!
 													isCanSearch
 													class="w-full"
 													theme="light"
-													bind:url={page.theme.heroBgImage}
+													bind:url={page.heroBgImage}
 												/>
+											</div>
+										{/if}
+
+										{#if page._id}
+											<div class="_section">
+												<div class="_title flex justify-between w-full">
+													Social Links
+
+													<!-- <div class="flex font-normal items-center">
+														Hide Hero <input
+															bind:checked={page.isHeroHidden}
+															class="ml-2"
+															type="checkbox"
+														/> -->
+													<!-- </div> -->
+												</div>
+
+												<div class="font-normal text-sm opacity-70 mb-4">
+													Add your social links: Twitter, LinkedIn, Instagram etc.
+												</div>
+
+												{#each page.links || [] as link}
+													<div class="flex gap-4 justify-between text-sm mb-2">
+														<input
+															placeholder="https://twitter.com/_that_igor"
+															type="url"
+															class="w-full"
+															theme="light"
+															bind:value={link.url}
+														/>
+														<button
+															on:click={() => {
+																page.links = page.links.filter((l) => l === link);
+															}}>🗑</button
+														>
+													</div>
+												{/each}
+												<div class="mt-4 w-full">
+													<button
+														class="_secondary _small w-full text-center"
+														on:click={() => {
+															page.links = page.links || [];
+															page.links.push({
+																url: ''
+															});
+														}}>🔗 Add Social Link</button
+													>
+												</div>
 											</div>
 										{/if}
 
@@ -1434,6 +1467,12 @@ See you!
 													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 													on:click={() => addNewSection({ type: 'stepper' })}
 													>💡 Add 1-2-3 stepper</button
+												>
+
+												<button
+													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+													on:click={() => addNewSection({ type: 'momentum_collection' })}
+													>📚 Connect database</button
 												>
 
 												<button
@@ -1828,7 +1867,13 @@ See you!
 									{/if} -->
 
 										{#if page}
-											<SitePreview class="pt-8" noStickyHeader={true} isNoBadge={true} bind:page />
+											<SitePreview
+												class="pt-8"
+												isNoVars
+												noStickyHeader={true}
+												isNoBadge={true}
+												bind:page
+											/>
 										{/if}
 									</BrowserFrame>
 								</div>

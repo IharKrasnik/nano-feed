@@ -8,6 +8,7 @@
 	export let pageId;
 	export let parentSectionId;
 	export let itemClass = 'p-4 mx-4';
+	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
 
 	let clazz;
 	export { clazz as class };
@@ -48,6 +49,20 @@
 	};
 
 	let submitAnswer = (answer) => {
+		$refreshConditionsTimestamp = +new Date();
+
+		if (answer.isSelected) {
+			let foundAnswer = sectionItem.answersResults.find((a) => a.emoji === answer.emoji);
+			foundAnswer.count--;
+			sectionItem.answersResults = [...sectionItem.answersResults];
+			answer.isSelected = false;
+
+			myAnswer = null;
+			localStorage[LOCAL_STORAGE_KEY] = null;
+
+			return;
+		}
+
 		post(`pages/${pageId}/questions/${sectionItem.id}`, {
 			parentSectionId,
 			answer
@@ -87,6 +102,8 @@
 				return qa;
 			})
 		};
+
+		$refreshConditionsTimestamp = +new Date();
 	};
 </script>
 
@@ -108,7 +125,7 @@
 	</div>
 
 	{#if myAnswer}
-		<div class="{itemClass} mt-8 text-lg">
+		<div out:fade class="{itemClass} mt-8 text-lg">
 			{sectionItem.interactiveFollowUp?.text || 'Thank you!'}
 			{myAnswer.emoji}
 
@@ -128,7 +145,7 @@
 	}
 
 	.emoji-button.selected {
-		border: 2px var(--accent-color) solid;
+		outline: 2px var(--accent-color) solid;
 	}
 
 	.emoji-button {

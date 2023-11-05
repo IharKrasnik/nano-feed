@@ -228,7 +228,6 @@
 				headerTextColor: newTheme === 'dark' ? '#f5f5f5' : '#11111'
 			};
 		}
-		debugger;
 	};
 
 	let bgColorRGB;

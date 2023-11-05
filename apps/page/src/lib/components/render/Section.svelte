@@ -1,9 +1,13 @@
 <script>
-	import { fade } from 'svelte/transition';
+	import _ from 'lodash';
+	import { fade, fly } from 'svelte/transition';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
+	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
+
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
 	import RenderMomentumFeed from '$lib/components/render/MomentumFeed.svelte';
+	import RenderMomentumCollection from '$lib/components/render/MomentumCollection.svelte';
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
@@ -14,6 +18,7 @@
 	export let section;
 	export let page;
 	export let themeStyles = {};
+	export let isSkipHeader = false;
 
 	export { clazz as class };
 	export let style = null;
@@ -66,6 +71,36 @@
 	if (section.carousel && section.items?.length) {
 		selectCarouselItem(section.items[0]);
 	}
+
+	section.isShown = !section.isHidden;
+
+	let refreshConditions = () => {
+		section.isShown = !section.isHidden;
+		if (!_.isEmpty(page.variablesValues) && !section.isHidden && section.conditions) {
+			_.each(section.conditions, (c) => {
+				if (c.minVisits) {
+					if (page.variablesValues.visitsCount < c.minVisits) {
+						section.isShown = false;
+					}
+				} else if (c.maxVisits) {
+					if (page.variablesValues.visitsCount > c.maxVisits) {
+						section.isShown = false;
+					}
+				} else if (c.interactiveAnswer) {
+					let myAnswer =
+						JSON.parse(localStorage[`ANSWER_${c.interactiveAnswer.sectionId}`] || null) || null;
+
+					if (!myAnswer || myAnswer.emoji !== c.interactiveAnswer.value) {
+						section.isShown = false;
+					}
+				}
+			});
+		}
+	};
+
+	$: if ($refreshConditionsTimestamp) {
+		refreshConditions();
+	}
 </script>
 
 <!-- <div class="section-bg" /> -->
@@ -99,300 +134,314 @@
 	class="row-span-1 row-span-2 row-span-3 row-span-4 row-span-5 row-span-6 row-span-7 row-span-8"
 />
 
-<div class="_section-container {section.type} p-4" style={style || ''}>
-	{#if section.title || section.description || section.imageUrl || section.emoji}
-		<div class="w-full text-center py-4 sm:pt-16 text-center">
-			{#if section.emoji}
-				<div class={emojiStyle[1]}>
-					<Emoji color={'white'} class="grayscale" bind:emoji={section.emoji} />
-				</div>
-			{/if}
-
-			{#if section.subtitle}
-				<div class="text-sm mb-4 opacity-90" style="font-weight: 500;">{section.subtitle}</div>
-			{/if}
-
-			{#if section.title}
-				<h2 class="_title sm:text-4xl text-3xl font-bold mb-4 sm:max-w-[768px] sm:mx-auto">
-					{@html section.title}
-				</h2>
-			{/if}
-
-			{#if section.description}
-				<h3
-					class="{descriptionStyle[1]} whitespace-pre-wrap sm:max-w-[600px] sm:mx-auto description"
-				>
-					{@html section.description}
-				</h3>
-			{/if}
-
-			{#if section.callToActionText || section.url}
-				<a href={section.url || page.url} target="_blank" class="mt-8 button"
-					>{section.callToActionText || 'Learn More'}
-				</a>
-			{/if}
-
-			{#if section.imageUrl}
-				<div class="my-8">
-					<RenderUrl
-						class=""
-						imgClass="mx-auto  {isGif(section.imageUrl) ? 'w-full object-cover' : ''}"
-						url={section.imageUrl}
-					/>
-				</div>
-			{/if}
-
-			{#if section.interactiveAnswers?.length}
-				<div class="sm:max-w-[600px] sm:mx-auto mt-8">
-					<RenderInteractiveOptions
-						class="justify-center"
-						bind:sectionItem={section}
-						bind:pageId={page._id}
-					/>
-				</div>
-			{/if}
-		</div>
-	{/if}
-
-	{#if section.type === 'faq'}
-		<RenderFAQ bind:section />
-	{:else if section.type === 'testimonials'}
-		<RenderTestimonials bind:section />
-	{:else if section.type === 'momentum_feed'}
-		<RenderMomentumFeed bind:page bind:themeStyles />
-	{:else if section.renderType === 'stepper'}
-		<div class="relative">
-			<div class="absolute ml-[50%] h-full w-[2px] bg-black" />
-			{#each section.items as step, i}
-				<div class="flex sm:w-[50%] p-8 {i % 2 ? 'sm:ml-[50%]' : 'justify-end text-right'}">
-					<div>
-						<div class="text-xl mb-4 font-bold">{@html step.title}</div>
-
-						{#if step.description}
-							<div class="mt-4">{@html step.description}</div>
-						{/if}
+{#if section.isShown}
+	<div
+		class="_section-container {section.type} p-4"
+		style={style || ''}
+		in:fly={{ y: 50 }}
+		out:fade
+	>
+		{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji)}
+			<div class="w-full text-center py-4 sm:pt-16 text-center">
+				{#if section.emoji}
+					<div class={emojiStyle[1]}>
+						<Emoji color={'white'} class="grayscale" bind:emoji={section.emoji} />
 					</div>
-				</div>
-			{/each}
-		</div>
-	{:else if section.items?.length}
-		<div class="w-full  {clazz}">
-			{#if section.columns === 1}
-				<div>
-					{#each section.items as item}
-						<div class="_section-item w-full grid grid-cols-3 gap-4">
-							<div class="p-4 sm:p-8 col-span-1">
-								<Emoji bind:emoji={item.emoji} />
-								<div class="_item-title mb-2">{@html item.title}</div>
-								<div class="_item-description whitespace-pre-wrap">{@html item.description}</div>
-							</div>
-							{#if item.imageUrl}
-								<RenderUrl
-									class="col-span-2"
-									imgClass="object-cover rounded-b-lg"
-									url={item.imageUrl}
-								/>
+				{/if}
+
+				{#if section.subtitle}
+					<div class="text-sm mb-4 opacity-90" style="font-weight: 500;">{section.subtitle}</div>
+				{/if}
+
+				{#if section.title}
+					<h2 class="_title sm:text-4xl text-3xl font-bold mb-4 sm:max-w-[768px] sm:mx-auto">
+						{@html section.title}
+					</h2>
+				{/if}
+
+				{#if section.description}
+					<h3
+						class="{descriptionStyle[1]} whitespace-pre-wrap sm:max-w-[600px] sm:mx-auto description"
+					>
+						{@html section.description}
+					</h3>
+				{/if}
+
+				{#if section.callToActionText || section.url}
+					<a href={section.url || page.url} target="_blank" class="mt-8 button"
+						>{section.callToActionText || 'Learn More'}
+					</a>
+				{/if}
+
+				{#if section.imageUrl}
+					<div class="my-8">
+						<RenderUrl
+							class=""
+							imgClass="mx-auto  {isGif(section.imageUrl) ? 'w-full object-cover' : ''}"
+							url={section.imageUrl}
+						/>
+					</div>
+				{/if}
+
+				{#if section.interactiveAnswers?.length}
+					<div class="sm:max-w-[600px] sm:mx-auto mt-8">
+						<RenderInteractiveOptions
+							class="justify-center"
+							bind:sectionItem={section}
+							bind:pageId={page._id}
+						/>
+					</div>
+				{/if}
+			</div>
+		{/if}
+
+		{#if section.type === 'faq'}
+			<RenderFAQ bind:section />
+		{:else if section.type === 'testimonials'}
+			<RenderTestimonials bind:section />
+		{:else if section.type === 'momentum_collection'}
+			<RenderMomentumCollection bind:section bind:page bind:themeStyles />
+		{:else if section.type === 'momentum_feed'}
+			<RenderMomentumFeed bind:page bind:themeStyles />
+		{:else if section.renderType === 'stepper'}
+			<div class="relative">
+				<div class="absolute ml-[50%] h-full w-[2px] bg-black" />
+				{#each section.items as step, i}
+					<div class="flex sm:w-[50%] p-8 {i % 2 ? 'sm:ml-[50%]' : 'justify-end text-right'}">
+						<div>
+							<div class="text-xl mb-4 font-bold">{@html step.title}</div>
+
+							{#if step.description}
+								<div class="mt-4">{@html step.description}</div>
 							{/if}
 						</div>
-					{/each}
-				</div>
-			{:else if section.renderType === 'carousel'}
-				<div class="grid grid-cols-12">
-					<div class="col-span-4">
+					</div>
+				{/each}
+			</div>
+		{:else if section.items?.length}
+			<div class="w-full  {clazz}">
+				{#if section.columns === 1}
+					<div>
 						{#each section.items as item}
-							<div class="p-4 sm:p-8 col-span-1">
-								<!-- {#if item.emoji !== '✨'}
+							<div class="_section-item w-full grid grid-cols-3 gap-4">
+								<div class="p-4 sm:p-8 col-span-1">
 									<Emoji bind:emoji={item.emoji} />
-								{/if} -->
-								<div class="_item-title">{@html item.title}</div>
-								<div class="_item-description whitespace-pre-wrap">{@html item.description}</div>
+									<div class="_item-title mb-2">{@html item.title}</div>
+									<div class="_item-description whitespace-pre-wrap">{@html item.description}</div>
+								</div>
+								{#if item.imageUrl}
+									<RenderUrl
+										class="col-span-2"
+										imgClass="object-cover rounded-b-lg"
+										url={item.imageUrl}
+									/>
+								{/if}
 							</div>
 						{/each}
 					</div>
-					<div class="col-span-8">
-						<RenderUrl
-							class="col-span-2"
-							imgClass="object-cover rounded-b-lg"
-							url={section.items[0].imageUrl}
-						/>
+				{:else if section.renderType === 'carousel'}
+					<div class="grid grid-cols-12">
+						<div class="col-span-4">
+							{#each section.items as item}
+								<div class="p-4 sm:p-8 col-span-1">
+									<!-- {#if item.emoji !== '✨'}
+									<Emoji bind:emoji={item.emoji} />
+								{/if} -->
+									<div class="_item-title">{@html item.title}</div>
+									<div class="_item-description whitespace-pre-wrap">{@html item.description}</div>
+								</div>
+							{/each}
+						</div>
+						<div class="col-span-8">
+							<RenderUrl
+								class="col-span-2"
+								imgClass="object-cover rounded-b-lg"
+								url={section.items[0].imageUrl}
+							/>
+						</div>
 					</div>
-				</div>
-			{:else}
-				<div
-					class="sm:grid-cols-{section.columns}  gap-4 {section.columns > 1
-						? 'items-stretch-or-not'
-						: ''} {section.carousel ? 'flex overflow-x-auto sm:grid' : 'grid'}"
-				>
-					{#each section.items || [] as item, i}
-						<div
-							class="_section-item rounded-lg sm:rounded-xl {section.className ||
-								''} col-span-{item.colSpan || 1} row-span-{item.rowSpan || 1} mb-8 {section.carousel
-								? `min-w-[300px] sm:min-w-0 cursor-pointer ${
-										item.isSelected ? '_selected' : '_not-selected'
-								  }`
-								: ''}"
-							on:click={() => {
-								if (section.carousel) {
-									selectCarouselItem(item);
-								}
-							}}
-							style="-webkit-column-break-inside: avoid;"
-						>
+				{:else}
+					<div
+						class="sm:grid-cols-{section.columns}  gap-4 {section.columns > 1
+							? 'items-stretch-or-not'
+							: ''} {section.carousel ? 'flex overflow-x-auto sm:grid' : 'grid'}"
+					>
+						{#each section.items || [] as item, i}
 							<div
-								class="flex flex-col justify-between {section.columns > 2
-									? 'h-full'
-									: ''} grid-cols-1 {section.columns > 1
-									? 'block'
-									: 'grid'} sm:grid-cols-{section.columns === 1 &&
-								item.imageUrl &&
-								section.items.length > 1
-									? 2
-									: ''} w-full {section.columns > 1
-									? `bg-section ${section.carousel ? 'shadow-md' : ''} rounded-2xl`
-									: ''}  {section.columns > 1 ? 'items-stretch' : 'items-center'} content-start"
-								style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
-									? 'margin-bottom: -64px;'
-									: ''}
+								class="_section-item rounded-lg sm:rounded-xl {section.className ||
+									''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
+									1} mb-8 {section.carousel
+									? `min-w-[300px] sm:min-w-0 cursor-pointer ${
+											item.isSelected ? '_selected' : '_not-selected'
+									  }`
+									: ''}"
+								on:click={() => {
+									if (section.carousel) {
+										selectCarouselItem(item);
+									}
+								}}
+								style="-webkit-column-break-inside: avoid;"
 							>
 								<div
-									class="flex w-full h-full flex-col justify-between {page?.theme?.containerWidth
-										? 'p-4'
-										: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
-									i % 2 === 1
-										? 'sm:order-last-off'
-										: ''} {section.columns === 1 &&
-										(!item.imageUrl || section.items.length === 1) &&
-										'mx-auto'}"
-									class:order-last-off={i % 2 === 0}
+									class="flex flex-col justify-between {section.columns > 2
+										? 'h-full'
+										: ''} grid-cols-1 {section.columns > 1
+										? 'block'
+										: 'grid'} sm:grid-cols-{section.columns === 1 &&
+									item.imageUrl &&
+									section.items.length > 1
+										? 2
+										: ''} w-full {section.columns > 1
+										? `bg-section ${section.carousel ? 'shadow-md' : ''} rounded-2xl`
+										: ''}  {section.columns > 1 ? 'items-stretch' : 'items-center'} content-start"
+									style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
+										? 'margin-bottom: -64px;'
+										: ''}
 								>
-									<div class="max-w-[600px]">
-										{#if item.title}
-											<div
-												class="flex {page?.theme?.containerWidth
-													? 'mb-2'
-													: 'mb-4'} {section.columns < 3 ? 'flex-col items-start' : 'items-center'}"
-											>
-												{#if item.emoji}
-													<div
-														class="{emojiStyle[
-															section.columns
-														]} _section-img {item.emoji.startsWith('feather:')
-															? ''
-															: 'grayscale-emoji'} mr-2"
-													>
-														<Emoji bind:emoji={item.emoji} />
+									<div
+										class="flex w-full h-full flex-col justify-between {page?.theme?.containerWidth
+											? 'p-4'
+											: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
+										i % 2 === 1
+											? 'sm:order-last-off'
+											: ''} {section.columns === 1 &&
+											(!item.imageUrl || section.items.length === 1) &&
+											'mx-auto'}"
+										class:order-last-off={i % 2 === 0}
+									>
+										<div class="max-w-[600px]">
+											{#if item.title}
+												<div
+													class="flex {page?.theme?.containerWidth
+														? 'mb-2'
+														: 'mb-4'} {section.columns < 3
+														? 'flex-col items-start'
+														: 'items-center'}"
+												>
+													{#if item.emoji}
+														<div
+															class="{emojiStyle[
+																section.columns
+															]} _section-img {item.emoji.startsWith('feather:')
+																? ''
+																: 'grayscale-emoji'} mr-2"
+														>
+															<Emoji bind:emoji={item.emoji} />
+														</div>
+													{/if}
+													<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
+														{@html item.title}
+													</h2>
+												</div>
+											{/if}
+
+											{#if item.description}
+												<h3
+													class="{descriptionStyle[
+														section.columns
+													]} _item-description whitespace-pre-wrap"
+												>
+													{@html item.description}
+												</h3>
+											{/if}
+
+											{#if item.pricing}
+												<div class="flex items-end mt-4 mb-4">
+													<div class="text-3xl font-bold mr-2">
+														${item.pricing.amount?.toFixed(2) || '0'}
+													</div>
+													<div class="text-lg">
+														/{item.pricing.per}
+													</div>
+												</div>
+												{#if item.pricing.benefits}
+													<div class="mb-4">
+														{#each item.pricing.benefits as benefit}
+															<div class="my-2">
+																<span class="inline-block mr-1">✅</span>
+																{benefit.name}
+															</div>
+														{/each}
 													</div>
 												{/if}
-												<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
-													{@html item.title}
-												</h2>
-											</div>
-										{/if}
+											{/if}
+										</div>
 
-										{#if item.description}
-											<h3
-												class="{descriptionStyle[
-													section.columns
-												]} _item-description whitespace-pre-wrap"
-											>
-												{@html item.description}
-											</h3>
-										{/if}
-
-										{#if item.pricing}
-											<div class="flex items-end mt-4 mb-4">
-												<div class="text-3xl font-bold mr-2">
-													${item.pricing.amount?.toFixed(2) || '0'}
-												</div>
-												<div class="text-lg">
-													/{item.pricing.per}
-												</div>
-											</div>
-											{#if item.pricing.benefits}
-												<div class="mb-4">
-													{#each item.pricing.benefits as benefit}
-														<div class="my-2">
-															<span class="inline-block mr-1">✅</span>
-															{benefit.name}
-														</div>
-													{/each}
-												</div>
+										{#if item.url}
+											<a
+												href={item.url}
+												target="_blank"
+												class="section-button w-full text-center block text-[#8B786D] pt-4"
+												>{item.callToActionText || 'Learn More'}
+											</a>
+										{:else if section.type === 'pricing'}
+											{#if page.isCollectEmails}
+												<button class="button w-full" on:click={focusEmailInput}
+													>{item.callToActionText || page.callToAction}</button
+												>
+											{:else}
+												<a
+													class="button text-center block w-full"
+													target="_blank"
+													href={page.actionUrl}
+												>
+													{item.callToActionText || page.callToAction}
+												</a>
 											{/if}
 										{/if}
 									</div>
 
-									{#if item.url}
-										<a
-											href={item.url}
-											target="_blank"
-											class="section-button w-full text-center block text-[#8B786D] pt-4"
-											>{item.callToActionText || 'Learn More'}
-										</a>
-									{:else if section.type === 'pricing'}
-										{#if page.isCollectEmails}
-											<button class="button w-full" on:click={focusEmailInput}
-												>{item.callToActionText || page.callToAction}</button
-											>
-										{:else}
-											<a
-												class="button text-center block w-full"
-												target="_blank"
-												href={page.actionUrl}
-											>
-												{item.callToActionText || page.callToAction}
-											</a>
-										{/if}
+									{#if !section.carousel && item.imageUrl}
+										<div
+											class="{section.pricing
+												? 'order-none-off'
+												: 'order-none-off'} {section.columns === 1 && i % 2 === 0
+												? 'sm:order-last-off'
+												: ''}"
+										>
+											<RenderUrl
+												class=""
+												imgClass="w-full aspect-og rounded-b-xl object-cover mx-auto {section.columns ===
+												1
+													? ''
+													: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
+													? 'w-full object-cover'
+													: ''}"
+												url={item.imageUrl}
+											/>
+										</div>
+									{/if}
+
+									{#if item.interactiveAnswers?.length}
+										<div class={page?.theme?.containerWidth ? 'p-4' : 'p-8'}>
+											<RenderInteractiveOptions
+												class={section.columns === 1 ? 'justify-center' : 'justify-start'}
+												bind:sectionItem={item}
+												parentSectionId={section.id}
+												bind:pageId={page._id}
+												itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+											/>
+										</div>
 									{/if}
 								</div>
-
-								{#if !section.carousel && item.imageUrl}
-									<div
-										class="{section.pricing
-											? 'order-none-off'
-											: 'order-none-off'} {section.columns === 1 && i % 2 === 0
-											? 'sm:order-last-off'
-											: ''}"
-									>
-										<RenderUrl
-											class=""
-											imgClass="w-full  mx-auto {section.columns === 1 ? '' : ''}  {section.items
-												.length === 1
-												? ''
-												: ''} {isGif(item.imageUrl) ? 'w-full object-cover' : ''}"
-											url={item.imageUrl}
-										/>
-									</div>
-								{/if}
-
-								{#if item.interactiveAnswers?.length}
-									<div class={page?.theme?.containerWidth ? 'p-4' : 'p-8'}>
-										<RenderInteractiveOptions
-											class={section.columns === 1 ? 'justify-center' : 'justify-start'}
-											bind:sectionItem={item}
-											parentSectionId={section.id}
-											bind:pageId={page._id}
-											itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-										/>
-									</div>
-								{/if}
 							</div>
-						</div>
-					{/each}
-				</div>
-			{/if}
-
-			{#if section.carousel}
-				{#key carouselKey}
-					<div in:fade>
-						<RenderUrl
-							url={(section.items.find((i) => i.isSelected) || section.items[0]).imageUrl}
-						/>
+						{/each}
 					</div>
-				{/key}
-			{/if}
-		</div>
-	{/if}
-</div>
+				{/if}
+
+				{#if section.carousel}
+					{#key carouselKey}
+						<div in:fade>
+							<RenderUrl
+								url={(section.items.find((i) => i.isSelected) || section.items[0]).imageUrl}
+							/>
+						</div>
+					{/key}
+				{/if}
+			</div>
+		{/if}
+	</div>
+{/if}
 
 <style>
 	button,

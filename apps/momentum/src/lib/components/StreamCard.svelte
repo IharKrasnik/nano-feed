@@ -2,7 +2,7 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import { browser } from '$app/environment';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
-	import SourceLogo from '$lib/components/SourceLogo.svelte';
+	import SourceLogo from 'lib/components/SourceLogo.svelte';
 	import { post } from 'lib/api';
 	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
