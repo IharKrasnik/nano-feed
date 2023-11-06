@@ -9,6 +9,8 @@ let fontPairs = [
 ];
 
 export default (page) => {
+	page.theme = page.parentPage?.theme || page.theme;
+
 	let styles = {
 		'container-width': page.theme?.containerWidth || '1280px',
 		'logo-font': page.theme?.logoFont || 'monospace',

@@ -9,6 +9,8 @@
 	import RenderMomentumFeed from '$lib/components/render/MomentumFeed.svelte';
 	import RenderMomentumCollection from '$lib/components/render/MomentumCollection.svelte';
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
+	import RenderServiceChat from '$lib/components/render/ServiceChat.svelte';
+
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
@@ -198,6 +200,8 @@
 			<RenderMomentumCollection bind:section bind:page bind:themeStyles />
 		{:else if section.type === 'momentum_feed'}
 			<RenderMomentumFeed bind:page bind:themeStyles />
+		{:else if section.type === 'service_chat'}
+			<RenderServiceChat bind:page bind:section bind:themeStyles />
 		{:else if section.renderType === 'stepper'}
 			<div class="relative">
 				<div class="absolute ml-[50%] h-full w-[2px] bg-black" />

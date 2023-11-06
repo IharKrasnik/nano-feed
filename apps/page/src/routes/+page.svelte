@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 </script>
 
-{#if $page.data.page || $page.params.pageSlug}
+{#if $page.params.pageSlug}
 	<Page />
 {:else}
 	<Editor />

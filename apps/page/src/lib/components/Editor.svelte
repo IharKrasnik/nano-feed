@@ -16,6 +16,7 @@
 
 	import loginWithGoogle from 'lib/helpers/loginWithGoogle';
 
+	import EditHero from '$lib/components/edit/Hero.svelte';
 	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditPricing from '$lib/components/edit/Pricing.svelte';
@@ -50,6 +51,7 @@
 
 	import currentUser from 'lib/stores/currentUser';
 	import allPages from '$lib/stores/allPages';
+	import isPageSet from '$lib/stores/isPageSet';
 	import pageDraft from '$lib/stores/pageDraft';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
@@ -75,6 +77,13 @@
 	let isSignupFormShown = false;
 	let isJustPaid;
 
+	let timezone = moment.tz.guess();
+
+	let timeframe = '7_days';
+
+	let isSubmissionsOpen = false;
+	let submissions;
+
 	if ($sveltePage.url.searchParams.get('thank-you')) {
 		isJustPaid = true;
 	}
@@ -93,7 +102,64 @@
 
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 
-	let isPageSet = false;
+	let pageSlug = '_new';
+
+	let isMetricsOpen = false;
+
+	let metrics;
+
+	let refreshMetrics = async () => {
+		metrics = null;
+
+		metrics = await get(`waveProjects/page.mmntm.build/stats`, {
+			timeframe,
+			subProjectId: page._id,
+			timezone
+		});
+
+		calculateConversion();
+	};
+
+	let toggleMetrics = async () => {
+		isMetricsOpen = !isMetricsOpen;
+
+		if (isMetricsOpen) {
+			refreshMetrics();
+		}
+	};
+
+	let calculateConversion = () => {
+		if (metrics && submissions) {
+			if (submissions.results.length) {
+				metrics.conversion = (submissions.results.length / metrics.totalUsersCount) * 100;
+
+				if (metrics.conversion > 100) {
+					metrics.conversion = 0;
+				}
+
+				metrics.conversion = parseInt(metrics.conversion);
+			} else {
+				metrics.conversion = 0;
+			}
+		}
+	};
+
+	let refreshSubmissions = async () => {
+		if (!$currentUser) {
+			return;
+		}
+		submissions = null;
+
+		submissions = await get(`pages/${page._id}/submissions`, {});
+		broadcastEmails = await get(`pages/${page._id}/broadcast-emails`, {});
+
+		calculateConversion();
+	};
+
+	let refreshData = async () => {
+		await Promise.all([refreshMetrics(), refreshSubmissions()]);
+		calculateConversion();
+	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
@@ -112,13 +178,23 @@
 		}
 
 		pageSlug = page.slug;
+
+		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug };
 	};
 
-	$: if (!isPageSet && $allPages?.length && !page?._id) {
+	if ($pageDraft.lastPageSlug && $pageDraft[$pageDraft.lastPageSlug]) {
+		$isPageSet = true;
+
+		setPageAndDraft({ ..._.cloneDeep($pageDraft[$pageDraft.lastPageSlug]) });
+
+		refreshData();
+	}
+
+	$: if (!$isPageSet && $allPages?.length && !page?._id) {
 		setPageAndDraft({ ..._.cloneDeep($allPages[0]) });
 
 		refreshData();
-		isPageSet = true;
+		$isPageSet = true;
 	}
 
 	let isJustPublished = false;
@@ -225,70 +301,7 @@ See you!
 		}
 	}
 
-	let isMetricsOpen = false;
-
-	let metrics;
-
-	let refreshData = async () => {
-		await Promise.all([refreshMetrics(), refreshSubmissions()]);
-		calculateConversion();
-	};
-
-	let calculateConversion = () => {
-		if (metrics && submissions) {
-			if (submissions.results.length) {
-				metrics.conversion = (submissions.results.length / metrics.totalUsersCount) * 100;
-
-				if (metrics.conversion > 100) {
-					metrics.conversion = 0;
-				}
-
-				metrics.conversion = parseInt(metrics.conversion);
-			} else {
-				metrics.conversion = 0;
-			}
-		}
-	};
-
-	let timezone = moment.tz.guess();
-
-	let timeframe = '7_days';
-
-	let refreshMetrics = async () => {
-		metrics = null;
-
-		metrics = await get(`waveProjects/page.mmntm.build/stats`, {
-			timeframe,
-			subProjectId: page._id,
-			timezone
-		});
-
-		calculateConversion();
-	};
-
-	let toggleMetrics = async () => {
-		isMetricsOpen = !isMetricsOpen;
-
-		if (isMetricsOpen) {
-			refreshMetrics();
-		}
-	};
-
-	let isSubmissionsOpen = false;
-	let submissions;
 	let broadcastEmails = null;
-
-	let refreshSubmissions = async () => {
-		if (!$currentUser) {
-			return;
-		}
-		submissions = null;
-
-		submissions = await get(`pages/${page._id}/submissions`, {});
-		broadcastEmails = await get(`pages/${page._id}/broadcast-emails`, {});
-
-		calculateConversion();
-	};
 
 	let getDefaultWelcomeEmail = () => {
 		return {
@@ -496,8 +509,6 @@ See you!
 		page.sections = [...(page.sections || []), newSection];
 	};
 
-	let pageSlug = '_new';
-
 	$: if (page) {
 		if (
 			!$pageDraft[page.slug] ||
@@ -610,7 +621,6 @@ See you!
 	let isNewSubPage;
 
 	let addSubpage = () => {
-		debugger;
 		setPageAndDraft(
 			{
 				slug: '_new',
@@ -1023,7 +1033,10 @@ See you!
 									<button
 										class="_secondary _small w-full mb-4"
 										on:click={() => {
-											isNewSubPage = false;
+											setPageAndDraft(
+												$allPages.find((p) => p.slug === page.parentPage.slug),
+												{ force: true }
+											);
 										}}>Back to the main page</button
 									>
 								{/if}
@@ -1121,7 +1134,7 @@ See you!
 									}}
 								>
 									{#if page.name}
-										{#if page._id}
+										{#if !page?.parentPage && page._id}
 											<div class="_section">
 												<select
 													class="w-full mb-4"
@@ -1151,414 +1164,209 @@ See you!
 												{/if}
 											</div>
 										{/if}
-										<div class="_section">
-											<div class="_title flex items-center justify-between">
-												<div>Tagline</div>
+									{/if}
 
-												{#if page.theme}
-													<div class="flex font-normal items-center">
-														Is Huge <input
-															bind:checked={page.theme.isHugeTitle}
-															class="ml-2"
-															type="checkbox"
-														/>
+									<EditHero bind:hero={page} bind:focuses />
+
+									{#if page._id}
+										<div class="_section">
+											<div class="_title flex justify-between w-full">
+												Social Links
+
+												<!-- <div class="flex font-normal items-center">
+													Hide Hero <input
+														bind:checked={page.isHeroHidden}
+														class="ml-2"
+														type="checkbox"
+													/> -->
+												<!-- </div> -->
+											</div>
+
+											<div class="font-normal text-sm opacity-70 mb-4">
+												Add your social links: Twitter, LinkedIn, Instagram etc.
+											</div>
+
+											{#each page.links || [] as link}
+												<div class="flex gap-4 justify-between text-sm mb-2">
+													<input
+														placeholder="https://twitter.com/_that_igor"
+														type="url"
+														class="w-full"
+														theme="light"
+														bind:value={link.url}
+													/>
+													<button
+														on:click={() => {
+															page.links = page.links.filter((l) => l === link);
+														}}>🗑</button
+													>
+												</div>
+											{/each}
+											<div class="mt-4 w-full">
+												<button
+													class="_secondary _small w-full text-center"
+													on:click={() => {
+														page.links = page.links || [];
+														page.links.push({
+															url: ''
+														});
+													}}>🔗 Add Social Link</button
+												>
+											</div>
+										</div>
+									{/if}
+
+									{#if page?._id}
+										<div class="_section bg-[#e8ffef] my-8" style="border: none;">
+											<div class="flex items-center justify-between w-full">
+												<div class="">
+													<div class="font-bold">Design your product with Momentum team</div>
+
+													<div class="text-sm">
+														Working with us is as easy as using Momentum Page
+													</div>
+												</div>
+											</div>
+											<a
+												href="https://studio.saltnbold.com/new"
+												class="w-full"
+												class:hidden={!page._id}
+												target="_blank"
+											>
+												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
+											</a>
+										</div>
+									{/if}
+
+									<!-- <EditTestimonials bind:page /> -->
+
+									{#if page._id}
+										<div
+											class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
+										>
+											<div class="flex items-center">
+												<div class="font-bold">🧱 Sections</div>
+
+												{#if page.sections?.length}
+													<div class="ml-4 number-tag">
+														{page.sections?.length || 0}
 													</div>
 												{/if}
 											</div>
 
-											<div
-												class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
-												contenteditable
-												use:contenteditable
-												data-placeholder="Build a better product in public."
-												bind:innerHTML={page.title}
-												on:focus={() => (focuses.title = true)}
-												on:blur={() => (focuses.title = false)}
-											/>
-
-											{#if focuses.title || (page.name && (!page.title || !page._id))}
-												<div
-													class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
-													in:fly={{ y: 50, duration: 150 }}
+											{#if !page.sections?.length}
+												<div>
+													<!-- <button
+													class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
+													on:click={addNewSection}
 												>
-													Start with a bold tagline
-
-													<div class="font-normal mt-2">
-														Make a big promise to your customer. Start with a verb. Spark curiosity
-														and hook their attention.
-													</div>
+													Add Empty Section
+												</button> -->
 												</div>
+
+												{#if page.sections?.length > 1}
+													<div
+														class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+														on:click={() => (isOrdering = true)}
+													>
+														💫 Reorder Sections
+													</div>
+												{/if}
 											{/if}
 										</div>
 									{/if}
 
-									{#if page.title}
-										{#if page._id}
-											<div class="_section">
-												<div class="_title">Subtitle</div>
-
-												<div
-													class="min-h-[100px]"
-													contenteditable="true"
-													use:contenteditable
-													bind:innerHTML={page.subtitle}
-													on:focus={() => (focuses.subtitle = true)}
-													on:blur={() => (focuses.subtitle = false)}
-													data-placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
-												/>
-
-												<!-- <textarea
-												bind:value={page.subtitle}
-												on:focus={() => (focuses.subtitle = true)}
-												on:blur={() => (focuses.subtitle = false)}
-												rows="4"
-												class="w-full"
-												placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
-											/> -->
-
-												{#if focuses.subtitle || (page._id && page.title && !page.subtitle)}
-													<div
-														class="p-4 transition {page.subtitle
-															? 'bg-green-600'
-															: 'bg-orange-400'} mt-4 rounded-xl text-white font-bold"
-														in:fly={{ y: 50, duration: 150 }}
-													>
-														Explain your value propositon
-
-														<div class="font-normal mt-2">
-															What change do you bring to the customer's life? Get specific. Avoid
-															self-explaining. Talk to them.
-														</div>
-													</div>
-												{/if}
-											</div>
-										{/if}
-
-										<div class="text-sm opacity-90 my-4">
-											Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word
-											or two.
-										</div>
-
-										{#if page._id}
-											<div class="_section">
-												<div class="flex justify-between  mb-4">
-													<div class="_title">
-														Product Demo
-
-														<div class="font-normal text-sm opacity-70">
-															Screenshot, live GIF or a <a
-																href="//loom.com"
-																class="underline"
-																target="_blank"
-																use:tooltip
-																title="We recommend using Loom or YouTube">video demo</a
-															> <br />
-														</div>
-													</div>
-
-													<div class="_title flex items-center">
-														{#if page.demoUrl}
-															<div>Vertical</div>
-															<input
-																class="ml-2"
-																type="checkbox"
-																bind:checked={page.theme.isHeroVertical}
-															/>
-														{/if}
-													</div>
-												</div>
-
-												<div class="flex items-center">
-													<FileInput
-														class="w-full"
-														bind:url={page.demoUrl}
-														theme="light"
-														isCanSearch
-													/>
-												</div>
-
-												{#if !page.demoUrl && page.subtitle && page.title}
-													<div
-														class="p-4 bg-orange-400 mt-4 rounded-xl text-white font-bold"
-														in:fly={{ y: 50, duration: 150 }}
-													>
-														Add your product demo
-
-														<div class="font-normal mt-2">
-															A picture is worth a thousand words. But video works even better. Show
-															how the future product will look like or translate emotion through
-															GIF.
-														</div>
-													</div>
-												{/if}
-											</div>
-										{/if}
-
-										{#if page._id}
-											<div class="_section">
-												<div class="_title flex justify-between w-full">
-													Call To Action
-
-													<div class="flex font-normal items-center">
-														Collect Emails <input
-															bind:checked={page.isCollectEmails}
-															class="ml-2"
-															type="checkbox"
+									{#if page.sections?.length}
+										<div>
+											<div
+												use:dndzone={{ items: page.sections, flipDurationMs }}
+												on:consider={handleDndConsider}
+												on:finalize={handleDndFinalize}
+											>
+												{#each page.sections || [] as section (section.id)}
+													<div animate:flip={{ duration: flipDurationMs }}>
+														<EditSection
+															bind:page
+															bind:section
+															onRemove={() => {
+																page.sections = page.sections.filter((s) => s !== section);
+															}}
 														/>
-													</div>
-												</div>
-
-												<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
-
-												<input
-													class="mb-4 w-full"
-													bind:value={page.callToAction}
-													placeholder="Join Waitlist"
-												/>
-
-												<div class="flex items-center font-normal text-sm opacity-70 mb-2 w-full">
-													<div class="shrink-0">Explain CTA:</div>
-
-													<input
-														class="ml-4 w-full"
-														placeholder="No credit card required"
-														bind:value={page.ctaExplainer}
-													/>
-												</div>
-
-												<div class="font-normal text-sm opacity-70 mb-2">
-													URL to open {page.isCollectEmails
-														? 'once email submitted (optional)'
-														: 'on click'}
-												</div>
-
-												<input
-													class="w-full mb-4"
-													bind:value={page.actionUrl}
-													placeholder="Action Url"
-												/>
-											</div>
-										{/if}
-
-										{#if page._id}
-											<div class="_section">
-												<div class="_title flex justify-between w-full">
-													Hero Settings
-
-													<div class="flex font-normal items-center">
-														Hide Hero <input
-															bind:checked={page.isHeroHidden}
-															class="ml-2"
-															type="checkbox"
-														/>
-													</div>
-												</div>
-
-												<div class="font-normal text-sm opacity-70 mb-2">Hero background image</div>
-
-												<FileInput
-													isCanSearch
-													class="w-full"
-													theme="light"
-													bind:url={page.heroBgImage}
-												/>
-											</div>
-										{/if}
-
-										{#if page._id}
-											<div class="_section">
-												<div class="_title flex justify-between w-full">
-													Social Links
-
-													<!-- <div class="flex font-normal items-center">
-														Hide Hero <input
-															bind:checked={page.isHeroHidden}
-															class="ml-2"
-															type="checkbox"
-														/> -->
-													<!-- </div> -->
-												</div>
-
-												<div class="font-normal text-sm opacity-70 mb-4">
-													Add your social links: Twitter, LinkedIn, Instagram etc.
-												</div>
-
-												{#each page.links || [] as link}
-													<div class="flex gap-4 justify-between text-sm mb-2">
-														<input
-															placeholder="https://twitter.com/_that_igor"
-															type="url"
-															class="w-full"
-															theme="light"
-															bind:value={link.url}
-														/>
-														<button
-															on:click={() => {
-																page.links = page.links.filter((l) => l === link);
-															}}>🗑</button
-														>
 													</div>
 												{/each}
-												<div class="mt-4 w-full">
-													<button
-														class="_secondary _small w-full text-center"
-														on:click={() => {
-															page.links = page.links || [];
-															page.links.push({
-																url: ''
-															});
-														}}>🔗 Add Social Link</button
-													>
-												</div>
 											</div>
-										{/if}
+										</div>
+									{/if}
 
-										{#if page?._id}
-											<div class="_section bg-[#e8ffef] my-8" style="border: none;">
-												<div class="flex items-center justify-between w-full">
-													<div class="">
-														<div class="font-bold">Design your product with Momentum team</div>
-
-														<div class="text-sm">
-															Working with us is as easy as using Momentum Page
-														</div>
-													</div>
-												</div>
-												<a
-													href="https://studio.saltnbold.com/new"
-													class="w-full"
-													class:hidden={!page._id}
-													target="_blank"
-												>
-													<button class="_small _secondary _promo mt-4">Design My Product 🧂</button
-													>
-												</a>
-											</div>
-										{/if}
-
-										<!-- <EditTestimonials bind:page /> -->
-
-										{#if page._id}
-											<div
-												class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
-											>
-												<div class="flex items-center">
-													<div class="font-bold">🧱 Sections</div>
-
-													{#if page.sections?.length}
-														<div class="ml-4 number-tag">
-															{page.sections?.length || 0}
-														</div>
-													{/if}
-												</div>
-
-												{#if !page.sections?.length}
-													<div>
-														<!-- <button
-														class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
-														on:click={addNewSection}
-													>
-														Add Empty Section
-													</button> -->
-													</div>
-
-													{#if page.sections?.length > 1}
-														<div
-															class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
-															on:click={() => (isOrdering = true)}
-														>
-															💫 Reorder Sections
-														</div>
-													{/if}
-												{/if}
-											</div>
-										{/if}
-
-										{#if page.sections?.length}
-											<div>
-												<div
-													use:dndzone={{ items: page.sections, flipDurationMs }}
-													on:consider={handleDndConsider}
-													on:finalize={handleDndFinalize}
-												>
-													{#each page.sections || [] as section (section.id)}
-														<div animate:flip={{ duration: flipDurationMs }}>
-															<EditSection
-																bind:page
-																bind:section
-																onRemove={() => {
-																	page.sections = page.sections.filter((s) => s !== section);
-																}}
-															/>
-														</div>
-													{/each}
-												</div>
-											</div>
-										{/if}
-
-										{#if page?._id}
+									{#if page?._id}
+										<button
+											class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
+											on:click={addNewSection}>🧱 Add Empty Section</button
+										>
+										<div class="text-sm mb-2">or use templates</div>
+										<div class="flex flex-wrap">
 											<button
-												class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={addNewSection}>🧱 Add Empty Section</button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'benefits' })}>🙌 Add Benefits</button
 											>
-											<div class="text-sm mb-2">or use templates</div>
-											<div class="flex flex-wrap">
-												<button
-													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={() => addNewSection({ type: 'benefits' })}
-													>🙌 Add Benefits</button
-												>
 
-												<button
-													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={() => addNewSection({ type: 'testimonials' })}
-													>💚 Add Testimonials</button
-												>
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'testimonials' })}
+												>💚 Add Testimonials</button
+											>
 
-												<button
-													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
-												>
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
+											>
 
-												<button
-													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
-												>
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
+											>
 
-												<button
-													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={() => addNewSection({ type: 'stepper' })}
-													>💡 Add 1-2-3 stepper</button
-												>
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'stepper' })}
+												>💡 Add 1-2-3 stepper</button
+											>
 
-												<button
-													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={() => addNewSection({ type: 'momentum_collection' })}
-													>📚 Connect database</button
-												>
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'momentum_collection' })}
+												>📚 Connect database</button
+											>
 
-												<button
-													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={() => addNewSection({ type: 'carousel' })}
-													>🎠 Add Carousel with Menu</button
-												>
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'carousel' })}
+												>🎠 Add Carousel with Menu</button
+											>
 
-												<button
-													class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-													on:click={() => addNewSection({ type: 'interactive-question' })}
-													>🤩 Ask Interactive Question</button
-												>
-											</div>
-										{/if}
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'interactive-question' })}
+												>🤩 Ask Interactive Question</button
+											>
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'service_chat' })}
+											>
+												Embed Service Chat</button
+											>
 
-										{#if page._id && page.name && page.title}
-											<hr class="my-8 border-[#8B786D] opacity-30" />
-										{/if}
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'community_chat' })}
+											>
+												Embed Community Chat</button
+											>
+										</div>
+									{/if}
 
-										{#if page._id}
-											<!-- <EditPricing bind:page /> -->
-											<!-- <EditFAQ bind:page /> -->
-										{/if}
+									{#if page._id && page.name && page.title}
+										<hr class="my-8 border-[#8B786D] opacity-30" />
 									{/if}
 								</div>
 
@@ -1813,7 +1621,9 @@ See you!
 											href={page.domains?.length &&
 											page.domains.filter((d) => d.isConfigured).length
 												? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
-												: `${PAGE_URL}/${page.slug}`}
+												: `${PAGE_URL}/${page.parentPage?.slug ? `${page.parentPage.slug}/` : ''}${
+														page.slug
+												  }`}
 											class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
 											style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
 											target="_blank"
@@ -1837,7 +1647,7 @@ See you!
 												{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
 													{page.domains.filter((d) => d.isConfigured)[0].url}
 												{:else}
-													/{page.slug}
+													{page.parentPage?.slug ? `/${page.parentPage.slug}/` : '/'}{page.slug}
 												{/if}
 											</div>
 										</a>

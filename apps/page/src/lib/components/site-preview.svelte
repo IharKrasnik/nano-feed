@@ -101,7 +101,9 @@
 
 		if (page.actionUrl) {
 			setTimeout(() => {
-				window.location.href = page.actionUrl;
+				window.location.href = page.actionUrl.startsWith('/')
+					? `${page.slug}${page.actionUrl}`
+					: page.actionUrl;
 			}, 2000);
 		}
 	};
@@ -139,7 +141,7 @@
 	}
 
 	$: if (previewEl) {
-		previewEl.style['background-color'] = page.theme?.backgroundColor || 'white';
+		previewEl.style['background-color'] = page?.theme?.backgroundColor || 'white';
 	}
 
 	let editEl;
@@ -493,7 +495,7 @@
 												>
 													{#if page.title}
 														<div>{@html page.title || ''}</div>
-													{:else if isEmbed}
+													{:else if isEmbed && !page.parentPage}
 														{'Type Tagline...'}
 													{/if}
 												</h1>
@@ -697,7 +699,7 @@
 						</div>
 					{/if}
 
-					{#if page.sections?.filter((s) => s.isShown)?.length}
+					{#if !page.parentPage && page.sections?.filter((s) => s.isShown)?.length}
 						<div
 							class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
 								? ''
