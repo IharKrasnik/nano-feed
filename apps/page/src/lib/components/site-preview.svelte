@@ -31,6 +31,7 @@
 	import PageBadge from '$lib/components/PageBadge.svelte';
 	import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
+	import userVars, { varsLastUpdatedOn } from '$lib/stores/userVars';
 
 	import { STREAM_URL, PAGE_URL } from 'lib/env';
 
@@ -189,38 +190,75 @@
 		localStorage.visitsCount = 1;
 	}
 
-	let systemVariables = [
-		{
-			name: 'visitsCount',
-			value: localStorage.visitsCount || 1
-		},
-		{
-			name: 'totalSignupsCount',
-			value: page.totalSignupsCount || 0
-		}
-	];
+	let varTemplatesBig = {
+		title: page.title,
+		subtitle: page.subtitle,
+		description: page.title,
+		ctaExplainer: page.ctaExplainer
+	};
 
-	if (browser) {
-		page.variablesValues = {};
-
-		[...systemVariables, ...(isNoVars ? [] : page.variables)].forEach((variable) => {
-			if (variable.calculateCode) {
-				page.variablesValues[variable.name] = eval(`(function(){${variable.calculateCode}})()`);
-				page.variablesValues[variable.name + 'Capitalised'] = _.capitalize(
-					page.variablesValues[variable.name]
-				);
-			} else {
-				page.variablesValues[variable.name] = variable.value;
+	let refreshVariables = (varTemplates) => {
+		let systemVariables = [
+			{
+				name: 'visitsCount',
+				value: localStorage.visitsCount || 1
+			},
+			{
+				name: 'totalSignupsCount',
+				value: page.totalSignupsCount || 0
 			}
+		];
 
-			['title', 'subtitle', 'ctaExplainer', 'callToAction'].forEach((fieldName) => {
-				page[fieldName] = replaceVariable({
-					str: page[fieldName],
-					varName: variable.name,
-					varValue: page.variablesValues[variable.name]
-				});
+		let userVariables = [];
+
+		Object.keys($userVars).forEach((varName) => {
+			userVariables.push({
+				name: `user.${varName}`,
+				value: $userVars[varName].value || $userVars[varName].emoji
 			});
 		});
+
+		if (browser) {
+			page.variablesValues = {};
+
+			[...systemVariables, ...userVariables, ...(isNoVars ? [] : page.variables)].forEach(
+				(variable) => {
+					if (variable.calculateCode) {
+						page.variablesValues[variable.name] = eval(`(function(){${variable.calculateCode}})()`);
+						page.variablesValues[variable.name + 'Capitalised'] = _.capitalize(
+							page.variablesValues[variable.name]
+						);
+					} else {
+						page.variablesValues[variable.name] = variable.value;
+					}
+
+					['title', 'subtitle', 'ctaExplainer', 'callToAction'].forEach((fieldName) => {
+						let str = page[fieldName];
+
+						// if (varTemplates[fieldName]) {
+						// 	str = varTemplates[fieldName];
+						// }
+
+						page[fieldName] = replaceVariable({
+							str,
+							varName: variable.name,
+							varValue: page.variablesValues[variable.name]
+						});
+
+						console.log(
+							'replacing',
+							fieldName,
+							page[fieldName],
+							page.variablesValues[variable.name]
+						);
+					});
+				}
+			);
+		}
+	};
+
+	$: if (browser && $varsLastUpdatedOn) {
+		refreshVariables(varTemplatesBig);
 	}
 </script>
 

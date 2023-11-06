@@ -475,6 +475,7 @@ See you!
 		} else if (type === 'interactive-question') {
 			newSection.title = 'A radically transparent question to you..';
 			newSection.description = 'How likely would you switch to our product?';
+			newSection.interactiveRenderType = 'single_choice';
 			newSection.interactiveAnswers = [{ emoji: '💯' }, { emoji: '🤔' }, { emoji: '👎' }];
 		} else if (type === 'carousel') {
 			newSection.title = 'Nice images!';

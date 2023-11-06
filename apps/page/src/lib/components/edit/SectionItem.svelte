@@ -194,26 +194,45 @@
 	{#if item.interactiveAnswers?.length}
 		<div class="font-normal text-sm opacity-70 mt-4 mb-2">How users can answer?</div>
 
-		<div>
-			{#each item.interactiveAnswers as answer}
-				<div class="flex justify-between">
-					<EmojiPicker
-						isNoCustom
-						class="w-full p-2 bg-[#fafafa] my-2 text-center"
-						bind:icon={answer.emoji}
-					/>
+		<select class="w-full" bind:value={section.interactiveRenderType}>
+			<option value="single_choice">Single Choice</option>
+			<option value="short_answer">Short Answer</option>
+		</select>
 
-					<button on:click={() => removeAnswerFromItem(item, answer)}>🗑</button>
-				</div>
-			{/each}
+		<div>
+			{#if !section.interactiveRenderType || section.interactiveRenderType === 'single_choice'}
+				{#each item.interactiveAnswers as answer}
+					<div class="flex justify-between">
+						<EmojiPicker
+							isNoCustom
+							class="w-full p-2 bg-[#fafafa] my-2 text-center"
+							bind:icon={answer.emoji}
+						/>
+
+						<button on:click={() => removeAnswerFromItem(item, answer)}>🗑</button>
+					</div>
+				{/each}
+				{#if item.interactiveAnswers.length === 3}
+					<div class="text-sm">You can add up to 3 answers</div>
+				{:else}
+					<button class="_small _secondary w-full" on:click={() => addAnswer(item)}
+						>Add another interactive answer</button
+					>
+				{/if}
+			{:else if section.interactiveRenderType === 'short_answer'}
+				<div class="text-sm mt-4">User will see Input</div>
+			{/if}
 		</div>
 
-		{#if item.interactiveAnswers.length === 3}
-			<div class="text-sm">You can add up to 3 answers</div>
-		{:else}
-			<button class="_small _secondary w-full" on:click={() => addAnswer(item)}
-				>Add another interactive answer</button
-			>
-		{/if}
+		<div>
+			<div class="font-normal text-sm opacity-70 mt-4 mb-2 font-bold">Save to variable</div>
+			<input class="w-full" placeholder="reasonToSwitch" bind:value={section.varName} />
+
+			{#if section.varName}
+				<div class="font-normal text-sm opacity-70 mt-4 mb-2">
+					The result will be available in $user.{section.varName}
+				</div>
+			{/if}
+		</div>
 	{/if}
 </div>

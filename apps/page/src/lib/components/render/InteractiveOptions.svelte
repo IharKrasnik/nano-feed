@@ -8,9 +8,12 @@
 	export let pageId;
 	export let parentSectionId;
 	export let itemClass = 'p-4 mx-4';
+
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
+	import userVars from '$lib/stores/userVars';
 
 	let clazz;
+	let shortAnswer = '';
 	export { clazz as class };
 
 	let isAnswerSubmitted;
@@ -51,7 +54,18 @@
 	let submitAnswer = (answer) => {
 		$refreshConditionsTimestamp = +new Date();
 
-		if (answer.isSelected) {
+		if (sectionItem.varName) {
+			$userVars = {
+				...$userVars,
+				[sectionItem.varName]: { value: answer.value, emoji: answer.emoji }
+			};
+		}
+
+		if (
+			(!sectionItem.interactiveRenderType ||
+				sectionItem.interactiveRenderType === 'single_choice') &&
+			answer.isSelected
+		) {
 			let foundAnswer = sectionItem.answersResults.find((a) => a.emoji === answer.emoji);
 			foundAnswer.count--;
 			sectionItem.answersResults = [...sectionItem.answersResults];
@@ -59,6 +73,13 @@
 
 			myAnswer = null;
 			localStorage[LOCAL_STORAGE_KEY] = null;
+
+			if (sectionItem.varName) {
+				delete $userVars[sectionItem.varName];
+				$userVars = {
+					...$userVars
+				};
+			}
 
 			return;
 		}
@@ -76,29 +97,42 @@
 
 		sectionItem.answersResults = sectionItem.answersResults || [];
 
-		let foundAnswer = sectionItem.answersResults.find((a) => a.emoji === answer.emoji);
+		if (
+			!sectionItem.interactiveRenderType ||
+			sectionItem.interactiveRenderType === 'single_choice'
+		) {
+			let foundAnswer = sectionItem.answersResults.find((a) => a.emoji === answer.emoji);
 
-		if (!foundAnswer) {
-			foundAnswer = { emoji: answer.emoji, count: 1 };
-			sectionItem.answersResults.push(foundAnswer);
-		} else {
-			foundAnswer.count++;
+			if (!foundAnswer) {
+				foundAnswer = { emoji: answer.emoji, count: 1 };
+				sectionItem.answersResults.push(foundAnswer);
+			} else {
+				foundAnswer.count++;
+			}
+		} else if (sectionItem.interactiveRenderType === 'short_answer') {
+			sectionItem.answersResults = [answer.value, ...sectionItem.answersResults];
 		}
 
 		sectionItem = {
 			...sectionItem,
 			interactiveAnswers: sectionItem.interactiveAnswers.map((qa) => {
-				if (qa.isSelected && qa !== answer) {
-					let foundPreviousAnswer = sectionItem.answersResults.find((a) => a.emoji === qa.emoji);
+				if (
+					!sectionItem.interactiveRenderType ||
+					sectionItem.interactiveRenderType === 'single_choice'
+				) {
+					if (qa.isSelected && qa !== answer) {
+						let foundPreviousAnswer = sectionItem.answersResults.find((a) => a.emoji === qa.emoji);
 
-					if (foundPreviousAnswer) {
-						foundPreviousAnswer.count--;
-					} else {
-						sectionItem.answersResults.push({ emoji: answer.emoji, count: 0 });
+						if (foundPreviousAnswer) {
+							foundPreviousAnswer.count--;
+						} else {
+							sectionItem.answersResults.push({ emoji: answer.emoji, count: 0 });
+						}
 					}
+
+					qa.isSelected = qa === answer;
 				}
 
-				qa.isSelected = qa === answer;
 				return qa;
 			})
 		};
@@ -109,33 +143,69 @@
 
 {#if sectionItem}
 	<div class="{clazz} flex flex-wrap">
-		{#each sectionItem.interactiveAnswers as answer}
-			<div
-				on:click={() => submitAnswer(answer)}
-				class="{itemClass} border emoji-button  flex items-center transition shadow-sm border-white/50 cursor-pointer"
-				class:selected={answer.isSelected}
-			>
-				{answer.emoji}
+		{#if sectionItem.interactiveRenderType === 'single_choice'}
+			{#each sectionItem.interactiveAnswers as answer}
+				<div
+					on:click={() => submitAnswer(answer)}
+					class="{itemClass} border emoji-button  flex items-center transition shadow-sm border-white/50 cursor-pointer"
+					class:selected={answer.isSelected}
+				>
+					{answer.emoji}
 
-				<div class="ml-2">
-					{countAnswers(answer)}
+					<div class="ml-2">
+						{countAnswers(answer)}
+					</div>
 				</div>
-			</div>
-		{/each}
+			{/each}
+		{:else if !myAnswer}
+			<input
+				placeholder="Your Answer"
+				bind:value={shortAnswer}
+				style="border: 2px var(--accent-color) solid; background: none;"
+				on:keypress={(e) => {
+					if (e.key === 'Enter') {
+						submitAnswer({
+							value: shortAnswer
+						});
+						e.preventDefault();
+					}
+				}}
+			/>
+		{/if}
 	</div>
 
 	{#if myAnswer}
-		<div class="{itemClass} mt-8 text-lg">
-			{sectionItem.interactiveFollowUp?.text || 'Thank you!'}
-			{myAnswer.emoji}
+		{#if sectionItem.interactiveRenderType === 'short_answer' && sectionItem.answersResults}
+			<div class="{itemClass} text-lg">
+				<!-- {sectionItem.interactiveFollowUp?.text || 'Thank you!'} -->
 
-			{#if sectionItem.interactiveFollowUp?.callToAction}
-				<a href={sectionItem.interactiveFollowUp.callToAction.url}>
-					{sectionItem.interactiveFollowUp.callToAction.text}
-				</a>
-			{/if}
-		</div>
+				<div
+					class="flex flex-col flex-col-reverse justify-start items-start gap-4 mt-4 _section-item p-4"
+				>
+					{#each sectionItem.answersResults as answer, i}
+						<div
+							class="p-4 rounded-xl border rounded-bl-none"
+							style="background: var(--accent-color); color: var(--button-color)"
+							class:self-end={i % 2 === 1}
+						>
+							{answer}
+						</div>
+					{/each}
+				</div>
+
+				{#if sectionItem.interactiveFollowUp?.callToAction}
+					<a href={sectionItem.interactiveFollowUp.callToAction.url}>
+						{sectionItem.interactiveFollowUp.callToAction.text}
+					</a>
+				{/if}
+			</div>
+		{/if}
 	{/if}
+
+	<div class="flex w-full justify-center items-center mt-4 ">
+		<div class="opacity-80 text-sm">Live answers from the community</div>
+		<div class="ml-2 w-[7px] h-[7px] rounded-full bg-green-300" />
+	</div>
 {/if}
 
 <style>
