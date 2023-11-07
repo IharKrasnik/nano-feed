@@ -1026,14 +1026,21 @@
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'service_chat' })}
 											>
-												Embed Service Chat</button
+												🧑‍💻 Service Chat</button
+											>
+
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'newsletter' })}
+											>
+												✉️ Newsletter</button
 											>
 
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'community_chat' })}
 											>
-												Embed Community Chat</button
+												💫 Community Chat</button
 											>
 										</div>
 									{/if}

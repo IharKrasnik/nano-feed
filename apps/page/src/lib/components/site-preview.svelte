@@ -15,6 +15,7 @@
 	import PortfolioPage from '$lib/layouts/PortfolioPage.svelte';
 	import getPageCssStyles from '$lib/services/getPageCssStyles';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import RenderBlog from '$lib/components/render/Blog.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
@@ -93,23 +94,6 @@
 	});
 
 	let email;
-
-	let isSubmitted = !!localStorage.submittedEmail;
-
-	let submitEmail = async () => {
-		await post(`pages/${page.slug}/submissions`, { email });
-		isSubmitted = true;
-
-		localStorage.submittedEmail = email;
-
-		if (page.actionUrl) {
-			setTimeout(() => {
-				window.location.href = page.actionUrl.startsWith('/')
-					? `${page.slug}${page.actionUrl}`
-					: page.actionUrl;
-			}, 0);
-		}
-	};
 
 	let inputEl;
 
@@ -191,6 +175,8 @@
 	} else {
 		localStorage.visitsCount = 1;
 	}
+
+	let isSubmitted;
 
 	let varTemplatesBig = {
 		title: page.title,
@@ -399,7 +385,7 @@
 											style="outline: 1px rgba(255, 255, 255, .8) solid;"
 											on:click={onButtonClick}>{page.callToAction}</button
 										>
-									{:else}
+									{:else if page.actionUrl}
 										<a href={page.actionUrl} target="_blank" class="button">
 											{page.callToAction}
 										</a>
@@ -491,6 +477,9 @@
 								class="absolute top-0 left-0 z-0 w-full h-screen opacity-20 rounded-full"
 								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
 							/> -->
+						{#if page.theme?.backgroundGradient}
+							<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
+						{/if}
 
 						<div class="relative _root bg-site" style="background: none;">
 							{#if $sveltePage.data.post}
@@ -498,9 +487,6 @@
 							{:else if $sveltePage.url.pathname.includes('/blog')}
 								<RenderBlog bind:page />
 							{:else}
-								{#if page.theme?.backgroundGradient}
-									<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
-								{/if}
 								<div
 									class="{isEmbed || page.sections?.length
 										? ''
@@ -555,7 +541,9 @@
 
 												{#if page.subtitle}
 													<h2
-														class="_subtitle whitespace-pre-wrap  {page.demoUrl ||
+														class="_subtitle {page.theme.isHugeTitle
+															? 'text-3xl'
+															: 'text-xl'}  whitespace-pre-wrap  {page.demoUrl ||
 														!page.theme?.isHeroVertical
 															? ''
 															: 'max-w-[600px]'}"
@@ -566,7 +554,8 @@
 												{/if}
 
 												{#if page.callToAction}
-													<div
+													<RenderInteractiveOptions {page} />
+													<!-- <div
 														in:fly={{ y: 50, duration: 800, delay: 200 }}
 														class="_input_container {page.isCollectEmails && !isSubmitted
 															? '_border flex'
@@ -605,7 +594,9 @@
 															{#if !isSubmitted}
 																{#if page.isCollectEmails}
 																	<input
-																		class="_input _email-input w-full"
+																		class="_input _email-input w-full {page.theme?.isInputBorder
+																			? 'mr-4'
+																			: ''}"
 																		placeholder="Your Email"
 																		type="email"
 																		required
@@ -618,9 +609,10 @@
 																		type="submit"
 																		class="_input_button justify-center {page.isCollectEmails
 																			? 'shrink-0 w-full sm:w-auto mt-4 sm:mt-0'
-																			: ''}">{page.callToAction}</button
+																			: ''} {page.theme?.isInputBorder ? 'mr-1' : 'absolute'}"
+																		>{page.callToAction}</button
 																	>
-																{:else}
+																{:else if page.actionUrl}
 																	<a
 																		href={page.actionUrl}
 																		target="_blank"
@@ -639,8 +631,9 @@
 																>{page.callToAction2.title}</a
 															>
 														{/if}
-													</div>
+													</div> -->
 												{/if}
+
 												{#if page.ctaExplainer}
 													<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
 												{/if}
@@ -793,7 +786,7 @@
 									  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
 									: ''}"
 							>
-								<form
+								<!-- <form
 									class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
 									on:submit|preventDefault={submitEmail}
 								>
@@ -823,7 +816,7 @@
 									{:else}
 										<div>💥 Thank you!</div>
 									{/if}
-								</form>
+								</form> -->
 							</div>
 						</div>
 					{/if}
@@ -922,74 +915,9 @@
 	}
 
 	._subtitle {
-		font-size: 24px;
-		line-height: 1.6;
 		margin-bottom: 40px;
 		max-width: 650px;
 		font-family: var(--subtitle-font);
-	}
-
-	._input_container {
-		position: relative;
-		border-radius: var(--button-radius);
-	}
-
-	@media (min-width: 640px) {
-		._input_container._border {
-			border-color: var(--text-color);
-			border-style: solid;
-			border-width: var(--input-container-border-width);
-			/* border: 1px var(--text-color) solid; */
-		}
-	}
-
-	@media (max-width: 640px) {
-		._input_container input {
-			border-color: var(--text-color);
-			border-style: solid;
-			border-width: var(--input-container-border-width);
-		}
-	}
-
-	._input {
-		background: var(--input-background);
-		color: var(--input-color);
-		width: 100%;
-		padding: 10px 18px;
-		border-radius: var(--button-radius);
-		font-size: 16px;
-
-		border-color: var(--text-color);
-		border-style: solid;
-		border-width: var(--input-border-width);
-
-		@apply mr-4;
-	}
-
-	button,
-	.button {
-		border-radius: var(--button-radius);
-		padding: 8px 16px;
-		cursor: pointer;
-
-		background-color: var(--accent-color);
-		color: var(--button-color);
-		font-size: 15px;
-		font-weight: 500;
-	}
-
-	.button.secondary {
-		background: none !important;
-		color: white;
-	}
-
-	._input_button {
-		display: flex;
-		align-items: center;
-		z-index: 100;
-		height: 100%;
-		right: 0;
-		top: 0;
 	}
 
 	._momentum-stream {

@@ -8,9 +8,9 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
+	import { v4 as uuidv4 } from 'uuid';
 
 	import Button from 'lib/components/Button.svelte';
-	import EditUrl from '$lib/components/edit/URL.svelte';
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
@@ -44,6 +44,8 @@
 		section.items = section.items || [];
 
 		let newItem = {
+			id: uuidv4(),
+
 			title: '',
 			description: '',
 			imageUrl: ''

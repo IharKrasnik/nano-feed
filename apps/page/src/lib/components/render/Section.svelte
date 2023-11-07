@@ -10,6 +10,7 @@
 	import RenderMomentumCollection from '$lib/components/render/MomentumCollection.svelte';
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import RenderServiceChat from '$lib/components/render/ServiceChat.svelte';
+	import RenderNewsletter from '$lib/components/render/Newsletter.svelte';
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
@@ -182,15 +183,27 @@
 	class="col-span-1 col-span-2 col-span-3 col-span-4 col-span-5 col-span-6 col-span-7 col-span-8 col-span-9 col-span-10 col-span-11 col-span-12"
 />
 <div
+	class="sm:col-span-1 sm:col-span-2 sm:col-span-3 sm:col-span-4 sm:col-span-5 sm:col-span-6 sm:col-span-7 sm:col-span-8 sm:col-span-9 sm:col-span-10 sm:col-span-11 sm:col-span-12"
+/>
+
+<div
 	class="row-span-1 row-span-2 row-span-3 row-span-4 row-span-5 row-span-6 row-span-7 row-span-8"
 />
 
 {#if section.isShown}
-	<div class="_section-container {section.type} p-4" style={style || ''} in:fly={{ y: 50 }}>
+	<div class=" _section-container {section.type} p-4" style={style || ''} in:fly={{ y: 50 }}>
 		{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji)}
-			<div class="w-full {page.theme.isTitlesLeft ? 'sm:text-left' : 'text-center'} py-4 sm:pt-16">
+			<div
+				class="relative w-full {page.theme.isTitlesLeft
+					? 'sm:text-left'
+					: 'text-center'} py-4 sm:pt-16"
+			>
 				{#if section.emoji}
-					<div class={emojiStyle[1]}>
+					<div
+						class="{emojiStyle[1]} {page.theme?.isTitlesLeft
+							? `absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
+							: ''} {page.theme?.isTitlesHuge ? 'text-[70px]' : ''}"
+					>
 						<Emoji color={'white'} class="grayscale" bind:emoji={section.emoji} />
 					</div>
 				{/if}
@@ -223,13 +236,10 @@
 					</h3>
 				{/if}
 
-				{#if section.callToActionText || section.url}
-					<a
-						href={section.url || page.url}
-						target={section.url.startsWith('http') ? '_blank' : ''}
-						class="mt-8 button"
-						>{section.callToActionText || 'Learn More'}
-					</a>
+				{#if section.interactiveRenderType}
+					<div class="sm:max-w-[600px] sm:mx-auto mt-8">
+						<RenderInteractiveOptions class="justify-center" bind:sectionItem={section} bind:page />
+					</div>
 				{/if}
 
 				{#if section.imageUrl}
@@ -238,16 +248,6 @@
 							class=""
 							imgClass="mx-auto  {isGif(section.imageUrl) ? 'w-full object-cover' : ''}"
 							url={section.imageUrl}
-						/>
-					</div>
-				{/if}
-
-				{#if section.interactiveAnswers?.length}
-					<div class="sm:max-w-[600px] sm:mx-auto mt-8">
-						<RenderInteractiveOptions
-							class="justify-center"
-							bind:sectionItem={section}
-							bind:pageId={page._id}
 						/>
 					</div>
 				{/if}
@@ -264,6 +264,8 @@
 			<RenderMomentumFeed bind:page bind:themeStyles />
 		{:else if section.type === 'service_chat'}
 			<RenderServiceChat bind:page bind:section bind:themeStyles />
+			<!-- {:else if section.type === 'newsletter'}
+			<RenderNewsletter bind:page bind:section bind:themeStyles /> -->
 		{:else if section.renderType === 'stepper'}
 			<div class="relative">
 				<div class="absolute ml-[50%] h-full w-[2px] bg-black" />
@@ -298,13 +300,12 @@
 								</div>
 								<div class="flex gap-4">
 									<div
-										class="opacity-40 hover:opacity-100 transition"
+										class="opacity-40 hover:opacity-100 transition cursor-pointer"
 										on:click={() => {
 											selectPreviousItem();
 										}}
 									>
 										<FeatherIcon
-											class="cursor-pointer"
 											on:click={() => {
 												selectPreviousItem();
 											}}
@@ -313,7 +314,7 @@
 									</div>
 
 									<div
-										class="opacity-40 hover:opacity-100 transition"
+										class="opacity-40 hover:opacity-100 transition cursor-pointer"
 										on:click={() => {
 											selectNextItem();
 										}}
@@ -352,13 +353,12 @@
 									{/each}
 									<div class="flex gap-4 p-2 sm:p-6">
 										<div
-											class="opacity-40 hover:opacity-100 transition"
+											class="opacity-40 hover:opacity-100 transition cursor-pointer"
 											on:click={() => {
 												selectPreviousItem();
 											}}
 										>
 											<FeatherIcon
-												class="cursor-pointer"
 												on:click={() => {
 													selectPreviousItem();
 												}}
@@ -367,12 +367,12 @@
 										</div>
 
 										<div
-											class="opacity-40 hover:opacity-100 transition "
+											class="opacity-40 hover:opacity-100 transition cursor-pointer"
 											on:click={() => {
 												selectNextItem();
 											}}
 										>
-											<FeatherIcon class="cursor-pointer" name="arrow-down" />
+											<FeatherIcon name="arrow-down" />
 										</div>
 									</div>
 								</div>
@@ -412,26 +412,41 @@
 						{/each}
 					</div> -->
 				{:else if section.columns === 1}
-					<div class="grid grid-cols-12">
-						<div class="col-span-4">
-							{#each section.items as item}
+					{#each section.items as item}
+						<div class="grid grid-cols-12 items-center mb-4 ">
+							<div class="sm:col-span-{item.colSpan || 6} {item.isReversed ? 'order-last' : ''}">
 								<div class="p-4 sm:p-8 col-span-1">
 									<!-- {#if item.emoji !== '✨'}
 									<Emoji bind:emoji={item.emoji} />
 								{/if} -->
-									<div class="_item-title">{@html item.title}</div>
+									<div class="_item-title mb-2">{@html item.title}</div>
 									<div class="_item-description whitespace-pre-wrap">{@html item.description}</div>
 								</div>
-							{/each}
+
+								{#if item.interactiveAnswers?.length}
+									<div class={page?.theme?.containerWidth ? 'p-4' : 'px-8 pb-4'}>
+										<RenderInteractiveOptions
+											bind:sectionItem={item}
+											parentSectionId={section.id}
+											bind:page
+											itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+										/>
+									</div>
+								{/if}
+							</div>
+							<div
+								class="sm:col-span-{12 - (item.colSpan || 6)} {item.isReversed
+									? 'order-first'
+									: ''}"
+							>
+								<RenderUrl
+									class="col-span-2"
+									imgClass="object-cover rounded-b-lg"
+									url={item.imageUrl}
+								/>
+							</div>
 						</div>
-						<div class="col-span-8">
-							<RenderUrl
-								class="col-span-2"
-								imgClass="object-cover rounded-b-lg"
-								url={section.items[0].imageUrl}
-							/>
-						</div>
-					</div>
+					{/each}
 				{:else}
 					<div
 						class="sm:grid-cols-{section.columns}  gap-4 {section.columns > 1
@@ -538,30 +553,22 @@
 													</div>
 												{/if}
 											{/if}
-										</div>
 
-										{#if item.url}
-											<a
-												href={item.url}
-												target={item.url.startsWith('http') ? '_blank' : ''}
-												class="section-button w-full text-center block text-[#8B786D] pt-4"
-												>{item.callToActionText || 'Learn More'}
-											</a>
-										{:else if section.type === 'pricing'}
-											{#if page.isCollectEmails}
-												<button class="button w-full" on:click={focusEmailInput}
-													>{item.callToActionText || page.callToAction}</button
-												>
-											{:else}
-												<a
-													class="button text-center block w-full"
-													target="_blank"
-													href={page.actionUrl}
-												>
-													{item.callToActionText || page.callToAction}
-												</a>
+											{#if item.interactiveRenderType}
+												<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
+													<RenderInteractiveOptions
+														class={section.columns === 1 &&
+														section.interactiveRenderType === 'single_choice'
+															? 'justify-center'
+															: 'justify-start'}
+														bind:sectionItem={item}
+														parentSectionId={section.id}
+														bind:page
+														itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+													/>
+												</div>
 											{/if}
-										{/if}
+										</div>
 									</div>
 
 									{#if !section.carousel && item.imageUrl}
@@ -581,18 +588,6 @@
 													? 'w-full object-cover'
 													: ''}"
 												url={item.imageUrl}
-											/>
-										</div>
-									{/if}
-
-									{#if item.interactiveAnswers?.length}
-										<div class={page?.theme?.containerWidth ? 'p-4' : 'p-8'}>
-											<RenderInteractiveOptions
-												class={section.columns === 1 ? 'justify-center' : 'justify-start'}
-												bind:sectionItem={item}
-												parentSectionId={section.id}
-												bind:pageId={page._id}
-												itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
 											/>
 										</div>
 									{/if}
@@ -616,22 +611,6 @@
 
 		color: var(--button-color);
 		background-color: var(--accent-color);
-	}
-
-	._item-title {
-		font-weight: 600;
-	}
-
-	._item-title {
-		font-size: var(--section-title-font-size);
-		line-height: var(--section-title-line-height);
-		/* margin-bottom: 16px; */
-	}
-
-	._item-description {
-		font-weight: 400;
-		font-size: 16px;
-		color: var(--section-description-text-color);
 	}
 
 	.grayscale-emoji {
@@ -705,5 +684,9 @@
 				60%,
 				transparent
 			); */;
+	}
+
+	._item-description {
+		color: var(--section-description-text-color);
 	}
 </style>

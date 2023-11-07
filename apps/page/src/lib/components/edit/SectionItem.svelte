@@ -35,22 +35,6 @@
 		item.pricing.benefits = item.pricing.benefits || [];
 		item.pricing.benefits.push({ name: '' });
 	};
-
-	let addAnswer = (item) => {
-		if (!item.interactiveAnswers) {
-			item.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
-		} else {
-			item.interactiveAnswers.push({ emoji: getRandomProjectEmoji() });
-			item.interactiveAnswers = [...item.interactiveAnswers];
-		}
-
-		section = { ...section };
-	};
-
-	let removeAnswerFromItem = (item, answer) => {
-		item.interactiveAnswers = item.interactiveAnswers.filter((a) => a.emoji !== answer.emoji);
-		section = { ...section };
-	};
 </script>
 
 {#if isEmojiPickerShown}
@@ -104,18 +88,32 @@
 			<EmojiPicker bind:icon={item.emoji} />
 
 			{#if isWithUrl}
-				<EditUrl bind:url={item.url} bind:callToActionText={item.callToActionText} />
-			{/if}
-
-			{#if isWithInteractive && !item.interactiveAnswers?.length}
-				<button on:click={() => addAnswer(item)}>🕹</button>
+				<EditUrl bind:sectionItem={item} />
 			{/if}
 
 			{#if isWithGrid}
 				<FeatherIcon class="ml-4 mr-2" size="15" color="gray" name="grid" />
-				<input type="number" class="max-w-[60px] mr-2" placeholder="1" bind:value={item.colSpan} />
-				x
-				<input type="number" class="max-w-[60px] ml-2" placeholder="1" bind:value={item.rowSpan} />
+				{#if section.columns > 1}
+					<input
+						type="number"
+						class="max-w-[60px] mr-2"
+						placeholder="1"
+						bind:value={item.colSpan}
+					/>
+					x
+					<input
+						type="number"
+						class="max-w-[60px] ml-2"
+						placeholder="1"
+						bind:value={item.rowSpan}
+					/>
+				{:else}
+					<select bind:value={item.colSpan}>
+						<option value="4">4 x 8</option>
+						<option value="6">6 x 6</option>
+						<option value="8">8 x 4</option>
+					</select>
+				{/if}
 			{/if}
 
 			{#if isWithSubtitle}
@@ -190,49 +188,8 @@
 			/>
 		</div>
 	{/if}
+</div>
 
-	{#if item.interactiveAnswers?.length}
-		<div class="font-normal text-sm opacity-70 mt-4 mb-2">How users can answer?</div>
-
-		<select class="w-full" bind:value={section.interactiveRenderType}>
-			<option value="single_choice">Single Choice</option>
-			<option value="short_answer">Short Answer</option>
-		</select>
-
-		<div>
-			{#if !section.interactiveRenderType || section.interactiveRenderType === 'single_choice'}
-				{#each item.interactiveAnswers as answer}
-					<div class="flex justify-between">
-						<EmojiPicker
-							isNoCustom
-							class="w-full p-2 bg-[#fafafa] my-2 text-center"
-							bind:icon={answer.emoji}
-						/>
-
-						<button on:click={() => removeAnswerFromItem(item, answer)}>🗑</button>
-					</div>
-				{/each}
-				{#if item.interactiveAnswers.length === 3}
-					<div class="text-sm">You can add up to 3 answers</div>
-				{:else}
-					<button class="_small _secondary w-full" on:click={() => addAnswer(item)}
-						>Add another interactive answer</button
-					>
-				{/if}
-			{:else if section.interactiveRenderType === 'short_answer'}
-				<div class="text-sm mt-4">User will see Input</div>
-			{/if}
-		</div>
-
-		<div>
-			<div class="font-normal text-sm opacity-70 mt-4 mb-2 font-bold">Save to variable</div>
-			<input class="w-full" placeholder="reasonToSwitch" bind:value={section.varName} />
-
-			{#if section.varName}
-				<div class="font-normal text-sm opacity-70 mt-4 mb-2">
-					The result will be available in $user.{section.varName}
-				</div>
-			{/if}
-		</div>
-	{/if}
+<div class="px-4 pb-4">
+	<input type="checkbox" bind:checked={item.isReversed} /> reverse
 </div>

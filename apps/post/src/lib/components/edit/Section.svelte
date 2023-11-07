@@ -8,7 +8,6 @@
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 
-	import EditUrl from '$lib/components/edit/Url.svelte';
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 
 	import RenderSection from '$lib/components/render/Section.svelte';

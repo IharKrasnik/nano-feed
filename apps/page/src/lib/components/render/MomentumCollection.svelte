@@ -70,7 +70,7 @@
 	let selectCategory = (categoryStream) => {
 		filterCategoryId = categoryStream?._id;
 
-		loadFeed({ categorySlug: categoryStream?.slug });
+		loadFeed({ categorySlug: categoryStream?.slug || section?.streamSlug || page?.streamSlug });
 	};
 </script>
 
