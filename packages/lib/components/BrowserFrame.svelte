@@ -2,6 +2,7 @@
 	import axios from 'axios';
 	import _ from 'lodash';
 	import { onMount } from 'svelte';
+	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 	import { STREAM_URL, PAGE_URL } from 'lib/env';
 	import slug from 'slug';
 
@@ -63,17 +64,17 @@
 		{/if}
 
 		{#if links}
-			<div
-				class="absolute mt-[75px] p-2 bg-[#fafafa] w-full flex text-white opacity-80 pl-4"
-				style="background-color: rgba(0,0,0,0.6);"
-			>
+			<div class="absolute mt-[75px] p-2 bg-[#8b786d] w-full flex text-white opacity-80 pl-4">
 				{#each links as link}
 					<a
-						class="text-sm flex block items-center mr-6"
+						class="text-sm flex block items-center mr-6 cursor-pointer"
 						href={link.url}
 						target={link.target || ''}
+						on:click={link.action && link.action()}
 					>
-						{link.emoji || ''}
+						{#if link.featherIcon}
+							<FeatherIcon name={link.featherIcon} color={'#ffffff'} />
+						{/if}
 						<div class="ml-2">
 							{link.title}
 						</div>

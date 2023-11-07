@@ -15,11 +15,13 @@
 	import PortfolioPage from '$lib/layouts/PortfolioPage.svelte';
 	import getPageCssStyles from '$lib/services/getPageCssStyles';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import RenderBlog from '$lib/components/render/Blog.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
 	import Gradients from '$lib/components/gradients/index.svelte';
+	import PostPreview from 'lib/components/post/PostPreview.svelte';
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
@@ -105,7 +107,7 @@
 				window.location.href = page.actionUrl.startsWith('/')
 					? `${page.slug}${page.actionUrl}`
 					: page.actionUrl;
-			}, 2000);
+			}, 0);
 		}
 	};
 
@@ -378,7 +380,7 @@
 								<span class="font-bold  " style="font-family: var(--logo-font)">
 									{page.parentPage?.name || page.name}
 								</span>
-								<div class="ml-4 opacity-70 hidden sm:block">
+								<div class="ml-6 opacity-70 hidden sm:block">
 									{@html striptags(page.parentPage?.title || page.title || '')}
 								</div>
 							</a>
@@ -386,7 +388,7 @@
 							<div class="shrink-0 flex items-center">
 								{#if page.parentPage?.blog || page.blog}
 									<div class="mr-4 sm:mr-8">
-										<a href={(page.parentPage?.blog || page.blog).url}>Blog</a>
+										<a href="/{page.parentPage?.slug || page.slug}/blog">Blog</a>
 									</div>
 								{/if}
 
@@ -416,50 +418,58 @@
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						<div class="p-4 _header flex md:justify-between items-center justify-center">
-							<a
-								class="flex items-center shrink-0 _logo"
-								href="/{page.parentPage?.slug || page.slug}"
+						<div class="_header">
+							<div
+								class="px-4 sm:px-0 mb-4 _header-content flex md:justify-between items-center justify-center"
 							>
-								{#if page?.logo && page.logo.startsWith('http')}
-									<Emoji class="mr-2" emoji={page.parentPage?.logo || page.logo} />
-								{/if}
-
-								<span
-									class="font-bold {page.heroBgImage ? 'light-colors' : ''}"
-									style="font-family: var(--logo-font)"
+								<a
+									class="flex items-center shrink-0 _logo"
+									href="/{page.parentPage?.slug || page.slug}"
 								>
-									{page.parentPage?.name || page.name}
-								</span>
-							</a>
-
-							<div class="shrink-0 mt-2 hidden md:flex items-center">
-								{#if page.blog}
-									<div class="mr-8">
-										<a href={(page.parentPage?.blog || page.blog).url}>Blog</a>
-									</div>
-								{/if}
-
-								{#if !page.parentPage || page.parentPage?.subPages}
-									{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-										<a href="/{page.parentPage?.slug || page.slug}/{subPage.slug}">{subPage.name}</a
-										>
-									{/each}
-								{/if}
-
-								{#if page.callToAction && !isSubmitted}
-									{#if page.isCollectEmails}
-										<button
-											class="cursor-pointer"
-											style="outline: 1px rgba(255, 255, 255, .8) solid;"
-											on:click={onButtonClick}>{page.callToAction}</button
-										>
-									{:else}
-										<a href={page.actionUrl} target="_blank" class="button">
-											{page.callToAction}
-										</a>
+									{#if page?.logo && page.logo.startsWith('http')}
+										<Emoji class="mr-2" emoji={page.parentPage?.logo || page.logo} />
 									{/if}
-								{/if}
+
+									<span
+										class="font-bold {page.heroBgImage ? 'light-colors' : ''}"
+										style="font-family: var(--logo-font)"
+									>
+										{page.parentPage?.name || page.name}
+									</span>
+								</a>
+
+								<div class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold">
+									{#if !page.parentPage || page.parentPage?.subPages}
+										{#if page.parentPage?.blog || page.blog}
+											<a href="/{page.parentPage?.slug || page.slug}/blog">Blog</a>
+										{/if}
+
+										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+											<a href="/{page.parentPage?.slug || page.slug}/{subPage.slug}"
+												>{subPage.name}</a
+											>
+										{/each}
+									{/if}
+
+									{#if (page.parentPage?.callToAction || page.callToAction) && !isSubmitted}
+										{#if page.isCollectEmails}
+											<button
+												class="cursor-pointer"
+												style="outline: 1px rgba(255, 255, 255, .8) solid;"
+												on:click={onButtonClick}
+												>{page.parentPage?.callToAction || page.callToAction}</button
+											>
+										{:else}
+											<a
+												href={page.parentPage?.actionUrl || page.actionUrl}
+												target="_blank"
+												class="button"
+											>
+												{page.parentPage?.callToAction || page.callToAction}
+											</a>
+										{/if}
+									{/if}
+								</div>
 							</div>
 						</div>
 
@@ -469,242 +479,260 @@
 					/>
 					 -->
 
-						{#if page.theme?.backgroundGradient}
-							<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
-						{/if}
-
 						<!-- <Gradients gradientType={'ship'} /> -->
 
 						<!-- <div
-						class="absolute top-0 left-0 z-0 w-full h-screen "
-						style="background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),
-					linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);"
-					/> -->
+								class="absolute top-0 left-0 z-0 w-full h-screen "
+								style="background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),
+							linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);"
+							/> -->
 
 						<!-- <div
-						class="absolute top-0 left-0 z-0 w-full h-screen opacity-20 rounded-full"
-						style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
-					/> -->
+								class="absolute top-0 left-0 z-0 w-full h-screen opacity-20 rounded-full"
+								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
+							/> -->
 
 						<div class="relative _root bg-site" style="background: none;">
-							<div
-								class="{isEmbed || page.sections?.length
-									? ''
-									: page.theme?.isHeroVertical
-									? ''
-									: 'min-h-screen h-screen'} mt-[-70px]"
-							>
+							{#if $sveltePage.data.post}
+								<PostPreview isEdit={false} isNoFooter post={$sveltePage.data.post} />
+							{:else if $sveltePage.url.pathname.includes('/blog')}
+								<RenderBlog bind:page />
+							{:else}
+								{#if page.theme?.backgroundGradient}
+									<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
+								{/if}
 								<div
-									bind:this={$aboveTheFoldEl}
-									class="_content {page.heroBgImage ? 'light-colors' : ''} {page.theme
-										?.isHeroVertical
+									class="{isEmbed || page.sections?.length
 										? ''
-										: ''} h-full {page.sections?.length ? '' : 'pb-16'} pt-16 {!page.testimonials
-										?.length
-										? `flex items-center`
-										: ''}"
-									style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
+										: page.theme?.isHeroVertical
+										? ''
+										: 'min-h-screen h-screen'} sm:mt-[-70px]"
 								>
 									<div
-										class="p-4 flex h-full w-full {page.demoUrl || page.theme?.isHeroLeft
-											? `flex-col ${
-													page.theme?.isHeroVertical ? '' : 'justify-between sm:flex-row'
-											  } items-center`
-											: 'text-center items-center'}"
+										bind:this={$aboveTheFoldEl}
+										class="_content {page.heroBgImage ? 'light-colors' : ''} {page.theme
+											?.isHeroVertical
+											? ''
+											: ''} h-full {page.sections?.length ? '' : 'pb-16'} sm:pt-36 {!page
+											.testimonials?.length
+											? `flex items-center`
+											: ''}"
+										style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 									>
 										<div
-											class="{page.demoUrl || page.theme?.isHeroLeft
-												? `w-full text-center ${
-														page.theme?.isHeroVertical
-															? 'flex flex-col items-center mb-8'
-															: 'sm:text-left'
-												  }  ${page.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
-												: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-										{page.theme?.isHeroLeft ? 'sm:text-left' : ''}"
+											class="p-4 flex h-full w-full {page.demoUrl || page.theme?.isHeroLeft
+												? `flex-col ${
+														page.theme?.isHeroVertical ? '' : 'justify-between sm:flex-row'
+												  } items-center`
+												: 'text-center items-center'}"
 										>
-											{#if isMounted}
-												<h1
-													class="{page.theme?.isGradientTitle
-														? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
-														: ''} _title 
-											{!page.demoUrl || page.theme?.isHeroVertical ? 'sm:max-w-[768px]' : ''}"
-													style={page.title ? '' : 'opacity: 20%;'}
-													in:fly={{ y: 50, duration: 800 }}
-												>
-													{#if page.title}
-														<div>{@html page.title || ''}</div>
-													{:else if isEmbed && !page.parentPage}
-														{'Type Tagline...'}
-													{/if}
-												</h1>
-											{/if}
-
-											{#if page.subtitle}
-												<h2
-													class="_subtitle whitespace-pre-wrap  {page.demoUrl ||
-													!page.theme?.isHeroVertical
-														? ''
-														: 'max-w-[600px]'}"
-													in:fly={{ y: 50, duration: 800 }}
-												>
-													{@html page.subtitle}
-												</h2>
-											{/if}
-
-											{#if page.callToAction}
-												<div
-													in:fly={{ y: 50, duration: 800, delay: 200 }}
-													class="_input_container {page.isCollectEmails && !isSubmitted
-														? '_border flex'
-														: 'inline-block'} items-center {page.demoUrl || page.theme?.isHeroLeft
-														? ''
-														: 'mx-auto'} {page.isCollectEmails
-														? 'w-full ' +
-														  (page.callToAction.length < 16
-																? 'sm:w-[360px]'
-																: page.callToAction.length < 20
-																? 'sm:w-[380px]'
-																: 'sm:w-[460px]')
-														: ''}"
-												>
-													<form
-														class="{page.isCollectEmails
-															? `w-full flex flex-col ${
-																	page.isHeroVertical ? '' : 'sm:flex-row'
-															  } items-center justify-center`
-															: 'mx-auto sm:mx-0 inline-block'} "
-														style={!page.isCollectEmails && !page.demoUrl ? 'margin: 0 auto;' : ''}
-														on:submit|preventDefault={submitEmail}
+											<div
+												class="{page.demoUrl || page.theme?.isHeroLeft
+													? `w-full text-center ${
+															page.theme?.isHeroVertical
+																? 'flex flex-col items-center mb-8'
+																: 'sm:text-left'
+													  }  ${page.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
+													: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+										{page.theme?.isHeroLeft && !page.theme?.isHeroVertical ? 'sm:text-left' : ''}"
+											>
+												{#if isMounted}
+													<h1
+														class="{page.theme?.isGradientTitle
+															? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
+															: ''} _title 
+											{!page.demoUrl || page.theme?.isHeroVertical ? 'sm:max-w-[912px]' : ''}"
+														style={page.title ? '' : 'opacity: 20%;'}
+														in:fly={{ y: 50, duration: 800 }}
 													>
-														{#if !isSubmitted}
-															{#if page.isCollectEmails}
-																<input
-																	class="_input _email-input w-full"
-																	placeholder="Your Email"
-																	type="email"
-																	required
-																	bind:this={inputEl}
-																	bind:value={email}
-																	disabled={isSubmitted}
-																	in:fade={{ duration: 150 }}
-																/>
-																<button
-																	type="submit"
-																	class="_input_button justify-center {page.isCollectEmails
-																		? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-																		: ''}">{page.callToAction}</button
-																>
-															{:else}
-																<a
-																	href={page.actionUrl}
-																	target="_blank"
-																	class="button _input_button"
-																>
-																	{page.callToAction}
-																</a>
-															{/if}
-														{:else}
-															<div>💥 Thank you!</div>
-
-															{#if page.actionUrl}
-																<div class="mt-8 opacity-70">Redirecting...</div>
-															{/if}
+														{#if page.title}
+															<div>{@html page.title || ''}</div>
+														{:else if isEmbed && !page.parentPage}
+															{'Type Tagline...'}
 														{/if}
-													</form>
+													</h1>
+												{/if}
 
-													{#if page.callToAction2}
-														<a href={page.callToAction.url} class="button secondary"
-															>{page.callToAction2.title}</a
+												{#if page.subtitle}
+													<h2
+														class="_subtitle whitespace-pre-wrap  {page.demoUrl ||
+														!page.theme?.isHeroVertical
+															? ''
+															: 'max-w-[600px]'}"
+														in:fly={{ y: 50, duration: 800 }}
+													>
+														{@html page.subtitle}
+													</h2>
+												{/if}
+
+												{#if page.callToAction}
+													<div
+														in:fly={{ y: 50, duration: 800, delay: 200 }}
+														class="_input_container {page.isCollectEmails && !isSubmitted
+															? '_border flex'
+															: 'inline-block'} items-center {page.demoUrl || page.theme?.isHeroLeft
+															? ''
+															: 'mx-auto'} {page.isCollectEmails
+															? 'w-full ' +
+															  (page.callToAction.length < 16
+																	? page.theme?.isInputBorder
+																		? 'sm:w-[400px]'
+																		: 'sm:w-[360px]'
+																	: page.callToAction.length < 20
+																	? page.theme?.isInputBorder
+																		? 'sm:w-[420px]'
+																		: 'sm:w-[380px]'
+																	: page.theme?.isInputBorder
+																	? 'sm:w-[460px]'
+																	: 'sm:w-[460px]')
+															: ''}"
+													>
+														<form
+															class="{page.isCollectEmails
+																? `flex flex-col sm:flex-row items-center ${
+																		page.theme?.isHeroVertical ? '' : 'sm:flex-row'
+																  } ${
+																		page.theme?.isHeroLeft && !page.theme?.isHeroVertical
+																			? ''
+																			: 'w-full justify-center'
+																  } `
+																: 'mx-auto sm:mx-0 inline-block'} "
+															style={!page.isCollectEmails && !page.demoUrl
+																? 'margin: 0 auto;'
+																: ''}
+															on:submit|preventDefault={submitEmail}
 														>
-													{/if}
-												</div>
-											{/if}
-											{#if page.ctaExplainer}
-												<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
-											{/if}
+															{#if !isSubmitted}
+																{#if page.isCollectEmails}
+																	<input
+																		class="_input _email-input w-full"
+																		placeholder="Your Email"
+																		type="email"
+																		required
+																		bind:this={inputEl}
+																		bind:value={email}
+																		disabled={isSubmitted}
+																		in:fade={{ duration: 150 }}
+																	/>
+																	<button
+																		type="submit"
+																		class="_input_button justify-center {page.isCollectEmails
+																			? 'shrink-0 w-full sm:w-auto mt-4 sm:mt-0'
+																			: ''}">{page.callToAction}</button
+																	>
+																{:else}
+																	<a
+																		href={page.actionUrl}
+																		target="_blank"
+																		class="button _input_button"
+																	>
+																		{page.callToAction}
+																	</a>
+																{/if}
+															{:else}
+																<div>💥 Thank you!</div>
+															{/if}
+														</form>
 
-											{#if isMounted && page.socialProof}
-												<div
-													class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
-													page.theme?.isHeroLeft
-														? ''
-														: 'flex justify-center w-full'} }"
-												>
-													<div class="flex flex-col sm:flex-row ">
-														{#each page.socialProof.logos as logo}
-															<img class="w-[50px] h-[50px]" src={logo.url} />
-														{/each}
+														{#if page.callToAction2}
+															<a href={page.callToAction.url} class="button secondary"
+																>{page.callToAction2.title}</a
+															>
+														{/if}
 													</div>
+												{/if}
+												{#if page.ctaExplainer}
+													<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
+												{/if}
 
-													<div class="text-sm mt-4 opacity-80">{@html page.socialProof.title}</div>
+												{#if isMounted && page.socialProof}
+													<div
+														class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
+														(page.theme?.isHeroLeft && !page.theme?.isHeroVertical)
+															? ''
+															: 'flex justify-center w-full'} }"
+													>
+														<div class="flex flex-col sm:flex-row ">
+															{#each page.socialProof.logos as logo}
+																<img class="w-[50px] h-[50px]" src={logo.url} />
+															{/each}
+														</div>
+
+														<div class="text-sm mt-4 opacity-80">
+															{@html page.socialProof.title}
+														</div>
+													</div>
+												{/if}
+											</div>
+
+											{#if page.demoUrl || page.lottieUrl}
+												<div
+													class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
+														? ''
+														: 'sm:ml-8 sm:max-w-[600px]'}"
+												>
+													{#if page.lottie}
+														<lottie-player
+															src={page.lottie.jsonUrl}
+															background="transparent"
+															speed="1"
+															class="w-full h-full"
+															loop
+															autoplay
+														/>
+													{:else if page.demoUrl}
+														<RenderUrl
+															isLazy={false}
+															class="w-full flex justify-end {page.theme?.isHeroVertical
+																? 'mt-8'
+																: ''}"
+															url={page.demoUrl}
+															imgClass="w-full rounded-xl shadow-md object-cover"
+														/>
+													{/if}
 												</div>
 											{/if}
 										</div>
-
-										{#if page.demoUrl || page.lottieUrl}
-											<div
-												class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
-													? ''
-													: 'sm:ml-8 sm:max-w-[600px]'}"
-											>
-												{#if page.lottie}
-													<lottie-player
-														src={page.lottie.jsonUrl}
-														background="transparent"
-														speed="1"
-														class="w-full h-full"
-														loop
-														autoplay
-													/>
-												{:else if page.demoUrl}
-													<RenderUrl
-														isLazy={false}
-														class="w-full flex justify-end {page.theme?.isHeroVertical
-															? 'mt-8'
-															: ''}"
-														url={page.demoUrl}
-														imgClass="w-full rounded-xl shadow-md object-cover"
-													/>
-												{/if}
-											</div>
-										{/if}
 									</div>
 								</div>
-							</div>
 
-							{#if !isAboveTheFold}
-								{#if page.sections?.length}
-									<div class={page.streamSlug ? '' : ''}>
-										{#each page.sections as section, i}
-											{#if $sectionToEdit && $sectionToEdit.id === section.id}
-												<div bind:this={editEl}>
-													<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
-													<div>
+								{#if !isAboveTheFold}
+									{#if page.sections?.length}
+										<div class={page.streamSlug ? '' : ''}>
+											{#each page.sections as section, i}
+												{#if $sectionToEdit && $sectionToEdit.id === section.id}
+													<div bind:this={editEl}>
+														<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
+														<div>
+															<RenderSection
+																bind:page
+																bind:themeStyles={styles}
+																bind:section={$sectionToEdit}
+															/>
+														</div>
+														<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
+													</div>
+													{focusEditEl() || ''}
+												{:else}
+													<div class="bg-site">
 														<RenderSection
 															bind:page
+															bind:section
 															bind:themeStyles={styles}
-															bind:section={$sectionToEdit}
+															style={false && page.theme?.isZebra && i % 2 === 0
+																? page.theme?.theme === 'dark'
+																	? `background-color: ${lighten(
+																			styles['background-color'],
+																			0.01
+																	  )};`
+																	: `background-color: ${darken(styles['background-color'], 0.08)};`
+																: ''}
 														/>
 													</div>
-													<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
-												</div>
-												{focusEditEl() || ''}
-											{:else}
-												<div class="bg-site">
-													<RenderSection
-														bind:page
-														bind:section
-														bind:themeStyles={styles}
-														style={false && page.theme?.isZebra && i % 2 === 0
-															? page.theme?.theme === 'dark'
-																? `background-color: ${lighten(styles['background-color'], 0.01)};`
-																: `background-color: ${darken(styles['background-color'], 0.08)};`
-															: ''}
-													/>
-												</div>
-											{/if}
-										{/each}
-									</div>
+												{/if}
+											{/each}
+										</div>
+									{/if}
 								{/if}
 							{/if}
 						</div>
@@ -737,7 +765,7 @@
 						</div>
 					{/if}
 
-					{#if !page.parentPage && page.sections?.filter((s) => s.isShown)?.length}
+					{#if !page.parentPage && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
 						<div
 							class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
 								? ''
@@ -794,19 +822,9 @@
 										{/if}
 									{:else}
 										<div>💥 Thank you!</div>
-
-										{#if page.actionUrl}
-											<div class="mt-8 opacity-70">Redirecting...</div>
-										{/if}
 									{/if}
 								</form>
 							</div>
-
-							{#if page.blog}
-								<div class="mt-8">
-									<a href={page.blog.url}>Or read our Blog</a>
-								</div>
-							{/if}
 						</div>
 					{/if}
 
@@ -851,17 +869,21 @@
 	}
 
 	._header {
-		max-width: var(--container-width);
-		margin: 0 auto;
+		@apply p-1 w-full;
+		border-bottom: 1px rgba(0, 0, 0, 0.2) solid;
 		position: relative;
 		z-index: 40;
+	}
+
+	._header ._header-content {
+		max-width: var(--container-width);
+		margin: 0 auto;
 	}
 
 	._logo {
 		font-family: var(--title-font);
 		font-weight: bold;
 		font-size: 18px;
-		margin-top: 12px;
 	}
 
 	:global(._title) {
@@ -900,8 +922,8 @@
 	}
 
 	._subtitle {
-		font-size: 20px;
-		line-height: 1.4;
+		font-size: 24px;
+		line-height: 1.6;
 		margin-bottom: 40px;
 		max-width: 650px;
 		font-family: var(--subtitle-font);
@@ -914,13 +936,18 @@
 
 	@media (min-width: 640px) {
 		._input_container._border {
-			border: 1px var(--text-color) solid;
+			border-color: var(--text-color);
+			border-style: solid;
+			border-width: var(--input-container-border-width);
+			/* border: 1px var(--text-color) solid; */
 		}
 	}
 
 	@media (max-width: 640px) {
 		._input_container input {
-			border: 1px var(--text-color) solid;
+			border-color: var(--text-color);
+			border-style: solid;
+			border-width: var(--input-container-border-width);
 		}
 	}
 
@@ -931,6 +958,12 @@
 		padding: 10px 18px;
 		border-radius: var(--button-radius);
 		font-size: 16px;
+
+		border-color: var(--text-color);
+		border-style: solid;
+		border-width: var(--input-border-width);
+
+		@apply mr-4;
 	}
 
 	button,

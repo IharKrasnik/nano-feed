@@ -7,14 +7,17 @@
 	import Avatar from 'lib/components/Avatar.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import contenteditable from 'lib/use/contenteditable';
-	import EndSubmitForm from '$lib/components/EndSubmitForm.svelte';
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
-	import PublishedLabel from '$lib/components/PublishedLabel.svelte';
-	import PostShortPreview from '$lib/components/PostShortPreview.svelte';
 
-	import styles from '$lib/stores/styles';
+	import EndSubmitForm from 'lib/components/post/EndSubmitForm.svelte';
+	import PublishedLabel from 'lib/components/post/PublishedLabel.svelte';
+	import PostShortPreview from 'lib/components/post/PostShortPreview.svelte';
+
+	import styles from 'lib/stores/styles';
 
 	export let post;
+	export let isNoHeader = false;
+	export let isNoFooter = false;
 
 	let blog = post.blog;
 
@@ -39,8 +42,6 @@
 		let defaultTags = getPostMetaTags({ post });
 		post.defaultImageUrl = defaultTags.image || `${BRAND_URL}/og.png?postId=${post._id}`;
 	}
-
-	debugger;
 </script>
 
 {#if post}
@@ -51,28 +52,30 @@
 	<div style={$styles.css} class="sm:mt-16 mt-8">
 		<div class="sticky bg-site color-site z-20 w-full min-h-screen">
 			<div class="max-w-[700px] py-16 px-2 mx-auto">
-				<h1 class="mb-4">
-					{post.title || ''}
+				{#if !isNoHeader}
+					<h1 class="mb-4">
+						{post.title || ''}
 
-					{#if !post.title && isEdit}
-						<div class="opacity-40">👈 Add post title...</div>
+						{#if !post.title && isEdit}
+							<div class="opacity-40">👈 Add post title...</div>
+						{/if}
+					</h1>
+
+					<div class="content my-8 opacity-70 text-lg">
+						{post.description || ''}
+
+						{#if !post.description && isEdit}
+							<div class="opacity-60">👈 Add short post description...</div>
+						{/if}
+					</div>
+
+					{#if post.imageUrl || post.defaultImageUrl}
+						<RenderUrl
+							imgClass="w-full my-4 aspect-[1200/630]"
+							isLazy={false}
+							url={post.imageUrl || post.defaultImageUrl}
+						/>
 					{/if}
-				</h1>
-
-				<div class="content my-8 opacity-70 text-lg">
-					{post.description || ''}
-
-					{#if !post.description && isEdit}
-						<div class="opacity-60">👈 Add short post description...</div>
-					{/if}
-				</div>
-
-				{#if post.imageUrl || post.defaultImageUrl}
-					<RenderUrl
-						imgClass="w-full my-4 aspect-[1200/630]"
-						isLazy={false}
-						url={post.imageUrl || post.defaultImageUrl}
-					/>
 				{/if}
 
 				<div class="flex items-center my-4 mb-16">
@@ -112,7 +115,7 @@
 		</div>
 	</div>
 
-	{#if !isEdit}
+	{#if !isEdit && !isNoFooter}
 		<EndSubmitForm bind:post />
 	{/if}
 {/if}

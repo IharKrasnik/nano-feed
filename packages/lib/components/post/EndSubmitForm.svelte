@@ -2,7 +2,7 @@
 	import { fly, fade, slide } from 'svelte/transition';
 	import { post as apiPost } from 'lib/api';
 	import { PAGE_URL } from 'lib/env';
-	import styles from '$lib/stores/styles';
+	import styles from 'lib/stores/styles';
 
 	export let isSubmitted;
 	import Emoji from 'lib/components/Emoji.svelte';

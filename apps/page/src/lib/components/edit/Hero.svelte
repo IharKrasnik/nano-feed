@@ -81,7 +81,7 @@
 	{/if}
 </div>
 
-{#if !isCollapsed && (page.title || page.parentPage)}
+{#if !isCollapsed && (page.name || page.parentPage)}
 	<div class="_section">
 		<div class="_title flex items-center justify-between">
 			<div>Tagline</div>

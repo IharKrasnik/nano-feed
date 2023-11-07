@@ -242,6 +242,13 @@
 			<option value="stepper">1-2-3 Stepper</option>
 		</select>
 
+		{#if section.renderType === 'carousel'}
+			<select class="w-full my-4" bind:value={section.carouselType}>
+				<option value="vertical">Vertical</option>
+				<option value="horizontal">Horizontal</option>
+			</select>
+		{/if}
+
 		<div
 			class="_section rounded-xl"
 			style="padding: 0px;"

@@ -96,7 +96,9 @@
 
 {#if isLoading}
 	<Loader />
-{:else}
+{/if}
+
+{#if feed.length}
 	<RenderSection isSkipHeader bind:themeStyles bind:page bind:section={databaseSection} />
 {/if}
 

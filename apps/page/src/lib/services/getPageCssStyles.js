@@ -1,3 +1,5 @@
+import { darken, lighten } from 'lib/helpers/color';
+
 let fontPairs = [
 	{ title: 'Inter', text: 'Inter' },
 	{ title: 'Calistoga', text: 'IBM Plex Sans' },
@@ -27,7 +29,10 @@ export default (page) => {
 		'text-color': page.theme?.textColor || '#111',
 		'accent-color': page.theme?.accentColor || '#000',
 		'section-background-color':
-			page.theme?.sectionBackgroundColor || (page.theme?.theme === 'dark' ? '#1a1c28' : '#f6f5f4'),
+			page.theme?.sectionBackgroundColor ||
+			(page.theme?.theme === 'dark'
+				? darken(page.theme?.accentColor, 0.98)
+				: lighten(page.theme?.accentColor, 0.82)),
 		'section-description-text-color':
 			page.theme?.theme === 'dark' ? 'rgb(229 231 235)' : 'rgba(4, 4, 4, 1)',
 
@@ -36,7 +41,9 @@ export default (page) => {
 
 		'input-background': page.theme?.inputBackground || 'transparent',
 		'input-color': page.theme?.inputColor || page.theme?.textColor || '#111',
-		'button-color': page.theme?.buttonColor || '#fff'
+		'button-color': page.theme?.buttonColor || '#fff',
+		'input-container-border-width': page.theme?.isInputBorder ? '0px' : '1px 1px 1px 1px',
+		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px'
 	};
 
 	let cssVarStyles = Object.entries(styles)

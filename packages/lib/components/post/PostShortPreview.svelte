@@ -7,8 +7,7 @@
 
 	import Avatar from 'lib/components/Avatar.svelte';
 
-	import PostShortPreview from '$lib/components/PostShortPreview.svelte';
-	import isCustomDomain from '$lib/stores/isCustomDomain';
+	import isCustomDomain from 'lib/stores/isCustomDomain';
 
 	export let post;
 	export let linkTarget = '';

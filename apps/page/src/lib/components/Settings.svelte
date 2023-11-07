@@ -1,5 +1,5 @@
 <script>
-	import { get, post } from 'lib/api';
+	import { get, post, del } from 'lib/api';
 	import currentUser from 'lib/stores/currentUser';
 	import Button from 'lib/components/Button.svelte';
 	import EditDomains from '$lib/components/settings/Domains.svelte';
@@ -14,6 +14,13 @@
 		let { url } = await get('stripe/subscribe', { pageId: page._id });
 		window.location.href = url;
 	};
+
+	let deletePage = async () => {
+		await del(`pages/${page._id}`);
+		page = {};
+	};
+
+	let isDeleteIntent = false;
 </script>
 
 <div>
@@ -99,5 +106,26 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<hr class="my-8 border-[#8B786D] opacity-30" />
+
+	<div>
+		<div class="flex justify-between w-full">
+			<div>
+				<h3 class="text-xl font-bold mb-2">😱 Danger Zone</h3>
+				<div class="mb-4">You scrolled too far, well...</div>
+			</div>
+
+			<div />
+		</div>
+
+		{#if isDeleteIntent}
+			<Button class="_primary _small _red" onClick={() => (isDeleteIntent = true)}
+				>😱 I am sure, delete {page.name} forever</Button
+			>
+		{:else}
+			<Button class="_primary _small _red" onClick={deletePage}>🙈 Delete {page.name}</Button>
+		{/if}
 	</div>
 </div>

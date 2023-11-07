@@ -151,10 +151,7 @@
 		<img src={bgUrl} class="absolute w-full h-full object-cover" style="z-index: -1;" />
 	{/if}
 
-	<div
-		class="og transition"
-		style=" background: url('https://i.stack.imgur.com/GySvQ.png'); background-color: {bgColor}; color: {textColor};"
-	>
+	<div class="og transition" style=" background-color: {bgColor}; color: {textColor};">
 		<div class="flex justify-between items-center" style="width: {width}px;">
 			<div class="flex {isVertical ? 'flex-col' : 'flex-row'} justify-between items-center w-full">
 				<div

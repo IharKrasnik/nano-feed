@@ -70,6 +70,10 @@
 		});
 	};
 
+	if (section.renderType === 'carousel') {
+		section.carousel = {};
+	}
+
 	if (section.carousel && section.items?.length) {
 		selectCarouselItem(section.items[0]);
 	}
@@ -103,6 +107,51 @@
 	$: if ($refreshConditionsTimestamp) {
 		refreshConditions();
 	}
+
+	let selectPreviousItem = () => {
+		let selectedIndex;
+
+		section.items = section.items.map((item, i) => {
+			if (item.isSelected) {
+				selectedIndex = i;
+				item.isSelected = false;
+			}
+
+			return item;
+		});
+
+		if (selectedIndex === 0) {
+			section.items[section.items.length - 1].isSelected = true;
+		} else {
+			section.items[selectedIndex - 1].isSelected = true;
+		}
+
+		section.items = [...section.items];
+
+		carouselKey = +new Date();
+	};
+
+	let selectNextItem = () => {
+		let selectedIndex = -2;
+
+		section.items = section.items.map((item, i) => {
+			if (item.isSelected) {
+				selectedIndex = i;
+				item.isSelected = false;
+			} else if (i === selectedIndex + 1) {
+				item.isSelected = true;
+			}
+
+			return item;
+		});
+
+		if (selectedIndex === section.items?.length - 1) {
+			section.items[0].isSelected = true;
+			section.items = [...section.items];
+		}
+
+		carouselKey = +new Date();
+	};
 </script>
 
 <!-- <div class="section-bg" /> -->
@@ -139,7 +188,7 @@
 {#if section.isShown}
 	<div class="_section-container {section.type} p-4" style={style || ''} in:fly={{ y: 50 }}>
 		{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji)}
-			<div class="w-full text-center py-4 sm:pt-16 text-center">
+			<div class="w-full {page.theme.isTitlesLeft ? 'sm:text-left' : 'text-center'} py-4 sm:pt-16">
 				{#if section.emoji}
 					<div class={emojiStyle[1]}>
 						<Emoji color={'white'} class="grayscale" bind:emoji={section.emoji} />
@@ -151,21 +200,34 @@
 				{/if}
 
 				{#if section.title}
-					<h2 class="_title sm:text-4xl text-3xl font-bold mb-4 sm:max-w-[768px] sm:mx-auto">
+					<h2
+						class="text-3xl {page.theme.isTitlesHuge
+							? 'sm:text-6xl font-medium mb-8'
+							: 'sm:text-4xl font-semibold'} mb-4 sm:max-w-[768px]  {page.theme.isTitlesLeft
+							? ''
+							: 'sm:mx-auto'}"
+					>
 						{@html section.title}
 					</h2>
 				{/if}
 
 				{#if section.description}
 					<h3
-						class="{descriptionStyle[1]} whitespace-pre-wrap sm:max-w-[600px] sm:mx-auto description"
+						class="{page.theme.isTitlesHuge
+							? 'text-xl leading-8'
+							: 'text-lg font-medium'} whitespace-pre-wrap opacity-90 {page.theme.isTitlesLeft
+							? 'sm:max-w-[712px]'
+							: 'sm:max-w-[512px] sm:mx-auto'}"
 					>
 						{@html section.description}
 					</h3>
 				{/if}
 
 				{#if section.callToActionText || section.url}
-					<a href={section.url || page.url} target="_blank" class="mt-8 button"
+					<a
+						href={section.url || page.url}
+						target={section.url.startsWith('http') ? '_blank' : ''}
+						class="mt-8 button"
 						>{section.callToActionText || 'Learn More'}
 					</a>
 				{/if}
@@ -219,8 +281,118 @@
 			</div>
 		{:else if section.items?.length}
 			<div class="w-full  {clazz}">
-				{#if section.columns === 1}
-					<div>
+				{#if section.renderType === 'carousel'}
+					{#if !section.carouselType || section.carouselType === 'vertical'}
+						<div>
+							<div class="flex w-full justify-between">
+								<div class="flex gap-8 mb-8">
+									{#each section.items as item}
+										<div
+											class:opacity-40={!item.isSelected}
+											class="cursor-pointer transition font-medium text-lg"
+											on:click={() => selectCarouselItem(item)}
+										>
+											{item.title}
+										</div>
+									{/each}
+								</div>
+								<div class="flex gap-4">
+									<div
+										class="opacity-40 hover:opacity-100 transition"
+										on:click={() => {
+											selectPreviousItem();
+										}}
+									>
+										<FeatherIcon
+											class="cursor-pointer"
+											on:click={() => {
+												selectPreviousItem();
+											}}
+											name="arrow-left"
+										/>
+									</div>
+
+									<div
+										class="opacity-40 hover:opacity-100 transition"
+										on:click={() => {
+											selectNextItem();
+										}}
+									>
+										<FeatherIcon class="cursor-pointer" name="arrow-right" />
+									</div>
+								</div>
+							</div>
+
+							{#key carouselKey}
+								<div in:fade>
+									<RenderUrl
+										class="aspect-og"
+										imgClass="aspect-og object-cover"
+										url={(section.items.find((i) => i.isSelected) || section.items[0]).imageUrl}
+									/>
+								</div>
+							{/key}
+						</div>
+					{:else if section.carouselType === 'horizontal'}
+						<div>
+							<div class="_section-item w-full grid grid-cols-3 gap-4 mb-4 items-center">
+								<div class="col-span-1">
+									{#each section.items as item}
+										<div
+											class="cursor-pointer p-2 sm:p-6 transition {item.isSelected
+												? ''
+												: 'opacity-40 hover:opacity-100'}"
+											on:click={selectCarouselItem(item)}
+										>
+											<div class="_item-title mb-2">{@html item.title}</div>
+											<div class="_item-description whitespace-pre-wrap">
+												{@html item.description}
+											</div>
+										</div>
+									{/each}
+									<div class="flex gap-4 p-2 sm:p-6">
+										<div
+											class="opacity-40 hover:opacity-100 transition"
+											on:click={() => {
+												selectPreviousItem();
+											}}
+										>
+											<FeatherIcon
+												class="cursor-pointer"
+												on:click={() => {
+													selectPreviousItem();
+												}}
+												name="arrow-up"
+											/>
+										</div>
+
+										<div
+											class="opacity-40 hover:opacity-100 transition "
+											on:click={() => {
+												selectNextItem();
+											}}
+										>
+											<FeatherIcon class="cursor-pointer" name="arrow-down" />
+										</div>
+									</div>
+								</div>
+
+								<div class="col-span-2 p-8" in:fade>
+									{#key carouselKey}
+										<RenderUrl
+											class="aspect-og"
+											imgClass="aspect-og object-cover"
+											url={(section.items.find((i) => i.isSelected) || section.items[0]).imageUrl}
+										/>
+									{/key}
+								</div>
+							</div>
+						</div>
+					{/if}
+
+					<!--
+						KLU:
+						<div>
 						{#each section.items as item}
 							<div class="_section-item w-full grid grid-cols-3 gap-4 mb-4">
 								<div class="p-4 sm:p-8 col-span-1">
@@ -228,6 +400,7 @@
 									<div class="_item-title mb-2">{@html item.title}</div>
 									<div class="_item-description whitespace-pre-wrap">{@html item.description}</div>
 								</div>
+
 								{#if item.imageUrl}
 									<RenderUrl
 										class="col-span-2"
@@ -237,8 +410,8 @@
 								{/if}
 							</div>
 						{/each}
-					</div>
-				{:else if section.renderType === 'carousel'}
+					</div> -->
+				{:else if section.columns === 1}
 					<div class="grid grid-cols-12">
 						<div class="col-span-4">
 							{#each section.items as item}
@@ -266,14 +439,15 @@
 							: ''} {section.carousel ? 'flex overflow-x-auto sm:grid' : 'grid'}"
 					>
 						{#each section.items || [] as item, i}
-							<div
+							<a
+								href={section.linkType === 'interactive' ? item.url : null}
 								class="_section-item rounded-lg sm:rounded-xl {section.className ||
 									''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
 									1} mb-8 {section.carousel
 									? `min-w-[300px] sm:min-w-0 cursor-pointer ${
 											item.isSelected ? '_selected' : '_not-selected'
 									  }`
-									: ''}"
+									: ''} {section.linkType === 'interactive' ? '_interactive' : ''}"
 								on:click={() => {
 									if (section.carousel) {
 										selectCarouselItem(item);
@@ -369,7 +543,7 @@
 										{#if item.url}
 											<a
 												href={item.url}
-												target="_blank"
+												target={item.url.startsWith('http') ? '_blank' : ''}
 												class="section-button w-full text-center block text-[#8B786D] pt-4"
 												>{item.callToActionText || 'Learn More'}
 											</a>
@@ -423,19 +597,9 @@
 										</div>
 									{/if}
 								</div>
-							</div>
+							</a>
 						{/each}
 					</div>
-				{/if}
-
-				{#if section.carousel}
-					{#key carouselKey}
-						<div in:fade>
-							<RenderUrl
-								url={(section.items.find((i) => i.isSelected) || section.items[0]).imageUrl}
-							/>
-						</div>
-					{/key}
 				{/if}
 			</div>
 		{/if}
@@ -474,13 +638,13 @@
 		filter: grayscale(0.8);
 	}
 
-	.description {
+	/* .description {
 		font-size: 18px;
 		line-height: 1.6;
 		max-width: 512px;
 		font-weight: 500;
 		opacity: 0.9;
-	}
+	} */
 
 	.section-button {
 		text-align: left;
@@ -497,6 +661,11 @@
 
 	.section-button:hover::after {
 		@apply ml-3;
+	}
+
+	._interactive:hover {
+		@apply transition;
+		border: 1px var(--accent-color) solid;
 	}
 
 	._selected .bg-section {

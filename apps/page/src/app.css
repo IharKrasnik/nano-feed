@@ -163,7 +163,11 @@ button._primary {
 }
 
 button._green {
-	background: green;
+	background: #748b6c;
+}
+
+button._red {
+	background: #db3b3b;
 }
 
 button._secondary {

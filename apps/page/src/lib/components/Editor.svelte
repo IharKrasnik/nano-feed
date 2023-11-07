@@ -20,9 +20,14 @@
 	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditPricing from '$lib/components/edit/Pricing.svelte';
+	import EditWelcomeEmail from '$lib/components/edit/WelcomeEmail.svelte';
+	import EditNewsletter from '$lib/components/edit/Newsletter.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
+	import EditPost from 'lib/components/post/EditPost.svelte';
+
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import PostPreview from 'lib/components/post/PostPreview.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
 
@@ -30,11 +35,19 @@
 	import Loader from 'lib/components/Loader.svelte';
 	import WaveSingleStat from 'lib/components/wave/SingleStat.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
+	import BackTo from '$lib/components/BackTo.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import MomentumHub from 'lib/components/MomentumHub.svelte';
 	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
 
 	import SitePreview from '$lib/components/site-preview.svelte';
+
+	import AnalyticsTab from '$lib/components/tabs/AnalyticsTab.svelte';
+	import AudienceTab from '$lib/components/tabs/AudienceTab.svelte';
+	import NewsletterTab from '$lib/components/tabs/NewsletterTab.svelte';
+	import DatabaseTab from '$lib/components/tabs/DatabaseTab.svelte';
+	import BlogTab from '$lib/components/tabs/BlogTab.svelte';
+
 	import SignupForm from '$lib/components/signup-form.svelte';
 
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
@@ -53,6 +66,7 @@
 	import allPages from '$lib/stores/allPages';
 	import isPageSet from '$lib/stores/isPageSet';
 	import pageDraft from '$lib/stores/pageDraft';
+	import postDraft from 'lib/stores/postDraft';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	//
@@ -65,6 +79,9 @@
 
 	const flipDurationMs = 300;
 
+	let submissions;
+	let metrics;
+
 	function handleDndConsider(e) {
 		page.sections = e.detail.items;
 	}
@@ -76,13 +93,6 @@
 	let isLoading = false;
 	let isSignupFormShown = false;
 	let isJustPaid;
-
-	let timezone = moment.tz.guess();
-
-	let timeframe = '7_days';
-
-	let isSubmissionsOpen = false;
-	let submissions;
 
 	if ($sveltePage.url.searchParams.get('thank-you')) {
 		isJustPaid = true;
@@ -103,63 +113,6 @@
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 
 	let pageSlug = '_new';
-
-	let isMetricsOpen = false;
-
-	let metrics;
-
-	let refreshMetrics = async () => {
-		metrics = null;
-
-		metrics = await get(`waveProjects/page.mmntm.build/stats`, {
-			timeframe,
-			subProjectId: page._id,
-			timezone
-		});
-
-		calculateConversion();
-	};
-
-	let toggleMetrics = async () => {
-		isMetricsOpen = !isMetricsOpen;
-
-		if (isMetricsOpen) {
-			refreshMetrics();
-		}
-	};
-
-	let calculateConversion = () => {
-		if (metrics && submissions) {
-			if (submissions.results.length) {
-				metrics.conversion = (submissions.results.length / metrics.totalUsersCount) * 100;
-
-				if (metrics.conversion > 100) {
-					metrics.conversion = 0;
-				}
-
-				metrics.conversion = parseInt(metrics.conversion);
-			} else {
-				metrics.conversion = 0;
-			}
-		}
-	};
-
-	let refreshSubmissions = async () => {
-		if (!$currentUser) {
-			return;
-		}
-		submissions = null;
-
-		submissions = await get(`pages/${page._id}/submissions`, {});
-		broadcastEmails = await get(`pages/${page._id}/broadcast-emails`, {});
-
-		calculateConversion();
-	};
-
-	let refreshData = async () => {
-		await Promise.all([refreshMetrics(), refreshSubmissions()]);
-		calculateConversion();
-	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
@@ -187,13 +140,13 @@
 
 		setPageAndDraft({ ..._.cloneDeep($pageDraft[$pageDraft.lastPageSlug]) });
 
-		refreshData();
+		// refreshData();
 	}
 
 	$: if (!$isPageSet && $allPages?.length && !page?._id) {
 		setPageAndDraft({ ..._.cloneDeep($allPages[0]) });
 
-		refreshData();
+		// refreshData();
 		$isPageSet = true;
 	}
 
@@ -205,28 +158,7 @@
 
 	let isBrandNameEdit = false;
 
-	let isBroadcastEmailModalShown;
-
-	let broadcastEmail = { callToAction: {} };
-
-	let getWelcomeEmailHtml = () => {
-		if (!$currentUser) {
-			return null;
-		}
-
-		return `
-Hi! My name is ${$currentUser.fullName.split(' ')[0]}. 👋 <br />
-Thank you for joining ${page.name} and welcome! <br />
-Your participation means a lot for our tiny team of 1 here, so I'm extremely grateful!
-<br />
-We'll keep in touch and let you know when we launch. <br /> <br />
-
-Meanwhile, if you open for a call — I'd love to chat! <br />
-Simply reply to this email and say "hi"! <br />
-
-See you!
-		`;
-	};
+	let selectedTab = 'designer';
 
 	const publishPage = async () => {
 		// if (!$currentUser) {
@@ -245,10 +177,6 @@ See you!
 
 			page.testimonials = page.testimonials || [];
 			page.benefits = page.benefits || [];
-
-			if (!page.welcomeEmail) {
-				page.welcomeEmail = { html: getWelcomeEmailHtml(), imageUrl: null };
-			}
 
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
 
@@ -300,28 +228,6 @@ See you!
 			}
 		}
 	}
-
-	let broadcastEmails = null;
-
-	let getDefaultWelcomeEmail = () => {
-		return {
-			subject: `Welcome to ${page.name}!`,
-			html: getWelcomeEmailHtml(),
-			imageUrl: null
-		};
-	};
-
-	let toggleSubmissions = async () => {
-		isSubmissionsOpen = !isSubmissionsOpen;
-
-		if (!page.welcomeEmail) {
-			page.welcomeEmail = getDefaultWelcomeEmail();
-		}
-
-		if (isSubmissionsOpen) {
-			refreshSubmissions();
-		}
-	};
 
 	let fileUploaded = ({ type, url } = {}, key) => {
 		page[key] = url;
@@ -552,66 +458,6 @@ See you!
 		subtitle: false
 	};
 
-	let updateEmailHtml = async () => {
-		await put(`pages/${page._id}/welcome-email`, {
-			subject: page.welcomeEmail.subject,
-			html: page.welcomeEmail.html,
-			imageUrl: page.welcomeEmail.imageUrl
-		});
-	};
-
-	let sendTestEmail = async () => {
-		await post(`pages/${page._id}/welcome-email/test`, {
-			html: page.welcomeEmail.html,
-			imageUrl: page.welcomeEmail.imageUrl
-		});
-
-		showSuccessMessage(`Sent test email to ${$currentUser.email}`);
-	};
-
-	let isBroadcastTestSent = false;
-
-	let sendTestBroadcastEmail = async () => {
-		if (broadcastEmail.subject && broadcastEmail.html) {
-			await post(`pages/${page._id}/broadcast-email/test`, {
-				subject: broadcastEmail.subject,
-				html: broadcastEmail.html,
-				callToAction: broadcastEmail.callToAction,
-				imageUrl: broadcastEmail.imageUrl
-			});
-
-			isBroadcastTestSent = true;
-		} else {
-			alert('Fill all the required fields');
-		}
-	};
-
-	let editBroadcastEmail = () => {
-		isBroadcastTestSent = false;
-	};
-
-	let sendBroadcastEmail = async () => {
-		let { sentToEmails } = await post(`pages/${page._id}/broadcast-email`, {
-			subject: broadcastEmail.subject,
-			html: broadcastEmail.html,
-			callToAction: broadcastEmail.callToAction,
-			imageUrl: broadcastEmail.imageUrl
-		});
-
-		broadcastEmail.isSent = true;
-		broadcastEmail.sentToEmails = sentToEmails;
-
-		broadcastEmails.results = [
-			{
-				subject: broadcastEmail.subject,
-				sentToEmails: broadcastEmail.sentToEmails,
-				html: broadcastEmail.html,
-				createdOn: new Date()
-			},
-			...(broadcastEmails.results || [])
-		];
-	};
-
 	let isSettingsModalShown = false;
 
 	let subscribe = async () => {
@@ -669,147 +515,6 @@ See you!
 		})();
 	</script>
 </svelte:head> -->
-
-{#if isBroadcastEmailModalShown}
-	<Modal
-		isShown
-		maxWidth={900}
-		onClosed={() => {
-			isBroadcastEmailModalShown = false;
-		}}
-	>
-		<div class="p-8 w-full">
-			<div class="text-xl font-bold mb-4">Broadcast emails to your audience</div>
-
-			{#if !isBroadcastTestSent}
-				<div class="mt-4 mb-2">Email Subject</div>
-				<div class="text-sm mt-2 mb-4">
-					Subject is very important! <br /> Spark reader's curiosity and make them want to open your
-					email.
-				</div>
-				<input
-					placeholder="{moment().format('MMMM')} Update 🔥"
-					class="w-full"
-					bind:value={broadcastEmail.subject}
-				/>
-
-				<div class="mt-4 mb-2">Message</div>
-				<div class="text-sm mt-2 mb-4">
-					What's in your email for them? <br />
-					Talk to your audience and solve their problems. <br />
-					Genuinly lead them to call to action through storytelling.
-				</div>
-
-				<div
-					class="w-full p-4 bg-[#f6f5f5] min-h-[200px] rounded-xl"
-					bind:innerHTML={broadcastEmail.html}
-					contenteditable
-					use:contenteditable
-				/>
-
-				<hr class="my-8 border-[#8B786D] opacity-30" />
-
-				<div class="mt-4">Call To Action (optional)</div>
-				<div class="text-sm mb-2 opacity-70">
-					Text & link for the button at the bottom of your email.
-				</div>
-
-				<div class="flex w-full">
-					<div class="w-full">
-						<div class="text-sm mb-2">Title</div>
-						<input
-							class="w-full"
-							placeholder="Join discovery call"
-							bind:value={broadcastEmail.callToAction.title}
-						/>
-					</div>
-					<div class="ml-4 w-full">
-						<div class="text-sm mb-2">URL</div>
-						<input
-							class="w-full"
-							type="text"
-							placeholder="https://cal.com/igor-krasnik-7uhewy/30min"
-							bind:value={broadcastEmail.callToAction.url}
-						/>
-					</div>
-				</div>
-
-				<div class="mt-4 mb-2">Image (optional)</div>
-				<div class="text-sm mt-2 mb-4">Add friendly photo or product demo to the end of email.</div>
-				<FileInput class="w-full" bind:url={broadcastEmail.imageUrl} />
-			{/if}
-
-			{#if isBroadcastTestSent}
-				<!-- <div class="p-4 bg-[#fafafa] rounded-xl mb-2">
-					<div class="mt-2 p-16">
-						<div class="text-lg font-bold mb-4">{broadcastEmail.subject}</div>
-						{@html broadcastEmail.html}
-					</div>
-
-					{#if broadcastEmail.callToAction.title && broadcastEmail.callToAction.url}
-						<a
-							class="mt-4 inline-block"
-							style="background-color: #222; color: white; padding: 8px 16px; border-radius: 8px;"
-							href={broadcastEmail.callToAction.url}
-						>
-							{broadcastEmail.callToAction.title}
-						</a>
-					{/if}
-
-					{#if broadcastEmail.imageUrl}
-						<img
-							src={broadcastEmail.imageUrl}
-							class="rounded-xl mt-4 max-h-[150px] max-w-[300px]"
-						/>
-					{/if}
-				</div> -->
-
-				{#if broadcastEmail.isSent}
-					<div class="my-8 mt-16 text-lg">
-						🎉 Email was sent to {broadcastEmail.sentToEmails.length} subscribers! <br />
-
-						<button
-							class="mt-4 _secondary"
-							on:click={() => {
-								isBroadcastEmailModalShown = false;
-							}}>✅ Cool, close the window</button
-						>
-					</div>
-				{:else}
-					<h3 class="text-lg mb-4">
-						The test email was sent to&nbsp;<b> {$currentUser.email}</b>. <br />
-					</h3>
-
-					Does it look good? Ready to send it to your subscribers?<br />
-
-					<div class="mt-4 bg-[#fafafa] p-4 rounded-xl">
-						<b>🙅‍♀️ No Spam Area</b> <br />
-						People like me and you don't like spam. <br />
-						Your subscribers put effort to follow your work. <br />
-						Put your heart into your messaging to turn your audience into potential clients.
-					</div>
-
-					<div class="flex mt-8">
-						<Button class="mt-4 _primary" onClick={sendBroadcastEmail}>📢 Broadcast Email</Button>
-
-						<button
-							class="ml-4 mt-4 secondary"
-							on:click={() => {
-								isBroadcastTestSent = false;
-							}}>🖊 Nah, continue editing</button
-						>
-					</div>
-				{/if}
-			{:else}
-				<div class="mt-8">
-					<Button class="mt-4 _secondary" onClick={sendTestBroadcastEmail}
-						>🔬 Send Test Email</Button
-					>
-				</div>
-			{/if}
-		</div>
-	</Modal>
-{/if}
 
 {#if isTutorialShown}
 	<Modal isShown>
@@ -899,7 +604,7 @@ See you!
 												setPageAndDraft({
 													..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
 												});
-												refreshData();
+												// refreshData();
 											}
 										}}
 									>
@@ -1028,8 +733,15 @@ See you!
 						</div>
 					{/if} -->
 
-						{#if !isMetricsOpen && !isSubmissionsOpen}
-							<div class="py-4">
+						<div class="py-4">
+							<!-- <div class="my-4">
+								<ABToggle></ABToggle>
+								</div> -->
+
+							{#if $postDraft}
+								<BackTo to={'Editor'} onClick={() => ($postDraft = null)} />
+								<EditPost class="none" bind:blog={page.blog} bind:post={$postDraft} />
+							{:else if selectedTab === 'designer'}
 								{#if page.parentPage}
 									<button
 										class="_secondary _small w-full mb-4"
@@ -1078,49 +790,9 @@ See you!
 												⚙️
 											</div>
 										</div>
-										<div class="flex">
-											<div class="flex items-center cursor-pointer" on:click={toggleSubmissions}>
-												<svg
-													width="18"
-													height="16"
-													viewBox="0 0 18 16"
-													fill="none"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path
-														d="M18 1V6H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0H17C17.2652 0 17.5196 0.105357 17.7071 0.292893C17.8946 0.48043 18 0.734784 18 1ZM17 9H1C0.734784 9 0.48043 9.10536 0.292893 9.29289C0.105357 9.48043 0 9.73478 0 10C0 10.2652 0.105357 10.5196 0.292893 10.7071C0.48043 10.8946 0.734784 11 1 11H17C17.2652 11 17.5196 10.8946 17.7071 10.7071C17.8946 10.5196 18 10.2652 18 10C18 9.73478 17.8946 9.48043 17.7071 9.29289C17.5196 9.10536 17.2652 9 17 9ZM17 14H1C0.734784 14 0.48043 14.1054 0.292893 14.2929C0.105357 14.4804 0 14.7348 0 15C0 15.2652 0.105357 15.5196 0.292893 15.7071C0.48043 15.8946 0.734784 16 1 16H17C17.2652 16 17.5196 15.8946 17.7071 15.7071C17.8946 15.5196 18 15.2652 18 15C18 14.7348 17.8946 14.4804 17.7071 14.2929C17.5196 14.1054 17.2652 14 17 14Z"
-														fill="#8B786D"
-													/>
-												</svg>
-												<span class="ml-2 mr-4 text-[#8B786D]">
-													Audience ({submissions?.results?.length || 0})
-												</span>
-											</div>
-
-											<div class="flex items-center cursor-pointer" on:click={toggleMetrics}>
-												<svg
-													width="24"
-													height="24"
-													viewBox="0 0 24 24"
-													fill="none"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path
-														d="M18 2H22V22H18V2ZM10 7V22H14V7H10ZM6 12H2V22H6V12Z"
-														fill="#8B786D"
-													/>
-												</svg>
-												<span class="ml-2 text-[#8B786D]">
-													Views ({metrics?.totalViewsCount || 0})
-												</span>
-											</div>
-										</div>
+										<div class="flex" />
 									</div>
 								{/if}
-
-								<!-- <div class="my-4">
-								<ABToggle></ABToggle>
-								</div> -->
 
 								<div
 									on:click={() => {
@@ -1412,200 +1084,27 @@ See you!
 										</div>
 									{/if}
 								</div>
-							</div>
+							{:else if selectedTab === 'audience'}
+								<EditWelcomeEmail bind:page />
+							{:else if selectedTab === 'newsletter'}
+								<EditNewsletter bind:page />
+							{:else if selectedTab === 'blog'}{/if}
+						</div>
 
-							{#if page._id}
-								<div class="pb-16">
-									<MomentumHub bind:page bind:isBroadcastEmailModalShown />
-								</div>
-							{/if}
+						{#if page._id}
+							<div class="pb-16">
+								<MomentumHub bind:page />
+							</div>
 						{/if}
 					</div>
 				</div>
 				<!-- END EDITOR -->
 
-				<!-- SUBMISSIONS & METRICS -->
-
-				{#if isSubmissionsOpen || isMetricsOpen}
-					<div
-						class="fixed w-[426px] pb-[150px] pr-4 pt-4 overflow-y-scroll mt-[70px]"
-						in:fly={{ x: -50, duration: 150, delay: 150 }}
-						style="height: calc(100vh - 60px);"
-					>
-						<div class="flex justify-between">
-							<div
-								class="flex items-center cursor-pointer text-[#8B786D]"
-								on:click={() => {
-									isSubmissionsOpen = false;
-									isMetricsOpen = false;
-								}}
-							>
-								<BackArrowSvg />
-								Back to Editor
-							</div>
-							{#if isMetricsOpen}
-								<div>
-									<select bind:value={timeframe} on:change={refreshMetrics}>
-										<option value="24_hours">24 hours</option>
-										<option value="7_days">7 days</option>
-										<option value="30_days">30 days</option>
-									</select>
-								</div>
-							{/if}
-						</div>
-
-						{#if isMetricsOpen}
-							{#if metrics}
-								<div class="mt-8 w-full">
-									<WaveDashboard bind:timeframe stats={metrics} isSingleColumn isSinglePage />
-								</div>
-							{:else}
-								<Loader />
-							{/if}
-						{/if}
-
-						{#if isSubmissionsOpen}
-							<!-- <div class="my-4">
-							<WaveSingleStat
-								actionType="signup"
-								projectId="63eaab5b0ebb830015458b95"
-								subProjectId={page._id}
-								timeframe="7_days"
-							/>
-						</div> -->
-							<div class="mt-4 text-lg mb-2 font-bold">Your Audience</div>
-
-							{#if submissions}
-								<div class="mt-4">
-									{#if submissions.results.length}
-										<div class="font-bold">
-											Forms Submissions: {submissions.results.length}
-										</div>
-									{:else}
-										You don't have form submissions yet. <br />
-										Share your page around to get your first signups.
-									{/if}
-
-									<div class="max-h-[250px] overflow-y-auto">
-										{#each submissions.results as submission}
-											<div class="flex my-2 opacity-90 w-full justify-between items-center">
-												<div>
-													{submission.email}
-													{#if submission.isVerified}
-														<div
-															class="inline"
-															use:tooltip
-															title="Email address is verified; Welcome email sent"
-														>
-															✅
-														</div>
-													{/if}
-												</div>
-												<div class="text-sm opacity-70">
-													{moment(submission.createdOn).format('MMM DD HH:MM')}
-												</div>
-											</div>
-										{/each}
-									</div>
-
-									{#if submissions?.results?.length}
-										<div class="font-bold mt-8 mb-4">Broadcast Emails</div>
-
-										{#if broadcastEmails?.results?.length}
-											{#each broadcastEmails.results as email}
-												<div class="flex justify-between items-center mb-4">
-													<div>
-														<div>
-															{email.subject}
-														</div>
-													</div>
-													<div class="flex">
-														<div class="mr-4 number-tag">{email.sentToEmails.length}</div>
-
-														<div class="opacity-70">
-															{moment(email.createdOn).format('MMM DD HH:MM')}
-														</div>
-													</div>
-												</div>
-											{/each}
-										{/if}
-
-										<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
-											<b> Keep your audience engaged </b> <br />
-
-											Stay in touch with them, keep them updated, share useful content, prepare them
-											for the launch.
-										</div>
-
-										<button
-											class="mt-4 _primary"
-											on:click={() => {
-												isBroadcastEmailModalShown = true;
-											}}>📢 Broadcast Emails</button
-										>
-									{/if}
-								</div>
-							{/if}
-
-							<hr class="my-8 border-[#8B786D] opacity-30" />
-
-							<div class="mt-4 font-bold">Your Welcome Email</div>
-
-							<div class="mt-4">
-								<div class="text-sm opacity-70 mb-2">Subject</div>
-								<input
-									type="text"
-									class="w-full"
-									placeholder="Welcome to {page.name}!"
-									bind:value={page.welcomeEmail.subject}
-								/>
-							</div>
-							<div class="mt-2 w-full">
-								<div class="text-sm opacity-70 mb-2">Email</div>
-								<div
-									contenteditable="true"
-									use:contenteditable
-									bind:innerHTML={page.welcomeEmail.html}
-									class="w-full p-4 bg-[#fafafa]"
-								/>
-							</div>
-
-							<div class="text-sm opacity-70 mt-4 mb-2">Demo Image</div>
-							<div class="text-sm mb-2">
-								Attach your friendly selfie or image relevant to your product.
-							</div>
-							<FileInput class="w-full" bind:url={page.welcomeEmail.imageUrl} theme="light" />
-
-							<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
-								Welcome email is sent once a user <b>verified</b> their email. <br />
-
-								🤝 Make it friendly and personal <br />
-								⏳ Keep it short and sweet <br />
-								⚡️ Stimulate reader to take action: book a call, check out the link, reply to email,
-								share in social media <br />
-							</div>
-
-							<div class="flex items-center">
-								<Button class="_primary my-8 mr-4" onClick={updateEmailHtml}
-									>Update Welcome Email</Button
-								>
-								<Button class="_secondary my-8" onClick={sendTestEmail}>🔬 Send Test Email</Button>
-							</div>
-						{/if}
-					</div>
-				{/if}
-
-				<!-- END SUBMISSIONS & METRICS -->
-
-				{#if page._id}
-					<hr class="my-8 border-[#8B786D] opacity-30" />
-				{/if}
-
 				<!-- PREVIEW -->
 
 				{#if page.name || page.title}
 					<div class="relative ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]" in:fade={{ delay: 150 }}>
-						{#if page._id && !$sectionToEdit}
+						{#if page._id && !$sectionToEdit && selectedTab === 'designer' && !$postDraft}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
 								<div class="mx-auto">
 									{#if isJustCreated || isJustPaid}
@@ -1701,9 +1200,50 @@ See you!
 								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
 									<BrowserFrame
 										class="max-h-screen overflow-y-scroll"
+										,
 										links={[
-											{ url: `explore`, title: 'Explore Pages', emoji: '🙌' },
-											{ url: 'about', title: 'About Momentum', emoji: '📄', target: '_blank' }
+											{
+												action: () => {
+													selectedTab = 'designer';
+												},
+												title: 'Designer',
+												featherIcon: 'file-text'
+											},
+											{
+												action: () => {
+													selectedTab = 'analytics';
+												},
+												title: `Views (${metrics?.totalViewsCount || 0})`,
+												featherIcon: 'activity'
+											},
+											{
+												action: () => {
+													selectedTab = 'audience';
+												},
+												title: `Conversions (${submissions?.results?.length || 0})`,
+												featherIcon: 'check-square'
+											},
+											{
+												action: () => {
+													selectedTab = 'blog';
+												},
+												title: 'Blog',
+												featherIcon: 'book-open'
+											},
+											{
+												action: () => {
+													selectedTab = 'newsletter';
+												},
+												title: 'Newsletter',
+												featherIcon: 'mail'
+											},
+											{
+												action: () => {
+													selectedTab = 'database';
+												},
+												title: 'CMS',
+												featherIcon: 'database'
+											}
 										]}
 										frameBgColor="#494949"
 									>
@@ -1740,14 +1280,28 @@ See you!
 									{/if} -->
 
 										{#if page}
-											<SitePreview
-												class="pt-8"
-												isNoVars
-												isEmbed
-												noStickyHeader={true}
-												isNoBadge={true}
-												bind:page
-											/>
+											{#if $postDraft}
+												<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
+											{:else if selectedTab === 'designer'}
+												<SitePreview
+													class="pt-8"
+													isNoVars
+													isEmbed
+													noStickyHeader={true}
+													isNoBadge={true}
+													bind:page
+												/>
+											{:else if selectedTab === 'analytics'}
+												<AnalyticsTab bind:page />
+											{:else if selectedTab === 'audience'}
+												<AudienceTab bind:page />
+											{:else if selectedTab === 'database'}
+												<DatabaseTab bind:page />
+											{:else if selectedTab === 'blog'}
+												<BlogTab bind:page />
+											{:else if selectedTab === 'newsletter'}
+												<NewsletterTab bind:page />
+											{/if}
 										{/if}
 									</BrowserFrame>
 								</div>

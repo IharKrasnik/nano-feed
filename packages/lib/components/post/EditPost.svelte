@@ -4,8 +4,8 @@
 	import { BRAND_URL } from 'lib/env';
 	import tooltip from 'lib/use/tooltip';
 	import getRandomEmoji from 'lib/services/getRandomProjectEmoji';
-	import blogPosts from '$lib/stores/blogPosts';
-	import postDraft from '$lib/stores/postDraft';
+	import blogPosts from 'lib/stores/blogPosts';
+	import postDraft from 'lib/stores/postDraft';
 	import getPostMetaTags from 'lib/helpers/getPostMetaTags';
 
 	import { fly } from 'svelte/transition';
@@ -63,15 +63,6 @@
 </script>
 
 <div class="{clazz} mb-32">
-	<div
-		class="flex items-center cursor-pointer text-[#8B786D] mb-4"
-		on:click={() => {
-			$postDraft = null;
-		}}
-	>
-		<BackArrowSvg />
-		Back to Editor
-	</div>
 	<label class="font-bold text-lg mb-2 block">Write Post</label>
 
 	<div class="opacity-80">
