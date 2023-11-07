@@ -802,7 +802,7 @@ See you!
 		<div class="xl:max-w-[1600px] mx-auto relative px-16 sm:px-0">
 			<div class="flex relative ml-4">
 				<!-- EDITOR-->
-				<div class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white">
+				<div class="fixed pt-[70px] min-w-[426px] h-screen overflow-y-scroll bg-white">
 					<div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
 						<div
 							class="flex items-center justify-between w-full py-4 pr-4"
