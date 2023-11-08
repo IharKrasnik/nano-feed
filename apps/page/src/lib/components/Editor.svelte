@@ -113,6 +113,7 @@
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 
 	let pageSlug = '_new';
+	let selectedTab = 'designer';
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
@@ -133,6 +134,8 @@
 		pageSlug = page.slug;
 
 		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug };
+
+		selectedTab = 'designer';
 	};
 
 	if ($pageDraft.lastPageSlug && $pageDraft[$pageDraft.lastPageSlug]) {
@@ -157,8 +160,6 @@
 	let isTutorialShown = false;
 
 	let isBrandNameEdit = false;
-
-	let selectedTab = 'designer';
 
 	const publishPage = async () => {
 		// if (!$currentUser) {
@@ -841,7 +842,7 @@
 
 									<EditHero bind:hero={page} bind:focuses />
 
-									{#if page._id}
+									{#if page._id && !page.parentPage}
 										<div class="_section">
 											<div class="_title flex justify-between w-full">
 												Social Links
@@ -889,7 +890,7 @@
 										</div>
 									{/if}
 
-									{#if page?._id}
+									{#if page?._id && !page.parentPage}
 										<div class="_section bg-[#e8ffef] my-8" style="border: none;">
 											<div class="flex items-center justify-between w-full">
 												<div class="">
@@ -1052,23 +1053,11 @@
 
 								<div class="flex items-center w-full justify-between mt-8 mb-32">
 									{#if page.name}
-										<Button class="_primary" onClick={publishPage}>Publish Page</Button>
-										<!-- 
-									<button
-										class="relative _primary {isLoading ? 'loading' : ''}"
-										on:click={publishPage}
-									>
-										{#if isLoading}
-											<div class="absolute top-0 h-full flex items-center bg-[#8B786D] z-10">
-												<Loader />
-											</div>
-											Publish
-										{:else if isJustPublished}
-											<div class="" in:scale={{ duration: 150 }}>👌</div>
+										{#if page.renderType === 'article'}
+											<Button class="_primary" onClick={publishPage}>Publish Article</Button>
 										{:else}
-											Publish
+											<Button class="_primary" onClick={publishPage}>Publish Page</Button>
 										{/if}
-									</button> -->
 									{/if}
 									<hr class="my-8 border-[#8B786D] opacity-30" />
 
@@ -1296,6 +1285,7 @@
 													isEmbed
 													noStickyHeader={true}
 													isNoBadge={true}
+													isEdit
 													bind:page
 												/>
 											{:else if selectedTab === 'analytics'}
@@ -1305,7 +1295,7 @@
 											{:else if selectedTab === 'database'}
 												<DatabaseTab bind:page />
 											{:else if selectedTab === 'blog'}
-												<BlogTab bind:page />
+												<BlogTab bind:page bind:setPageAndDraft />
 											{:else if selectedTab === 'newsletter'}
 												<NewsletterTab bind:page />
 											{/if}

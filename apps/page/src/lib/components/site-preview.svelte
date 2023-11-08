@@ -42,6 +42,8 @@
 
 	export { clazz as class };
 
+	export let isEdit = false;
+
 	export let page = {
 		name: 'momentum',
 		slug: 'momentum',
@@ -294,7 +296,7 @@
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
 
 {#key page._id}
-	{#if page.renderType === 'portfolio'}
+	{#if page.layoutType === 'portfolio'}
 		<PortfolioPage bind:page />
 	{:else}
 		<div class="" bind:this={previewEl}>
@@ -494,199 +496,128 @@
 										? ''
 										: 'min-h-screen h-screen'} sm:mt-[-70px]"
 								>
-									<div
-										bind:this={$aboveTheFoldEl}
-										class="_content {page.heroBgImage ? 'light-colors' : ''} {page.theme
-											?.isHeroVertical
-											? ''
-											: ''} h-full {page.sections?.length ? '' : 'pb-16'} sm:pt-36 {!page
-											.testimonials?.length
-											? `flex items-center`
-											: ''}"
-										style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
-									>
+									{#if page.renderType !== 'article'}
 										<div
-											class="p-4 flex h-full w-full {page.demoUrl || page.theme?.isHeroLeft
-												? `flex-col ${
-														page.theme?.isHeroVertical ? '' : 'justify-between sm:flex-row'
-												  } items-center`
-												: 'text-center items-center'}"
+											bind:this={$aboveTheFoldEl}
+											class="_content {page.heroBgImage ? 'light-colors' : ''} {page.theme
+												?.isHeroVertical
+												? ''
+												: ''} h-full {page.sections?.length ? '' : 'pb-16'} sm:pt-36 {!page
+												.testimonials?.length
+												? `flex items-center`
+												: ''}"
+											style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 										>
 											<div
-												class="{page.demoUrl || page.theme?.isHeroLeft
-													? `w-full text-center ${
-															page.theme?.isHeroVertical
-																? 'flex flex-col items-center mb-8'
-																: 'sm:text-left'
-													  }  ${page.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
-													: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-										{page.theme?.isHeroLeft && !page.theme?.isHeroVertical ? 'sm:text-left' : ''}"
+												class="p-4 flex h-full w-full {page.demoUrl || page.theme?.isHeroLeft
+													? `flex-col ${
+															page.theme?.isHeroVertical ? '' : 'justify-between sm:flex-row'
+													  } items-center`
+													: 'text-center items-center'}"
 											>
-												{#if isMounted}
-													<h1
-														class="{page.theme?.isGradientTitle
-															? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
-															: ''} _title 
+												<div
+													class="{page.demoUrl || page.theme?.isHeroLeft
+														? `w-full text-center ${
+																page.theme?.isHeroVertical
+																	? 'flex flex-col items-center mb-8'
+																	: 'sm:text-left'
+														  }  ${page.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
+														: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+										{page.theme?.isHeroLeft && !page.theme?.isHeroVertical ? 'sm:text-left' : ''}"
+												>
+													{#if isMounted}
+														<h1
+															class="{page.theme?.isGradientTitle
+																? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
+																: ''} _title 
 											{!page.demoUrl || page.theme?.isHeroVertical ? 'sm:max-w-[912px]' : ''}"
-														style={page.title ? '' : 'opacity: 20%;'}
-														in:fly={{ y: 50, duration: 800 }}
-													>
-														{#if page.title}
-															<div>{@html page.title || ''}</div>
-														{:else if isEmbed && !page.parentPage}
-															{'Type Tagline...'}
-														{/if}
-													</h1>
-												{/if}
-
-												{#if page.subtitle}
-													<h2
-														class="_subtitle {page.theme.isHugeTitle
-															? 'text-3xl'
-															: 'text-xl'}  whitespace-pre-wrap  {page.demoUrl ||
-														!page.theme?.isHeroVertical
-															? ''
-															: 'max-w-[600px]'}"
-														in:fly={{ y: 50, duration: 800 }}
-													>
-														{@html page.subtitle}
-													</h2>
-												{/if}
-
-												{#if page.callToAction}
-													<RenderInteractiveOptions {page} />
-													<!-- <div
-														in:fly={{ y: 50, duration: 800, delay: 200 }}
-														class="_input_container {page.isCollectEmails && !isSubmitted
-															? '_border flex'
-															: 'inline-block'} items-center {page.demoUrl || page.theme?.isHeroLeft
-															? ''
-															: 'mx-auto'} {page.isCollectEmails
-															? 'w-full ' +
-															  (page.callToAction.length < 16
-																	? page.theme?.isInputBorder
-																		? 'sm:w-[400px]'
-																		: 'sm:w-[360px]'
-																	: page.callToAction.length < 20
-																	? page.theme?.isInputBorder
-																		? 'sm:w-[420px]'
-																		: 'sm:w-[380px]'
-																	: page.theme?.isInputBorder
-																	? 'sm:w-[460px]'
-																	: 'sm:w-[460px]')
-															: ''}"
-													>
-														<form
-															class="{page.isCollectEmails
-																? `flex flex-col sm:flex-row items-center ${
-																		page.theme?.isHeroVertical ? '' : 'sm:flex-row'
-																  } ${
-																		page.theme?.isHeroLeft && !page.theme?.isHeroVertical
-																			? ''
-																			: 'w-full justify-center'
-																  } `
-																: 'mx-auto sm:mx-0 inline-block'} "
-															style={!page.isCollectEmails && !page.demoUrl
-																? 'margin: 0 auto;'
-																: ''}
-															on:submit|preventDefault={submitEmail}
+															style={page.title ? '' : 'opacity: 20%;'}
+															in:fly={{ y: 50, duration: 800 }}
 														>
-															{#if !isSubmitted}
-																{#if page.isCollectEmails}
-																	<input
-																		class="_input _email-input w-full {page.theme?.isInputBorder
-																			? 'mr-4'
-																			: ''}"
-																		placeholder="Your Email"
-																		type="email"
-																		required
-																		bind:this={inputEl}
-																		bind:value={email}
-																		disabled={isSubmitted}
-																		in:fade={{ duration: 150 }}
-																	/>
-																	<button
-																		type="submit"
-																		class="_input_button justify-center {page.isCollectEmails
-																			? 'shrink-0 w-full sm:w-auto mt-4 sm:mt-0'
-																			: ''} {page.theme?.isInputBorder ? 'mr-1' : 'absolute'}"
-																		>{page.callToAction}</button
-																	>
-																{:else if page.actionUrl}
-																	<a
-																		href={page.actionUrl}
-																		target="_blank"
-																		class="button _input_button"
-																	>
-																		{page.callToAction}
-																	</a>
+															{#if page.title}
+																<div>{@html page.title || ''}</div>
+															{:else if isEmbed && !page.parentPage}
+																{#if page.renderType !== 'article'}
+																	{'Type Tagline...'}
 																{/if}
-															{:else}
-																<div>💥 Thank you!</div>
 															{/if}
-														</form>
+														</h1>
+													{/if}
 
-														{#if page.callToAction2}
-															<a href={page.callToAction.url} class="button secondary"
-																>{page.callToAction2.title}</a
-															>
-														{/if}
-													</div> -->
-												{/if}
+													{#if page.subtitle}
+														<h2
+															class="_subtitle {page.theme.isHugeTitle
+																? 'text-3xl'
+																: 'text-xl'}  whitespace-pre-wrap  {page.demoUrl ||
+															!page.theme?.isHeroVertical
+																? ''
+																: 'max-w-[600px]'}"
+															in:fly={{ y: 50, duration: 800 }}
+														>
+															{@html page.subtitle}
+														</h2>
+													{/if}
 
-												{#if page.ctaExplainer}
-													<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
-												{/if}
+													{#if page.callToAction}
+														<RenderInteractiveOptions {page} />
+													{/if}
 
-												{#if isMounted && page.socialProof}
+													{#if page.ctaExplainer}
+														<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
+													{/if}
+
+													{#if isMounted && page.socialProof}
+														<div
+															class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
+															(page.theme?.isHeroLeft && !page.theme?.isHeroVertical)
+																? ''
+																: 'flex justify-center w-full'} }"
+														>
+															<div class="flex flex-col sm:flex-row ">
+																{#each page.socialProof.logos as logo}
+																	<img class="w-[50px] h-[50px]" src={logo.url} />
+																{/each}
+															</div>
+
+															<div class="text-sm mt-4 opacity-80">
+																{@html page.socialProof.title}
+															</div>
+														</div>
+													{/if}
+												</div>
+
+												{#if page.demoUrl || page.lottieUrl}
 													<div
-														class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
-														(page.theme?.isHeroLeft && !page.theme?.isHeroVertical)
+														class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
 															? ''
-															: 'flex justify-center w-full'} }"
+															: 'sm:ml-8 sm:max-w-[600px]'}"
 													>
-														<div class="flex flex-col sm:flex-row ">
-															{#each page.socialProof.logos as logo}
-																<img class="w-[50px] h-[50px]" src={logo.url} />
-															{/each}
-														</div>
-
-														<div class="text-sm mt-4 opacity-80">
-															{@html page.socialProof.title}
-														</div>
+														{#if page.lottie}
+															<lottie-player
+																src={page.lottie.jsonUrl}
+																background="transparent"
+																speed="1"
+																class="w-full h-full"
+																loop
+																autoplay
+															/>
+														{:else if page.demoUrl}
+															<RenderUrl
+																isLazy={false}
+																class="w-full flex justify-end {page.theme?.isHeroVertical
+																	? 'mt-8'
+																	: ''}"
+																url={page.demoUrl}
+																imgClass="w-full rounded-xl shadow-md object-cover"
+															/>
+														{/if}
 													</div>
 												{/if}
 											</div>
-
-											{#if page.demoUrl || page.lottieUrl}
-												<div
-													class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
-														? ''
-														: 'sm:ml-8 sm:max-w-[600px]'}"
-												>
-													{#if page.lottie}
-														<lottie-player
-															src={page.lottie.jsonUrl}
-															background="transparent"
-															speed="1"
-															class="w-full h-full"
-															loop
-															autoplay
-														/>
-													{:else if page.demoUrl}
-														<RenderUrl
-															isLazy={false}
-															class="w-full flex justify-end {page.theme?.isHeroVertical
-																? 'mt-8'
-																: ''}"
-															url={page.demoUrl}
-															imgClass="w-full rounded-xl shadow-md object-cover"
-														/>
-													{/if}
-												</div>
-											{/if}
 										</div>
-									</div>
+									{:else}
+										<div style="height: 72px;" class="mb-16" />
+									{/if}
 								</div>
 
 								{#if !isAboveTheFold}
@@ -701,6 +632,7 @@
 																bind:page
 																bind:themeStyles={styles}
 																bind:section={$sectionToEdit}
+																bind:isEdit
 															/>
 														</div>
 														<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
@@ -712,6 +644,7 @@
 															bind:page
 															bind:section
 															bind:themeStyles={styles}
+															bind:isEdit
 															style={false && page.theme?.isZebra && i % 2 === 0
 																? page.theme?.theme === 'dark'
 																	? `background-color: ${lighten(

@@ -11,17 +11,19 @@
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import RenderServiceChat from '$lib/components/render/ServiceChat.svelte';
 	import RenderNewsletter from '$lib/components/render/Newsletter.svelte';
+	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 
-	let clazz = 'py-4 sm:pb-16';
-
 	export let section;
+	let clazz = section?.renderType === 'article' ? 'py-4' : 'py-4 sm:pb-16';
+
 	export let page;
 	export let themeStyles = {};
 	export let isSkipHeader = false;
+	export let isEdit = false;
 
 	export { clazz as class };
 	export let style = null;
@@ -191,12 +193,18 @@
 />
 
 {#if section.isShown}
-	<div class=" _section-container {section.type} p-4" style={style || ''} in:fly={{ y: 50 }}>
+	<div
+		class=" _section-container {section.type} {section.renderType} {section.renderType !== 'article'
+			? 'p-8 sm:pt-16'
+			: 'px-8'}"
+		style={style || ''}
+		in:fly={{ y: 50 }}
+	>
 		{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji)}
 			<div
-				class="relative w-full {page.theme.isTitlesLeft
+				class="relative w-full {page.theme.isTitlesLeft || section.renderType === 'article'
 					? 'sm:text-left'
-					: 'text-center'} py-4 sm:pt-16"
+					: 'text-center'} {page.renderType === 'article' ? 'px-8' : ''}"
 			>
 				{#if section.emoji}
 					<div
@@ -209,18 +217,25 @@
 				{/if}
 
 				{#if section.subtitle}
-					<div class="text-sm mb-4 opacity-90" style="font-weight: 500;">{section.subtitle}</div>
+					<div class="text-sm mb-4 opacity-90" style="font-weight: 500;">
+						<ContentEditableIf class="" bind:innerHTML={section.subtitle} condition={isEdit} />
+					</div>
 				{/if}
 
 				{#if section.title}
 					<h2
 						class="text-3xl {page.theme.isTitlesHuge
 							? 'sm:text-6xl font-medium mb-8'
-							: 'sm:text-4xl font-semibold'} mb-4 sm:max-w-[768px]  {page.theme.isTitlesLeft
+							: 'sm:text-4xl font-semibold'} mb-4 sm:max-w-[768px]  {page.theme.isTitlesLeft ||
+						section.renderType === 'article'
 							? ''
 							: 'sm:mx-auto'}"
 					>
-						{@html section.title}
+						<ContentEditableIf
+							class="_item-title mb-2"
+							bind:innerHTML={section.title}
+							condition={isEdit}
+						/>
 					</h2>
 				{/if}
 
@@ -228,11 +243,14 @@
 					<h3
 						class="{page.theme.isTitlesHuge
 							? 'text-xl leading-8'
-							: 'text-lg font-medium'} whitespace-pre-wrap opacity-90 {page.theme.isTitlesLeft
+							: 'text-lg font-medium'} whitespace-pre-wrap opacity-90 {section.renderType ===
+						'article'
+							? 'sm:max-w-[768px]'
+							: page.theme.isTitlesLeft
 							? 'sm:max-w-[712px]'
 							: 'sm:max-w-[512px] sm:mx-auto'}"
 					>
-						{@html section.description}
+						<ContentEditableIf class="" bind:innerHTML={section.description} condition={isEdit} />
 					</h3>
 				{/if}
 
@@ -272,10 +290,17 @@
 				{#each section.items as step, i}
 					<div class="flex sm:w-[50%] p-8 {i % 2 ? 'sm:ml-[50%]' : 'justify-end text-right'}">
 						<div>
-							<div class="text-xl mb-4 font-bold">{@html step.title}</div>
-
+							<ContentEditableIf
+								class="text-xl mb-4 font-bold"
+								bind:innerHTML={step.title}
+								condition={isEdit}
+							/>
 							{#if step.description}
-								<div class="mt-4">{@html step.description}</div>
+								<ContentEditableIf
+									class="mt-4"
+									bind:innerHTML={step.description}
+									condition={isEdit}
+								/>
 							{/if}
 						</div>
 					</div>
@@ -294,7 +319,7 @@
 											class="cursor-pointer transition font-medium text-lg"
 											on:click={() => selectCarouselItem(item)}
 										>
-											{item.title}
+											<ContentEditableIf class="" bind:innerHTML={item.title} condition={isEdit} />
 										</div>
 									{/each}
 								</div>
@@ -345,10 +370,16 @@
 												: 'opacity-40 hover:opacity-100'}"
 											on:click={selectCarouselItem(item)}
 										>
-											<div class="_item-title mb-2">{@html item.title}</div>
-											<div class="_item-description whitespace-pre-wrap">
-												{@html item.description}
-											</div>
+											<ContentEditableIf
+												class="_item-title mb-2"
+												bind:innerHTML={item.title}
+												condition={isEdit}
+											/>
+											<ContentEditableIf
+												class="_item-description whitespace-pre-wrap"
+												bind:innerHTML={item.description}
+												condition={isEdit}
+											/>
 										</div>
 									{/each}
 									<div class="flex gap-4 p-2 sm:p-6">
@@ -413,14 +444,29 @@
 					</div> -->
 				{:else if section.columns === 1}
 					{#each section.items as item}
-						<div class="grid grid-cols-12 items-center mb-4 ">
+						<div
+							class="grid grid-cols-12 items-center {section.renderType === 'article'
+								? 'mb-8'
+								: 'mb-4'}"
+						>
 							<div class="sm:col-span-{item.colSpan || 6} {item.isReversed ? 'order-last' : ''}">
-								<div class="p-4 sm:p-8 col-span-1">
+								<div
+									class="{section.renderType === 'article' ? 'sm:px-8' : 'p-4 sm:p-8'} col-span-1"
+								>
 									<!-- {#if item.emoji !== '✨'}
 									<Emoji bind:emoji={item.emoji} />
 								{/if} -->
-									<div class="_item-title mb-2">{@html item.title}</div>
-									<div class="_item-description whitespace-pre-wrap">{@html item.description}</div>
+									<ContentEditableIf
+										class="_item-title mb-2"
+										bind:innerHTML={item.title}
+										condition={isEdit}
+									/>
+
+									<ContentEditableIf
+										class="_item-description whitespace-pre-wrap"
+										bind:innerHTML={item.description}
+										condition={isEdit}
+									/>
 								</div>
 
 								{#if item.interactiveAnswers?.length}
@@ -435,9 +481,11 @@
 								{/if}
 							</div>
 							<div
-								class="sm:col-span-{12 - (item.colSpan || 6)} {item.isReversed
-									? 'order-first'
-									: ''}"
+								class="sm:col-span-{!item.colSpan
+									? 12
+									: 12 - (item.title || item.description ? item.colSpan || 6 : 0) || 12} 
+									
+									{item.isReversed ? 'order-first' : ''}"
 							>
 								<RenderUrl
 									class="col-span-2"
@@ -518,7 +566,11 @@
 														</div>
 													{/if}
 													<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
-														{@html item.title}
+														<ContentEditableIf
+															class=""
+															bind:innerHTML={item.title}
+															condition={isEdit}
+														/>
 													</h2>
 												</div>
 											{/if}
@@ -529,7 +581,11 @@
 														section.columns
 													]} _item-description whitespace-pre-wrap"
 												>
-													{@html item.description}
+													<ContentEditableIf
+														class=""
+														bind:innerHTML={item.description}
+														condition={isEdit}
+													/>
 												</h3>
 											{/if}
 
@@ -602,6 +658,11 @@
 {/if}
 
 <style>
+	._section-container.article {
+		max-width: 768px;
+		margin: 0 auto;
+	}
+
 	button,
 	.button {
 		display: inline-block;

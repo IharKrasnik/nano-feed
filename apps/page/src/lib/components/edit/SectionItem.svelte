@@ -107,8 +107,9 @@
 						placeholder="1"
 						bind:value={item.rowSpan}
 					/>
-				{:else}
+				{:else if item.imageUrl}
 					<select bind:value={item.colSpan}>
+						<option value="12">12 x 12</option>
 						<option value="4">4 x 8</option>
 						<option value="6">6 x 6</option>
 						<option value="8">8 x 4</option>

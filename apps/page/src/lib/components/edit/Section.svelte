@@ -242,6 +242,7 @@
 			<option value="grid">Grid Section</option>
 			<option value="carousel">Carousel Menu</option>
 			<option value="stepper">1-2-3 Stepper</option>
+			<option value="article">Article</option>
 		</select>
 
 		{#if section.renderType === 'carousel'}
