@@ -18,7 +18,7 @@
 			isShowEditable = false;
 		}}
 	/>
-{:else}
+{:else if innerHTML}
 	<div
 		class={clazz}
 		on:click={() => {

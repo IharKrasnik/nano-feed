@@ -164,6 +164,7 @@
 			</div>
 
 			<RenderSection
+				class="sm:p-4 sm:pt-4"
 				bind:page
 				bind:section={activeSection}
 				bind:themeStyles={styles}

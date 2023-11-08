@@ -17,6 +17,7 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import RenderBlog from '$lib/components/render/Blog.svelte';
+	import RenderArticleHeader from '$lib/components/render/ArticleHeader.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
@@ -617,6 +618,7 @@
 										</div>
 									{:else}
 										<div style="height: 72px;" class="mb-16" />
+										<RenderArticleHeader {page} />
 									{/if}
 								</div>
 

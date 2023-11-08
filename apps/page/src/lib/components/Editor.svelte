@@ -113,7 +113,7 @@
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 
 	let pageSlug = '_new';
-	let selectedTab = 'designer';
+	let selectedTab = 'editor';
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
@@ -136,7 +136,7 @@
 
 		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug, lastPageId: page._id };
 
-		selectedTab = 'designer';
+		selectedTab = 'editor';
 	};
 
 	if ($pageDraft.lastPageSlug && $pageDraft[$pageDraft.lastPageId]) {
@@ -745,7 +745,7 @@
 							{#if $postDraft}
 								<BackTo to={'Editor'} onClick={() => ($postDraft = null)} />
 								<EditPost class="none" bind:blog={page.blog} bind:post={$postDraft} />
-							{:else if selectedTab === 'designer'}
+							{:else if selectedTab === 'editor'}
 								{#if page.parentPage}
 									<button
 										class="_secondary _small w-full mb-4"
@@ -1103,7 +1103,7 @@
 
 				{#if page.name || page.title}
 					<div class="relative ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]" in:fade={{ delay: 150 }}>
-						{#if page._id && !$sectionToEdit && selectedTab === 'designer' && !$postDraft}
+						{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
 								<div class="mx-auto">
 									{#if isJustCreated || isJustPaid}
@@ -1203,9 +1203,9 @@
 										links={[
 											{
 												action: () => {
-													selectedTab = 'designer';
+													selectedTab = 'editor';
 												},
-												title: 'Designer',
+												title: 'Editor',
 												featherIcon: 'file-text'
 											},
 											{
@@ -1281,7 +1281,7 @@
 										{#if page}
 											{#if $postDraft}
 												<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
-											{:else if selectedTab === 'designer'}
+											{:else if selectedTab === 'editor'}
 												<SitePreview
 													class="pt-8"
 													isNoVars

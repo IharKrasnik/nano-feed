@@ -196,7 +196,7 @@
 	<div
 		class=" _section-container {section.type} {section.renderType} {section.renderType !== 'article'
 			? 'p-8 sm:pt-16'
-			: 'px-8'}"
+			: 'px-8'} {clazz}"
 		style={style || ''}
 		in:fly={{ y: 50 }}
 	>
@@ -307,7 +307,7 @@
 				{/each}
 			</div>
 		{:else if section.items?.length}
-			<div class="w-full  {clazz}">
+			<div class="w-full">
 				{#if section.renderType === 'carousel'}
 					{#if !section.carouselType || section.carouselType === 'vertical'}
 						<div>
@@ -449,7 +449,11 @@
 								? 'mb-8'
 								: 'mb-4'}"
 						>
-							<div class="sm:col-span-{item.colSpan || 12} {item.isReversed ? 'order-last' : ''}">
+							<div
+								class="sm:col-span-{item.colSpan || 12} {item.isReversed
+									? 'order-last'
+									: ''} {(!item.colSpan || item.colSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
+							>
 								<div
 									class="{section.renderType === 'article' ? 'sm:px-8' : 'p-4 sm:p-8'} col-span-1"
 								>

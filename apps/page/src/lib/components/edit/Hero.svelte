@@ -64,24 +64,22 @@
 	export let isCollapsed = true;
 </script>
 
-{#if page.renderType !== 'article'}
-	<div
-		class="_section flex items-center justify-between cursor-pointer"
-		on:click={() => (isCollapsed = !isCollapsed)}
-	>
-		Header
+<div
+	class="_section flex items-center justify-between cursor-pointer"
+	on:click={() => (isCollapsed = !isCollapsed)}
+>
+	Header
 
-		{#if isCollapsed}
-			<div class="flex items-center">
-				<FeatherIcon class="mr-2" size="15" name="eye" /> Expand
-			</div>
-		{:else}
-			<div class="flex items-center">
-				<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse Header
-			</div>
-		{/if}
-	</div>
-{/if}
+	{#if isCollapsed}
+		<div class="flex items-center">
+			<FeatherIcon class="mr-2" size="15" name="eye" /> Expand
+		</div>
+	{:else}
+		<div class="flex items-center">
+			<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse Header
+		</div>
+	{/if}
+</div>
 {#if !isCollapsed && (page.name || page.parentPage)}
 	<div class="_section">
 		<div class="_title flex items-center justify-between">
