@@ -139,8 +139,6 @@
 			console.log('selection.anchorNode.parentNode.tagName', selection.anchorNode);
 			window.parentNode = selection.anchorNode.parentNode;
 
-			debugger;
-
 			if (_.includes(['H1', 'H2', 'H3'], selection.anchorNode.parentNode.tagName)) {
 				selection.anchorNode.parentNode.replaceWith(selection.anchorNode);
 			} else if (

@@ -120,28 +120,29 @@
 
 		if (
 			!force &&
-			$pageDraft[page.slug] &&
-			new Date(page.updatedOn) < new Date($pageDraft[page.slug].updatedOn)
+			$pageDraft[page._id] &&
+			new Date(page.updatedOn) < new Date($pageDraft[page._id].updatedOn)
 		) {
-			page = { ..._.cloneDeep($pageDraft[page.slug]), totalSignupsCount: page.totalSignupsCount };
+			page = { ..._.cloneDeep($pageDraft[page._id]), totalSignupsCount: page.totalSignupsCount };
 		} else {
 			$pageDraft = {
 				..._.cloneDeep($pageDraft),
-				[page.slug]: { ..._.cloneDeep(page) }
+				[page.slug]: { ..._.cloneDeep(page) },
+				[page._id]: { ..._.cloneDeep(page) }
 			};
 		}
 
 		pageSlug = page.slug;
 
-		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug };
+		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug, lastPageId: page._id };
 
 		selectedTab = 'designer';
 	};
 
-	if ($pageDraft.lastPageSlug && $pageDraft[$pageDraft.lastPageSlug]) {
+	if ($pageDraft.lastPageSlug && $pageDraft[$pageDraft.lastPageId]) {
 		$isPageSet = true;
 
-		setPageAndDraft({ ..._.cloneDeep($pageDraft[$pageDraft.lastPageSlug]) });
+		setPageAndDraft({ ..._.cloneDeep($pageDraft[$pageDraft.lastPageId]) });
 
 		// refreshData();
 	}
@@ -419,10 +420,10 @@
 
 	$: if (page) {
 		if (
-			!$pageDraft[page.slug] ||
+			!$pageDraft[page._id] ||
 			!_.isEqual(
 				_.omit(page, ['welcomeEmail', 'totalSignupsCount']),
-				_.omit($pageDraft[page.slug], ['welcomeEmail', 'totalSignupsCount'])
+				_.omit($pageDraft[page._id], ['welcomeEmail', 'totalSignupsCount'])
 			)
 		) {
 			if (page.isDirty === false) {
@@ -430,15 +431,17 @@
 			} else {
 				page.isDirty = true;
 			}
-			if (!$pageDraft[page.slug]) {
+			if (!$pageDraft[page._id]) {
 				$pageDraft = {
 					..._.cloneDeep($pageDraft),
-					[page.slug || '_new']: { ..._.cloneDeep(page) }
+					[page.slug || '_new']: { ..._.cloneDeep(page) },
+					[page._id || '_new']: { ..._.cloneDeep(page), updatedOn: new Date().toISOString() }
 				};
 			} else {
 				$pageDraft = {
 					..._.cloneDeep($pageDraft),
-					[page.slug || '_new']: { ..._.cloneDeep(page), updatedOn: new Date().toISOString() }
+					[page.slug || '_new']: { ..._.cloneDeep(page), updatedOn: new Date().toISOString() },
+					[page._id || '_new']: { ..._.cloneDeep(page), updatedOn: new Date().toISOString() }
 				};
 			}
 		}

@@ -449,7 +449,7 @@
 								? 'mb-8'
 								: 'mb-4'}"
 						>
-							<div class="sm:col-span-{item.colSpan || 6} {item.isReversed ? 'order-last' : ''}">
+							<div class="sm:col-span-{item.colSpan || 12} {item.isReversed ? 'order-last' : ''}">
 								<div
 									class="{section.renderType === 'article' ? 'sm:px-8' : 'p-4 sm:p-8'} col-span-1"
 								>
