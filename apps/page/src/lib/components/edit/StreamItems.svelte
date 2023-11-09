@@ -5,7 +5,7 @@
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 	import feedCache, { getFeed } from '$lib/stores/feedCache';
 
-	export let streamSlug;
+	export let stream;
 
 	let feed = [];
 	let childStreams = [];
@@ -16,18 +16,8 @@
 		activeTabName = tabName;
 	};
 
-	let loadChildStreams = async () => {
-		let { results } = await get('projects', {
-			hubStreamSlug: streamSlug
-		});
-
-		childStreams = results;
-	};
-
-	loadChildStreams();
-
 	let loadFeed = async () => {
-		return getFeed({ streamSlug });
+		return getFeed({ streamSlug: stream.slug });
 	};
 
 	loadFeed().then((res) => {
@@ -64,7 +54,7 @@
 			return fi;
 		});
 
-		$feedCache[streamSlug] = [...feed];
+		$feedCache[stream.slug] = [...feed];
 		feed = [...feed];
 
 		showSuccessMessage('Record created');
@@ -73,7 +63,7 @@
 	let updateFeedItem = async ({ feedItem }) => {
 		let updated = await put(`feed/${feedItem._id}`, feedItem);
 
-		feed = $feedCache[streamSlug] = $feedCache[streamSlug].map((item) => {
+		feed = $feedCache[stream.slug] = $feedCache[stream.slug].map((item) => {
 			if (item._id === feedItem._id) {
 				return updated;
 			} else {
@@ -87,46 +77,46 @@
 	let deleteFeedItem = async ({ feedItem }) => {
 		await del(`feed/${feedItem._id}`);
 
-		feed = $feedCache[streamSlug] = $feedCache[streamSlug].filter(
+		feed = $feedCache[stream.slug] = $feedCache[stream.slug].filter(
 			(item) => item._id !== feedItem._id
 		);
 
 		showSuccessMessage('Record deleted');
 	};
 
-	let createCategoryStream = async ({ categoryStream }) => {
-		let { project } = await put(`pages/${page._id}/embed-stream`, {
-			title: categoryStream.title,
-			description: categoryStream.description
-		});
+	// let createCategoryStream = async ({ categoryStream }) => {
+	// 	let { project } = await put(`pages/${page._id}/embed-stream`, {
+	// 		title: categoryStream.title,
+	// 		description: categoryStream.description
+	// 	});
 
-		childStreams = childStreams.map((cs) => {
-			if (cs === categoryStream) {
-				return project;
-			}
-			return cs;
-		});
-	};
+	// 	childStreams = childStreams.map((cs) => {
+	// 		if (cs === categoryStream) {
+	// 			return project;
+	// 		}
+	// 		return cs;
+	// 	});
+	// };
 
-	let updateCategoryStream = async ({ categoryStream }) => {
-		let newStream = await put(`projects/${categoryStream._id}`, categoryStream);
+	// let updateCategoryStream = async ({ categoryStream }) => {
+	// 	let newStream = await put(`projects/${categoryStream._id}`, categoryStream);
 
-		childStreams = childStreams.map((cs) => {
-			if (cs === categoryStream) {
-				return newStream;
-			}
-			return cs;
-		});
-	};
+	// 	childStreams = childStreams.map((cs) => {
+	// 		if (cs === categoryStream) {
+	// 			return newStream;
+	// 		}
+	// 		return cs;
+	// 	});
+	// };
 
-	let deleteCategoryStream = async ({ categoryStream }) => {
-		await del(`projects/${categoryStream._id}`);
-		childStreams = childStreams.filter((cs) => cs._id !== categoryStream._id);
-	};
+	// let deleteCategoryStream = async ({ categoryStream }) => {
+	// 	await del(`projects/${categoryStream._id}`);
+	// 	childStreams = childStreams.filter((cs) => cs._id !== categoryStream._id);
+	// };
 </script>
 
 <div class="flex items-center gap-4 border-b border-black/20 mb-8">
-	<div
+	<!-- <div
 		class="p-4 mr-4 cursor-pointer"
 		class:selected={activeTabName === 'items'}
 		on:click={() => setTab('items')}
@@ -146,7 +136,7 @@
 		on:click={() => setTab('tags')}
 	>
 		Tags
-	</div>
+	</div> -->
 </div>
 
 {#if activeTabName === 'items'}
@@ -158,7 +148,7 @@
 					title: '',
 					content: '',
 					url: '',
-					projects: [{ slug: streamSlug }],
+					projects: [{ slug: stream.slug }],
 					attachments: [{ url: '' }]
 				});
 				feed = [...feed];
@@ -196,7 +186,13 @@
 				bind:innerHTML={feedItem.content}
 			/>
 			<div>
-				<FileInput class="w-full" placeholder="Image URL" bind:url={feedItem.attachments[0].url} />
+				{#if feedItem.attachments?.length}
+					<FileInput
+						class="w-full"
+						placeholder="Image URL"
+						bind:url={feedItem.attachments[0].url}
+					/>
+				{/if}
 				<FileInput class="w-full mt-2" placeholder="Logo URL" bind:url={feedItem.logoUrl} />
 			</div>
 

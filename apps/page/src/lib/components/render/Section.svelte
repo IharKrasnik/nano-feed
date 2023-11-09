@@ -1,10 +1,12 @@
 <script>
+	import moment from 'moment';
 	import _ from 'lodash';
 	import { fade, fly } from 'svelte/transition';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
 
+	import Avatar from 'lib/components/Avatar.svelte';
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
 	import RenderMomentumFeed from '$lib/components/render/MomentumFeed.svelte';
 	import RenderMomentumCollection from '$lib/components/render/MomentumCollection.svelte';
@@ -12,20 +14,23 @@
 	import RenderServiceChat from '$lib/components/render/ServiceChat.svelte';
 	import RenderNewsletter from '$lib/components/render/Newsletter.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
+	import ArticleAuthorLabel from '$lib/components/render/ArticleAuthorLabel.svelte';
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 
 	export let section;
-	let clazz = section?.renderType === 'article' ? 'py-4' : 'py-4 sm:pb-16';
+	let clazz;
+	export { clazz as class };
 
 	export let page;
 	export let themeStyles = {};
 	export let isSkipHeader = false;
 	export let isEdit = false;
 
-	export { clazz as class };
+	export let isShowAuthor;
+
 	export let style = null;
 
 	const headerTextStyle = (item) => {
@@ -181,24 +186,26 @@
 	</div>
 </div> -->
 
-<div
-	class="col-span-1 col-span-2 col-span-3 col-span-4 col-span-5 col-span-6 col-span-7 col-span-8 col-span-9 col-span-10 col-span-11 col-span-12"
-/>
-<div
-	class="sm:col-span-1 sm:col-span-2 sm:col-span-3 sm:col-span-4 sm:col-span-5 sm:col-span-6 sm:col-span-7 sm:col-span-8 sm:col-span-9 sm:col-span-10 sm:col-span-11 sm:col-span-12"
-/>
-
-<div
-	class="row-span-1 row-span-2 row-span-3 row-span-4 row-span-5 row-span-6 row-span-7 row-span-8"
-/>
+{#if false}
+	<div
+		class="col-span-1 col-span-2 col-span-3 col-span-4 col-span-5 col-span-6 col-span-7 col-span-8 col-span-9 col-span-10 col-span-11 col-span-12"
+	/>
+	<div
+		class="sm:col-span-1 sm:col-span-2 sm:col-span-3 sm:col-span-4 sm:col-span-5 sm:col-span-6 sm:col-span-7 sm:col-span-8 sm:col-span-9 sm:col-span-10 sm:col-span-11 sm:col-span-12"
+	/>
+	<div
+		class="row-span-1 row-span-2 row-span-3 row-span-4 row-span-5 row-span-6 row-span-7 row-span-8"
+	/>
+{/if}
 
 {#if section.isShown}
 	<div
-		class=" _section-container {section.type} {section.renderType} {section.renderType !== 'article'
+		class=" _section-container {section.type} {section.renderType} {clazz
+			? clazz
+			: section.renderType !== 'article'
 			? 'p-8 sm:pt-16'
-			: 'px-8'} {clazz}"
+			: 'px-8 sm:pb-16'}"
 		style={style || ''}
-		in:fly={{ y: 50 }}
 	>
 		{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji)}
 			<div
@@ -276,7 +283,7 @@
 			<RenderFAQ bind:section />
 		{:else if section.type === 'testimonials'}
 			<RenderTestimonials bind:section />
-		{:else if section.type === 'momentum_collection'}
+		{:else if section.collectionType}
 			<RenderMomentumCollection bind:section bind:page bind:themeStyles />
 		{:else if section.type === 'momentum_feed'}
 			<RenderMomentumFeed bind:page bind:themeStyles />
@@ -455,17 +462,23 @@
 									: ''} {(!item.colSpan || item.colSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
 							>
 								<div
-									class="{section.renderType === 'article' ? 'sm:px-8' : 'p-4 sm:p-8'} col-span-1"
+									class="{section.renderType === 'article'
+										? 'sm:px-8'
+										: 'p-4 sm:p-8'} _section-item col-span-1"
 								>
 									<!-- {#if item.emoji !== '✨'}
 									<Emoji bind:emoji={item.emoji} />
 								{/if} -->
-									<ContentEditableIf
+									<a
 										class="_item-title mb-2"
-										bind:innerHTML={item.title}
-										condition={isEdit}
-									/>
-
+										href={item.url || ''}
+										target={item.url?.startsWith('http') ? '_blank' : ''}
+									>
+										<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+									</a>
+									{#if isShowAuthor}
+										<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
+									{/if}
 									<ContentEditableIf
 										class="_item-description whitespace-pre-wrap"
 										bind:innerHTML={item.description}
@@ -508,6 +521,7 @@
 						{#each section.items || [] as item, i}
 							<a
 								href={section.linkType === 'interactive' ? item.url : null}
+								target={item.url?.startsWith('http') ? '_blank' : ''}
 								class="_section-item rounded-lg sm:rounded-xl {section.className ||
 									''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
 									1} mb-8 {section.carousel
@@ -523,7 +537,7 @@
 								style="-webkit-column-break-inside: avoid;"
 							>
 								<div
-									class="flex flex-col justify-between {section.columns > 2
+									class="flex flex-col justify-between {section.columns > 1
 										? 'h-full'
 										: ''} grid-cols-1 {section.columns > 1
 										? 'block'
@@ -667,6 +681,10 @@
 		margin: 0 auto;
 	}
 
+	._section-container.article ._section-item {
+		background: none;
+	}
+
 	button,
 	.button {
 		display: inline-block;
@@ -705,11 +723,6 @@
 
 	.section-button:hover::after {
 		@apply ml-3;
-	}
-
-	._interactive:hover {
-		@apply transition;
-		border: 1px var(--accent-color) solid;
 	}
 
 	._selected .bg-section {

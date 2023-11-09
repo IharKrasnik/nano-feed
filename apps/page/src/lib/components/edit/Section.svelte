@@ -96,7 +96,7 @@
 
 	let createStream = async () => {
 		const { streamSlug } = await put(`pages/${page.parentPage?._id || page._id}/embed-stream`, {
-			title: page.name,
+			title: section.streamSlug,
 			hubStreamSlug: page.streamSlug || ''
 		});
 
@@ -135,7 +135,7 @@
 			<div class="text-lg font-bold">⁉️ FAQ</div>
 		{:else if section.type === 'testimonials'}
 			<div class="text-lg font-bold">💚 Testimonials</div>
-		{:else if section.type === 'momentum_collection'}
+		{:else if section.renderType === 'momentum_collection'}
 			<div class="text-lg font-bold">📚 Database</div>
 		{:else if section.type === 'interactive_question'}
 			<div class="text-lg font-bold">🕹 Interactive Question</div>
@@ -201,43 +201,50 @@
 	{:else if section.type === 'testimonials'}
 		<EditTestimonials bind:section />
 	{:else}
-		{#if section.type === 'momentum_collection'}
-			<div class="_section">
-				<div class="_title mt-4" style="margin: 0;">Database Name</div>
+		<div class="_section">
+			<div class="_title mt-4" style="margin: 0;">Sync from database</div>
 
-				<div class="flex gap-4 items-center justify-between w-full  mb-4 mt-2">
-					{#if !section.streamSlug}
-						{#if pageStreams?.length}
-							<select bind:value={section.streamSlug}>
-								<option value="">No</option>
+			<div class="w-full flex flex-col gap-4 mb-4 mt-2">
+				{#if pageStreams?.length}
+					<select class="w-full" bind:value={section.collectionType}>
+						<option value="">No</option>
+						<option value="articles">Blog Articles</option>
+						<option value="feed">Database</option>
+					</select>
 
-								{#each pageStreams as stream (stream._id)}
-									<option value={stream.slug}>{stream.title}</option>
-								{/each}
-							</select>
-						{:else}
+					{#if section.collectionType === 'feed'}
+						<select bind:value={section.streamSlug}>
+							{#each pageStreams as stream (stream._id)}
+								<option value={stream.slug}>{stream.title}</option>
+							{/each}
+							<option value="">Add New</option>
+						</select>
+
+						<input class="w-full" bind:value={section.streamSlug} />
+
+						{#if pageStreams.filter((ps) => ps.slug === section.streamSlug).length}
+							<Button
+								class="shrink-0 _small _secondary"
+								onClick={() => {
+									return getFeed({ cacheId: section.id, streamSlug: section.streamSlug });
+								}}>💫 refresh</Button
+							>
+						{:else if section.streamSlug}
 							<Button class="shrink-0 _small _secondary" onClick={createStream}
 								>Create Database</Button
 							>
 						{/if}
-					{:else}
-						<input class="w-full" bind:value={section.streamSlug} />
-
-						<Button
-							class="shrink-0 _small _secondary"
-							onClick={() => {
-								return getFeed({ cacheId: section.id, streamSlug: section.streamSlug });
-							}}>💫 refresh</Button
-						>
 					{/if}
-				</div>
+				{:else}{/if}
 			</div>
-			{#if section.streamSlug}
-				<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
-					>Edit Data</button
-				>
-			{/if}
+		</div>
+
+		{#if section.streamSlug}
+			<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
+				>Edit Data</button
+			>
 		{/if}
+
 		<select class="w-full my-4" bind:value={section.renderType}>
 			<option value="grid">Grid Section</option>
 			<option value="carousel">Carousel Menu</option>

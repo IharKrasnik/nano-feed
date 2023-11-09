@@ -8,17 +8,15 @@
 
 	export let page;
 	export let section;
-	export let streamSlug;
 	export let themeStyles;
 
 	let childStreams = [];
 
 	let isFeedLoading = true;
-	let feed = [];
-
 	let databaseSection = {
 		columns: section.columns,
-		items: []
+		items: [],
+		linkType: 'interactive'
 	};
 
 	$: if (section.columns) {
@@ -30,22 +28,37 @@
 	let loadFeed = async ({ categorySlug = null } = {}) => {
 		isLoading = true;
 
-		if (categorySlug || section?.streamSlug) {
-			feed = await getFeed({
-				cacheId: section._id,
-				streamSlug: categorySlug || section?.streamSlug,
-				forceRefresh: true
+		if (section.collectionType === 'articles') {
+			let articles = await get(`pages/${page.parentPage?._id || page?._id}/subpages`, {
+				renderType: 'article'
 			});
 
-			databaseSection.items = feed.map(({ title, content, attachments, logoUrl, url }) => {
+			databaseSection.items = articles.results.map(({ title, subtitle, demoUrl, url, slug }) => {
 				return {
 					title,
-					description: content,
-					imageUrl: attachments && attachments[0] && attachments[0].url,
-					emoji: logoUrl,
-					url
+					description: subtitle,
+					imageUrl: demoUrl,
+					url: `/${page.parentPage?.slug || page.slug}/blog/post/${slug}`
 				};
 			});
+		} else {
+			if (categorySlug || section?.streamSlug) {
+				let feed = await getFeed({
+					cacheId: section._id,
+					streamSlug: categorySlug || section?.streamSlug,
+					forceRefresh: true
+				});
+
+				databaseSection.items = feed.map(({ title, content, attachments, logoUrl, url }) => {
+					return {
+						title,
+						description: content,
+						imageUrl: attachments && attachments[0] && attachments[0].url,
+						emoji: logoUrl,
+						url
+					};
+				});
+			}
 		}
 
 		isLoading = false;
@@ -74,45 +87,43 @@
 	};
 </script>
 
-<div class="flex w-full justify-center gap-4">
-	<div
-		class="_section-container _section-item p-2 {filterCategoryId ? '' : 'selected'}"
-		on:click={() => selectCategory(null)}
-	>
-		All Categories
-	</div>
-
-	{#each childStreams.filter( (cs) => cs.slug.includes('category-') ) as categoryStream (categoryStream._id)}
+{#if section.renderType === 'feed' && childStreams.length}
+	<div class="flex w-full justify-center gap-4">
 		<div
-			class="_section-container _section-item p-2 {filterCategoryId === categoryStream._id
-				? 'selected'
-				: ''}"
-			on:click={() => selectCategory(categoryStream)}
+			class="_section-container _section-item p-2 {filterCategoryId ? '' : 'selected'}"
+			on:click={() => selectCategory(null)}
 		>
-			{categoryStream.title}
+			All Categories
 		</div>
-	{/each}
-</div>
+
+		{#each childStreams.filter( (cs) => cs.slug.includes('category-') ) as categoryStream (categoryStream._id)}
+			<div
+				class="_section-container _section-item p-2 {filterCategoryId === categoryStream._id
+					? 'selected'
+					: ''}"
+				on:click={() => selectCategory(categoryStream)}
+			>
+				{categoryStream.title}
+			</div>
+		{/each}
+	</div>
+{/if}
 
 {#if isLoading}
 	<Loader />
 {/if}
 
-{#if feed.length}
-	<RenderSection isSkipHeader bind:themeStyles bind:page bind:section={databaseSection} />
+{#if databaseSection?.items.length}
+	<RenderSection
+		class="sm:p-0 sm:pt-0 _horizontal-padding-none"
+		isSkipHeader
+		isShowAuthor={section.collectionType === 'articles'}
+		bind:themeStyles
+		bind:page
+		bind:section={databaseSection}
+	/>
 {/if}
 
-<!-- {#each feed || [] as feedItem (feedItem._id)}
-	<div on:click={() => trackClick(feedItem)}>
-		{feedItem.title || ''}
-		{feedItem.content || ''}
-		{feedItem.createdOn}
-
-		{#if feedItem?.attachments?.length}
-			<RenderUrl url={feedItem.attachments[0].url} />
-		{/if}
-	</div>
-{/each} -->
 <style>
 	._section-item:not(.selected) {
 		@apply opacity-60 transition cursor-pointer;

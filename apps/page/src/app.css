@@ -23,6 +23,11 @@
 	@apply rounded-2xl;
 }
 
+._horizontal-padding-none {
+	padding-left: 0;
+	padding-right: 0;
+}
+
 .aspect-og {
 	aspect-ratio: 1200/630;
 }
@@ -33,6 +38,14 @@
 	text-align: left;
 	border: 1px rgba(255, 255, 255, 0.2) solid;
 	@apply rounded-xl;
+}
+
+._section-item._interactive {
+	@apply transition shadow-md shadow-black/10;
+}
+
+._section-item._interactive:hover {
+	border: 1px var(--accent-color) solid;
 }
 
 .h-screen-plus {
@@ -214,7 +227,7 @@ a.button.tab.selected {
 	color: gray;
 } */
 
-a {
+a[href] {
 	cursor: pointer;
 }
 
@@ -263,6 +276,14 @@ a {
 	font-size: var(--section-title-font-size);
 	line-height: var(--section-title-line-height);
 	/* margin-bottom: 16px; */
+}
+
+a._item-title {
+	@apply transition;
+}
+
+a._item-title:hover {
+	color: var(--accent-color-darker);
 }
 
 ._item-description {

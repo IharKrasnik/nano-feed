@@ -1011,12 +1011,6 @@
 
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
-												on:click={() => addNewSection({ type: 'momentum_collection' })}
-												>📚 Connect database</button
-											>
-
-											<button
-												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'carousel' })}
 												>🎠 Add Carousel with Menu</button
 											>

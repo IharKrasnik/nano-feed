@@ -250,7 +250,7 @@
 
 			<div class="font-normal text-sm opacity-70 mb-2">Hero background image</div>
 
-			<FileInput isCanSearch class="w-full" theme="light" bind:url={page.heroBgImage} />
+			<FileInput isCanSearch class="w-full" theme="light" bind:url={page.theme.heroBgImage} />
 		</div>
 	{/if}
 {/if}

@@ -46,6 +46,9 @@ export default (page) => {
 		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px'
 	};
 
+	styles['accent-color-darker'] = darken(styles['accent-color'], 0.6);
+	styles['accent-color-lighter'] = lighten(styles['accent-color'], 0.6);
+
 	let cssVarStyles = Object.entries(styles)
 		.map(([key, value]) => `--${key}:${value}`)
 		.join(';');

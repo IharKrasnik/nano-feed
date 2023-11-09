@@ -12,6 +12,24 @@
 	export let page;
 
 	let childStreams = [];
+	let activeStream = null;
+
+	let loadChildStreams = async () => {
+		let { results } = await get('projects', {
+			hubStreamSlug: page.streamSlug
+		});
+
+		childStreams = results;
+		activeStream = childStreams[0];
+	};
+
+	if (page.streamSlug) {
+		loadChildStreams();
+	}
+
+	let selectStream = (childStream) => {
+		activeStream = childStream;
+	};
 
 	if (!(page.parentPage?.streamSlug || page.streamSlug)) {
 		put(`pages/${page.parentPage?._id || page._id}/embed-stream`, {}).then(({ streamSlug }) => {
@@ -23,20 +41,6 @@
 		});
 	}
 
-	if (!(page.parentPage?.blogStreamSlug || page.blogStreamSlug)) {
-		page.blogStreamSlug = `${page.slug}-blog`;
-
-		put(`pages/${page.parentPage?._id || page._id}/embed-blog-stream`, {}).then(
-			({ blogStreamSlug }) => {
-				if (page.parentPage) {
-					page.parentPage.blogStreamSlug = blogStreamSlug;
-				} else {
-					page.blogStreamSlug = blogStreamSlug;
-				}
-			}
-		);
-	}
-
 	let activeTabName = 'main';
 
 	let setTab = (tabName) => {
@@ -46,35 +50,20 @@
 
 <div class="w-full">
 	<div class="flex items-center gap-4 border-b border-black/20 px-4">
-		<div
-			class="p-4 mr-4 cursor-pointer"
-			class:selected={activeTabName === 'main'}
-			on:click={() => setTab('main')}
-		>
-			Main
-		</div>
-		<div
-			class="p-4 mr-4 cursor-pointer"
-			class:selected={activeTabName === 'blog'}
-			on:click={() => setTab('blog')}
-		>
-			Blog
-		</div>
+		{#each childStreams as childStream}
+			<div
+				class="p-4 mr-4 cursor-pointer"
+				class:selected={activeStream?._id === childStream._id}
+				on:click={() => selectStream(childStream)}
+			>
+				{childStream.title}
+			</div>
+		{/each}
 	</div>
 
-	<div class="p-4 py-8">
-		{#if activeTabName === 'main'}
-			<EditStreamItems
-				streamSlug={page.parentPage?.streamSlug || page.streamSlug}
-				parentPageId={page.parentPage?._id || page._id}
-			/>
-		{:else if activeTabName === 'blog'}
-			<EditStreamItems
-				streamSlug={page.parentPage?.blogStreamSlug || page.blogStreamSlug}
-				parentPageId={page.parentPage?._id || page._id}
-			/>
-		{/if}
-	</div>
+	{#if activeStream}
+		<EditStreamItems bind:stream={activeStream} />
+	{/if}
 </div>
 
 <style>
