@@ -580,7 +580,7 @@
 									: ''} {section.carousel ? 'flex overflow-x-auto sm:grid' : 'grid'}"
 							>
 								{#each section.items || [] as item, i}
-									{#if item.isShown}
+									{#if item.isShown || _.isUndefined(item.isShown)}
 										<a
 											href={section.linkType === 'interactive' ? item.url : null}
 											target={item.url?.startsWith('http') ? '_blank' : ''}

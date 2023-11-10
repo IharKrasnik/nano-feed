@@ -13,6 +13,7 @@
 	let childStreams = [];
 
 	let isFeedLoading = true;
+
 	let databaseSection = {
 		columns: section.columns,
 		items: [],
@@ -53,7 +54,6 @@
 				});
 			}
 		}
-
 		isLoading = false;
 	};
 
