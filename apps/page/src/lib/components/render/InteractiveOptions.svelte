@@ -18,7 +18,6 @@
 	export let itemClass = 'p-4 mx-4';
 
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
-	import userVars from '$lib/stores/userVars';
 
 	let clazz = '';
 	let shortAnswer = '';
@@ -59,10 +58,9 @@
 		$refreshConditionsTimestamp = +new Date();
 
 		if (sectionItem.varName) {
-			$userVars = {
-				...$userVars,
-				[sectionItem.varName]: { value: answer.value, emoji: answer.emoji }
-			};
+			$currentCustomer.vars = $currentCustomer.vars || {};
+
+			$currentCustomer.vars[sectionItem.varName] = answer.emoji;
 		}
 
 		if (
@@ -79,10 +77,7 @@
 			localStorage[LOCAL_STORAGE_KEY] = null;
 
 			if (sectionItem.varName) {
-				delete $userVars[sectionItem.varName];
-				$userVars = {
-					...$userVars
-				};
+				delete $currentCustomer.vars[sectionItem.varName];
 			}
 
 			return;
@@ -307,7 +302,7 @@
 	</div>
 
 	{#if sectionItem.interactiveRenderType === 'short_answer' || sectionItem.interactiveRenderType === 'single_choice'}
-		<div class="flex w-full justify-center items-center mt-4 ">
+		<div class="flex w-full items-center mt-4 ">
 			<div class="opacity-80 text-sm">Live answers from the community</div>
 			<div class="ml-2 w-[7px] h-[7px] rounded-full bg-green-300" />
 		</div>

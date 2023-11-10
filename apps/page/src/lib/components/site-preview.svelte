@@ -223,22 +223,27 @@
 					['title', 'subtitle', 'ctaExplainer', 'callToAction'].forEach((fieldName) => {
 						let str = page[fieldName];
 
-						// if (varTemplates[fieldName]) {
-						// 	str = varTemplates[fieldName];
-						// }
-
 						page[fieldName] = replaceVariable({
 							str,
 							varName: variable.name,
 							varValue: page.variablesValues[variable.name]
 						});
+					});
 
-						console.log(
-							'replacing',
-							fieldName,
-							page[fieldName],
-							page.variablesValues[variable.name]
-						);
+					page.sections = page.sections.map((s) => {
+						s.title = replaceVariable({
+							str: s.title,
+							varName: variable.name,
+							varValue: page.variablesValues[variable.name]
+						});
+
+						s.description = replaceVariable({
+							str: s.description,
+							varName: variable.name,
+							varValue: page.variablesValues[variable.name]
+						});
+
+						return s;
 					});
 				}
 			);
@@ -495,7 +500,7 @@
 											class="_content {page.theme?.heroBgImage ? 'light-colors' : ''} {page.theme
 												?.isHeroVertical
 												? ''
-												: ''} h-full {page.sections?.length ? '' : 'pb-16'} sm:pt-36 {!page
+												: ''} h-full {page.sections?.length ? 'pb-16' : 'pb-16'} sm:pt-36 {!page
 												.testimonials?.length
 												? `flex items-center`
 												: ''}"
@@ -687,7 +692,7 @@
 						</div>
 					{/if}
 
-					{#if !page.parentPage && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
+					<!-- {#if !page.parentPage && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
 						<div
 							class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
 								? ''
@@ -715,40 +720,10 @@
 									  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
 									: ''}"
 							>
-								<!-- <form
-									class="w-full {page.isCollectEmails ? '' : 'flex justify-center'}"
-									on:submit|preventDefault={submitEmail}
-								>
-									{#if !isSubmitted}
-										{#if page.isCollectEmails}
-											<input
-												class="_input _email-input w-full"
-												placeholder="Your Email"
-												type="email"
-												required
-												bind:this={inputEl}
-												bind:value={email}
-												disabled={isSubmitted}
-												in:fade={{ duration: 150 }}
-											/>
-											<button
-												type="submit"
-												class="_input_button justify-center {page.isCollectEmails
-													? 'sm:absolute w-full sm:w-auto mt-4 sm:mt-0'
-													: ''}">{page.callToAction}</button
-											>
-										{:else}
-											<a href={page.actionUrl} target="_blank" class="button _input_button">
-												{page.callToAction}
-											</a>
-										{/if}
-									{:else}
-										<div>💥 Thank you!</div>
-									{/if}
-								</form> -->
+							
 							</div>
 						</div>
-					{/if}
+					{/if} -->
 
 					{#if !isNoBadge && !page.isNoBadge}
 						<PageBadge theme={page.theme?.theme || 'light'} />

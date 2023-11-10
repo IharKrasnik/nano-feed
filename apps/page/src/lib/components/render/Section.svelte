@@ -20,6 +20,7 @@
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import currentCustomer from 'lib/stores/currentCustomer';
 
 	export let section;
 	let clazz;
@@ -88,28 +89,39 @@
 		selectCarouselItem(section.items[0]);
 	}
 
-	section.isShown = !section.isHidden;
+	let checkConditions = (section) => {
+		section.isShown = !section.isHidden;
+
+		_.each(section.conditions, (c) => {
+			if (c.minVisits) {
+				if (page.variablesValues.visitsCount < c.minVisits) {
+					section.isShown = false;
+				}
+			} else if (c.maxVisits) {
+				if (page.variablesValues.visitsCount > c.maxVisits) {
+					section.isShown = false;
+				}
+			} else if (c.var) {
+				if (c.var.eq) {
+					debugger;
+					section.isShown =
+						$currentCustomer &&
+						$currentCustomer.vars &&
+						$currentCustomer.vars[c.var.eq.varName] === c.var.eq.varValue;
+				}
+			}
+		});
+	};
 
 	let refreshConditions = () => {
 		section.isShown = !section.isHidden;
-		if (!_.isEmpty(page.variablesValues) && !section.isHidden && section.conditions) {
-			_.each(section.conditions, (c) => {
-				if (c.minVisits) {
-					if (page.variablesValues.visitsCount < c.minVisits) {
-						section.isShown = false;
-					}
-				} else if (c.maxVisits) {
-					if (page.variablesValues.visitsCount > c.maxVisits) {
-						section.isShown = false;
-					}
-				} else if (c.interactiveAnswer) {
-					let myAnswer =
-						JSON.parse(localStorage[`ANSWER_${c.interactiveAnswer.sectionId}`] || null) || null;
 
-					if (!myAnswer || myAnswer.emoji !== c.interactiveAnswer.value) {
-						section.isShown = false;
-					}
-				}
+		if (!_.isEmpty(page.variablesValues) && !section.isHidden && section.conditions) {
+			checkConditions(section);
+		}
+		if (section.isShown) {
+			section.items?.forEach((sectionItem) => {
+				checkConditions(sectionItem);
 			});
 		}
 	};
@@ -357,17 +369,19 @@
 									<div class="flex w-full justify-between">
 										<div class="flex gap-8 mb-8">
 											{#each section.items as item}
-												<div
-													class:opacity-40={!item.isSelected}
-													class="cursor-pointer transition font-medium text-lg"
-													on:click={() => selectCarouselItem(item)}
-												>
-													<ContentEditableIf
-														class=""
-														bind:innerHTML={item.title}
-														condition={isEdit}
-													/>
-												</div>
+												{#if item.isShown}
+													<div
+														class:opacity-40={!item.isSelected}
+														class="cursor-pointer transition font-medium text-lg"
+														on:click={() => selectCarouselItem(item)}
+													>
+														<ContentEditableIf
+															class=""
+															bind:innerHTML={item.title}
+															condition={isEdit}
+														/>
+													</div>
+												{/if}
 											{/each}
 										</div>
 										<div class="flex gap-4">
@@ -411,23 +425,25 @@
 									<div class="_section-item w-full grid grid-cols-3 gap-4 mb-4 items-center">
 										<div class="col-span-1">
 											{#each section.items as item}
-												<div
-													class="cursor-pointer p-2 sm:p-6 transition {item.isSelected
-														? ''
-														: 'opacity-40 hover:opacity-100'}"
-													on:click={selectCarouselItem(item)}
-												>
-													<ContentEditableIf
-														class="_item-title mb-2"
-														bind:innerHTML={item.title}
-														condition={isEdit}
-													/>
-													<ContentEditableIf
-														class="_item-description whitespace-pre-wrap"
-														bind:innerHTML={item.description}
-														condition={isEdit}
-													/>
-												</div>
+												{#if item.isShown}
+													<div
+														class="cursor-pointer p-2 sm:p-6 transition {item.isSelected
+															? ''
+															: 'opacity-40 hover:opacity-100'}"
+														on:click={selectCarouselItem(item)}
+													>
+														<ContentEditableIf
+															class="_item-title mb-2"
+															bind:innerHTML={item.title}
+															condition={isEdit}
+														/>
+														<ContentEditableIf
+															class="_item-description whitespace-pre-wrap"
+															bind:innerHTML={item.description}
+															condition={isEdit}
+														/>
+													</div>
+												{/if}
 											{/each}
 											<div class="flex gap-4 p-2 sm:p-6">
 												<div
@@ -560,171 +576,173 @@
 									: ''} {section.carousel ? 'flex overflow-x-auto sm:grid' : 'grid'}"
 							>
 								{#each section.items || [] as item, i}
-									<a
-										href={section.linkType === 'interactive' ? item.url : null}
-										target={item.url?.startsWith('http') ? '_blank' : ''}
-										class="_section-item relative {item.bgImageUrl
-											? '_bg-image'
-											: ''} rounded-lg sm:rounded-xl {item.className ||
-											''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
-											1} mb-8 {section.carousel
-											? `min-w-[300px] sm:min-w-0 cursor-pointer ${
-													item.isSelected ? '_selected' : '_not-selected'
-											  }`
-											: ''} {section.linkType === 'interactive' ? '_interactive' : ''}"
-										on:click={() => {
-											if (section.carousel) {
-												selectCarouselItem(item);
-											}
-										}}
-										style="-webkit-column-break-inside: avoid;"
-									>
-										{#if item.bgImageUrl}
-											<img
-												src={item.bgImageUrl}
-												class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
-												style="z-index: 0;"
-											/>
-											<div
-												class="absolute top-0 left-0 w-full h-full rounded-xl"
-												style="background-color: rgba(0,0,0, 0.85); z-index: 1;"
-											/>
-										{/if}
-
-										<div
-											class="flex flex-col justify-between {section.columns > 1
-												? 'h-full'
-												: ''} grid-cols-1 {section.columns > 1
-												? 'block'
-												: 'grid'} sm:grid-cols-{section.columns === 1 &&
-											item.imageUrl &&
-											section.items.length > 1
-												? 2
-												: ''} w-full {section.columns > 1
-												? `bg-section ${section.carousel ? 'shadow-md' : ''} rounded-2xl`
-												: ''}  {section.columns > 1
-												? 'items-stretch'
-												: 'items-center'} content-start"
-											style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
-												? 'margin-bottom: -64px;'
-												: ''}
+									{#if item.isShown}
+										<a
+											href={section.linkType === 'interactive' ? item.url : null}
+											target={item.url?.startsWith('http') ? '_blank' : ''}
+											class="_section-item relative {item.bgImageUrl
+												? '_bg-image'
+												: ''} rounded-lg sm:rounded-xl {item.className ||
+												''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
+												1} mb-8 {section.carousel
+												? `min-w-[300px] sm:min-w-0 cursor-pointer ${
+														item.isSelected ? '_selected' : '_not-selected'
+												  }`
+												: ''} {section.linkType === 'interactive' ? '_interactive' : ''}"
+											on:click={() => {
+												if (section.carousel) {
+													selectCarouselItem(item);
+												}
+											}}
+											style="-webkit-column-break-inside: avoid;"
 										>
+											{#if item.bgImageUrl}
+												<img
+													src={item.bgImageUrl}
+													class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
+													style="z-index: 0;"
+												/>
+												<div
+													class="absolute top-0 left-0 w-full h-full rounded-xl"
+													style="background-color: rgba(0,0,0, 0.85); z-index: 1;"
+												/>
+											{/if}
+
 											<div
-												class="flex w-full h-full flex-col justify-between {page?.theme
-													?.containerWidth
-													? 'p-4'
-													: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
-												i % 2 === 1
-													? 'sm:order-last-off'
-													: ''} {section.columns === 1 &&
-													(!item.imageUrl || section.items.length === 1) &&
-													'mx-auto'}"
-												class:order-last-off={i % 2 === 0}
+												class="flex flex-col justify-between {section.columns > 1
+													? 'h-full'
+													: ''} grid-cols-1 {section.columns > 1
+													? 'block'
+													: 'grid'} sm:grid-cols-{section.columns === 1 &&
+												item.imageUrl &&
+												section.items.length > 1
+													? 2
+													: ''} w-full {section.columns > 1
+													? `bg-section ${section.carousel ? 'shadow-md' : ''} rounded-2xl`
+													: ''}  {section.columns > 1
+													? 'items-stretch'
+													: 'items-center'} content-start"
+												style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
+													? 'margin-bottom: -64px;'
+													: ''}
 											>
-												<div class="max-w-[600px]">
-													{#if item.title}
-														<div
-															class="flex {page?.theme?.containerWidth
-																? 'mb-2'
-																: 'mb-4'} {section.columns < 3
-																? 'flex-col items-start'
-																: 'items-center'}"
-														>
-															{#if item.emoji}
-																<div
-																	class="{emojiStyle[
-																		section.columns
-																	]} _section-img {item.emoji.startsWith('feather:')
-																		? ''
-																		: 'grayscale-emoji'} mr-2"
-																>
-																	<Emoji bind:emoji={item.emoji} />
-																</div>
-															{/if}
-															<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
-																<ContentEditableIf
-																	class=""
-																	bind:innerHTML={item.title}
-																	condition={isEdit}
-																/>
-															</h2>
-														</div>
-													{/if}
-
-													{#if item.description}
-														<h3
-															class="{descriptionStyle[
-																section.columns
-															]} _item-description whitespace-pre-wrap"
-														>
-															<ContentEditableIf
-																class=""
-																bind:innerHTML={item.description}
-																condition={isEdit}
-															/>
-														</h3>
-													{/if}
-
-													{#if item.pricing}
-														<div class="flex items-end mt-4 mb-4">
-															<div class="text-3xl font-bold mr-2">
-																${item.pricing.amount?.toFixed(2) || '0'}
-															</div>
-															<div class="text-lg">
-																/{item.pricing.per}
-															</div>
-														</div>
-														{#if item.pricing.benefits}
-															<div class="mb-4">
-																{#each item.pricing.benefits as benefit}
-																	<div class="my-2">
-																		<span class="inline-block mr-1">✅</span>
-																		{benefit.name}
+												<div
+													class="flex w-full h-full flex-col justify-between {page?.theme
+														?.containerWidth
+														? 'p-4'
+														: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
+													i % 2 === 1
+														? 'sm:order-last-off'
+														: ''} {section.columns === 1 &&
+														(!item.imageUrl || section.items.length === 1) &&
+														'mx-auto'}"
+													class:order-last-off={i % 2 === 0}
+												>
+													<div class="max-w-[600px]">
+														{#if item.title}
+															<div
+																class="flex {page?.theme?.containerWidth
+																	? 'mb-2'
+																	: 'mb-4'} {section.columns < 3
+																	? 'flex-col items-start'
+																	: 'items-center'}"
+															>
+																{#if item.emoji}
+																	<div
+																		class="{emojiStyle[
+																			section.columns
+																		]} _section-img {item.emoji.startsWith('feather:')
+																			? ''
+																			: 'grayscale-emoji'} mr-2"
+																	>
+																		<Emoji bind:emoji={item.emoji} />
 																	</div>
-																{/each}
+																{/if}
+																<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
+																	<ContentEditableIf
+																		class=""
+																		bind:innerHTML={item.title}
+																		condition={isEdit}
+																	/>
+																</h2>
 															</div>
 														{/if}
-													{/if}
 
-													{#if item.interactiveRenderType}
-														<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
-															<RenderInteractiveOptions
-																class={section.columns === 1 &&
-																section.interactiveRenderType === 'single_choice'
-																	? 'justify-center'
-																	: 'justify-start'}
-																bind:sectionItem={item}
-																parentSectionId={section.id}
-																bind:page
-																itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-															/>
-														</div>
-													{/if}
+														{#if item.description}
+															<h3
+																class="{descriptionStyle[
+																	section.columns
+																]} _item-description whitespace-pre-wrap"
+															>
+																<ContentEditableIf
+																	class=""
+																	bind:innerHTML={item.description}
+																	condition={isEdit}
+																/>
+															</h3>
+														{/if}
+
+														{#if item.pricing}
+															<div class="flex items-end mt-4 mb-4">
+																<div class="text-3xl font-bold mr-2">
+																	${item.pricing.amount?.toFixed(2) || '0'}
+																</div>
+																<div class="text-lg">
+																	/{item.pricing.per}
+																</div>
+															</div>
+															{#if item.pricing.benefits}
+																<div class="mb-4">
+																	{#each item.pricing.benefits as benefit}
+																		<div class="my-2">
+																			<span class="inline-block mr-1">✅</span>
+																			{benefit.name}
+																		</div>
+																	{/each}
+																</div>
+															{/if}
+														{/if}
+
+														{#if item.interactiveRenderType}
+															<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
+																<RenderInteractiveOptions
+																	class={section.columns === 1 &&
+																	section.interactiveRenderType === 'single_choice'
+																		? 'justify-center'
+																		: 'justify-start'}
+																	bind:sectionItem={item}
+																	parentSectionId={section.id}
+																	bind:page
+																	itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																/>
+															</div>
+														{/if}
+													</div>
 												</div>
-											</div>
 
-											{#if !section.carousel && item.imageUrl}
-												<div
-													class="{section.pricing
-														? 'order-none-off'
-														: 'order-none-off'} {section.columns === 1 && i % 2 === 0
-														? 'sm:order-last-off'
-														: ''}"
-												>
-													<RenderUrl
-														class=""
-														imgClass="w-full aspect-og rounded-b-xl object-cover mx-auto {section.columns ===
-														1
-															? ''
-															: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
-															? 'w-full object-cover'
+												{#if !section.carousel && item.imageUrl}
+													<div
+														class="{section.pricing
+															? 'order-none-off'
+															: 'order-none-off'} {section.columns === 1 && i % 2 === 0
+															? 'sm:order-last-off'
 															: ''}"
-														url={item.imageUrl}
-													/>
-												</div>
-											{/if}
-										</div>
-									</a>
+													>
+														<RenderUrl
+															class=""
+															imgClass="w-full aspect-og rounded-b-xl object-cover mx-auto {section.columns ===
+															1
+																? ''
+																: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
+																? 'w-full object-cover'
+																: ''}"
+															url={item.imageUrl}
+														/>
+													</div>
+												{/if}
+											</div>
+										</a>
+									{/if}
 								{/each}
 							</div>
 						{/if}
