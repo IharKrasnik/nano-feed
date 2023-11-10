@@ -103,11 +103,16 @@
 				}
 			} else if (c.var) {
 				if (c.var.eq) {
-					debugger;
 					section.isShown =
 						$currentCustomer &&
 						$currentCustomer.vars &&
 						$currentCustomer.vars[c.var.eq.varName] === c.var.eq.varValue;
+				} else if (c.var.isEmpty) {
+					debugger;
+					section.isShown =
+						$currentCustomer &&
+						$currentCustomer.vars &&
+						!$currentCustomer.vars[c.var.isEmpty.varName];
 				}
 			}
 		});

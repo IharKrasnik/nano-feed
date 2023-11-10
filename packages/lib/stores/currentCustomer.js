@@ -1,7 +1,9 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
-const currentCustomerStore = writable({});
+const currentCustomerStore = writable({
+	vars: {}
+});
 
 let CACHE_KEY = 'CURRENT_CUSTOMER';
 
@@ -13,6 +15,10 @@ if (browser) {
 	currentCustomerStore.subscribe((store) => {
 		if (store) {
 			store.updatedOn = new Date();
+		}
+
+		if (!store.vars) {
+			store.vars = {};
 		}
 
 		localStorage[CACHE_KEY] = JSON.stringify(store);
