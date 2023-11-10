@@ -148,19 +148,19 @@
 	page.variables = [
 		{
 			name: 'timeOfDay',
-			calculateCode: `
-			var currentHour = moment().format("HH");
+			calculateFn: () => {
+				var currentHour = moment().format('HH');
 
-			if (currentHour >= 3 && currentHour < 12){
-					return "morning";
-			} else if (currentHour >= 12 && currentHour < 17){
-					return "afternoon";
-			}   else if (currentHour >= 17 && currentHour < 22){
-					return "evening";
-			} else if (currentHour >= 22 || currentHour < 3){
-					return "night";
+				if (currentHour >= 3 && currentHour < 12) {
+					return 'morning';
+				} else if (currentHour >= 12 && currentHour < 17) {
+					return 'afternoon';
+				} else if (currentHour >= 17 && currentHour < 22) {
+					return 'evening';
+				} else if (currentHour >= 22 || currentHour < 3) {
+					return 'night';
+				}
 			}
-		`
 		}
 	];
 
@@ -205,7 +205,6 @@
 		});
 
 		if (browser) {
-			window.moment = moment;
 			page.variablesValues = {};
 
 			[...systemVariables, ...userVariables, ...(isNoVars ? [] : page.variables)].forEach(
@@ -215,6 +214,8 @@
 						page.variablesValues[variable.name + 'Capitalised'] = _.capitalize(
 							page.variablesValues[variable.name]
 						);
+					} else if (variable.calculateFn) {
+						page.variablesValues[variable.name] = variable.calculateFn();
 					} else {
 						page.variablesValues[variable.name] = variable.value;
 					}
