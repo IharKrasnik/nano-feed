@@ -145,11 +145,6 @@
 			}
 		}, 0);
 	};
-
-	if (window) {
-		window.moment = moment;
-	}
-
 	page.variables = [
 		{
 			name: 'timeOfDay',
@@ -210,6 +205,7 @@
 		});
 
 		if (browser) {
+			window.moment = moment;
 			page.variablesValues = {};
 
 			[...systemVariables, ...userVariables, ...(isNoVars ? [] : page.variables)].forEach(
