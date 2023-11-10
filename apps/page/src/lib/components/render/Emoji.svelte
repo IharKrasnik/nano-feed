@@ -1,7 +1,7 @@
 <script>
 	let clazz;
 	export { clazz as class };
-	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	export let emoji;
 	export let width = 25;
 	export let color = '#111';

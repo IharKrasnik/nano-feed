@@ -34,6 +34,7 @@
 	"dependencies": {
 		"@resvg/resvg-js": "^2.2.0",
 		"@zerodevx/svelte-toast": "^1.0.0-rc.1",
+		"csvtojson": "^2.0.10",
 		"emoji-picker-element": "^1.15.1",
 		"iframe-resizer": "^4.3.2",
 		"is-dark-color": "^1.2.0",

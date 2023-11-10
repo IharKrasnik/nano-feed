@@ -2,7 +2,7 @@
 	import axios from 'axios';
 	import _ from 'lodash';
 	import { onMount } from 'svelte';
-	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import { STREAM_URL, PAGE_URL } from 'lib/env';
 	import slug from 'slug';
 

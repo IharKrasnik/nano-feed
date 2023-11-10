@@ -8,8 +8,9 @@
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import EditUrl from '$lib/components/edit/URL.svelte';
+	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
-	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import contenteditable from 'lib/use/contenteditable';
@@ -20,7 +21,7 @@
 	export let isWithUrl = true;
 	export let isWithGrid = true;
 	export let isWithSubtitle = false;
-	export let isWithInteractive = true;
+	export let isWithSettings = true;
 
 	export let item;
 	export let section;
@@ -85,15 +86,20 @@
 >
 	<div class="relative flex justify-between items-center mb-4">
 		<div class="flex items-center w-full">
-			<EmojiPicker bind:icon={item.emoji} />
-
+			{#if section.type !== 'form'}
+				<EmojiPicker bind:icon={item.emoji} />
+			{/if}
 			{#if isWithUrl}
 				<EditUrl bind:sectionItem={item} />
 			{/if}
 
+			{#if isWithSettings && section.type !== 'form'}
+				<EditSectionSettings bind:sectionItem={item} />
+			{/if}
+
 			{#if isWithGrid}
-				<FeatherIcon class="ml-4 mr-2" size="15" color="gray" name="grid" />
 				{#if section.columns > 1}
+					<FeatherIcon class="ml-4 mr-2" size="15" color="gray" name="grid" />
 					<input
 						type="number"
 						class="max-w-[60px] mr-2"
@@ -178,7 +184,7 @@
 		<div class="w-full p-4 mb-4 cursor-pointer text-center" on:click={addBenefit}>
 			➕Add Benefit
 		</div>
-	{:else}
+	{:else if section.type !== 'form'}
 		<div class="relative flex justify-between items-center">
 			<FileInput
 				class="w-full"
@@ -189,8 +195,4 @@
 			/>
 		</div>
 	{/if}
-</div>
-
-<div class="px-4 pb-4">
-	<input type="checkbox" bind:checked={item.isReversed} /> reverse
 </div>

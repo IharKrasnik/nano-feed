@@ -560,11 +560,11 @@
 													{/if}
 
 													{#if page.callToAction}
-														<RenderInteractiveOptions {page} />
+														<RenderInteractiveOptions class="w-full max-w-[400px] mx-auto" {page} />
 													{/if}
 
 													{#if page.ctaExplainer}
-														<div class="text-sm mt-4">{@html page.ctaExplainer}</div>
+														<div class="text-sm mt-4 max-w-[400px]">{@html page.ctaExplainer}</div>
 													{/if}
 
 													{#if isMounted && page.socialProof}
@@ -574,14 +574,16 @@
 																? ''
 																: 'flex justify-center w-full'} }"
 														>
-															<div class="flex flex-col sm:flex-row ">
-																{#each page.socialProof.logos as logo}
-																	<img class="w-[50px] h-[50px]" src={logo.url} />
-																{/each}
-															</div>
+															<div>
+																<div class="flex flex-col sm:flex-row gap-2">
+																	{#each _.shuffle(page.socialProof.logos) as logo}
+																		<img class="w-[50px] h-[50px] rounded-full" src={logo.url} />
+																	{/each}
+																</div>
 
-															<div class="text-sm mt-4 opacity-80">
-																{@html page.socialProof.title}
+																<div class="text-sm mt-4 opacity-80 max-w-[400px]">
+																	{@html page.socialProof.title || ''}
+																</div>
 															</div>
 														</div>
 													{/if}

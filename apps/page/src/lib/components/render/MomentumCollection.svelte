@@ -3,7 +3,7 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import Loader from 'lib/components/Loader.svelte';
-	import { getFeed } from '$lib/stores/feedCache';
+	import feed, { getFeed } from '$lib/stores/feedCache';
 	import { get } from 'lib/api';
 
 	export let page;
@@ -43,26 +43,33 @@
 			});
 		} else {
 			if (categorySlug || section?.streamSlug) {
-				let feed = await getFeed({
-					cacheId: section._id,
+				await getFeed({
+					cacheId: section.id,
 					streamSlug: categorySlug || section?.streamSlug,
-					forceRefresh: true
-				});
-
-				databaseSection.items = feed.map(({ title, content, attachments, logoUrl, url }) => {
-					return {
-						title,
-						description: content,
-						imageUrl: attachments && attachments[0] && attachments[0].url,
-						emoji: logoUrl,
-						url
-					};
+					forceRefresh: true,
+					isWithUrlOnly: true,
+					isWithImageOnly: true,
+					streamSettings: section.streamSettings
 				});
 			}
 		}
 
 		isLoading = false;
 	};
+
+	$: if ($feed[section.id]) {
+		databaseSection.items = $feed[section.id].map(
+			({ title, content, attachments, logoUrl, url }) => {
+				return {
+					title,
+					description: content,
+					imageUrl: attachments && attachments[0] && attachments[0].url,
+					emoji: logoUrl,
+					url
+				};
+			}
+		);
+	}
 
 	let loadChildStreams = async () => {
 		let { results } = await get('projects', {
@@ -122,6 +129,10 @@
 		bind:page
 		bind:section={databaseSection}
 	/>
+{/if}
+
+{#if section.footer}
+	<RenderSection bind:section={section.footer} isFooter bind:page bind:themeStyles />
 {/if}
 
 <style>

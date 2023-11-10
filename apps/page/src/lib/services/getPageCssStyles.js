@@ -31,7 +31,7 @@ export default (page) => {
 		'section-background-color':
 			page.theme?.sectionBackgroundColor ||
 			(page.theme?.theme === 'dark'
-				? darken(page.theme?.accentColor, 0.98)
+				? darken(page.theme?.accentColor, 0.993)
 				: lighten(page.theme?.accentColor, 0.82)),
 		'section-description-text-color':
 			page.theme?.theme === 'dark' ? 'rgb(229 231 235)' : 'rgba(4, 4, 4, 1)',
@@ -45,8 +45,10 @@ export default (page) => {
 		'input-container-border-width': page.theme?.isInputBorder ? '0px' : '1px 1px 1px 1px',
 		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px'
 	};
-
 	styles['accent-color-darker'] = darken(styles['accent-color'], 0.6);
+	styles['accent-color-darker-lg'] = darken(styles['accent-color'], 0.8);
+	styles['accent-color-darker-xl'] = darken(styles['accent-color'], 0.9);
+	styles['accent-color-darker-3xl'] = darken(styles['accent-color'], 0.99);
 	styles['accent-color-lighter'] = lighten(styles['accent-color'], 0.6);
 
 	let cssVarStyles = Object.entries(styles)

@@ -27,7 +27,7 @@
 
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
-	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import WaveSingleStat from 'lib/components/wave/SingleStat.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';

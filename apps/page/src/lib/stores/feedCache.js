@@ -13,13 +13,15 @@ export const fetchFeed = async ({
 	streamSlug = '',
 	cacheId = streamSlug,
 	creatorUsername,
-	isExplore
+	isExplore,
+	isWithUrlOnly = false,
+	isWithImageOnly = false
 } = {}) => {
-	feedStore.update((st) => {
-		st[cacheId] = [];
-		localStorage[getCacheKey(cacheId)] = '[]';
-		return st;
-	});
+	// feedStore.update((st) => {
+	// 	st[cacheId] = [];
+	// 	localStorage[getCacheKey(cacheId)] = '[]';
+	// 	return st;
+	// });
 
 	const query = {
 		sort,
@@ -43,10 +45,19 @@ export const fetchFeed = async ({
 		query.isExplore = isExplore;
 	}
 
+	if (isWithUrlOnly) {
+		query.isWithUrlOnly = true;
+	}
+
+	if (isWithImageOnly) {
+		query.isWithImageOnly = true;
+	}
+
 	const { results: feed } = await get('feed', query);
 
 	feedStore.update((st) => {
 		st[cacheId] = feed;
+		st.updatedOn = new Date();
 		localStorage[getCacheKey(cacheId)] = JSON.stringify(feed);
 		return st;
 	});
@@ -54,8 +65,19 @@ export const fetchFeed = async ({
 	return feed;
 };
 
-export const getFeed = async ({ cacheId, streamSlug, forceRefresh = false }) => {
-	if (!forceRefresh) {
+export const getFeed = async ({
+	cacheId,
+	streamSlug,
+	streamId,
+	forceRefresh = false,
+	isWithUrlOnly,
+	isWithImageOnly,
+	streamSettings = null,
+	page,
+	sort,
+	perPage
+}) => {
+	if (!streamSettings && !forceRefresh) {
 		let cachedFeed = JSON.parse(localStorage[getCacheKey()] || 'null');
 
 		if (cachedFeed) {
@@ -63,7 +85,25 @@ export const getFeed = async ({ cacheId, streamSlug, forceRefresh = false }) => 
 		}
 	}
 
-	return fetchFeed({ cacheId, streamSlug });
+	if (streamSettings) {
+		if (streamSettings.sort) {
+			sort = streamSettings.sort;
+		}
+
+		if (streamSettings.limit) {
+			perPage = streamSettings.limit;
+		}
+	}
+
+	return fetchFeed({
+		cacheId,
+		sort,
+		perPage,
+		streamSlug,
+		isWithUrlOnly,
+		isWithImageOnly,
+		page
+	});
 };
 
 export default feedStore;

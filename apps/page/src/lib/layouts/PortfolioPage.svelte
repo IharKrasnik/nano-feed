@@ -1,7 +1,7 @@
 <script>
 	import getPageCssStyles from '$lib/services/getPageCssStyles';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
-	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import { page as sveltePage } from '$app/stores';
 	import { lighten, darken, getLuminance } from 'lib/helpers/color';

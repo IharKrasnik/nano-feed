@@ -3,6 +3,7 @@
 	import { fly, fade, slide } from 'svelte/transition';
 	import { v4 as uuidv4 } from 'uuid';
 	import { post } from 'lib/api';
+	import currentCustomer from 'lib/stores/currentCustomer';
 
 	export let page;
 
@@ -87,10 +88,12 @@
 			return;
 		}
 
-		post(`pages/${page._id}/questions/${sectionItem.id}`, {
-			parentSectionId,
-			answer
-		});
+		if (sectionItem.id) {
+			post(`pages/${page._id}/questions/${sectionItem.id}`, {
+				parentSectionId,
+				answer
+			});
+		}
 
 		isAnswerSubmitted = true;
 		answer.isSelected = true;
@@ -145,43 +148,26 @@
 
 	let emailAddress;
 
-	if (!localStorage.submittedEmails) {
-		localStorage.submittedEmails = '{}';
-	}
-
-	let submittedEmail = (JSON.parse(localStorage.submittedEmails) || {})[
-		sectionItem.id || page.parentPage?._id || page._id
-	];
-
-	let isEmailSubmitted = submittedEmail;
-
 	let submitEmail = async () => {
-		await post(`pages/${page.slug}/submissions`, { email: emailAddress });
-		isEmailSubmitted = true;
-
-		localStorage.submittedEmails = JSON.stringify({
-			...JSON.parse(localStorage.submittedEmails),
-			[sectionItem.id || page.parentPage?._id || page._id]: emailAddress
-		});
-
-		submittedEmail = emailAddress;
+		$currentCustomer.email = emailAddress;
+		let submission = await post(`pages/${page.slug}/submissions`, { email: emailAddress });
 
 		if (page.actionUrl) {
 			setTimeout(() => {
-				window.location.href = page.actionUrl.startsWith('/')
+				window.location.href = page.actionUrl?.startsWith('/')
 					? `${page.slug}${page.actionUrl}`
 					: page.actionUrl;
 			}, 0);
 		}
 	};
 
-	let trackClick = () => {
+	let trackClick = ({ callToActionText, url } = {}) => {
 		post(`pages/${page._id}/questions/${sectionItem.id}`, {
 			parentSectionId,
 			answer: {
 				click: {
-					callToActionText: sectionItem.callToActionText || 'Learn More',
-					url: sectionItem.url
+					callToActionText,
+					url
 				}
 			}
 		});
@@ -245,7 +231,7 @@
 				</div>
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'email'}
-			{#if isEmailSubmitted}
+			{#if $currentCustomer.email}
 				<div>
 					<div>👏 Thank you!</div>
 					<div
@@ -255,7 +241,7 @@
 							emailAddress = submittedEmail;
 						}}
 					>
-						Your email is {submittedEmail}
+						Your email is {$currentCustomer.email}
 					</div>
 				</div>
 			{:else}
@@ -266,7 +252,7 @@
 					>
 						<input
 							placeholder="myemail@gmail.com"
-							bind:value={emailAddress}
+							bind:value={$currentCustomer.email}
 							class="_input _email-input w-full"
 						/>
 						<button type="submit" class="_input_button _wide absolute"
@@ -275,18 +261,50 @@
 					</form>
 				</div>
 			{/if}
-		{:else if sectionItem.interactiveRenderType === 'button'}
-			<a class="cursor-pointer" target="_blank" href={sectionItem.url} on:click={trackClick}
-				><button>{sectionItem.callToActionText || 'Learn More'}</button></a
-			>
-		{:else if sectionItem.interactiveRenderType === 'link'}
-			<a
-				class="cursor-pointer text-base"
-				target="_blank"
-				href={sectionItem.url}
-				on:click={trackClick}
-				>{sectionItem.callToActionText || 'Learn More'}
-			</a>
+		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
+			<div class="flex gap-6 items-center">
+				<a
+					class="cursor-pointer"
+					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
+					href={sectionItem.url?.startsWith('/')
+						? `/${page.parentPage?.slug || page.slug}${sectionItem.url}`
+						: sectionItem.url}
+					on:click={() =>
+						trackClick({
+							url: sectionItem.url,
+							callToActionText: sectionItem.callToActionText
+						})}
+				>
+					{#if sectionItem.isUrlButton}
+						<button>{sectionItem.callToActionText || 'Learn More'}</button>
+					{:else}
+						{sectionItem.callToActionText || 'Learn More'}
+					{/if}
+				</a>
+
+				{#if sectionItem.interactiveRenderType === 'links'}
+					<a
+						class="cursor-pointer"
+						target={sectionItem.url2.startsWith('http') ? '_blank' : ''}
+						href={sectionItem.url2.startsWith('/')
+							? `/${page.parentPage?.slug || page.slug}${sectionItem.url2}`
+							: sectionItem.url2}
+						on:click={() =>
+							trackClick({
+								url: sectionItem.url2,
+								callToActionText: sectionItem.callToActionText2
+							})}
+					>
+						{#if sectionItem.isUrl2Button}
+							<button class:_alternative={sectionItem.isUrlButton}
+								>{sectionItem.callToActionText2 || 'Learn More'}</button
+							>
+						{:else}
+							{sectionItem.callToActionText2 || 'Learn More'}
+						{/if}
+					</a>
+				{/if}
+			</div>
 		{/if}
 	</div>
 

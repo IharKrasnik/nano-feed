@@ -242,11 +242,11 @@
 	let changeBackgroundColor = () => {
 		let newTheme = isDarkColor(page.theme.backgroundColor) ? 'dark' : 'light';
 
-		if (newTheme === 'light') {
-			page.theme.sectionBackgroundColor = '#f6f5f4';
-		} else {
-			page.theme.sectionBackgroundColor = '#1a1c28';
-		}
+		// if (newTheme === 'light') {
+		// 	page.theme.sectionBackgroundColor = '#f6f5f4';
+		// } else {
+		// 	page.theme.sectionBackgroundColor = '#1a1c28';
+		// }
 
 		if (page.theme.theme !== newTheme) {
 			page.theme = {

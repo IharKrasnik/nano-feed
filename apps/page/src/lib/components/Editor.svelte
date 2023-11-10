@@ -411,6 +411,25 @@
 			];
 
 			newSection.carousel = { is: true };
+		} else if (type === 'form') {
+			newSection.items = [
+				{
+					title: `What's your email?`,
+					interactiveRenderType: 'email'
+				},
+				{
+					title: `What's your name?`,
+					description: '',
+					interactiveRenderType: 'text',
+					varName: 'user.name'
+				},
+				{
+					title: `Your message`,
+					description: '',
+					interactiveRenderType: 'textarea',
+					varName: 'user.request'
+				}
+			];
 		}
 
 		$sectionToEdit = newSection;
@@ -1008,12 +1027,12 @@
 												on:click={() => addNewSection({ type: 'stepper' })}
 												>💡 Add 1-2-3 stepper</button
 											>
-
+											<!-- 
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'carousel' })}
 												>🎠 Add Carousel with Menu</button
-											>
+											> -->
 
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
@@ -1029,17 +1048,25 @@
 
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => addNewSection({ type: 'form' })}
+											>
+												🔤 Form
+											</button>
+
+											<!--
+											<button
+												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'newsletter' })}
 											>
 												✉️ Newsletter</button
-											>
+											> -->
 
-											<button
+											<!-- <button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'community_chat' })}
 											>
 												💫 Community Chat</button
-											>
+											> -->
 										</div>
 									{/if}
 

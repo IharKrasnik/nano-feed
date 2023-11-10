@@ -18,12 +18,35 @@
 ._section-container {
 }
 
-.section-container.callout {
-	background: red;
-	@apply rounded-2xl;
+._section-container._callout {
+	background: radial-gradient(#010101, #11111121);
+
+	@apply rounded-xl;
+	@apply mt-16 mb-32;
 }
 
-._horizontal-padding-none {
+._section-container._darker {
+	background: var(--accent-color-darker-3xl);
+
+	@apply rounded-xl;
+}
+
+._section-item._darker > .flex {
+	background: var(--accent-color-darker-xl);
+}
+
+._section-container._lighter,
+._section-item._lighter > .flex {
+	background: var(--accent-color-darker-lg);
+	@apply rounded-xl;
+}
+
+._section-container._lighter ._section_titles,
+._section-item._lighter ._section_titles {
+	color: var(--button-color);
+}
+
+. ._horizontal-padding-none {
 	padding-left: 0;
 	padding-right: 0;
 }
@@ -32,12 +55,20 @@
 	aspect-ratio: 1200/630;
 }
 
-._section-item,
-._section-item > .flex {
+._section-item:not(.bg_image),
+._section-item:not(.bg_image) > .flex {
 	background: var(--section-background-color);
 	text-align: left;
 	border: 1px rgba(255, 255, 255, 0.2) solid;
 	@apply rounded-xl;
+}
+
+._section-container._bg-image,
+._section-item._bg-image > .flex {
+	background: none !important;
+	color: #f6f5f4;
+	position: relative;
+	z-index: 10;
 }
 
 ._section-item._interactive {
@@ -294,7 +325,7 @@ a._item-title:hover {
 ._input_container {
 	position: relative;
 	border-radius: var(--button-radius);
-	max-width: 400px;
+	max-width: 470px;
 	min-width: 300px;
 }
 
@@ -357,4 +388,20 @@ butotn._wide {
 .button.secondary {
 	background: none !important;
 	color: white;
+}
+
+._alternative {
+	background: none;
+	border: 1px var(--accent-color) solid;
+	color: var(--text-color);
+	@apply transition;
+}
+
+._alternative:hover {
+	background: rgba(255, 255, 255, 0.3);
+}
+
+._transparent {
+	background: rgba(0, 0, 0, 0.3) !important;
+	border: 1px var(--color-text) solid;
 }

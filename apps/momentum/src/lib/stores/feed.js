@@ -10,7 +10,8 @@ export const fetch = async ({
 	source,
 	project,
 	creatorUsername,
-	isExplore
+	isExplore,
+	isWithUrlOnly = false
 } = {}) => {
 	feedStore.set([]);
 
@@ -34,6 +35,10 @@ export const fetch = async ({
 
 	if (isExplore) {
 		query.isExplore = isExplore;
+	}
+
+	if (isWithUrlOnly) {
+		query.isWithUrlOnly = true;
 	}
 
 	const { results: feed } = await get('feed', query);

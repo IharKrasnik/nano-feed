@@ -15,7 +15,7 @@
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import EditDatabase from '$lib/components/edit/Database.svelte';
-	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
@@ -83,9 +83,6 @@
 
 	let isDatabaseModalShown = false;
 
-	if (!section.streamSlug) {
-		section.newStreamTitle = page.name;
-	}
 	let pageStreams;
 
 	let getPageStreams = async () => {
@@ -106,6 +103,10 @@
 
 		section.streamSlug = streamSlug;
 	};
+
+	if (section.streamSlug && !section.streamSettings) {
+		section.streamSettings = {};
+	}
 </script>
 
 {#if isDatabaseModalShown}
@@ -201,62 +202,86 @@
 	{:else if section.type === 'testimonials'}
 		<EditTestimonials bind:section />
 	{:else}
-		<div class="_section">
-			<div class="_title mt-4" style="margin: 0;">Sync from database</div>
+		{#if section.type !== 'form'}
+			<div class="_section">
+				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
 
-			<div class="w-full flex flex-col gap-4 mb-4 mt-2">
-				{#if pageStreams?.length}
-					<select class="w-full" bind:value={section.collectionType}>
-						<option value="">No</option>
-						<option value="articles">Blog Articles</option>
-						<option value="feed">Database</option>
-					</select>
-
-					{#if section.collectionType === 'feed'}
-						<select bind:value={section.streamSlug}>
-							{#each pageStreams as stream (stream._id)}
-								<option value={stream.slug}>{stream.title}</option>
-							{/each}
-							<option value="">Add New</option>
+				<div class="w-full flex flex-col gap-4 mb-4 mt-2">
+					{#if pageStreams?.length}
+						<select class="w-full" bind:value={section.collectionType}>
+							<option value="">No</option>
+							<option value="articles">Blog Articles</option>
+							<option value="feed">Database</option>
 						</select>
 
-						<input class="w-full" bind:value={section.streamSlug} />
+						{#if section.collectionType === 'feed'}
+							<select bind:value={section.streamSlug}>
+								{#each pageStreams as stream (stream._id)}
+									<option value={stream.slug}>{stream.title}</option>
+								{/each}
+								<option value="">Add New</option>
+							</select>
 
-						{#if pageStreams.filter((ps) => ps.slug === section.streamSlug).length}
-							<Button
-								class="shrink-0 _small _secondary"
-								onClick={() => {
-									return getFeed({ cacheId: section.id, streamSlug: section.streamSlug });
-								}}>💫 refresh</Button
-							>
-						{:else if section.streamSlug}
-							<Button class="shrink-0 _small _secondary" onClick={createStream}
-								>Create Database</Button
-							>
+							{#if pageStreams.filter((ps) => ps.slug === section.streamSlug).length}
+								{#if section.streamSettings}
+									<div class="grid grid-cols-2">
+										<div class="_section">
+											<div class="text-sm">Limit items (leave 0 for pagination)</div>
+											<input type="number" bind:value={section.streamSettings.limit} />
+										</div>
+
+										<div class="_section">
+											<div class="text-sm">Sort</div>
+
+											<select bind:value={section.streamSettings.sortBy}>
+												<option value="-publishedOn">Newest First</option>
+												<option value="-viewsCount">Popular First</option>
+											</select>
+										</div>
+									</div>
+								{/if}
+
+								<Button
+									class="shrink-0 _small _secondary"
+									onClick={() => {
+										return getFeed({
+											cacheId: section.id,
+											streamSlug: section.streamSlug,
+											streamSettings: section.streamSettings,
+											forceRefresh: true
+										});
+									}}>💫 refresh</Button
+								>
+							{:else}
+								<input placeholder="databaseName" class="w-full" bind:value={section.streamSlug} />
+								<Button class="shrink-0 _small _secondary" onClick={createStream}
+									>Create Database</Button
+								>
+							{/if}
 						{/if}
-					{/if}
-				{:else}{/if}
+					{:else}{/if}
+				</div>
 			</div>
-		</div>
 
-		{#if section.streamSlug}
-			<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
-				>Edit Data</button
-			>
-		{/if}
+			{#if section.streamSlug}
+				<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
+					>Edit Data</button
+				>
+			{/if}
 
-		<select class="w-full my-4" bind:value={section.renderType}>
-			<option value="grid">Grid Section</option>
-			<option value="carousel">Carousel Menu</option>
-			<option value="stepper">1-2-3 Stepper</option>
-			<option value="article">Article</option>
-		</select>
-
-		{#if section.renderType === 'carousel'}
-			<select class="w-full my-4" bind:value={section.carouselType}>
-				<option value="vertical">Vertical</option>
-				<option value="horizontal">Horizontal</option>
+			<select class="w-full my-4" bind:value={section.renderType}>
+				<option value="grid">Grid Section</option>
+				<option value="carousel">Carousel Menu</option>
+				<option value="stepper">1-2-3 Stepper</option>
+				<option value="article">Article</option>
 			</select>
+
+			{#if section.renderType === 'carousel'}
+				<select class="w-full my-4" bind:value={section.carouselType}>
+					<option value="vertical">Vertical</option>
+					<option value="horizontal">Horizontal</option>
+				</select>
+			{/if}
 		{/if}
 
 		<div
@@ -271,7 +296,7 @@
 				// onEditEnded(section);
 			}}
 		>
-			{#if section.renderType === 'grid'}
+			{#if section.type !== 'form' && section.renderType === 'grid'}
 				<div class="bg-white top-[60px] rounded-xl">
 					<div class="p-4 pb-0 flex justify-between items-center">
 						<div class="_title" style="margin: 0;">Columns</div>
@@ -361,6 +386,29 @@
 				<!-- {#if $sectionToEdit}
 				<RenderSection bind:section={$sectionToEdit} />
 			{/if} -->
+			</div>
+		</div>
+	{/if}
+	{#if section.streamSettings?.limit}
+		{section.footer ? '' : (section.footer = { id: uuidv4() }) && ''}
+
+		<div class="_section rounded-xl" style="padding:0;">
+			<div class="flex justify-between items-center">
+				<div class="_title p-4" style="margin: 0;">Footer</div>
+			</div>
+
+			<hr class="border-[#8B786D] opacity-30" />
+
+			<div class="p-4">
+				<EditSectionItem
+					class="p-0"
+					isWithGrid={false}
+					isWithSubtitle
+					isWithInteractive
+					onRemove={null}
+					bind:section
+					bind:item={section.footer}
+				/>
 			</div>
 		</div>
 	{/if}

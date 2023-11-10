@@ -4,6 +4,8 @@
 	import Button from 'lib/components/Button.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 	import feedCache, { getFeed } from '$lib/stores/feedCache';
+	import csv from 'csvtojson';
+	import { v4 as uuidv4 } from 'uuid';
 
 	export let stream;
 
@@ -24,40 +26,22 @@
 		feed = res;
 	});
 
-	let createFeedItem = async ({ feedItem }) => {
-		if (!feedItem._id && feedItem.url) {
-			const metatags = await get('utils/fetch-meta-tags', {
-				url: feedItem.url
-			});
-
-			feedItem.source = metatags.source;
-
-			feedItem.title = metatags.title;
-			feedItem.content = metatags.description;
-			if (metatags.favicon?.startsWith('http')) {
-				feedItem.logoUrl = metatags.favicon;
-			}
-
-			if (metatags.image?.startsWith('http')) {
-				feedItem.attachments = [{ type: 'image', url: metatags.image }];
-			}
-		}
-
-		let created = await post(`feed`, feedItem);
-
-		feedItem._id = created._id;
+	let createFeedItem = async ({ feedItem }, { isShowSuccessMessage = true } = {}) => {
+		let created = await post(`feed/from-url`, { ...feedItem, projectSlug: stream.slug });
 
 		feed = feed.map((fi) => {
-			if (fi === feedItem) {
+			if (fi.id === feedItem.id) {
 				return created;
 			}
+
 			return fi;
 		});
 
 		$feedCache[stream.slug] = [...feed];
-		feed = [...feed];
 
-		showSuccessMessage('Record created');
+		if (isShowSuccessMessage) {
+			showSuccessMessage('Record created');
+		}
 	};
 
 	let updateFeedItem = async ({ feedItem }) => {
@@ -84,78 +68,106 @@
 		showSuccessMessage('Record deleted');
 	};
 
-	// let createCategoryStream = async ({ categoryStream }) => {
-	// 	let { project } = await put(`pages/${page._id}/embed-stream`, {
-	// 		title: categoryStream.title,
-	// 		description: categoryStream.description
-	// 	});
+	let uploaderEl;
 
-	// 	childStreams = childStreams.map((cs) => {
-	// 		if (cs === categoryStream) {
-	// 			return project;
-	// 		}
-	// 		return cs;
-	// 	});
-	// };
+	let parseCSV = async (e) => {
+		const reader = new FileReader();
 
-	// let updateCategoryStream = async ({ categoryStream }) => {
-	// 	let newStream = await put(`projects/${categoryStream._id}`, categoryStream);
+		let parseP = new Promise((resolve, reject) => {
+			reader.readAsText(e.target.files[0]);
 
-	// 	childStreams = childStreams.map((cs) => {
-	// 		if (cs === categoryStream) {
-	// 			return newStream;
-	// 		}
-	// 		return cs;
-	// 	});
-	// };
+			reader.onload = async () => {
+				const csvContent = reader.result;
 
-	// let deleteCategoryStream = async ({ categoryStream }) => {
-	// 	await del(`projects/${categoryStream._id}`);
-	// 	childStreams = childStreams.filter((cs) => cs._id !== categoryStream._id);
-	// };
+				let parsedFile = await csv()
+					.fromString(csvContent)
+					.preFileLine((fileLine, idx) => {
+						if (idx === 0) {
+							return fileLine.toLowerCase();
+						}
+						return fileLine;
+					});
+
+				feed = [
+					...parsedFile.map((item) => {
+						return {
+							id: uuidv4(),
+							url: item.url || item.website,
+							title: item.name || item.title,
+							description: item.description || '',
+							imageUrl: item.image || item.imageUrl,
+							tagsStr: item.type || item.tags
+						};
+					}),
+					...feed
+				];
+
+				resolve(feed);
+			};
+		});
+
+		return parseP;
+	};
+
+	let saveAll = async () => {
+		let newItems = feed.filter((f) => !f._id);
+
+		if (
+			confirm(
+				`You are about to create ${newItems.length} items in ${stream.title} database. Continue?`
+			)
+		) {
+			let failedCount = 0;
+
+			await newItems.reduce(
+				(p, feedItem) =>
+					p
+						.then(() => {
+							return createFeedItem({ feedItem });
+						})
+						.catch(() => {
+							failedCount++;
+							return p;
+						}),
+				Promise.resolve()
+			);
+
+			showSuccessMessage(
+				`Created ${newItems.length - failedCount}. ${
+					failedCount ? `${failedCount} items failed to import` : ''
+				}`
+			);
+		}
+	};
 </script>
 
-<div class="flex items-center gap-4 border-b border-black/20 mb-8">
-	<!-- <div
-		class="p-4 mr-4 cursor-pointer"
-		class:selected={activeTabName === 'items'}
-		on:click={() => setTab('items')}
-	>
-		Items
-	</div>
-	<div
-		class="p-4 mr-4 cursor-pointer"
-		class:selected={activeTabName === 'categories'}
-		on:click={() => setTab('categories')}
-	>
-		Categories
-	</div>
-	<div
-		class="p-4 mr-4 cursor-pointer"
-		class:selected={activeTabName === 'tags'}
-		on:click={() => setTab('tags')}
-	>
-		Tags
-	</div> -->
-</div>
+<div class="flex items-center gap-4 border-b border-black/20 mb-8" />
 
 {#if activeTabName === 'items'}
-	<div class="mb-8">
-		<button
-			class="_primary _small"
-			on:click={() => {
-				feed.unshift({
-					title: '',
-					content: '',
-					url: '',
-					projects: [{ slug: stream.slug }],
-					attachments: [{ url: '' }]
-				});
-				feed = [...feed];
-			}}
-		>
-			Add New Item</button
-		>
+	<div class="flex w-full justify-between">
+		<div class="mb-8">
+			<button
+				class="_primary _small"
+				on:click={() => {
+					feed.unshift({
+						id: uuidv4(),
+						title: '',
+						content: '',
+						url: '',
+						attachments: [{ url: '' }]
+					});
+					feed = [...feed];
+				}}
+			>
+				Add New Item</button
+			>
+
+			<input class="ml-4" bind:this={uploaderEl} on:change={parseCSV} type="file" />
+		</div>
+
+		{#if feed.filter((i) => !i._id)?.length > 1}
+			<Button onClick={saveAll}>💾💾💾 Save All</Button>
+		{/if}
 	</div>
 
 	<div class="grid grid-cols-6 gap-4 w-full items-start">
@@ -165,19 +177,26 @@
 		<div class="text-sm  opacity-80">Media</div>
 		<div class="text-sm opacity-80" />
 
-		{#each feed as feedItem (feedItem._id)}
+		{#each (feed || [])
+			.filter((f) => f.id || f._id)
+			.sort((f) => {
+				if (!f._id && !f.id) {
+					console.log(' no id??', f);
+				}
+
+				if (!f._id) {
+					return -1;
+				}
+
+				return 1;
+			}) as feedItem (feedItem._id + feedItem.id)}
 			<input placeholder="URL" bind:value={feedItem.url} autofocus="true" />
 
 			<div>
 				<input class="col-span-1" placeholder="Title" bind:value={feedItem.title} />
 
-				<select class="w-full mt-2" bind:value={feedItem.categoryId}>
-					<option>No Category</option>
-
-					{#each childStreams.filter((cs) => cs.slug.includes('category-')) as categoryStream}
-						<option value={categoryStream._id}>{categoryStream.title}</option>
-					{/each}
-				</select>
+				<div class="text-xs mt-2">Tags</div>
+				<input class="w-full" bind:value={feedItem.tagsStr} />
 			</div>
 			<div
 				contenteditable=""
@@ -204,7 +223,7 @@
 					>
 				{:else}
 					<Button
-						class="_secondary _small cursor-pointer"
+						class="_secondary _small cursor-pointer _green"
 						onClick={() => createFeedItem({ feedItem })}>💾</Button
 					>
 				{/if}

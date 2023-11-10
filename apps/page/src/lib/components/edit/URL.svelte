@@ -19,22 +19,6 @@
 		isShown = false;
 	};
 
-	let prevUrl = sectionItem.url;
-
-	$: if (prevUrl !== sectionItem.url) {
-		prevUrl = sectionItem.url;
-	} else if (innerUrl) {
-		if (isUrl(innerUrl)) {
-			sectionItem.url = innerUrl;
-			prevUrl = sectionItem.url;
-		}
-	} else if (sectionItem.url) {
-		sectionItem.url = null;
-		prevUrl = null;
-	}
-
-	let innerUrl = sectionItem.url;
-
 	let addAnswer = () => {
 		if (!sectionItem.interactiveAnswers) {
 			sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
@@ -88,26 +72,53 @@
 			}}
 		>
 			<option value="">None</option>
-			<option value="button">Click Button</option>
-			<option value="link">Click Link</option>
+			<option value="link">Click 1 Link</option>
+			<option value="links">Click Few Links</option>
 			<option value="email">Submit Email</option>
 			<option value="single_choice">Select Single Choice</option>
 			<option value="short_answer">Short Answer</option>
 		</select>
 
-		{#if sectionItem.interactiveRenderType === 'button' || sectionItem.interactiveRenderType === 'link'}
-			<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
-			<input class="w-full" bind:value={innerUrl} {placeholder} type="url" />
+		{#if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
+			<div class="flex items-center w-full justify-between">
+				<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
+				<div>
+					<input type="checkbox" bind:checked={sectionItem.isUrlButton} /> is button
+				</div>
+			</div>
+			<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
 
 			<div class="text-sm opacity-70 mt-4 mb-2">
-				{sectionItem.interactiveRenderType === 'link' ? 'Link' : 'Button'} text
+				{sectionItem.isUrlButton ? 'Button' : 'Link'} text
 			</div>
+
 			<input
 				class="w-full"
 				bind:value={sectionItem.callToActionText}
 				placeholder="Learn More"
 				type="text"
 			/>
+
+			{#if sectionItem.interactiveRenderType === 'links'}
+				<div class="w-full flex items-center justify-between">
+					<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
+					<input type="checkbox" bind:checked={sectionItem.isUrl2Button} />
+				</div>
+				<input class="w-full" bind:value={sectionItem.url2} {placeholder} type="url" />
+
+				<div class="text-sm opacity-70 mt-4 mb-2">
+					{sectionItem.isUrl2Button ? 'Button' : 'Link'} text
+				</div>
+
+				<div>
+					<input
+						class="w-full"
+						bind:value={sectionItem.callToActionText2}
+						placeholder="Learn More"
+						type="text"
+					/> is button
+				</div>
+			{/if}
 		{:else}
 			<div>
 				{#if sectionItem.interactiveAnswers?.length && (!sectionItem.interactiveRenderType || sectionItem.interactiveRenderType === 'single_choice')}

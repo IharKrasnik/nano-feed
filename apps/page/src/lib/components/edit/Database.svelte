@@ -41,30 +41,69 @@
 		});
 	}
 
+	let newDatabaseName = '';
 	let activeTabName = 'main';
 
 	let setTab = (tabName) => {
 		activeTabName = tabName;
 	};
+
+	let createDatabase = async () => {
+		if (!page.streamSlug) {
+			let { streamSlug = parentPageSlug } = await put(
+				`pages/${page.parentPage?._id || page._id}/embed-stream`,
+				{
+					title: page.name
+				}
+			);
+
+			page.streamSlug = parentPageSlug;
+		}
+
+		const { streamSlug, project: newStream } = await put(
+			`pages/${page.parentPage?._id || page._id}/embed-stream`,
+			{
+				title: newDatabaseName,
+				hubStreamSlug: page.streamSlug
+			}
+		);
+
+		childStreams = [newStream, ...childStreams];
+		newDatabaseName = '';
+	};
 </script>
 
-<div class="w-full">
-	<div class="flex items-center gap-4 border-b border-black/20 px-4">
-		{#each childStreams as childStream}
-			<div
-				class="p-4 mr-4 cursor-pointer"
-				class:selected={activeStream?._id === childStream._id}
-				on:click={() => selectStream(childStream)}
-			>
-				{childStream.title}
-			</div>
-		{/each}
+{#if !childStreams?.length}
+	<div class="my-8">
+		<input placeholder="Tools" bind:value={newDatabaseName} />
+		<Button class="mt-2 _primary" onClick={createDatabase}>Create new database</Button>
 	</div>
+{:else}
+	<div class="w-full">
+		<div class="flex items-center w-full justify-between">
+			<div class="flex items-center gap-4 border-b border-black/20 px-4">
+				{#each childStreams as childStream}
+					<div
+						class="p-4 mr-4 cursor-pointer"
+						class:selected={activeStream?._id === childStream._id}
+						on:click={() => selectStream(childStream)}
+					>
+						{childStream.title}
+					</div>
+				{/each}
+			</div>
 
-	{#if activeStream}
-		<EditStreamItems bind:stream={activeStream} />
-	{/if}
-</div>
+			<div class="flex items-center">
+				<input placeholder="Tools" bind:value={newDatabaseName} />
+				<Button class=" _primary _small" onClick={createDatabase}>Create new database</Button>
+			</div>
+		</div>
+
+		{#if activeStream}
+			<EditStreamItems bind:stream={activeStream} />
+		{/if}
+	</div>
+{/if}
 
 <style>
 	.selected {
