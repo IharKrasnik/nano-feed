@@ -49,27 +49,29 @@
 	};
 
 	let createDatabase = async () => {
-		if (!page.streamSlug) {
-			let { streamSlug = parentPageSlug } = await put(
+		if (newDatabaseName) {
+			if (!page.streamSlug) {
+				let { streamSlug = parentPageSlug } = await put(
+					`pages/${page.parentPage?._id || page._id}/embed-stream`,
+					{
+						title: page.name
+					}
+				);
+
+				page.streamSlug = parentPageSlug;
+			}
+
+			const { streamSlug, project: newStream } = await put(
 				`pages/${page.parentPage?._id || page._id}/embed-stream`,
 				{
-					title: page.name
+					title: newDatabaseName,
+					hubStreamSlug: page.streamSlug
 				}
 			);
 
-			page.streamSlug = parentPageSlug;
+			childStreams = [newStream, ...childStreams];
+			newDatabaseName = '';
 		}
-
-		const { streamSlug, project: newStream } = await put(
-			`pages/${page.parentPage?._id || page._id}/embed-stream`,
-			{
-				title: newDatabaseName,
-				hubStreamSlug: page.streamSlug
-			}
-		);
-
-		childStreams = [newStream, ...childStreams];
-		newDatabaseName = '';
 	};
 </script>
 
@@ -100,7 +102,9 @@
 		</div>
 
 		{#if activeStream}
-			<EditStreamItems bind:stream={activeStream} />
+			{#key activeStream._id}
+				<EditStreamItems bind:stream={activeStream} />
+			{/key}
 		{/if}
 	</div>
 {/if}

@@ -49,7 +49,6 @@
 					streamSlug: categorySlug || section?.streamSlug,
 					forceRefresh: true,
 					isWithUrlOnly: true,
-					isWithImageOnly: true,
 					streamSettings: section.streamSettings
 				});
 			}

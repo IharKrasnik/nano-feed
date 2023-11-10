@@ -230,21 +230,23 @@
 						});
 					});
 
-					page.sections = page.sections.map((s) => {
-						s.title = replaceVariable({
-							str: s.title,
-							varName: variable.name,
-							varValue: page.variablesValues[variable.name]
-						});
+					if (page.sections?.length) {
+						page.sections = page.sections.map((s) => {
+							s.title = replaceVariable({
+								str: s.title,
+								varName: variable.name,
+								varValue: page.variablesValues[variable.name]
+							});
 
-						s.description = replaceVariable({
-							str: s.description,
-							varName: variable.name,
-							varValue: page.variablesValues[variable.name]
-						});
+							s.description = replaceVariable({
+								str: s.description,
+								varName: variable.name,
+								varValue: page.variablesValues[variable.name]
+							});
 
-						return s;
-					});
+							return s;
+						});
+					}
 				}
 			);
 		}
