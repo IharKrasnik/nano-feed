@@ -20,29 +20,6 @@ export async function load({ url, params, session, cookies }) {
 
 	const { subPageSlug } = params;
 
-	if (!currentDomain.includes('locahost')) {
-		if (currentDomain === 'mmntm.me' && !pageSlug) {
-			throw redirect(302, 'https://page.mmntm.build');
-		}
-
-		if (currentDomain === 'mmntm.page' && !pageSlug) {
-			throw redirect(302, 'https://ide.momentum.page');
-		}
-
-		if (currentDomain === 'ide.momentum.page' && pageSlug) {
-			throw redirect(302, `https://mmntm.page/${pageSlug}`);
-		}
-
-		if (!pageSlug) {
-			if (url.href.includes('.mmntm.page') || url.href.includes('.mmntm.live')) {
-				pageSlug = currentDomain;
-			} else if (currentDomain !== 'page.mmntm.build' && !currentDomain.includes('localhost')) {
-				pageSlug = currentDomain;
-			}
-		}
-	}
-
-	console.log('pageSlug', pageSlug);
 	let extend = {};
 	if (pageSlug) {
 		let page = await get(`pages/${subPageSlug || pageSlug}`, {
