@@ -29,7 +29,7 @@ export async function load({ url, params, session, cookies }) {
 	}
 
 	if (!pageSlug) {
-		if (url.href.includes('.mmntm.live')) {
+		if (url.href.includes('.mmntm.page') || url.href.includes('.mmntm.live')) {
 			pageSlug = currentDomain;
 		} else if (currentDomain !== 'page.mmntm.build' && !currentDomain.includes('localhost')) {
 			pageSlug = currentDomain;
