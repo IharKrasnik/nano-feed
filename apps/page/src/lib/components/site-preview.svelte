@@ -123,7 +123,7 @@
 	}
 
 	if (browser) {
-		if ($sveltePage.params.pageSlug) {
+		if ($sveltePage.data.pageSlug) {
 			window.document.body.style['background-color'] = page.theme?.backgroundColor || 'white';
 		} else {
 			window.document.body.style['background-color'] = null;
@@ -373,7 +373,7 @@
 							<div class="shrink-0 flex items-center">
 								{#if page.parentPage?.blog || page.blog}
 									<div class="mr-4 sm:mr-8">
-										<a href="/{page.parentPage?.slug || page.slug}/blog">Blog</a>
+										<a href="/blog">Blog</a>
 									</div>
 								{/if}
 
@@ -407,10 +407,7 @@
 							<div
 								class="px-4 sm:px-0 mb-4 _header-content flex md:justify-between items-center justify-center"
 							>
-								<a
-									class="flex items-center shrink-0 _logo"
-									href="/{page.parentPage?.slug || page.slug}"
-								>
+								<a class="flex items-center shrink-0 _logo" href="/">
 									{#if page?.logo && page.logo.startsWith('http')}
 										<Emoji class="mr-2" emoji={page.parentPage?.logo || page.logo} />
 									{/if}
@@ -426,13 +423,11 @@
 								<div class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold">
 									{#if !page.parentPage || page.parentPage?.subPages}
 										{#if page.parentPage?.blog || page.blog}
-											<a href="/{page.parentPage?.slug || page.slug}/blog">Blog</a>
+											<a href="/blog">Blog</a>
 										{/if}
 
 										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-											<a href="/{page.parentPage?.slug || page.slug}/{subPage.slug}"
-												>{subPage.name}</a
-											>
+											<a href="/{subPage.slug}">{subPage.name}</a>
 										{/each}
 									{/if}
 

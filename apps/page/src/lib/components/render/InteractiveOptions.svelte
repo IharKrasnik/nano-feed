@@ -266,9 +266,7 @@
 				<a
 					class="cursor-pointer"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
-					href={sectionItem.url?.startsWith('/')
-						? `/${page.parentPage?.slug || page.slug}${sectionItem.url}`
-						: sectionItem.url}
+					href={sectionItem.url?.startsWith('/') ? `/${sectionItem.url}` : sectionItem.url}
 					on:click={() =>
 						trackClick({
 							url: sectionItem.url,

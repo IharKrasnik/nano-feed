@@ -1,6 +1,12 @@
 <script>
+	import Page from '$lib/components/Page.svelte';
+	import Editor from '$lib/components/Editor.svelte';
+	import { get } from 'lib/api';
+	import currentPage from '$lib/stores/currentPage';
+	import { browser } from '$app/environment';
+	import Emoji from 'lib/components/Emoji.svelte';
 	import '../app.css';
-	import { page } from '$app/stores';
+	import { page as sveltePage } from '$app/stores';
 	import { onMount } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
 
@@ -13,42 +19,59 @@
 	import 'lazysizes';
 	// import a plugin 1
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
+
+	let prevSlug;
+
+	$currentPage = $sveltePage.data.page;
+	$currentPage._refreshTimestamp = +new Date();
+
+	$: if (
+		(!$sveltePage.params.subPageSlug &&
+			$sveltePage.data.pageSlug &&
+			$sveltePage.data.pageSlug !== prevSlug) ||
+		($sveltePage.params.subPageSlug && $sveltePage.params.subPageSlug !== prevSlug)
+	) {
+		prevSlug = $sveltePage.params.subPageSlug || $sveltePage.data.pageSlug;
+
+		$currentPage = $sveltePage.data.page;
+		$currentPage._refreshTimestamp = +new Date();
+	}
 </script>
 
 <svelte:head>
-	<title>{$page.data.ogTitle}</title>
+	<title>{$sveltePage.data.ogTitle}</title>
 
-	<meta name="title" content={$page.data.ogTitle} />
-	<meta name="description" content={$page.data.ogDescription} />
-	<meta name="og:description" content={$page.data.ogDescription} />
+	<meta name="title" content={$sveltePage.data.ogTitle} />
+	<meta name="description" content={$sveltePage.data.ogDescription} />
+	<meta name="og:description" content={$sveltePage.data.ogDescription} />
 
-	<meta name="twitter:title" content={$page.data.ogTitle} />
-	<meta name="twitter:description" content={$page.data.ogDescription} />
+	<meta name="twitter:title" content={$sveltePage.data.ogTitle} />
+	<meta name="twitter:description" content={$sveltePage.data.ogDescription} />
 	<meta name="twitter:card" content="summary_large_image" />
 
 	<meta
 		name="twitter:image"
-		content={$page.data.ogImage ||
+		content={$sveltePage.data.ogImage ||
 			'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
 	/>
 
 	<meta
 		name="og:image"
-		content={$page.data.ogImage ||
+		content={$sveltePage.data.ogImage ||
 			'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
 	/>
 
-	{#if $page.data?.page?.customCode}
-		{@html $page.data.page.customCode}
+	{#if $sveltePage.data?.page?.customCode}
+		{@html $sveltePage.data.page.customCode}
 	{/if}
 
-	{#if $page.data?.page?.logo}
-		{#if isUrl($page.data.page.logo)}
-			<link rel="icon" href={$page.data.page.logo} />
+	{#if $sveltePage.data?.page?.logo}
+		{#if isUrl($sveltePage.data.page.logo)}
+			<link rel="icon" href={$sveltePage.data.page.logo} />
 		{:else}
 			<link
 				rel="icon"
-				href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{$page
+				href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{$sveltePage
 					.data.page.logo}</text></svg>"
 			/>
 		{/if}
@@ -60,13 +83,18 @@
 <SvelteToast />
 
 <div id="modal-portal" />
-
 {#if !$isUserLoading}
 	<div class="relative" style="	">
+		{#if $sveltePage.data.pageSlug}
+			<Page />
+		{:else}
+			<Editor />
+		{/if}
+
 		<slot />
 	</div>
 {/if}
 
-<div class:hidden={!($currentUser && !$page.params.pageSlug && !$sectionToEdit)}>
+<div class:hidden={!($currentUser && !$sveltePage.data.pageSlug && !$sectionToEdit)}>
 	<Dock activeIcon="page" />
 </div>

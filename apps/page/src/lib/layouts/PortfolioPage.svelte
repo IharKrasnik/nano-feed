@@ -140,7 +140,7 @@
 							: 'w-[128px] h-[128px] mt-[-64px]'} mr-6 mb-4"
 					>
 						{#if page.demoUrl || page.parentPage?.demoUrl}
-							<a href="/{page.parentPage?.slug || page.slug}">
+							<a href="/">
 								<RenderUrl
 									imgClass="transition rounded-full w-full {page.parentPage
 										? 'grayscale hover:grayscale-0'

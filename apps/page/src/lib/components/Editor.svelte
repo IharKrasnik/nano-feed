@@ -567,7 +567,7 @@
 	</Modal>
 {/if}
 
-{#if !$sveltePage.params.pageSlug}
+{#if !$sveltePage.data.pageSlug}
 	{#if !$currentUser || $allPages}
 		<div class="fixed w-full" />
 
@@ -1139,9 +1139,7 @@
 											href={page.domains?.length &&
 											page.domains.filter((d) => d.isConfigured).length
 												? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
-												: `${PAGE_URL}/${page.parentPage?.slug ? `${page.parentPage.slug}/` : ''}${
-														page.slug
-												  }`}
+												: `${PAGE_URL}/${page.slug}`}
 											class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
 											style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
 											target="_blank"
@@ -1165,7 +1163,7 @@
 												{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
 													{page.domains.filter((d) => d.isConfigured)[0].url}
 												{:else}
-													{page.parentPage?.slug ? `/${page.parentPage.slug}/` : '/'}{page.slug}
+													/{page.slug}
 												{/if}
 											</div>
 										</a>

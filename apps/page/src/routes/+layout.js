@@ -12,56 +12,58 @@ let getDomain = (href) => {
 };
 
 export async function load({ url, params, session, cookies }) {
-	let { pageSlug, subPageSlug } = params;
-
 	let currentDomain = getDomain(url.href);
+	let pageSlug = url.searchParams.get('pageSlug') || currentDomain;
+	const { subPageSlug } = params;
 
-	if (currentDomain === 'mmntm.me' && !pageSlug) {
-		throw redirect(302, 'https://page.mmntm.build');
-	}
+	if (!currentDomain.includes('locahost')) {
+		if (currentDomain === 'mmntm.me' && !pageSlug) {
+			throw redirect(302, 'https://page.mmntm.build');
+		}
 
-	if (currentDomain === 'mmntm.page' && !pageSlug) {
-		throw redirect(302, 'https://ide.momentum.page');
-	}
+		if (currentDomain === 'mmntm.page' && !pageSlug) {
+			throw redirect(302, 'https://ide.momentum.page');
+		}
 
-	if (currentDomain === 'ide.momentum.page' && pageSlug) {
-		throw redirect(302, `https://mmntm.page/${pageSlug}`);
-	}
+		if (currentDomain === 'ide.momentum.page' && pageSlug) {
+			throw redirect(302, `https://mmntm.page/${pageSlug}`);
+		}
 
-	if (!pageSlug) {
-		if (url.href.includes('.mmntm.page') || url.href.includes('.mmntm.live')) {
-			pageSlug = currentDomain;
-		} else if (currentDomain !== 'page.mmntm.build' && !currentDomain.includes('localhost')) {
-			pageSlug = currentDomain;
+		if (!pageSlug) {
+			if (url.href.includes('.mmntm.page') || url.href.includes('.mmntm.live')) {
+				pageSlug = currentDomain;
+			} else if (currentDomain !== 'page.mmntm.build' && !currentDomain.includes('localhost')) {
+				pageSlug = currentDomain;
+			}
 		}
 	}
 
 	let extend = {};
 
-	// if (pageSlug) {
-	// 	let page = await get(`pages/${subPageSlug || pageSlug}`, {
-	// 		parentPageSlug: subPageSlug ? pageSlug : '',
-	// 		isServer: true
-	// 	});
+	if (pageSlug) {
+		let page = await get(`pages/${subPageSlug || pageSlug}`, {
+			parentPageSlug: subPageSlug ? pageSlug : '',
+			isServer: true
+		});
 
-	// 	let metaTags = getPageMetaTags({ page });
-	// 	//s
-	// 	extend = {
-	// 		page,
-	// 		ogTitle: metaTags.title,
-	// 		ogDescription: metaTags.description,
-	// 		ogImage: metaTags.image
-	// 	};
-	// } else {
-	// 	extend = {
-	// 		ogTitle: `Momentum Page`,
-	// 		ogDescription: `Grow your startup: launch landing pages, collect waitlist, create, connect with your audience, sell.`,
-	// 		ogImage:
-	// 			'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
-	// 	};
-	// }
+		let metaTags = getPageMetaTags({ page });
+		//s
+		extend = {
+			page,
+			ogTitle: metaTags.title,
+			ogDescription: metaTags.description,
+			ogImage: metaTags.image
+		};
+	} else {
+		extend = {
+			ogTitle: `Momentum Page`,
+			ogDescription: `Grow your startup: launch landing pages, collect waitlist, create, connect with your audience, sell.`,
+			ogImage:
+				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
+		};
+	}
 
 	let authData = await authClientGuard({ url, params, session }, 'Momentum IDE');
 
-	return { ...authData, ...extend };
+	return { ...authData, ...extend, pageSlug };
 }

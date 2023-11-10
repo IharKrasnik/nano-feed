@@ -38,7 +38,7 @@
 					title,
 					description: subtitle,
 					imageUrl: demoUrl,
-					url: `/${page.parentPage?.slug || page.slug}/blog/post/${slug}`
+					url: `/blog/post/${slug}`
 				};
 			});
 		} else {

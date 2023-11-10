@@ -2,34 +2,42 @@ import authServerGuard from 'lib/guards/auth.server';
 import { BRAND_URL } from 'lib/env';
 import { get } from 'lib/api';
 
+let getDomain = (href) => {
+	let res = /:\/\/([^\/]+)/.exec(href);
+	return (res && res[1]) || href;
+};
+
 export async function load({ url, params, session, cookies }) {
-	const { pageSlug, subPageSlug } = params;
+	let domain = getDomain(url.href);
+	let pageSlug = url.searchParams.get('pageSlug') || domain;
+	const { subPageSlug } = params;
 
-	let extend = {};
+	let extend = {
+		pageSlug
+	};
 
-	// if (pageSlug) {
-	// 	let page = await get(`pages/${subPageSlug || pageSlug}`, {
-	// 		parentPageSlug: subPageSlug ? pageSlug : '',
-	// 		isServer: true
-	// 	});
+	if (pageSlug) {
+		let page = await get(`pages/${subPageSlug || pageSlug}`, {
+			parentPageSlug: subPageSlug ? pageSlug : '',
+			isServer: true
+		});
 
-	// 	extend = {
-	// 		page,
-	// 		ogTitle: `${page.name} — ${page.title}`,
-	// 		ogDescription: `${page.subtitle || page.callToAction || ''}`,
-	// 		ogImage: page.demoUrl || `${BRAND_URL}/og.png?pageId=${page._id}`
-	// 	};
-	// } else {
-	// 	extend = {
-	// 		ogTitle: `Momentum Page`,
-	// 		ogDescription: `Grow your startup: launch landing pages, collect waitlist, create, connect with your audience, sell.`,
-	// 		ogImage:
-	// 			'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
-	// 	};
-	// }
+		extend = {
+			page,
+			ogTitle: `${page.name} — ${page.title}`,
+			ogDescription: `${page.subtitle || page.callToAction || ''}`,
+			ogImage: page.demoUrl || `${BRAND_URL}/og.png?pageId=${page._id}`
+		};
+	} else {
+		extend = {
+			ogTitle: `Momentum Page`,
+			ogDescription: `Grow your startup: launch landing pages, collect waitlist, create, connect with your audience, sell.`,
+			ogImage:
+				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
+		};
+	}
 
 	let authData = await authServerGuard({ url, params, session, cookies }, 'Momentum IDE');
-
-	console.log('authData', { ...authData, ...extend });
-	return { ...authData, ...extend };
+	console.log('pageSlug', extend);
+	return { ...authData, ...extend, pageSlug };
 }
