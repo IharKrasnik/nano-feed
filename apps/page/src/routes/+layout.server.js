@@ -8,15 +8,21 @@ let getDomain = (href) => {
 };
 
 export async function load({ url, params, session, cookies }) {
-	let domain = getDomain(url.href);
-	let pageSlug = url.searchParams.get('pageSlug') || domain;
+	let currentDomain = getDomain(url.href);
+
+	let pageSlug = currentDomain.includes('localhost')
+		? url.searchParams.get('pageSlug')
+		: currentDomain;
+
 	const { subPageSlug } = params;
 
 	let extend = {
 		pageSlug
 	};
 
-	if (pageSlug) {
+	console.log('asdasdasdasdasda', extend);
+
+	if (false || pageSlug) {
 		let page = await get(`pages/${subPageSlug || pageSlug}`, {
 			parentPageSlug: subPageSlug ? pageSlug : '',
 			isServer: true
@@ -38,6 +44,6 @@ export async function load({ url, params, session, cookies }) {
 	}
 
 	let authData = await authServerGuard({ url, params, session, cookies }, 'Momentum IDE');
-	console.log('pageSlug', extend);
+
 	return { ...authData, ...extend, pageSlug };
 }

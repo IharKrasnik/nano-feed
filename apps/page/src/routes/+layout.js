@@ -13,7 +13,11 @@ let getDomain = (href) => {
 
 export async function load({ url, params, session, cookies }) {
 	let currentDomain = getDomain(url.href);
-	let pageSlug = url.searchParams.get('pageSlug') || currentDomain;
+
+	let pageSlug = currentDomain.includes('localhost')
+		? url.searchParams.get('pageSlug')
+		: currentDomain;
+
 	const { subPageSlug } = params;
 
 	if (!currentDomain.includes('locahost')) {
@@ -38,8 +42,8 @@ export async function load({ url, params, session, cookies }) {
 		}
 	}
 
+	console.log('pageSlug', pageSlug);
 	let extend = {};
-
 	if (pageSlug) {
 		let page = await get(`pages/${subPageSlug || pageSlug}`, {
 			parentPageSlug: subPageSlug ? pageSlug : '',

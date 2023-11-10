@@ -23,7 +23,10 @@
 	let prevSlug;
 
 	$currentPage = $sveltePage.data.page;
-	$currentPage._refreshTimestamp = +new Date();
+
+	if ($currentPage) {
+		$currentPage._refreshTimestamp = +new Date();
+	}
 
 	$: if (
 		(!$sveltePage.params.subPageSlug &&
