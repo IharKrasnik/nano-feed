@@ -141,7 +141,7 @@
 		$refreshConditionsTimestamp = +new Date();
 	};
 
-	let emailAddress;
+	let emailAddress = $currentCustomer.email;
 
 	let submitEmail = async () => {
 		$currentCustomer.email = emailAddress;
@@ -227,7 +227,7 @@
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'email'}
 			{#if $currentCustomer.email}
-				<div>
+				<div class={clazz?.includes('mx-auto') ? 'mx-auto' : ''}>
 					<div>👏 Thank you!</div>
 					<div
 						class="text-sm cursor-pointer opacity-80"
@@ -247,7 +247,7 @@
 					>
 						<input
 							placeholder="myemail@gmail.com"
-							bind:value={$currentCustomer.email}
+							bind:value={emailAddress}
 							class="_input _email-input w-full"
 						/>
 						<button type="submit" class="_input_button _wide absolute"
