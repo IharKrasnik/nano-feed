@@ -268,7 +268,7 @@ Follow my updates here:`,
 			<div>
 				<div class="font-bold mt-4">
 					Launch a new website with
-					<a href="https://page.mmntm.build" target="_blank" rel="noreferrer"> Momentum Page </a>
+					<a href="https://page.mmntm.build" target="_blank" rel="noreferrer"> Momentum IDE </a>
 				</div>
 			</div>
 		</div>

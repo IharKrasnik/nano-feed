@@ -542,12 +542,12 @@
 {#if isTutorialShown}
 	<Modal isShown>
 		<div class="p-8 bg-[#fafafa]">
-			<h1 class="text-xl mb-4 font-bold">Get started with Momentum Page ✨</h1>
+			<h1 class="text-xl mb-4 font-bold">Get started with Momentum IDE ✨</h1>
 			<div class="text-lg">
 				Congrats! You just published your first page 🥳<br />
 
 				<div class="mt-2">
-					Momentum Page is a super-simple landing page builder that helps you get to product-market
+					Momentum IDE is a super-simple landing page builder that helps you get to product-market
 					fit faster.<br />
 
 					Check out this video to learn how to see views analytics, collect emails and edit
@@ -918,9 +918,7 @@
 												<div class="">
 													<div class="font-bold">Design your product with Momentum team</div>
 
-													<div class="text-sm">
-														Working with us is as easy as using Momentum Page
-													</div>
+													<div class="text-sm">Working with us is as easy as using Momentum</div>
 												</div>
 											</div>
 											<a

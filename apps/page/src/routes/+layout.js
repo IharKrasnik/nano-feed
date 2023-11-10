@@ -20,8 +20,12 @@ export async function load({ url, params, session, cookies }) {
 		throw redirect(302, 'https://page.mmntm.build');
 	}
 
-	if (currentDomain === 'page.mmntm.build' && pageSlug) {
-		throw redirect(302, `https://mmntm.me/${pageSlug}`);
+	if (currentDomain === 'mmntm.page' && !pageSlug) {
+		throw redirect(302, 'https://ide.momentum.page');
+	}
+
+	if (currentDomain === 'ide.momentum.page' && pageSlug) {
+		throw redirect(302, `https://mmntm.page/${pageSlug}`);
 	}
 
 	if (!pageSlug) {
@@ -57,7 +61,7 @@ export async function load({ url, params, session, cookies }) {
 	// 	};
 	// }
 
-	let authData = await authClientGuard({ url, params, session }, 'Momentum Page');
+	let authData = await authClientGuard({ url, params, session }, 'Momentum IDE');
 
 	return { ...authData, ...extend };
 }

@@ -16,7 +16,7 @@ export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.b
 
 export const BRAND_URL = dev ? 'http://localhost:5173' : 'https://brand.mmntm.build';
 
-export const PAGE_URL = dev ? 'http://localhost:5177' : 'https://mmntm.me';
+export const PAGE_URL = dev ? 'http://localhost:5177' : 'https://mmntm.page';
 
 export const POST_URL = dev ? 'http://localhost:5179' : 'https://mmntm.blog';
 
