@@ -16,7 +16,6 @@ if (browser) {
 		if (store) {
 			store.updatedOn = new Date();
 		}
-
 		if (!store.vars) {
 			store.vars = {};
 		}

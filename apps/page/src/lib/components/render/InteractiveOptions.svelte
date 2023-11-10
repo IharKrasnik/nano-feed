@@ -54,6 +54,8 @@
 		return foundAnswer ? foundAnswer.count : 0;
 	};
 
+	let isResetEmail;
+
 	let submitAnswer = (answer) => {
 		$refreshConditionsTimestamp = +new Date();
 
@@ -144,6 +146,7 @@
 	let emailAddress = $currentCustomer.email;
 
 	let submitEmail = async () => {
+		isResetEmail = false;
 		$currentCustomer.email = emailAddress;
 		let submission = await post(`pages/${page.slug}/submissions`, { email: emailAddress });
 
@@ -226,14 +229,14 @@
 				</div>
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'email'}
-			{#if $currentCustomer.email}
+			{#if $currentCustomer.email && !isResetEmail}
 				<div class={clazz?.includes('mx-auto') ? 'mx-auto' : ''}>
 					<div>👏 Thank you!</div>
 					<div
 						class="text-sm cursor-pointer opacity-80"
 						on:click={() => {
-							isEmailSubmitted = false;
-							emailAddress = submittedEmail;
+							isResetEmail = true;
+							emailAddress = $currentCustomer.email;
 						}}
 					>
 						Your email is {$currentCustomer.email}
@@ -250,16 +253,16 @@
 							bind:value={emailAddress}
 							class="_input _email-input w-full"
 						/>
-						<button type="submit" class="_input_button _wide absolute"
+						<button type="submit" class="_input_button _wide text-center sm:absolute"
 							>{sectionItem.callToActionText || 'Subscribe'}</button
 						>
 					</form>
 				</div>
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
-			<div class="flex gap-6 items-center">
+			<div class="flex flex-col w-full sm:w-auto sm:flex-row gap-6 items-center">
 				<a
-					class="cursor-pointer"
+					class="cursor-pointer w-full sm:w-auto"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					href={sectionItem.url}
 					on:click={() =>
@@ -269,7 +272,7 @@
 						})}
 				>
 					{#if sectionItem.isUrlButton}
-						<button>{sectionItem.callToActionText || 'Learn More'}</button>
+						<button class="w-full">{sectionItem.callToActionText || 'Learn More'}</button>
 					{:else}
 						{sectionItem.callToActionText || 'Learn More'}
 					{/if}
@@ -277,7 +280,7 @@
 
 				{#if sectionItem.interactiveRenderType === 'links'}
 					<a
-						class="cursor-pointer"
+						class="w-full sm:w-auto cursor-pointer"
 						target={sectionItem.url2.startsWith('http') ? '_blank' : ''}
 						href={sectionItem.url2.startsWith('/')
 							? `/${page.parentPage?.slug || page.slug}${sectionItem.url2}`
@@ -289,7 +292,7 @@
 							})}
 					>
 						{#if sectionItem.isUrl2Button}
-							<button class:_alternative={sectionItem.isUrlButton}
+							<button class="w-full" class:_alternative={sectionItem.isUrlButton}
 								>{sectionItem.callToActionText2 || 'Learn More'}</button
 							>
 						{:else}

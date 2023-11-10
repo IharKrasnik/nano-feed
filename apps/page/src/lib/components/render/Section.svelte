@@ -239,7 +239,7 @@
 				? clazz
 				: section.renderType === 'article'
 				? 'px-8 sm:pb-16'
-				: `${section.items?.length || isFooter ? 'p-8 sm:pt-16' : 'p-8 sm:py-32'}`}"
+				: `${section.items?.length ? `${isFooter ? 'p-0' : 'p-8'} sm:pt-16` : 'p-8 sm:py-32'}`}"
 			style="z-index: 10; {style || ''}"
 		>
 			{#if section.type === 'form'}

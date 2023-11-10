@@ -502,8 +502,9 @@
 											class="_content {page.theme?.heroBgImage ? 'light-colors' : ''} {page.theme
 												?.isHeroVertical
 												? ''
-												: ''} h-full {page.sections?.length ? 'pb-16' : 'pb-16'} sm:pt-36 {!page
-												.testimonials?.length
+												: ''} h-full {page.sections?.length
+												? 'pb-16'
+												: 'pb-16'} pt-16 sm:pt-36 {!page.testimonials?.length
 												? `flex items-center`
 												: ''}"
 											style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
@@ -574,7 +575,7 @@
 																: 'flex justify-center w-full'} }"
 														>
 															<div>
-																<div class="flex flex-col sm:flex-row gap-2">
+																<div class="flex gap-2">
 																	{#each _.shuffle(page.socialProof.logos) as logo}
 																		<img class="w-[50px] h-[50px] rounded-full" src={logo.url} />
 																	{/each}
