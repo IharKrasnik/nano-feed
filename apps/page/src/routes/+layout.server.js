@@ -10,17 +10,16 @@ let getDomain = (href) => {
 export async function load({ url, params, session, cookies }) {
 	let currentDomain = getDomain(url.href);
 
-	let pageSlug = currentDomain.includes('localhost')
-		? url.searchParams.get('pageSlug')
-		: currentDomain;
+	let pageSlug =
+		currentDomain.includes('localhost') || currentDomain.includes('ide.momentum.page')
+			? url.searchParams.get('pageSlug')
+			: currentDomain;
 
 	const { subPageSlug } = params;
 
 	let extend = {
 		pageSlug
 	};
-
-	console.log('asdasdasdasdasda', extend);
 
 	if (false || pageSlug) {
 		let page = await get(`pages/${subPageSlug || pageSlug}`, {
