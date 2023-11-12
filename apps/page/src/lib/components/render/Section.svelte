@@ -214,7 +214,7 @@
 		class="sm:col-span-1 sm:col-span-2 sm:col-span-3 sm:col-span-4 sm:col-span-5 sm:col-span-6 sm:col-span-7 sm:col-span-8 sm:col-span-9 sm:col-span-10 sm:col-span-11 sm:col-span-12"
 	/>
 	<div
-		class="row-span-1 row-span-2 row-span-3 row-span-4 row-span-5 row-span-6 row-span-7 row-span-8"
+		class="line-clamp-4 hover:line-clamp-5 row-span-1 row-span-2 row-span-3 row-span-4 row-span-5 row-span-6 row-span-7 row-span-8"
 	/>
 {/if}
 
@@ -676,10 +676,12 @@
 															<h3
 																class="{descriptionStyle[
 																	section.columns
-																]} _item-description whitespace-pre-wrap"
+																]} _item-description whitespace-pre-wrap "
 															>
 																<ContentEditableIf
-																	class=""
+																	class={section.renderType === 'feed'
+																		? 'line-clamp-4 hover:line-clamp-5'
+																		: ''}
 																	bind:innerHTML={item.description}
 																	condition={isEdit}
 																/>
@@ -848,5 +850,12 @@
 
 	._item-description {
 		color: var(--section-description-text-color);
+	}
+
+	.line-clamp-4 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 4;
 	}
 </style>

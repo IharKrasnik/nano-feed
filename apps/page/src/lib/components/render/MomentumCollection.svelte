@@ -15,6 +15,7 @@
 	let isFeedLoading = true;
 
 	let databaseSection = {
+		renderType: 'feed',
 		columns: section.columns,
 		items: [],
 		linkType: 'interactive'

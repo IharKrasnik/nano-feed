@@ -115,7 +115,7 @@
 					loop
 					autoplay
 				/>
-			{:else if url.includes('.jpg') || url.includes('.jpeg') || url.includes('png')}
+			{:else if url.includes('.jpg') || url.includes('.jpeg') || url.includes('png') || url.includes('webp')}
 				{#key url}
 					{#if isLazy}
 						<img class="{imgClass} lazyload" data-src={url} />
