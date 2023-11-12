@@ -76,6 +76,10 @@
 		);
 	};
 
+	if (!isEdit) {
+		replaceVars();
+	}
+
 	$: if ($feedCache[section.id]) {
 		databaseSection.items = $feedCache[section.id].feed.map(
 			({ _id, title, content, attachments, logoUrl, url }) => {
