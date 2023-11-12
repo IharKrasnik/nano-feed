@@ -257,7 +257,7 @@
 								? `absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
 								: ''} {page.theme?.isTitlesHuge ? 'text-[70px]' : ''}"
 						>
-							<Emoji color={'white'} class="grayscale" bind:emoji={section.emoji} />
+							<Emoji color={'white'} bind:emoji={section.emoji} />
 						</div>
 					{/if}
 
@@ -776,7 +776,7 @@
 	}
 
 	.grayscale-emoji {
-		filter: grayscale(0.8);
+		/* filter: grayscale(0.8); */
 	}
 
 	/* .description {

@@ -103,7 +103,7 @@
 	</div>
 {/if}
 
-{#if isEdit || isFormSubmitted}
+{#if section.actionSuccessSection && (isEdit || isFormSubmitted)}
 	<div in:fly={{ y: 50, duration: 150 }}>
 		<RenderSection section={section.actionSuccessSection} {page} />
 	</div>
