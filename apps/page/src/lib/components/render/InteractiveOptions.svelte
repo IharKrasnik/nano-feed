@@ -310,9 +310,7 @@
 					<a
 						class="w-full sm:w-auto cursor-pointer"
 						target={sectionItem.url2?.startsWith('http') ? '_blank' : ''}
-						href={sectionItem.url2?.startsWith('/')
-							? `/${page.parentPage?.slug || page.slug}${sectionItem.url2}`
-							: sectionItem.url2}
+						href={sectionItem.url2?.startsWith('/') ? `${sectionItem.url2}` : sectionItem.url2}
 						on:click={(evt) => {
 							trackClick({
 								url: sectionItem.url2,
