@@ -95,7 +95,7 @@
 				{:else}
 					<VimeoIcon class="w-[45px] opacity-50" />
 				{/if}
-			{:else if url.includes('.mp4') || url.includes('mov')}
+			{:else if url.includes('.mp4') || url.includes('.mov')}
 				{log()}
 				<video
 					class="w-full mx-auto {imgClass}"
@@ -115,7 +115,7 @@
 					loop
 					autoplay
 				/>
-			{:else}
+			{:else if url.includes('.jpg') || url.includes('.jpeg') || url.includes('png')}
 				{#key url}
 					{#if isLazy}
 						<img class="{imgClass} lazyload" data-src={url} />
@@ -123,6 +123,8 @@
 						<img class={imgClass} src={url} />
 					{/if}
 				{/key}
+			{:else}
+				<iframe src={url} class="w-full h-full" />
 			{/if}
 		</div>
 	{:else}

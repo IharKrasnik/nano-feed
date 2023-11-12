@@ -22,7 +22,6 @@
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
 	import Gradients from '$lib/components/gradients/index.svelte';
-	import PostPreview from 'lib/components/post/PostPreview.svelte';
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';

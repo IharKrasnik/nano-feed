@@ -86,6 +86,7 @@
 <SvelteToast />
 
 <div id="modal-portal" />
+<div id="popup-portal" />
 {#if !$isUserLoading}
 	<div class="relative" style="	">
 		{#if $sveltePage.data.pageSlug}

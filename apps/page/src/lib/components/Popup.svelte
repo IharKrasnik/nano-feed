@@ -1,0 +1,113 @@
+<script>
+	import { fly } from 'svelte/transition';
+	import portal from 'lib/use/portal';
+	import CrossSvg from 'lib/icons/cross.svelte';
+	import clickOutside from 'lib/use/clickOutside';
+
+	export let isShown;
+	export let isClosable = true;
+	export let isFixed = true;
+	export let maxWidth = 1080;
+	export let zIndex = 2000;
+	export let onClosed = () => {};
+
+	export let page;
+
+	const closePopup = () => {
+		isShown = false;
+		onClosed();
+	};
+
+	const handleKeydown = (evt) => {
+		if (isShown && evt.key === 'Escape') {
+			closePopup();
+		}
+	};
+</script>
+
+<svelte:window on:keydown={handleKeydown} />
+
+{#if isShown}
+	<div use:portal={'#popup-portal'}>
+		<div
+			in:fly={{ y: 50, duration: 150, delay: 150 }}
+			class="inset-0 overflow-y-hidden rounded-2xl max-h-[100%] py-8 {page?.theme.theme === 'dark'
+				? '_dark'
+				: '_light'}"
+			aria-labelledby="popup-title"
+			role="dialog"
+			aria-modal="true"
+			class:hidden={!isShown}
+			class:fixed={isFixed}
+			class:absolute={!isFixed}
+			style="z-index: {zIndex}"
+		>
+			<div class="flex items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+				<div class="absolute _popup-backdrop inset-0 transition-opacity" aria-hidden="true" />
+
+				<div
+					class="popup-content max-h-full overflow-y-auto absolute inline-block align-bottom rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
+					use:clickOutside
+					on:clickOutside={closePopup}
+					style={maxWidth ? `max-width: ${maxWidth}px;` : ''}
+				>
+					{#if isClosable}
+						<div class="_cross" on:click={closePopup}>
+							<CrossSvg />
+						</div>
+					{/if}
+					<div class="_popup-contents">
+						<slot />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<style>
+	.backdrop {
+		/* backdrop-filter: blur(3px); */
+		background-color: rgba(0, 0, 0, 0);
+	}
+	.popup-content {
+		z-index: 1000;
+	}
+
+	._cross {
+		cursor: pointer;
+		opacity: 0.7;
+		transition: opacity 0.3;
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		width: 25px;
+	}
+	._cross:hover {
+		opacity: 1;
+	}
+
+	._dark ._popup-backdrop {
+		/* display: none; */
+		background: rgba(0, 0, 0, 0.8);
+	}
+
+	._light ._popup-backdrop {
+		background: rgba(255, 255, 255, 0.8);
+	}
+
+	.popup-content {
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		width: calc(100% - 32px);
+	}
+
+	._dark ._popup-contents {
+		background: #111;
+	}
+
+	._light ._popup-contents {
+		background: #fff;
+	}
+</style>

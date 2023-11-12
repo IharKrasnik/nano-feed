@@ -5,6 +5,9 @@
 	import { post } from 'lib/api';
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import Emoji from '$lib/components/render/Emoji.svelte';
+	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
+	import Popup from '$lib/components/Popup.svelte';
+	import RenderUrl from 'lib/components/RenderUrl.svelte';
 
 	export let page;
 
@@ -51,6 +54,8 @@
 	};
 
 	let isResetEmail;
+
+	let popupEmbedUrl;
 
 	let submitAnswer = (answer) => {
 		$refreshConditionsTimestamp = +new Date();
@@ -168,6 +173,12 @@
 	};
 </script>
 
+{#if popupEmbedUrl}
+	<Popup {page} maxWidth={0} isShown onClosed={() => (popupEmbedUrl = null)}
+		><RenderUrl isAutoplay url={popupEmbedUrl} /></Popup
+	>
+{/if}
+
 {#if sectionItem}
 	<div class="{clazz} flex flex-wrap ">
 		{#if sectionItem.interactiveRenderType === 'single_choice'}
@@ -271,11 +282,17 @@
 					class="cursor-pointer w-full sm:w-auto"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					href={sectionItem.url}
-					on:click={() =>
+					on:click={(evt) => {
 						trackClick({
 							url: sectionItem.url,
 							callToActionText: sectionItem.callToActionText
-						})}
+						});
+
+						if (isUrlEmbeddable(sectionItem.url)) {
+							evt.preventDefault();
+							popupEmbedUrl = sectionItem.url;
+						}
+					}}
 				>
 					{#if sectionItem.isUrlButton}
 						<button class="w-full flex items-center">
@@ -296,11 +313,17 @@
 						href={sectionItem.url2?.startsWith('/')
 							? `/${page.parentPage?.slug || page.slug}${sectionItem.url2}`
 							: sectionItem.url2}
-						on:click={() =>
+						on:click={(evt) => {
 							trackClick({
 								url: sectionItem.url2,
 								callToActionText: sectionItem.callToActionText2
-							})}
+							});
+
+							if (isUrlEmbeddable(sectionItem.url2)) {
+								evt.preventDefault();
+								popupEmbedUrl = sectionItem.url2;
+							}
+						}}
 					>
 						{#if sectionItem.isUrl2Button}
 							<button class="w-full flex items-center" class:_alternative={sectionItem.isUrlButton}>
