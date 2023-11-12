@@ -93,7 +93,7 @@
 	</div>
 {/if}
 
-{#if section.ctaExplainer}
+{#if section.ctaExplainer && !isFormSubmitted}
 	<div class="text-sm mt-2 w-full text-center">{section.ctaExplainer}</div>
 {/if}
 
