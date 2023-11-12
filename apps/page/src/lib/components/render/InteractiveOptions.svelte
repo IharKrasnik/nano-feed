@@ -4,15 +4,11 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { post } from 'lib/api';
 	import currentCustomer from 'lib/stores/currentCustomer';
+	import Emoji from '$lib/components/render/Emoji.svelte';
 
 	export let page;
 
-	export let sectionItem = {
-		id: page._id,
-		interactiveRenderType: page.isCollectEmails ? 'email' : 'button',
-		callToActionText: page.callToAction,
-		url: page.url
-	};
+	export let sectionItem;
 
 	export let parentSectionId;
 	export let itemClass = 'p-4 mx-4';
@@ -258,9 +254,19 @@
 						>
 					</form>
 				</div>
+
+				{#if sectionItem.ctaExplainer}
+					<div class="text-sm mt-4 max-w-[400px]">{@html sectionItem.ctaExplainer}</div>
+				{/if}
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
-			<div class="flex flex-col w-full sm:w-auto sm:flex-row gap-6 items-center">
+			<div
+				class="flex flex-col w-full sm:w-auto sm:flex-row gap-6 items-center {clazz?.includes(
+					'mx-auto'
+				)
+					? 'mx-auto'
+					: ''}"
+			>
 				<a
 					class="cursor-pointer w-full sm:w-auto"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
@@ -272,7 +278,12 @@
 						})}
 				>
 					{#if sectionItem.isUrlButton}
-						<button class="w-full">{sectionItem.callToActionText || 'Learn More'}</button>
+						<button class="w-full flex items-center">
+							{#if sectionItem.urlIcon}
+								<Emoji class="mr-2" emoji={sectionItem.urlIcon} />
+							{/if}
+							{sectionItem.callToActionText || 'Learn More'}
+						</button>
 					{:else}
 						{sectionItem.callToActionText || 'Learn More'}
 					{/if}
@@ -281,8 +292,8 @@
 				{#if sectionItem.interactiveRenderType === 'links'}
 					<a
 						class="w-full sm:w-auto cursor-pointer"
-						target={sectionItem.url2.startsWith('http') ? '_blank' : ''}
-						href={sectionItem.url2.startsWith('/')
+						target={sectionItem.url2?.startsWith('http') ? '_blank' : ''}
+						href={sectionItem.url2?.startsWith('/')
 							? `/${page.parentPage?.slug || page.slug}${sectionItem.url2}`
 							: sectionItem.url2}
 						on:click={() =>
@@ -292,9 +303,12 @@
 							})}
 					>
 						{#if sectionItem.isUrl2Button}
-							<button class="w-full" class:_alternative={sectionItem.isUrlButton}
-								>{sectionItem.callToActionText2 || 'Learn More'}</button
-							>
+							<button class="w-full flex items-center" class:_alternative={sectionItem.isUrlButton}>
+								{#if sectionItem.url2Icon}
+									<Emoji class="mr-2" emoji={sectionItem.url2Icon} />
+								{/if}
+								{sectionItem.callToActionText2 || 'Learn More'}
+							</button>
 						{:else}
 							{sectionItem.callToActionText2 || 'Learn More'}
 						{/if}

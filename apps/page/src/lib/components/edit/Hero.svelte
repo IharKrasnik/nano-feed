@@ -9,12 +9,14 @@
 	import autofocus from 'lib/use/autofocus';
 	import { goto } from '$app/navigation';
 	import { page as sveltePage } from '$app/stores';
+	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 
 	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
 
 	import { get, post, put } from 'lib/api';
 
 	import loginWithGoogle from 'lib/helpers/loginWithGoogle';
+	import striptags from 'striptags';
 
 	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
@@ -54,69 +56,161 @@
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 
-	export let hero;
-	let page = hero;
+	let clazz = '';
+	export { clazz as class };
+	export let isShowTips = true;
 
-	$: page = hero;
+	export let page;
+	export let hero;
+
+	if (!hero.theme) {
+		hero.theme = {};
+	}
 
 	export let focuses;
 
 	export let isCollapsed = true;
+
+	let isSettingsShown = false;
+
+	let showSettings = () => {
+		isSettingsShown = true;
+	};
+
+	let deleteHero = () => {
+		if (confirm('This Hero section will be deleted')) {
+			page.heros = page.heros.filter((h) => h.id !== hero.id);
+			page.activeHero = page.heros[0];
+		}
+	};
 </script>
 
-<div
-	class="_section flex items-center justify-between cursor-pointer"
-	on:click={() => (isCollapsed = !isCollapsed)}
->
-	Header
+{#if isCollapsed}
+	<div
+		class="{isCollapsed
+			? '_section '
+			: 'py-4'} flex items-center justify-between cursor-pointer {clazz}"
+		on:click={() => {
+			page.activeHero = hero;
 
-	{#if isCollapsed}
-		<div class="flex items-center">
-			<FeatherIcon class="mr-2" size="15" name="eye" /> Expand
-		</div>
-	{:else}
-		<div class="flex items-center">
-			<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse Header
-		</div>
-	{/if}
-</div>
-{#if !isCollapsed && (page.name || page.parentPage)}
-	<div class="_section">
-		<div class="_title flex items-center justify-between">
-			<div>Tagline</div>
-
-			{#if page.theme}
-				<div class="flex font-normal items-center">
-					Is Huge <input bind:checked={page.theme.isHugeTitle} class="ml-2" type="checkbox" />
+			isCollapsed = !isCollapsed;
+		}}
+	>
+		<div>
+			{#if isCollapsed}
+				<div class="flex items-center">
+					<div class="font-bold text-lg mr-2">Hero Section 🤩</div>
+				</div>
+				<div class="text">
+					{@html striptags(hero.title || hero.subtitle || '')}
 				</div>
 			{/if}
 		</div>
+	</div>
+{/if}
 
-		<div
-			class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
-			contenteditable
-			use:contenteditable
-			data-placeholder="Build a better product in public."
-			bind:innerHTML={page.title}
-			on:focus={() => (focuses.title = true)}
-			on:blur={() => (focuses.title = false)}
-		/>
+{#if !isCollapsed && hero}
+	<div class="_section p-4 relative mt-4" in:fade={{ duration: 100 }}>
+		<div class="flex w-full items-center justify-between mb-4 ">
+			<div class="flex items-center ">
+				<div class="font-bold mr-4">Hero Section</div>
+				<div
+					class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+					on:click={showSettings}
+				>
+					⚙️
+				</div>
+			</div>
 
-		{#if focuses.title || (page.name && (!page.title || !page._id))}
 			<div
-				class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
-				in:fly={{ y: 50, duration: 150 }}
+				class="flex items-center opacity-50 hover:opacity-100 cursor-pointer"
+				on:click={() => (isCollapsed = true)}
 			>
-				Start with a bold tagline
+				<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse Hero
+			</div>
+		</div>
 
-				<div class="font-normal mt-2">
-					Make a big promise to your customer. Start with a verb. Spark curiosity and hook their
-					attention.
+		{#if isSettingsShown}
+			<div
+				class="absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl"
+				in:fly={{ y: 50, duration: 150 }}
+				use:clickOutside
+				on:clickOutside={() => {
+					isSettingsShown = false;
+				}}
+			>
+				<div class="w-full">
+					<div class="">
+						<div class="_title flex justify-between w-full">
+							Hero Settings
+
+							<div class="flex font-normal items-center">
+								Hide Hero <input bind:checked={hero.isHidden} class="ml-2" type="checkbox" />
+							</div>
+						</div>
+
+						<div class="font-normal text-sm opacity-70 mb-2">Hero background image or video</div>
+
+						<FileInput isCanSearch class="w-full" theme="light" bind:url={hero.bgImageUrl} />
+
+						{#if hero.theme}
+							<div class="flex gap-4 mt-4">
+								<div class="flex font-normal items-center">
+									Is Huge <input
+										bind:checked={hero.theme.isHugeTitle}
+										class="ml-2"
+										type="checkbox"
+									/>
+								</div>
+								<div class="flex font-normal items-center">
+									Is Left Aligned <input
+										bind:checked={hero.theme.isLeft}
+										class="ml-2"
+										type="checkbox"
+									/>
+								</div>
+							</div>
+						{/if}
+
+						<hr class="my-8 opacity-80" />
+
+						<div class="mt-8">
+							<button class="_secondary _small" on:click={deleteHero}>🗑 Delete Hero</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
-	</div>
-	{#if page._id}
+
+		<div class="_section">
+			<div class="_title flex items-center justify-between">
+				<div>Tagline</div>
+			</div>
+
+			<div
+				class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
+				contenteditable
+				use:contenteditable
+				data-placeholder="Build a better product in public."
+				bind:innerHTML={hero.title}
+				on:focus={() => (focuses.title = true)}
+				on:blur={() => (focuses.title = false)}
+			/>
+
+			{#if isShowTips && (focuses.title || !hero.title || !hero._id)}
+				<div
+					class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
+					in:fly={{ y: 50, duration: 150 }}
+				>
+					Start with a bold tagline
+
+					<div class="font-normal mt-2">
+						Make a big promise to your customer. Start with a verb. Spark curiosity and hook their
+						attention.
+					</div>
+				</div>
+			{/if}
+		</div>
 		<div class="_section">
 			<div class="_title">Subtitle</div>
 
@@ -124,24 +218,15 @@
 				class="min-h-[100px]"
 				contenteditable="true"
 				use:contenteditable
-				bind:innerHTML={page.subtitle}
+				bind:innerHTML={hero.subtitle}
 				on:focus={() => (focuses.subtitle = true)}
 				on:blur={() => (focuses.subtitle = false)}
 				data-placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
 			/>
 
-			<!-- <textarea
-												bind:value={page.subtitle}
-												on:focus={() => (focuses.subtitle = true)}
-												on:blur={() => (focuses.subtitle = false)}
-												rows="4"
-												class="w-full"
-												placeholder="Momentum instructs you how to create and distribute your content. Add subscribers early and build based on real users feedback."
-											/> -->
-
-			{#if focuses.subtitle || (page._id && page.title && !page.subtitle)}
+			{#if isShowTips && (focuses.subtitle || (hero._id && hero.title && !hero.subtitle))}
 				<div
-					class="p-4 transition {page.subtitle
+					class="p-4 transition {hero.subtitle
 						? 'bg-green-600'
 						: 'bg-orange-400'} mt-4 rounded-xl text-white font-bold"
 					in:fly={{ y: 50, duration: 150 }}
@@ -155,15 +240,13 @@
 				</div>
 			{/if}
 		</div>
-	{/if}
 
-	<div class="text-sm opacity-90 my-4">
-		Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word or two.
-	</div>
+		<div class="text-sm opacity-90 my-4">
+			Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word or two.
+		</div>
 
-	{#if page._id}
 		<div class="_section">
-			<div class="flex justify-between  mb-4">
+			<div class="flex justify-between  mb-2">
 				<div class="_title">
 					Product Demo
 
@@ -181,16 +264,16 @@
 				<div class="_title flex items-center">
 					{#if page.demoUrl}
 						<div>Vertical</div>
-						<input class="ml-2" type="checkbox" bind:checked={page.theme.isHeroVertical} />
+						<input class="ml-2" type="checkbox" bind:checked={hero.theme.isVertical} />
 					{/if}
 				</div>
 			</div>
 
 			<div class="flex items-center">
-				<FileInput class="w-full" bind:url={page.demoUrl} theme="light" isCanSearch />
+				<FileInput class="w-full" bind:url={hero.demoUrl} theme="light" isCanSearch />
 			</div>
 
-			{#if !page.demoUrl && page.subtitle && page.title}
+			{#if isShowTips && !hero.demoUrl && hero.subtitle && hero.title}
 				<div
 					class="p-4 bg-orange-400 mt-4 rounded-xl text-white font-bold"
 					in:fly={{ y: 50, duration: 150 }}
@@ -204,53 +287,11 @@
 				</div>
 			{/if}
 		</div>
-	{/if}
 
-	{#if page._id}
 		<div class="_section">
-			<div class="_title flex justify-between w-full">
-				Call To Action
+			<div class="_title flex justify-between w-full">Call To Action</div>
 
-				<div class="flex font-normal items-center">
-					Collect Emails <input bind:checked={page.isCollectEmails} class="ml-2" type="checkbox" />
-				</div>
-			</div>
-
-			<div class="font-normal text-sm opacity-70 mb-2">Button text</div>
-
-			<input class="mb-4 w-full" bind:value={page.callToAction} placeholder="Join Waitlist" />
-
-			<div class="flex items-center font-normal text-sm opacity-70 mb-2 w-full">
-				<div class="shrink-0">Explain CTA:</div>
-
-				<input
-					class="ml-4 w-full"
-					placeholder="No credit card required"
-					bind:value={page.ctaExplainer}
-				/>
-			</div>
-
-			<div class="font-normal text-sm opacity-70 mb-2">
-				URL to open {page.isCollectEmails ? 'once email submitted (optional)' : 'on click'}
-			</div>
-
-			<input class="w-full mb-4" bind:value={page.actionUrl} placeholder="Action Url" />
+			<EditInteractiveOptions bind:sectionItem={hero} isWithButton={false} />
 		</div>
-	{/if}
-
-	{#if page._id}
-		<div class="_section">
-			<div class="_title flex justify-between w-full">
-				Hero Settings
-
-				<div class="flex font-normal items-center">
-					Hide Hero <input bind:checked={page.isHeroHidden} class="ml-2" type="checkbox" />
-				</div>
-			</div>
-
-			<div class="font-normal text-sm opacity-70 mb-2">Hero background image</div>
-
-			<FileInput isCanSearch class="w-full" theme="light" bind:url={page.theme.heroBgImage} />
-		</div>
-	{/if}
+	</div>
 {/if}

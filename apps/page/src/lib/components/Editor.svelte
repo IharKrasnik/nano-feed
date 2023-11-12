@@ -137,6 +137,57 @@
 		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug, lastPageId: page._id };
 
 		selectedTab = 'editor';
+
+		if (!page.heros) {
+			page.heros = [];
+		}
+
+		let heroSection = page.heros[0];
+
+		if (!page.parentPage && !heroSection) {
+			page.heros = [
+				{
+					id: uuidv4(),
+					isHidden: false,
+					renderType: 'default',
+
+					title: page.title,
+					subtitle: page.subtitle,
+					demoUrl: page.demoUrl,
+
+					interactiveRenderType: page.interactiveRenderType,
+
+					callToActionText: page.callToAction,
+					ctaExplainer: page.ctaExplainer,
+
+					url: page.url,
+					actionUrl: page.actionUrl,
+					isUrlButton: page.isUrlButton,
+
+					url2: page.url2,
+					isUrl2Button: page.isUrl2Button,
+
+					bgImageUrl: page.theme?.heroBgImage,
+
+					theme: {
+						isLeft: page.theme?.isHeroLeft,
+						isVertical: page.theme?.isHeroVertical,
+						isHuge: page.theme?.isHugeTitle
+					}
+				}
+			];
+		}
+
+		page.activeHero = page.heros[0];
+	};
+
+	let addNewHero = () => {
+		let newHero = { ..._.last(page.heros.find((h) => !h.isHidden)) };
+
+		newHero.id = uuidv4();
+		newHero.isCollapsed = false;
+
+		page.heros = [...page.heros, newHero];
 	};
 
 	if ($pageDraft.lastPageSlug && $pageDraft[$pageDraft.lastPageId]) {
@@ -839,9 +890,9 @@
 								>
 									{#if page.name}
 										{#if !page?.parentPage && page._id}
-											<div class="_section">
+											<div class="_section flex justify-between items-center  mb-4">
 												<select
-													class="w-full mb-4"
+													class="w-full"
 													bind:value={page._id}
 													on:change={async (evt) => {
 														setPageAndDraft(
@@ -862,7 +913,7 @@
 												</select>
 
 												{#if !page.parentPage}
-													<Button class="_primary _small w-full mt-4" onClick={addSubpage}
+													<Button class="_secondary _small shrink-0 ml-4" onClick={addSubpage}
 														>Add Subpage</Button
 													>
 												{/if}
@@ -870,10 +921,49 @@
 										{/if}
 									{/if}
 
-									<EditHero bind:hero={page} bind:focuses />
+									{#each page.heros || [] as hero}
+										<EditHero
+											class="my-4"
+											bind:hero
+											bind:page
+											bind:focuses
+											isShowTips={page.hero?.length < 2}
+										/>
+									{/each}
+
+									{#if page?._id}
+										<div class="opacity-70 hover:opacity-100 my-4">
+											<button
+												class="_secondary _small w-full flex items-center justify-between"
+												on:click={addNewHero}
+												>Add Alternative Hero
+												<div class="text-xs">Run A/B tests</div>
+											</button>
+										</div>
+									{/if}
+
+									{#if page?._id && !page.parentPage}
+										<div class="_section bg-[#e8ffef] my-8" style="border: none;">
+											<div class="flex items-center justify-between w-full">
+												<div class="">
+													<div class="font-bold">Design your product with Momentum team</div>
+
+													<div class="text-sm">Working with us is as easy as using Momentum</div>
+												</div>
+											</div>
+											<a
+												href="https://studio.saltnbold.com/new"
+												class="w-full"
+												class:hidden={!page._id}
+												target="_blank"
+											>
+												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
+											</a>
+										</div>
+									{/if}
 
 									{#if page._id && !page.parentPage}
-										<div class="_section">
+										<div class="_section my-8">
 											<div class="_title flex justify-between w-full">
 												Social Links
 
@@ -917,26 +1007,6 @@
 													}}>🔗 Add Social Link</button
 												>
 											</div>
-										</div>
-									{/if}
-
-									{#if page?._id && !page.parentPage}
-										<div class="_section bg-[#e8ffef] my-8" style="border: none;">
-											<div class="flex items-center justify-between w-full">
-												<div class="">
-													<div class="font-bold">Design your product with Momentum team</div>
-
-													<div class="text-sm">Working with us is as easy as using Momentum</div>
-												</div>
-											</div>
-											<a
-												href="https://studio.saltnbold.com/new"
-												class="w-full"
-												class:hidden={!page._id}
-												target="_blank"
-											>
-												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
-											</a>
 										</div>
 									{/if}
 

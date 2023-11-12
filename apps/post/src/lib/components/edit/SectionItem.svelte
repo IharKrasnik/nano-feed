@@ -6,7 +6,7 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
-	import EditUrl from '$lib/components/edit/Url.svelte';
+	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
@@ -91,7 +91,7 @@
 				{item.emoji || '✨'}
 			</div> -->
 			{#if isWithUrl}
-				<EditUrl bind:url={item.url} bind:callToActionText={item.callToActionText} />
+				<EditInteractiveOptions bind:url={item.url} bind:callToActionText={item.callToActionText} />
 			{/if}
 		</div>
 

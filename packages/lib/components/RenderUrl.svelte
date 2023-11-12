@@ -14,7 +14,8 @@
 	export let isLazy = true;
 	export let url;
 	export let imgClass = '';
-	export let isAutoplay = true;
+
+	export let isAutoplay = url?.includes('.mp4') || url?.includes('.mov');
 
 	export let isFilesOnly = false;
 
@@ -71,7 +72,9 @@
 						class="w-full mt-2 lazyload"
 						style="aspect-ratio: 536/300;"
 						data-src="https://www.youtube.com/embed/{new URL(url).searchParams.get('v') ||
-							url.replace('https://youtu.be', '')}"
+							url.replace('https://youtu.be', '')}?rel=0{isAutoplay
+							? '&autoplay=1&mute=1&controls=0'
+							: ''}"
 						title="YouTube video player"
 						frameborder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -102,6 +105,15 @@
 					loop
 					bind:this={videoEl}
 					src={url}
+				/>
+			{:else if url.includes('lottie')}
+				<lottie-player
+					src={url}
+					background="transparent"
+					speed="1"
+					class="w-full h-full"
+					loop
+					autoplay
 				/>
 			{:else}
 				{#key url}

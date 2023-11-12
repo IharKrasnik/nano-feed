@@ -159,7 +159,7 @@
 				<div>
 					{striptags((section.faqs || []).map((f) => f.question).join(', '))}
 				</div>
-			{:else}
+			{:else if section.items}
 				{#each section.items as item}
 					<div>
 						{striptags(item.title || 'empty')}

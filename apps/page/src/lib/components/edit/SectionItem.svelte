@@ -7,7 +7,7 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
-	import EditUrl from '$lib/components/edit/URL.svelte';
+	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -90,7 +90,7 @@
 				<EmojiPicker bind:icon={item.emoji} />
 			{/if}
 			{#if isWithUrl}
-				<EditUrl bind:sectionItem={item} />
+				<EditInteractiveOptions bind:sectionItem={item} />
 			{/if}
 
 			{#if isWithSettings && section.type !== 'form'}

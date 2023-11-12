@@ -17,10 +17,9 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import RenderBlog from '$lib/components/render/Blog.svelte';
-	import RenderArticleHeader from '$lib/components/render/ArticleHeader.svelte';
+	import RenderHero from '$lib/components/render/Hero.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
-	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
 	import Gradients from '$lib/components/gradients/index.svelte';
 	import PostPreview from 'lib/components/post/PostPreview.svelte';
@@ -255,6 +254,10 @@
 	$: if (browser && $varsLastUpdatedOn) {
 		refreshVariables(varTemplatesBig);
 	}
+
+	if (!page.activeHero) {
+		page.activeHero = _.shuffle(page.heros)[0];
+	}
 </script>
 
 <svelte:head>
@@ -305,25 +308,7 @@
 		<PortfolioPage bind:page />
 	{:else}
 		<div class="" bind:this={previewEl}>
-			<div class="relative color-site ttt" style="{cssVarStyles};">
-				{#if page.headerAnimation?.name === 'coma'}
-					<ComaDragons />
-				{/if}
-				<!-- <img
-				class="absolute w-screen h-screen object-cover"
-				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
-			/> -->
-				{#if page?.theme?.heroBgImage}
-					<div
-						class="absolute top-0 left-0 w-screen h-screen z-1"
-						style="background-color: rgba(0,0,0, 0.7); z-index: 1;"
-					/>
-					<img
-						class="absolute left-0 top-0 w-screen h-screen object-cover opacity-90"
-						src={page?.theme?.heroBgImage}
-					/>
-				{/if}
-
+			<div class="relative color-site" style="{cssVarStyles};">
 				<!-- SQUARES -->
 				{#if page?.theme?.heroPattern}
 					{#if page?.theme?.theme === 'dark'}
@@ -483,186 +468,50 @@
 							<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
 						{/if}
 
+						{#if page.activeHero}
+							<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
+						{/if}
+
 						<div class="relative _root bg-site" style="background: none;">
 							{#if $sveltePage.data.post}
 								<PostPreview isEdit={false} isNoFooter post={$sveltePage.data.post} />
 							{:else if $sveltePage.url.pathname.includes('/blog')}
 								<RenderBlog bind:page />
-							{:else}
-								<div
-									class="{isEmbed || page.sections?.length
-										? ''
-										: page.theme?.isHeroVertical
-										? ''
-										: 'min-h-screen h-screen'} sm:mt-[-70px]"
-								>
-									{#if page.renderType !== 'article'}
-										<div
-											bind:this={$aboveTheFoldEl}
-											class="_content {page.theme?.heroBgImage ? 'light-colors' : ''} {page.theme
-												?.isHeroVertical
-												? ''
-												: ''} h-full {page.sections?.length
-												? 'pb-16'
-												: 'pb-16'} pt-16 sm:pt-36 {!page.testimonials?.length
-												? `flex items-center`
-												: ''}"
-											style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
-										>
-											<div
-												class="p-4 flex h-full w-full {page.demoUrl || page.theme?.isHeroLeft
-													? `flex-col ${
-															page.theme?.isHeroVertical ? '' : 'justify-between sm:flex-row'
-													  } items-center`
-													: 'text-center items-center'}"
-											>
-												<div
-													class="{page.demoUrl || page.theme?.isHeroLeft
-														? `w-full text-center ${
-																page.theme?.isHeroVertical
-																	? 'flex flex-col items-center mb-8'
-																	: 'sm:text-left'
-														  }  ${page.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
-														: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-										{page.theme?.isHeroLeft && !page.theme?.isHeroVertical ? 'sm:text-left' : ''}"
-												>
-													{#if isMounted}
-														<h1
-															class="{page.theme?.isGradientTitle
-																? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
-																: ''} _title 
-											{!page.demoUrl || page.theme?.isHeroVertical ? 'sm:max-w-[912px]' : ''}"
-															style={page.title ? '' : 'opacity: 20%;'}
-															in:fly={{ y: 50, duration: 800 }}
-														>
-															{#if page.title}
-																<div>{@html page.title || ''}</div>
-															{:else if isEmbed && !page.parentPage}
-																{#if page.renderType !== 'article'}
-																	{'Type Tagline...'}
-																{/if}
-															{/if}
-														</h1>
-													{/if}
-
-													{#if page.subtitle}
-														<h2
-															class="_subtitle {page.theme.isHugeTitle
-																? 'text-3xl'
-																: 'text-xl'}  whitespace-pre-wrap  {page.demoUrl ||
-															!page.theme?.isHeroVertical
-																? ''
-																: 'max-w-[600px]'}"
-															in:fly={{ y: 50, duration: 800 }}
-														>
-															{@html page.subtitle}
-														</h2>
-													{/if}
-
-													{#if page.callToAction}
-														<RenderInteractiveOptions class="w-full max-w-[400px] mx-auto" {page} />
-													{/if}
-
-													{#if page.ctaExplainer}
-														<div class="text-sm mt-4 max-w-[400px]">{@html page.ctaExplainer}</div>
-													{/if}
-
-													{#if isMounted && page.socialProof}
-														<div
-															class="mt-16 py-4 {page.socialProof.className || ''} {page.demoUrl ||
-															(page.theme?.isHeroLeft && !page.theme?.isHeroVertical)
-																? ''
-																: 'flex justify-center w-full'} }"
-														>
-															<div>
-																<div class="flex gap-2">
-																	{#each _.shuffle(page.socialProof.logos) as logo}
-																		<img class="w-[50px] h-[50px] rounded-full" src={logo.url} />
-																	{/each}
-																</div>
-
-																<div class="text-sm mt-4 opacity-80 max-w-[400px]">
-																	{@html page.socialProof.title || ''}
-																</div>
-															</div>
-														</div>
-													{/if}
-												</div>
-
-												{#if page.demoUrl || page.lottieUrl}
-													<div
-														class="w-full  mt-16 sm:mt-0 {page.theme?.isHeroVertical
-															? ''
-															: 'sm:ml-8 sm:max-w-[600px]'}"
-													>
-														{#if page.lottie}
-															<lottie-player
-																src={page.lottie.jsonUrl}
-																background="transparent"
-																speed="1"
-																class="w-full h-full"
-																loop
-																autoplay
-															/>
-														{:else if page.demoUrl}
-															<RenderUrl
-																isLazy={false}
-																class="w-full flex justify-end {page.theme?.isHeroVertical
-																	? 'mt-8'
-																	: ''}"
-																url={page.demoUrl}
-																imgClass="w-full rounded-xl shadow-md object-cover"
-															/>
-														{/if}
-													</div>
-												{/if}
-											</div>
-										</div>
-									{:else}
-										<div style="height: 72px;" class="mb-16" />
-										<RenderArticleHeader {page} />
-									{/if}
-								</div>
-
-								{#if !isAboveTheFold}
-									{#if page.sections?.length}
-										<div class={page.streamSlug ? '' : ''}>
-											{#each page.sections as section, i}
-												{#if $sectionToEdit && $sectionToEdit.id === section.id}
-													<div bind:this={editEl}>
-														<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
-														<div>
-															<RenderSection
-																bind:page
-																bind:themeStyles={styles}
-																bind:section={$sectionToEdit}
-																bind:isEdit
-															/>
-														</div>
-														<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
-													</div>
-													{focusEditEl() || ''}
-												{:else}
-													<div class="bg-site">
+							{:else if !isAboveTheFold}
+								{#if page.sections?.length}
+									<div class="relative z-10 {page.streamSlug ? '' : ''}">
+										{#each page.sections as section, i}
+											{#if $sectionToEdit && $sectionToEdit.id === section.id}
+												<div bind:this={editEl}>
+													<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
+													<div>
 														<RenderSection
 															bind:page
-															bind:section
 															bind:themeStyles={styles}
+															bind:section={$sectionToEdit}
 															bind:isEdit
-															style={false && page.theme?.isZebra && i % 2 === 0
-																? page.theme?.theme === 'dark'
-																	? `background-color: ${lighten(
-																			styles['background-color'],
-																			0.01
-																	  )};`
-																	: `background-color: ${darken(styles['background-color'], 0.08)};`
-																: ''}
 														/>
 													</div>
-												{/if}
-											{/each}
-										</div>
-									{/if}
+													<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
+												</div>
+												{focusEditEl() || ''}
+											{:else}
+												<div class="bg-site">
+													<RenderSection
+														bind:page
+														bind:section
+														bind:themeStyles={styles}
+														bind:isEdit
+														style={false && page.theme?.isZebra && i % 2 === 0
+															? page.theme?.theme === 'dark'
+																? `background-color: ${lighten(styles['background-color'], 0.01)};`
+																: `background-color: ${darken(styles['background-color'], 0.08)};`
+															: ''}
+													/>
+												</div>
+											{/if}
+										{/each}
+									</div>
 								{/if}
 							{/if}
 						</div>
@@ -764,10 +613,6 @@
 		margin: 0 auto;
 	}
 
-	.container-width {
-		max-width: var(--container-width);
-	}
-
 	._header {
 		@apply p-1 w-full;
 		border-bottom: 1px rgba(0, 0, 0, 0.2) solid;
@@ -784,47 +629,6 @@
 		font-family: var(--title-font);
 		font-weight: bold;
 		font-size: 18px;
-	}
-
-	:global(._title) {
-		font-family: Archivo;
-	}
-
-	._title {
-		font-family: Archivo;
-		font-size: var(--title-font-size, 36px);
-		@apply font-bold;
-		line-height: var(--title-line-height, 1.2);
-		margin-bottom: 32px;
-		/* sm:text-[32px]; */
-	}
-
-	@media (max-width: 640px) {
-		._title {
-			font-size: 36px;
-		}
-	}
-
-	:global(._root ._title) {
-		font-family: var(--title-font) !important;
-	}
-
-	:global(._title b, ._title em) {
-		/* background-color: var(--accent-color); */
-		color: var(--accent-color);
-		opacity: 0.9;
-	}
-
-	:global(._highlight-old b, ._highlight-old em) {
-		background-color: var(--accent-color);
-		color: var(--button-color);
-		opacity: 0.9;
-	}
-
-	._subtitle {
-		margin-bottom: 40px;
-		max-width: 650px;
-		font-family: var(--subtitle-font);
 	}
 
 	._momentum-stream {

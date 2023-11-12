@@ -18,7 +18,6 @@ export default (page) => {
 		'logo-font': page.theme?.logoFont || 'monospace',
 		'title-font': page.theme?.titleFont || fontPairs[0].title,
 		'subtitle-font': page.theme?.subtitleFont || page.theme?.titleFont,
-		'title-font-size': page.theme?.isHugeTitle ? '72px' : '48px',
 		'title-line-height': '1.0',
 		'button-radius': page.theme?.buttonRadius || '24px',
 		'text-font': page.theme?.textFont || fontPairs[0].text,
