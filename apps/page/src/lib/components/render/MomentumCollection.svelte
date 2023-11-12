@@ -3,12 +3,13 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import Loader from 'lib/components/Loader.svelte';
-	import feed, { getFeed } from '$lib/stores/feedCache';
+	import feedCache, { getFeed } from '$lib/stores/feedCache';
 	import { get } from 'lib/api';
 
 	export let page;
 	export let section;
 	export let themeStyles;
+	export let isEdit;
 
 	let childStreams = [];
 
@@ -18,7 +19,8 @@
 		renderType: 'feed',
 		columns: section.columns,
 		items: [],
-		linkType: 'interactive'
+		linkType: 'interactive',
+		totalItemsLength: 0
 	};
 
 	$: if (section.columns) {
@@ -57,10 +59,28 @@
 		isLoading = false;
 	};
 
-	$: if ($feed[section.id]) {
-		databaseSection.items = $feed[section.id].map(
-			({ title, content, attachments, logoUrl, url }) => {
+	section.templates = {
+		title: section.title || '',
+		description: section.description || ''
+	};
+
+	let replaceVars = () => {
+		section.title = section.templates.title.replace(
+			'$db.totalCount',
+			$feedCache[section.id].totalCount || ''
+		);
+
+		section.description = section.templates.description.replace(
+			'$db.totalCount',
+			$feedCache[section.id].totalCount || ''
+		);
+	};
+
+	$: if ($feedCache[section.id]) {
+		databaseSection.items = $feedCache[section.id].feed.map(
+			({ _id, title, content, attachments, logoUrl, url }) => {
 				return {
+					feedItemId: _id,
 					title,
 					description: content,
 					imageUrl: attachments && attachments[0] && attachments[0].url,
@@ -69,6 +89,10 @@
 				};
 			}
 		);
+
+		if (!isEdit) {
+			replaceVars();
+		}
 	}
 
 	let loadChildStreams = async () => {

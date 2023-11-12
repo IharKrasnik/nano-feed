@@ -2,6 +2,7 @@
 	import moment from 'moment';
 	import _ from 'lodash';
 	import { fade, fly } from 'svelte/transition';
+	import { post } from 'lib/api';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
@@ -336,7 +337,7 @@
 				{:else if section.type === 'testimonials'}
 					<RenderTestimonials bind:section />
 				{:else if section.collectionType}
-					<RenderMomentumCollection bind:section bind:page bind:themeStyles />
+					<RenderMomentumCollection bind:section bind:page bind:themeStyles bind:isEdit />
 				{:else if section.type === 'momentum_feed'}
 					<RenderMomentumFeed bind:page bind:themeStyles />
 				{:else if section.type === 'service_chat'}
@@ -597,6 +598,8 @@
 												if (section.carousel) {
 													selectCarouselItem(item);
 												}
+
+												post(`feed/${item.feedItemId}/view`);
 											}}
 											style="-webkit-column-break-inside: avoid;"
 										>

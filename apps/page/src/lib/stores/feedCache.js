@@ -53,10 +53,10 @@ export const fetchFeed = async ({
 		query.isWithImageOnly = true;
 	}
 
-	const { results: feed } = await get('feed', query);
+	const { results: feed, count } = await get('feed', query);
 
 	feedStore.update((st) => {
-		st[cacheId] = feed;
+		st[cacheId] = { updatedOn: new Date(), feed, totalCount: count };
 		st.updatedOn = new Date();
 		localStorage[getCacheKey(cacheId)] = JSON.stringify(feed);
 		return st;

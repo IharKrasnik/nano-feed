@@ -37,7 +37,7 @@
 			return fi;
 		});
 
-		$feedCache[stream.slug] = [...feed];
+		$feedCache[stream.slug] = { feed: [...feed] };
 
 		if (isShowSuccessMessage) {
 			showSuccessMessage('Record created');
@@ -47,7 +47,7 @@
 	let updateFeedItem = async ({ feedItem }) => {
 		let updated = await put(`feed/${feedItem._id}`, feedItem);
 
-		feed = $feedCache[stream.slug] = $feedCache[stream.slug].map((item) => {
+		feed = $feedCache[stream.slug].feed = $feedCache[stream.slug].feed.map((item) => {
 			if (item._id === feedItem._id) {
 				return updated;
 			} else {
@@ -61,7 +61,7 @@
 	let deleteFeedItem = async ({ feedItem }) => {
 		await del(`feed/${feedItem._id}`);
 
-		feed = $feedCache[stream.slug] = $feedCache[stream.slug].filter(
+		feed = $feedCache[stream.slug].feed = $feedCache[stream.slug].feed.filter(
 			(item) => item._id !== feedItem._id
 		);
 
