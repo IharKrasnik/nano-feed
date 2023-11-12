@@ -463,6 +463,8 @@
 
 			newSection.carousel = { is: true };
 		} else if (type === 'form') {
+			newSection.renderType = 'form';
+
 			newSection.items = [
 				{
 					title: `What's your email?`,

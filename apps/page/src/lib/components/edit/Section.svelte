@@ -138,8 +138,8 @@
 			<div class="text-lg font-bold">💚 Testimonials</div>
 		{:else if section.renderType === 'momentum_collection'}
 			<div class="text-lg font-bold">📚 Database</div>
-		{:else if section.type === 'interactive_question'}
-			<div class="text-lg font-bold">🕹 Interactive Question</div>
+		{:else if section.renderType === 'form'}
+			<div class="text-lg font-bold">🔤 Form</div>
 		{:else if section.type === 'benefits'}
 			<div class="text-lg font-bold" />
 		{/if}
@@ -202,7 +202,7 @@
 	{:else if section.type === 'testimonials'}
 		<EditTestimonials bind:section />
 	{:else}
-		{#if section.type !== 'form'}
+		{#if section.renderType !== 'form'}
 			<div class="_section">
 				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
 
@@ -211,7 +211,7 @@
 						<select class="w-full" bind:value={section.collectionType}>
 							<option value="">No</option>
 							<option value="articles">Blog Articles</option>
-							<option value="feed">Database</option>
+							<option value="feed">Choose Database</option>
 						</select>
 
 						{#if section.collectionType === 'feed'}
@@ -263,19 +263,23 @@
 				</div>
 			</div>
 
-			{#if section.streamSlug}
+			{#if section.collectionType === 'feed'}
 				<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
 					>Edit Data</button
 				>
 			{/if}
 
-			<select class="w-full my-4" bind:value={section.renderType}>
-				<option value="grid">Grid Section</option>
-				<option value="carousel">Carousel Menu</option>
-				<option value="stepper">1-2-3 Stepper</option>
-				<option value="article">Article</option>
-			</select>
+			<div class="my-8">
+				<div class="text-sm font-bold mb-2 mt-4">Section Type</div>
 
+				<select class="block w-full mt-2 mb-4" bind:value={section.renderType}>
+					<option value="grid">Default Grid Section</option>
+					<option value="carousel">Carousel Menu</option>
+					<option value="stepper">1-2-3 Stepper</option>
+					<option value="article">Article</option>
+					<option value="form">Form</option>
+				</select>
+			</div>
 			{#if section.renderType === 'carousel'}
 				<select class="w-full my-4" bind:value={section.carouselType}>
 					<option value="vertical">Vertical</option>
@@ -296,7 +300,7 @@
 				// onEditEnded(section);
 			}}
 		>
-			{#if section.type !== 'form' && section.renderType === 'grid'}
+			{#if section.renderType !== 'form' && section.renderType === 'grid'}
 				<div class="bg-white top-[60px] rounded-xl">
 					<div class="p-4 pb-0 flex justify-between items-center">
 						<div class="_title" style="margin: 0;">Columns</div>
@@ -389,6 +393,49 @@
 			</div>
 		</div>
 	{/if}
+
+	{#if section.renderType === 'form'}
+		<div class="_section">
+			<div class="font-normal text-sm opacity-70 mb-2 mt-4">Button text</div>
+
+			<input class="mb-4 w-full" bind:value={section.callToActionText} placeholder="Submit" />
+
+			<div class="flex items-center font-normal text-sm mb-2 w-full">
+				<div class="shrink-0  opacity-70">Explainer:</div>
+
+				<input
+					class="ml-4 w-full"
+					placeholder="You just 1 step away 🪄"
+					bind:value={section.ctaExplainer}
+				/>
+			</div>
+
+			<div class="font-normal opacity-70 text-sm mt-2 mb-2">Once submitted...</div>
+
+			<div class="w-full mb-2">
+				<select bind:value={section.actionType} class="w-full">
+					<option value="success">Show thank you message</option>
+					<option value="url">Redirect to URL</option>
+				</select>
+			</div>
+
+			{#if section.actionType === 'success'}
+				{section.actionSuccessSection
+					? ''
+					: (section.actionSuccessSection = { id: uuidv4(), isActionSuccessSection: true }) && ''}
+				<div class="_section mt-4">
+					<EditSectionItem class="" {section} bind:item={section.actionSuccessSection} />
+				</div>
+			{/if}
+
+			{#if section.actionType === 'url'}
+				<div class="font-normal text-sm opacity-70 mt-4 mb-2">URL to open once email submitted</div>
+
+				<input class="w-full mb-4" bind:value={section.actionUrl} placeholder="Action Url" />
+			{/if}
+		</div>
+	{/if}
+
 	{#if section.streamSettings?.limit}
 		{section.footer ? '' : (section.footer = { id: uuidv4() }) && ''}
 

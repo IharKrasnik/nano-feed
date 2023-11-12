@@ -154,7 +154,7 @@
 		if (page.actionUrl) {
 			setTimeout(() => {
 				window.location.href = page.actionUrl?.startsWith('/')
-					? `${page.slug}${page.actionUrl}`
+					? `${page.actionUrl}`
 					: page.actionUrl;
 			}, 0);
 		}

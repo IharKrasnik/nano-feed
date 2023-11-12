@@ -86,14 +86,15 @@
 >
 	<div class="relative flex justify-between items-center mb-4">
 		<div class="flex items-center w-full">
-			{#if section.type !== 'form'}
+			{#if section.renderType !== 'form' || item.isActionSuccessSection}
 				<EmojiPicker bind:icon={item.emoji} />
 			{/if}
+
 			{#if isWithUrl}
-				<EditInteractiveOptions bind:sectionItem={item} />
+				<EditInteractiveOptions bind:section bind:sectionItem={item} />
 			{/if}
 
-			{#if isWithSettings && section.type !== 'form'}
+			{#if (isWithSettings && section.renderType !== 'form') || item.isActionSuccessSection}
 				<EditSectionSettings bind:sectionItem={item} />
 			{/if}
 
@@ -184,7 +185,7 @@
 		<div class="w-full p-4 mb-4 cursor-pointer text-center" on:click={addBenefit}>
 			➕Add Benefit
 		</div>
-	{:else if section.type !== 'form'}
+	{:else if section.renderType !== 'form' || item.isActionSuccessSection}
 		<div class="relative flex justify-between items-center">
 			<FileInput
 				class="w-full"

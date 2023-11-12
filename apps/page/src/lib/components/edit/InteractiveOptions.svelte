@@ -10,6 +10,7 @@
 	export { clazz as class };
 
 	export let sectionItem;
+	export let section;
 
 	export let isWithButton = true;
 
@@ -32,14 +33,14 @@
 			sectionItem.interactiveAnswers = [...sectionItem.interactiveAnswers];
 		}
 
-		section = { ...section };
+		sectionItem = { ...sectionItem };
 	};
 
 	let removeAnswerFromItem = (item = sectionItem, answer) => {
 		sectionItem.interactiveAnswers = sectionItem.interactiveAnswers.filter(
 			(a) => a.emoji !== answer.emoji
 		);
-		section = { ...section };
+		sectionItem = { ...sectionItem };
 	};
 </script>
 
@@ -80,13 +81,36 @@
 				}
 			}}
 		>
-			<option value="">No interaction</option>
-			<option value="link">Click 1 Link</option>
-			<option value="links">Click Few Links</option>
-			<option value="email">Submit Email</option>
-			<option value="single_choice">Select Single Choice</option>
-			<option value="short_answer">Short Answer</option>
+			{#if sectionItem.isActionSuccessSection}
+				<option value="">No interaction</option>
+				<option value="link">Click 1 Link</option>
+				<option value="links">Click Few Links</option>
+				<option value="single_choice">Community Single Choice</option>
+				<option value="short_answer">Community Answer</option>
+			{:else if section.renderType === 'form'}
+				<option value="email">Email</option>
+				<option value="text">Short Text</option>
+				<option value="textarea">Long Text</option>
+			{:else}
+				<option value="">No interaction</option>
+				<option value="link">Click 1 Link</option>
+				<option value="links">Click Few Links</option>
+				<option value="email">Submit Email</option>
+				<option value="single_choice">Community Single Choice</option>
+				<option value="short_answer">Community Answer</option>
+			{/if}
 		</select>
+
+		{#if section.renderType === 'form'}
+			<div class="my-2">
+				<div class="text-sm opacity-70 mb-2">Placeholder</div>
+				<input
+					type="text"
+					placeholder="Placeholder"
+					bind:value={sectionItem.interactivePlaceholder}
+				/>
+			</div>
+		{/if}
 
 		{#if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
 			<EmojiPicker class="mt-4" isNoCustom bind:icon={sectionItem.urlIcon} />
@@ -170,7 +194,7 @@
 			<div>
 				<div class="font-normal text-sm opacity-70 mt-4 mb-2 font-bold">Save to variable</div>
 				<input
-					class="w-full"
+					class=""
 					placeholder="reasonToSwitch"
 					disabled={sectionItem.interactiveRenderType === 'email'}
 					bind:value={sectionItem.varName}
@@ -184,7 +208,7 @@
 			</div>
 		{/if}
 
-		{#if sectionItem.interactiveRenderType === 'email'}
+		{#if sectionItem.interactiveRenderType === 'email' && section.renderType !== 'form'}
 			<div class="font-normal text-sm opacity-70 mb-2 mt-4">Button text</div>
 
 			<input
@@ -203,11 +227,11 @@
 				/>
 			</div>
 
-			<div class="font-normal opacity-70 text-sm mb-2">Once submitted:</div>
+			<div class="font-normal opacity-70 text-sm mb-2 mt-2">Once submitted...</div>
 
 			<div class="w-full mb-2">
 				<select bind:value={sectionItem.actionType} class="w-full">
-					<option value="thank_you">Show thank you message</option>
+					<option value="success">Show thank you message</option>
 					<option value="url">Redirect to URL</option>
 				</select>
 			</div>
