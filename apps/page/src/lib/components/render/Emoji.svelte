@@ -19,7 +19,11 @@
 <div class={clazz}>
 	{#if emoji?.startsWith('http')}
 		{#key emoji}
-			<img style="width: {width}px; height: {width}px;" src={emoji} />
+			<img
+				class={clazz?.includes('rounded-full') ? 'rounded-full' : ''}
+				style="width: {width}px; height: {width}px;"
+				src={emoji}
+			/>
 		{/key}
 	{:else if emoji?.startsWith('feather:')}
 		<FeatherIcon name={emoji.replace('feather:', '')} {color} />

@@ -67,12 +67,12 @@
 	let replaceVars = () => {
 		section.title = section.templates.title.replace(
 			'$db.totalCount',
-			$feedCache[section.id].totalCount || ''
+			$feedCache[section.id]?.totalCount || ''
 		);
 
 		section.description = section.templates.description.replace(
 			'$db.totalCount',
-			$feedCache[section.id].totalCount || ''
+			$feedCache[section.id]?.totalCount || ''
 		);
 	};
 

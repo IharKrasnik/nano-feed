@@ -39,8 +39,8 @@
 		{#each section.items as formField}
 			<div>
 				<div class="mb-2">
-					<div class="text-lg font-semibold mb-2 opacity-80">{formField.title}</div>
-					<div>{formField.description || ''}</div>
+					<div class="text-lg font-semibold opacity-80">{@html formField.title}</div>
+					<div class="text-sm opacity-80 mb-2">{@html formField.description || ''}</div>
 				</div>
 
 				{#if formField.interactiveRenderType === 'text'}

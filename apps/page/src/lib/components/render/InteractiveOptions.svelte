@@ -297,7 +297,7 @@
 					{#if sectionItem.isUrlButton}
 						<button class="w-full flex items-center">
 							{#if sectionItem.urlIcon}
-								<Emoji class="mr-2" emoji={sectionItem.urlIcon} />
+								<Emoji class="mr-2 rounded-full" emoji={sectionItem.urlIcon} />
 							{/if}
 							{sectionItem.callToActionText || 'Learn More'}
 						</button>
@@ -328,7 +328,7 @@
 						{#if sectionItem.isUrl2Button}
 							<button class="w-full flex items-center" class:_alternative={sectionItem.isUrlButton}>
 								{#if sectionItem.url2Icon}
-									<Emoji class="mr-2" emoji={sectionItem.url2Icon} />
+									<Emoji class="mr-2 rounded-full" emoji={sectionItem.url2Icon} />
 								{/if}
 								{sectionItem.callToActionText2 || 'Learn More'}
 							</button>

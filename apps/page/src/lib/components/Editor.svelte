@@ -936,7 +936,7 @@
 											<button
 												class="_secondary _small w-full flex items-center justify-between"
 												on:click={addNewHero}
-												>Add Alternative Hero
+												>Add Alternative Hero Section
 												<div class="text-xs">Run A/B tests</div>
 											</button>
 										</div>
