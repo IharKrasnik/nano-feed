@@ -422,7 +422,15 @@
 			{#if section.actionType === 'success'}
 				{section.actionSuccessSection
 					? ''
-					: (section.actionSuccessSection = { id: uuidv4(), isActionSuccessSection: true }) && ''}
+					: (section.actionSuccessSection = {
+							id: uuidv4(),
+							isActionSuccessSection: true,
+							emoji: '👏',
+							title: 'Thank you for your submission!',
+							description: "We'll review it shortly",
+							bgImageUrl:
+								'https://media3.giphy.com/media/PMV7yRpwGO5y9p3DBx/giphy.gif?cid=54dcf3bfllvlfmn72sc3m0wa7l2sygeg0lf30hhuotmgye4v&ep=v1_gifs_search&rid=giphy.gif&ct=g'
+					  }) && ''}
 				<div class="_section mt-4">
 					<EditSectionItem class="" {section} bind:item={section.actionSuccessSection} />
 				</div>
