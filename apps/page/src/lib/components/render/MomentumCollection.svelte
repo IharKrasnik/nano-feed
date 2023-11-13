@@ -37,14 +37,17 @@
 				renderType: 'article'
 			});
 
-			databaseSection.items = articles.results.map(({ title, subtitle, demoUrl, url, slug }) => {
-				return {
-					title,
-					description: subtitle,
-					imageUrl: demoUrl,
-					url: `/blog/post/${slug}`
-				};
-			});
+			databaseSection.items = articles.results.map(
+				({ title, subtitle, demoUrl, url, slug, tagsStr }) => {
+					return {
+						title,
+						description: subtitle,
+						imageUrl: demoUrl,
+						url: `/blog/post/${slug}`,
+						tagsStr
+					};
+				}
+			);
 		} else {
 			if (categorySlug || section?.streamSlug) {
 				await getFeed({
@@ -82,14 +85,15 @@
 
 	$: if ($feedCache[section.id]) {
 		databaseSection.items = $feedCache[section.id].feed.map(
-			({ _id, title, content, attachments, logoUrl, url }) => {
+			({ _id, title, content, attachments, logoUrl, url, tagsStr }) => {
 				return {
 					feedItemId: _id,
 					title,
 					description: content,
 					imageUrl: attachments && attachments[0] && attachments[0].url,
 					emoji: logoUrl,
-					url
+					url,
+					tagsStr
 				};
 			}
 		);
@@ -169,7 +173,7 @@
 	}
 
 	._section-item.selected {
-		outline: 2px var(--accent-color) solid;
+		/* outline: 2px var(--accent-color) solid; */
 		@apply shadow-md;
 	}
 

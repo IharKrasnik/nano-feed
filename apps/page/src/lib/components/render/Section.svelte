@@ -676,12 +676,23 @@
 														>
 															<ContentEditableIf
 																class={section.renderType === 'feed'
-																	? 'line-clamp-4 hover:line-clamp-5'
+																	? '_line-clamp-4 hover:line-clamp-5'
 																	: ''}
 																bind:innerHTML={item.description}
 																condition={isEdit}
 															/>
 														</h3>
+													{/if}
+													{#if item.tagsStr}
+														<div class="my-4 flex gap-2">
+															{#each item.tagsStr.split(',') as tag}
+																<div
+																	class="px-2 py-1  text-sm  opacity-80 _border-accent rounded-xl inline"
+																>
+																	{tag}
+																</div>
+															{/each}
+														</div>
 													{/if}
 
 													{#if item.pricing}
@@ -845,12 +856,5 @@
 
 	._item-description {
 		color: var(--section-description-text-color);
-	}
-
-	.line-clamp-4 {
-		overflow: hidden;
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 4;
 	}
 </style>

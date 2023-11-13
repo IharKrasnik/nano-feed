@@ -92,6 +92,10 @@
 	color: var(--button-color) !important;
 }
 
+._border-accent {
+	border: 1px var(--accent-color) solid;
+}
+
 .bg-body {
 	background: var(--background-color);
 	color: var(--text-color);
