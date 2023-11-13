@@ -70,6 +70,8 @@
 
 	let carouselKey;
 
+	let selectedCarouselItem = null;
+
 	let selectCarouselItem = (item) => {
 		item.isSelected = true;
 		carouselKey = +new Date();
@@ -153,8 +155,6 @@
 			section.items[selectedIndex - 1].isSelected = true;
 		}
 
-		section.items = [...section.items];
-
 		carouselKey = +new Date();
 	};
 
@@ -179,6 +179,10 @@
 
 		carouselKey = +new Date();
 	};
+
+	$: if (section.items && carouselKey) {
+		selectedCarouselItem = section.items.find((i) => i.isSelected);
+	}
 
 	let submitForm = () => {};
 </script>
@@ -364,10 +368,12 @@
 				<div class="w-full">
 					{#if section.renderType === 'carousel'}
 						{#if !section.carouselType || section.carouselType === 'vertical'}
-							<div>
+							<div
+								class={!section.size || section.size === 'medium' ? 'max-w-[600px] mx-auto' : ''}
+							>
 								<div class="flex w-full justify-between">
 									<div class="flex gap-8 mb-8">
-										{#each section.items as item}
+										{#each section.items as item (item.id)}
 											{#if item.isShown}
 												<div
 													class:opacity-40={!item.isSelected}
@@ -391,6 +397,7 @@
 											}}
 										>
 											<FeatherIcon
+												color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
 												on:click={() => {
 													selectPreviousItem();
 												}}
@@ -404,20 +411,42 @@
 												selectNextItem();
 											}}
 										>
-											<FeatherIcon class="cursor-pointer" name="arrow-right" />
+											<FeatherIcon
+												class="cursor-pointer"
+												color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
+												name="arrow-right"
+											/>
 										</div>
 									</div>
 								</div>
 
-								{#key carouselKey}
-									<div in:fade>
-										<RenderUrl
-											class="aspect-og"
-											imgClass="aspect-og object-cover"
-											url={(section.items.find((i) => i.isSelected) || section.items[0]).imageUrl}
-										/>
-									</div>
-								{/key}
+								{#if selectedCarouselItem}
+									{#key carouselKey}
+										<div class="_section-item">
+											<div class="p-4">
+												{@html selectedCarouselItem.description}
+											</div>
+
+											<div>
+												<RenderInteractiveOptions
+													bind:sectionItem={selectedCarouselItem}
+													class="p-4"
+													{page}
+												/>
+											</div>
+
+											<div in:fade>
+												<RenderUrl
+													class="aspect-og"
+													imgClass="aspect-og object-cover {section.description
+														? 'rounded-b-lg'
+														: ''}"
+													bind:url={selectedCarouselItem.imageUrl}
+												/>
+											</div>
+										</div>
+									{/key}
+								{/if}
 							</div>
 						{:else if section.carouselType === 'horizontal'}
 							<div>
@@ -470,15 +499,17 @@
 										</div>
 									</div>
 
-									<div class="col-span-2 p-8" in:fade>
-										{#key carouselKey}
-											<RenderUrl
-												class="aspect-og"
-												imgClass="aspect-og object-cover"
-												url={(section.items.find((i) => i.isSelected) || section.items[0]).imageUrl}
-											/>
-										{/key}
-									</div>
+									{#if selectedCarouselItem}
+										<div class="col-span-2 p-8" in:fade>
+											{#key carouselKey}
+												<RenderUrl
+													class="aspect-og"
+													imgClass="aspect-og object-cover"
+													bind:url={selectedCarouselItem.imageUrl}
+												/>
+											{/key}
+										</div>
+									{/if}
 								</div>
 							</div>
 						{/if}

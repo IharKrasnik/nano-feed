@@ -55,7 +55,7 @@
 			newItem.pricing = { amount: 1.99, per: 'month' };
 		}
 
-		section.items.push(newItem);
+		section.items = [...section.items, newItem];
 	};
 
 	let removeItem = (benefit) => {
