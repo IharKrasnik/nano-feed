@@ -98,6 +98,7 @@
 				<option value="email">Submit Email</option>
 				<option value="single_choice">Community Single Choice</option>
 				<option value="short_answer">Community Answer</option>
+				<option value="wave_analytics">See Public Web Analytics</option>
 			{/if}
 		</select>
 

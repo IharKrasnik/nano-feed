@@ -304,6 +304,10 @@
 				<div class="bg-white top-[60px] rounded-xl">
 					<div class="p-4 pb-0 flex justify-between items-center">
 						<div class="_title" style="margin: 0;">Columns</div>
+						<div>
+							<input type="checkbox" bind:checked={section.isShowSource} /> show url source
+							<input class="ml-2" type="checkbox" bind:checked={section.isMasonryGrid} /> masonry
+						</div>
 
 						<!-- <div class="opacity-70 hover:opacity-100 transition text-right w-full text-sm">
 					<a class="cursor-pointer text-[#8B786D]" title="Remove Whole Section" on:click={onRemove}

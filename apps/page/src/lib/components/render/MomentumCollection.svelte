@@ -16,11 +16,13 @@
 	let isFeedLoading = true;
 
 	let databaseSection = {
+		isShowSource: section.isShowSource,
 		renderType: 'feed',
 		columns: section.columns,
 		items: [],
 		linkType: 'interactive',
-		totalItemsLength: 0
+		totalItemsLength: 0,
+		isMasonryGrid: section.isMasonryGrid
 	};
 
 	$: if (section.columns) {
@@ -100,17 +102,33 @@
 					return item.tagsStr?.includes(filterTag);
 				}
 			})
-			.map(({ _id, title, content, attachments, logoUrl, url, tagsStr }) => {
-				return {
-					feedItemId: _id,
+			.map(
+				({
+					createdOn,
+					publishedOn,
+					source,
+					_id,
 					title,
-					description: content,
-					imageUrl: attachments && attachments[0] && attachments[0].url,
-					emoji: logoUrl,
+					content,
+					attachments,
+					logoUrl,
 					url,
 					tagsStr
-				};
-			});
+				}) => {
+					return {
+						createdOn,
+						publishedOn,
+						source,
+						feedItemId: _id,
+						title,
+						description: content,
+						imageUrl: attachments && attachments[0] && attachments[0].url,
+						emoji: logoUrl,
+						url,
+						tagsStr
+					};
+				}
+			);
 
 		if (!isEdit) {
 			replaceVars();

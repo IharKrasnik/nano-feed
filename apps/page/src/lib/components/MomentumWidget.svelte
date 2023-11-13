@@ -44,20 +44,24 @@
 	setTab('url');
 
 	let submitLink = async () => {
-		if (!page.streamSlug) {
-			const { streamSlug } = await put(`pages/${page._id}/embed-stream`);
-			page.streamSlug = streamSlug;
+		if (!page.feedStreamSlug) {
+			const { streamSlug } = await put(`pages/${page._id}/embed-stream`, {
+				title: 'Feed'
+			});
+
+			page.feedStreamSlug = streamSlug;
 		}
 
 		await post('feed/from-url', {
 			url: urlToSubmitToStream,
-			projectSlug: page.streamSlug
+			projectSlug: page.feedStreamSlug
 		});
 
 		urlToSubmitToStream = null;
 		$feedLastUpdatedOn = new Date();
 		isCollapsed = true;
-		showSuccessMessage('Congrats! Your post is published on your page.');
+
+		showSuccessMessage('Congrats! Your post is published in your "Feed" database.');
 	};
 
 	let publishNewMoment = async () => {
@@ -79,7 +83,8 @@
 
 		$feedLastUpdatedOn = new Date();
 		isCollapsed = true;
-		showSuccessMessage('Congrats! Your post is published on your page.');
+
+		showSuccessMessage('Congrats! Your post is published in your "Feed" database.');
 	};
 
 	let linkedInLogin = async () => {
@@ -200,7 +205,7 @@
 					class="_dark w-full"
 					type="text"
 					bind:this={urlEl}
-					placeholder="https://twitter.com/aliszu/status/1650908531711787014"
+					placeholder="https://twitter.com/that_igor_/status/1720773458898911334"
 					bind:value={urlToSubmitToStream}
 				/>
 

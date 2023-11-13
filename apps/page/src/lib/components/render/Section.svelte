@@ -17,6 +17,7 @@
 	import RenderForm from '$lib/components/render/Form.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
 	import ArticleAuthorLabel from '$lib/components/render/ArticleAuthorLabel.svelte';
+	import SourceLogo from 'lib/components/SourceLogo.svelte';
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
@@ -604,16 +605,20 @@
 						{/each}
 					{:else}
 						<div
-							class="sm:grid-cols-{section.columns}  gap-4 {section.columns > 1
+							class="gap-2 sm:gap-4 {section.columns > 1
 								? 'items-stretch-or-not'
-								: ''} {section.carousel ? 'flex overflow-x-auto sm:grid' : 'grid'}"
+								: ''} {section.carousel
+								? 'flex overflow-x-auto sm:grid'
+								: ''} {section.isMasonryGrid
+								? `sm:columns-${section.columns}`
+								: `grid sm:grid-cols-${section.columns}`}"
 						>
 							{#each section.items || [] as item, i}
 								{#if item.isShown || _.isUndefined(item.isShown)}
 									<a
 										href={section.linkType === 'interactive' ? item.url : null}
 										target={item.url?.startsWith('http') ? '_blank' : ''}
-										class="_section-item relative {item.bgImageUrl
+										class="_section-item break-inside-avoid block relative {item.bgImageUrl
 											? '_bg-image'
 											: ''} rounded-lg sm:rounded-xl {item.className ||
 											''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
@@ -718,6 +723,7 @@
 															/>
 														</h3>
 													{/if}
+
 													{#if item.tagsStr}
 														<div class="my-4 flex flex-wrap gap-2">
 															{#each item.tagsStr.split(',') as tag}
@@ -752,7 +758,7 @@
 													{/if}
 
 													{#if item.interactiveRenderType}
-														<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
+														<div class="px-4 {page?.theme?.containerWidth ? 'py-4' : 'py-4'}">
 															<RenderInteractiveOptions
 																class={section.columns === 1 &&
 																section.interactiveRenderType === 'single_choice'
@@ -786,6 +792,23 @@
 															: ''}"
 														url={item.imageUrl}
 													/>
+												</div>
+											{/if}
+
+											{#if section.isShowSource}
+												<div class="p-4">
+													<hr class="my-4 opacity-30" />
+
+													<div class="flex justify-between items-center text-sm opacity-80">
+														{moment(item.publishedOn || item.createdOn).format('MMM DD, YYYY')}
+
+														<div>
+															<SourceLogo
+																theme={page?.theme?.theme || 'light'}
+																bind:url={item.url}
+															/>
+														</div>
+													</div>
 												</div>
 											{/if}
 										</div>

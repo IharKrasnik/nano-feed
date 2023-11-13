@@ -8,7 +8,7 @@
 	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
 	import Popup from '$lib/components/Popup.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
-
+	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 	export let page;
 
 	export let sectionItem;
@@ -237,6 +237,8 @@
 					{/if}
 				</div>
 			{/if}
+		{:else if sectionItem.interactiveRenderType === 'wave_analytics'}
+			<WaveIndicator project={{ page }} class="mt-4 _alternative" />
 		{:else if sectionItem.interactiveRenderType === 'email'}
 			{#if $currentCustomer.email && !isResetEmail}
 				<div class={clazz?.includes('mx-auto') ? 'mx-auto' : ''}>

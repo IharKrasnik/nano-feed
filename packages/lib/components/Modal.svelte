@@ -1,5 +1,6 @@
 <script>
 	import { fly } from 'svelte/transition';
+	import { page } from '$app/stores';
 	import portal from 'lib/use/portal';
 	import CrossSvg from 'lib/icons/cross.svelte';
 	import clickOutside from 'lib/use/clickOutside';
@@ -39,7 +40,12 @@
 			style="z-index: {zIndex}"
 		>
 			<div class="flex items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-				<div class="absolute _modal-backdrop inset-0 transition-opacity" aria-hidden="true" />
+				<div
+					class="absolute _modal-backdrop inset-0 transition-opacity"
+					style="background-color: {$page.data?.page?.theme?.theme === 'dark'
+						? 'rgba(0,0,0,0.8)'
+						: 'rgba(255,255,255,0.8)'};"
+				/>
 
 				<div
 					class="modal-content max-h-full overflow-y-auto absolute inline-block align-bottom rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
@@ -48,11 +54,21 @@
 					style={maxWidth ? `max-width: ${maxWidth}px;` : ''}
 				>
 					{#if isClosable}
-						<div class="_cross" on:click={closeModal}>
+						<div
+							class="_cross"
+							on:click={closeModal}
+							style={$page.data?.page
+								? `stroke: ${$page.data?.page?.theme?.theme === 'dark' ? '#fff' : '#000'};`
+								: ''}
+						>
 							<CrossSvg />
 						</div>
 					{/if}
-					<div class="_modal-contents bg-[#fff]">
+					<div
+						class="_modal-contents {$page.data?.page?.theme?.theme === 'dark'
+							? 'bg-[#111] text-white'
+							: 'bg-[#fff]'}"
+					>
 						<slot />
 					</div>
 				</div>

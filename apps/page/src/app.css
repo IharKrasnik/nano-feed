@@ -142,11 +142,6 @@ input[type='checkbox'] {
 	background: white;
 }
 
-.modal-content ._cross {
-	/* color: #222; */
-	stroke: #000 !important;
-}
-
 ._modal-backdrop {
 	/* display: none; */
 	background: rgba(255, 255, 255, 0.8);
@@ -175,14 +170,17 @@ textarea._dark {
 }
 
 select {
-	background: #f6f5f5;
+	/* background: #f6f5f5; */
+	background: none;
 	padding: 8px 12px;
 	font-size: 14px;
 	border-radius: 8px;
 }
 
 textarea {
-	background: #f6f5f5;
+	background: none;
+
+	/* background: #f6f5f5; */
 	padding: 8px 12px;
 	font-size: 14px;
 	border-radius: 8px;
