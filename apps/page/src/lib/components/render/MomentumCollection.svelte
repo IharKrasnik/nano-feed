@@ -155,7 +155,9 @@
 {/if} -->
 
 {#if $feedCache[section.id]?.tags?.length}
-	<div class="flex w-full sm:justify-center gap-4 mt-4 mb-8 overflow-x-scroll max-w-screen">
+	<div
+		class="flex w-full sm:justify-center gap-4 mt-4 mb-8 overflow-x-scroll sm:overflow-x-auto sm:flex-wrap max-w-screen"
+	>
 		<div
 			class="_section-container _section-item px-4 py-2 shrink-0 {filterTag ? '' : 'selected'}"
 			on:click={() => setTag(null)}
