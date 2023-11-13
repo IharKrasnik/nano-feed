@@ -358,13 +358,25 @@
 									{page.parentPage?.name || page.name}
 								</span>
 								<div class="ml-6 opacity-70 hidden sm:block">
-									{@html striptags(page.parentPage?.title || page.title || '')}
+									{@html striptags(
+										page.parentPage?.title ||
+											page.title ||
+											(page?.parentPage?.heros[0] && page?.parentPage?.heros[0].title)
+									)}
 								</div>
 							</a>
 
 							<div class="shrink-0 flex items-center">
+								{#if page?.parentPage?.heros && page?.parentPage?.heros[0].id}
+									<RenderInteractiveOptions sectionItem={page.parentPage.heros[0]} bind:page />
+								{/if}
+
 								{#if page.activeHero}
-									<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
+									<RenderInteractiveOptions
+										sectionItem={page.activeHero ||
+											(page.parentPage && page.parentPage.heros && page.parentPage.heros[0])}
+										bind:page
+									/>
 									<!-- {#if page.isCollectEmails}
 									<button
 										class="cursor-pointer"
@@ -399,29 +411,42 @@
 							<div
 								class="px-4 sm:px-0 mb-4 _header-content flex md:justify-between items-center justify-center"
 							>
-								<a class="flex items-center shrink-0 _logo" href="/">
-									{#if page?.logo && page.logo.startsWith('http')}
-										<Emoji class="mr-2 rounded" emoji={page.parentPage?.logo || page.logo} />
-									{/if}
+								<div class="flex">
+									<a class="flex items-center shrink-0 _logo" href="/">
+										{#if page?.logo && page.logo.startsWith('http')}
+											<Emoji class="mr-2 rounded" emoji={page.parentPage?.logo || page.logo} />
+										{/if}
 
-									<span
-										class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
-										style="font-family: var(--logo-font)"
-									>
-										{page.parentPage?.name || page.name}
-									</span>
-								</a>
+										<span
+											class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
+											style="font-family: var(--logo-font)"
+										>
+											{page.parentPage?.name || page.name}
+										</span>
+									</a>
+									{#if page.parentPage && page.parentPage.heros?.length}
+										<div
+											class="ml-8 flex items-center justify-center font-semibold text-sm py-1 gap-4"
+										>
+											{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+												<a href="/{subPage.slug}">{subPage.name}</a>
+											{/each}
+										</div>
+									{/if}
+								</div>
 
 								<div class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold">
-									<!-- {#if !page.parentPage || page.parentPage?.subPages}
-										{#if page.parentPage?.blog || page.blog}
-											<a href="/blog">Blog</a>
-										{/if}
-									{/if} -->
-
-									{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-										<a href="/{subPage.slug}">{subPage.name}</a>
-									{/each}
+									{#if page.parentPage && page.parentPage.heros?.length}
+										<RenderInteractiveOptions
+											size="small"
+											sectionItem={page.parentPage.heros[0]}
+											{page}
+										/>
+									{:else}
+										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+											<a href="/{subPage.slug}">{subPage.name}</a>
+										{/each}
+									{/if}
 
 									{#if page.activeHero}
 										<!-- <RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page /> -->

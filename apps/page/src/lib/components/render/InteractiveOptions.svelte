@@ -13,6 +13,8 @@
 
 	export let sectionItem;
 
+	export let size;
+
 	export let parentSectionId;
 	export let itemClass = 'p-4 mx-4';
 
@@ -295,9 +297,13 @@
 					}}
 				>
 					{#if sectionItem.isUrlButton}
-						<button class="w-full flex items-center">
+						<button class="w-full flex items-center {size === 'small' ? '_small' : ''}">
 							{#if sectionItem.urlIcon}
-								<Emoji class="mr-2 rounded-full" emoji={sectionItem.urlIcon} />
+								<Emoji
+									width={size === 'small' ? 15 : 25}
+									class="mr-2 rounded-full"
+									emoji={sectionItem.urlIcon}
+								/>
 							{/if}
 							{sectionItem.callToActionText || 'Learn More'}
 						</button>
@@ -324,9 +330,16 @@
 						}}
 					>
 						{#if sectionItem.isUrl2Button}
-							<button class="w-full flex items-center" class:_alternative={sectionItem.isUrlButton}>
+							<button
+								class="w-full flex items-center {size === 'small' ? '_small' : ''}"
+								class:_alternative={sectionItem.isUrlButton}
+							>
 								{#if sectionItem.url2Icon}
-									<Emoji class="mr-2 rounded-full" emoji={sectionItem.url2Icon} />
+									<Emoji
+										class="mr-2 rounded-full"
+										width={size === 'small' ? 15 : 25}
+										emoji={sectionItem.url2Icon}
+									/>
 								{/if}
 								{sectionItem.callToActionText2 || 'Learn More'}
 							</button>
