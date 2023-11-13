@@ -20,7 +20,9 @@
 	{#if emoji?.startsWith('http')}
 		{#key emoji}
 			<img
-				class={clazz?.includes('rounded-full') ? 'rounded-full' : ''}
+				class="{clazz?.includes('rounded-full') ? 'rounded-full' : ''} {clazz?.includes('rounded')
+					? 'rounded'
+					: ''}"
 				style="width: {width}px; height: {width}px;"
 				src={emoji}
 			/>

@@ -363,24 +363,24 @@
 							</a>
 
 							<div class="shrink-0 flex items-center">
-								{#if page.parentPage?.blog || page.blog}
-									<div class="mr-4 sm:mr-8">
-										<a href="/blog">Blog</a>
-									</div>
-								{/if}
-
-								{#if page.callToAction && !isSubmitted}
-									{#if page.isCollectEmails}
-										<button
-											class="cursor-pointer"
-											style="outline: 1px rgba(255, 255, 255, .8) solid;"
-											on:click={onButtonClick}>{page.callToAction}</button
-										>
-									{:else if page.actionUrl}
-										<a href={page.actionUrl} target="_blank" class="button">
-											{page.callToAction}
-										</a>
-									{/if}
+								{#if page.activeHero}
+									<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
+									<!-- {#if page.isCollectEmails}
+									<button
+										class="cursor-pointer"
+										style="outline: 1px rgba(255, 255, 255, .8) solid;"
+										on:click={onButtonClick}
+										>{page.parentPage?.callToAction || page.callToAction}</button
+									>
+								{:else}
+									<a
+										href={page.parentPage?.actionUrl || page.actionUrl}
+										target="_blank"
+										class="button"
+									>
+										{page.parentPage?.callToAction || page.callToAction}
+									</a>
+								{/if} -->
 								{/if}
 							</div>
 						</div>
@@ -401,7 +401,7 @@
 							>
 								<a class="flex items-center shrink-0 _logo" href="/">
 									{#if page?.logo && page.logo.startsWith('http')}
-										<Emoji class="mr-2" emoji={page.parentPage?.logo || page.logo} />
+										<Emoji class="mr-2 rounded" emoji={page.parentPage?.logo || page.logo} />
 									{/if}
 
 									<span
@@ -413,18 +413,19 @@
 								</a>
 
 								<div class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold">
-									{#if !page.parentPage || page.parentPage?.subPages}
+									<!-- {#if !page.parentPage || page.parentPage?.subPages}
 										{#if page.parentPage?.blog || page.blog}
 											<a href="/blog">Blog</a>
 										{/if}
+									{/if} -->
 
-										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-											<a href="/{subPage.slug}">{subPage.name}</a>
-										{/each}
-									{/if}
+									{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+										<a href="/{subPage.slug}">{subPage.name}</a>
+									{/each}
 
-									{#if (page.parentPage?.callToAction || page.callToAction) && !isSubmitted}
-										{#if page.isCollectEmails}
+									{#if page.activeHero}
+										<!-- <RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page /> -->
+										<!-- {#if page.isCollectEmails}
 											<button
 												class="cursor-pointer"
 												style="outline: 1px rgba(255, 255, 255, .8) solid;"
@@ -439,7 +440,7 @@
 											>
 												{page.parentPage?.callToAction || page.callToAction}
 											</a>
-										{/if}
+										{/if} -->
 									{/if}
 								</div>
 							</div>

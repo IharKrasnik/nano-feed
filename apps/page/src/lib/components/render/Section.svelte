@@ -372,12 +372,14 @@
 								class={!section.size || section.size === 'medium' ? 'max-w-[600px] mx-auto' : ''}
 							>
 								<div class="flex w-full justify-between">
-									<div class="flex gap-8 mb-8">
+									<div class="flex gap-8 mb-8 items-center">
 										{#each section.items as item (item.id)}
 											{#if item.isShown}
 												<div
 													class:opacity-40={!item.isSelected}
-													class="cursor-pointer transition font-medium text-lg"
+													class="cursor-pointer transition  {item.isSelected && item.description
+														? 'text-2xl font-semibold'
+														: 'text-lg font-medium'}"
 													on:click={() => selectCarouselItem(item)}
 												>
 													<ContentEditableIf

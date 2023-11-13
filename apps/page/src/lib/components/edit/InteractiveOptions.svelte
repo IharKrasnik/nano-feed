@@ -87,7 +87,7 @@
 				<option value="links">Click Few Links</option>
 				<option value="single_choice">Community Single Choice</option>
 				<option value="short_answer">Community Answer</option>
-			{:else if section.renderType === 'form'}
+			{:else if section?.renderType === 'form'}
 				<option value="email">Email</option>
 				<option value="text">Short Text</option>
 				<option value="textarea">Long Text</option>
@@ -101,7 +101,7 @@
 			{/if}
 		</select>
 
-		{#if section.renderType === 'form'}
+		{#if section?.renderType === 'form'}
 			<div class="my-2">
 				<div class="text-sm opacity-70 mb-2">Placeholder</div>
 				<input
@@ -208,7 +208,7 @@
 			</div>
 		{/if}
 
-		{#if sectionItem.interactiveRenderType === 'email' && section.renderType !== 'form'}
+		{#if sectionItem.interactiveRenderType === 'email' && section?.renderType !== 'form'}
 			<div class="font-normal text-sm opacity-70 mb-2 mt-4">Button text</div>
 
 			<input
