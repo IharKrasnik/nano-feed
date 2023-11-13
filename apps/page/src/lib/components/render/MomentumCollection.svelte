@@ -156,10 +156,14 @@
 
 {#if $feedCache[section.id]?.tags?.length}
 	<div
-		class="flex w-full sm:justify-center gap-4 mt-4 mb-8 overflow-x-scroll sm:overflow-x-auto sm:flex-wrap max-w-screen"
+		class="flex w-full {section.isTitleLeft
+			? ''
+			: 'sm:justify-center'} gap-3 mt-4 mb-8 overflow-x-scroll sm:overflow-x-auto sm:flex-wrap max-w-screen"
 	>
 		<div
-			class="_section-container _section-item px-4 py-2 shrink-0 {filterTag ? '' : 'selected'}"
+			class="px-2 py-1 text-sm opacity-80 _border-accent rounded-xl cursor-pointer shrink-0 _tag {filterTag
+				? ''
+				: 'selected'}"
 			on:click={() => setTag(null)}
 		>
 			All tags
@@ -167,7 +171,10 @@
 
 		{#each $feedCache[section.id]?.tags as tag}
 			<div
-				class="_section-container _section-item p-2  shrink-0 {filterTag === tag ? 'selected' : ''}"
+				class="px-2 py-1 text-sm opacity-80 _border-accent rounded-xl cursor-pointer shrink-0 _tag {filterTag ===
+				tag
+					? 'selected'
+					: ''}"
 				on:click={() => setTag(tag)}
 			>
 				{tag}
@@ -196,16 +203,16 @@
 {/if}
 
 <style>
-	._section-item:not(.selected) {
+	._tag:not(.selected) {
 		@apply opacity-40 transition cursor-pointer;
 	}
 
-	._section-item.selected {
+	._tag.selected {
 		/* outline: 2px var(--accent-color) solid; */
-		@apply shadow-md;
+		@apply shadow-md font-semibold;
 	}
 
-	._section-item:not(.selected):hover {
+	._tag:not(.selected):hover {
 		@apply opacity-100;
 	}
 </style>
