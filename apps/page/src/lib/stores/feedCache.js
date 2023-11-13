@@ -1,9 +1,22 @@
+import _ from 'lodash';
 import { writable } from 'svelte/store';
 import { get } from 'lib/api';
 
 const feedStore = writable({});
 
 let getCacheKey = (cacheId) => `feed-${cacheId}`;
+
+let getTags = (feed) => {
+	let tags = [];
+	let tagsStrs = feed.filter((f) => f.tagsStr).map((f) => f.tagsStr);
+
+	tagsStrs.forEach((tagsStr) => {
+		let itemTags = tagsStr.split(',').map((t) => _.trim(t));
+		itemTags.forEach((itemTag) => tags.push(itemTag));
+	});
+
+	return _.uniq(tags);
+};
 
 export const fetchFeed = async ({
 	sort = { publishedOn: -1, createdOn: -1 },
@@ -56,9 +69,9 @@ export const fetchFeed = async ({
 	const { results: feed, count } = await get('feed', query);
 
 	feedStore.update((st) => {
-		st[cacheId] = { updatedOn: new Date(), feed, totalCount: count };
+		st[cacheId] = { updatedOn: new Date(), feed, tags: getTags(feed), totalCount: count };
 		st.updatedOn = new Date();
-		localStorage[getCacheKey(cacheId)] = JSON.stringify(feed);
+		localStorage[getCacheKey(cacheId)] = JSON.stringify(st[cacheId]);
 		return st;
 	});
 

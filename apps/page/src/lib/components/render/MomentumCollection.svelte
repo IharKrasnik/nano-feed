@@ -84,9 +84,23 @@
 		replaceVars();
 	}
 
-	$: if ($feedCache[section.id]) {
-		databaseSection.items = $feedCache[section.id].feed.map(
-			({ _id, title, content, attachments, logoUrl, url, tagsStr }) => {
+	let filterTag = null;
+
+	let setTag = (tag) => {
+		filterTag = tag;
+		data;
+	};
+
+	$: if ($feedCache[section.id] || filterTag) {
+		databaseSection.items = $feedCache[section.id].feed
+			.filter((item) => {
+				if (!filterTag) {
+					return true;
+				} else {
+					return item.tagsStr?.includes(filterTag);
+				}
+			})
+			.map(({ _id, title, content, attachments, logoUrl, url, tagsStr }) => {
 				return {
 					feedItemId: _id,
 					title,
@@ -96,8 +110,7 @@
 					url,
 					tagsStr
 				};
-			}
-		);
+			});
 
 		if (!isEdit) {
 			replaceVars();
@@ -117,17 +130,9 @@
 	loadFeed();
 
 	let trackClick = (feedItem) => {};
-
-	let filterCategoryId = null;
-
-	let selectCategory = (categoryStream) => {
-		filterCategoryId = categoryStream?._id;
-
-		loadFeed({ categorySlug: categoryStream?.slug || section?.streamSlug || page?.streamSlug });
-	};
 </script>
 
-{#if section.renderType === 'feed' && childStreams.length}
+<!-- {#if section.renderType === 'feed' && childStreams.length}
 	<div class="flex w-full justify-center gap-4">
 		<div
 			class="_section-container _section-item p-2 {filterCategoryId ? '' : 'selected'}"
@@ -144,6 +149,26 @@
 				on:click={() => selectCategory(categoryStream)}
 			>
 				{categoryStream.title}
+			</div>
+		{/each}
+	</div>
+{/if} -->
+
+{#if $feedCache[section.id]?.tags?.length}
+	<div class="flex w-full sm:justify-center gap-4 mt-4 mb-8 overflow-x-scroll max-w-screen">
+		<div
+			class="_section-container _section-item px-4 py-2 shrink-0 {filterTag ? '' : 'selected'}"
+			on:click={() => setTag(null)}
+		>
+			All tags
+		</div>
+
+		{#each $feedCache[section.id]?.tags as tag}
+			<div
+				class="_section-container _section-item p-2  shrink-0 {filterTag === tag ? 'selected' : ''}"
+				on:click={() => setTag(tag)}
+			>
+				{tag}
 			</div>
 		{/each}
 	</div>
@@ -170,7 +195,7 @@
 
 <style>
 	._section-item:not(.selected) {
-		@apply opacity-60 transition cursor-pointer;
+		@apply opacity-40 transition cursor-pointer;
 	}
 
 	._section-item.selected {
