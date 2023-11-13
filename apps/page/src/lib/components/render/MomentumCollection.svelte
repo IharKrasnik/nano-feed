@@ -55,7 +55,8 @@
 					streamSlug: categorySlug || section?.streamSlug,
 					forceRefresh: true,
 					isWithUrlOnly: true,
-					streamSettings: section.streamSettings
+					streamSettings: section.streamSettings,
+					perPage: 100
 				});
 			}
 		}

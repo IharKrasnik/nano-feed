@@ -19,7 +19,7 @@
 	};
 
 	let loadFeed = async () => {
-		return getFeed({ streamSlug: stream.slug });
+		return getFeed({ streamSlug: stream.slug, perPage: 100 });
 	};
 
 	loadFeed().then((res) => {
