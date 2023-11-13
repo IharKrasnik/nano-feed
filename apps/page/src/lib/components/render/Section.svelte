@@ -684,7 +684,7 @@
 														</h3>
 													{/if}
 													{#if item.tagsStr}
-														<div class="my-4 flex gap-2">
+														<div class="my-4 flex flex-wrap gap-2">
 															{#each item.tagsStr.split(',') as tag}
 																<div
 																	class="px-2 py-1  text-sm  opacity-80 _border-accent rounded-xl inline"
