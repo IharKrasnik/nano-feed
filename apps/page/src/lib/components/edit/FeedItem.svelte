@@ -26,6 +26,8 @@
 
 	export let feedItem;
 
+	let originalFeedItem = _.cloneDeep(feedItem);
+
 	export let isCollapsed = !!feedItem._id;
 
 	$: if (!feedItem.attachments?.length) {
@@ -34,6 +36,8 @@
 
 	let updateFeedItem = async () => {
 		let updated = await put(`feed/${feedItem._id}`, feedItem);
+
+		originalFeedItem = _.cloneDeep(updated);
 
 		showSuccessMessage('Record updated');
 
@@ -153,6 +157,13 @@
 				<a
 					class="_secondary _small text-sm cursor-pointer"
 					on:click={() => {
+						// feedItem = originalFeedItem;
+						feedItem.title = originalFeedItem.title;
+						feedItem.content = originalFeedItem.content;
+						feedItem.attachments = originalFeedItem.attachments;
+						feedItem.iconUrl = originalFeedItem.iconUrl;
+						feedItem.tagsStr = originalFeedItem.tagsStr;
+
 						isCollapsed = true;
 					}}>Cancel</a
 				>
