@@ -59,7 +59,7 @@
 		class="relative z-10 container container-width mx-auto {hero.theme?.isVertical ||
 		page.sections?.length
 			? ''
-			: 'min-h-screen h-screen'} pt-[60px]"
+			: 'min-h-screen h-screen'} pt-[60px] mb-[-60px]"
 		style="{styles};"
 	>
 		{#if page.renderType !== 'article'}

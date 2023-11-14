@@ -531,10 +531,7 @@
 							<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
 						{/if}
 
-						<div
-							class="relative _root bg-site"
-							style="background: none;  padding-top: {page.activeHero ? '0px;' : '60px;'}"
-						>
+						<div class="relative _root bg-site pt-[60px]" style="background: none;">
 							{#if $sveltePage.data.post}
 								<PostPreview isEdit={false} isNoFooter post={$sveltePage.data.post} />
 							{:else if $sveltePage.url.pathname.includes('/blog')}
