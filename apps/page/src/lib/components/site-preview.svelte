@@ -144,6 +144,7 @@
 			}
 		}, 0);
 	};
+
 	page.variables = [
 		{
 			name: 'timeOfDay',
@@ -358,7 +359,7 @@
 				
 				class="absolute w-screen h-screen object-cover"
 				src="https://as2.ftcdn.net/v2/jpg/06/15/14/25/1000_F_615142554_j3WPgAOSyTX1Ri1O6pxf0s8jx37vXLbg.jpg"
-			/> -->
+			  /> -->
 
 				<!-- {#if !noStickyHeader && scrollY > 300}
 					<div

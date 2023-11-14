@@ -243,7 +243,8 @@
 							title: '',
 							content: '',
 							url: '',
-							attachments: [{ url: '' }]
+							attachments: [{ url: '' }],
+							projects: [{ slug: activeStream.slug }]
 						},
 						...$feedCache[activeStream.slug].feed
 					]
@@ -277,6 +278,7 @@
 			}) as feedItem (feedItem._id + feedItem.id)}
 				<EditFeedItem
 					bind:feedItem
+					isSocialFeed={activeStream.slug.includes('-feed')}
 					onUpdated={(updatedFeedItem) => {
 						$feedCache[activeStream.slug] = {
 							...$feedCache[activeStream.slug],

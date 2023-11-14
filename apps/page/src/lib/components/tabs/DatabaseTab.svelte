@@ -1,9 +1,21 @@
 <script>
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import RenderMomentumCollection from '$lib/components/render/MomentumCollection.svelte';
+	import getPageCssStyles from '$lib/services/getPageCssStyles';
 
 	export let page;
 	export let streamSlug;
+
+	let cssVarStyles;
+	let styles;
+
+	let previewEl;
+
+	$: if (page) {
+		let res = getPageCssStyles(page);
+		cssVarStyles = res.cssVarStyles;
+		styles = res.styles;
+	}
 
 	let getSection = () => ({
 		id: streamSlug,
@@ -20,7 +32,7 @@
 
 {#if streamSlug}
 	{#key streamSlug}
-		<div class="p-16 bg-background">
+		<div class="p-16 bg-background" style="{cssVarStyles}; color: var(--text-color);">
 			<RenderMomentumCollection
 				isUseCache
 				bind:cacheId={streamSlug}

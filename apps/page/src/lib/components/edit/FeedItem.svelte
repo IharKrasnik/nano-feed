@@ -1,12 +1,14 @@
 <script>
 	import { get, post, put, del } from 'lib/api';
 	import _ from 'lodash';
+	import moment from 'moment';
 	import tooltip from 'lib/use/tooltip';
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
 	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly, fade } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import SourceLogo from 'lib/components/SourceLogo.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
@@ -25,6 +27,7 @@
 	export let onUpdated = () => {};
 
 	export let feedItem;
+	export let isSocialFeed = false;
 
 	let originalFeedItem = _.cloneDeep(feedItem);
 
@@ -35,13 +38,19 @@
 	}
 
 	let updateFeedItem = async () => {
-		let updated = await put(`feed/${feedItem._id}`, feedItem);
+		if (feedItem._id) {
+			let updated = await put(`feed/${feedItem._id}`, feedItem);
+			originalFeedItem = _.cloneDeep(updated);
 
-		originalFeedItem = _.cloneDeep(updated);
+			showSuccessMessage('Record updated');
 
-		showSuccessMessage('Record updated');
-
-		onUpdated(updated);
+			onUpdated(updated);
+		} else {
+			let created = await post(`feed`, feedItem);
+			originalFeedItem = _.cloneDeep(created);
+			showSuccessMessage('Record created');
+			onUpdated(created);
+		}
 
 		isCollapsed = true;
 	};
@@ -53,11 +62,26 @@
 		onRemoved(feedItem);
 		isCollapsed = true;
 	};
+
+	let fetchMetaTags = async () => {
+		if (feedItem.url) {
+			const data = await get('utils/fetch-meta-tags', {
+				url: feedItem.url
+			});
+
+			feedItem.title = feedItem.title || data.title;
+			feedItem.content = feedItem.content || data.description;
+
+			if ((!feedItem.attachments || !feedItem.attachments[0].url) && data.image) {
+				feedItem.attachments = [{ type: 'image', url: data.image }];
+			}
+		}
+	};
 </script>
 
 {#if isCollapsed}
 	<div
-		class="_section flex font-medium"
+		class="_section"
 		on:click={() => {
 			isCollapsed = false;
 
@@ -68,7 +92,29 @@
 			}
 		}}
 	>
-		{feedItem.title || feedItem.content}
+		<div class="flex justify-between">
+			<div class="font-medium truncate">
+				{feedItem.title || feedItem.content}
+			</div>
+
+			<div class="ml-2 shrink-0 opacity-50 flex items-center">
+				<div class="mr-2">
+					{feedItem.viewsCount || 0}
+				</div>
+
+				<FeatherIcon size="15" name="mouse-pointer" />
+			</div>
+		</div>
+		{#if isSocialFeed}
+			<div class="mt-4 flex justify-between items-center">
+				<div class=" opacity-50">
+					{moment(feedItem.publishedOn || feedItem.createdOn).format('DD, MMM')}
+				</div>
+				<div class="opacity-30">
+					<SourceLogo url={feedItem.url} theme={'light'} />
+				</div>
+			</div>
+		{/if}
 	</div>
 {:else}
 	<div
@@ -99,14 +145,20 @@
 			</div>
 		</div>
 
-		<div class="relative mb-4">
+		<div class="flex justify-between w-full relative mb-4">
 			<input
 				class="w-full"
 				placeholder="Item URL"
+				autofocus
 				type="url"
 				bind:value={feedItem.url}
 				theme="light"
 			/>
+			<div>
+				{#if feedItem.url}
+					<Button class="ml-2 rounded-full bg-[#f6f5f4]" onClick={fetchMetaTags}>🪄</Button>
+				{/if}
+			</div>
 		</div>
 
 		<div class="flex w-full items-center mb-4">

@@ -8,10 +8,6 @@
 
 	export let name = 'cpu';
 	export let color = '#111';
-
-	if (size !== '100%') {
-		size = size.slice(-1) === 'x' ? size.slice(0, size.length - 1) + 'em' : parseInt(size) + 'px';
-	}
 </script>
 
 <svg
