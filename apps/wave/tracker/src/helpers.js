@@ -1,7 +1,6 @@
 import config from './config';
 
-const API_URL =
-	window.WAVE_API_URL || (process.env.BUILD === 'dev' ? config.API_URL_DEV : config.API_URL);
+const API_URL = process.env.BUILD === 'dev' ? config.API_URL_DEV : config.API_URL;
 // const API_URL = config.API_URL_DEV;
 
 const CLASS_DIVIDER = / /g;
@@ -101,7 +100,7 @@ export const getValue = (element) => {
 };
 
 export const sendData = (url, data) =>
-	fetch(`${API_URL}/${url}`, {
+	fetch(`${window.WAVE_API_URL || API_URL}/${url}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
