@@ -100,7 +100,7 @@ export const getValue = (element) => {
 };
 
 export const sendData = (url, data) =>
-	fetch(`${API_URL}/${url}`, {
+	fetch(`${window.WAVE_API_URL || API_URL}/${url}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

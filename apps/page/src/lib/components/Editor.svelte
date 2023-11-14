@@ -56,6 +56,7 @@
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
 	import Settings from '$lib/components/Settings.svelte';
 	import EditDatabase from '$lib/components/edit/DatabaseNew.svelte';
+	import EditCustomers from '$lib/components/edit/Customers.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -1190,6 +1191,8 @@
 								<div>
 									{#if selectedTab === 'database'}
 										<EditDatabase bind:page bind:selectedStreamSlug />
+									{:else if selectedTab === 'analytics'}
+										<EditCustomers bind:page />
 									{:else if selectedTab === 'audience'}
 										<EditWelcomeEmail bind:page />
 									{:else if selectedTab === 'newsletter'}
@@ -1319,14 +1322,14 @@
 												action: () => {
 													selectedTab = 'analytics';
 												},
-												title: `Views (${metrics?.totalViewsCount || 0})`,
+												title: `Customers (${metrics?.totalViewsCount || 0})`,
 												featherIcon: 'activity'
 											},
 											{
 												action: () => {
 													selectedTab = 'audience';
 												},
-												title: `Conversions (${submissions?.results?.length || 0})`,
+												title: `Submissions (${submissions?.results?.length || 0})`,
 												featherIcon: 'check-square'
 											},
 											{
