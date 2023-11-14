@@ -357,7 +357,7 @@
 				src="https://as2.ftcdn.net/v2/jpg/06/15/14/25/1000_F_615142554_j3WPgAOSyTX1Ri1O6pxf0s8jx37vXLbg.jpg"
 			/> -->
 
-				{#if !noStickyHeader && scrollY > 300}
+				<!-- {#if !noStickyHeader && scrollY > 300}
 					<div
 						class="fixed top-0 bg-site w-full backdrop-blur "
 						style="z-index: 33;"
@@ -367,7 +367,6 @@
 							class="flex w-full justify-between items-center container-width left-0 mx-auto p-4"
 						>
 							<a class="flex items-center shrink-0" href="">
-								<!-- <Emoji class="mr-2" emoji={page.parentPage?.logo || page.logo} /> -->
 
 								<span class="font-bold  " style="font-family: var(--logo-font)">
 									{page.parentPage?.name || page.name}
@@ -402,22 +401,7 @@
 												(page.parentPage && page.parentPage.heros && page.parentPage.heros[0])}
 											bind:page
 										/>
-										<!-- {#if page.isCollectEmails}
-									<button
-										class="cursor-pointer"
-										style="outline: 1px rgba(255, 255, 255, .8) solid;"
-										on:click={onButtonClick}
-										>{page.parentPage?.callToAction || page.callToAction}</button
-									>
-								{:else}
-									<a
-										href={page.parentPage?.actionUrl || page.actionUrl}
-										target="_blank"
-										class="button"
-									>
-										{page.parentPage?.callToAction || page.callToAction}
-									</a>
-								{/if} -->
+								
 									{/if}
 								</div>
 							</div>
@@ -425,7 +409,7 @@
 
 						<hr class="border-[#8B786D] opacity-30 w-full" />
 					</div>
-				{/if}
+				{/if} -->
 
 				{#if isMounted}
 					<div
@@ -433,7 +417,7 @@
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						<div class="_header">
+						<div class="fixed top-0 left-0 _header backdrop-blur-lg">
 							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
 								<div class="flex  py-4 sm:py-0">
 									<a class="flex items-center shrink-0 _logo" href="/">
@@ -490,34 +474,33 @@
 									</div>
 								</div>
 							</div>
-
-							{#if isMenuOpen}
-								<div
-									in:fly={{ y: 350, duration: 250 }}
-									out:fly={{ duration: 150 }}
-									class="left-0 top-[61px] fixed w-screen h-screen bg-site bg-background p-4"
-								>
-									{#if page.activeHero}
-										<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
-									{:else if page.parentPage && page.parentPage.heros?.length}
-										<RenderInteractiveOptions
-											size="small"
-											sectionItem={page.parentPage.heros[0]}
-											{page}
-										/>
-									{/if}
-
-									<div class="flex flex-col mt-8">
-										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-											<a class="block  py-4 border-b border-white/20" href="/{subPage.slug}"
-												>{subPage.name}</a
-											>
-										{/each}
-									</div>
-								</div>
-							{/if}
 						</div>
 
+						{#if isMenuOpen}
+							<div
+								in:fly={{ y: 350, duration: 250 }}
+								out:fly={{ duration: 150 }}
+								class="left-0 top-[61px] fixed w-screen h-screen bg-site bg-background p-4"
+							>
+								{#if page.activeHero}
+									<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
+								{:else if page.parentPage && page.parentPage.heros?.length}
+									<RenderInteractiveOptions
+										size="small"
+										sectionItem={page.parentPage.heros[0]}
+										{page}
+									/>
+								{/if}
+
+								<div class="flex flex-col mt-8">
+									{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+										<a class="block  py-4 border-b border-white/20" href="/{subPage.slug}"
+											>{subPage.name}</a
+										>
+									{/each}
+								</div>
+							</div>
+						{/if}
 						<!-- <img
 						class="absolute top-0 left-0 z-0 w-full h-screen"
 						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1698794318980-image.png"
@@ -688,7 +671,6 @@
 	._header {
 		@apply p-1 w-full;
 		border-bottom: 1px rgba(0, 0, 0, 0.2) solid;
-		position: relative;
 		z-index: 40;
 	}
 
