@@ -225,7 +225,7 @@
 {/if}
 
 {#if section.isShown}
-	<div class="relative">
+	<div class="relative {section.bgImageUrl ? 'my-8 sm:my-16' : ''}">
 		{#if section.bgImageUrl}
 			<img
 				src={section.bgImageUrl}
@@ -247,7 +247,7 @@
 				? 'px-8 sm:pb-16'
 				: `${
 						section.items?.length
-							? `${isFooter ? 'p-0' : 'p-4 sm:p-8'} sm:pt-16`
+							? `${isFooter ? 'p-0' : 'px-4 py-8 sm:py-16'}`
 							: 'p-4 sm:p-8 sm:py-32'
 				  }`}"
 			style="z-index: 10; {style || ''}"
