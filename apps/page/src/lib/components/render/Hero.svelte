@@ -59,7 +59,7 @@
 		class="relative z-10 container container-width mx-auto {hero.theme?.isVertical ||
 		page.sections?.length
 			? ''
-			: 'min-h-screen h-screen'}"
+			: 'min-h-screen h-screen'} pt-[60px]"
 		style="{styles};"
 	>
 		{#if page.renderType !== 'article'}
@@ -67,9 +67,7 @@
 				bind:this={$aboveTheFoldEl}
 				class="{hero.theme?.bgImage ? 'light-colors' : ''} {hero.theme?.isVertical
 					? ''
-					: ''} h-full  pb-16 pt-24 sm:pt-36 sm:pb-24 {!hero.testimonials?.length
-					? `flex items-center`
-					: ''}"
+					: ''} h-full py-16 sm:py-24 {!hero.testimonials?.length ? `flex items-center` : ''}"
 				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 			>
 				<div

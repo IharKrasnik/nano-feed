@@ -261,7 +261,10 @@
 
 	let isMenuOpen = false;
 
-	$: $sveltePage.url && (isMenuOpen = false);
+	$: if ($sveltePage.url) {
+		isMenuOpen = false;
+		window.document.body.style['overflow'] = null;
+	}
 
 	let toggleMenu = () => {
 		isMenuOpen = !isMenuOpen;
@@ -528,7 +531,10 @@
 							<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
 						{/if}
 
-						<div class="relative _root bg-site" style="background: none;">
+						<div
+							class="relative _root bg-site"
+							style="background: none;  padding-top: {page.activeHero ? '0px;' : '60px;'}"
+						>
 							{#if $sveltePage.data.post}
 								<PostPreview isEdit={false} isNoFooter post={$sveltePage.data.post} />
 							{:else if $sveltePage.url.pathname.includes('/blog')}
