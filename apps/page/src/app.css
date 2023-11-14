@@ -393,7 +393,7 @@ butotn._wide {
 
 ._alternative {
 	background: none;
-	border: 1px var(--accent-color) solid;
+	outline: 1px var(--accent-color) solid;
 	color: var(--text-color);
 	@apply transition;
 }

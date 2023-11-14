@@ -304,7 +304,7 @@
 						<button class="w-full flex items-center {size === 'small' ? '_small' : ''}">
 							{#if sectionItem.urlIcon}
 								<Emoji
-									width={size === 'small' ? 15 : 25}
+									width={size === 'small' ? 15 : 22}
 									class="mr-2 rounded-full"
 									emoji={sectionItem.urlIcon}
 								/>
@@ -341,7 +341,7 @@
 								{#if sectionItem.url2Icon}
 									<Emoji
 										class="mr-2 rounded-full"
-										width={size === 'small' ? 15 : 25}
+										width={size === 'small' ? 15 : 22}
 										emoji={sectionItem.url2Icon}
 									/>
 								{/if}

@@ -457,6 +457,14 @@
 												<a href="/{subPage.slug}">{subPage.name}</a>
 											{/each}
 										</div>
+									{:else}
+										<div
+											class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
+										>
+											{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+												<a href="/{subPage.slug}">{subPage.name}</a>
+											{/each}
+										</div>
 									{/if}
 								</div>
 
@@ -475,11 +483,10 @@
 												sectionItem={page.parentPage.heros[0]}
 												{page}
 											/>
-										{:else}
-											{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-												<a href="/{subPage.slug}">{subPage.name}</a>
-											{/each}
 										{/if}
+										<!-- {#each page.subPages || page.parentPage?.subPages || [] as subPage}
+											<a href="/{subPage.slug}">{subPage.name}</a>
+										{/each} -->
 									</div>
 								</div>
 							</div>
