@@ -92,13 +92,12 @@
 	color: var(--button-color) !important;
 }
 
-._border-accent {
-	border: 1px var(--accent-color) solid;
+.bg-background {
+	background: var(--background-color);
 }
 
-.bg-body {
-	background: var(--background-color);
-	color: var(--text-color);
+._border-accent {
+	border: 1px var(--accent-color) solid;
 }
 
 ._section-item._color ._section-img {

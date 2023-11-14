@@ -7,7 +7,12 @@
 	export { customClass as class };
 
 	export let name = 'cpu';
-	export let color = '#111';
+	export let color = '#111111';
+	export let theme = 'light';
+
+	if (theme === 'dark') {
+		color = '#f6f5f4';
+	}
 
 	if (size !== '100%') {
 		size = size.slice(-1) === 'x' ? size.slice(0, size.length - 1) + 'em' : parseInt(size) + 'px';

@@ -17,6 +17,8 @@
 
 	export let parentSectionId;
 	export let itemClass = 'p-4 mx-4';
+	export let urlClass = '';
+	export let url2Class = '';
 
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
 
@@ -283,7 +285,7 @@
 					: ''}"
 			>
 				<a
-					class="cursor-pointer w-full sm:w-auto"
+					class="cursor-pointer w-full sm:w-auto {urlClass}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					href={sectionItem.url}
 					on:click={(evt) => {
@@ -316,7 +318,7 @@
 
 				{#if sectionItem.interactiveRenderType === 'links'}
 					<a
-						class="w-full sm:w-auto cursor-pointer"
+						class="w-full sm:w-auto cursor-pointer {url2Class}"
 						target={sectionItem.url2?.startsWith('http') ? '_blank' : ''}
 						href={sectionItem.url2?.startsWith('/') ? `${sectionItem.url2}` : sectionItem.url2}
 						on:click={(evt) => {

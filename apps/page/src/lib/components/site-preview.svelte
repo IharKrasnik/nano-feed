@@ -22,6 +22,7 @@
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
 	import Gradients from '$lib/components/gradients/index.svelte';
+	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
@@ -257,6 +258,20 @@
 	if (!page.activeHero) {
 		page.activeHero = _.shuffle(page.heros)[0];
 	}
+
+	let isMenuOpen = false;
+
+	$: $sveltePage.url && (isMenuOpen = false);
+
+	let toggleMenu = () => {
+		isMenuOpen = !isMenuOpen;
+
+		if (isMenuOpen) {
+			window.document.body.style['overflow'] = 'hidden';
+		} else {
+			window.document.body.style['overflow'] = null;
+		}
+	};
 </script>
 
 <svelte:head>
@@ -344,7 +359,7 @@
 
 				{#if !noStickyHeader && scrollY > 300}
 					<div
-						class="fixed top-0 bg-site w-full backdrop-blur"
+						class="fixed top-0 bg-site w-full backdrop-blur "
 						style="z-index: 33;"
 						in:fly={{ y: -150, duration: 150, delay: 150 }}
 					>
@@ -367,17 +382,27 @@
 							</a>
 
 							<div class="shrink-0 flex items-center">
-								{#if page?.parentPage?.heros && page?.parentPage?.heros[0].id}
-									<RenderInteractiveOptions sectionItem={page.parentPage.heros[0]} bind:page />
-								{/if}
+								<div class="sm:hidden" on:click={toggleMenu}>
+									<FeatherIcon theme={page.theme?.theme} name="menu" />
+								</div>
 
-								{#if page.activeHero}
-									<RenderInteractiveOptions
-										sectionItem={page.activeHero ||
-											(page.parentPage && page.parentPage.heros && page.parentPage.heros[0])}
-										bind:page
-									/>
-									<!-- {#if page.isCollectEmails}
+								<div class="hidden sm:block">
+									{#if page?.parentPage?.heros && page?.parentPage?.heros[0].id}
+										<RenderInteractiveOptions
+											urlClass="hidden sm:block"
+											sectionItem={page.parentPage.heros[0]}
+											bind:page
+										/>
+									{/if}
+
+									{#if page.activeHero}
+										<RenderInteractiveOptions
+											urlClass="hidden sm:block"
+											sectionItem={page.activeHero ||
+												(page.parentPage && page.parentPage.heros && page.parentPage.heros[0])}
+											bind:page
+										/>
+										<!-- {#if page.isCollectEmails}
 									<button
 										class="cursor-pointer"
 										style="outline: 1px rgba(255, 255, 255, .8) solid;"
@@ -393,7 +418,8 @@
 										{page.parentPage?.callToAction || page.callToAction}
 									</a>
 								{/if} -->
-								{/if}
+									{/if}
+								</div>
 							</div>
 						</div>
 
@@ -408,10 +434,8 @@
 						in:fade={{ duration: 150 }}
 					>
 						<div class="_header">
-							<div
-								class="px-4 sm:px-0 mb-4 _header-content flex md:justify-between items-center justify-center"
-							>
-								<div class="flex">
+							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
+								<div class="flex  py-4 sm:py-0">
 									<a class="flex items-center shrink-0 _logo" href="/">
 										{#if page?.logo && page.logo.startsWith('http')}
 											<Emoji class="mr-2 rounded" emoji={page.parentPage?.logo || page.logo} />
@@ -424,9 +448,10 @@
 											{page.parentPage?.name || page.name}
 										</span>
 									</a>
+
 									{#if page.parentPage && page.parentPage.heros?.length}
 										<div
-											class="ml-8 flex items-center justify-center font-semibold text-sm py-1 gap-4"
+											class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
 										>
 											{#each page.subPages || page.parentPage?.subPages || [] as subPage}
 												<a href="/{subPage.slug}">{subPage.name}</a>
@@ -435,40 +460,55 @@
 									{/if}
 								</div>
 
-								<div class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold">
-									{#if page.parentPage && page.parentPage.heros?.length}
+								<div>
+									<div class="sm:hidden" on:click={toggleMenu}>
+										<FeatherIcon theme={page.theme?.theme} name="menu" />
+									</div>
+									<div
+										class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold"
+									>
+										{#if page.activeHero}
+											<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
+										{:else if page.parentPage && page.parentPage.heros?.length}
+											<RenderInteractiveOptions
+												size="small"
+												sectionItem={page.parentPage.heros[0]}
+												{page}
+											/>
+										{:else}
+											{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+												<a href="/{subPage.slug}">{subPage.name}</a>
+											{/each}
+										{/if}
+									</div>
+								</div>
+							</div>
+
+							{#if isMenuOpen}
+								<div
+									in:fly={{ y: 350, duration: 250 }}
+									out:fly={{ duration: 150 }}
+									class="left-0 top-[61px] fixed w-screen h-screen bg-site bg-background p-4"
+								>
+									{#if page.activeHero}
+										<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
+									{:else if page.parentPage && page.parentPage.heros?.length}
 										<RenderInteractiveOptions
 											size="small"
 											sectionItem={page.parentPage.heros[0]}
 											{page}
 										/>
-									{:else}
-										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-											<a href="/{subPage.slug}">{subPage.name}</a>
-										{/each}
 									{/if}
 
-									{#if page.activeHero}
-										<!-- <RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page /> -->
-										<!-- {#if page.isCollectEmails}
-											<button
-												class="cursor-pointer"
-												style="outline: 1px rgba(255, 255, 255, .8) solid;"
-												on:click={onButtonClick}
-												>{page.parentPage?.callToAction || page.callToAction}</button
+									<div class="flex flex-col mt-8">
+										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+											<a class="block  py-4 border-b border-white/20" href="/{subPage.slug}"
+												>{subPage.name}</a
 											>
-										{:else}
-											<a
-												href={page.parentPage?.actionUrl || page.actionUrl}
-												target="_blank"
-												class="button"
-											>
-												{page.parentPage?.callToAction || page.callToAction}
-											</a>
-										{/if} -->
-									{/if}
+										{/each}
+									</div>
 								</div>
-							</div>
+							{/if}
 						</div>
 
 						<!-- <img
@@ -616,9 +656,9 @@
 {/if}
 
 <style>
-	:global(.bg-site) {
+	/* :global(.bg-site) {
 		background-color: var(--background-color, white);
-	}
+	} */
 
 	:global(.bg-section) {
 		background-color: var(--section-background-color);

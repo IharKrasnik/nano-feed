@@ -23,8 +23,8 @@ export default (page) => {
 		'text-font': page.theme?.textFont || fontPairs[0].text,
 		'text-font-size': '18px',
 		'text-line-height': 1.55,
-		// 'background-color': page.theme?.backgroundColor || '#ffffff',
-		'background-color': 'transparent',
+		'background-color': page.theme?.backgroundColor || '#ffffff',
+		// 'background-color': 'transparent',
 		'text-color': page.theme?.textColor || '#111',
 		'accent-color': page.theme?.accentColor || '#000',
 		'section-background-color':

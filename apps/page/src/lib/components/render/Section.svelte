@@ -246,7 +246,9 @@
 				: section.renderType === 'article'
 				? 'px-8 sm:pb-16'
 				: `${
-						section.items?.length ? `${isFooter ? 'p-0' : 'p-8'} sm:pt-16` : 'p-4 sm:p-8 sm:py-32'
+						section.items?.length
+							? `${isFooter ? 'p-0' : 'p-4 sm:p-8'} sm:pt-16`
+							: 'p-4 sm:p-8 sm:py-32'
 				  }`}"
 			style="z-index: 10; {style || ''}"
 		>
@@ -375,7 +377,7 @@
 								class={!section.size || section.size === 'medium' ? 'max-w-[600px] mx-auto' : ''}
 							>
 								<div class="flex w-full justify-between">
-									<div class="flex gap-8 mb-8 items-center">
+									<div class="flex gap-8 mb-8 items-center justify-center w-full sm:justify-start">
 										{#each section.items as item (item.id)}
 											{#if item.isShown}
 												<div
@@ -394,7 +396,7 @@
 											{/if}
 										{/each}
 									</div>
-									<div class="flex gap-4">
+									<div class="hidden sm:flex gap-4">
 										<div
 											class="opacity-40 hover:opacity-100 transition cursor-pointer"
 											on:click={() => {
@@ -452,6 +454,36 @@
 										</div>
 									{/key}
 								{/if}
+
+								<div class="flex w-full justify-center sm:hidden py-4">
+									<div
+										class="opacity-40 hover:opacity-100 transition cursor-pointer mr-4"
+										on:click={() => {
+											selectPreviousItem();
+										}}
+									>
+										<FeatherIcon
+											color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
+											on:click={() => {
+												selectPreviousItem();
+											}}
+											name="arrow-left"
+										/>
+									</div>
+
+									<div
+										class="opacity-40 hover:opacity-100 transition cursor-pointer"
+										on:click={() => {
+											selectNextItem();
+										}}
+									>
+										<FeatherIcon
+											class="cursor-pointer"
+											color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
+											name="arrow-right"
+										/>
+									</div>
+								</div>
 							</div>
 						{:else if section.carouselType === 'horizontal'}
 							<div>
@@ -622,7 +654,7 @@
 											? '_bg-image'
 											: ''} rounded-lg sm:rounded-xl {item.className ||
 											''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
-											1} mb-8 {section.carousel
+											1} mb-2 sm:mb-8 {section.carousel
 											? `min-w-[300px] sm:min-w-0 cursor-pointer ${
 													item.isSelected ? '_selected' : '_not-selected'
 											  }`
@@ -758,7 +790,7 @@
 													{/if}
 
 													{#if item.interactiveRenderType}
-														<div class="px-4 {page?.theme?.containerWidth ? 'py-4' : 'py-4'}">
+														<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
 															<RenderInteractiveOptions
 																class={section.columns === 1 &&
 																section.interactiveRenderType === 'single_choice'
@@ -780,24 +812,23 @@
 														? 'order-none-off'
 														: 'order-none-off'} {section.columns === 1 && i % 2 === 0
 														? 'sm:order-last-off'
-														: ''}"
+														: ''} {section.isShowSource ? 'px-4' : ''}"
 												>
 													<RenderUrl
 														class=""
-														imgClass="w-full aspect-og rounded-b-xl object-cover mx-auto {section.columns ===
-														1
+														imgClass="w-full aspect-og object-cover mx-auto {section.columns === 1
 															? ''
 															: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
 															? 'w-full object-cover'
-															: ''}"
+															: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl '}"
 														url={item.imageUrl}
 													/>
 												</div>
 											{/if}
 
 											{#if section.isShowSource}
-												<div class="p-4">
-													<hr class="my-4 opacity-30" />
+												<div class="px-4 pb-4 {item.imageUrl ? 'pt-4' : ''}">
+													<hr class="mb-4 opacity-30" />
 
 													<div class="flex justify-between items-center text-sm opacity-80">
 														{moment(item.publishedOn || item.createdOn).format('MMM DD, YYYY')}
