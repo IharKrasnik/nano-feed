@@ -67,7 +67,9 @@
 				bind:this={$aboveTheFoldEl}
 				class="{hero.theme?.bgImage ? 'light-colors' : ''} {hero.theme?.isVertical
 					? ''
-					: ''} h-full  pt-16 sm:pt-36 {!hero.testimonials?.length ? `flex items-center` : ''}"
+					: ''} h-full  pb-16 pt-24 sm:pt-36 sm:pb-24 {!hero.testimonials?.length
+					? `flex items-center`
+					: ''}"
 				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 			>
 				<div
