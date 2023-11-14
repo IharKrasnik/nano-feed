@@ -420,7 +420,7 @@
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						<div class="fixed top-0 left-0 _header backdrop-blur-lg">
+						<div class="{isEdit ? 'mb-[-60px]' : 'fixed top-0 left-0'} _header backdrop-blur-lg">
 							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
 								<div class="flex  py-4 sm:py-0">
 									<a class="flex items-center shrink-0 _logo" href="/">

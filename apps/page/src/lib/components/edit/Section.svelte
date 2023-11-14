@@ -117,7 +117,7 @@
 			isDatabaseModalShown = false;
 		}}
 	>
-		<EditDatabase bind:page bind:streamSlug={section.streamSlug} />
+		<EditDatabase bind:page />
 	</Modal>
 {/if}
 

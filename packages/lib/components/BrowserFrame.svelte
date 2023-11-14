@@ -105,7 +105,7 @@
 	{/if}
 
 	<div
-		class="{browserClass} overflow-y-scroll"
+		class="{browserClass} overflow-y-scroll pt-8"
 		style={browserStyle}
 		class:text-black={theme === 'light'}
 	>

@@ -169,7 +169,6 @@ textarea._dark {
 }
 
 select {
-	/* background: #f6f5f5; */
 	background: none;
 	padding: 8px 12px;
 	font-size: 14px;
@@ -178,11 +177,15 @@ select {
 
 textarea {
 	background: none;
-
-	/* background: #f6f5f5; */
 	padding: 8px 12px;
 	font-size: 14px;
 	border-radius: 8px;
+}
+
+._editor select,
+._editor textarea,
+._editor input {
+	background: #f6f5f5;
 }
 
 button {

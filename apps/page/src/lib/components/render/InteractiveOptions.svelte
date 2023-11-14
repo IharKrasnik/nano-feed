@@ -285,7 +285,7 @@
 					: ''}"
 			>
 				<a
-					class="cursor-pointer w-full sm:w-auto {urlClass}"
+					class="shrink-0 cursor-pointer w-full sm:w-auto {urlClass}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					href={sectionItem.url}
 					on:click={(evt) => {
@@ -318,7 +318,7 @@
 
 				{#if sectionItem.interactiveRenderType === 'links'}
 					<a
-						class="w-full sm:w-auto cursor-pointer {url2Class}"
+						class="shrink-0 w-full sm:w-auto cursor-pointer {url2Class}"
 						target={sectionItem.url2?.startsWith('http') ? '_blank' : ''}
 						href={sectionItem.url2?.startsWith('/') ? `${sectionItem.url2}` : sectionItem.url2}
 						on:click={(evt) => {

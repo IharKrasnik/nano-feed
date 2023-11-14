@@ -10,6 +10,8 @@
 	export let section;
 	export let themeStyles;
 	export let isEdit;
+	export let isUseCache = false;
+	export let cacheId = section.id;
 
 	let childStreams = [];
 
@@ -53,9 +55,9 @@
 		} else {
 			if (categorySlug || section?.streamSlug) {
 				await getFeed({
-					cacheId: section.id,
+					cacheId,
 					streamSlug: categorySlug || section?.streamSlug,
-					forceRefresh: true,
+					forceRefresh: isUseCache ? false : true,
 					isWithUrlOnly: true,
 					streamSettings: section.streamSettings,
 					perPage: 100
@@ -73,12 +75,12 @@
 	let replaceVars = () => {
 		section.title = section.templates.title.replace(
 			'$db.totalCount',
-			$feedCache[section.id]?.totalCount || ''
+			$feedCache[cacheId]?.totalCount || ''
 		);
 
 		section.description = section.templates.description.replace(
 			'$db.totalCount',
-			$feedCache[section.id]?.totalCount || ''
+			$feedCache[cacheId]?.totalCount || ''
 		);
 	};
 
@@ -93,8 +95,8 @@
 		data;
 	};
 
-	$: if ($feedCache[section.id] || filterTag) {
-		databaseSection.items = $feedCache[section.id].feed
+	$: if ($feedCache[cacheId] || filterTag) {
+		databaseSection.items = $feedCache[cacheId].feed
 			.filter((item) => {
 				if (!filterTag) {
 					return true;
@@ -104,10 +106,10 @@
 			})
 			.map(
 				({
+					_id,
 					createdOn,
 					publishedOn,
 					source,
-					_id,
 					title,
 					content,
 					attachments,
@@ -116,10 +118,10 @@
 					tagsStr
 				}) => {
 					return {
+						feedItemId: _id,
 						createdOn,
 						publishedOn,
 						source,
-						feedItemId: _id,
 						title,
 						description: content,
 						imageUrl: attachments && attachments[0] && attachments[0].url,
@@ -172,7 +174,7 @@
 	</div>
 {/if} -->
 
-{#if $feedCache[section.id]?.tags?.length}
+{#if $feedCache[cacheId]?.tags?.length}
 	<div
 		class="flex w-full {section.isTitleLeft
 			? ''
@@ -187,7 +189,7 @@
 			All tags
 		</div>
 
-		{#each $feedCache[section.id]?.tags as tag}
+		{#each $feedCache[cacheId]?.tags as tag}
 			<div
 				class="px-2 py-1 text-sm opacity-80 _border-accent rounded-xl cursor-pointer shrink-0 _tag {filterTag ===
 				tag

@@ -37,7 +37,7 @@
 			return fi;
 		});
 
-		$feedCache[stream.slug] = { ...$feedCache[stream.slug], feed: [...feed] };
+		$feedCache[stream.slug] = { feed: [...feed] };
 
 		if (isShowSuccessMessage) {
 			showSuccessMessage('Record created');
@@ -143,9 +143,9 @@
 
 {#if activeTabName === 'items'}
 	<div class="flex w-full justify-between py-8">
-		<div class="mb-8 w-full">
+		<div class="mb-8">
 			<button
-				class="_primary _small w-full"
+				class="_primary _small"
 				on:click={() => {
 					feed.unshift({
 						id: uuidv4(),
@@ -168,7 +168,6 @@
 		{/if}
 	</div>
 
-	<!-- 
 	<div class="grid grid-cols-6 gap-4 w-full items-start">
 		<div class="text-sm  opacity-80">Url</div>
 		<div class="text-sm opacity-80">Title</div>
@@ -239,7 +238,7 @@
 				>
 			</div>
 		{/each}
-	</div> -->
+	</div>
 {:else if activeTabName === 'categories'}
 	<button
 		class="_primary _small mb-8"

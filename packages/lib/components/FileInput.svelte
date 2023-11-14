@@ -126,7 +126,9 @@
 
 	{#if isCanSearch}
 		<div
-			class="p-2 mr-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center"
+			class="p-2 mr-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center {url
+				? 'opacity-40 hover:opacity-100'
+				: ''}"
 			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
 		>
 			<ImageSearch
@@ -141,7 +143,9 @@
 	{#if !isLoading}
 		<label
 			for="fileInput-{componentId}"
-			class="p-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center"
+			class="p-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center {url
+				? 'opacity-40 hover:opacity-100'
+				: ''}"
 			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
 			use:tooltip
 			title="Upload File"

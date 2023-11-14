@@ -55,6 +55,7 @@
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
 	import Settings from '$lib/components/Settings.svelte';
+	import EditDatabase from '$lib/components/edit/DatabaseNew.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -562,6 +563,7 @@
 	};
 
 	let createSubPage = () => {};
+	let selectedStreamSlug;
 </script>
 
 {#if isSettingsModalShown}
@@ -628,7 +630,7 @@
 		<SignupForm />
 	{/if} -->
 
-		<div class="xl:max-w-[1600px] mx-auto relative px-16 sm:px-0">
+		<div class="_editor xl:max-w-[1600px] mx-auto relative px-16 sm:px-0">
 			<div class="flex relative ml-4">
 				<!-- EDITOR-->
 				<div class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white">
@@ -1182,18 +1184,26 @@
 										</div>
 									{/if}
 								</div>
-							{:else if selectedTab === 'audience'}
-								<EditWelcomeEmail bind:page />
-							{:else if selectedTab === 'newsletter'}
-								<EditNewsletter bind:page />
-							{:else if selectedTab === 'blog'}{/if}
+							{:else}
+								<BackTo to={'Editor'} onClick={() => (selectedTab = 'editor')} />
+
+								<div>
+									{#if selectedTab === 'database'}
+										<EditDatabase bind:page bind:selectedStreamSlug />
+									{:else if selectedTab === 'audience'}
+										<EditWelcomeEmail bind:page />
+									{:else if selectedTab === 'newsletter'}
+										<EditNewsletter bind:page />
+									{:else if selectedTab === 'blog'}{/if}
+								</div>
+							{/if}
 						</div>
 
-						{#if page._id}
+						<!-- {#if page._id}
 							<div class="pb-16">
 								<MomentumHub bind:page />
 							</div>
-						{/if}
+						{/if} -->
 					</div>
 				</div>
 				<!-- END EDITOR -->
@@ -1388,6 +1398,8 @@
 													isEdit
 													bind:page
 												/>
+											{:else if selectedTab === 'database'}
+												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 											{:else if selectedTab === 'analytics'}
 												<AnalyticsTab bind:page />
 											{:else if selectedTab === 'audience'}

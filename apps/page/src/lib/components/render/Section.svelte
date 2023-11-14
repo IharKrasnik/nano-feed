@@ -650,6 +650,7 @@
 									<a
 										href={section.linkType === 'interactive' ? item.url : null}
 										target={item.url?.startsWith('http') ? '_blank' : ''}
+										id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
 										class="_section-item break-inside-avoid block relative {item.bgImageUrl
 											? '_bg-image'
 											: ''} rounded-lg sm:rounded-xl {item.className ||
@@ -664,9 +665,11 @@
 												selectCarouselItem(item);
 											}
 
-											post(`feed/${item.feedItemId}/view`);
+											if (item.feedItemId) {
+												post(`feed/${item.feedItemId}/view`);
+											}
 										}}
-										style="-webkit-column-break-inside: avoid;"
+										style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
 									>
 										{#if item.bgImageUrl}
 											<img

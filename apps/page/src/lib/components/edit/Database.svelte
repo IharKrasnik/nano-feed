@@ -86,7 +86,7 @@
 			<div class="flex items-center gap-4 border-b border-black/20 px-4">
 				{#each childStreams as childStream}
 					<div
-						class="p-4 mr-4 cursor-pointer"
+						class="p-4 mr-4 cursor-pointer font-medium"
 						class:selected={activeStream?._id === childStream._id}
 						on:click={() => selectStream(childStream)}
 					>
