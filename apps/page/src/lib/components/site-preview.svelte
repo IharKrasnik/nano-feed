@@ -480,6 +480,7 @@
 							<div
 								in:fly={{ y: 350, duration: 250 }}
 								out:fly={{ duration: 150 }}
+								style="z-index: 100"
 								class="left-0 top-[61px] fixed w-screen h-screen bg-site bg-background p-4"
 							>
 								{#if page.activeHero}
