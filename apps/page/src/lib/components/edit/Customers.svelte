@@ -7,6 +7,7 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	export let page;
+	export let selectedCustomer;
 
 	let customers = [];
 
@@ -31,6 +32,8 @@
 			}
 			return c;
 		});
+
+		selectedCustomer = null;
 	};
 </script>
 
@@ -39,7 +42,15 @@
 		<div
 			class="_section cursor-pointer"
 			on:click={() => {
-				customer.isCollapsed = false;
+				customers = customers.map((c) => {
+					c.isCollapsed = true;
+					if (c._id === customer._id) {
+						c.isCollapsed = false;
+					}
+					return c;
+				});
+
+				selectedCustomer = customer;
 			}}
 		>
 			<div class=" flex justify-between items-center">
@@ -49,7 +60,7 @@
 						<div class="ml-2 opacity-50">({customer.email})</div>
 					</div>
 				{:else}
-					{customer.email}
+					{customer.email || 'anonymous'}
 				{/if}
 
 				<div class="flex gap-2 items-center">

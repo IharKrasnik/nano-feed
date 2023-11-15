@@ -12,6 +12,7 @@
 
 	export let page;
 	export let selectedStreamSlug;
+	export let selectedCustomer;
 
 	let childStreams = [];
 	let activeStream = null;

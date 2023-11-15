@@ -6,15 +6,23 @@
 
 	import Loader from 'lib/components/Loader.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
+	import CustomerAnalytics from '$lib/components/render/CustomerAnalytics.svelte';
 	import currentUser from 'lib/stores/currentUser';
 
 	export let page;
+	export let customer;
 </script>
 
 <div class="px-8 py-16">
-	<div class="" in:fly={{ y: 50, duration: 150 }} style="height: calc(100vh - 60px);">
-		<div class="mt-8 w-full">
-			<WaveDashboard project={{ page }} />
+	{#if customer}
+		{#key customer._id}
+			<CustomerAnalytics bind:page bind:customer />
+		{/key}
+	{:else}
+		<div class="" in:fly={{ y: 50, duration: 150 }} style="height: calc(100vh - 60px);">
+			<div class="mt-8 w-full">
+				<WaveDashboard project={{ page }} />
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>

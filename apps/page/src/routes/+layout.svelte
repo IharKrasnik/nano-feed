@@ -2,6 +2,7 @@
 	import Page from '$lib/components/Page.svelte';
 	import Editor from '$lib/components/Editor.svelte';
 	import { get } from 'lib/api';
+	import { API_URL } from 'lib/env';
 	import currentPage from '$lib/stores/currentPage';
 	import { browser } from '$app/environment';
 	import Emoji from 'lib/components/Emoji.svelte';
@@ -38,6 +39,10 @@
 
 		$currentPage = $sveltePage.data.page;
 		$currentPage._refreshTimestamp = +new Date();
+	}
+
+	if (browser) {
+		window.WAVE_API_URL = API_URL;
 	}
 </script>
 

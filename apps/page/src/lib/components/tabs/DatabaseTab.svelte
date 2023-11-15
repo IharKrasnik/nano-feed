@@ -9,8 +9,6 @@
 	let cssVarStyles;
 	let styles;
 
-	let previewEl;
-
 	$: if (page) {
 		let res = getPageCssStyles(page);
 		cssVarStyles = res.cssVarStyles;

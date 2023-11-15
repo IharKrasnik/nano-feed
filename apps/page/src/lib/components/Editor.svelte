@@ -57,6 +57,7 @@
 	import Settings from '$lib/components/Settings.svelte';
 	import EditDatabase from '$lib/components/edit/DatabaseNew.svelte';
 	import EditCustomers from '$lib/components/edit/Customers.svelte';
+	import EditSubmissions from '$lib/components/edit/Submissions.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -565,6 +566,9 @@
 
 	let createSubPage = () => {};
 	let selectedStreamSlug;
+
+	let selectedCustomer;
+	let selectedSubmission;
 </script>
 
 {#if isSettingsModalShown}
@@ -631,10 +635,10 @@
 		<SignupForm />
 	{/if} -->
 
-		<div class="_editor xl:max-w-[1600px] mx-auto relative px-16 sm:px-0">
+		<div class="xl:max-w-[1600px] mx-auto relative px-16 sm:px-0">
 			<div class="flex relative ml-4">
 				<!-- EDITOR-->
-				<div class="fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white">
+				<div class="_editor fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white">
 					<div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
 						<div
 							class="flex items-center justify-between w-full py-4 pr-4"
@@ -1192,11 +1196,12 @@
 									{#if selectedTab === 'database'}
 										<EditDatabase bind:page bind:selectedStreamSlug />
 									{:else if selectedTab === 'analytics'}
-										<EditCustomers bind:page />
+										<EditCustomers bind:page bind:selectedCustomer />
 									{:else if selectedTab === 'audience'}
-										<EditWelcomeEmail bind:page />
+										<EditSubmissions bind:page bind:selectedSubmission />
 									{:else if selectedTab === 'newsletter'}
 										<EditNewsletter bind:page />
+										<EditWelcomeEmail bind:page />
 									{:else if selectedTab === 'blog'}{/if}
 								</div>
 							{/if}
@@ -1309,7 +1314,6 @@
 								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
 									<BrowserFrame
 										class="max-h-screen overflow-y-scroll"
-										,
 										links={[
 											{
 												action: () => {
@@ -1321,17 +1325,20 @@
 											{
 												action: () => {
 													selectedTab = 'analytics';
+													selectedCustomer = null;
 												},
-												title: `Customers (${metrics?.totalViewsCount || 0})`,
+												title: `Customers`,
 												featherIcon: 'activity'
 											},
 											{
 												action: () => {
 													selectedTab = 'audience';
+													selectedSubmission = null;
 												},
 												title: `Submissions (${submissions?.results?.length || 0})`,
 												featherIcon: 'check-square'
 											},
+
 											{
 												action: () => {
 													selectedTab = 'blog';
@@ -1404,9 +1411,9 @@
 											{:else if selectedTab === 'database'}
 												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 											{:else if selectedTab === 'analytics'}
-												<AnalyticsTab bind:page />
+												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
 											{:else if selectedTab === 'audience'}
-												<AudienceTab bind:page />
+												<AudienceTab bind:page bind:selectedSubmission />
 											{:else if selectedTab === 'database'}
 												<DatabaseTab bind:page />
 											{:else if selectedTab === 'blog'}

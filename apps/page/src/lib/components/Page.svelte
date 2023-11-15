@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { get } from 'lib/api';
-	import { API_URL } from 'lib/env';
 	import currentPage from '$lib/stores/currentPage';
 
 	import SitePreview from '$lib/components/site-preview.svelte';
@@ -14,7 +13,6 @@
 
 	if (browser && $currentPage) {
 		window.WAVE_SUBPROJECT_ID = $currentPage.parentPage?._id || $currentPage._id;
-		window.WAVE_API_URL = API_URL;
 	}
 </script>
 

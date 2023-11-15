@@ -94,6 +94,7 @@
 
 .bg-background {
 	background: var(--background-color);
+	color: var(--text-color);
 }
 
 ._border-accent {

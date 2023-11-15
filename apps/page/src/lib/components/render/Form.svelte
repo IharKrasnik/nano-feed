@@ -12,13 +12,18 @@
 	let formData = {};
 
 	section.items.forEach((item) => {
-		formData[item.varName] = '';
+		if (item.varName === 'email' || item.varName === 'name') {
+			formData[item.varName] = (section?.submission && section.submission[item.varName]) || '';
+		} else {
+			formData[item.varName] =
+				(section?.submission?.vars && section.submission.vars[item.varName]) || '';
+		}
 	});
 
 	let isFormSubmitted = false;
 
 	let submitForm = async () => {
-		let postData = { vars: {} };
+		let postData = { vars: {}, sectionId: section.id };
 
 		section.items.forEach(({ varName, interactiveRenderType }) => {
 			if (interactiveRenderType === 'email') {
@@ -32,7 +37,7 @@
 			}
 		});
 
-		trackForm({ sectionId: section.id });
+		trackForm({ sectionId: section.id, text: section.title || section.description });
 
 		let submission = await post(`pages/${page.slug}/submissions`, postData);
 
@@ -91,13 +96,17 @@
 				</div>
 			{/each}
 
-			<button class="_primary mt-8" type="submit">{section.callToActionText || 'Submit'}</button>
+			{#if !section.submission}
+				<button class="_primary mt-8" type="submit">{section.callToActionText || 'Submit'}</button>
+			{/if}
 		</form>
 	</div>
 {/if}
 
-{#if section.ctaExplainer && !isFormSubmitted}
-	<div class="text-sm mt-2 w-full text-center">{section.ctaExplainer}</div>
+{#if !section.submission}
+	{#if section.ctaExplainer && !isFormSubmitted}
+		<div class="text-sm mt-2 w-full text-center">{section.ctaExplainer}</div>
+	{/if}
 {/if}
 
 {#if isEdit && section.actionType === 'success'}
