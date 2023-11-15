@@ -8,12 +8,22 @@
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import CustomerAnalytics from '$lib/components/render/CustomerAnalytics.svelte';
 	import currentUser from 'lib/stores/currentUser';
+	import getPageCssStyles from '$lib/services/getPageCssStyles';
 
 	export let page;
 	export let customer;
+
+	let cssVarStyles;
+	let styles;
+
+	$: if (page) {
+		let res = getPageCssStyles(page);
+		cssVarStyles = res.cssVarStyles;
+		styles = res.styles;
+	}
 </script>
 
-<div class="px-8 py-16">
+<div class="px-8 py-16 bg-background" style={cssVarStyles}>
 	{#if customer}
 		{#key customer._id}
 			<CustomerAnalytics bind:page bind:customer />

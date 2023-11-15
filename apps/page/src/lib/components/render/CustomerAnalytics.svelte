@@ -51,7 +51,11 @@
 			<div class="py-4">
 				<div class="flex items-start">
 					<div class="rounded-full border p-2">
-						<FeatherIcon class="opacity-30" theme={page.theme?.theme} name={getIconName(event)} />
+						<FeatherIcon
+							class="opacity-30"
+							theme={page.parentPage ? page.parentPage.theme?.theme : page.theme?.theme}
+							name={getIconName(event)}
+						/>
 					</div>
 					<div class="ml-4">
 						<div class="opacity-80 mb-1 font-bold">{getTitle(event)}</div>

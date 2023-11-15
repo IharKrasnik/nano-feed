@@ -34,7 +34,6 @@
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import WaveSingleStat from 'lib/components/wave/SingleStat.svelte';
-	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import BackTo from '$lib/components/BackTo.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import MomentumHub from 'lib/components/MomentumHub.svelte';

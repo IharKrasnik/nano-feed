@@ -8,6 +8,15 @@
 
 	export let name = 'cpu';
 	export let color = '#111';
+	export let theme;
+
+	if (theme) {
+		if (theme === 'dark') {
+			color = '#f6f5f4';
+		} else {
+			color = '#111111';
+		}
+	}
 </script>
 
 <svg
