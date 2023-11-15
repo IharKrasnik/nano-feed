@@ -24,6 +24,8 @@
 	import Gradients from '$lib/components/gradients/index.svelte';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 
+	import trackClick from 'lib/services/trackClick';
+
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
@@ -424,7 +426,18 @@
 						<div class="{isEdit ? 'mb-[-60px]' : 'fixed top-0 left-0'} _header backdrop-blur-lg">
 							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
 								<div class="flex  py-4 sm:py-0">
-									<a class="flex items-center shrink-0 _logo" href="/">
+									<a
+										class="flex items-center shrink-0 _logo"
+										href="/"
+										on:click={() => {
+											trackClick({
+												sectionId: `${page.parentPage?._id || page._id}_header`,
+												linkId: 'home',
+												url: '/',
+												text: page.parentPage?.name || page.name
+											});
+										}}
+									>
 										{#if page?.logo && page.logo.startsWith('http')}
 											<Emoji class="mr-2 rounded" emoji={page.parentPage?.logo || page.logo} />
 										{/if}
@@ -437,23 +450,23 @@
 										</span>
 									</a>
 
-									{#if page.parentPage && page.parentPage.heros?.length}
-										<div
-											class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
-										>
-											{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-												<a href="/{subPage.slug}">{subPage.name}</a>
-											{/each}
-										</div>
-									{:else}
-										<div
-											class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
-										>
-											{#each page.subPages || page.parentPage?.subPages || [] as subPage}
-												<a href="/{subPage.slug}">{subPage.name}</a>
-											{/each}
-										</div>
-									{/if}
+									<div
+										class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
+									>
+										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+											<a
+												href="/{subPage.slug}"
+												on:click={() => {
+													trackClick({
+														sectionId: `${page.parentPage?._id || page._id}_header`,
+														linkId: subPage._id,
+														url: `/${subPage.slug}`,
+														text: subPage.name
+													});
+												}}>{subPage.name}</a
+											>
+										{/each}
+									</div>
 								</div>
 
 								<div>
@@ -463,10 +476,17 @@
 									<div
 										class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold"
 									>
-										{#if page.activeHero}
-											<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
-										{:else if page.parentPage && page.parentPage.heros?.length}
+										{#if !page.parentPage}
+											{#if page.activeHero}
+												<RenderInteractiveOptions
+													trackId={`${page._id}_header`}
+													bind:sectionItem={page.activeHero}
+													bind:page
+												/>
+											{/if}
+										{:else if page.parentPage.heros?.length}
 											<RenderInteractiveOptions
+												trackId={`${page.parentPage._id}_header`}
 												size="small"
 												sectionItem={page.parentPage.heros[0]}
 												{page}

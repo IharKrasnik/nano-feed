@@ -3,6 +3,7 @@
 	import { fly } from 'svelte/transition';
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import RenderSection from '$lib/components/render/Section.svelte';
+	import trackForm from 'lib/services/trackForm';
 
 	export let section;
 	export let page;
@@ -30,6 +31,8 @@
 				}
 			}
 		});
+
+		trackForm({ sectionId: section.id });
 
 		let submission = await post(`pages/${page.slug}/submissions`, postData);
 

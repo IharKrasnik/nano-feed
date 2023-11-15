@@ -4,6 +4,7 @@
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import feedCache, { getFeed } from '$lib/stores/feedCache';
+	import trackClick from 'lib/services/trackClick';
 	import { get } from 'lib/api';
 
 	export let page;
@@ -18,6 +19,7 @@
 	let isFeedLoading = true;
 
 	let databaseSection = {
+		id: section.id,
 		isShowSource: section.isShowSource,
 		renderType: 'feed',
 		columns: section.columns,
@@ -92,7 +94,12 @@
 
 	let setTag = (tag) => {
 		filterTag = tag;
-		data;
+
+		trackClick({
+			sectionId: section.id,
+			linkId: tag,
+			text: tag || 'All Tags'
+		});
 	};
 
 	$: if ($feedCache[cacheId] || filterTag) {
@@ -148,8 +155,6 @@
 	loadChildStreams();
 
 	loadFeed();
-
-	let trackClick = (feedItem) => {};
 </script>
 
 <!-- {#if section.renderType === 'feed' && childStreams.length}

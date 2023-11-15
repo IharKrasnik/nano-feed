@@ -9,9 +9,13 @@
 	import Popup from '$lib/components/Popup.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
+	import trackClick from 'lib/services/trackClick';
+	import trackInteractiveAnswer from 'lib/services/trackInteractiveAnswer';
+
 	export let page;
 
 	export let sectionItem;
+	export let trackId = null;
 
 	export let size;
 
@@ -95,6 +99,15 @@
 				parentSectionId,
 				answer
 			});
+
+			trackInteractiveAnswer({
+				sectionId: parentSectionId || sectionItem.id,
+				sectionItemId: parentSectionId ? sectionItem.id : null,
+
+				emoji: answer.emoji,
+				text: answer.text,
+				value: answer.value
+			});
 		}
 
 		isAnswerSubmitted = true;
@@ -164,7 +177,7 @@
 		}
 	};
 
-	let trackClick = ({ callToActionText, url } = {}) => {
+	let trackQuestionClick = ({ callToActionText, url } = {}) => {
 		post(`pages/${page._id}/questions/${sectionItem.id}`, {
 			parentSectionId,
 			answer: {
@@ -289,9 +302,17 @@
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					href={sectionItem.url}
 					on:click={(evt) => {
-						trackClick({
+						trackQuestionClick({
 							url: sectionItem.url,
 							callToActionText: sectionItem.callToActionText
+						});
+
+						trackClick({
+							sectionId: trackId || parentSectionId || sectionItem.id,
+							sectionItemId: trackId ? null : parentSectionId ? sectionItem.id : null,
+							linkId: `${trackId || sectionItem.id}_links_0`,
+							url: sectionItem.url,
+							text: sectionItem.callToActionText
 						});
 
 						if (isUrlEmbeddable(sectionItem.url)) {
@@ -325,6 +346,14 @@
 							trackClick({
 								url: sectionItem.url2,
 								callToActionText: sectionItem.callToActionText2
+							});
+
+							trackClick({
+								sectionId: parentSectionId || sectionItem.id,
+								sectionItemId: parentSectionId ? sectionItem.id : null,
+								linkId: `${sectionItem.id}_links_1`,
+								url: sectionItem.url2,
+								text: sectionItem.callToActionText2
 							});
 
 							if (isUrlEmbeddable(sectionItem.url2)) {

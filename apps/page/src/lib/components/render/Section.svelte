@@ -23,6 +23,7 @@
 	import isGif from 'lib/helpers/isGif';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import currentCustomer from 'lib/stores/currentCustomer';
+	import trackClick from 'lib/services/trackClick';
 
 	export let section;
 	let clazz;
@@ -667,6 +668,23 @@
 
 											if (item.feedItemId) {
 												post(`feed/${item.feedItemId}/view`);
+
+												trackClick({
+													sectionId: section.id,
+													sectionItemId: item.feedItemId,
+													isFeedItem: true,
+													linkId: item.feedItemId,
+													url: item.url,
+													text: item.title || item.description
+												});
+											} else {
+												trackClick({
+													sectionId: section.id,
+													sectionItemId: item.id,
+													linkId: item.id,
+													url: item.url,
+													text: item.title || item.description
+												});
 											}
 										}}
 										style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
