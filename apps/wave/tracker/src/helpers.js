@@ -124,6 +124,28 @@ export const sendTrackData = (userData, url, data) =>
 		return trackData;
 	});
 
+export const sendTrackEvent = ({ type, timestamp = Date.now(), payload }) => {
+	let userData = window.WAVE_USER_DATA;
+
+	return sendData('waveActions', {
+		projectId: userData.projectId,
+		visitorId: userData.visitorId,
+		sessionId: userData.sessionId,
+		subProjectId: window.WAVE_SUBPROJECT_ID,
+
+		type,
+		timestamp,
+		payload
+	}).then((trackData) => {
+		if (trackData.sessionId) {
+			// eslint-disable-next-line no-param-reassign
+			userData.sessionId = trackData.sessionId;
+		}
+
+		return trackData;
+	});
+};
+
 export const registerHandlers = (userData, handlers) => {
 	handlers.forEach((handler) => handler(userData));
 };

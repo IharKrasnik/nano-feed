@@ -13,8 +13,13 @@ import {
 	getDeviceType,
 	getBrowserName,
 	getConnectionType,
-	getOS
+	getOS,
+	sendTrackEvent
 } from './helpers';
+
+window.mwave = {
+	sendTrackEvent
+};
 
 if (process.env.BUILD === 'dev') {
 	if (Fingerprint2 && Fingerprint2.getV18) {
@@ -132,16 +137,20 @@ const init =
 					setInterval(setSession, 10 * 1000);
 
 					userData.sessionId = sessionId;
+
 					registerHandlers(userData, handlers);
+					window.WAVE_USER_DATA = userData;
 					trackerMutationObserver.init(userData);
 					handleLocationChange(userData);
 				} else if (process.env.BUILD === 'dev') {
 					console.error('Something went wrong, sessionId not setted:', sessionId); // eslint-disable-line
 				}
 			})
-			.then(() => ({
-				userData
-			}));
+			.then(() => {
+				return {
+					userData
+				};
+			});
 	};
 
 export default {
