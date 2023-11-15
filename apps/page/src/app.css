@@ -183,6 +183,10 @@ textarea {
 	border-radius: 8px;
 }
 
+._editor {
+	padding-bottom: 64px;
+}
+
 ._editor select,
 ._editor textarea,
 ._editor input {

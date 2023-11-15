@@ -183,7 +183,7 @@
 	};
 
 	$: if (section.items && carouselKey) {
-		selectedCarouselItem = section.items.find((i) => i.isSelected);
+		selectedCarouselItem = section.items.find((i) => i.isSelected) || section.items[0];
 	}
 
 	let submitForm = () => {};
@@ -380,7 +380,7 @@
 								<div class="flex w-full justify-between">
 									<div class="flex gap-8 mb-8 items-center justify-center w-full sm:justify-start">
 										{#each section.items as item (item.id)}
-											{#if item.isShown}
+											{#if item.isShown || _.isUndefined(item.isShown)}
 												<div
 													class:opacity-40={!item.isSelected}
 													class="cursor-pointer transition  {item.isSelected && item.description
@@ -576,23 +576,24 @@
 					{:else if section.columns === 1}
 						{#each section.items as item}
 							<div
-								class="grid grid-cols-12 items-center {section.renderType === 'article'
+								class="_section-item grid grid-cols-12 items-center {section.renderType ===
+								'article'
 									? 'mb-8'
 									: 'mb-4'}"
 							>
 								<div
-									class="sm:col-span-{item.colSpan || 12} {item.isReversed
+									class="sm:col-span-{item.colSpan || (item.imageUrl ? 6 : 12)} {item.isReversed
 										? 'order-last'
 										: ''} {(!item.colSpan || item.colSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
 								>
 									<div
 										class="{section.renderType === 'article'
-											? 'sm:px-8'
-											: 'p-4 sm:p-8'} _section-item col-span-1"
+											? 'sm:px-8  _section-item'
+											: 'p-4 sm:p-8'} col-span-1"
 									>
 										<!-- {#if item.emoji !== '✨'}
 									<Emoji bind:emoji={item.emoji} />
-								{/if} -->
+									{/if} -->
 										<a
 											class="_item-title mb-2"
 											href={item.url || ''}
@@ -623,7 +624,7 @@
 								</div>
 								<div
 									class="sm:col-span-{!item.colSpan
-										? 12
+										? 6
 										: 12 - (item.title || item.description ? item.colSpan || 6 : 0) || 12} 
 									
 									{item.isReversed ? 'order-first' : ''}"
@@ -656,10 +657,8 @@
 											? '_bg-image'
 											: ''} rounded-lg sm:rounded-xl {item.className ||
 											''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
-											1} mb-2 sm:mb-8 {section.carousel
-											? `min-w-[300px] sm:min-w-0 cursor-pointer ${
-													item.isSelected ? '_selected' : '_not-selected'
-											  }`
+											1} mb-2 sm:mb-8 {section.renderType === 'carousel'
+											? `min-w-[300px] sm:min-w-0 cursor-pointer`
 											: ''} {section.linkType === 'interactive' ? '_interactive' : ''}"
 										on:click={() => {
 											if (section.carousel) {
@@ -926,12 +925,12 @@
 	}
 
 	._selected .bg-section {
-		background: white;
+		/* background: white; */
 	}
 
 	._not-selected .bg-section {
-		background: #f6f5f4 !important;
-		@apply transition;
+		/* background: #f6f5f4 !important;
+		@apply transition; */
 	}
 
 	.section-bg::before {

@@ -45,7 +45,7 @@
 
 		let newItem = {
 			id: uuidv4(),
-
+			isShown: true,
 			title: '',
 			description: '',
 			imageUrl: ''
@@ -270,22 +270,23 @@
 			{/if}
 
 			<div class="my-8">
-				<div class="text-sm font-bold mb-2 mt-4">Section Type</div>
+				<div class="text-sm font-bold mb-2 mt-4">Render this section as...</div>
 
-				<select class="block w-full mt-2 mb-4" bind:value={section.renderType}>
+				<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
 					<option value="grid">Default Grid Section</option>
 					<option value="carousel">Carousel Menu</option>
 					<option value="stepper">1-2-3 Stepper</option>
 					<option value="article">Article</option>
 					<option value="form">Form</option>
 				</select>
+
+				{#if section.renderType === 'carousel'}
+					<select class="w-full my-4" bind:value={section.carouselType}>
+						<option value="vertical">Vertical</option>
+						<option value="horizontal">Horizontal</option>
+					</select>
+				{/if}
 			</div>
-			{#if section.renderType === 'carousel'}
-				<select class="w-full my-4" bind:value={section.carouselType}>
-					<option value="vertical">Vertical</option>
-					<option value="horizontal">Horizontal</option>
-				</select>
-			{/if}
 		{/if}
 
 		<div

@@ -86,7 +86,7 @@
 >
 	<div class="relative flex justify-between items-center mb-4">
 		<div class="flex items-center w-full">
-			{#if section.renderType !== 'form' || item.isActionSuccessSection}
+			{#if (section.renderType !== 'form' && section.renderType !== 'carousel') || item.isActionSuccessSection}
 				<EmojiPicker bind:icon={item.emoji} />
 			{/if}
 
@@ -94,11 +94,11 @@
 				<EditInteractiveOptions bind:section bind:sectionItem={item} />
 			{/if}
 
-			{#if (isWithSettings && section.renderType !== 'form') || item.isActionSuccessSection}
+			{#if (isWithSettings && section.renderType !== 'form' && section.renderType !== 'carousel') || item.isActionSuccessSection}
 				<EditSectionSettings bind:sectionItem={item} />
 			{/if}
 
-			{#if isWithGrid}
+			{#if isWithGrid && section.renderType !== 'carousel'}
 				{#if section.columns > 1}
 					<FeatherIcon class="ml-4 mr-2" size="15" color="gray" name="grid" />
 					<input
@@ -116,6 +116,7 @@
 					/>
 				{:else if item.imageUrl}
 					<select bind:value={item.colSpan}>
+						<option value="">Default</option>
 						<option value="12">12 x 12</option>
 						<option value="4">4 x 8</option>
 						<option value="6">6 x 6</option>

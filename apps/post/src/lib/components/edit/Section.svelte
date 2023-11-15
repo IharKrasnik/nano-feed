@@ -3,6 +3,7 @@
 	import tooltip from 'lib/use/tooltip';
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
 	import { fly } from 'svelte/transition';
+	import { v4 as uuidv4 } from 'uuid';
 
 	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
@@ -32,6 +33,7 @@
 		section.items = section.items || [];
 
 		let newItem = {
+			id: uuidv4(),
 			title: '',
 			description: '',
 			imageUrl: ''

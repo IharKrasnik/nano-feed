@@ -86,6 +86,7 @@
 </script>
 
 {#if isCollapsed}
+	<div class="font-bold mr-2 py-4 my-4">🤩 Hero Section</div>
 	<div
 		class="{isCollapsed
 			? '_section '
@@ -96,14 +97,16 @@
 			isCollapsed = !isCollapsed;
 		}}
 	>
-		<div>
+		<div class="overflow-x-hidden">
 			{#if isCollapsed}
-				<div class="flex items-center">
-					<div class="font-bold text-lg mr-2">Hero Section 🤩</div>
+				<div class="text font-bold">
+					{@html striptags(hero.title || '')}
 				</div>
-				<div class="text">
-					{@html striptags(hero.title || hero.subtitle || '')}
-				</div>
+				{#if hero.subtitle}
+					<div class="mt-1 truncate">
+						{@html striptags(hero.subtitle || '')}
+					</div>
+				{/if}
 			{/if}
 		</div>
 	</div>
@@ -239,10 +242,9 @@
 					</div>
 				</div>
 			{/if}
-		</div>
-
-		<div class="text-sm opacity-90 my-4">
-			Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word or two.
+			<div class="text-sm opacity-90 my-4">
+				Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word or two.
+			</div>
 		</div>
 
 		<div class="_section">

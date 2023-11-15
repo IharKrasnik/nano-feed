@@ -237,6 +237,7 @@
 
 			page.isDirty = false;
 			pageSlug = page.slug;
+			page.activeHero = page.heros && page.heros[0];
 
 			$pageDraft = {
 				..._.cloneDeep($pageDraft),
@@ -758,7 +759,9 @@
 						{/if}
 
 						{#if $sectionToEdit}
-							<div class="bg-white p-4 pl-0 z-40 fixed pb-32 h-screen overflow-y-scroll w-[426px]">
+							<div
+								class="bg-white p-4 pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll w-[426px]"
+							>
 								<div
 									class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 									on:click={() => {
