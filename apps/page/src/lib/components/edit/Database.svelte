@@ -1,5 +1,6 @@
 <script>
 	import { get, post, put, del } from 'lib/api';
+	import { fade } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
@@ -27,7 +28,7 @@
 		childStreams = results;
 
 		activeStream = localStorage[lastStreamSlug]
-			? childStreams.find((s) => s.slug === localStorage[lastStreamSlug])
+			? childStreams.find((s) => s.slug === localStorage[lastStreamSlug]) || childStreams[0]
 			: childStreams[0];
 
 		selectedStreamSlug = activeStream?.slug;
@@ -262,10 +263,8 @@
 			<div class="text-sm font-bold mb-2">Database</div>
 
 			{#if isStreamEdit}
-				<div class="_section w-full flex flex-col">
-					<div class="cursor-pointer py-2" on:click={() => selectStream(null)}>New Database</div>
-
-					{#each childStreams as childStream}
+				<div class="_section w-full flex flex-col" in:fade={{ duration: 150 }}>
+					{#each childStreams.filter((s) => s.slug !== (page?.parentPage?.streamSlug || page.streamSlug)) as childStream}
 						<div
 							class="cursor-pointer py-2"
 							on:click={(evt) => {
@@ -276,6 +275,11 @@
 							{childStream.title}
 						</div>
 					{/each}
+
+					<button
+						class="cursor-pointer mt-4 py-2 _secondary _small"
+						on:click={() => selectStream(null)}>Add New Database</button
+					>
 				</div>
 
 				<div class="flex justify-between items-center py-4">

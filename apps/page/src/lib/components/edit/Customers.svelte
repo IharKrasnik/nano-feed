@@ -82,8 +82,26 @@
 		</div>
 	{:else}
 		<div class="_section flex flex-col gap-2" in:fade={{ duration: 150 }}>
-			<input class="w-full" bind:value={customer.email} disabled />
-			<input class="w-full" placeholder="Name" bind:value={customer.name} />
+			{#if customer.email}
+				<input class="w-full" bind:value={customer.email} disabled />
+				<input class="w-full" placeholder="Name" bind:value={customer.name} />
+			{:else}
+				<div class="flex justify-between items-center">
+					Anonymous Visitor
+					<div class="flex gap-2 items-center">
+						{#if customer?.visitor?.payload?.deviceType}
+							{#if customer.visitor.payload.deviceType === 'desktop'}
+								<FeatherIcon theme="light" size="15" name="monitor" />
+							{:else}
+								<FeatherIcon theme="light" size="15" name="smartphone" />
+							{/if}
+						{/if}
+						{#if customer?.visitor?.geoData?.country}
+							{countryCodeEmoji(customer?.visitor?.geoData?.country)}
+						{/if}
+					</div>
+				</div>
+			{/if}
 			<textarea rows="2" class="w-full" placeholder="Notes..." bind:value={customer.notes} />
 
 			<Button class="_small _primary mt-4 block" onClick={() => saveCustomer(customer)}

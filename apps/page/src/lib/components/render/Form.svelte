@@ -58,7 +58,7 @@
 		<form class="w-full flex flex-col gap-4 p-8" on:submit|preventDefault={submitForm}>
 			{#each section.items as formField}
 				<div>
-					<div class="mb-2">
+					<div class="mb-4">
 						<div class="text-lg font-semibold opacity-80">{@html formField.title}</div>
 						<div class="text-sm opacity-80 mb-2">{@html formField.description || ''}</div>
 					</div>
@@ -120,3 +120,16 @@
 		<RenderSection section={section.actionSuccessSection} {page} />
 	</div>
 {/if}
+
+<style>
+	input,
+	textarea {
+		border: 1px var(--text-color) solid;
+		opacity: 0.8;
+	}
+
+	input:focus,
+	textarea:focus {
+		opacity: 100;
+	}
+</style>
