@@ -17,15 +17,21 @@
 	let childStreams = [];
 	let activeStream = null;
 
+	let lastStreamSlug = 'LAST_DATABASE_STREAM_SLUG';
+
 	let loadChildStreams = async () => {
 		let { results } = await get('projects', {
 			hubStreamSlug: page.streamSlug
 		});
 
 		childStreams = results;
-		activeStream = childStreams[0];
+
+		activeStream = localStorage[lastStreamSlug]
+			? childStreams.find((s) => s.slug === localStorage[lastStreamSlug])
+			: childStreams[0];
 
 		selectedStreamSlug = activeStream?.slug;
+		localStorage[lastStreamSlug] = selectedStreamSlug;
 	};
 
 	if (page.streamSlug) {
@@ -38,6 +44,7 @@
 		activeStream = childStream;
 		isStreamEdit = false;
 		selectedStreamSlug = activeStream?.slug;
+		localStorage[lastStreamSlug] = selectedStreamSlug;
 	};
 
 	if (!(page.parentPage?.streamSlug || page.streamSlug)) {
