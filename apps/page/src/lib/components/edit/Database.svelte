@@ -20,7 +20,11 @@
 
 	let lastStreamSlug = 'LAST_DATABASE_STREAM_SLUG';
 
+	let isLoading = false;
+
 	let loadChildStreams = async () => {
+		isLoading = true;
+
 		let { results } = await get('projects', {
 			hubStreamSlug: page.streamSlug
 		});
@@ -33,6 +37,8 @@
 
 		selectedStreamSlug = activeStream?.slug;
 		localStorage[lastStreamSlug] = selectedStreamSlug;
+
+		isLoading = false;
 	};
 
 	if (page.streamSlug) {
@@ -252,7 +258,7 @@
 	};
 </script>
 
-{#if !childStreams?.length}
+{#if !isLoading && !childStreams?.length}
 	<div class="my-8">
 		<input placeholder="Tools" bind:value={newDatabaseName} />
 		<Button class="mt-2 _primary" onClick={createDatabase}>Create new database</Button>

@@ -1122,7 +1122,7 @@
 												>🎠 Add Carousel with Menu</button
 											> -->
 
-											<button
+											<!-- <button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'interactive-question' })}
 												>🤩 Ask Interactive Question</button
@@ -1139,7 +1139,7 @@
 												on:click={() => addNewSection({ type: 'form' })}
 											>
 												🔤 Form
-											</button>
+											</button> -->
 
 											<!--
 											<button
@@ -1338,7 +1338,7 @@
 													selectedTab = 'audience';
 													selectedSubmission = null;
 												},
-												title: `Submissions (${submissions?.results?.length || 0})`,
+												title: `Submissions`,
 												featherIcon: 'check-square'
 											},
 											{

@@ -179,7 +179,7 @@
 	</div>
 {/if} -->
 
-{#if $feedCache[cacheId]?.tags?.length}
+{#if !section.streamSettings?.limit && $feedCache[cacheId]?.tags?.length}
 	<div
 		class="flex w-full {section.isTitleLeft
 			? ''

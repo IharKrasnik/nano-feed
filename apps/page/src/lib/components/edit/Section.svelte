@@ -224,31 +224,53 @@
 
 							{#if pageStreams.filter((ps) => ps.slug === section.streamSlug).length}
 								{#if section.streamSettings}
-									<div class="grid grid-cols-2">
+									<div class="grid grid-cols-2 gap-4">
 										<div class="_section">
-											<div class="text-sm">Limit items (leave 0 for pagination)</div>
-											<input type="number" bind:value={section.streamSettings.limit} />
+											<div class="text-sm mb-2">Limit items</div>
+											<input
+												type="number"
+												class="w-full"
+												bind:value={section.streamSettings.limit}
+											/>
+											<div class="text-xs mt-2">Leave 0 for pagination</div>
 										</div>
 
 										<div class="_section">
-											<div class="text-sm">Sort</div>
+											<div class="text-sm mb-2">Sort</div>
 
 											<select bind:value={section.streamSettings.sortBy}>
+												<option value="_sample">Random</option>
 												<option value="-publishedOn">Newest First</option>
 												<option value="-viewsCount">Popular First</option>
 											</select>
+										</div>
+									</div>
+									<div class="_section">
+										<div class="text-sm mb-2">Show best sample</div>
+										<div>
+											<input
+												type="checkbox"
+												bind:checked={section.streamSettings.isWithImageOnly}
+											/> Include only items with image
+										</div>
+
+										<div>
+											<input type="checkbox" bind:checked={section.streamSettings.isWithUrlOnly} /> Include
+											only items with URL
 										</div>
 									</div>
 								{/if}
 
 								<Button
 									class="shrink-0 _small _secondary"
+									theme="light"
 									onClick={() => {
 										return getFeed({
 											cacheId: section.id,
 											streamSlug: section.streamSlug,
 											streamSettings: section.streamSettings,
-											forceRefresh: true
+											forceRefresh: true,
+											perPage: 100
 										});
 									}}>💫 refresh</Button
 								>

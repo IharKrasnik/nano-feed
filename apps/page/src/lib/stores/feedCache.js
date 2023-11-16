@@ -99,8 +99,8 @@ export const getFeed = async ({
 	}
 
 	if (streamSettings) {
-		if (streamSettings.sort) {
-			sort = streamSettings.sort;
+		if (streamSettings.sortBy) {
+			sort = streamSettings.sortBy;
 		}
 
 		if (streamSettings.limit) {
@@ -113,8 +113,8 @@ export const getFeed = async ({
 		sort,
 		perPage,
 		streamSlug,
-		isWithUrlOnly,
-		isWithImageOnly,
+		isWithUrlOnly: streamSettings?.isWithUrlOnly,
+		isWithImageOnly: streamSettings?.isWithImageOnly,
 		page
 	});
 };

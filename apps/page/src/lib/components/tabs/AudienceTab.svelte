@@ -43,5 +43,7 @@
 				/>
 			{/if}
 		{/key}
+	{:else}
+		← Select submission
 	{/if}
 </div>
