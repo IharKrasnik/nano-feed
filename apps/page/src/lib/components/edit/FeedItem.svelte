@@ -126,7 +126,9 @@
 		<div class="relative flex justify-between items-center mb-4">
 			<div class="flex items-center w-full">
 				<EmojiPicker bind:icon={feedItem.iconUrl} />
-
+				{#if feedItem.url}
+					<Button class="ml-2 rounded-full bg-[#f6f5f4]" onClick={fetchMetaTags}>🪄</Button>
+				{/if}
 				<!-- <EditSectionSettings bind:sectionItem={feedItem} /> -->
 			</div>
 
@@ -154,11 +156,7 @@
 				bind:value={feedItem.url}
 				theme="light"
 			/>
-			<div>
-				{#if feedItem.url}
-					<Button class="ml-2 rounded-full bg-[#f6f5f4]" onClick={fetchMetaTags}>🪄</Button>
-				{/if}
-			</div>
+			<div />
 		</div>
 
 		<div class="flex w-full items-center mb-4">

@@ -80,7 +80,14 @@
 		<h2 class="text-lg font-medium mb-4">
 			It looks like you have no articles yet... Let's fix that!
 		</h2>
+
 		<div>
+			<input
+				class="mb-4 w-[420px]"
+				type="text"
+				placeholder={newArticleTitlePlaceholder}
+				bind:value={newArticleTitle}
+			/>
 			<Button class="mb-2 _primary" onClick={createNewArticle}>Write my first article</Button>
 		</div>
 

@@ -69,8 +69,13 @@ const ftch = async (method, url, params, options = {}) => {
 		options.mode = 'cors';
 	}
 
+	let controller = new AbortController();
+
+	const timeoutId = setTimeout(() => controller.abort(), options?.abortTimeout || 10000);
+
 	try {
 		res = await fetch(`${absoluteUrl}${method === 'get' ? `?${serialize(params)}` : ''}`, {
+			signal: controller.signal,
 			method,
 			body,
 			...options,
@@ -80,6 +85,8 @@ const ftch = async (method, url, params, options = {}) => {
 				...(options.headers || {})
 			}
 		});
+
+		clearTimeout(timeoutId);
 	} catch (err) {
 		console.log('error GET', absoluteUrl, method, err);
 
@@ -99,7 +106,7 @@ const ftch = async (method, url, params, options = {}) => {
 		return data;
 	} else {
 		const data = await res.json();
-		if (browser) {
+		if (browser && !options?.isNoNotifications) {
 			toast.push('Error: ' + (data?.errors?.global || 'unknown'), {
 				duration: 3000,
 				pausable: true,

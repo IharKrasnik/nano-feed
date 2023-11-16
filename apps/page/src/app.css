@@ -55,8 +55,8 @@
 	aspect-ratio: 1200/630;
 }
 
-._section-item:not(.bg_image),
-._section-item:not(.bg_image) > .flex {
+._section-item:not(.bg_image):not(._article),
+._section-item:not(.bg_image):not(._article) > .flex {
 	background: var(--section-background-color);
 	text-align: left;
 	border: 1px rgba(255, 255, 255, 0.2) solid;

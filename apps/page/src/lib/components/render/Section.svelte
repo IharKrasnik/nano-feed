@@ -578,7 +578,7 @@
 							<div
 								class="_section-item grid grid-cols-12 items-center {section.renderType ===
 								'article'
-									? 'mb-8'
+									? '_article mb-8'
 									: 'mb-4'}"
 							>
 								<div
@@ -588,8 +588,8 @@
 								>
 									<div
 										class="{section.renderType === 'article'
-											? 'sm:px-8  _section-item'
-											: 'p-4 sm:p-8'} col-span-1"
+											? 'sm:px-8'
+											: '_section-item p-4 sm:p-8'} col-span-1"
 									>
 										<!-- {#if item.emoji !== '✨'}
 									<Emoji bind:emoji={item.emoji} />

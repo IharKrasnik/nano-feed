@@ -54,7 +54,7 @@
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
 	import Settings from '$lib/components/Settings.svelte';
-	import EditDatabase from '$lib/components/edit/DatabaseNew.svelte';
+	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import EditCustomers from '$lib/components/edit/Customers.svelte';
 	import EditSubmissions from '$lib/components/edit/Submissions.svelte';
 
@@ -320,7 +320,8 @@
 			id: uuidv4(),
 			columns: 1,
 			items: [],
-			type
+			type,
+			renderType: page.renderType === 'article' ? 'article' : 'grid'
 		};
 
 		if (type === 'benefits') {
@@ -1340,7 +1341,13 @@
 												title: `Submissions (${submissions?.results?.length || 0})`,
 												featherIcon: 'check-square'
 											},
-
+											{
+												action: () => {
+													selectedTab = 'database';
+												},
+												title: 'Databases',
+												featherIcon: 'database'
+											},
 											{
 												action: () => {
 													selectedTab = 'blog';
@@ -1354,13 +1361,6 @@
 												},
 												title: 'Newsletter',
 												featherIcon: 'mail'
-											},
-											{
-												action: () => {
-													selectedTab = 'database';
-												},
-												title: 'CMS',
-												featherIcon: 'database'
 											}
 										]}
 										frameBgColor="#494949"

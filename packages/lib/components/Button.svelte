@@ -12,6 +12,7 @@
 	let isJustDone = false;
 	let isJustFailed = false;
 	let errMessage;
+	export let theme;
 
 	let load = async () => {
 		isLoading = true;
@@ -39,7 +40,7 @@
 <button class="relative {clazz} flex justify-center" {style} on:click={load}>
 	{#if isLoading}
 		<div class="absolute top-0 h-full flex items-center z-10">
-			<Loader />
+			<Loader {theme} />
 		</div>
 	{/if}
 
