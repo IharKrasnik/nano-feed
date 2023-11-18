@@ -418,3 +418,31 @@ butotn._wide {
 .container-width {
 	max-width: var(--container-width);
 }
+
+.heatmap {
+	@apply relative;
+}
+
+[data-heatmap-clicks-count] {
+	--heatmap-clicks-count: attr(data-heatmap-clicks-count);
+}
+
+.heatmap::before {
+	content: '';
+	top: -8px;
+	left: -8px;
+	width: calc(100% + 16px);
+	height: calc(100% + 16px);
+	@apply block absolute shadow-lg shadow-green-700 bg-green-700/30;
+}
+
+.heatmap::after {
+	content: var(--heatmap-clicks-count);
+	@apply block absolute;
+	top: -16px;
+	right: -16px;
+	padding: 0px 16px;
+	border-radius: 4px;
+	transform: rotate(-1deg);
+	@apply bg-yellow-300 text-black;
+}

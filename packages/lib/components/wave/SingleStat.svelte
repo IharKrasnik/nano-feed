@@ -14,7 +14,9 @@
 	export let timezone = moment.tz.guess();
 
 	let actionLabels = {
-		signup: 'Signups'
+		signup: 'Signups',
+		click_custom: 'Clicks',
+		form_submitted: 'Forms'
 	};
 
 	let stats;

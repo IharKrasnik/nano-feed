@@ -175,49 +175,62 @@
 				</div>
 			</div>
 
-			<div class="rounded-xl p-4 border _border-white">
-				<div class="flex justify-between items-center mb-4">
-					<div class="text-lg">Page Views</div>
-					<div class="text-3xl font-bold">
-						{stats.totalViewsCount}
-					</div>
-				</div>
-
-				<hr class="_border-white my-4" style="border-width: .5px" />
-
-				{#if viewChartData && chartWidth}
-					<LinkedChart
-						linked="chart"
-						uid="views"
-						data={viewChartData}
-						fill="#8B786D"
-						grow={true}
-						barMinWidth={5}
-						gap={10}
-						height={150}
-						width={chartWidth}
-						transition={500}
-					/>
-				{/if}
-
-				<div class="px-4 flex w-full justify-between">
-					<div class="text-sm text-slate-300 mt-4 shrink-0">
-						{Object.keys(viewChartData)[0]}
+			{#if !isShowSignups}
+				<div class="rounded-xl p-4 border _border-white">
+					<div class="flex justify-between items-center mb-4">
+						<div class="text-lg">Page Views</div>
+						<div class="text-3xl font-bold">
+							{stats.totalViewsCount}
+						</div>
 					</div>
 
-					<div class="text-sm text-slate-300 mt-4 shrink-0">
-						{_.last(Object.keys(viewChartData))}
+					<hr class="_border-white my-4" style="border-width: .5px" />
+
+					{#if viewChartData && chartWidth}
+						<LinkedChart
+							linked="chart"
+							uid="views"
+							data={viewChartData}
+							fill="#8B786D"
+							grow={true}
+							barMinWidth={5}
+							gap={10}
+							height={150}
+							width={chartWidth}
+							transition={500}
+						/>
+					{/if}
+
+					<div class="px-4 flex w-full justify-between">
+						<div class="text-sm text-slate-300 mt-4 shrink-0">
+							{Object.keys(viewChartData)[0]}
+						</div>
+
+						<div class="text-sm text-slate-300 mt-4 shrink-0">
+							{_.last(Object.keys(viewChartData))}
+						</div>
+					</div>
+
+					<div class="w-full text-center py-4">
+						<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
+						<LinkedValue uid="views" empty={stats.totalViewsCount} /> views
 					</div>
 				</div>
-
-				<div class="w-full text-center py-4">
-					<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
-					<LinkedValue uid="views" empty={stats.totalViewsCount} /> views
-				</div>
-			</div>
+			{/if}
 
 			{#if isShowSignups}
-				<SingleStat actionType="signup" projectId="63eaab5b0ebb830015458b95" bind:timeframe />
+				<SingleStat
+					actionType="click_custom"
+					projectId="63eaab5b0ebb830015458b95"
+					subProjectId={project.page._id}
+					bind:timeframe
+				/>
+				<SingleStat
+					actionType="form_submitted"
+					projectId="63eaab5b0ebb830015458b95"
+					subProjectId={project.page._id}
+					bind:timeframe
+				/>
 			{/if}
 		</div>
 

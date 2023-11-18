@@ -431,6 +431,7 @@
 										href="/"
 										on:click={() => {
 											trackClick({
+												pageId: page?._id,
 												sectionId: `${page.parentPage?._id || page._id}_header`,
 												linkId: 'home',
 												url: '/',
@@ -458,6 +459,7 @@
 												href="/{subPage.slug}"
 												on:click={() => {
 													trackClick({
+														pageId: page?._id,
 														sectionId: `${page.parentPage?._id || page._id}_header`,
 														linkId: subPage._id,
 														url: `/${subPage.slug}`,

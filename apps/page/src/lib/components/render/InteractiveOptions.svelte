@@ -3,13 +3,17 @@
 	import { fly, fade, slide } from 'svelte/transition';
 	import { v4 as uuidv4 } from 'uuid';
 	import { post } from 'lib/api';
+
 	import currentCustomer from 'lib/stores/currentCustomer';
+	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
+
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
 	import Popup from '$lib/components/Popup.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 	import trackClick from 'lib/services/trackClick';
+	import trackForm from 'lib/services/trackForm';
 	import trackInteractiveAnswer from 'lib/services/trackInteractiveAnswer';
 
 	export let page;
@@ -166,6 +170,9 @@
 	let submitEmail = async () => {
 		isResetEmail = false;
 		$currentCustomer.email = emailAddress;
+
+		trackForm({ sectionId: sectionItem.id, text: sectionItem.callToActionText });
+
 		let submission = await post(`pages/${page.slug}/submissions`, { email: emailAddress });
 
 		if (page.actionUrl) {
@@ -300,6 +307,14 @@
 				<a
 					class="shrink-0 cursor-pointer w-full sm:w-auto {urlClass}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
+					class:heatmap={$heatmap}
+					data-heatmap-clicks-count={$heatmap
+						? getHeatmapClicksCount({
+								sectionId: parentSectionId || sectionItem.id,
+								sectionItemId: parentSectionId ? sectionItem.id : null,
+								linkId: `${sectionItem.id}_links_0`
+						  })
+						: ''}
 					href={sectionItem.url}
 					on:click={(evt) => {
 						trackQuestionClick({
@@ -308,6 +323,7 @@
 						});
 
 						trackClick({
+							pageId: page?._id,
 							sectionId: trackId || parentSectionId || sectionItem.id,
 							sectionItemId: trackId ? null : parentSectionId ? sectionItem.id : null,
 							linkId: `${trackId || sectionItem.id}_links_0`,
@@ -340,6 +356,14 @@
 				{#if sectionItem.interactiveRenderType === 'links'}
 					<a
 						class="shrink-0 w-full sm:w-auto cursor-pointer {url2Class}"
+						class:heatmap={$heatmap}
+						data-heatmap-clicks-count={$heatmap
+							? getHeatmapClicksCount({
+									sectionId: parentSectionId || sectionItem.id,
+									sectionItemId: parentSectionId ? sectionItem.id : null,
+									linkId: `${sectionItem.id}_links_1`
+							  })
+							: ''}
 						target={sectionItem.url2?.startsWith('http') ? '_blank' : ''}
 						href={sectionItem.url2?.startsWith('/') ? `${sectionItem.url2}` : sectionItem.url2}
 						on:click={(evt) => {
@@ -349,6 +373,7 @@
 							});
 
 							trackClick({
+								pageId: page?._id,
 								sectionId: parentSectionId || sectionItem.id,
 								sectionItemId: parentSectionId ? sectionItem.id : null,
 								linkId: `${sectionItem.id}_links_1`,

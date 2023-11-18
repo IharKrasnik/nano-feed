@@ -23,7 +23,7 @@
 	}
 </script>
 
-<div class="px-8 py-16 bg-background" style={cssVarStyles}>
+<div class="px-8 py-16 bg-background overflow-y-auto" style={cssVarStyles}>
 	{#if customer}
 		{#key customer._id}
 			<CustomerAnalytics bind:page bind:customer />
@@ -31,7 +31,7 @@
 	{:else}
 		<div class="" in:fly={{ y: 50, duration: 150 }} style="height: calc(100vh - 60px);">
 			<div class="mt-8 w-full">
-				<WaveDashboard project={{ page }} />
+				<WaveDashboard project={{ page }} isShowSignups />
 			</div>
 		</div>
 	{/if}

@@ -57,6 +57,7 @@
 	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import EditCustomers from '$lib/components/edit/Customers.svelte';
 	import EditSubmissions from '$lib/components/edit/Submissions.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -71,6 +72,8 @@
 	import postDraft from 'lib/stores/postDraft';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
+	import heatmap from '$lib/stores/heatmap';
+
 	//
 	onMount(async () => {
 		await import('emoji-picker-element/svelte');
@@ -116,6 +119,23 @@
 
 	let pageSlug = '_new';
 	let selectedTab = 'editor';
+
+	let conversions;
+
+
+	let refreshPageConversionStats = async () => {
+		let stats = await get(`pages/${page._id}/conversions`);
+		page.totalUniqueViews = stats.totalVisitorsCount;
+		page.totalUniqueClicksCount = stats.uniqueClicksCount;
+		page.totalSignupsCount = stats.totalSubmissionsCount;
+
+		conversions = {
+			clicks: (page.totalUniqueClicksCount / page.totalUniqueViews) * 100,
+			forms: (page.totalSignupsCount / page.totalUniqueViews) * 100
+		};
+
+		$heatmap = await get(`pages/${page._id}/heatmap`);
+	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
@@ -181,6 +201,8 @@
 		}
 
 		page.activeHero = page.heros[0];
+
+		refreshPageConversionStats();
 	};
 
 	let addNewHero = () => {
@@ -1287,17 +1309,33 @@
 											</div>
 										{/if}
 									</div>
-									{#if metrics?.conversion}
-										<div class="flex justify-center mt-1 absolute top-0 left-20">
+
+									{#if conversions}
+										<div class="flex items-center justify-center mt-1 absolute top-0 left-20">
+											{#if page.totalUniqueClicksCount}
+												<div
+													class="mr-4 opacity-80 text-center px-4 rounded-xl flex"
+													style="background-color: {getConversionColor(
+														conversions.clicks
+													)}; color:white; left:50%;"
+													use:tooltip
+													title="Conversion rate. Target 10+%"
+												>
+													<FeatherIcon name="mouse-pointer" theme="dark" class="mr-1" size="15px" />
+													{conversions.clicks.toFixed(2)}%
+												</div>
+											{/if}
+
 											<div
-												class="mr-4 opacity-80 text-center px-4 rounded-xl"
+												class="flex items-center mr-4 opacity-80 text-center px-4 rounded-xl"
 												style="background-color: {getConversionColor(
-													metrics.conversion
+													conversions.forms
 												)}; color:white; left:50%;"
 												use:tooltip
-												title="Conversion rate. Target 10+%"
+												title="Form conversion rate. Target 10+%"
 											>
-												{metrics.conversion}%
+												<FeatherIcon name="clipboard" theme="dark" class="mr-1" size="15px" />
+												{conversions.forms.toFixed(2)}%
 											</div>
 										</div>
 									{/if}

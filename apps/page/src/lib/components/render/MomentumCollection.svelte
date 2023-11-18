@@ -96,6 +96,7 @@
 		filterTag = tag;
 
 		trackClick({
+			pageId: page?._id,
 			sectionId: section.id,
 			linkId: tag,
 			text: tag || 'All Tags'
@@ -125,6 +126,7 @@
 					tagsStr
 				}) => {
 					return {
+						id: _id,
 						feedItemId: _id,
 						createdOn,
 						publishedOn,

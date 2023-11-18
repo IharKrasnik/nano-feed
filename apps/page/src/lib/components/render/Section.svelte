@@ -6,6 +6,7 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
+	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
 
 	import Avatar from 'lib/components/Avatar.svelte';
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
@@ -669,6 +670,7 @@
 												post(`feed/${item.feedItemId}/view`);
 
 												trackClick({
+													pageId: page?._id,
 													sectionId: section.id,
 													sectionItemId: item.feedItemId,
 													isFeedItem: true,
@@ -678,6 +680,7 @@
 												});
 											} else {
 												trackClick({
+													pageId: page?._id,
 													sectionId: section.id,
 													sectionItemId: item.id,
 													linkId: item.id,
@@ -686,6 +689,14 @@
 												});
 											}
 										}}
+										class:heatmap={$heatmap}
+										data-heatmap-clicks-count={$heatmap
+											? getHeatmapClicksCount({
+													sectionId: section.id,
+													sectionItemId: item.id,
+													linkId: item.id
+											  })
+											: ''}
 										style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
 									>
 										{#if item.bgImageUrl}
