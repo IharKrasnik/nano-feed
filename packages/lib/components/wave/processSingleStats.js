@@ -3,16 +3,14 @@ import moment from 'moment';
 export default (stats, timeframe = '7_days') => {
 	let chartData = null;
 
-	let growth;
+	let growth = 0;
 
-	if (!stats.totalCount && !stats.prevTotalCount) {
-		growth = 0;
-	} else if (stats.totalCount === 0) {
-		growth = -100;
-	} else if (stats.totalCount === 0) {
-		growth = 100;
+	if (!stats.prevUniqueCount) {
+		if (stats.uniqueCount) {
+			growth = 100;
+		}
 	} else {
-		growth = parseInt((stats.totalCount / stats.prevTotalCount - 1) * 100);
+		growth = parseInt((stats.uniqueCount / stats.prevUniqueCount - 1) * 100);
 	}
 
 	let dateFrom;
@@ -46,6 +44,7 @@ export default (stats, timeframe = '7_days') => {
 	}
 
 	return {
-		chartData
+		chartData,
+		growth
 	};
 };

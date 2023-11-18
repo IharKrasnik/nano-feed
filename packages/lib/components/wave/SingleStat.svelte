@@ -21,18 +21,19 @@
 
 	let stats;
 	let chartData;
+	let growth = 0;
 
 	let fetchStats = async () => {
-		stats = (
-			await get(`waveProjects/${projectId || subProjectId}/action-stats`, {
-				...(subProjectId ? { subProjectId } : {}),
-				actionType,
-				timeframe,
-				timezone
-			})
-		)[actionType][0];
+		stats = await get(`waveProjects/${projectId || subProjectId}/action-stats`, {
+			...(subProjectId ? { subProjectId } : {}),
+			actionType,
+			timeframe,
+			timezone
+		});
 
-		chartData = processSingleStats(stats, timeframe).chartData;
+		let res = processSingleStats(stats, timeframe);
+		chartData = res.chartData;
+		growth = res.growth;
 
 		if (browser && !chartWidth) {
 			setTimeout(() => {
@@ -58,8 +59,15 @@
 	{#if stats}
 		<div class="flex justify-between items-center mb-4" bind:this={widthEl}>
 			<div class="text-lg">{actionLabels[actionType]}</div>
-			<div class="text-3xl font-bold">
-				{stats.totalCount}
+			<div class="flex items-center">
+				{#if growth}
+					<div class="mr-4" class:text-green-300={growth > 0} class:text-red-300={growth < 0}>
+						{growth > 0 ? '+' : '-'}{growth}%
+					</div>
+				{/if}
+				<div class="text-3xl font-bold">
+					{stats.uniqueCount}
+				</div>
 			</div>
 		</div>
 
@@ -93,6 +101,14 @@
 			<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
 			<LinkedValue uid="users" empty={stats.totalCount} />
 			{actionLabels[actionType].toLowerCase()}
+		</div>
+
+		<hr class="_border-white my-4 " style="border-width: .5px" />
+		<div class="flex justify-between items-center opacity-80" bind:this={widthEl}>
+			<div class="text-lg">Total</div>
+			<div class="text-2xl font-bold">
+				{stats.totalCount}
+			</div>
 		</div>
 	{/if}
 </div>

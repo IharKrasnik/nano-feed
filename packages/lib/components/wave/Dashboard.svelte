@@ -54,11 +54,23 @@
 		).then((res) => (stats = res));
 	};
 
+	let userGrowth;
+
 	$: if (stats) {
 		isShowAll = false;
 		maxViewsCount = stats.pageStats[0]?.count;
 		maxReferralCount = stats.referralStats[0]?.count;
 		maxCountryCount = stats.userCountryStats[0]?.count;
+
+		if (!stats.totalUsersCount && !stats.prevUsersCount) {
+			userGrowth = 0;
+		} else if (stats.totalUsersCount === 0) {
+			userGrowth = -100;
+		} else if (stats.prevUsersCount === 0) {
+			userGrowth = 100;
+		} else {
+			userGrowth = parseInt((stats.totalUsersCount / stats.prevUsersCount - 1) * 100);
+		}
 
 		let dateFrom;
 		let unitToAdd;
@@ -137,8 +149,20 @@
 			<div class="rounded-xl p-4 _border-white">
 				<div class="flex justify-between items-center mb-4" bind:this={widthEl}>
 					<div class="text-lg">Unique Users</div>
-					<div class="text-3xl font-bold">
-						{stats.totalUsersCount}
+
+					<div class="flex items-center">
+						{#if userGrowth}
+							<div
+								class="mr-4"
+								class:text-green-300={userGrowth > 0}
+								class:text-red-300={userGrowth < 0}
+							>
+								{userGrowth > 0 ? '+' : '-'}{userGrowth}%
+							</div>
+						{/if}
+						<div class="text-3xl font-bold">
+							{stats.totalUsersCount}
+						</div>
 					</div>
 				</div>
 
@@ -173,6 +197,16 @@
 					<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
 					<LinkedValue uid="users" empty={stats.totalUsersCount} /> users
 				</div>
+
+				{#if isShowSignups}
+					<hr class="_border-white my-4 " style="border-width: .5px" />
+					<div class="flex justify-between items-center opacity-80" bind:this={widthEl}>
+						<div class="text-lg">Total Views</div>
+						<div class="text-2xl font-bold">
+							{stats.totalViewsCount}
+						</div>
+					</div>
+				{/if}
 			</div>
 
 			{#if !isShowSignups}
