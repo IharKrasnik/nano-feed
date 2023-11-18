@@ -157,7 +157,7 @@
 								class:text-green-300={userGrowth > 0}
 								class:text-red-300={userGrowth < 0}
 							>
-								{userGrowth > 0 ? '+' : '-'}{userGrowth}%
+								{userGrowth > 0 ? '+' : ''}{userGrowth}%
 							</div>
 						{/if}
 						<div class="text-3xl font-bold">

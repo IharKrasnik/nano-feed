@@ -62,11 +62,11 @@
 			<div class="flex items-center">
 				{#if growth}
 					<div class="mr-4" class:text-green-300={growth > 0} class:text-red-300={growth < 0}>
-						{growth > 0 ? '+' : '-'}{growth}%
+						{growth > 0 ? '+' : ''}{growth}%
 					</div>
 				{/if}
 				<div class="text-3xl font-bold">
-					{stats.uniqueCount}
+					{stats.uniqueCount || 0}
 				</div>
 			</div>
 		</div>
@@ -107,7 +107,7 @@
 		<div class="flex justify-between items-center opacity-80" bind:this={widthEl}>
 			<div class="text-lg">Total</div>
 			<div class="text-2xl font-bold">
-				{stats.totalCount}
+				{stats.totalCount || 0}
 			</div>
 		</div>
 	{/if}
