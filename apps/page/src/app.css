@@ -444,5 +444,5 @@ butotn._wide {
 	padding: 0px 16px;
 	border-radius: 4px;
 	transform: rotate(-1deg);
-	@apply bg-yellow-300 text-black;
+	@apply bg-yellow-300 text-black break-inside-avoid;
 }

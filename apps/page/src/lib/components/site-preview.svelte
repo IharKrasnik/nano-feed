@@ -37,6 +37,7 @@
 	import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
 	import userVars, { varsLastUpdatedOn } from '$lib/stores/userVars';
+	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
 
 	import { STREAM_URL, PAGE_URL } from 'lib/env';
 
@@ -423,7 +424,11 @@
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						<div class="{isEdit ? 'mb-[-60px]' : 'fixed top-0 left-0'} _header backdrop-blur-lg">
+						<div
+							class="{isEdit
+								? 'absolute mb-[-60px]'
+								: 'fixed top-0 left-0'} _header backdrop-blur-lg"
+						>
 							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
 								<div class="flex  py-4 sm:py-0">
 									<a
@@ -438,6 +443,13 @@
 												text: page.parentPage?.name || page.name
 											});
 										}}
+										class:heatmap={$heatmap}
+										data-heatmap-clicks-count={$heatmap
+											? getHeatmapClicksCount({
+													sectionId: `${page.parentPage?._id || page._id}_header`,
+													linkId: `home`
+											  })
+											: ''}
 									>
 										{#if page?.logo && page.logo.startsWith('http')}
 											<Emoji class="mr-2 rounded" emoji={page.parentPage?.logo || page.logo} />
@@ -465,7 +477,14 @@
 														url: `/${subPage.slug}`,
 														text: subPage.name
 													});
-												}}>{subPage.name}</a
+												}}
+												class:heatmap={$heatmap}
+												data-heatmap-clicks-count={$heatmap
+													? getHeatmapClicksCount({
+															sectionId: `${page.parentPage?._id || page._id}_header`,
+															linkId: subPage._id
+													  })
+													: ''}>{subPage.name}</a
 											>
 										{/each}
 									</div>

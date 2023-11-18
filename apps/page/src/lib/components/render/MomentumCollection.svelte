@@ -6,6 +6,7 @@
 	import feedCache, { getFeed } from '$lib/stores/feedCache';
 	import trackClick from 'lib/services/trackClick';
 	import { get } from 'lib/api';
+	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
 
 	export let page;
 	export let section;
@@ -185,12 +186,19 @@
 	<div
 		class="flex w-full {section.isTitleLeft
 			? ''
-			: 'sm:justify-center'} gap-3 mt-4 mb-8 overflow-x-scroll sm:overflow-x-auto sm:flex-wrap max-w-screen"
+			: 'sm:justify-center'} gap-3 mt-4 mb-8 overflow-x-scroll sm:overflow-visible sm:flex-wrap max-w-screen"
 	>
 		<div
 			class="px-2 py-1 text-sm opacity-80 _border-accent rounded-xl cursor-pointer shrink-0 _tag {filterTag
 				? ''
 				: 'selected'}"
+			class:heatmap={$heatmap}
+			data-heatmap-clicks-count={$heatmap
+				? getHeatmapClicksCount({
+						sectionId: section.id,
+						linkId: null
+				  })
+				: ''}
 			on:click={() => setTag(null)}
 		>
 			All tags
@@ -202,6 +210,13 @@
 				tag
 					? 'selected'
 					: ''}"
+				class:heatmap={$heatmap}
+				data-heatmap-clicks-count={$heatmap
+					? getHeatmapClicksCount({
+							sectionId: section.id,
+							linkId: tag
+					  })
+					: ''}
 				on:click={() => setTag(tag)}
 			>
 				{tag}

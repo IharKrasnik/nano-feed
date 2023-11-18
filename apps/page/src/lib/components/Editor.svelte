@@ -122,6 +122,12 @@
 
 	let conversions;
 
+	let isShowHeatmap = false;
+
+	let refreshHeatmap = async () => {
+		$heatmap = await get(`pages/${page._id}/heatmap`);
+		isShowHeatmap = true;
+	};
 
 	let refreshPageConversionStats = async () => {
 		let stats = await get(`pages/${page._id}/conversions`);
@@ -133,8 +139,7 @@
 			clicks: (page.totalUniqueClicksCount / page.totalUniqueViews) * 100,
 			forms: (page.totalSignupsCount / page.totalUniqueViews) * 100
 		};
-
-		$heatmap = await get(`pages/${page._id}/heatmap`);
+		refreshHeatmap();
 	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
@@ -906,7 +911,20 @@
 												⚙️
 											</div>
 										</div>
-										<div class="flex" />
+										<div class="flex">
+											<input
+												class="mr-2"
+												type="checkbox"
+												bind:checked={isShowHeatmap}
+												on:change={() => {
+													if (isShowHeatmap) {
+														refreshHeatmap();
+													} else {
+														$heatmap = null;
+													}
+												}}
+											/> Show Heatmap
+										</div>
 									</div>
 								{/if}
 
