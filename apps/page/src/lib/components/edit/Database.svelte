@@ -26,7 +26,7 @@
 		isLoading = true;
 
 		let { results } = await get('projects', {
-			hubStreamSlug: page.streamSlug
+			hubStreamSlug: page.parentPage?.streamSlug || page.streamSlug
 		});
 
 		childStreams = results;
@@ -41,7 +41,7 @@
 		isLoading = false;
 	};
 
-	if (page.streamSlug) {
+	if (page.parentPage?.streamSlug || page.streamSlug) {
 		loadChildStreams();
 	}
 

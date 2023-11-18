@@ -130,7 +130,7 @@
 	};
 
 	let refreshPageConversionStats = async () => {
-		let stats = await get(`pages/${page._id}/conversions`);
+		let stats = await get(`pages/${page.parentPage?._id || page._id}/conversions`);
 		page.totalUniqueViews = stats.totalVisitorsCount;
 		page.totalUniqueClicksCount = stats.uniqueClicksCount;
 		page.totalSignupsCount = stats.totalSubmissionsCount;
@@ -877,7 +877,7 @@
 
 								{#if !page._id || isBrandNameEdit}
 									<div class="_section">
-										<div class="_title">Brand Name</div>
+										<div class="_title">Page Name</div>
 										<input
 											class="w-full"
 											bind:value={page.name}
@@ -982,7 +982,7 @@
 											isShowTips={page.hero?.length < 2}
 										/>
 									{/each}
-
+									<!-- 
 									{#if page?._id}
 										<div class="opacity-70 hover:opacity-100 my-4">
 											<button
@@ -992,7 +992,7 @@
 												<div class="text-xs">Run A/B tests</div>
 											</button>
 										</div>
-									{/if}
+									{/if} -->
 
 									{#if page?._id && !page.parentPage}
 										<div class="_section bg-[#e8ffef] my-8" style="border: none;">

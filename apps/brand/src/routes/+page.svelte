@@ -345,7 +345,7 @@
 
 						{#if $currentUser && !brand._id}
 							<div class="_section">
-								<div class="_title">Brand Name</div>
+								<div class="_title">Page Name</div>
 
 								<div>
 									<input

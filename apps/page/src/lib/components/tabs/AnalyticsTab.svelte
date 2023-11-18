@@ -31,7 +31,7 @@
 	{:else}
 		<div class="" in:fly={{ y: 50, duration: 150 }} style="height: calc(100vh - 60px);">
 			<div class="mt-8 w-full">
-				<WaveDashboard project={{ page }} isShowSignups />
+				<WaveDashboard project={{ page: page.parentPage || page }} isShowSignups />
 			</div>
 		</div>
 	{/if}

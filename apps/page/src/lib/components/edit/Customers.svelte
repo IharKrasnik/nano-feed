@@ -12,7 +12,7 @@
 	let customers = [];
 
 	let loadCustomers = async () => {
-		let customerResult = await get(`customers`, { pageId: page._id });
+		let customerResult = await get(`customers`, { pageId: page.parentPage?._id || page._id });
 
 		customers = customerResult.results.map((c) => {
 			c.isCollapsed = true;
@@ -23,7 +23,10 @@
 	loadCustomers();
 
 	let saveCustomer = async (customer) => {
-		let updatedCustomer = await put(`customers/${customer._id}?pageId=${page._id}`, customer);
+		let updatedCustomer = await put(
+			`customers/${customer._id}?pageId=${page.parentPage?._id || page._id}`,
+			customer
+		);
 
 		customers = customers.map((c) => {
 			if (c._id === updatedCustomer._id) {
