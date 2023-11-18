@@ -1263,6 +1263,42 @@
 
 				{#if page.name || page.title}
 					<div class="relative ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]" in:fade={{ delay: 150 }}>
+						{#if conversions}
+							<div
+								class="flex items-center justify-center mt-1 absolute left-[160px] top-[20px] cursor-pointer"
+								style="z-index: 10;"
+								on:click={() => {
+									selectedTab = 'analytics';
+								}}
+							>
+								{#if page.totalUniqueClicksCount}
+									<div
+										class="flex items-center mr-4 opacity-90 text-center px-4 rounded-xl "
+										style="background-color: {getConversionColor(
+											conversions.clicks
+										)}; color:white; left:50%;"
+										use:tooltip
+										title="Clicks conversion rate. Target 10+%"
+									>
+										<FeatherIcon name="mouse-pointer" theme="dark" class="mr-1" size="15px" />
+										{conversions.clicks.toFixed(2)}%
+									</div>
+								{/if}
+
+								<div
+									class="flex items-center mr-4 opacity-80 text-center px-4 rounded-xl"
+									style="background-color: {getConversionColor(
+										conversions.forms
+									)}; color:white; left:50%;"
+									use:tooltip
+									title="Form conversion rate. Target 10+%"
+								>
+									<FeatherIcon name="clipboard" theme="dark" class="mr-1" size="15px" />
+									{conversions.forms.toFixed(2)}%
+								</div>
+							</div>
+						{/if}
+
 						{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
 								<div class="mx-auto">
@@ -1327,36 +1363,6 @@
 											</div>
 										{/if}
 									</div>
-
-									{#if conversions}
-										<div class="flex items-center justify-center mt-1 absolute top-0 left-20">
-											{#if page.totalUniqueClicksCount}
-												<div
-													class="mr-4 opacity-80 text-center px-4 rounded-xl flex"
-													style="background-color: {getConversionColor(
-														conversions.clicks
-													)}; color:white; left:50%;"
-													use:tooltip
-													title="Conversion rate. Target 10+%"
-												>
-													<FeatherIcon name="mouse-pointer" theme="dark" class="mr-1" size="15px" />
-													{conversions.clicks.toFixed(2)}%
-												</div>
-											{/if}
-
-											<div
-												class="flex items-center mr-4 opacity-80 text-center px-4 rounded-xl"
-												style="background-color: {getConversionColor(
-													conversions.forms
-												)}; color:white; left:50%;"
-												use:tooltip
-												title="Form conversion rate. Target 10+%"
-											>
-												<FeatherIcon name="clipboard" theme="dark" class="mr-1" size="15px" />
-												{conversions.forms.toFixed(2)}%
-											</div>
-										</div>
-									{/if}
 								</div>
 							</div>
 						{/if}
