@@ -6,7 +6,7 @@ export default heatmapStore;
 
 export let getHeatmapClicksCount = ({ sectionId, sectionItemId, linkId }) => {
 	let heatmaps = get(heatmapStore);
-	console.log('getHeatmapClicksCount', { sectionId, sectionItemId, linkId });
+
 	return (
 		heatmaps.find((h) => {
 			if (sectionItemId) {

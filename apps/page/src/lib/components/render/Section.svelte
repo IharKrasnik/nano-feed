@@ -75,7 +75,7 @@
 
 	let selectedCarouselItem = null;
 
-	let selectCarouselItem = (item) => {
+	let selectCarouselItem = (item, { isAuto = false } = {}) => {
 		item.isSelected = true;
 		carouselKey = +new Date();
 
@@ -85,6 +85,16 @@
 				isSelected: si === item
 			};
 		});
+
+		if (!isAuto) {
+			trackClick({
+				pageId: page._id,
+				sectionId: section.id,
+				sectionItemId: item.id,
+				linkId: item.id,
+				text: item.title
+			});
+		}
 	};
 
 	if (section.renderType === 'carousel') {
@@ -92,7 +102,7 @@
 	}
 
 	if (section.carousel && section.items?.length) {
-		selectCarouselItem(section.items[0]);
+		selectCarouselItem(section.items[0], { isAuto: true });
 	}
 
 	let checkConditions = (section) => {
@@ -159,6 +169,13 @@
 		}
 
 		carouselKey = +new Date();
+
+		trackClick({
+			pageId: page._id,
+			sectionId: section.id,
+			linkId: 'arrow_prev',
+			text: '←'
+		});
 	};
 
 	let selectNextItem = () => {
@@ -181,6 +198,13 @@
 		}
 
 		carouselKey = +new Date();
+
+		trackClick({
+			pageId: page._id,
+			sectionId: section.id,
+			linkId: 'arrow_next',
+			text: '→'
+		});
 	};
 
 	$: if (section.items && carouselKey) {
@@ -387,6 +411,14 @@
 													class="cursor-pointer transition  {item.isSelected && item.description
 														? 'text-2xl font-semibold'
 														: 'text-lg font-medium'}"
+													class:heatmap={$heatmap}
+													data-heatmap-clicks-count={$heatmap
+														? getHeatmapClicksCount({
+																sectionId: section.id,
+																sectionItemId: item.id,
+																linkId: item.id
+														  })
+														: ''}
 													on:click={() => selectCarouselItem(item)}
 												>
 													<ContentEditableIf
@@ -401,21 +433,32 @@
 									<div class="hidden sm:flex gap-4">
 										<div
 											class="opacity-40 hover:opacity-100 transition cursor-pointer"
+											class:heatmap={$heatmap}
+											data-heatmap-clicks-count={$heatmap
+												? getHeatmapClicksCount({
+														sectionId: section.id,
+														linkId: 'arrow_prev'
+												  })
+												: ''}
 											on:click={() => {
 												selectPreviousItem();
 											}}
 										>
 											<FeatherIcon
 												color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
-												on:click={() => {
-													selectPreviousItem();
-												}}
 												name="arrow-left"
 											/>
 										</div>
 
 										<div
 											class="opacity-40 hover:opacity-100 transition cursor-pointer"
+											class:heatmap={$heatmap}
+											data-heatmap-clicks-count={$heatmap
+												? getHeatmapClicksCount({
+														sectionId: section.id,
+														linkId: 'arrow_next'
+												  })
+												: ''}
 											on:click={() => {
 												selectNextItem();
 											}}
@@ -460,21 +503,32 @@
 								<div class="flex w-full justify-center sm:hidden py-4">
 									<div
 										class="opacity-40 hover:opacity-100 transition cursor-pointer mr-4"
+										class:heatmap={$heatmap}
+										data-heatmap-clicks-count={$heatmap
+											? getHeatmapClicksCount({
+													sectionId: section.id,
+													linkId: 'arrow_prev'
+											  })
+											: ''}
 										on:click={() => {
 											selectPreviousItem();
 										}}
 									>
 										<FeatherIcon
 											color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
-											on:click={() => {
-												selectPreviousItem();
-											}}
 											name="arrow-left"
 										/>
 									</div>
 
 									<div
 										class="opacity-40 hover:opacity-100 transition cursor-pointer"
+										class:heatmap={$heatmap}
+										data-heatmap-clicks-count={$heatmap
+											? getHeatmapClicksCount({
+													sectionId: section.id,
+													linkId: 'arrow_next'
+											  })
+											: ''}
 										on:click={() => {
 											selectNextItem();
 										}}
@@ -498,6 +552,14 @@
 														? ''
 														: 'opacity-40 hover:opacity-100'}"
 													on:click={selectCarouselItem(item)}
+													class:heatmap={$heatmap}
+													data-heatmap-clicks-count={$heatmap
+														? getHeatmapClicksCount({
+																sectionId: section.id,
+																sectionItemId: item.id,
+																linkId: item.id
+														  })
+														: ''}
 												>
 													<ContentEditableIf
 														class="_item-title mb-2"
@@ -689,8 +751,8 @@
 												});
 											}
 										}}
-										class:heatmap={$heatmap}
-										data-heatmap-clicks-count={$heatmap
+										class:heatmap={$heatmap && section.linkType === 'interactive'}
+										data-heatmap-clicks-count={$heatmap && section.linkType === 'interactive'
 											? getHeatmapClicksCount({
 													sectionId: section.id,
 													sectionItemId: item.id,
