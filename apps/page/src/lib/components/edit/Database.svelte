@@ -336,6 +336,10 @@
 	</div>
 
 	{#if activeStream && $feedCache[activeStream.slug]}
+		<div class="text-sm font-bold mb-2 mt-4">
+			Database Items ({$feedCache[activeStream.slug].totalCount || 0})
+		</div>
+
 		<div class="my-2 w-full">
 			<input type="text" class="w-full" placeholder="Search item..." bind:value={searchStr} />
 		</div>

@@ -90,7 +90,7 @@
 				<EmojiPicker bind:icon={item.emoji} />
 			{/if}
 
-			{#if isWithUrl}
+			{#if isWithUrl && section.type !== 'form'}
 				<EditInteractiveOptions bind:section bind:sectionItem={item} />
 			{/if}
 
@@ -126,7 +126,7 @@
 			{/if}
 
 			{#if isWithSubtitle}
-				<input class="ml-4 w-full" placeholder="Subtitle" bind:value={item.subtitle} />
+				<input class="w-full" placeholder="Subtitle" bind:value={item.subtitle} />
 			{/if}
 		</div>
 
@@ -152,6 +152,10 @@
 		bind:innerHTML={item.description}
 		data-placeholder="Description"
 	/>
+
+	{#if section.renderType === 'form' && item?.id !== section?.id}
+		<EditInteractiveOptions bind:section bind:sectionItem={item} isWithButton={false} />
+	{/if}
 
 	{#if section.type === 'pricing' && item.pricing}
 		<div class="flex items-center">

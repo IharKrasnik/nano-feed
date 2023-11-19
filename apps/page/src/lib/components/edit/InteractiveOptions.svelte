@@ -102,7 +102,7 @@
 			{/if}
 		</select>
 
-		{#if section?.renderType === 'form'}
+		{#if section?.renderType === 'form' && ['text', 'textarea', 'email'].includes(sectionItem.interactiveRenderType)}
 			<div class="my-2">
 				<div class="text-sm opacity-70 mb-2">Placeholder</div>
 				<input

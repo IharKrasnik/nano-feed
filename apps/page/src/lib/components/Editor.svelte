@@ -863,18 +863,6 @@
 								<BackTo to={'Editor'} onClick={() => ($postDraft = null)} />
 								<EditPost class="none" bind:blog={page.blog} bind:post={$postDraft} />
 							{:else if selectedTab === 'editor'}
-								{#if page.parentPage}
-									<button
-										class="_secondary _small w-full mb-4"
-										on:click={() => {
-											setPageAndDraft(
-												$allPages.find((p) => p.slug === page.parentPage.slug),
-												{ force: true }
-											);
-										}}>Back to the main page</button
-									>
-								{/if}
-
 								{#if !page._id || isBrandNameEdit}
 									<div class="_section">
 										<div class="_title">Page Name</div>
@@ -923,9 +911,21 @@
 														$heatmap = null;
 													}
 												}}
-											/> Show Heatmap
+											/> Show Heatmap 🔥
 										</div>
 									</div>
+								{/if}
+
+								{#if page.parentPage}
+									<button
+										class="_secondary _small w-full my-8"
+										on:click={() => {
+											setPageAndDraft(
+												$allPages.find((p) => p.slug === page.parentPage.slug),
+												{ force: true }
+											);
+										}}>Back to the home page</button
+									>
 								{/if}
 
 								<div

@@ -122,28 +122,15 @@
 {/if}
 
 {#if isShort}
-	<div
-		class="_section cursor-pointer"
-		on:click={() => {
-			// isShort = false;
-			$sectionToEdit = section;
-			// onEditStarted(section);
-		}}
-	>
-		{#if section.type === 'pricing'}
-			<div class="text-lg font-bold">🤑 Pricing</div>
-		{:else if section.type === 'faq'}
-			<div class="text-lg font-bold">⁉️ FAQ</div>
-		{:else if section.type === 'testimonials'}
-			<div class="text-lg font-bold">💚 Testimonials</div>
-		{:else if section.renderType === 'momentum_collection'}
-			<div class="text-lg font-bold">📚 Database</div>
-		{:else if section.renderType === 'form'}
-			<div class="text-lg font-bold">🔤 Form</div>
-		{:else if section.type === 'benefits'}
-			<div class="text-lg font-bold" />
-		{/if}
-		<div>
+	<div>
+		<div
+			class="_section cursor-pointer"
+			on:click={() => {
+				// isShort = false;
+				$sectionToEdit = section;
+				// onEditStarted(section);
+			}}
+		>
 			{#if section.title}
 				<div>
 					<b>{@html striptags(section.title || '')}</b>
@@ -162,9 +149,41 @@
 			{:else if section.items}
 				{#each section.items as item}
 					<div>
-						{striptags(item.title || 'empty')}
+						{striptags(item.title || '')}
 					</div>
 				{/each}
+			{/if}
+
+			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.collectionType || ['form', 'carousel', 'stepper', 'article'].includes(section.renderType)}
+				<div class="mt-2 p-2 bg-slate-200/20 rounded opacity-90">
+					{#if section.type === 'pricing'}
+						🤑 Pricing
+					{:else if section.type === 'faq'}
+						⁉️ FAQ
+					{:else if section.type === 'testimonials'}
+						💚 Testimonials
+					{:else if section.collectionType}
+						{#if section.collectionType === 'feed'}
+							{#if section.streamSlug.includes('-feed')}
+								📺 Media Database (Feed)
+							{:else}
+								📚 Database ({section.streamSlug}
+								{#if section.streamSettings?.limit}
+									limit {section.streamSettings?.limit}{/if})
+							{/if}
+						{/if}
+					{:else if section.renderType === 'carousel'}
+						🎠 Media Carousel
+					{:else if section.renderType === 'form'}
+						🔤 Form
+					{:else if section.renderType === 'stepper'}
+						🔢 Stepper
+					{:else if section.renderType === 'article'}
+						📄 Article
+					{:else if section.type === 'benefits'}
+						<div class="text-lg font-bold" />
+					{/if}
+				</div>
 			{/if}
 		</div>
 	</div>
