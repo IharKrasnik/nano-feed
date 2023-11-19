@@ -8,10 +8,8 @@
 	// let url;
 
 	// $: if (emoji?.startsWith('http')) {
-	// 	debugger;
 	// 	url = emoji;
 	// } else {
-	// 	debugger;
 	// 	url = null;
 	// }
 </script>
