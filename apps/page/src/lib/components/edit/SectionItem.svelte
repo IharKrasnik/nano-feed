@@ -157,7 +157,7 @@
 		<EditInteractiveOptions bind:section bind:sectionItem={item} isWithButton={false} />
 	{/if}
 
-	{#if section.type === 'pricing' && item.pricing}
+	{#if section.renderType === 'pricing' && item.pricing}
 		<div class="flex items-center">
 			<div class="mr-2">$</div>
 
@@ -194,9 +194,10 @@
 		<div class="relative flex justify-between items-center">
 			<FileInput
 				class="w-full"
-				placeholder="Insert image/video url or paste from clipboard"
+				placeholder="Paste media URL / clipboard"
 				isCanSearch
 				bind:url={item.imageUrl}
+				isWithIntegrations
 				theme="light"
 			/>
 		</div>

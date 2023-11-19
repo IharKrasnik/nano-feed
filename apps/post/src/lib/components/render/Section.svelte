@@ -152,7 +152,7 @@
 										class="button w-full text-center block text-[#8B786D] mt-4"
 										>{item.callToActionText || 'Learn More'}
 									</a>
-								{:else if section.type === 'pricing'}
+								{:else if section.renderType === 'pricing'}
 									{#if blog.isCollectEmails}
 										<button class="button w-full" on:click={focusEmailInput}
 											>{item.callToActionText || blog.callToAction}</button

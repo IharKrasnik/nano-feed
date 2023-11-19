@@ -118,7 +118,7 @@
 		data-placeholder="Description"
 	/>
 
-	{#if section.type === 'pricing' && item.pricing}
+	{#if section.renderType === 'pricing' && item.pricing}
 		<div class="flex items-center">
 			<div class="mr-2">$</div>
 

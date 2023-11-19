@@ -7,11 +7,13 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import Loader from 'lib/components/Loader.svelte';
 	import ImageSearch from 'lib/components/ImageSearch.svelte';
+	import EmbedUrl from 'lib/components/EmbedUrl.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import { showErrorMessage } from 'lib/services/toast';
 	import currentUser from 'lib/stores/currentUser';
 
 	export let isCanSearch = false;
+	export let isWithIntegrations = false;
 	export let url;
 	export let theme = 'dark';
 	export let placeholder = 'Insert URL or paste from clipboard';
@@ -25,7 +27,7 @@
 	$: if (prevUrl !== url) {
 		prevUrl = url;
 	} else if (innerUrlValue) {
-		if (innerUrlValue.startsWith('http')) {
+		if (innerUrlValue.startsWith('http') || innerUrlValue.startsWith('$')) {
 			url = innerUrlValue;
 			prevUrl = url;
 		}
@@ -81,6 +83,22 @@
 	};
 
 	let handleFilesSelect = () => {};
+
+	let isImageOrVideo = () => {
+		if (!url) {
+			return false;
+		}
+
+		let isImage = false;
+
+		['.jpg', '.gif', '.jpeg', '.mp4', '.mov'].forEach((ext) => {
+			if (url.includes(ext)) {
+				isImage = true;
+			}
+		});
+
+		return isImage;
+	};
 </script>
 
 <div class="w-full flex items-center">
@@ -120,6 +138,24 @@
 			style="max-height: 35px;"
 			in:fly={{ x: 50, duration: 150 }}
 		/> -->
+	{/if}
+
+	{#if isWithIntegrations}
+		<div class="w-[1px] mx-4 my-1 bg-[#8B786D] opacity-40 self-stretch" />
+		<div
+			class="p-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center {url
+				? 'opacity-40 hover:opacity-100'
+				: ''}"
+			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
+		>
+			<EmbedUrl
+				{url}
+				onSelected={(embedUrl) => {
+					url = embedUrl;
+					innerUrlValue = url;
+				}}
+			/>
+		</div>
 	{/if}
 
 	<div class="w-[1px] mx-4 my-1 bg-[#8B786D] opacity-40 self-stretch" />

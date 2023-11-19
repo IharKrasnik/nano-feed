@@ -39,7 +39,7 @@
 			imageUrl: ''
 		};
 
-		if (section.type === 'pricing') {
+		if (section.renderType === 'pricing') {
 			newItem.pricing = { amount: 1.99, per: 'month' };
 		}
 
@@ -87,7 +87,7 @@
 			{/if}
 			{@html striptags(section.description || '')}
 
-			{#if section.type === 'testimonials'}
+			{#if section.renderType === 'testimonials'}
 				<div>
 					{striptags((section.testimonials || []).map((f) => f.name).join(', '))}
 				</div>
@@ -133,7 +133,7 @@
 
 	{#if section.type === 'faq'}
 		<EditFAQ bind:section />
-	{:else if section.type === 'testimonials'}
+	{:else if section.renderType === 'testimonials'}
 		<EditTestimonials bind:section />
 	{:else}
 		<div
@@ -163,7 +163,7 @@
 
 				<div class="relative mt-4">
 					<div class="px-4 flex items-center">
-						{#if section.type !== 'pricing'}
+						{#if section.renderType !== 'pricing'}
 							<div
 								class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
 								class:aspect-square={section.columns !== 1}

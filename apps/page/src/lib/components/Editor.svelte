@@ -394,6 +394,8 @@
 		} else if (type === 'pricing') {
 			newSection.columns = 2;
 
+			newSection.renderType = 'pricing';
+
 			newSection.title = 'Pricing';
 			newSection.description = 'Simple plans that fit your needs';
 
@@ -445,20 +447,21 @@
 				}
 			];
 		} else if (type === 'testimonials') {
+			newSection.renderType = 'testimonials';
 			newSection.title = `Don't just trust our words...`;
 			newSection.description = `Here's what people say about ${page.name}!`;
 
-			newSection.testimonials = [
+			newSection.items = [
 				{
-					name: 'Igor Krasnik, Momentum',
-					comment: `${page.name} is awesome!`,
-					avatarUrl:
+					title: 'Igor Krasnik, Momentum',
+					description: `${page.name} is awesome!`,
+					imageUrl:
 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156297060-image.png'
 				},
 				{
-					name: 'Elon Musk, Twitter',
-					comment: `${page.name} is the future, to the moon 🚀`,
-					avatarUrl:
+					title: 'Elon Musk, X',
+					description: `${page.name} is the future, to the moon 🚀`,
+					imageUrl:
 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156478852-image.png'
 				}
 			];

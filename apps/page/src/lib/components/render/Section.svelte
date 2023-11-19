@@ -359,9 +359,9 @@
 				</div>
 			{/if}
 
-			{#if section.type === 'faq'}
+			{#if section.renderType === 'faq'}
 				<RenderFAQ bind:section />
-			{:else if section.type === 'testimonials'}
+			{:else if section.renderType === 'testimonials'}
 				<RenderTestimonials bind:section />
 			{:else if section.collectionType}
 				<RenderMomentumCollection bind:section bind:page bind:themeStyles bind:isEdit />

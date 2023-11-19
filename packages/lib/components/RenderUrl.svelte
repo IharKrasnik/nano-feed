@@ -2,6 +2,10 @@
 	import LoomIcon from 'lib/icons/loom.svelte';
 	import YouTubeIcon from 'lib/icons/youtube.svelte';
 	import VimeoIcon from 'lib/icons/vimeo.svelte';
+	import VideoAskIcon from 'lib/icons/videoask.svelte';
+	import TallyIcon from 'lib/icons/tally.svelte';
+	import TypeformIcon from 'lib/icons/typeform.svelte';
+	import SenjaIcon from 'lib/icons/senja.svelte';
 
 	import { onMount } from 'svelte';
 
@@ -21,6 +25,10 @@
 
 	let isUrl = () => {
 		return url.startsWith('http');
+	};
+
+	let isServiceUrl = () => {
+		return url.startsWith('$');
 	};
 
 	let isFile;
@@ -46,14 +54,35 @@
 		);
 	});
 
-	let log = () => {
-		console.log('render');
-		return '';
+	function getQueryVariable(variable) {
+		var query = window.location.search.substring(1);
+		var vars = query.split('&');
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split('=');
+			if (decodeURIComponent(pair[0]) == variable) {
+				return decodeURIComponent(pair[1]);
+			}
+		}
+		console.log('Query variable %s not found', variable);
+	}
+
+	let getUrlParam = (param) => {
+		let queryString = `?${url.split('?')[1]}`;
+
+		let query = {};
+		let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+
+		for (let i = 0; i < pairs.length; i++) {
+			let pair = pairs[i].split('=');
+			query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+		}
+
+		return query[param];
 	};
 </script>
 
 {#if url}
-	{#if isUrl()}
+	{#if isUrl() || isServiceUrl()}
 		<div class="w-full {clazz}" {style}>
 			{#if url.includes('loom.com')}
 				{#if !isFilesOnly}
@@ -81,8 +110,23 @@
 						allowfullscreen
 					/>
 				{:else}
-					<YouTubeIcon class="w-[45px] opacity-50" />
+					<YouTubeIcon class="w-[45px] opacity-80" />
 				{/if}
+			{:else if url.includes('videoask') && isFilesOnly}
+				<VideoAskIcon class="w-[45px] opacity-80" />
+			{:else if url.includes('typeform') && isFilesOnly}
+				<TypeformIcon class="w-[45px] opacity-80" />
+			{:else if url.includes('tally.so') && isFilesOnly}
+				<TallyIcon class="w-[45px] opacity-80" />
+			{:else if url.includes('$senja') && isFilesOnly}
+				<SenjaIcon class="w-[45px] opacity-80" />
+			{:else if url.startsWith('$senja')}
+				<div class="senja-embed" data-id={getUrlParam('widgetId')} data-lazyload="false" />
+				<script
+					async
+					type="text/javascript"
+					src="https://static.senja.io/dist/platform.js"
+				></script>
 			{:else if url.includes('vimeo.com')}
 				{#if !isFilesOnly}
 					<iframe
@@ -96,7 +140,6 @@
 					<VimeoIcon class="w-[45px] opacity-50" />
 				{/if}
 			{:else if url.includes('.mp4') || url.includes('.mov')}
-				{log()}
 				<video
 					class="w-full mx-auto {imgClass}"
 					autoplay={isAutoplay}
@@ -123,8 +166,8 @@
 						<img class={imgClass} src={url} />
 					{/if}
 				{/key}
-			{:else}
-				<iframe src={url} class="w-full h-full" />
+			{:else if !isFilesOnly && url.startsWith('http')}
+				<iframe src={url} class="w-full h-full" style="border:none; height: 600px;" />
 			{/if}
 		</div>
 	{:else}

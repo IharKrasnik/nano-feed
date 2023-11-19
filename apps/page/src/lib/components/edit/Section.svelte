@@ -51,7 +51,7 @@
 			imageUrl: ''
 		};
 
-		if (section.type === 'pricing') {
+		if (section.renderType === 'pricing') {
 			newItem.pricing = { amount: 1.99, per: 'month' };
 		}
 
@@ -138,7 +138,7 @@
 			{/if}
 			{@html striptags(section.description || '')}
 
-			{#if section.type === 'testimonials'}
+			{#if section.renderType === 'testimonials'}
 				<div>
 					{striptags((section.testimonials || []).map((f) => f.name).join(', '))}
 				</div>
@@ -154,13 +154,13 @@
 				{/each}
 			{/if}
 
-			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.collectionType || ['form', 'carousel', 'stepper', 'article'].includes(section.renderType)}
+			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.collectionType || ['testimonials', 'pricing', 'form', 'carousel', 'stepper', 'article'].includes(section.renderType)}
 				<div class="mt-2 p-2 bg-slate-200/20 rounded opacity-90">
-					{#if section.type === 'pricing'}
+					{#if section.renderType === 'pricing'}
 						🤑 Pricing
 					{:else if section.type === 'faq'}
 						⁉️ FAQ
-					{:else if section.type === 'testimonials'}
+					{:else if section.renderType === 'testimonials'}
 						💚 Testimonials
 					{:else if section.collectionType}
 						{#if section.collectionType === 'feed'}
@@ -216,120 +216,116 @@
 		</div>
 	</div>
 
-	{#if section.type === 'faq'}
-		<EditFAQ bind:section />
-	{:else if section.type === 'testimonials'}
-		<EditTestimonials bind:section />
-	{:else}
-		{#if section.renderType !== 'form'}
-			<div class="_section">
-				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
+	{#if section.renderType !== 'form' && section.renderType !== 'testimonials'}
+		<div class="my-8">
+			<div class="text-sm font-bold mb-2 mt-4">Render this section as...</div>
 
-				<div class="w-full flex flex-col gap-4 mb-4 mt-2">
-					{#if pageStreams?.length}
-						<select class="w-full" bind:value={section.collectionType}>
-							<option value="">No</option>
-							<option value="articles">Blog Articles</option>
-							<option value="feed">Choose Database</option>
+			<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
+				<option value="grid">Default Grid Section</option>
+				<option value="pricing">Pricing</option>
+				<option value="testimonials">Testimonials</option>
+				<option value="carousel">Carousel Menu</option>
+				<option value="stepper">1-2-3 Stepper</option>
+				<option value="article">Article</option>
+				<option value="form">Form</option>
+			</select>
+
+			{#if section.renderType === 'carousel'}
+				<select class="w-full my-4" bind:value={section.carouselType}>
+					<option value="vertical">Vertical</option>
+					<option value="horizontal">Horizontal</option>
+				</select>
+			{/if}
+		</div>
+
+		<div class="_section">
+			<div class="_title mt-4" style="margin: 0;">Sync from database</div>
+
+			<div class="w-full flex flex-col gap-4 mb-4 mt-2">
+				{#if pageStreams?.length}
+					<select class="w-full" bind:value={section.collectionType}>
+						<option value="">No</option>
+						<option value="articles">Blog Articles</option>
+						<option value="feed">Choose Database</option>
+					</select>
+
+					{#if section.collectionType === 'feed'}
+						<select bind:value={section.streamSlug}>
+							{#each pageStreams as stream (stream._id)}
+								<option value={stream.slug}>{stream.title}</option>
+							{/each}
+							<option value="">Add New</option>
 						</select>
 
-						{#if section.collectionType === 'feed'}
-							<select bind:value={section.streamSlug}>
-								{#each pageStreams as stream (stream._id)}
-									<option value={stream.slug}>{stream.title}</option>
-								{/each}
-								<option value="">Add New</option>
-							</select>
-
-							{#if pageStreams.filter((ps) => ps.slug === section.streamSlug).length}
-								{#if section.streamSettings}
-									<div class="grid grid-cols-2 gap-4">
-										<div class="_section">
-											<div class="text-sm mb-2">Limit items</div>
-											<input
-												type="number"
-												class="w-full"
-												bind:value={section.streamSettings.limit}
-											/>
-											<div class="text-xs mt-2">Leave 0 for pagination</div>
-										</div>
-
-										<div class="_section">
-											<div class="text-sm mb-2">Sort</div>
-
-											<select bind:value={section.streamSettings.sortBy}>
-												<option value="_sample">Random</option>
-												<option value="-publishedOn">Newest First</option>
-												<option value="-viewsCount">Popular First</option>
-											</select>
-										</div>
-									</div>
+						{#if pageStreams.filter((ps) => ps.slug === section.streamSlug).length}
+							{#if section.streamSettings}
+								<div class="grid grid-cols-2 gap-4">
 									<div class="_section">
-										<div class="text-sm mb-2">Show best sample</div>
-										<div>
-											<input
-												type="checkbox"
-												bind:checked={section.streamSettings.isWithImageOnly}
-											/> Include only items with image
-										</div>
-
-										<div>
-											<input type="checkbox" bind:checked={section.streamSettings.isWithUrlOnly} /> Include
-											only items with URL
-										</div>
+										<div class="text-sm mb-2">Limit items</div>
+										<input type="number" class="w-full" bind:value={section.streamSettings.limit} />
+										<div class="text-xs mt-2">Leave 0 for pagination</div>
 									</div>
-								{/if}
 
-								<Button
-									class="shrink-0 _small _secondary"
-									theme="light"
-									onClick={() => {
-										return getFeed({
-											cacheId: section.id,
-											streamSlug: section.streamSlug,
-											streamSettings: section.streamSettings,
-											forceRefresh: true,
-											perPage: 100
-										});
-									}}>💫 refresh</Button
-								>
-							{:else}
-								<input placeholder="databaseName" class="w-full" bind:value={section.streamSlug} />
-								<Button class="shrink-0 _small _secondary" onClick={createStream}
-									>Create Database</Button
-								>
+									<div class="_section">
+										<div class="text-sm mb-2">Sort</div>
+
+										<select bind:value={section.streamSettings.sortBy}>
+											<option value="_sample">Random</option>
+											<option value="-publishedOn">Newest First</option>
+											<option value="-viewsCount">Popular First</option>
+										</select>
+									</div>
+								</div>
+								<div class="_section">
+									<div class="text-sm mb-2">Show best sample</div>
+									<div>
+										<input type="checkbox" bind:checked={section.streamSettings.isWithImageOnly} /> Include
+										only items with image
+									</div>
+
+									<div>
+										<input type="checkbox" bind:checked={section.streamSettings.isWithUrlOnly} /> Include
+										only items with URL
+									</div>
+								</div>
 							{/if}
+
+							<Button
+								class="shrink-0 _small _secondary"
+								theme="light"
+								onClick={() => {
+									return getFeed({
+										cacheId: section.id,
+										streamSlug: section.streamSlug,
+										streamSettings: section.streamSettings,
+										forceRefresh: true,
+										perPage: 100
+									});
+								}}>💫 refresh</Button
+							>
+						{:else}
+							<input placeholder="databaseName" class="w-full" bind:value={section.streamSlug} />
+							<Button class="shrink-0 _small _secondary" onClick={createStream}
+								>Create Database</Button
+							>
 						{/if}
-					{:else}{/if}
-				</div>
+					{/if}
+				{:else}{/if}
 			</div>
+		</div>
 
-			{#if section.collectionType === 'feed'}
-				<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
-					>Edit Data</button
-				>
-			{/if}
-
-			<div class="my-8">
-				<div class="text-sm font-bold mb-2 mt-4">Render this section as...</div>
-
-				<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
-					<option value="grid">Default Grid Section</option>
-					<option value="carousel">Carousel Menu</option>
-					<option value="stepper">1-2-3 Stepper</option>
-					<option value="article">Article</option>
-					<option value="form">Form</option>
-				</select>
-
-				{#if section.renderType === 'carousel'}
-					<select class="w-full my-4" bind:value={section.carouselType}>
-						<option value="vertical">Vertical</option>
-						<option value="horizontal">Horizontal</option>
-					</select>
-				{/if}
-			</div>
+		{#if section.collectionType === 'feed'}
+			<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
+				>Edit Data</button
+			>
 		{/if}
+	{/if}
 
+	{#if section.renderType === 'faq'}
+		<EditFAQ bind:section />
+	{:else if section.renderType === 'testimonials'}
+		<EditTestimonials bind:section />
+	{:else}
 		<div
 			class="_section rounded-xl"
 			style="padding: 0px;"
@@ -361,7 +357,7 @@
 					<hr class="mt-4 border-[#8B786D] opacity-30" />
 					<div class="relative mt-4">
 						<div class="px-4 flex items-center">
-							{#if section.type !== 'pricing'}
+							{#if section.renderType !== 'pricing'}
 								<div
 									class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
 									class:aspect-square={section.columns !== 1}
@@ -438,56 +434,58 @@
 			{/if} -->
 			</div>
 		</div>
-	{/if}
 
-	{#if section.renderType === 'form'}
-		<div class="_section">
-			<div class="font-normal text-sm opacity-70 mb-2 mt-4">Button text</div>
+		{#if section.renderType === 'form'}
+			<div class="_section">
+				<div class="font-normal text-sm opacity-70 mb-2 mt-4">Button text</div>
 
-			<input class="mb-4 w-full" bind:value={section.callToActionText} placeholder="Submit" />
+				<input class="mb-4 w-full" bind:value={section.callToActionText} placeholder="Submit" />
 
-			<div class="flex items-center font-normal text-sm mb-2 w-full">
-				<div class="shrink-0  opacity-70">Explainer:</div>
+				<div class="flex items-center font-normal text-sm mb-2 w-full">
+					<div class="shrink-0  opacity-70">Explainer:</div>
 
-				<input
-					class="ml-4 w-full"
-					placeholder="You just 1 step away 🪄"
-					bind:value={section.ctaExplainer}
-				/>
-			</div>
-
-			<div class="font-normal opacity-70 text-sm mt-2 mb-2">Once submitted...</div>
-
-			<div class="w-full mb-2">
-				<select bind:value={section.actionType} class="w-full">
-					<option value="success">Show thank you message</option>
-					<option value="url">Redirect to URL</option>
-				</select>
-			</div>
-
-			{#if section.actionType === 'success'}
-				{section.actionSuccessSection
-					? ''
-					: (section.actionSuccessSection = {
-							id: uuidv4(),
-							isActionSuccessSection: true,
-							emoji: '👏',
-							title: 'Thank you for your submission!',
-							description: "We'll review it shortly",
-							bgImageUrl:
-								'https://media3.giphy.com/media/PMV7yRpwGO5y9p3DBx/giphy.gif?cid=54dcf3bfllvlfmn72sc3m0wa7l2sygeg0lf30hhuotmgye4v&ep=v1_gifs_search&rid=giphy.gif&ct=g'
-					  }) && ''}
-				<div class="_section mt-4">
-					<EditSectionItem class="" {section} bind:item={section.actionSuccessSection} />
+					<input
+						class="ml-4 w-full"
+						placeholder="You just 1 step away 🪄"
+						bind:value={section.ctaExplainer}
+					/>
 				</div>
-			{/if}
 
-			{#if section.actionType === 'url'}
-				<div class="font-normal text-sm opacity-70 mt-4 mb-2">URL to open once email submitted</div>
+				<div class="font-normal opacity-70 text-sm mt-2 mb-2">Once submitted...</div>
 
-				<input class="w-full mb-4" bind:value={section.actionUrl} placeholder="Action Url" />
-			{/if}
-		</div>
+				<div class="w-full mb-2">
+					<select bind:value={section.actionType} class="w-full">
+						<option value="success">Show thank you message</option>
+						<option value="url">Redirect to URL</option>
+					</select>
+				</div>
+
+				{#if section.actionType === 'success'}
+					{section.actionSuccessSection
+						? ''
+						: (section.actionSuccessSection = {
+								id: uuidv4(),
+								isActionSuccessSection: true,
+								emoji: '👏',
+								title: 'Thank you for your submission!',
+								description: "We'll review it shortly",
+								bgImageUrl:
+									'https://media3.giphy.com/media/PMV7yRpwGO5y9p3DBx/giphy.gif?cid=54dcf3bfllvlfmn72sc3m0wa7l2sygeg0lf30hhuotmgye4v&ep=v1_gifs_search&rid=giphy.gif&ct=g'
+						  }) && ''}
+					<div class="_section mt-4">
+						<EditSectionItem class="" {section} bind:item={section.actionSuccessSection} />
+					</div>
+				{/if}
+
+				{#if section.actionType === 'url'}
+					<div class="font-normal text-sm opacity-70 mt-4 mb-2">
+						URL to open once email submitted
+					</div>
+
+					<input class="w-full mb-4" bind:value={section.actionUrl} placeholder="Action Url" />
+				{/if}
+			</div>
+		{/if}
 	{/if}
 
 	{#if section.streamSettings?.limit}

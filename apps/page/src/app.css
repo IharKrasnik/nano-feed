@@ -9,6 +9,18 @@
 	margin-bottom: 8px;
 }
 
+._section._clickable {
+	@apply transition;
+}
+
+._section._clickable:hover {
+	border: 1px #111 solid;
+}
+
+._section._highlighted {
+	border: 1px #111 solid;
+}
+
 ._title {
 	font-weight: bold;
 	margin-bottom: 12px;
