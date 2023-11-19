@@ -8,6 +8,7 @@
 	import { countryCodeEmoji } from 'country-code-emoji';
 	import countryCodeLoockup from 'country-code-lookup';
 	import getDomain from 'lib/helpers/getDomain';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	export let stats;
 	export let project;
@@ -112,22 +113,26 @@
 	} else {
 		loadMetrics();
 	}
+
+	let clicksStat;
+	let formsStat;
 </script>
 
 <div class="flex justify-between items-center mb-4">
 	<div>
-		<h2 class="text-lg mb-4">Website Analytics</h2>
-		{#if project}
+		<h2 class="text-lg font-bold mb-4">Website Analytics</h2>
+		<!-- {#if project}
 			<h3>
 				<a target="_blank" href={project.url}>
 					{project.page?.url ? project.page.url.replace('https://', '') : getDomain(project.url)}
 				</a>
 			</h3>
-		{/if}
+		{/if} -->
 	</div>
 
 	<div>
-		<select class="small" bind:value={timeframe} on:change={loadMetrics}>
+		<span class="font-bold opacity-80 mr-2">Timeframe</span>
+		<select class="_border-white" bind:value={timeframe} on:change={loadMetrics}>
 			<option value="24_hours">24 hours</option>
 			<option value="7_days">7 days</option>
 			<option value="30_days">30 days</option>
@@ -138,6 +143,29 @@
 {#key stats}
 	{#if stats}
 		<div class="md:grid-cols-1 md:grid-cols-2 md:grid-cols-3" />
+
+		{#if isShowSignups && stats.totalUsersCount}
+			<div class="grid grid-cols-2 mb-8 mt-8 gap-4">
+				<div class="flex w-full justify-between rounded-xl p-4 _border-white">
+					<div class="flex items-center text-lg">
+						<FeatherIcon name="mouse-pointer" color="#fff" class="opacity-70 mr-2" /> Click Conversion
+						Rate
+					</div>
+					<div class="font-bold text-3xl">
+						{(((clicksStat?.uniqueCount || 0) / stats.totalUsersCount) * 100).toFixed(2)} %
+					</div>
+				</div>
+
+				<div class="flex w-full justify-between rounded-xl p-4 _border-white">
+					<div class="flex items-center text-lg">
+						<FeatherIcon name="clipboard" color="#fff" class="opacity-70 mr-2" /> Forms Conversion Rate
+					</div>
+					<div class="font-bold text-3xl">
+						{(((formsStat?.uniqueCount || 0) / stats.totalUsersCount) * 100).toFixed(2)} %
+					</div>
+				</div>
+			</div>
+		{/if}
 
 		<div
 			class="grid grid-cols-1 {isShowSignups
@@ -257,12 +285,15 @@
 					actionType="click_custom"
 					projectId="63eaab5b0ebb830015458b95"
 					subProjectId={project.page._id}
+					bind:stat={clicksStat}
 					bind:timeframe
 				/>
+
 				<SingleStat
 					actionType="form_submitted"
 					projectId="63eaab5b0ebb830015458b95"
 					subProjectId={project.page._id}
+					bind:stat={formsStat}
 					bind:timeframe
 				/>
 			{/if}

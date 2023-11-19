@@ -45,6 +45,8 @@ export default (stats, timeframe = '7_days') => {
 
 	return {
 		chartData,
-		growth
+		growth,
+		uniqueCount: stats.uniqueCount,
+		prevUniqueCount: stats.prevUniqueCount
 	};
 };

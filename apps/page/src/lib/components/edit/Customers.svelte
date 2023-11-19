@@ -40,6 +40,8 @@
 	};
 </script>
 
+<h3 class="text-lg font-bold mb-4">Customers</h3>
+
 {#each customers as customer}
 	{#if customer.isCollapsed}
 		<div

@@ -12,6 +12,7 @@
 	export let actionType;
 	export let timeframe;
 	export let timezone = moment.tz.guess();
+	export let stat;
 
 	let actionLabels = {
 		signup: 'Signups',
@@ -34,6 +35,13 @@
 		let res = processSingleStats(stats, timeframe);
 		chartData = res.chartData;
 		growth = res.growth;
+
+		stat = {
+			chartData,
+			growth,
+			uniqueCount: stats.uniqueCount,
+			prevUniqueCount: stats.prevUniqueCount
+		};
 
 		if (browser && !chartWidth) {
 			setTimeout(() => {
