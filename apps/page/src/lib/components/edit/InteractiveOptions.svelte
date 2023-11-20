@@ -214,7 +214,7 @@
 
 			<input
 				class="mb-4 w-full"
-				bind:value={sectionItem.callToAction}
+				bind:value={sectionItem.callToActionText}
 				placeholder="Join Waitlist"
 			/>
 

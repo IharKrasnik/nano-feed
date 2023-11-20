@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
 	import { slide, fly, scale, fade } from 'svelte/transition';
@@ -15,54 +15,6 @@
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	export let page;
-
-	let getWelcomeEmailHtml = () => {
-		if (!$currentUser) {
-			return null;
-		}
-
-		return `
-Hi! My name is ${$currentUser.fullName.split(' ')[0]}. 👋 <br />
-Thank you for joining ${page.name} and welcome! <br />
-Your participation means a lot for our tiny team of 1 here, so I'm extremely grateful!
-<br />
-We'll keep in touch and let you know when we launch. <br /> <br />
-
-Meanwhile, if you open for a call — I'd love to chat! <br />
-Simply reply to this email and say "hi"! <br />
-
-See you!
-  `;
-	};
-
-	let getDefaultWelcomeEmail = () => {
-		return {
-			subject: `Welcome to ${page.name}!`,
-			html: getWelcomeEmailHtml(),
-			imageUrl: null
-		};
-	};
-
-	if (!page.welcomeEmail) {
-		page.welcomeEmail = { html: getWelcomeEmailHtml(), imageUrl: null };
-	}
-
-	let updateEmailHtml = async () => {
-		await put(`pages/${page._id}/welcome-email`, {
-			subject: page.welcomeEmail.subject,
-			html: page.welcomeEmail.html,
-			imageUrl: page.welcomeEmail.imageUrl
-		});
-	};
-
-	let sendTestEmail = async () => {
-		await post(`pages/${page._id}/welcome-email/test`, {
-			html: page.welcomeEmail.html,
-			imageUrl: page.welcomeEmail.imageUrl
-		});
-
-		showSuccessMessage(`Sent test email to ${$currentUser.email}`);
-	};
 </script>
 
 <hr class="my-8 border-[#8B786D] opacity-30" />
@@ -104,4 +56,4 @@ See you!
 <div class="flex items-center">
 	<Button class="_primary my-8 mr-4" onClick={updateEmailHtml}>Update Welcome Email</Button>
 	<Button class="_secondary my-8" onClick={sendTestEmail}>🔬 Send Test Email</Button>
-</div>
+</div> -->

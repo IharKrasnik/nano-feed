@@ -42,6 +42,7 @@
 	import SitePreview from '$lib/components/site-preview.svelte';
 
 	import AnalyticsTab from '$lib/components/tabs/AnalyticsTab.svelte';
+	import MessagingTab from '$lib/components/tabs/MessagingTab.svelte';
 	import AudienceTab from '$lib/components/tabs/AudienceTab.svelte';
 	import NewsletterTab from '$lib/components/tabs/NewsletterTab.svelte';
 	import DatabaseTab from '$lib/components/tabs/DatabaseTab.svelte';
@@ -57,6 +58,7 @@
 	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import EditCustomers from '$lib/components/edit/Customers.svelte';
 	import EditSubmissions from '$lib/components/edit/Submissions.svelte';
+	import EditMessaging from '$lib/components/edit/Messaging.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
@@ -139,7 +141,6 @@
 			clicks: (page.totalUniqueClicksCount / page.totalUniqueViews) * 100,
 			forms: (page.totalSignupsCount / page.totalUniqueViews) * 100
 		};
-		refreshHeatmap();
 	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
@@ -600,6 +601,8 @@
 
 	let selectedCustomer;
 	let selectedSubmission;
+	let selectedTrigger;
+	let selectedChatRoom;
 </script>
 
 {#if isSettingsModalShown}
@@ -1243,6 +1246,8 @@
 										<EditDatabase bind:page bind:selectedStreamSlug />
 									{:else if selectedTab === 'analytics'}
 										<EditCustomers bind:page bind:selectedCustomer />
+									{:else if selectedTab === 'messaging'}
+										<EditMessaging bind:page bind:selectedTrigger bind:selectedChatRoom />
 									{:else if selectedTab === 'audience'}
 										<EditSubmissions bind:page bind:selectedSubmission />
 									{:else if selectedTab === 'newsletter'}
@@ -1288,17 +1293,19 @@
 									</div>
 								{/if}
 
-								<div
-									class="flex items-center mr-4 opacity-80 text-center px-4 rounded-xl"
-									style="background-color: {getConversionColor(
-										conversions.forms
-									)}; color:white; left:50%;"
-									use:tooltip
-									title="Form conversion rate. Target 10+%"
-								>
-									<FeatherIcon name="clipboard" theme="dark" class="mr-1" size="15px" />
-									{conversions.forms.toFixed(2)}%
-								</div>
+								{#if page.totalSubmissionsCount}
+									<div
+										class="flex items-center mr-4 opacity-80 text-center px-4 rounded-xl"
+										style="background-color: {getConversionColor(
+											conversions.forms
+										)}; color:white; left:50%;"
+										use:tooltip
+										title="Form conversion rate. Target 10+%"
+									>
+										<FeatherIcon name="clipboard" theme="dark" class="mr-1" size="15px" />
+										{conversions.forms.toFixed(2)}%
+									</div>
+								{/if}
 							</div>
 						{/if}
 
@@ -1408,6 +1415,15 @@
 											},
 											{
 												action: () => {
+													selectedTab = 'messaging';
+													selectedTrigger = null;
+													selectedChatRoom = null;
+												},
+												title: 'Messaging',
+												featherIcon: 'message-square'
+											},
+											{
+												action: () => {
 													selectedTab = 'database';
 												},
 												title: 'Databases',
@@ -1479,6 +1495,8 @@
 												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 											{:else if selectedTab === 'analytics'}
 												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+											{:else if selectedTab === 'messaging'}
+												<MessagingTab bind:page bind:trigger={selectedTrigger} bind:chatRoom={selectedChatRoom}/>
 											{:else if selectedTab === 'audience'}
 												<AudienceTab bind:page bind:selectedSubmission />
 											{:else if selectedTab === 'database'}
