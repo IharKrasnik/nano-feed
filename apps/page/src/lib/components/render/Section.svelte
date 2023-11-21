@@ -270,7 +270,9 @@
 		{/if}
 
 		<div
-			class=" _section-container {section.className} {section.type} {section.renderType} {section.bgImageUrl
+			class=" _section-container {section.isGlowing
+				? '_glowing'
+				: ''} {section.className} {section.type} {section.renderType} {section.bgImageUrl
 				? '_bg-image'
 				: ''} {clazz
 				? clazz
@@ -310,7 +312,7 @@
 					<div class="mb-8">
 						{#if section.title}
 							<h2
-								class="text-3xl {page.theme.isTitlesHuge
+								class="_title text-3xl {page.theme.isTitlesHuge
 									? 'sm:text-6xl font-medium'
 									: 'sm:text-4xl font-semibold'} mb-4 sm:max-w-[768px]  {page.theme.isTitlesLeft ||
 								section.isTitleLeft ||
@@ -331,7 +333,7 @@
 									? 'sm:max-w-[768px]'
 									: page.theme.isTitlesLeft || section.isTitleLeft
 									? 'sm:max-w-[712px]'
-									: 'sm:max-w-[512px] sm:mx-auto'}"
+									: 'sm:max-w-[592px] sm:mx-auto'}"
 							>
 								<ContentEditableIf
 									class=""

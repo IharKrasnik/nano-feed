@@ -22,6 +22,44 @@
 	border: 1px var(--accent-color) solid !important;
 }
 
+._section-container._glowing {
+	position: relative;
+}
+
+._section-container._glowing::before {
+	content: '';
+	position: absolute;
+	opacity: 0.11;
+
+	bottom: 30%;
+	right: 50%;
+
+	height: 100%;
+
+	transform: translate(50%, 10%) translateZ(0);
+
+	width: calc(100vw - 50px);
+
+	filter: blur(80px);
+
+	--page-edge: calc((100vw - 1280px) / 2);
+	--blobBg: var(--accent-color);
+
+	background: radial-gradient(
+			400px circle at calc(100% - var(--page-edge) - 10%) 45%,
+			var(--blobBg),
+			70%,
+			transparent
+		),
+		radial-gradient(600px circle at 50% 55%, var(--blobBg), 60%, transparent),
+		radial-gradient(
+			400px circle at calc(var(--page-edge) + 15%) 40%,
+			var(--blobBg),
+			60%,
+			transparent
+		);
+}
+
 ._title {
 	font-weight: bold;
 	margin-bottom: 12px;

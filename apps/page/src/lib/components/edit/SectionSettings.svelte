@@ -88,7 +88,9 @@
 						<option value="_lighter">Light</option>
 						<!-- <option value="_transparent">Transparent</option> -->
 					</select>
-					<input class="ml-4" type="checkbox" bind:checked={sectionItem.isHugeTitle} /> Is Huge Title
+					<input class="ml-4" type="checkbox" bind:checked={sectionItem.isHugeTitle} /> Is Huge
+					Title
+					<input class="ml-4" type="checkbox" bind:checked={sectionItem.isGlowing} /> Is Glowing
 				</div>
 			{/if}
 		</div>
