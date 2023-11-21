@@ -144,6 +144,7 @@
 	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
+		console.log('setPageAndDraft');
 		page = { ..._.cloneDeep(p) };
 
 		if (
@@ -209,6 +210,8 @@
 		page.activeHero = page.heros[0];
 
 		refreshPageConversionStats();
+
+		debugger;
 	};
 
 	let addNewHero = () => {
@@ -581,6 +584,7 @@
 	let addSubpage = () => {
 		setPageAndDraft(
 			{
+				_id: null,
 				slug: '_new',
 				name: '',
 				title: '',
@@ -986,6 +990,7 @@
 											bind:page
 											bind:focuses
 											isShowTips={page.hero?.length < 2}
+											isCollapsed={!!page.title}
 										/>
 									{/each}
 									<!-- 
@@ -1293,7 +1298,7 @@
 									</div>
 								{/if}
 
-								{#if page.totalSubmissionsCount}
+								{#if page.totalSignupsCount}
 									<div
 										class="flex items-center mr-4 opacity-80 text-center px-4 rounded-xl"
 										style="background-color: {getConversionColor(
@@ -1483,7 +1488,7 @@
 												<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
 											{:else if selectedTab === 'editor'}
 												<SitePreview
-													class="pt-8"
+													class="p-4"
 													isNoVars
 													isEmbed
 													noStickyHeader={true}

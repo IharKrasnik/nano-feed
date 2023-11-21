@@ -17,7 +17,7 @@ export default (page) => {
 		'container-width': page.theme?.containerWidth || '1280px',
 		'logo-font': page.theme?.logoFont || 'monospace',
 		'title-font': page.theme?.titleFont || fontPairs[0].title,
-		'subtitle-font': page.theme?.subtitleFont || page.theme?.titleFont,
+		'subtitle-font': page.theme?.subtitleFont || page.theme?.textFont || page.theme?.titleFont,
 		'title-line-height': '1.0',
 		'button-radius': page.theme?.buttonRadius || '24px',
 		'text-font': page.theme?.textFont || fontPairs[0].text,
@@ -25,7 +25,7 @@ export default (page) => {
 		'text-line-height': 1.55,
 		'background-color': page.theme?.backgroundColor || '#ffffff',
 		// 'background-color': 'transparent',
-		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.3)' : 'rgba(0,0,0,.3)',
+		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
 		'text-color': page.theme?.textColor || '#111',
 		'accent-color': page.theme?.accentColor || '#000',
 		'section-background-color':

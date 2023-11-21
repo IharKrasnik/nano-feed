@@ -4,6 +4,7 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	export let emoji;
 	export let width = 25;
+	export let height = width;
 	export let color = '#111';
 	// let url;
 
@@ -21,7 +22,7 @@
 				class="{clazz?.includes('rounded-full') ? 'rounded-full' : ''} {clazz?.includes('rounded')
 					? 'rounded'
 					: ''}"
-				style="width: {width}px; height: {width}px;"
+				style="width: {width === 'auto' ? 'auto' : `${width}px`}; height: {height}px;"
 				src={emoji}
 			/>
 		{/key}

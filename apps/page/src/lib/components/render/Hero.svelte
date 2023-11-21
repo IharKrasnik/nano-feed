@@ -71,7 +71,7 @@
 				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 			>
 				<div
-					class="p-4 flex h-full w-full {hero.demoUrl || hero.theme?.isLeft
+					class="p-4 sm:p-0 flex h-full w-full {hero.demoUrl || hero.theme?.isLeft
 						? `flex-col ${hero.theme?.isVertical ? '' : 'justify-between sm:flex-row'} items-center`
 						: 'text-center items-center'}"
 				>
@@ -105,7 +105,7 @@
 						{#if hero.subtitle}
 							<h2
 								class="_subtitle {hero.theme.isHugeTitle
-									? 'text-3xl'
+									? 'text-xl'
 									: 'text-xl'}  whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
 									? ''
 									: 'max-w-[600px]'}"
@@ -170,7 +170,7 @@
 
 <style>
 	._title {
-		font-family: Archivo;
+		font-family: var(--title-font);
 
 		font-size: var(--title-font-size);
 

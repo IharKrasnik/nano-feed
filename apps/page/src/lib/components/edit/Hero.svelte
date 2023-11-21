@@ -147,9 +147,9 @@
 						<div class="_title flex justify-between w-full">
 							Hero Settings
 
-							<div class="flex font-normal items-center">
+							<!-- <div class="flex font-normal items-center">
 								Hide Hero <input bind:checked={hero.isHidden} class="ml-2" type="checkbox" />
-							</div>
+							</div> -->
 						</div>
 
 						<div class="font-normal text-sm opacity-70 mb-2">Hero background image or video</div>
@@ -293,7 +293,7 @@
 		<div class="_section">
 			<div class="_title flex justify-between w-full">Call To Action</div>
 
-			<EditInteractiveOptions bind:section={hero} isWithButton={false} />
+			<EditInteractiveOptions bind:section={hero} bind:sectionItem={hero} isWithButton={false} />
 		</div>
 	</div>
 {/if}

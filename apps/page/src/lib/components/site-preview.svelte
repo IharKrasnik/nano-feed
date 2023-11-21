@@ -427,7 +427,7 @@
 						<div
 							class="{isEdit
 								? 'absolute mb-[-60px]'
-								: 'fixed top-0 left-0'} _header backdrop-blur-lg"
+								: 'fixed top-0 left-0'} _header backdrop-blur-lg _border-b-theme"
 						>
 							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
 								<div class="flex  py-4 sm:py-0">
@@ -452,15 +452,20 @@
 											: ''}
 									>
 										{#if page?.logo && page.logo.startsWith('http')}
-											<Emoji class="mr-2 rounded" emoji={page.parentPage?.logo || page.logo} />
+											<Emoji
+												width="auto"
+												height="25"
+												class="mr-2 rounded"
+												emoji={page.parentPage?.logo || page.logo}
+											/>
+										{:else}
+											<span
+												class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
+												style="font-family: var(--logo-font)"
+											>
+												{page.parentPage?.name || page.name}
+											</span>
 										{/if}
-
-										<span
-											class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
-											style="font-family: var(--logo-font)"
-										>
-											{page.parentPage?.name || page.name}
-										</span>
 									</a>
 
 									<div
@@ -503,6 +508,7 @@
 													trackId={`${page._id}_header`}
 													bind:sectionItem={page.activeHero}
 													bind:page
+													isHeader
 												/>
 											{/if}
 										{:else if page.parentPage.heros?.length}
@@ -511,6 +517,7 @@
 												size="small"
 												sectionItem={page.parentPage.heros[0]}
 												{page}
+												isHeader
 											/>
 										{/if}
 										<!-- {#each page.subPages || page.parentPage?.subPages || [] as subPage}
@@ -716,7 +723,6 @@
 
 	._header {
 		@apply p-1 w-full;
-		border-bottom: 1px rgba(0, 0, 0, 0.2) solid;
 		z-index: 40;
 	}
 

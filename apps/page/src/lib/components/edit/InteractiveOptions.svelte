@@ -161,7 +161,6 @@
 				</div>
 
 				<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
-
 				<input class="w-full" bind:value={sectionItem.url2} {placeholder} type="url" />
 			{/if}
 		{:else}
@@ -209,7 +208,7 @@
 			</div>
 		{/if}
 
-		{#if sectionItem.interactiveRenderType === 'email' && section?.renderType !== 'form'}
+		{#if ['email', 'link', 'links'].includes(sectionItem.interactiveRenderType) && section?.renderType !== 'form'}
 			<div class="font-normal text-sm opacity-70 mb-2 mt-4">Button text</div>
 
 			<input
@@ -221,10 +220,11 @@
 			<div class="flex items-center font-normal text-sm mb-2 w-full">
 				<div class="shrink-0  opacity-70">Explainer:</div>
 
-				<input
+				<div
+					contenteditable=""
 					class="ml-4 w-full"
 					placeholder="No credit card required"
-					bind:value={sectionItem.ctaExplainer}
+					bind:innerHTML={sectionItem.ctaExplainer}
 				/>
 			</div>
 

@@ -139,7 +139,7 @@
 				{:else}
 					<VimeoIcon class="w-[45px] opacity-50" />
 				{/if}
-			{:else if url.includes('.mp4') || url.includes('.mov')}
+			{:else if (url.includes('.mp4') || url.includes('.mov')) && !url.includes('lottie')}
 				<video
 					class="w-full mx-auto {imgClass}"
 					autoplay={isAutoplay}
@@ -149,7 +149,7 @@
 					bind:this={videoEl}
 					src={url}
 				/>
-			{:else if url.includes('lottie')}
+			{:else if url.includes('lottie') && url.includes('.json')}
 				<lottie-player
 					src={url}
 					background="transparent"

@@ -21,6 +21,8 @@
 	export let sectionItem;
 	export let trackId = null;
 
+	export let isHeader = false;
+
 	export let size;
 
 	export let parentSectionId;
@@ -291,10 +293,6 @@
 						>
 					</form>
 				</div>
-
-				{#if sectionItem.ctaExplainer}
-					<div class="text-sm mt-4 max-w-[400px]">{@html sectionItem.ctaExplainer}</div>
-				{/if}
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
 			<div
@@ -409,6 +407,10 @@
 			</div>
 		{/if}
 	</div>
+
+	{#if !isHeader && sectionItem.ctaExplainer}
+		<div class="text-sm mt-4 max-w-[400px]">{@html sectionItem.ctaExplainer}</div>
+	{/if}
 
 	{#if sectionItem.interactiveRenderType === 'short_answer' || sectionItem.interactiveRenderType === 'single_choice'}
 		<div class="flex w-full items-center mt-4 ">

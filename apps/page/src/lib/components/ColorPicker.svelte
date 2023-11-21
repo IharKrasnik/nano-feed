@@ -14,9 +14,8 @@
 	export let page;
 
 	let fontPairs = [
-		{ title: 'Inter', text: 'Inter' },
-		{ title: 'DM Sans', text: 'Inter' },
 		{ title: 'Inter', subtitle: 'Space Grotesk', text: 'Inter' },
+		{ title: 'DM Sans', text: 'Inter' },
 		{ title: 'Syne', text: 'Syne' },
 		{ title: 'Archivo', text: 'Inter' },
 		{ title: 'Calistoga', text: 'IBM Plex Sans' },
@@ -403,9 +402,10 @@
 									Input
 									<div>
 										<div class="text-sm font-bold">Container Size:</div>
-										<button on:click={() => setContainerWidth('900px')}>SM</button><button
-											on:click={() => setContainerWidth('1080px')}>MD</button
-										><button on:click={() => setContainerWidth('1280px')}>LG</button>
+										<button on:click={() => setContainerWidth('900px')}>SM (900px)</button><button
+											on:click={() => setContainerWidth('1080px')}>MD (1080px)</button
+										><button on:click={() => setContainerWidth('1200px')}>LG (1200px)</button>
+										<button on:click={() => setContainerWidth('1280px')}>XL (1280px)</button>
 									</div>
 								</div>
 							</div>
