@@ -131,6 +131,10 @@
 	};
 
 	let refreshPageConversionStats = async () => {
+		if (!page.parentPage?._id && !page._id) {
+			return;
+		}
+
 		let stats = await get(`pages/${page.parentPage?._id || page._id}/conversions`);
 		page.totalUniqueViews = stats.totalVisitorsCount;
 		page.totalUniqueClicksCount = stats.uniqueClicksCount;
@@ -1239,14 +1243,11 @@
 									{#if page._id && page.isDirty}
 										<div
 											class="cursor-pointer text-sm opacity-70"
-											on:click={() => {
+											on:click={async () => {
 												setPageAndDraft(
-													{
-														...(page._id
-															? { ..._.cloneDeep($allPages.find((p) => p.slug === page.slug)) }
-															: { ...defaultPage }),
-														welcomeEmail: page.welcomeEmail
-													},
+													await get(`pages/${page._id}`, {
+														parentPageSlug: page.parentPage?.slug
+													}),
 													{ force: true }
 												);
 											}}

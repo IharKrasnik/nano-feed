@@ -357,7 +357,9 @@
 						<div class="my-8">
 							<RenderUrl
 								class=""
-								imgClass="mx-auto  {isGif(section.imageUrl) ? 'w-full object-cover' : ''}"
+								imgClass="mx-auto {section.imgMaxWidth
+									? `max-w-[${section.imgMaxWidth}px]`
+									: ''} {isGif(section.imageUrl) ? 'w-full object-cover' : ''}"
 								url={section.imageUrl}
 							/>
 						</div>

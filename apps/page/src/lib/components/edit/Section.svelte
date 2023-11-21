@@ -5,7 +5,6 @@
 	import { fly } from 'svelte/transition';
 
 	import { get, put } from 'lib/api';
-	import FileInput from 'lib/components/FileInput.svelte';
 	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import { v4 as uuidv4 } from 'uuid';
