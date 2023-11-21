@@ -329,7 +329,7 @@
 		<PortfolioPage bind:page />
 	{:else}
 		<div class="" bind:this={previewEl}>
-			<div class="relative color-site" style="{cssVarStyles};">
+			<div class="relative color-site min-h-screen" style="{cssVarStyles};">
 				<!-- SQUARES -->
 				{#if page?.theme?.heroPattern}
 					{#if page?.theme?.theme === 'dark'}
@@ -451,7 +451,7 @@
 											  })
 											: ''}
 									>
-										{#if page?.logo && page.logo.startsWith('http')}
+										{#if page?.parentPage?.logo || page?.logo}
 											<Emoji
 												width="auto"
 												height="25"
