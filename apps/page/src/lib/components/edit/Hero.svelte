@@ -293,7 +293,7 @@
 		<div class="_section">
 			<div class="_title flex justify-between w-full">Call To Action</div>
 
-			<EditInteractiveOptions bind:sectionItem={hero} isWithButton={false} />
+			<EditInteractiveOptions bind:section={hero} isWithButton={false} />
 		</div>
 	</div>
 {/if}

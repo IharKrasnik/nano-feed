@@ -657,13 +657,20 @@
 										<!-- {#if item.emoji !== '✨'}
 									<Emoji bind:emoji={item.emoji} />
 									{/if} -->
-										<a
-											class="_item-title mb-2"
-											href={item.url || ''}
-											target={item.url?.startsWith('http') ? '_blank' : ''}
-										>
-											<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
-										</a>
+										{#if item.url}
+											<a
+												class="_item-title mb-2"
+												href={item.url || ''}
+												target={item.url?.startsWith('http') ? '_blank' : ''}
+											>
+												<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+											</a>
+										{:else}
+											<div class="_item-title mb-2">
+												<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+											</div>
+										{/if}
+
 										{#if isShowAuthor}
 											<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
 										{/if}

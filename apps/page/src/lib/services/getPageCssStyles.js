@@ -25,6 +25,7 @@ export default (page) => {
 		'text-line-height': 1.55,
 		'background-color': page.theme?.backgroundColor || '#ffffff',
 		// 'background-color': 'transparent',
+		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.3)' : 'rgba(0,0,0,.3)',
 		'text-color': page.theme?.textColor || '#111',
 		'accent-color': page.theme?.accentColor || '#000',
 		'section-background-color':
@@ -32,6 +33,7 @@ export default (page) => {
 			(page.theme?.theme === 'dark'
 				? darken(page.theme?.accentColor, 0.993)
 				: lighten(page.theme?.accentColor, 0.82)),
+
 		'section-description-text-color':
 			page.theme?.theme === 'dark' ? 'rgb(229 231 235)' : 'rgba(4, 4, 4, 1)',
 

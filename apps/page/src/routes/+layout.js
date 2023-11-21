@@ -39,7 +39,7 @@ export async function load({ url, params, session, cookies }) {
 		};
 	} else {
 		extend = {
-			ogTitle: `Momentum Page`,
+			ogTitle: `Momentum IDE`,
 			ogDescription: `Grow your startup: launch landing pages, collect waitlist, create, connect with your audience, sell.`,
 			ogImage:
 				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'

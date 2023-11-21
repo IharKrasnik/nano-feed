@@ -10,6 +10,7 @@
 
 	import Loader from 'lib/components/Loader.svelte';
 	import currentUser from 'lib/stores/currentUser';
+	import submissions from 'lib/stores/submissions';
 	import FileInput from 'lib/components/FileInput.svelte';
 
 	import formsCache, { getForm } from '$lib/stores/formsCache';
@@ -44,6 +45,10 @@
 			{/if}
 		{/key}
 	{:else}
+		<div class="_section flex justify-between">
+			<div>Total Submissions</div>
+			<div class="text-lg">{$submissions?.length || 0}</div>
+		</div>
 		← Select submission
 	{/if}
 </div>

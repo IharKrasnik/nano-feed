@@ -3,18 +3,17 @@
 	import { get, post, put, del } from 'lib/api';
 	import { fade } from 'svelte/transition';
 	import { countryCodeEmoji } from 'country-code-emoji';
+	import submissions from 'lib/stores/submissions';
 	import Button from 'lib/components/Button.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	export let page;
 	export let selectedSubmission;
 
-	let submissions = [];
-
 	let loadSubmissions = async () => {
 		let submissionsResults = await get(`pages/${page.parentPage?._id || page._id}/submissions`, {});
 
-		submissions = submissionsResults.results.map((s) => {
+		$submissions = submissionsResults.results.map((s) => {
 			s.isCollapsed = true;
 			return s;
 		});
@@ -33,12 +32,12 @@
 	loadSubmissions();
 </script>
 
-{#each submissions as submission}
+{#each $submissions as submission}
 	<div
 		class="_section cursor-pointer"
 		class:_active={!submission.isCollapsed}
 		on:click={() => {
-			submissions = submissions.map((s) => {
+			$submissions = $submissions.map((s) => {
 				s.isCollapsed = true;
 				if (s._id === submission._id) {
 					s.isCollapsed = false;
@@ -66,7 +65,7 @@
 			</div>
 		</div>
 		<div class="text-sm mt-2">
-			{moment(submission.createdOn).format('MMM DD')}
+			{moment(submission.createdOn).format('MMM DD HH:mm')}
 		</div>
 	</div>
 {/each}

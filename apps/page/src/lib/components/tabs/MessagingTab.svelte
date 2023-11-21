@@ -78,7 +78,9 @@
 	{#if trigger}
 		{#key trigger._id}
 			<div class="flex flex-col items-center">
-				<div class="text-2xl font-bold">When a user submits a email..</div>
+				<div class="text-2xl font-bold">
+					When a user submits a {trigger.on.includes('email') ? 'email' : 'form'}..
+				</div>
 
 				<div class="relative my-4 h-[50px]">
 					<div class="absolute left-[50%] border-r border-black/50 h-full" />
@@ -99,6 +101,7 @@
 								<span class="opacity-80">(info@mmntm.build)</span>
 							</div>
 							<div class="text-lg mt-2 font-bold">{triggerAction.data.subject}</div>
+							<hr class="_border-theme my-4" />
 							<div class="mt-2">
 								{@html triggerAction.data.messageHTML}
 							</div>
@@ -117,30 +120,60 @@
 			</div>
 		{/key}
 	{:else if chatRoom}
+		{#if chatRoom.customers}
+			<div class="max-w-[900px] mx-auto mb-4">
+				<div class="text-lg mb-2 font-bold opacity-80">Chat with customer</div>
+
+				<div>
+					{chatRoom.customers[0].email || 'anonymous'}
+				</div>
+			</div>
+		{:else}
+			<div class=" max-w-[900px] mx-auto mb-4">
+				<div class="text-lg mb-2 font-bold opacity-80">Chat with yourself</div>
+
+				<div>
+					Use it to see how messaging work. Messages will be sent to your email ({$currentUser.email})
+				</div>
+			</div>
+		{/if}
+
 		<div class="flex flex-col flex-1 h-full justify-between max-w-[900px] mx-auto _section-item">
 			<div
 				class="h-full min-h-[400px] max-h-[600px] overflow-y-scroll justify-end p-8"
 				bind:this={chatEl}
 			>
 				{#each messages as message}
-					<div class="message my-4" class:my={message.customer} class:their={message.user}>
+					<div
+						class="message my-4  mb-8 p-4 rounded-lg _border-theme"
+						class:my={message.customer}
+						class:their={message.user}
+					>
 						<div class="content">
-							{@html message.messageHTML}
+							{@html message.messageHTML || ''}
 						</div>
-						<div class="mt-2 mb-8 text-sm">
+						<div class="mt-2 text-sm">
 							{moment(message.createdOn).format('MMM DD, HH:mm')}
 						</div>
 					</div>
 				{/each}
 			</div>
 
-			<div class="w-full flex gap-4 items-center justify-between">
-				<textarea class="w-full" placeholder="Your Message" bind:value={newMessage.messageHTML} />
-				<button
-					disabled={!newMessage.messageHTML}
-					on:click={sendMessage}
-					class="_primary _small shrink-0">Send Message</button
-				>
+			<div>
+				<div class="w-full flex gap-4 items-center justify-between _border-theme">
+					<textarea
+						class="w-full"
+						placeholder="Your Message {chatRoom.customers
+							? `(will be sent to ${chatRoom.customers[0].email})`
+							: `will be sent to your ${$currentUser.email}`}"
+						bind:value={newMessage.messageHTML}
+					/>
+					<button
+						disabled={!newMessage.messageHTML}
+						on:click={sendMessage}
+						class="_primary _small shrink-0">Send Email</button
+					>
+				</div>
 			</div>
 		</div>
 	{:else}

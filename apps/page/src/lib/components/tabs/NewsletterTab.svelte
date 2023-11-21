@@ -52,7 +52,7 @@
 	};
 
 	let sendBroadcastEmail = async () => {
-		let { sentToEmails } = await post(`pages/${page._id}/broadcast-email`, {
+		let { customerIds } = await post(`pages/${page._id}/broadcast-emails`, {
 			subject: broadcastEmail.subject,
 			html: broadcastEmail.html,
 			callToAction: broadcastEmail.callToAction,
@@ -60,12 +60,12 @@
 		});
 
 		broadcastEmail.isSent = true;
-		broadcastEmail.sentToEmails = sentToEmails;
+		broadcastEmail.customerIds = customerIds;
 
 		broadcastEmails.results = [
 			{
 				subject: broadcastEmail.subject,
-				sentToEmails: broadcastEmail.sentToEmails,
+				customerIds: broadcastEmail.customerIds,
 				html: broadcastEmail.html,
 				createdOn: new Date()
 			},
@@ -142,7 +142,7 @@
 			{#if isBroadcastTestSent}
 				{#if broadcastEmail.isSent}
 					<div class="my-8 mt-16 text-lg">
-						🎉 Email was sent to {broadcastEmail.sentToEmails.length} subscribers! <br />
+						🎉 Email was sent to {broadcastEmail.customerIds.length} subscribers! <br />
 
 						<button
 							class="mt-4 _secondary"
@@ -198,7 +198,7 @@
 						</div>
 					</div>
 					<div class="flex">
-						<div class="mr-4 number-tag">{email.sentToEmails.length}</div>
+						<div class="mr-4 number-tag">{email.customerIds?.length || 0}</div>
 
 						<div class="opacity-70">
 							{moment(email.createdOn).format('MMM DD HH:MM')}

@@ -113,6 +113,10 @@
 	border: 1px var(--accent-color) solid;
 }
 
+._border-theme {
+	border: 1px var(--border-color) solid;
+}
+
 ._section-item._color ._section-img {
 	background: #f0e1f9;
 	color: white;

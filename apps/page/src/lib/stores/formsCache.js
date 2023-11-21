@@ -11,9 +11,32 @@ export let getForm = async ({ pageId, sectionId, forceRefresh = false }) => {
 		return cache[sectionId];
 	}
 
-	let form = await get(`forms/${sectionId}`, {
-		pageId
-	});
+	let form;
+
+	if (!sectionId) {
+		form = {
+			id: 'email',
+			columns: 1,
+			items: [
+				{
+					title: 'Submitted Email',
+					interactiveRenderType: 'email',
+					description: '',
+					isShown: true
+				}
+			],
+			type: 'form',
+			renderType: 'form',
+			isShown: true,
+			collectionType: '',
+			interactiveRenderType: '',
+			subtitle: ''
+		};
+	} else {
+		form = await get(`forms/${sectionId}`, {
+			pageId
+		});
+	}
 
 	formsStore.update((s) => {
 		s[sectionId] = form;

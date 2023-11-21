@@ -216,7 +216,7 @@
 		</div>
 	</div>
 
-	{#if section.renderType !== 'form' && section.renderType !== 'testimonials'}
+	{#if page.renderType !== 'article' && section.renderType !== 'form' && section.renderType !== 'testimonials'}
 		<div class="my-8">
 			<div class="text-sm font-bold mb-2 mt-4">Render this section as...</div>
 

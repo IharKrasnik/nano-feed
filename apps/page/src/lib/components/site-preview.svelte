@@ -466,7 +466,7 @@
 									<div
 										class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
 									>
-										{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+										{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => s.renderType !== 'article') as subPage}
 											<a
 												href="/{subPage.slug}"
 												on:click={() => {

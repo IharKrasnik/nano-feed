@@ -82,7 +82,7 @@
 				</div>
 			</div>
 			<div class="text-sm mt-2">
-				{moment(customer.createdOn).format('MMM DD')}
+				{moment(customer.createdOn).format('MMM DD HH:mm')}
 			</div>
 		</div>
 	{:else}

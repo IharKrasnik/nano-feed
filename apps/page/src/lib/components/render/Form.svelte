@@ -56,45 +56,54 @@
 {#if !isFormSubmitted}
 	<div class="_section-item max-w-[500px]  w-full mx-auto">
 		<form class="w-full flex flex-col gap-4 p-8" on:submit|preventDefault={submitForm}>
-			{#each section.items as formField}
-				<div>
-					<div class="mb-4">
-						<div class="text-lg font-semibold opacity-80">{@html formField.title}</div>
-						<div class="text-sm opacity-80 mb-2">{@html formField.description || ''}</div>
-					</div>
+			{#if section.items.length}
+				{#each section.items as formField}
+					<div>
+						<div class="mb-4">
+							<div class="text-lg font-semibold opacity-80">{@html formField.title}</div>
+							<div class="text-sm opacity-80 mb-2">{@html formField.description || ''}</div>
+						</div>
 
-					{#if formField.interactiveRenderType === 'text'}
-						{#if formField.varName === 'name'}
-							<input
-								class="w-full _transparent"
-								placeholder={formField.interactivePlaceholder || 'Paul Graham'}
-								type="text"
-								bind:value={$currentCustomer.name}
-							/>
-						{:else}
-							<input
+						{#if formField.interactiveRenderType === 'text'}
+							{#if formField.varName === 'name'}
+								<input
+									class="w-full _transparent"
+									placeholder={formField.interactivePlaceholder || 'Paul Graham'}
+									type="text"
+									bind:value={$currentCustomer.name}
+								/>
+							{:else}
+								<input
+									class="w-full _transparent"
+									placeholder={formField.interactivePlaceholder || 'Type your message...'}
+									type="text"
+									bind:value={formData[formField.varName]}
+								/>
+							{/if}
+						{:else if formField.interactiveRenderType === 'textarea'}
+							<textarea
 								class="w-full _transparent"
 								placeholder={formField.interactivePlaceholder || 'Type your message...'}
-								type="text"
 								bind:value={formData[formField.varName]}
 							/>
+						{:else if formField.interactiveRenderType === 'email'}
+							<input
+								class="w-full _transparent"
+								type="email"
+								placeholder={formField.interactivePlaceholder || 'my@email.com'}
+								bind:value={$currentCustomer.email}
+							/>
 						{/if}
-					{:else if formField.interactiveRenderType === 'textarea'}
-						<textarea
-							class="w-full _transparent"
-							placeholder={formField.interactivePlaceholder || 'Type your message...'}
-							bind:value={formData[formField.varName]}
-						/>
-					{:else if formField.interactiveRenderType === 'email'}
-						<input
-							class="w-full _transparent"
-							type="email"
-							placeholder={formField.interactivePlaceholder || 'my@email.com'}
-							bind:value={$currentCustomer.email}
-						/>
-					{/if}
-				</div>
-			{/each}
+					</div>
+				{/each}
+			{:else if section.submission && section.submission.email}
+				<input
+					class="w-full _transparent"
+					type="email"
+					disabled
+					bind:value={section.submission.email}
+				/>
+			{/if}
 
 			{#if !section.submission}
 				<button class="_primary mt-8" type="submit">{section.callToActionText || 'Submit'}</button>

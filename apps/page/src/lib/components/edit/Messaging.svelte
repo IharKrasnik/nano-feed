@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import moment from 'moment';
 	import { get, post, put, del } from 'lib/api';
 	import { fade } from 'svelte/transition';
@@ -42,6 +43,23 @@ See you!
 		if (trigger.on === 'email:submitted') {
 			return 'Email Submitted';
 		}
+		if (trigger.on === 'form:submitted') {
+			return 'Form Submitted';
+		}
+	};
+
+	let selectTrigger = (trigger) => {
+		if (trigger.isCollapsed) {
+			triggers = triggers.map((t) => {
+				t.isCollapsed = true;
+				if (t._id === trigger._id) {
+					t.isCollapsed = false;
+				}
+				return t;
+			});
+
+			selectedTrigger = trigger;
+		}
 	};
 
 	let loadTriggers = async () => {
@@ -49,10 +67,13 @@ See you!
 			pageId: page.parentPage?._id || page._id
 		});
 
-		triggers = triggersResults.results.map((s) => {
-			s.isCollapsed = true;
-			return s;
-		});
+		triggers = [
+			...triggers,
+			...triggersResults.results.map((s) => {
+				s.isCollapsed = true;
+				return s;
+			})
+		];
 
 		if (!triggers.length) {
 			triggers = [
@@ -78,6 +99,39 @@ See you!
 
 	loadTriggers();
 
+	let forms = [];
+
+	let addFormTrigger = () => {
+		let formTrigger = {
+			isCollapsed: true,
+			isEnabled: true,
+			on: 'form:submitted',
+			actionSequence: [
+				{
+					inMinutes: 0,
+					type: 'send_message',
+					data: {
+						subject: `Thank you for your submission`,
+						messageHTML: `We'll review it shortly!`,
+						imageUrl: null
+					}
+				}
+			]
+		};
+
+		triggers = [...triggers, formTrigger];
+
+		selectTrigger(formTrigger);
+	};
+
+	let loadForms = async () => {
+		forms = await get('forms', {
+			pageId: page.parentPage?._id || page?._id
+		});
+	};
+
+	loadForms();
+
 	let saveTrigger = async () => {
 		let updatedTrigger;
 
@@ -93,9 +147,11 @@ See you!
 			);
 		}
 
-		showSuccessMessage('Trigger is saved');
+		showSuccessMessage('Trigger saved');
 
-		selectedTrigger = updatedTrigger;
+		_.extend(selectedTrigger, updatedTrigger);
+		selectedTrigger.isCollapsed = true;
+		selectedTrigger = null;
 	};
 
 	let loadChatRooms = async () => {
@@ -111,27 +167,24 @@ See you!
 	let openChatRoom = ({ chatRoom }) => {
 		selectedChatRoom = chatRoom;
 	};
+
+	let sendTestEmail = async ({ triggerAction }) => {
+		await post(`triggers/test-email?pageId=${page.parentPage?._id || page._id}`, {
+			subject: triggerAction.data.subject,
+			messageHTML: triggerAction.data.messageHTML,
+			imageUrl: triggerAction.data.imageUrl,
+			callToActionText: triggerAction.data.callToActionText,
+			callToActionUrl: triggerAction.data.callToActionUrl
+		});
+
+		showSuccessMessage(`Sent test email to ${$currentUser.email}`);
+	};
 </script>
 
 <div class="font-bold text-lg mb-4">Messaging Triggers</div>
 
 {#each triggers as trigger}
-	<div
-		class="_section cursor-pointer"
-		on:click={() => {
-			if (trigger.isCollapsed) {
-				triggers = triggers.map((t) => {
-					t.isCollapsed = true;
-					if (t._id === trigger._id) {
-						t.isCollapsed = false;
-					}
-					return t;
-				});
-
-				selectedTrigger = trigger;
-			}
-		}}
-	>
+	<div class="_section cursor-pointer" on:click={() => selectTrigger(trigger)}>
 		<div class=" flex justify-between items-center">
 			<div class="flex gap-2 items-center">
 				On: <span class="font-semibold">{formatTrigger(trigger)}</span>
@@ -140,13 +193,7 @@ See you!
 				{trigger.isEnabled ? 'Enabled' : 'Disabled'}
 			{:else}
 				<div>
-					<input
-						type="checkbox"
-						bind:checked={trigger.isEnabled}
-						on:change={() => {
-							debugger;
-						}}
-					/> Enabled
+					<input type="checkbox" bind:checked={trigger.isEnabled} on:change={() => {}} /> Enabled
 				</div>
 			{/if}
 		</div>
@@ -224,17 +271,19 @@ See you!
 						</div>
 						<FileInput class="w-full" bind:url={triggerAction.data.imageUrl} />
 
-						<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
-							Welcome email is sent once a user <b>submitted</b> their email. <br />
+						{#if selectedTrigger.on.includes('email')}
+							<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
+								Welcome email is sent once a user <b>submitted</b> their email. <br />
 
-							🤝 Make it friendly and personal <br />
-							⏳ Keep it short and sweet <br />
-							⚡️ Stimulate reader to take action: book a call, check out the link, reply to email, share
-							in social media <br />
-						</div>
+								🤝 Make it friendly and personal <br />
+								⏳ Keep it short and sweet <br />
+								⚡️ Stimulate reader to take action: book a call, check out the link, reply to email,
+								share in social media <br />
+							</div>
+						{/if}
 
 						<div class="flex items-center">
-							<Button class="_secondary my-8" onClick={() => {}}
+							<Button class="_secondary my-8" onClick={() => sendTestEmail({ triggerAction })}
 								>🔬 Send Test Message + Email</Button
 							>
 						</div>
@@ -265,15 +314,25 @@ See you!
 	</div>
 {/each}
 
+{#if forms.length && !triggers.find((t) => t.on === 'form:submitted')}
+	<button class="_secondary w-full mt-4" on:click={addFormTrigger}> Add Form Trigger </button>
+{/if}
+
 <div class="font-bold text-lg mb-4 mt-8">Messages</div>
 
 {#each chatRooms as chatRoom}
 	<div
 		class="my-4 _section p-4 truncate overflow-hidden cursor-pointer"
+		class:_active={chatRoom._id === selectedChatRoom?._id}
 		on:click={() => openChatRoom({ chatRoom })}
 	>
 		{@html striptags(chatRoom.lastMessageHTML || '')}
+
 		<div class="mt-4 text-sm">
+			<div class="text-sm mb-2" class:text-orange-700={!chatRoom.customers}>
+				{chatRoom.customers ? chatRoom.customers[0].email : 'chat with yourself'}
+			</div>
+
 			{moment(chatRoom.lastMessageSentOn).format('MMM DD, HH:mm')}
 		</div>
 	</div>

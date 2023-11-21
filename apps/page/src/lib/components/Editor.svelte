@@ -1496,7 +1496,11 @@
 											{:else if selectedTab === 'analytics'}
 												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
 											{:else if selectedTab === 'messaging'}
-												<MessagingTab bind:page bind:trigger={selectedTrigger} bind:chatRoom={selectedChatRoom}/>
+												<MessagingTab
+													bind:page
+													bind:trigger={selectedTrigger}
+													bind:chatRoom={selectedChatRoom}
+												/>
 											{:else if selectedTab === 'audience'}
 												<AudienceTab bind:page bind:selectedSubmission />
 											{:else if selectedTab === 'database'}
