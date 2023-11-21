@@ -733,13 +733,13 @@
 										class:pt-16={section.isFunkyGrid && i === 1}
 									>
 										<a
-											href={item.url && !section.interactiveRenderType ? item.url : null}
+											href={item.url && !item.interactiveRenderType ? item.url : null}
 											target={item.url?.startsWith('http') ? '_blank' : ''}
 											id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
 											class="_section-item block relative {item.bgImageUrl
 												? '_bg-image'
 												: ''} rounded-lg sm:rounded-xl {item.className ||
-												''} mb-2 sm:mb-8 {item.url && !section.interactiveRenderType
+												''} mb-2 sm:mb-8 {item.url && !item.interactiveRenderType
 												? '_interactive'
 												: ''}"
 											on:click={() => {
