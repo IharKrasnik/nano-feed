@@ -9,9 +9,7 @@
 
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
-	if (isEdit) {
-		section.items;
-	}
+	section.items.forEach((i) => (i.isExpanded = !!isEdit));
 
 	let expandFaq = (item) => {
 		item.isExpanded = true;
@@ -38,8 +36,6 @@
 								: ''}
 							on:click={() => {
 								faq.isExpanded = !faq.isExpanded;
-
-								debugger;
 
 								trackClick({
 									pageId: page?._id,
