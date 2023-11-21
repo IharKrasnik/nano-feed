@@ -9,7 +9,8 @@
 
 	let isEmojiPickerShown = false;
 
-	export let icon = '✨';
+	export let defaultIcon = '✨';
+	export let icon = defaultIcon;
 
 	let url = icon?.startsWith('http') ? icon : null;
 

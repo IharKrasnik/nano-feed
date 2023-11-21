@@ -125,8 +125,11 @@
 			<input class="mr-2" type="number" bind:value={item.pricing.amount} placeholder="29.99" />
 
 			<select class="w-full" bind:value={item.pricing.per}>
-				<option value="month">Month</option>
 				<option value="one-time">One-Time</option>
+				<option value="week">Week</option>
+				<option value="month">Month</option>
+				<option value="Quarter">Quarter</option>
+				<option value="year">Year</option>
 			</select>
 		</div>
 

@@ -296,14 +296,14 @@
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
 			<div
-				class="flex flex-col w-full sm:w-auto sm:flex-row gap-6 items-center {clazz?.includes(
-					'mx-auto'
-				)
+				class="flex flex-col sm:flex-row w-full gap-6 items-center {clazz?.includes('mx-auto')
 					? 'mx-auto'
-					: ''}"
+					: ''} {clazz?.includes('w-full') ? '' : 'sm:w-auto'}"
 			>
 				<a
-					class="shrink-0 cursor-pointer w-full sm:w-auto {urlClass}"
+					class="shrink-0 cursor-pointer w-full {clazz?.includes('w-full')
+						? ''
+						: 'sm:w-auto'} {urlClass}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					class:heatmap={$heatmap}
 					data-heatmap-clicks-count={$heatmap
@@ -336,7 +336,7 @@
 					}}
 				>
 					{#if sectionItem.isUrlButton}
-						<button class="w-full flex items-center {size === 'small' ? '_small' : ''}">
+						<button class="w-full flex justify-center items-center {size ? `_is${size}` : ''}">
 							{#if sectionItem.urlIcon}
 								<Emoji
 									width={size === 'small' ? 15 : 22}
@@ -387,7 +387,7 @@
 					>
 						{#if sectionItem.isUrl2Button}
 							<button
-								class="w-full flex items-center {size === 'small' ? '_small' : ''}"
+								class="w-full flex items-center justify-center {size ? `_is${size}` : ''}"
 								class:_alternative={sectionItem.isUrlButton}
 							>
 								{#if sectionItem.url2Icon}
@@ -409,7 +409,9 @@
 	</div>
 
 	{#if !isHeader && sectionItem.ctaExplainer}
-		<div class="text-sm mt-4 max-w-[400px]">{@html sectionItem.ctaExplainer}</div>
+		<div class="text-sm mt-4 {clazz?.includes('w-full') ? 'w-full text-center' : 'max-w-[400px]'}">
+			{@html sectionItem.ctaExplainer}
+		</div>
 	{/if}
 
 	{#if sectionItem.interactiveRenderType === 'short_answer' || sectionItem.interactiveRenderType === 'single_choice'}
@@ -421,6 +423,18 @@
 {/if}
 
 <style>
+	button._ishuge {
+		font-size: 20px;
+		padding: 16px 32px;
+		border-radius: 32px;
+	}
+
+	button._islarge {
+		font-size: 18px;
+		padding: 12px 24px;
+		border-radius: 24px;
+	}
+
 	.emoji-button:hover {
 		background: var(--accent-color) !important;
 		color: var(--button-color) !important;

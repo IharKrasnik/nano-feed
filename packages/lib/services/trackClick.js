@@ -8,6 +8,7 @@ export default ({
 	text
 }) => {
 	try {
+		debugger;
 		return window.mwave.sendTrackEvent({
 			type: 'click_custom',
 			payload: {

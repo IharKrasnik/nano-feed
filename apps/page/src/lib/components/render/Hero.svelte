@@ -43,10 +43,12 @@
 				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
 			/> -->
 	{#if hero.bgImageUrl}
-		<div
-			class="absolute top-0 left-0 w-screen h-screen z-1"
-			style="background-color: rgba(0,0,0, 0.7); z-index: 1;"
-		/>
+		{#if hero.theme.isBgImageDimmed}
+			<div
+				class="absolute top-0 left-0 w-screen h-screen z-1"
+				style="background-color: rgba(0,0,0, 0.7); z-index: 1;"
+			/>
+		{/if}
 		<RenderUrl
 			class="absolute left-0 top-0 w-screen h-screen opacity-90 overflow-hidden z-0"
 			isAutoplay={!isEdit}
@@ -117,7 +119,8 @@
 
 						{#if hero.interactiveRenderType}
 							<RenderInteractiveOptions
-								class={hero.theme.isLeft ? '' : 'w-full max-w-[600px] mx-auto'}
+								class={hero.theme.isLeft ? '' : 'max-w-[600px] mx-auto'}
+								size={hero.theme.isHugeTitle ? 'huge' : 'large'}
 								bind:page
 								bind:sectionItem={hero}
 							/>

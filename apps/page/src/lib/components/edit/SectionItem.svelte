@@ -95,34 +95,7 @@
 			{/if}
 
 			{#if (isWithSettings && section.renderType !== 'form' && section.renderType !== 'carousel') || item.isActionSuccessSection}
-				<EditSectionSettings bind:sectionItem={item} />
-			{/if}
-
-			{#if isWithGrid && section.renderType !== 'carousel'}
-				{#if section.columns > 1}
-					<FeatherIcon class="ml-4 mr-2" size="15" color="gray" name="grid" />
-					<input
-						type="number"
-						class="max-w-[60px] mr-2"
-						placeholder="1"
-						bind:value={item.colSpan}
-					/>
-					x
-					<input
-						type="number"
-						class="max-w-[60px] ml-2"
-						placeholder="1"
-						bind:value={item.rowSpan}
-					/>
-				{:else if item.imageUrl}
-					<select bind:value={item.colSpan}>
-						<option value="">Default</option>
-						<option value="12">12 x 12</option>
-						<option value="4">4 x 8</option>
-						<option value="6">6 x 6</option>
-						<option value="8">8 x 4</option>
-					</select>
-				{/if}
+				<EditSectionSettings bind:section bind:sectionItem={item} />
 			{/if}
 
 			{#if isWithSubtitle}
@@ -164,10 +137,16 @@
 			<input class="mr-2" type="number" bind:value={item.pricing.amount} placeholder="29.99" />
 
 			<select class="w-full" bind:value={item.pricing.per}>
-				<option value="month">Month</option>
 				<option value="one-time">One-Time</option>
+				<option value="week">Week</option>
+				<option value="month">Month</option>
+				<option value="Quarter">Quarter</option>
+				<option value="year">Year</option>
 			</select>
 		</div>
+
+		<div class="mt-4 text-sm mb-2">Benefits (separate by new line)</div>
+		<textarea class="w-full" bind:value={item.pricing.benefitsStr} />
 
 		{#if item.pricing?.benefits?.length}
 			<div class="mt-4">
@@ -186,10 +165,6 @@
 				{/each}
 			</div>
 		{/if}
-
-		<div class="w-full p-4 mb-4 cursor-pointer text-center" on:click={addBenefit}>
-			➕Add Benefit
-		</div>
 	{:else if section.renderType !== 'form' || item.isActionSuccessSection}
 		<div class="relative flex justify-between items-center">
 			<FileInput

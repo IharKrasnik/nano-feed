@@ -17,8 +17,9 @@
 	border: 1px #111 solid;
 }
 
-._section._highlighted {
-	border: 1px #111 solid;
+._section._highlighted,
+._section-item._highlighted {
+	border: 1px var(--accent-color) solid !important;
 }
 
 ._title {
@@ -44,12 +45,16 @@
 }
 
 ._section-item._darker > .flex {
-	background: var(--accent-color-darker-xl);
+	background: var(--accent-color-darker-xl) !important;
+}
+
+._section-item._transparent > .flex {
+	background: none !important;
 }
 
 ._section-container._lighter,
 ._section-item._lighter > .flex {
-	background: var(--accent-color-darker-lg);
+	background: var(--accent-color-darker-lg) !important;
 	@apply rounded-xl;
 }
 
@@ -245,6 +250,7 @@ button._red {
 
 button._secondary {
 	border: 1px #8b786d solid;
+	@apply rounded-lg;
 }
 
 button._hub {
@@ -410,7 +416,10 @@ button[type='submit'] {
 	font-weight: 500;
 }
 
-butotn._wide {
+button._islarge {
+}
+
+button._wide {
 	padding: 16px 32px;
 }
 

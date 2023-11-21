@@ -3,7 +3,9 @@
 
 	import isUrl from 'lib/helpers/isUrl';
 	import FileInput from 'lib/components/FileInput.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
+	export let section;
 	export let sectionItem;
 
 	export let isShown = false;
@@ -34,25 +36,60 @@
 		in:fly={{ y: 50, duration: 150 }}
 	>
 		<div class="w-full py-4">
+			{#if !sectionItem.items && section.renderType !== 'carousel'}
+				<div class="text-sm mb-2">Grid</div>
+				<div class="flex items-center mb-4">
+					{#if section.columns > 1}
+						<input
+							type="number"
+							class="max-w-[60px] mr-2"
+							placeholder="1"
+							bind:value={sectionItem.colSpan}
+						/>
+						x
+						<input
+							type="number"
+							class="max-w-[60px] ml-2"
+							placeholder="1"
+							bind:value={sectionItem.rowSpan}
+						/>
+					{:else if sectionItem.imageUrl}
+						<select bind:value={sectionItem.colSpan}>
+							<option value="">Default</option>
+							<option value="12">12 x 12</option>
+							<option value="4">4 x 8</option>
+							<option value="6">6 x 6</option>
+							<option value="8">8 x 4</option>
+						</select>
+					{/if}
+				</div>
+			{/if}
+
 			{#if sectionItem.imageUrl}
 				<input class="mr-2" type="checkbox" bind:checked={sectionItem.isReversed} /> reverse
 			{/if}
 
 			{#if sectionItem.items}
-				<input class="mr-2" type="checkbox" bind:checked={sectionItem.isTitleLeft} /> left align
+				<input class="ml-2 mr-2" type="checkbox" bind:checked={sectionItem.isTitleLeft} /> left align
 			{/if}
 
 			{#if !sectionItem.bgImageUrl}
-				<select class="ml-4" bind:value={sectionItem.className}>
-					<option value="">Default</option>
+				<div class="">
+					<div class="text-sm mb-2 mt-8">Style</div>
+					<select bind:value={sectionItem.className}>
+						<option value="">Default</option>
 
-					{#if sectionItem.items}
-						<option value="_callout">Callout</option>
-					{/if}
+						{#if sectionItem.items}
+							<option value="_callout">Callout</option>
+						{/if}
 
-					<option value="_darker">Dark</option>
-					<option value="_lighter">Light</option>
-				</select>
+						<option value="_highlighted">Highlighted</option>
+						<option value="_darker">Dark</option>
+						<option value="_lighter">Light</option>
+						<!-- <option value="_transparent">Transparent</option> -->
+					</select>
+					<input type="checkbox" bind:checked={sectionItem.isHugeTitle} /> Is Huge Title
+				</div>
 			{/if}
 		</div>
 

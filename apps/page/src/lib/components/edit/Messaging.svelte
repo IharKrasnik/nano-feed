@@ -301,13 +301,7 @@ See you!
 					>
 				</div>
 				<div>
-					<input
-						type="checkbox"
-						bind:checked={trigger.isEnabled}
-						on:change={() => {
-							debugger;
-						}}
-					/> Enabled
+					<input type="checkbox" bind:checked={trigger.isEnabled} on:change={() => {}} /> Enabled
 				</div>
 			</div>
 		{/if}

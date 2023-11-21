@@ -65,7 +65,6 @@
 
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
-	import contenteditable from 'lib/use/contenteditable';
 
 	import currentUser from 'lib/stores/currentUser';
 	import allPages from '$lib/stores/allPages';
@@ -143,6 +142,40 @@
 		};
 	};
 
+	let addDefaultHero = () => {
+		page.heros = [
+			{
+				id: uuidv4(),
+				isHidden: false,
+				renderType: 'default',
+
+				title: page.title,
+				subtitle: page.subtitle,
+				demoUrl: page.demoUrl,
+
+				interactiveRenderType: page.interactiveRenderType,
+
+				callToActionText: page.callToAction,
+				ctaExplainer: page.ctaExplainer,
+
+				url: page.url,
+				actionUrl: page.actionUrl,
+				isUrlButton: page.isUrlButton,
+
+				url2: page.url2,
+				isUrl2Button: page.isUrl2Button,
+
+				bgImageUrl: page.theme?.heroBgImage,
+
+				theme: {
+					isLeft: page.theme?.isHeroLeft,
+					isVertical: page.theme?.isHeroVertical,
+					isHuge: page.theme?.isHugeTitle
+				}
+			}
+		];
+	};
+
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		console.log('setPageAndDraft');
 		page = { ..._.cloneDeep(p) };
@@ -174,44 +207,12 @@
 		let heroSection = page.heros[0];
 
 		if (!page.parentPage && !heroSection) {
-			page.heros = [
-				{
-					id: uuidv4(),
-					isHidden: false,
-					renderType: 'default',
-
-					title: page.title,
-					subtitle: page.subtitle,
-					demoUrl: page.demoUrl,
-
-					interactiveRenderType: page.interactiveRenderType,
-
-					callToActionText: page.callToAction,
-					ctaExplainer: page.ctaExplainer,
-
-					url: page.url,
-					actionUrl: page.actionUrl,
-					isUrlButton: page.isUrlButton,
-
-					url2: page.url2,
-					isUrl2Button: page.isUrl2Button,
-
-					bgImageUrl: page.theme?.heroBgImage,
-
-					theme: {
-						isLeft: page.theme?.isHeroLeft,
-						isVertical: page.theme?.isHeroVertical,
-						isHuge: page.theme?.isHugeTitle
-					}
-				}
-			];
+			addDefaultHero();
 		}
 
 		page.activeHero = page.heros[0];
 
 		refreshPageConversionStats();
-
-		debugger;
 	};
 
 	let addNewHero = () => {
@@ -441,13 +442,18 @@
 		} else if (type === 'faq') {
 			newSection.title = 'Frequently Asked Questions';
 			newSection.description = 'Answers summarized';
+			newSection.renderType = 'faq';
 
 			// delete newSection.items;
 
-			newSection.faqs = [
+			newSection.items = [
 				{
-					question: 'Do you offer a refund?',
-					answer: 'Yes, all subscriptions refunded no-questions-asked the first 2 weeks.'
+					title: 'Do you offer a refund?',
+					description: 'Yes, all subscriptions refunded no-questions-asked the first 2 weeks.'
+				},
+				{
+					title: 'How the process look like?',
+					description: 'You submit the form, prepay and get the result in 48 hours.'
 				}
 			];
 		} else if (type === 'testimonials') {
@@ -983,7 +989,9 @@
 										{/if}
 									{/if}
 
-									{#each page.heros || [] as hero}
+									<div class="font-bold mr-2 py-4 my-4">🤩 Hero Section</div>
+
+									{#each page.heros || [{}] as hero}
 										<EditHero
 											class="my-4"
 											bind:hero
@@ -993,6 +1001,10 @@
 											isCollapsed={!!page.title}
 										/>
 									{/each}
+
+									{#if !page.heros?.length}
+										<button class="_secondary" on:click={addDefaultHero}>Add Hero Section</button>
+									{/if}
 									<!-- 
 									{#if page?._id}
 										<div class="opacity-70 hover:opacity-100 my-4">

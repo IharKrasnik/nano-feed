@@ -226,6 +226,7 @@
 				<option value="testimonials">Testimonials</option>
 				<option value="carousel">Carousel Menu</option>
 				<option value="stepper">1-2-3 Stepper</option>
+				<option value="faq">FAQ</option>
 				<option value="article">Article</option>
 				<option value="form">Form</option>
 			</select>
@@ -238,86 +239,105 @@
 			{/if}
 		</div>
 
-		<div class="_section">
-			<div class="_title mt-4" style="margin: 0;">Sync from database</div>
+		{#if section.renderType !== 'pricing'}
+			<div class="_section">
+				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
 
-			<div class="w-full flex flex-col gap-4 mb-4 mt-2">
-				{#if pageStreams?.length}
-					<select class="w-full" bind:value={section.collectionType}>
-						<option value="">No</option>
-						<option value="articles">Blog Articles</option>
-						<option value="feed">Choose Database</option>
-					</select>
-
-					{#if section.collectionType === 'feed'}
-						<select bind:value={section.streamSlug}>
-							{#each pageStreams as stream (stream._id)}
-								<option value={stream.slug}>{stream.title}</option>
-							{/each}
-							<option value="">Add New</option>
+				<div class="w-full flex flex-col gap-4 mb-4 mt-2">
+					{#if pageStreams?.length}
+						<select class="w-full" bind:value={section.collectionType}>
+							<option value="">No</option>
+							<option value="articles">Blog Articles</option>
+							<option value="feed">Database</option>
+							<option value="global_feed">Global Database</option>
 						</select>
 
-						{#if pageStreams.filter((ps) => ps.slug === section.streamSlug).length}
-							{#if section.streamSettings}
-								<div class="grid grid-cols-2 gap-4">
-									<div class="_section">
-										<div class="text-sm mb-2">Limit items</div>
-										<input type="number" class="w-full" bind:value={section.streamSettings.limit} />
-										<div class="text-xs mt-2">Leave 0 for pagination</div>
-									</div>
-
-									<div class="_section">
-										<div class="text-sm mb-2">Sort</div>
-
-										<select bind:value={section.streamSettings.sortBy}>
-											<option value="_sample">Random</option>
-											<option value="-publishedOn">Newest First</option>
-											<option value="-viewsCount">Popular First</option>
-										</select>
-									</div>
-								</div>
-								<div class="_section">
-									<div class="text-sm mb-2">Show best sample</div>
-									<div>
-										<input type="checkbox" bind:checked={section.streamSettings.isWithImageOnly} /> Include
-										only items with image
-									</div>
-
-									<div>
-										<input type="checkbox" bind:checked={section.streamSettings.isWithUrlOnly} /> Include
-										only items with URL
-									</div>
-								</div>
+						{#if section.collectionType === 'feed' || section.collectionType === 'global_feed'}
+							{#if section.collectionType === 'feed'}
+								<select bind:value={section.streamSlug}>
+									{#each pageStreams as stream (stream._id)}
+										<option value={stream.slug}>{stream.title}</option>
+									{/each}
+									<option value="">Add New</option>
+								</select>
+							{/if}
+							{#if section.collectionType === 'global_feed'}
+								<input bind:value={section.streamSlug} />
 							{/if}
 
-							<Button
-								class="shrink-0 _small _secondary"
-								theme="light"
-								onClick={() => {
-									return getFeed({
-										cacheId: section.id,
-										streamSlug: section.streamSlug,
-										streamSettings: section.streamSettings,
-										forceRefresh: true,
-										perPage: 100
-									});
-								}}>💫 refresh</Button
-							>
-						{:else}
-							<input placeholder="databaseName" class="w-full" bind:value={section.streamSlug} />
-							<Button class="shrink-0 _small _secondary" onClick={createStream}
-								>Create Database</Button
-							>
-						{/if}
-					{/if}
-				{:else}{/if}
-			</div>
-		</div>
+							{#if section.streamSlug}
+								{#if section.streamSettings}
+									<div class="grid grid-cols-2 gap-4">
+										<div class="_section">
+											<div class="text-sm mb-2">Limit items</div>
+											<input
+												type="number"
+												class="w-full"
+												bind:value={section.streamSettings.limit}
+											/>
+											<div class="text-xs mt-2">Leave 0 for pagination</div>
+										</div>
 
-		{#if section.collectionType === 'feed'}
-			<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
-				>Edit Data</button
-			>
+										<div class="_section">
+											<div class="text-sm mb-2">Sort</div>
+
+											<select bind:value={section.streamSettings.sortBy}>
+												<option value="_sample">Random</option>
+												<option value="-publishedOn">Newest First</option>
+												<option value="-viewsCount">Popular First</option>
+											</select>
+										</div>
+									</div>
+									<div class="_section">
+										<div class="text-sm mb-2">Show best sample</div>
+										<div>
+											<input
+												type="checkbox"
+												bind:checked={section.streamSettings.isWithImageOnly}
+											/> Include only items with image
+										</div>
+
+										<div>
+											<input type="checkbox" bind:checked={section.streamSettings.isWithUrlOnly} /> Include
+											only items with URL
+										</div>
+									</div>
+								{/if}
+
+								<Button
+									class="shrink-0 _small _secondary"
+									theme="light"
+									onClick={() => {
+										return getFeed({
+											cacheId: section.id,
+											streamSlug: section.streamSlug,
+											streamSettings: section.streamSettings,
+											forceRefresh: true,
+											perPage: 100
+										});
+									}}>💫 refresh</Button
+								>
+							{:else}
+								<input placeholder="databaseName" class="w-full" bind:value={section.streamSlug} />
+								<Button class="shrink-0 _small _secondary" onClick={createStream}
+									>Create Database</Button
+								>
+							{/if}
+						{/if}
+					{:else}
+						<input placeholder="databaseName" class="w-full" bind:value={section.streamSlug} />
+						<Button class="shrink-0 _small _secondary" onClick={createStream}
+							>Create Database</Button
+						>
+					{/if}
+				</div>
+			</div>
+
+			{#if section.collectionType === 'feed' || section.collectionType === 'global_feed'}
+				<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
+					>Edit Data</button
+				>
+			{/if}
 		{/if}
 	{/if}
 
@@ -326,6 +346,18 @@
 	{:else if section.renderType === 'testimonials'}
 		<EditTestimonials bind:section />
 	{:else}
+		{#if section.renderType === 'pricing'}
+			<div class="_section rounded-xl p-4">
+				<div class="flex items-center">
+					Benefits icon <EmojiPicker
+						class="ml-4"
+						defaultIcon="✅"
+						bind:icon={section.benefitsEmoji}
+					/>
+				</div>
+				<div>This icon is used to show benefits</div>
+			</div>
+		{/if}
 		<div
 			class="_section rounded-xl"
 			style="padding: 0px;"
@@ -338,12 +370,15 @@
 				// onEditEnded(section);
 			}}
 		>
-			{#if section.renderType !== 'form' && section.renderType === 'grid'}
+			{#if section.renderType === 'grid' || section.renderType === 'pricing'}
 				<div class="bg-white top-[60px] rounded-xl">
 					<div class="p-4 pb-0 flex justify-between items-center">
 						<div class="_title" style="margin: 0;">Columns</div>
 						<div>
 							<input type="checkbox" bind:checked={section.isShowSource} /> show url source
+							{#if section.isMasonryGrid}
+								<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> funky
+							{/if}
 							<input class="ml-2" type="checkbox" bind:checked={section.isMasonryGrid} /> masonry
 						</div>
 

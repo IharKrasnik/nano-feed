@@ -41,6 +41,11 @@
 	export let style = null;
 
 	const headerTextStyle = (item) => {
+		if (item.isHugeTitle) {
+			let defaultSize = 'text-3xl sm:text-4xl';
+			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize };
+		}
+
 		return {
 			1: item.imageUrl ? 'text-lg' : 'sm:text-4xl text-3xl',
 			2: 'text-lg',
@@ -340,8 +345,9 @@
 					{#if section.interactiveRenderType}
 						<div class="sm:max-w-[600px] sm:mx-auto mt-8">
 							<RenderInteractiveOptions
-								class="justify-center"
+								class="justify-center mb-8"
 								bind:sectionItem={section}
+								size="large"
 								bind:page
 							/>
 						</div>
@@ -360,7 +366,7 @@
 			{/if}
 
 			{#if section.renderType === 'faq'}
-				<RenderFAQ bind:section />
+				<RenderFAQ bind:section bind:page />
 			{:else if section.renderType === 'testimonials'}
 				<RenderTestimonials bind:section />
 			{:else if section.collectionType}
@@ -719,231 +725,258 @@
 						>
 							{#each section.items || [] as item, i}
 								{#if item.isShown || _.isUndefined(item.isShown)}
-									<a
-										href={section.linkType === 'interactive' ? item.url : null}
-										target={item.url?.startsWith('http') ? '_blank' : ''}
-										id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
-										class="_section-item break-inside-avoid block relative {item.bgImageUrl
-											? '_bg-image'
-											: ''} rounded-lg sm:rounded-xl {item.className ||
-											''} col-span-{item.colSpan || 1} row-span-{item.rowSpan ||
-											1} mb-2 sm:mb-8 {section.renderType === 'carousel'
+									<div
+										class=" break-inside-avoid  col-span-{item.colSpan ||
+											1} row-span-{item.rowSpan || 1} {section.renderType === 'carousel'
 											? `min-w-[300px] sm:min-w-0 cursor-pointer`
-											: ''} {section.linkType === 'interactive' ? '_interactive' : ''}"
-										on:click={() => {
-											if (section.carousel) {
-												selectCarouselItem(item);
-											}
-
-											if (item.feedItemId) {
-												post(`feed/${item.feedItemId}/view`);
-
-												trackClick({
-													pageId: page?._id,
-													sectionId: section.id,
-													sectionItemId: item.feedItemId,
-													isFeedItem: true,
-													linkId: item.feedItemId,
-													url: item.url,
-													text: item.title || item.description
-												});
-											} else {
-												trackClick({
-													pageId: page?._id,
-													sectionId: section.id,
-													sectionItemId: item.id,
-													linkId: item.id,
-													url: item.url,
-													text: item.title || item.description
-												});
-											}
-										}}
-										class:heatmap={$heatmap && section.linkType === 'interactive'}
-										data-heatmap-clicks-count={$heatmap && section.linkType === 'interactive'
-											? getHeatmapClicksCount({
-													sectionId: section.id,
-													sectionItemId: item.id,
-													linkId: item.id
-											  })
-											: ''}
-										style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
+											: ''}"
+										class:pt-16={section.isFunkyGrid && i === 1}
 									>
-										{#if item.bgImageUrl}
-											<img
-												src={item.bgImageUrl}
-												class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
-												style="z-index: 0;"
-											/>
-											<div
-												class="absolute top-0 left-0 w-full h-full rounded-xl"
-												style="background-color: rgba(0,0,0, 0.85); z-index: 1;"
-											/>
-										{/if}
+										<a
+											href={item.url && !section.interactiveRenderType ? item.url : null}
+											target={item.url?.startsWith('http') ? '_blank' : ''}
+											id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
+											class="_section-item block relative {item.bgImageUrl
+												? '_bg-image'
+												: ''} rounded-lg sm:rounded-xl {item.className ||
+												''} mb-2 sm:mb-8 {item.url && !section.interactiveRenderType
+												? '_interactive'
+												: ''}"
+											on:click={() => {
+												if (section.carousel) {
+													selectCarouselItem(item);
+												}
 
-										<div
-											class="flex flex-col justify-between {section.columns > 1
-												? 'h-full'
-												: ''} grid-cols-1 {section.columns > 1
-												? 'block'
-												: 'grid'} sm:grid-cols-{section.columns === 1 &&
-											item.imageUrl &&
-											section.items.length > 1
-												? 2
-												: ''} w-full {section.columns > 1
-												? `bg-section ${section.carousel ? 'shadow-md' : ''} rounded-2xl`
-												: ''}  {section.columns > 1
-												? 'items-stretch'
-												: 'items-center'} content-start"
-											style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
-												? 'margin-bottom: -64px;'
+												if (item.feedItemId) {
+													post(`feed/${item.feedItemId}/view`);
+
+													trackClick({
+														pageId: page?._id,
+														sectionId: section.id,
+														sectionItemId: item.feedItemId,
+														isFeedItem: true,
+														linkId: item.feedItemId,
+														url: item.url,
+														text: item.title || item.description
+													});
+												} else {
+													trackClick({
+														pageId: page?._id,
+														sectionId: section.id,
+														sectionItemId: item.id,
+														linkId: item.id,
+														url: item.url,
+														text: item.title || item.description
+													});
+												}
+											}}
+											class:heatmap={$heatmap && section.linkType === 'interactive'}
+											data-heatmap-clicks-count={$heatmap && section.linkType === 'interactive'
+												? getHeatmapClicksCount({
+														sectionId: section.id,
+														sectionItemId: item.id,
+														linkId: item.id
+												  })
 												: ''}
+											style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
 										>
+											{#if item.bgImageUrl}
+												<img
+													src={item.bgImageUrl}
+													class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
+													style="z-index: 0;"
+												/>
+												<div
+													class="absolute top-0 left-0 w-full h-full rounded-xl"
+													style="background-color: rgba(0,0,0, 0.85); z-index: 1;"
+												/>
+											{/if}
+
 											<div
-												class="flex w-full h-full flex-col justify-between {page?.theme
-													?.containerWidth
-													? 'p-4'
-													: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
-												i % 2 === 1
-													? 'sm:order-last-off'
-													: ''} {section.columns === 1 &&
-													(!item.imageUrl || section.items.length === 1) &&
-													'mx-auto'}"
-												class:order-last-off={i % 2 === 0}
+												class="flex flex-col justify-between {section.columns > 1
+													? 'h-full'
+													: ''} grid-cols-1 {section.columns > 1
+													? 'block'
+													: 'grid'} sm:grid-cols-{section.columns === 1 &&
+												item.imageUrl &&
+												section.items.length > 1
+													? 2
+													: ''} w-full {section.columns > 1
+													? `bg-section ${section.carousel ? 'shadow-md' : ''} rounded-2xl`
+													: ''}  {section.columns > 1
+													? 'items-stretch'
+													: 'items-center'} content-start"
+												style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
+													? 'margin-bottom: -64px;'
+													: ''}
 											>
-												<div class="max-w-[600px]">
-													{#if item.title}
-														<div
-															class="flex {page?.theme?.containerWidth
-																? 'mb-2'
-																: 'mb-4'} {section.columns < 3
-																? 'flex-col items-start'
-																: 'items-center'}"
-														>
-															{#if item.emoji}
-																<div
-																	class="{emojiStyle[
-																		section.columns
-																	]} _section-img {item.emoji.startsWith('feather:')
-																		? ''
-																		: 'grayscale-emoji'} mr-2"
-																>
-																	<Emoji bind:emoji={item.emoji} />
-																</div>
-															{/if}
-															<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
+												<div
+													class="flex w-full h-full flex-col justify-between {page?.theme
+														?.containerWidth
+														? 'p-4'
+														: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
+													i % 2 === 1
+														? 'sm:order-last-off'
+														: ''} {section.columns === 1 &&
+														(!item.imageUrl || section.items.length === 1) &&
+														'mx-auto'}"
+													class:order-last-off={i % 2 === 0}
+												>
+													<div class="max-w-[600px]">
+														{#if item.title || item.emoji}
+															<div
+																class="flex {page?.theme?.containerWidth
+																	? 'mb-2'
+																	: 'mb-4'} {section.columns < 3
+																	? 'flex-col items-start'
+																	: 'items-center'}"
+															>
+																{#if item.emoji}
+																	<div
+																		class="{emojiStyle[
+																			section.columns
+																		]} _section-img {item.emoji.startsWith('feather:')
+																			? ''
+																			: 'grayscale-emoji'} mr-2"
+																	>
+																		<Emoji bind:emoji={item.emoji} />
+																	</div>
+																{/if}
+																<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
+																	<ContentEditableIf
+																		class=""
+																		bind:innerHTML={item.title}
+																		condition={isEdit}
+																	/>
+																</h2>
+															</div>
+														{/if}
+
+														{#if item.description && !item.pricing}
+															<h3
+																class="{descriptionStyle[
+																	section.columns
+																]} _item-description whitespace-pre-wrap "
+															>
 																<ContentEditableIf
-																	class=""
-																	bind:innerHTML={item.title}
+																	class={section.renderType === 'feed'
+																		? '_line-clamp-4 hover:line-clamp-5'
+																		: ''}
+																	bind:innerHTML={item.description}
 																	condition={isEdit}
 																/>
-															</h2>
-														</div>
-													{/if}
+															</h3>
+														{/if}
 
-													{#if item.description}
-														<h3
-															class="{descriptionStyle[
-																section.columns
-															]} _item-description whitespace-pre-wrap "
-														>
-															<ContentEditableIf
-																class={section.renderType === 'feed'
-																	? '_line-clamp-4 hover:line-clamp-5'
-																	: ''}
-																bind:innerHTML={item.description}
-																condition={isEdit}
-															/>
-														</h3>
-													{/if}
-
-													{#if item.tagsStr}
-														<div class="my-4 flex flex-wrap gap-2">
-															{#each item.tagsStr.split(',') as tag}
-																<div
-																	class="px-2 py-1  text-sm  opacity-80 _border-accent rounded-xl inline"
-																>
-																	{tag}
-																</div>
-															{/each}
-														</div>
-													{/if}
-
-													{#if item.pricing}
-														<div class="flex items-end mt-4 mb-4">
-															<div class="text-3xl font-bold mr-2">
-																${item.pricing.amount?.toFixed(2) || '0'}
-															</div>
-															<div class="text-lg">
-																/{item.pricing.per}
-															</div>
-														</div>
-														{#if item.pricing.benefits}
-															<div class="mb-4">
-																{#each item.pricing.benefits as benefit}
-																	<div class="my-2">
-																		<span class="inline-block mr-1">✅</span>
-																		{benefit.name}
+														{#if item.tagsStr}
+															<div class="my-4 flex flex-wrap gap-2">
+																{#each item.tagsStr.split(',') as tag}
+																	<div
+																		class="px-2 py-1  text-sm  opacity-80 _border-accent rounded-xl inline"
+																	>
+																		{tag}
 																	</div>
 																{/each}
 															</div>
 														{/if}
-													{/if}
 
-													{#if item.interactiveRenderType}
-														<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
-															<RenderInteractiveOptions
-																class={section.columns === 1 &&
-																section.interactiveRenderType === 'single_choice'
-																	? 'justify-center'
-																	: 'justify-start'}
-																bind:sectionItem={item}
-																parentSectionId={section.id}
-																bind:page
-																itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-															/>
-														</div>
-													{/if}
-												</div>
-											</div>
+														{#if item.pricing}
+															<div class="flex items-end mt-4 mb-4">
+																<div class="text-5xl font-bold mr-2">
+																	${item.pricing.amount?.toFixed(2) || '0'}
+																</div>
+																<div class="text-lg">
+																	/{item.pricing.per}
+																</div>
+															</div>
+															<div class="mb-8 opacity-70">
+																{item.description}
+															</div>
 
-											{#if !section.carousel && item.imageUrl}
-												<div
-													class="{section.pricing
-														? 'order-none-off'
-														: 'order-none-off'} {section.columns === 1 && i % 2 === 0
-														? 'sm:order-last-off'
-														: ''} {section.isShowSource ? 'px-4' : ''}"
-												>
-													<RenderUrl
-														class=""
-														imgClass="w-full aspect-og object-cover mx-auto {section.columns === 1
-															? ''
-															: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
-															? 'w-full object-cover'
-															: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl '}"
-														url={item.imageUrl}
-													/>
-												</div>
-											{/if}
+															{#if item.pricing.benefitsStr}
+																<div class="mb-4">
+																	{#each item.pricing.benefitsStr.split('\n') as benefit}
+																		<div class="my-2 flex items-center">
+																			<Emoji
+																				color={'#fff'}
+																				emoji={section.benefitsEmoji || '✅'}
+																				class="mr-2 opacity-70"
+																			/>
+																			{benefit}
+																		</div>
+																	{/each}
+																</div>
+															{:else if item.pricing.benefits}
+																<div class="mb-4">
+																	{#each item.pricing.benefits as benefit}
+																		<div class="my-2">
+																			<span class="inline-block mr-1">✅</span>
+																			{benefit.name}
+																		</div>
+																	{/each}
+																</div>
+															{/if}
+														{/if}
 
-											{#if section.isShowSource}
-												<div class="px-4 pb-4 {item.imageUrl ? 'pt-4' : ''}">
-													<hr class="mb-4 opacity-30" />
-
-													<div class="flex justify-between items-center text-sm opacity-80">
-														{moment(item.publishedOn || item.createdOn).format('MMM DD, YYYY')}
-
-														<div>
-															<SourceLogo
-																theme={page?.theme?.theme || 'light'}
-																bind:url={item.url}
-															/>
-														</div>
+														{#if item.interactiveRenderType}
+															<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
+																<RenderInteractiveOptions
+																	class={`${
+																		section.columns === 1 &&
+																		section.interactiveRenderType === 'single_choice'
+																			? 'justify-center'
+																			: 'justify-start'
+																	} ${item.pricing ? 'w-full' : ''}`}
+																	size={item.pricing ? 'large' : 'normal'}
+																	bind:sectionItem={item}
+																	parentSectionId={section.id}
+																	bind:page
+																	itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																/>
+															</div>
+														{/if}
 													</div>
 												</div>
-											{/if}
-										</div>
-									</a>
+
+												{#if !section.carousel && item.imageUrl}
+													<div
+														class="{section.pricing
+															? 'order-none-off'
+															: 'order-none-off'} {section.columns === 1 && i % 2 === 0
+															? 'sm:order-last-off'
+															: ''} {section.isShowSource ? 'px-4' : ''}"
+													>
+														<RenderUrl
+															class=""
+															imgClass="w-full aspect-og object-cover mx-auto {section.columns === 1
+																? ''
+																: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
+																? 'w-full object-cover'
+																: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl '}"
+															url={item.imageUrl}
+														/>
+													</div>
+												{/if}
+
+												{#if section.isShowSource}
+													<div class="px-4 pb-4 {item.imageUrl ? 'pt-4' : ''}">
+														<hr class="mb-4 opacity-30" />
+
+														<div class="flex justify-between items-center text-sm opacity-80">
+															{moment(item.publishedOn || item.createdOn).format('MMM DD, YYYY')}
+
+															<div>
+																<SourceLogo
+																	theme={page?.theme?.theme || 'light'}
+																	bind:url={item.url}
+																/>
+															</div>
+														</div>
+													</div>
+												{/if}
+											</div>
+										</a>
+									</div>
 								{/if}
 							{/each}
 						</div>

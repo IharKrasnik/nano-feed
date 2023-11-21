@@ -86,7 +86,6 @@
 </script>
 
 {#if isCollapsed}
-	<div class="font-bold mr-2 py-4 my-4">🤩 Hero Section</div>
 	<div
 		class="{isCollapsed
 			? '_section '
@@ -156,21 +155,21 @@
 
 						<FileInput isCanSearch class="w-full" theme="light" bind:url={hero.bgImageUrl} />
 
+						{#if hero.bgImageUrl}
+							<div class="flex text-sm mt-2 font-normal items-center">
+								<input bind:checked={hero.theme.isBgImageDimmed} class="mr-2" type="checkbox" />
+
+								Dim background image
+							</div>
+						{/if}
+
 						{#if hero.theme}
 							<div class="flex gap-4 mt-4">
 								<div class="flex font-normal items-center">
-									Is Huge <input
-										bind:checked={hero.theme.isHugeTitle}
-										class="ml-2"
-										type="checkbox"
-									/>
+									<input bind:checked={hero.theme.isHugeTitle} class="mr-2" type="checkbox" /> Is Huge
 								</div>
 								<div class="flex font-normal items-center">
-									Is Left Aligned <input
-										bind:checked={hero.theme.isLeft}
-										class="ml-2"
-										type="checkbox"
-									/>
+									<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
 								</div>
 							</div>
 						{/if}

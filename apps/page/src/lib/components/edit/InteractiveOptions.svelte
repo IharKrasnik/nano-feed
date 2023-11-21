@@ -92,7 +92,7 @@
 				<option value="text">Short Text</option>
 				<option value="textarea">Long Text</option>
 			{:else}
-				<option value="">No interaction</option>
+				<option value="">{sectionItem.url ? 'Open URL on click' : 'No interaction'}</option>
 				<option value="link">Click 1 Link</option>
 				<option value="links">Click Few Links</option>
 				<option value="email">Submit Email</option>
@@ -101,6 +101,11 @@
 				<option value="wave_analytics">See Public Web Analytics</option>
 			{/if}
 		</select>
+
+		{#if !sectionItem.interactiveRenderType}
+			<div class="text-sm mb-2 mt-4">Item URL</div>
+			<input type="url" bind:value={sectionItem.url} />
+		{/if}
 
 		{#if section?.renderType === 'form' && ['text', 'textarea', 'email'].includes(sectionItem.interactiveRenderType)}
 			<div class="my-2">

@@ -240,7 +240,7 @@
 	/>
 {/if}
 
-{#if section.footer}
+{#if section.footer && (section.footer.title || section.footer.description || section.footer.interactiveRenderType)}
 	<RenderSection bind:section={section.footer} isFooter bind:page bind:themeStyles />
 {/if}
 
