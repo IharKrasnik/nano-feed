@@ -66,12 +66,21 @@
 
 						{#if formField.interactiveRenderType === 'text'}
 							{#if formField.varName === 'name'}
-								<input
-									class="w-full _transparent"
-									placeholder={formField.interactivePlaceholder || 'Paul Graham'}
-									type="text"
-									bind:value={$currentCustomer.name}
-								/>
+								{#if section.submission}
+									<input
+										class="w-full _transparent"
+										type="text"
+										disabled
+										value={section.submission.name}
+									/>
+								{:else}
+									<input
+										class="w-full _transparent"
+										placeholder={formField.interactivePlaceholder || 'Paul Graham'}
+										type="text"
+										bind:value={$currentCustomer.name}
+									/>
+								{/if}
 							{:else}
 								<input
 									class="w-full _transparent"
@@ -87,12 +96,21 @@
 								bind:value={formData[formField.varName]}
 							/>
 						{:else if formField.interactiveRenderType === 'email'}
-							<input
-								class="w-full _transparent"
-								type="email"
-								placeholder={formField.interactivePlaceholder || 'my@email.com'}
-								bind:value={$currentCustomer.email}
-							/>
+							{#if section.submission}
+								<input
+									class="w-full _transparent"
+									type="email"
+									disabled
+									value={section.submission.email}
+								/>
+							{:else}
+								<input
+									class="w-full _transparent"
+									type="email"
+									placeholder={formField.interactivePlaceholder || 'my@email.com'}
+									bind:value={$currentCustomer.email}
+								/>
+							{/if}
 						{/if}
 					</div>
 				{/each}
