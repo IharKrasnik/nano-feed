@@ -368,7 +368,7 @@
 			{/if}
 
 			{#if section.renderType === 'faq'}
-				<RenderFAQ bind:section bind:page />
+				<RenderFAQ bind:section bind:page bind:isEdit />
 			{:else if section.renderType === 'testimonials'}
 				<RenderTestimonials bind:section />
 			{:else if section.collectionType}
