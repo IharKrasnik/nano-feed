@@ -271,7 +271,7 @@ See you!
 						</div>
 						<FileInput class="w-full" bind:url={triggerAction.data.imageUrl} />
 
-						{#if selectedTrigger.on.includes('email')}
+						{#if selectedTrigger?.on?.includes('email')}
 							<div class="my-4 p-4 bg-green-600 rounded-xl text-white">
 								Welcome email is sent once a user <b>submitted</b> their email. <br />
 
