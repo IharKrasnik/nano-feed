@@ -98,6 +98,10 @@
 			label: 'Stars 🔥'
 		},
 		{
+			key: 'cursors',
+			label: 'Cursors 🤩'
+		},
+		{
 			key: null,
 			label: 'None'
 		}
@@ -216,7 +220,7 @@
 								</div>
 								{#each bgPatterns as bgPattern}
 									<button
-										class="_secondary _small mr-2"
+										class="_secondary _small mr-2 mb-2"
 										on:click={() => (hero.theme.bgPattern = bgPattern.key)}
 										>{bgPattern.key === hero.theme.bgPattern ? '✅' : ''} {bgPattern.label}</button
 									>

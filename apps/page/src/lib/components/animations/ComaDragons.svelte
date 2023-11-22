@@ -1,13 +1,13 @@
 <div class="hero_content-container h-screen">
 	<div class="hero_content h-full">
-		<img
+		<!-- <img
 			src="https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed.png"
 			loading="lazy"
 			alt=""
 			sizes="(max-width: 991px) 100vw, 96vw"
 			srcset="https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed-p-500.png 500w, https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed-p-800.png 800w, https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed-p-1080.png 1080w, https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed.png 1951w"
 			class="hero_gradient"
-		/>
+		/> -->
 
 		<div class="cursor-animation1">
 			<div class="multiplayer_item designer">

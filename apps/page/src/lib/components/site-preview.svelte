@@ -22,6 +22,7 @@
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
 	import Gradients from '$lib/components/gradients/index.svelte';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
+	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
 
 	import trackClick from 'lib/services/trackClick';
 
@@ -357,66 +358,6 @@
 					style="background-image: linear-gradient(rgba(0, 0, 0, 0) 82%, #0c120c), linear-gradient(rgba(12, 18, 12, .8), rgba(12, 18, 12, .8)), url('https://assets.website-files.com/636cf54cf20a6ac090f7deb0/636cfb105b88e07b40e1e494_hero-bg.svg')"
 				/>
 
-				<!-- <img
-				
-				class="absolute w-screen h-screen object-cover"
-				src="https://as2.ftcdn.net/v2/jpg/06/15/14/25/1000_F_615142554_j3WPgAOSyTX1Ri1O6pxf0s8jx37vXLbg.jpg"
-			  /> -->
-
-				<!-- {#if !noStickyHeader && scrollY > 300}
-					<div
-						class="fixed top-0 bg-site w-full backdrop-blur "
-						style="z-index: 33;"
-						in:fly={{ y: -150, duration: 150, delay: 150 }}
-					>
-						<div
-							class="flex w-full justify-between items-center container-width left-0 mx-auto p-4"
-						>
-							<a class="flex items-center shrink-0" href="">
-
-								<span class="font-bold  " style="font-family: var(--logo-font)">
-									{page.parentPage?.name || page.name}
-								</span>
-								<div class="ml-6 opacity-70 hidden sm:block">
-									{@html striptags(
-										page.parentPage?.title ||
-											page.title ||
-											(page?.parentPage?.heros[0] && page?.parentPage?.heros[0].title)
-									)}
-								</div>
-							</a>
-
-							<div class="shrink-0 flex items-center">
-								<div class="sm:hidden" on:click={toggleMenu}>
-									<FeatherIcon theme={page.theme?.theme} name="menu" />
-								</div>
-
-								<div class="hidden sm:block">
-									{#if page?.parentPage?.heros && page?.parentPage?.heros[0].id}
-										<RenderInteractiveOptions
-											urlClass="hidden sm:block"
-											sectionItem={page.parentPage.heros[0]}
-											bind:page
-										/>
-									{/if}
-
-									{#if page.activeHero}
-										<RenderInteractiveOptions
-											urlClass="hidden sm:block"
-											sectionItem={page.activeHero ||
-												(page.parentPage && page.parentPage.heros && page.parentPage.heros[0])}
-											bind:page
-										/>
-								
-									{/if}
-								</div>
-							</div>
-						</div>
-
-						<hr class="border-[#8B786D] opacity-30 w-full" />
-					</div>
-				{/if} -->
-
 				{#if isMounted}
 					<div
 						class="sticky bg-none z-20 w-full {clazz}"
@@ -693,6 +634,10 @@
 
 {#if page?.activeHero?.theme?.bgPattern === 'stars'}
 	<Background />
+{/if}
+
+{#if page?.activeHero?.theme?.bgPattern === 'cursors'}
+	<ComaDragons />
 {/if}
 
 <style>

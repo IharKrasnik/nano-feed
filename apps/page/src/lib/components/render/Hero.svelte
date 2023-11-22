@@ -33,7 +33,7 @@
 </script>
 
 <div class="relative">
-	{#if hero.animation?.name === 'coma'}
+	{#if hero.theme?.bgPattern === 'cursors'}
 		<ComaDragons />
 	{/if}
 

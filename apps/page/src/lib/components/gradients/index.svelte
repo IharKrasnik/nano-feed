@@ -18,21 +18,13 @@
 	}
 
 	let types = {
-		// ship: {
-		// 	className: '',
-		// 	style: ({ from = 'rgba(225, 174, 255, 0.3)' }) =>
-		// 		`background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),linear-gradient(104deg, ${hexToRgbA(
-		// 			from,
-		// 			0.2
-		// 		)}, rgba(0, 108, 104, 0.3) 42%, #030303);`
-		// },
 		ship: {
 			className: '',
 			style: ({ from = 'rgba(225, 174, 255, 0.3)' }) =>
-				`background-image: linear-gradient(to top, #f6f5f4, rgba(0, 0, 0, 0)),linear-gradient(104deg, ${hexToRgbA(
+				`background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),linear-gradient(104deg, ${hexToRgbA(
 					from,
 					0.2
-				)}, rgba(255, 108, 104, 0.3) 42%, #030303);`
+				)}, rgba(0, 108, 104, 0.3) 42%, #030303);`
 		},
 		coma: { className: '', gradient: '' },
 		turborepo: {
