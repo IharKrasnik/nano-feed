@@ -16,7 +16,6 @@
 	import getPageCssStyles from '$lib/services/getPageCssStyles';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
-	import RenderBlog from '$lib/components/render/Blog.svelte';
 	import RenderHero from '$lib/components/render/Hero.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
@@ -581,11 +580,7 @@
 						{/if}
 
 						<div class="relative _root bg-site pt-[60px]" style="background: none;">
-							{#if $sveltePage.data.post}
-								<PostPreview isEdit={false} isNoFooter post={$sveltePage.data.post} />
-							{:else if $sveltePage.url.pathname.includes('/blog')}
-								<RenderBlog bind:page />
-							{:else if !isAboveTheFold}
+							{#if !isAboveTheFold}
 								{#if page.sections?.length}
 									<div class="relative z-10 {page.streamSlug ? '' : ''}">
 										{#each page.sections as section, i}
