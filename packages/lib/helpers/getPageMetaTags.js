@@ -2,9 +2,28 @@ import { BRAND_URL } from 'lib/env';
 import striptags from 'striptags';
 
 const getPageMetaTags = ({ page }) => {
+	let pageTitle = page.openGraph?.title;
+
+	if (!pageTitle) {
+		pageTitle =
+			(page.heros[0] && page.heros[0].title) ||
+			(page.sections && page.sections[0].title) ||
+			page.title;
+
+		pageTitle = `${page.name}${pageTitle ? ` — ${pageTitle}` : ''}`;
+	}
+
+	let pageSubtitle =
+		page.openGraph?.description ||
+		(page.heros[0] && page.heros[0].subtitle) ||
+		(page.sections && page.sections[0].ogDescription) ||
+		page.subtitle ||
+		page.callToAction ||
+		'';
+
 	return {
-		title: striptags(page.openGraph?.title || `${page.name} — ${page.title}`),
-		description: striptags(page.openGraph?.description || `${page.subtitle || page.callToAction}`),
+		title: striptags(pageTitle),
+		description: striptags(pageSubtitle),
 		image: page.openGraph?.imageUrl || `${BRAND_URL}/og.png?pageId=${page._id}`
 	};
 };

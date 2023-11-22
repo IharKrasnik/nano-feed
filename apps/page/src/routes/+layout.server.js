@@ -1,6 +1,7 @@
 import authServerGuard from 'lib/guards/auth.server';
 import { BRAND_URL } from 'lib/env';
 import { get } from 'lib/api';
+import getPageMetaTags from 'lib/helpers/getPageMetaTags';
 
 let getDomain = (href) => {
 	let res = /:\/\/([^\/]+)/.exec(href);
@@ -21,17 +22,20 @@ export async function load({ url, params, session, cookies }) {
 		pageSlug
 	};
 
-	if (false || pageSlug) {
+	if (pageSlug) {
 		let page = await get(`pages/${subPageSlug || pageSlug}`, {
 			parentPageSlug: subPageSlug ? pageSlug : '',
 			isServer: true
 		});
 
+		let metatags = getPageMetaTags({ page });
+
 		extend = {
 			page,
-			ogTitle: `${page.name} — ${page.title}`,
-			ogDescription: `${page.subtitle || page.callToAction || ''}`,
-			ogImage: page.demoUrl || `${BRAND_URL}/og.png?pageId=${page._id}`
+
+			ogTitle: metatags.title,
+			ogDescription: metatags.description,
+			ogImage: metatags.image
 		};
 	} else {
 		extend = {
@@ -41,6 +45,8 @@ export async function load({ url, params, session, cookies }) {
 				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
 		};
 	}
+
+	console.log('extend', extend);
 
 	let authData = await authServerGuard({ url, params, session, cookies }, 'Momentum IDE');
 

@@ -73,9 +73,12 @@
 		{@html $sveltePage.data.page.customCode}
 	{/if}
 
-	{#if $sveltePage.data?.page?.logo}
-		{#if isUrl($sveltePage.data.page.logo)}
-			<link rel="icon" href={$sveltePage.data.page.logo} />
+	{#if $sveltePage.data.page?.parentPage?.logo || $sveltePage.data.page?.logo}
+		{#if isUrl($sveltePage.data.page.parentPage?.logo || $sveltePage.data.page.logo)}
+			<link
+				rel="icon"
+				href={$sveltePage.data.page.parentPage?.logo || $sveltePage.data.page.logo}
+			/>
 		{:else}
 			<link
 				rel="icon"
