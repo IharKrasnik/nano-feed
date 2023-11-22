@@ -18,7 +18,7 @@
 	export let theme = 'dark';
 	export let placeholder = 'Insert URL or paste from clipboard';
 
-	let innerUrlValue = url?.startsWith('http') ? url : null;
+	let innerUrlValue = url?.startsWith('http') || url?.startsWith('$') ? url : null;
 
 	let componentId = uuidv4();
 

@@ -86,8 +86,14 @@
 	background: var(--accent-color-darker-xl) !important;
 }
 
+._section-item._transparent {
+	background: none !important;
+	border: none !important;
+}
+
 ._section-item._transparent > .flex {
 	background: none !important;
+	border: none !important;
 }
 
 ._section-container._lighter,

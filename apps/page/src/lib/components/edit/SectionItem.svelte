@@ -176,26 +176,28 @@
 				theme="light"
 			/>
 		</div>
-		<div class="text-xs mt-1 flex gap-2 items-center">
-			<div
-				class="cursor-pointer"
-				on:click={() => {
-					section.imgMaxWidth = 0;
-				}}
-				class:font-bold={!section.imgMaxWidth}
-			>
-				Stretch
-			</div>
+		{#if section.imageUrl && item === section}
+			<div class="text-xs mt-2 flex gap-2 items-center">
+				<div
+					class="cursor-pointer"
+					on:click={() => {
+						section.imgMaxWidth = 0;
+					}}
+					class:font-bold={!section.imgMaxWidth}
+				>
+					Stretch
+				</div>
 
-			<div
-				class="cursor-pointer"
-				on:click={() => {
-					section.imgMaxWidth = 600;
-				}}
-				class:font-bold={section.imgMaxWidth === 600}
-			>
-				Medium
+				<div
+					class="cursor-pointer"
+					on:click={() => {
+						section.imgMaxWidth = 600;
+					}}
+					class:font-bold={section.imgMaxWidth === 600}
+				>
+					Medium
+				</div>
 			</div>
-		</div>
+		{/if}
 	{/if}
 </div>

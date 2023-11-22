@@ -57,6 +57,14 @@
 			placeholder: 'https://www.videoask.com/fei8fmlos'
 		},
 		{
+			key: 'lottie',
+			whenIncludes: '.json',
+			name: 'Lottie',
+			description: 'Animations',
+			placeholder:
+				'https://assets-global.website-files.com/64831da00244efd7c8280a6c/653a7e78a2c38db93a1d27ab_1.mp4.lottie%20(1)%20(1).json'
+		},
+		{
 			key: '$senja',
 			whenIncludes: '$senja',
 			name: 'Senja',

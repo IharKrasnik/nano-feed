@@ -86,7 +86,7 @@
 						<option value="_highlighted">Highlighted</option>
 						<option value="_darker">Dark</option>
 						<option value="_lighter">Light</option>
-						<!-- <option value="_transparent">Transparent</option> -->
+						<option value="_transparent">Transparent</option>
 					</select>
 					<input class="ml-4" type="checkbox" bind:checked={sectionItem.isHugeTitle} /> Is Huge
 					Title

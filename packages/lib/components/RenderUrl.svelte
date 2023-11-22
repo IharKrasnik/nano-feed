@@ -154,7 +154,7 @@
 					src={url}
 					background="transparent"
 					speed="1"
-					class="w-full h-full"
+					class="w-full h-full {imgClass}"
 					loop
 					autoplay
 				/>
@@ -167,7 +167,7 @@
 					{/if}
 				{/key}
 			{:else if !isFilesOnly && url.startsWith('http')}
-				<iframe src={url} class="w-full h-full" style="border:none; height: 600px;" />
+				<iframe src={url} class="w-full h-full {imgClass}" style="border:none; height: 600px;" />
 			{/if}
 		</div>
 	{:else}
