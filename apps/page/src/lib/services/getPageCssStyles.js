@@ -11,9 +11,7 @@ let fontPairs = [
 ];
 
 export default (page) => {
-	console.log('cssstyles', page.theme);
-
-	if (page.parentPage && !page.theme.isOverride) {
+	if (page.parentPage && !page.theme?.isOverride) {
 		page.theme = page.parentPage?.theme;
 	}
 	let styles = {
