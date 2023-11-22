@@ -83,6 +83,40 @@
 			page.activeHero = page.heros[0];
 		}
 	};
+
+	let bgPatterns = [
+		{
+			key: 'squares',
+			label: 'Squares'
+		},
+		{
+			key: 'dots',
+			label: 'Dots'
+		},
+		{
+			key: 'stars',
+			label: 'Stars 🔥'
+		},
+		{
+			key: null,
+			label: 'None'
+		}
+	];
+
+	let bgGradients = [
+		{
+			key: 'ship',
+			label: 'Subtle'
+		},
+		{
+			key: 'turborepo',
+			label: 'Bright'
+		},
+		{
+			key: null,
+			label: 'None'
+		}
+	];
 </script>
 
 {#if isCollapsed}
@@ -173,6 +207,46 @@
 								</div>
 							</div>
 						{/if}
+
+						<div class="mt-4 mb-2">
+							<div class="_section">
+								<div class="font-semibold">Background patterns</div>
+								<div class="text-sm mb-4 opacity-80">
+									Nice subtle backgrounds to catch attention
+								</div>
+								{#each bgPatterns as bgPattern}
+									<button
+										class="_secondary _small mr-2"
+										on:click={() => (hero.theme.bgPattern = bgPattern.key)}
+										>{bgPattern.key === hero.theme.bgPattern ? '✅' : ''} {bgPattern.label}</button
+									>
+								{/each}
+							</div>
+							<div class="_section">
+								<div class="font-semibold">Background gradients</div>
+								<div class="text-sm mb-4 opacity-80">
+									Nice gradients to add extra dimensions and shadow
+								</div>
+
+								{#each bgGradients as bgGradient}
+									<button
+										class="_secondary _small mr-2"
+										on:click={() => {
+											if (!bgGradient.key) {
+												hero.theme.bgGradient = null;
+											} else {
+												hero.theme.bgGradient = { type: bgGradient.key };
+											}
+										}}
+										>{(!bgGradient.key && !hero.theme.bgGradient?.type) ||
+										bgGradient.key === hero.theme.bgGradient?.type
+											? '✅'
+											: ''}
+										{bgGradient.label}</button
+									>
+								{/each}
+							</div>
+						</div>
 
 						<hr class="my-8 opacity-80" />
 

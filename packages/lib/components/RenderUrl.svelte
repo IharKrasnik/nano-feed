@@ -149,11 +149,11 @@
 					bind:this={videoEl}
 					src={url}
 				/>
-			{:else if url.includes('lottie') && url.includes('.json')}
+			{:else if url.includes('.json')}
 				<lottie-player
 					src={url}
 					background="transparent"
-					speed="1"
+					speed={getUrlParam('speed') || 1}
 					class="w-full h-full {imgClass}"
 					loop
 					autoplay

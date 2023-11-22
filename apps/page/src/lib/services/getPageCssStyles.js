@@ -11,8 +11,11 @@ let fontPairs = [
 ];
 
 export default (page) => {
-	page.theme = page.parentPage?.theme || page.theme;
+	console.log('cssstyles', page.theme);
 
+	if (page.parentPage && !page.theme.isOverride) {
+		page.theme = page.parentPage?.theme;
+	}
 	let styles = {
 		'container-width': page.theme?.containerWidth || '1280px',
 		'logo-font': page.theme?.logoFont || 'monospace',
@@ -26,7 +29,7 @@ export default (page) => {
 		'background-color': page.theme?.backgroundColor || '#ffffff',
 		// 'background-color': 'transparent',
 		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
-		'text-color': page.theme?.textColor || '#111',
+		'text-color': page.theme.theme === 'light' ? '#111111' : '#f5f5f5',
 		'accent-color': page.theme?.accentColor || '#000',
 		'section-background-color':
 			page.theme?.sectionBackgroundColor ||

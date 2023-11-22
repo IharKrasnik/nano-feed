@@ -1,5 +1,13 @@
-<div class="absolute top-0 left-0 h-screen overflow-y-hidden w-screen h-screen" style="z-index: -1">
-	<div
+<script>
+	import RenderUrl from 'lib/components/RenderUrl.svelte';
+</script>
+
+<div class="absolute top-0 left-0 h-screen overflow-y-hidden w-screen h-screen">
+	<RenderUrl
+		imgClass="h-full w-auto"
+		url="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1700655741529-stars.json?speed=0.2"
+	/>
+	<!-- <lottie-player
 		class=""
 		data-w-id="de4037f3-d8ef-a4eb-43ba-5ed365dfa960"
 		data-animation-type="lottie"
@@ -592,5 +600,5 @@
 				></g
 			></svg
 		>
-	</div>
+	</lottie-player> -->
 </div>

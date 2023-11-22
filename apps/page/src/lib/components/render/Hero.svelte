@@ -8,7 +8,6 @@
 	import RenderArticleHeader from '$lib/components/render/ArticleHeader.svelte';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
-	import getPageCssStyles from '$lib/services/getPageCssStyles';
 
 	export let page;
 

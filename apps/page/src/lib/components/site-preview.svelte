@@ -331,22 +331,22 @@
 		<div class="" bind:this={previewEl}>
 			<div class="relative color-site min-h-screen" style="{cssVarStyles};">
 				<!-- SQUARES -->
-				{#if page?.theme?.heroPattern}
+				{#if page?.activeHero?.theme?.bgPattern}
 					{#if page?.theme?.theme === 'dark'}
-						{#if page?.theme?.heroPattern === 'squares'}
+						{#if page?.activeHero?.theme?.bgPattern === 'squares'}
 							<div
 								class="bg-root absolute z-10 inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
 							/>
-						{:else if page?.theme?.heroPattern === 'dots'}
+						{:else if page?.activeHero?.theme?.bgPattern === 'dots'}
 							<div
-								class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#ffffff_0.5px,transparent_1px)] [background-size:16px_16px]"
+								class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(rgba(255,255,255,.3)_0.5px,transparent_1px)] [background-size:32px_32px]"
 							/>
 						{/if}
-					{:else if page?.theme?.heroPattern === 'squares'}
+					{:else if page?.activeHero?.theme?.bgPattern === 'squares'}
 						<div
 							class="bg-root  z-10 absolute inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
 						/>
-					{:else if page?.theme?.heroPattern === 'dots'}
+					{:else if page?.activeHero?.theme?.bgPattern === 'dots'}
 						<div
 							class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#c8c8c8.5px,transparent_1px)] [background-size:32px_32px]"
 						/>
@@ -572,8 +572,8 @@
 								class="absolute top-0 left-0 z-0 w-full h-screen opacity-20 rounded-full"
 								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
 							/> -->
-						{#if page.theme?.backgroundGradient}
-							<Gradients bind:page gradientType={page.theme.backgroundGradient.type} />
+						{#if page.activeHero?.theme?.bgGradient}
+							<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
 						{/if}
 
 						{#if page.activeHero}
@@ -694,7 +694,7 @@
 	{/if}
 {/key}
 
-{#if page?.theme?.headerBgPattern?.name === 'stars'}
+{#if page?.activeHero?.theme?.bgPattern === 'stars'}
 	<Background />
 {/if}
 

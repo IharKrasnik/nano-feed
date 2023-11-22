@@ -195,10 +195,8 @@
 		}, 0);
 	};
 
-	if (!page.theme?.textColor) {
+	if (!page.theme?.textColor && !page.parentPage?.theme?.textColor) {
 		page.theme = {
-			isZebra: true,
-			textColor: '#111111',
 			accentColor: '#000000',
 			backgroundColor: '#ffffff'
 		};
@@ -241,19 +239,13 @@
 	let changeBackgroundColor = () => {
 		let newTheme = isDarkColor(page.theme.backgroundColor) ? 'dark' : 'light';
 
-		// if (newTheme === 'light') {
-		// 	page.theme.sectionBackgroundColor = '#f6f5f4';
-		// } else {
-		// 	page.theme.sectionBackgroundColor = '#1a1c28';
-		// }
+		page.theme = {
+			...page.theme,
+			theme: newTheme,
+			isOverride: true
+		};
 
-		if (page.theme.theme !== newTheme) {
-			page.theme = {
-				...page.theme,
-				theme: newTheme,
-				textColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
-			};
-		}
+		console.log('changebgcolor', page.theme);
 	};
 
 	let changeAccentColor = () => {
@@ -271,6 +263,8 @@
 				buttonTheme: newTheme,
 				buttonColor: newTheme === 'dark' ? '#f5f5f5' : '#111'
 			};
+
+			page.theme.isOverride = true;
 		}
 	};
 </script>
@@ -353,15 +347,7 @@
 								</div>
 							</div>
 
-							<div class="flex gap-4 items-center col-span-2">
-								<div>
-									<input type="checkbox" bind:checked={page.theme.isHeroLeft} />
-									Is Hero Left
-								</div>
-								<div>
-									<input type="checkbox" bind:checked={page.theme.isHugeTitle} />
-									Is Hero Huge
-								</div>
+							<div class="flex gap-4 items-center col-span-2 my-2">
 								<div>
 									<input type="checkbox" bind:checked={page.theme.isTitlesLeft} />
 									Are Titles Left
@@ -407,33 +393,6 @@
 										><button on:click={() => setContainerWidth('1200px')}>LG (1200px)</button>
 										<button on:click={() => setContainerWidth('1280px')}>XL (1280px)</button>
 									</div>
-								</div>
-							</div>
-
-							<div class="grid grid-cols-2 gap-4 mb-2">
-								<div class="_section">
-									<div class="font-semibold">Background patterns</div>
-									<div class="text-sm mb-4 opacity-80">
-										Nice subtle backgrounds to catch attention
-									</div>
-
-									<button on:click={() => (page.theme.heroPattern = 'squares')}>Squares</button>
-									<button on:click={() => (page.theme.heroPattern = 'dots')}>Dots</button>
-									<button on:click={() => (page.theme.heroPattern = null)}>None</button>
-								</div>
-								<div class="_section">
-									<div class="font-semibold">Background gradients</div>
-									<div class="text-sm mb-4 opacity-80">
-										Nice gradients to add extra dimensions and shadow
-									</div>
-
-									<button on:click={() => (page.theme.backgroundGradient = { type: 'ship' })}
-										>Subtle</button
-									>
-									<button on:click={() => (page.theme.backgroundGradient = { type: 'turborepo' })}
-										>Bright</button
-									>
-									<button on:click={() => (page.theme.backgroundGradient = null)}>None</button>
 								</div>
 							</div>
 						</div>

@@ -4,11 +4,35 @@
 
 	let turborepo = ['#2a8af6', 'a853ba'];
 
+	function hexToRgbA(hex, opacity = 1) {
+		var c;
+		if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+			c = hex.substring(1).split('');
+			if (c.length == 3) {
+				c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+			}
+			c = '0x' + c.join('');
+			return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + `,${opacity})`;
+		}
+		throw new Error('Bad Hex');
+	}
+
 	let types = {
+		// ship: {
+		// 	className: '',
+		// 	style: ({ from = 'rgba(225, 174, 255, 0.3)' }) =>
+		// 		`background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),linear-gradient(104deg, ${hexToRgbA(
+		// 			from,
+		// 			0.2
+		// 		)}, rgba(0, 108, 104, 0.3) 42%, #030303);`
+		// },
 		ship: {
 			className: '',
-			style: () =>
-				`background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);`
+			style: ({ from = 'rgba(225, 174, 255, 0.3)' }) =>
+				`background-image: linear-gradient(to top, #f6f5f4, rgba(0, 0, 0, 0)),linear-gradient(104deg, ${hexToRgbA(
+					from,
+					0.2
+				)}, rgba(255, 108, 104, 0.3) 42%, #030303);`
 		},
 		coma: { className: '', gradient: '' },
 		turborepo: {
