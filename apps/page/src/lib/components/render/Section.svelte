@@ -682,7 +682,9 @@
 										{/if}
 
 										{#if isShowAuthor}
-											<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
+											<div>
+												<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
+											</div>
 										{/if}
 										<ContentEditableIf
 											class="_item-description whitespace-pre-wrap"
@@ -853,6 +855,12 @@
 																		condition={isEdit}
 																	/>
 																</h2>
+															</div>
+														{/if}
+
+														{#if isShowAuthor}
+															<div>
+																<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
 															</div>
 														{/if}
 
