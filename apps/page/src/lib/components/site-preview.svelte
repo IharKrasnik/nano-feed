@@ -433,6 +433,7 @@
 									<a
 										class="flex items-center shrink-0 _logo"
 										href="/"
+										data-sveltekit-preload-data="hover"
 										on:click={() => {
 											trackClick({
 												pageId: page?._id,
@@ -473,6 +474,7 @@
 										{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => s.renderType !== 'article') as subPage}
 											<a
 												href="/{subPage.slug}"
+												data-sveltekit-preload-data="hover"
 												on:click={() => {
 													trackClick({
 														pageId: page?._id,
