@@ -11,7 +11,7 @@ let getDomain = (href) => {
 	return (res && res[1]) || href;
 };
 
-export async function load({ url, params, session, cookies }) {
+export async function load({ url, params, session, cookies, data }) {
 	let currentDomain = getDomain(url.href);
 
 	let pageSlug =
@@ -21,30 +21,32 @@ export async function load({ url, params, session, cookies }) {
 
 	const { subPageSlug } = params;
 
-	let extend = {};
+	let extend = {
+		...data
+	};
 
-	if (pageSlug) {
-		let page = await get(`pages/${subPageSlug || pageSlug}`, {
-			parentPageSlug: subPageSlug ? pageSlug : '',
-			isServer: true
-		});
+	// if (pageSlug) {
+	// 	let page = await get(`pages/${subPageSlug || pageSlug}`, {
+	// 		parentPageSlug: subPageSlug ? pageSlug : '',
+	// 		isServer: true
+	// 	});
 
-		let metaTags = getPageMetaTags({ page });
-		//s
-		extend = {
-			page,
-			ogTitle: metaTags.title,
-			ogDescription: metaTags.description,
-			ogImage: metaTags.image
-		};
-	} else {
-		extend = {
-			ogTitle: `Momentum IDE`,
-			ogDescription: `Grow your startup: launch landing pages, collect waitlist, create, connect with your audience, sell.`,
-			ogImage:
-				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
-		};
-	}
+	// 	let metaTags = getPageMetaTags({ page });
+	// 	//s
+	// 	extend = {
+	// 		page,
+	// 		ogTitle: metaTags.title,
+	// 		ogDescription: metaTags.description,
+	// 		ogImage: metaTags.image
+	// 	};
+	// } else {
+	// 	extend = {
+	// 		ogTitle: `Momentum IDE`,
+	// 		ogDescription: `Grow your startup: launch landing pages, collect waitlist, create, connect with your audience, sell.`,
+	// 		ogImage:
+	// 			'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
+	// 	};
+	// }
 
 	let authData = await authClientGuard({ url, params, session }, 'Momentum IDE');
 
