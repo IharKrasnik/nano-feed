@@ -1246,7 +1246,7 @@
 											on:click={async () => {
 												setPageAndDraft(
 													await get(`pages/${page._id}`, {
-														parentPageSlug: page.parentPage?.slug
+														...(page.parentPage ? { parentPageSlug: page.parentPage?.slug } : {})
 													}),
 													{ force: true }
 												);
