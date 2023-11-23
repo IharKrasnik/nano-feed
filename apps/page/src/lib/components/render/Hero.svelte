@@ -115,7 +115,6 @@
 								{@html hero.subtitle}
 							</h2>
 						{/if}
-
 						{#if hero.interactiveRenderType}
 							<RenderInteractiveOptions
 								class={hero.theme.isLeft ? '' : 'max-w-[600px] mx-auto'}

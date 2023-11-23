@@ -224,7 +224,7 @@
 					}
 
 					['title', 'subtitle', 'ctaExplainer', 'callToAction'].forEach((fieldName) => {
-						let str = page[fieldName];
+						let str = page.heros[0][fieldName];
 
 						page.heros[0][fieldName] = replaceVariable({
 							str,
@@ -261,6 +261,8 @@
 
 	if (browser && !page.activeHero) {
 		page.activeHero = _.shuffle(page.heros)[0];
+		console.log('page.activeHero', page.heros, page.activeHero);
+		window.page = page;
 	}
 
 	let isMenuOpen = false;
