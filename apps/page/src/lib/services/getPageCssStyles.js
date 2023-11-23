@@ -27,7 +27,7 @@ export default (page) => {
 		'background-color': page.theme?.backgroundColor || '#ffffff',
 		// 'background-color': 'transparent',
 		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
-		'text-color': page.theme.theme === 'light' ? '#111111' : '#f5f5f5',
+		'text-color': page.theme?.theme === 'dark' ? '#f5f5f5' : '#111111',
 		'accent-color': page.theme?.accentColor || '#000',
 		'section-background-color':
 			page.theme?.sectionBackgroundColor ||

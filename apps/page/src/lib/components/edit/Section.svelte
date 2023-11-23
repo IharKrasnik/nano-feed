@@ -228,6 +228,7 @@
 				<option value="faq">FAQ</option>
 				<option value="article">Article</option>
 				<option value="form">Form</option>
+				<option value="embedCode">HTML Code Embed</option>
 			</select>
 
 			{#if section.renderType === 'carousel'}
@@ -238,7 +239,7 @@
 			{/if}
 		</div>
 
-		{#if section.renderType !== 'pricing'}
+		{#if section.renderType !== 'pricing' && section.renderType !== 'embedCode'}
 			<div class="_section">
 				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
 
@@ -340,7 +341,14 @@
 		{/if}
 	{/if}
 
-	{#if section.renderType === 'faq'}
+	{#if section.renderType === 'embedCode'}
+		<textarea
+			placeholder="<div>Hello World</div>"
+			class="w-full"
+			rows="8"
+			bind:value={section.customCodeHTML}
+		/>
+	{:else if section.renderType === 'faq'}
 		<EditFAQ bind:section />
 	{:else if section.renderType === 'testimonials'}
 		<EditTestimonials bind:section />

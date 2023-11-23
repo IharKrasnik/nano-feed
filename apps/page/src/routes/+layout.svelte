@@ -38,7 +38,10 @@
 		prevSlug = $sveltePage.params.subPageSlug || $sveltePage.data.pageSlug;
 
 		$currentPage = $sveltePage.data.page;
-		$currentPage._refreshTimestamp = +new Date();
+
+		if ($currentPage) {
+			$currentPage._refreshTimestamp = +new Date();
+		}
 	}
 
 	if (browser) {

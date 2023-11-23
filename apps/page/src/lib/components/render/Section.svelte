@@ -369,7 +369,11 @@
 				</div>
 			{/if}
 
-			{#if section.renderType === 'faq'}
+			{#if section.renderType === 'embedCode'}
+				{#if section.customCodeHTML}
+					{@html section.customCodeHTML}
+				{/if}
+			{:else if section.renderType === 'faq'}
 				<RenderFAQ bind:section bind:page bind:isEdit />
 			{:else if section.renderType === 'testimonials'}
 				<RenderTestimonials bind:section />
