@@ -8,6 +8,7 @@
 	import RenderArticleHeader from '$lib/components/render/ArticleHeader.svelte';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
+	import Background from '$lib/components/Background.svelte';
 
 	export let page;
 
@@ -35,6 +36,10 @@
 <div class="relative">
 	{#if hero.theme?.bgPattern === 'cursors'}
 		<ComaDragons />
+	{/if}
+
+	{#if hero.theme?.bgPattern === 'stars'}
+		<Background />
 	{/if}
 
 	<!-- <img

@@ -207,62 +207,60 @@
 			});
 		});
 
-		if (!isEdit && browser) {
-			page.variablesValues = {};
+		let variablesValues = {};
 
-			[...systemVariables, ...userVariables, ...(isNoVars ? [] : page.variables)].forEach(
-				(variable) => {
-					if (variable.calculateCode) {
-						page.variablesValues[variable.name] = eval(`(function(){${variable.calculateCode}})()`);
-						page.variablesValues[variable.name + 'Capitalised'] = _.capitalize(
-							page.variablesValues[variable.name]
-						);
-					} else if (variable.calculateFn) {
-						page.variablesValues[variable.name] = variable.calculateFn();
-					} else {
-						page.variablesValues[variable.name] = variable.value;
-					}
-
-					['title', 'subtitle', 'ctaExplainer', 'callToAction'].forEach((fieldName) => {
-						let str = page.heros[0][fieldName];
-
-						page.heros[0][fieldName] = replaceVariable({
-							str,
-							varName: variable.name,
-							varValue: page.variablesValues[variable.name]
-						});
-					});
-
-					if (page.sections?.length) {
-						page.sections = page.sections.map((s) => {
-							s.title = replaceVariable({
-								str: s.title,
-								varName: variable.name,
-								varValue: page.variablesValues[variable.name]
-							});
-
-							s.description = replaceVariable({
-								str: s.description,
-								varName: variable.name,
-								varValue: page.variablesValues[variable.name]
-							});
-
-							return s;
-						});
-					}
+		[...systemVariables, ...userVariables, ...(isNoVars ? [] : page.variables)].forEach(
+			(variable) => {
+				if (variable.calculateCode) {
+					variablesValues[variable.name] = eval(`(function(){${variable.calculateCode}})()`);
+					variablesValues[variable.name + 'Capitalised'] = _.capitalize(
+						variablesValues[variable.name]
+					);
+				} else if (variable.calculateFn) {
+					variablesValues[variable.name] = variable.calculateFn();
+				} else {
+					variablesValues[variable.name] = variable.value;
 				}
-			);
-		}
-	};
 
-	$: if (browser && $varsLastUpdatedOn) {
-		refreshVariables(varTemplatesBig);
-	}
+				let activeHero = page.activeHero;
+
+				['title', 'subtitle', 'ctaExplainer'].forEach((fieldName) => {
+					let str = activeHero[fieldName];
+
+					activeHero[fieldName] = replaceVariable({
+						str,
+						varName: variable.name,
+						varValue: variablesValues[variable.name]
+					});
+				});
+
+				if (page.sections?.length) {
+					page.sections = page.sections.map((s) => {
+						s.title = replaceVariable({
+							str: s.title,
+							varName: variable.name,
+							varValue: variablesValues[variable.name]
+						});
+
+						s.description = replaceVariable({
+							str: s.description,
+							varName: variable.name,
+							varValue: variablesValues[variable.name]
+						});
+
+						return s;
+					});
+				}
+			}
+		);
+	};
 
 	if (browser && !page.activeHero) {
 		page.activeHero = _.shuffle(page.heros)[0];
-		console.log('page.activeHero', page.heros, page.activeHero);
-		window.page = page;
+	}
+
+	if (browser && !isEdit) {
+		refreshVariables(varTemplatesBig);
 	}
 
 	let isMenuOpen = false;
@@ -634,9 +632,9 @@
 	{/if}
 {/key}
 
-{#if page?.activeHero?.theme?.bgPattern === 'stars'}
+<!-- {#if page?.activeHero?.theme?.bgPattern === 'stars'}
 	<Background />
-{/if}
+{/if} -->
 
 {#if page?.activeHero?.theme?.bgPattern === 'cursors'}
 	<ComaDragons />

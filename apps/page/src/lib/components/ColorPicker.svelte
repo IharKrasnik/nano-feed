@@ -244,8 +244,6 @@
 			theme: newTheme,
 			isOverride: true
 		};
-
-		console.log('changebgcolor', page.theme);
 	};
 
 	let changeAccentColor = () => {
