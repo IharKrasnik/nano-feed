@@ -993,21 +993,22 @@
 										{/if}
 									{/if}
 
-									<div class="font-bold mr-2 py-4 my-4">🤩 Hero Section</div>
+									{#if page._id}
+										<div class="font-bold mr-2 py-4 my-4">🤩 Hero Section</div>
+										{#each page.heros as hero}
+											<EditHero
+												class="my-4"
+												bind:hero
+												bind:page
+												bind:focuses
+												isShowTips={page.hero?.length < 2}
+												isCollapsedDefault={!!page.title}
+											/>
+										{/each}
 
-									{#each page.heros || [{}] as hero}
-										<EditHero
-											class="my-4"
-											bind:hero
-											bind:page
-											bind:focuses
-											isShowTips={page.hero?.length < 2}
-											isCollapsedDefault={!!page.title}
-										/>
-									{/each}
-
-									{#if !page.heros?.length}
-										<button class="_secondary" on:click={addDefaultHero}>Add Hero Section</button>
+										{#if !page.heros?.length}
+											<button class="_secondary" on:click={addDefaultHero}>Add Hero Section</button>
+										{/if}
 									{/if}
 									<!-- 
 									{#if page?._id}
