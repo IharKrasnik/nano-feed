@@ -69,7 +69,8 @@
 
 	export let focuses;
 
-	export let isCollapsed = true;
+	export let isCollapsedDefault = true;
+	let isCollapsed = isCollapsedDefault;
 
 	let isSettingsShown = false;
 

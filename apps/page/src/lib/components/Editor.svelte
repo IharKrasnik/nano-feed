@@ -1002,6 +1002,7 @@
 											bind:page
 											bind:focuses
 											isShowTips={page.hero?.length < 2}
+											isCollapsedDefault={!!page.title}
 										/>
 									{/each}
 

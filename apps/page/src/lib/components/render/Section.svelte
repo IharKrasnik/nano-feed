@@ -7,6 +7,7 @@
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
 	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
+	import { browser } from '$app/environment';
 
 	import Avatar from 'lib/components/Avatar.svelte';
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
@@ -217,6 +218,12 @@
 	}
 
 	let submitForm = () => {};
+
+	if (browser && section.thirdPartyScriptUrl) {
+		eval(
+			`var d=document;var s=d.createElement("script"); s.src="${section.thirdPartyScriptUrl}";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);`
+		);
+	}
 </script>
 
 <!-- <div class="section-bg" /> -->
@@ -370,7 +377,7 @@
 			{/if}
 
 			{#if section.renderType === 'embedCode'}
-				{#if section.customCodeHTML}
+				{#if browser && section.customCodeHTML}
 					{@html section.customCodeHTML}
 				{/if}
 			{:else if section.renderType === 'faq'}
@@ -663,38 +670,40 @@
 										? 'order-last'
 										: ''} {(!item.colSpan || item.colSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
 								>
-									<div
-										class="{section.renderType === 'article'
-											? 'sm:px-8'
-											: '_section-item p-4 sm:p-8'} col-span-1"
-									>
-										<!-- {#if item.emoji !== '✨'}
+									<div>
+										<div
+											class="{section.renderType === 'article'
+												? 'sm:px-8'
+												: '_section-item _borderless p-4 sm:p-8'} col-span-1"
+										>
+											<!-- {#if item.emoji !== '✨'}
 									<Emoji bind:emoji={item.emoji} />
 									{/if} -->
-										{#if item.url}
-											<a
-												class="_item-title mb-2"
-												href={item.url || ''}
-												target={item.url?.startsWith('http') ? '_blank' : ''}
-											>
-												<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
-											</a>
-										{:else}
-											<div class="_item-title mb-2">
-												<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
-											</div>
-										{/if}
+											{#if item.url}
+												<a
+													class="_item-title block mb-2"
+													href={item.url || ''}
+													target={item.url?.startsWith('http') ? '_blank' : ''}
+												>
+													<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+												</a>
+											{:else}
+												<div class="_item-title mb-2">
+													<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+												</div>
+											{/if}
 
-										{#if isShowAuthor}
-											<div>
-												<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
-											</div>
-										{/if}
-										<ContentEditableIf
-											class="_item-description whitespace-pre-wrap"
-											bind:innerHTML={item.description}
-											condition={isEdit}
-										/>
+											{#if isShowAuthor}
+												<div>
+													<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
+												</div>
+											{/if}
+											<ContentEditableIf
+												class="_item-description whitespace-pre-wrap"
+												bind:innerHTML={item.description}
+												condition={isEdit}
+											/>
+										</div>
 									</div>
 
 									{#if item.interactiveAnswers?.length}

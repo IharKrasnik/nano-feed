@@ -140,6 +140,10 @@
 	border: 1px var(--accent-color) solid;
 }
 
+._section-item._borderless {
+	border: none !important;
+}
+
 .h-screen-plus {
 	height: calc(100vh + 300px);
 }

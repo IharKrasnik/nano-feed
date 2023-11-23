@@ -155,7 +155,9 @@
 
 			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.collectionType || ['testimonials', 'pricing', 'form', 'carousel', 'stepper', 'article'].includes(section.renderType)}
 				<div class="mt-2 p-2 bg-slate-200/20 rounded opacity-90">
-					{#if section.renderType === 'pricing'}
+					{#if section.renderType === 'embedCode'}
+						<FeatherIcon name="code" /> Custom Code
+					{:else if section.renderType === 'pricing'}
 						🤑 Pricing
 					{:else if section.type === 'faq'}
 						⁉️ FAQ
@@ -342,12 +344,25 @@
 	{/if}
 
 	{#if section.renderType === 'embedCode'}
+		<div class="text-sm mb-2">Custom HTML Code</div>
+
 		<textarea
 			placeholder="<div>Hello World</div>"
 			class="w-full"
 			rows="8"
 			bind:value={section.customCodeHTML}
 		/>
+
+		<div>
+			<div class="text-sm mb-2">3rd-party script URL</div>
+
+			<input
+				type="url"
+				class="w-full"
+				placeholder="https://ship-assets.fra1.cdn.digitaloceanspaces.com/console/17-10-2023-cd6a3dfb.js"
+				bind:value={section.thirdPartyScriptUrl}
+			/>
+		</div>
 	{:else if section.renderType === 'faq'}
 		<EditFAQ bind:section />
 	{:else if section.renderType === 'testimonials'}
