@@ -5,7 +5,7 @@
 <div class="absolute top-0 left-0 h-screen overflow-y-hidden w-screen h-screen">
 	<RenderUrl
 		imgClass="h-full w-auto"
-		url="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1700655741529-stars.json?speed=0.2"
+		url="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1700655741529-stars.json"
 	/>
 	<!-- <lottie-player
 		class=""
