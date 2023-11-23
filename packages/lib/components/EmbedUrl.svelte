@@ -79,6 +79,12 @@
 			]
 		},
 		{
+			key: 'stackblitz',
+			name: 'StackBlitz IDE',
+			description: 'Embed code editor',
+			placeholder: 'https://stackblitz.com/edit/sveltejs-kit-minimal-tailwind-haaijq?embed=1&'
+		},
+		{
 			key: 'iframe',
 			name: 'Any iFrame',
 			description: 'Embed any page by URL',

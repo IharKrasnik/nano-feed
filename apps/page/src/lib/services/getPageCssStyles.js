@@ -10,10 +10,25 @@ let fontPairs = [
 	{ title: 'Albert Sans', text: 'Barlow' }
 ];
 
+function hexToRGBA(hex, opacity = 1) {
+	var c;
+	if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+		c = hex.substring(1).split('');
+		if (c.length == 3) {
+			c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+		}
+		c = '0x' + c.join('');
+		return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + `,${opacity})`;
+	}
+	throw new Error('Bad Hex');
+}
+
 export default (page) => {
 	if (page.parentPage && !page.theme?.isOverride) {
 		page.theme = page.parentPage?.theme;
 	}
+
+	debugger;
 	let styles = {
 		'container-width': page.theme?.containerWidth || '1280px',
 		'logo-font': page.theme?.logoFont || 'monospace',
@@ -32,8 +47,8 @@ export default (page) => {
 		'section-background-color':
 			page.theme?.sectionBackgroundColor ||
 			(page.theme?.theme === 'dark'
-				? darken(page.theme?.accentColor, 0.993)
-				: lighten(page.theme?.accentColor, 0.82)),
+				? hexToRGBA(darken(page.theme?.accentColor, 0.993), 0.8)
+				: hexToRGBA(lighten(page.theme?.accentColor, 0.82), 0.8)),
 
 		'section-description-text-color':
 			page.theme?.theme === 'dark' ? 'rgb(229 231 235)' : 'rgba(4, 4, 4, 1)',

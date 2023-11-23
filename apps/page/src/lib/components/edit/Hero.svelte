@@ -196,9 +196,9 @@
 
 						{#if hero.bgImageUrl}
 							<div class="flex text-sm mt-2 font-normal items-center">
-								<input bind:checked={hero.theme.isBgImageDimmed} class="mr-2" type="checkbox" />
+								<input bind:checked={hero.theme.isNotBgImageDimmed} class="mr-2" type="checkbox" />
 
-								Dim background image
+								Do not dim background image
 							</div>
 						{/if}
 

@@ -394,7 +394,7 @@
 			<RenderNewsletter bind:page bind:section bind:themeStyles /> -->
 			{:else if section.renderType === 'stepper'}
 				<div class="relative">
-					<div class="absolute ml-[50%] h-full w-[2px] bg-black" />
+					<div class="absolute ml-[50%] h-full w-[2px] _border-theme" />
 					{#each section.items as step, i}
 						<div class="flex sm:w-[50%] p-8 {i % 2 ? 'sm:ml-[50%]' : 'justify-end text-right'}">
 							<div>

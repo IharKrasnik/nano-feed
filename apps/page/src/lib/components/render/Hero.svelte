@@ -42,7 +42,7 @@
 				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
 			/> -->
 	{#if hero.bgImageUrl}
-		{#if hero.theme.isBgImageDimmed}
+		{#if !hero.theme.isNotBgImageDimmed}
 			<div
 				class="absolute top-0 left-0 w-screen h-screen z-1"
 				style="background-color: rgba(0,0,0, 0.7); z-index: 1;"
@@ -51,7 +51,7 @@
 		<RenderUrl
 			class="absolute left-0 top-0 w-screen h-screen opacity-90 overflow-hidden z-0"
 			isAutoplay={!isEdit}
-			imgClass="w-full h-full object-cover overflow-hidden"
+			imgClass="w-screen h-screen object-cover overflow-hidden"
 			url={hero.bgImageUrl}
 		/>
 	{/if}

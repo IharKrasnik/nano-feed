@@ -175,6 +175,10 @@
 	border: 1px var(--border-color) solid;
 }
 
+._bg-border {
+	background: 1px var(--border-color) solid;
+}
+
 ._border-b-theme {
 	border-bottom: 1px var(--border-color) solid;
 }
