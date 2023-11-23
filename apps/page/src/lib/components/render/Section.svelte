@@ -510,8 +510,8 @@
 
 											<div in:fade>
 												<RenderUrl
-													class="aspect-og"
-													imgClass="aspect-og object-cover {section.description
+													class="aspect-image"
+													imgClass="aspect-image object-cover {section.description
 														? 'rounded-b-lg'
 														: ''}"
 													bind:url={selectedCarouselItem.imageUrl}
@@ -603,6 +603,7 @@
 												}}
 											>
 												<FeatherIcon
+													color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
 													on:click={() => {
 														selectPreviousItem();
 													}}
@@ -616,7 +617,10 @@
 													selectNextItem();
 												}}
 											>
-												<FeatherIcon name="arrow-down" />
+												<FeatherIcon
+													color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
+													name="arrow-down"
+												/>
 											</div>
 										</div>
 									</div>
@@ -625,8 +629,8 @@
 										<div class="col-span-2 p-8" in:fade>
 											{#key carouselKey}
 												<RenderUrl
-													class="aspect-og"
-													imgClass="aspect-og object-cover"
+													class="aspect-image"
+													imgClass="aspect-image object-cover"
 													bind:url={selectedCarouselItem.imageUrl}
 												/>
 											{/key}
@@ -973,7 +977,8 @@
 													>
 														<RenderUrl
 															class=""
-															imgClass="w-full aspect-og object-cover mx-auto {section.columns === 1
+															imgClass="w-full aspect-image object-cover mx-auto {section.columns ===
+															1
 																? ''
 																: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
 																? 'w-full object-cover'

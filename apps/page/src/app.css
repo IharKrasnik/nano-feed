@@ -30,6 +30,7 @@
 	content: '';
 	position: absolute;
 	opacity: 0.11;
+	z-index: -1;
 
 	bottom: 30%;
 	right: 50%;
@@ -114,6 +115,10 @@
 
 .aspect-og {
 	aspect-ratio: 1200/630;
+}
+
+.aspect-image {
+	aspect-ratio: 1200/900;
 }
 
 ._section-item:not(.bg_image):not(._article),

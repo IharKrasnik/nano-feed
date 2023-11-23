@@ -349,6 +349,11 @@
 
 							<div class="flex gap-4 items-center col-span-2 my-2">
 								<div>
+									<input type="checkbox" bind:checked={page.theme.isGradientTitle} />
+
+									Are Titles Gradient
+								</div>
+								<div>
 									<input type="checkbox" bind:checked={page.theme.isTitlesLeft} />
 									Are Titles Left
 								</div>
