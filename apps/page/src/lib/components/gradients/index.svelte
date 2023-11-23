@@ -38,7 +38,7 @@
 {#if types[gradientType].style}
 	<div
 		class="absolute top-0 left-0 z-0 w-full h-screen {types[gradientType].className}"
-		style="{types[gradientType].style({ from: page.theme.accentColor })}; z-index: -2;"
+		style="{types[gradientType].style({ from: page.theme.accentColor })}; z-index: 2;"
 	/>
 {:else if types[gradientType].url}
 	<img

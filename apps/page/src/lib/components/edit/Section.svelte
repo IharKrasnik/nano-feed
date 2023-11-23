@@ -90,9 +90,11 @@
 
 	getPageStreams();
 
+	let newStreamSlug;
+
 	let createStream = async () => {
 		const { streamSlug } = await put(`pages/${page.parentPage?._id || page._id}/embed-stream`, {
-			title: section.streamSlug,
+			title: newStreamSlug,
 			hubStreamSlug: page.streamSlug || ''
 		});
 
@@ -101,6 +103,7 @@
 		}
 
 		section.streamSlug = streamSlug;
+		newStreamSlug = '';
 	};
 
 	if (section.streamSlug && !section.streamSettings) {
@@ -165,7 +168,7 @@
 						💚 Testimonials
 					{:else if section.collectionType}
 						{#if section.collectionType === 'feed'}
-							{#if section.streamSlug.includes('-feed')}
+							{#if section.streamSlug?.includes('-feed')}
 								📺 Media Database (Feed)
 							{:else}
 								📚 Database ({section.streamSlug}
@@ -263,6 +266,7 @@
 									<option value="">Add New</option>
 								</select>
 							{/if}
+
 							{#if section.collectionType === 'global_feed'}
 								<input bind:value={section.streamSlug} />
 							{/if}
@@ -320,7 +324,7 @@
 									}}>💫 refresh</Button
 								>
 							{:else}
-								<input placeholder="databaseName" class="w-full" bind:value={section.streamSlug} />
+								<input placeholder="databaseName" class="w-full" bind:value={newStreamSlug} />
 								<Button class="shrink-0 _small _secondary" onClick={createStream}
 									>Create Database</Button
 								>

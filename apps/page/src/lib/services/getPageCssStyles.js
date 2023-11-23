@@ -28,7 +28,6 @@ export default (page) => {
 		page.theme = page.parentPage?.theme;
 	}
 
-	debugger;
 	let styles = {
 		'container-width': page.theme?.containerWidth || '1280px',
 		'logo-font': page.theme?.logoFont || 'monospace',

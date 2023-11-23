@@ -207,7 +207,7 @@
 			});
 		});
 
-		if (browser) {
+		if (!isEdit && browser) {
 			page.variablesValues = {};
 
 			[...systemVariables, ...userVariables, ...(isNoVars ? [] : page.variables)].forEach(
@@ -226,7 +226,7 @@
 					['title', 'subtitle', 'ctaExplainer', 'callToAction'].forEach((fieldName) => {
 						let str = page[fieldName];
 
-						page[fieldName] = replaceVariable({
+						page.heros[0][fieldName] = replaceVariable({
 							str,
 							varName: variable.name,
 							varValue: page.variablesValues[variable.name]
@@ -259,7 +259,7 @@
 		refreshVariables(varTemplatesBig);
 	}
 
-	if (!page.activeHero) {
+	if (browser && !page.activeHero) {
 		page.activeHero = _.shuffle(page.heros)[0];
 	}
 
