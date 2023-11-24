@@ -182,7 +182,6 @@
 	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
-		console.log('setPageAndDraft');
 		page = { ..._.cloneDeep(p) };
 
 		if (
@@ -209,11 +208,8 @@
 			page.heros = [];
 		}
 
-		let heroSection = page.heros[0];
-
-		if (!page.parentPage && !heroSection) {
+		if (!page.parentPage && !page.heros) {
 			addDefaultHero();
-			page.activeHero = page.heros[0];
 		}
 
 		page.activeHero = page.heros[0];
@@ -275,6 +271,11 @@
 
 			page.isDirty = false;
 			pageSlug = page.slug;
+
+			if (!page.heros) {
+				addDefaultHero();
+			}
+
 			page.activeHero = page.heros && page.heros[0];
 
 			$pageDraft = {
@@ -283,7 +284,7 @@
 				[isNewPage ? '_new' : page.slug]: null
 			};
 
-			if (isNewPage) {
+			if (isNewPage && !page.parentPage) {
 				$allPages = [{ ...page }, ...($allPages || [])];
 				isJustCreated = true;
 
@@ -294,6 +295,8 @@
 				$allPages = $allPages.map((p) => {
 					if (p._id === page._id) {
 						return { ..._.cloneDeep(page) };
+					} else if (page.parentPage && p._id == page.parentPage._id) {
+						return { ...p, subPages: [...p.subPages, page] };
 					} else {
 						return p;
 					}
@@ -594,18 +597,24 @@
 	let isNewSubPage;
 
 	let addSubpage = () => {
+		let heros = [
+			{
+				title: '',
+				subtitle: ''
+			}
+		];
+
 		setPageAndDraft(
 			{
 				_id: null,
 				slug: '_new',
+				heros,
+				activeHero: heros[0],
 				name: '',
 				title: '',
 				subtitle: '',
 				ctaExplainer: '',
-				parentPage: {
-					_id: page.parentPage?._id || page._id,
-					slug: page.parentPage?.slug || page.slug
-				},
+				parentPage: { ...page },
 				variablesValues: page.variablesValues
 			},
 			{ force: true }

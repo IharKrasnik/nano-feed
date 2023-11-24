@@ -11,6 +11,10 @@ let fontPairs = [
 ];
 
 function hexToRGBA(hex, opacity = 1) {
+	if (!hex) {
+		hex = '#111111';
+	}
+
 	var c;
 	if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
 		c = hex.substring(1).split('');

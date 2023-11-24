@@ -452,6 +452,10 @@
 													: ''}>{subPage.name}</a
 											>
 										{/each}
+
+										{#if !page._id}
+											<span>{page.name}</span>
+										{/if}
 									</div>
 								</div>
 
