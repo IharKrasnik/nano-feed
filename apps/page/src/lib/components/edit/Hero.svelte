@@ -203,6 +203,11 @@
 
 						{#if hero.theme}
 							<div class="flex gap-4 mt-4">
+								{#if hero.demoUrl}
+									<div class="flex font-normal items-center">
+										<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertocal
+									</div>
+								{/if}
 								<div class="flex font-normal items-center">
 									<input bind:checked={hero.theme.isHugeTitle} class="mr-2" type="checkbox" /> Is Huge
 								</div>

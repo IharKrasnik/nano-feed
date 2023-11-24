@@ -169,7 +169,7 @@
 		<div class="relative flex justify-between items-center">
 			<FileInput
 				class="w-full"
-				placeholder="Paste media URL / clipboard"
+				placeholder="Media URL (or clipboard)"
 				isCanSearch
 				bind:url={item.imageUrl}
 				isWithIntegrations

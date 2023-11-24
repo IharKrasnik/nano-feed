@@ -166,6 +166,8 @@
 						<img class={imgClass} src={url} />
 					{/if}
 				{/key}
+			{:else if !isFilesOnly && url.includes('producthunt.com')}
+				<iframe src={url} class="w-full h-full {imgClass}" style="border:none; height: 1000px;" />
 			{:else if !isFilesOnly && url.startsWith('http')}
 				<iframe src={url} class="w-full h-full {imgClass}" style="border:none; height: 600px;" />
 			{/if}
