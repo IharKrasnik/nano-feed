@@ -224,15 +224,17 @@
 
 				let activeHero = page.activeHero;
 
-				['title', 'subtitle', 'ctaExplainer'].forEach((fieldName) => {
-					let str = activeHero[fieldName];
+				if (activeHero) {
+					['title', 'subtitle', 'ctaExplainer'].forEach((fieldName) => {
+						let str = activeHero[fieldName];
 
-					activeHero[fieldName] = replaceVariable({
-						str,
-						varName: variable.name,
-						varValue: variablesValues[variable.name]
+						activeHero[fieldName] = replaceVariable({
+							str,
+							varName: variable.name,
+							varValue: variablesValues[variable.name]
+						});
 					});
-				});
+				}
 
 				if (page.sections?.length) {
 					page.sections = page.sections.map((s) => {
