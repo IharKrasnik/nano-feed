@@ -17,6 +17,7 @@
 	import RenderServiceChat from '$lib/components/render/ServiceChat.svelte';
 	import RenderNewsletter from '$lib/components/render/Newsletter.svelte';
 	import RenderForm from '$lib/components/render/Form.svelte';
+	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
 	import ArticleAuthorLabel from '$lib/components/render/ArticleAuthorLabel.svelte';
 	import SourceLogo from 'lib/components/SourceLogo.svelte';
@@ -342,11 +343,20 @@
 									? 'sm:max-w-[712px]'
 									: 'sm:max-w-[592px] sm:mx-auto'}"
 							>
-								<ContentEditableIf
-									class=""
-									bind:innerHTML={section.description}
-									condition={isEdit}
-								/>
+								{#if isEdit && page.renderType === 'article'}
+									<ContentEditable
+										class="content bg-site color-site text-lg"
+										placeholder="Start typing..."
+										bind:value={section.description}
+										isWithMenu={true}
+									/>
+								{:else}
+									<ContentEditableIf
+										class=""
+										bind:innerHTML={section.description}
+										condition={isEdit}
+									/>
+								{/if}
 							</h3>
 						{/if}
 					</div>

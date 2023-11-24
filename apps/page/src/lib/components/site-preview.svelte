@@ -141,7 +141,6 @@
 	let focusEditEl = () => {
 		setTimeout(() => {
 			try {
-				debugger;
 				editEl.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 			} catch (err) {
 				console.error(err);
@@ -342,7 +341,7 @@
 							/>
 						{:else if page?.activeHero?.theme?.bgPattern === 'dots'}
 							<div
-								class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(rgba(255,255,255,.3)_0.5px,transparent_1px)] [background-size:32px_32px]"
+								class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(rgba(255,255,255,.1)_0.5px,transparent_1px)] [background-size:32px_32px]"
 							/>
 						{/if}
 					{:else if page?.activeHero?.theme?.bgPattern === 'squares'}

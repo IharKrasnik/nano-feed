@@ -20,11 +20,14 @@
 	let types = {
 		ship: {
 			className: '',
-			style: ({ from = 'rgba(225, 174, 255, 0.3)' }) =>
-				`background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),linear-gradient(104deg, ${hexToRgbA(
+			style: ({
+				from = 'rgba(225, 174, 255, 0.3)',
+				to = page.theme?.backgroundColor || '#030303'
+			}) =>
+				`background-image: linear-gradient(to top, ${to}, rgba(0, 0, 0, 0)),linear-gradient(104deg, ${hexToRgbA(
 					from,
 					0.2
-				)}, rgba(0, 108, 104, 0.3) 42%, #030303);`
+				)}, rgba(0, 108, 104, 0.3) 42%, ${to});`
 		},
 		coma: { className: '', gradient: '' },
 		turborepo: {

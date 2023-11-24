@@ -207,7 +207,14 @@
 		}
 
 		if (text.startsWith('http')) {
-			createLink(text);
+			let selection = document.getSelection();
+
+			document.execCommand(
+				'insertHTML',
+				false,
+				'<a href="' + text + '" target="_blank">' + selection + '</a>'
+			);
+			console.log('inserthtml');
 		} else {
 			document.execCommand('insertText', false, text);
 		}
