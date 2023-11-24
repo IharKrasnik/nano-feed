@@ -212,6 +212,7 @@
 
 		if (!page.parentPage && !heroSection) {
 			addDefaultHero();
+			page.activeHero = page.heros[0];
 		}
 
 		page.activeHero = page.heros[0];
@@ -953,7 +954,7 @@
 										$aboveTheFoldEl &&
 											$aboveTheFoldEl.scrollIntoView({
 												behavior: 'smooth',
-												block: 'center',
+												block: 'start',
 												inline: 'nearest'
 											});
 

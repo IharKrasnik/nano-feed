@@ -22,11 +22,11 @@
 	border: 1px var(--accent-color) solid !important;
 }
 
-._section-container._glowing {
+._glowing {
 	position: relative;
 }
 
-._section-container._glowing::before {
+._glowing::before {
 	content: '';
 	position: absolute;
 	opacity: 0.11;

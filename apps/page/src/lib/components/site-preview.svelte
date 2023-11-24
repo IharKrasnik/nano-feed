@@ -141,7 +141,8 @@
 	let focusEditEl = () => {
 		setTimeout(() => {
 			try {
-				editEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+				debugger;
+				editEl.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 			} catch (err) {
 				console.error(err);
 			}
@@ -531,7 +532,7 @@
 										{#each page.sections as section, i}
 											{#if $sectionToEdit && $sectionToEdit.id === section.id}
 												<div bind:this={editEl}>
-													<div class="p-2 bg-green-100 text-center">🚧🚧🚧🚧🚧</div>
+													<div class="p-2 my-4 bg-green-200 text-center">🚧🚧🚧🚧🚧</div>
 													<div>
 														<RenderSection
 															bind:page
@@ -540,7 +541,7 @@
 															bind:isEdit
 														/>
 													</div>
-													<div class="p-2 bg-green-100 text-center text-white">🚧🚧🚧🚧🚧</div>
+													<div class="p-2 my-4 bg-green-200 text-center text-white">🚧🚧🚧🚧🚧</div>
 												</div>
 												{focusEditEl() || ''}
 											{:else}

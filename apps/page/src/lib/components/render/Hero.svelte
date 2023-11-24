@@ -31,6 +31,10 @@
 	});
 
 	let maxHeight;
+
+	if (page.renderType === 'article') {
+		hero.theme.isVertical = true;
+	}
 </script>
 
 <div class="relative">
@@ -68,109 +72,117 @@
 			: 'min-h-screen h-screen'} pt-[60px] mb-[-60px]"
 		style="{styles};"
 	>
-		{#if page.renderType !== 'article'}
+		<div
+			bind:this={$aboveTheFoldEl}
+			class="{hero.theme?.bgImage ? 'light-colors' : ''} {hero.theme?.isVertical
+				? ''
+				: ''} h-full py-16 sm:py-24 {!hero.testimonials?.length ? `flex items-center` : ''}"
+			style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
+		>
 			<div
-				bind:this={$aboveTheFoldEl}
-				class="{hero.theme?.bgImage ? 'light-colors' : ''} {hero.theme?.isVertical
-					? ''
-					: ''} h-full py-16 sm:py-24 {!hero.testimonials?.length ? `flex items-center` : ''}"
-				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
+				class="p-4 sm:p-0 flex h-full w-full {hero.demoUrl || hero.theme?.isLeft
+					? `flex-col ${hero.theme?.isVertical ? '' : 'justify-between sm:flex-row'} items-center`
+					: 'text-center items-center'}"
 			>
 				<div
-					class="p-4 sm:p-0 flex h-full w-full {hero.demoUrl || hero.theme?.isLeft
-						? `flex-col ${hero.theme?.isVertical ? '' : 'justify-between sm:flex-row'} items-center`
-						: 'text-center items-center'}"
+					class="{hero.demoUrl || hero.theme?.isLeft
+						? `w-full text-center ${
+								hero.theme?.isVertical ? 'flex flex-col items-center mb-8' : 'sm:text-left'
+						  }  ${hero.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
+						: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+										{hero.theme?.isLeft ? 'sm:text-left' : ''}"
 				>
-					<div
-						class="{hero.demoUrl || hero.theme?.isLeft
-							? `w-full text-center ${
-									hero.theme?.isVertical ? 'flex flex-col items-center mb-8' : 'sm:text-left'
-							  }  ${hero.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
-							: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-										{hero.theme?.isLeft && !hero.theme?.isVertical ? 'sm:text-left' : ''}"
-					>
-						{#if isMounted}
-							<h1
-								class="{page.theme?.isGradientTitle
-									? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
-									: ''} _title 
-											{!hero.demoUrl || hero.theme?.isVertical ? 'sm:max-w-[912px]' : ''}"
-								style={hero.title ? '' : 'opacity: 20%;'}
-								in:fly={{ y: 50, duration: 800 }}
-							>
-								{#if hero.title}
-									<div>{@html hero.title || ''}</div>
-								{:else if isEmbed && !page.parentPage}
-									{#if page.renderType !== 'article'}
-										{'Type Tagline...'}
-									{/if}
+					{#if isMounted}
+						<h1
+							class="{page.theme?.isGradientTitle
+								? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
+								: ''} _title 
+											{!hero.demoUrl || hero.theme?.isVertical
+								? page.renderType === 'article'
+									? 'sm:max-w-[768px]'
+									: 'sm:max-w-[912px]'
+								: ''}"
+							style={hero.title ? '' : 'opacity: 20%;'}
+							in:fly={{ y: 50, duration: 800 }}
+						>
+							{#if hero.title}
+								<div>{@html hero.title || ''}</div>
+							{:else if isEmbed && !page.parentPage}
+								{#if page.renderType !== 'article'}
+									{'Type Tagline...'}
 								{/if}
-							</h1>
-						{/if}
+							{/if}
+						</h1>
+					{/if}
 
-						{#if hero.subtitle}
-							<h2
-								class="_subtitle {hero.theme.isHugeTitle
-									? 'text-xl'
-									: 'text-xl'}  whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
-									? ''
-									: 'max-w-[600px]'}"
-								in:fly={{ y: 50, duration: 800 }}
-							>
-								{@html hero.subtitle}
-							</h2>
-						{/if}
-						{#if hero.interactiveRenderType}
-							<RenderInteractiveOptions
-								class={hero.theme.isLeft ? '' : 'max-w-[600px] mx-auto'}
-								size={hero.theme.isHugeTitle ? 'huge' : 'large'}
-								bind:page
-								bind:sectionItem={hero}
-							/>
-						{/if}
+					{#if hero.subtitle}
+						<h2
+							class="_subtitle {hero.theme.isHugeTitle
+								? 'text-xl'
+								: 'text-xl'}  whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
+								? page.renderType === 'article'
+									? 'max-w-[768px]'
+									: 'max-w-[650px]'
+								: 'max-w-[600px]'}"
+							in:fly={{ y: 50, duration: 800 }}
+						>
+							{@html hero.subtitle}
+						</h2>
+					{/if}
+					{#if hero.interactiveRenderType}
+						<RenderInteractiveOptions
+							class={hero.theme.isLeft ? '' : 'max-w-[600px] mx-auto'}
+							size={hero.theme.isHugeTitle ? 'huge' : 'large'}
+							bind:page
+							bind:sectionItem={hero}
+						/>
+					{/if}
 
-						{#if isMounted && hero.socialProof}
-							<div
-								class="mt-16 py-4 {hero.socialProof.className || ''} {hero.demoUrl ||
-								(hero.theme?.isLeft && !hero.theme?.isVertical)
-									? ''
-									: 'flex justify-center w-full'} }"
-							>
-								<div>
-									<div class="flex gap-2">
-										{#each _.shuffle(hero.socialProof.logos) as logo}
-											<img class="w-[50px] h-[50px] rounded-full" src={logo.url} />
-										{/each}
-									</div>
+					{#if page.renderType === 'article'}
+						<RenderArticleHeader
+							class={hero.theme.isLeft ? 'justify-start' : 'justify-center'}
+							{page}
+						/>
+					{/if}
 
-									<div class="text-sm mt-4 opacity-80 max-w-[400px]">
-										{@html hero.socialProof.title || ''}
-									</div>
+					{#if isMounted && hero.socialProof}
+						<div
+							class="mt-16 py-4 {hero.socialProof.className || ''} {hero.demoUrl ||
+							(hero.theme?.isLeft && !hero.theme?.isVertical)
+								? ''
+								: 'flex justify-center w-full'} }"
+						>
+							<div>
+								<div class="flex gap-2">
+									{#each _.shuffle(hero.socialProof.logos) as logo}
+										<img class="w-[50px] h-[50px] rounded-full" src={logo.url} />
+									{/each}
+								</div>
+
+								<div class="text-sm mt-4 opacity-80 max-w-[400px]">
+									{@html hero.socialProof.title || ''}
 								</div>
 							</div>
-						{/if}
-					</div>
-
-					{#if hero.demoUrl}
-						<div
-							class="w-full  mt-16 sm:mt-0 {hero.theme?.isVertical
-								? ''
-								: 'sm:ml-8 sm:max-w-[600px]'}"
-						>
-							<RenderUrl
-								isLazy={false}
-								class="w-full flex justify-end {hero.theme?.isVertical ? 'mt-8' : ''}"
-								url={hero.demoUrl}
-								imgClass="w-full rounded-xl shadow-md object-cover"
-							/>
 						</div>
 					{/if}
 				</div>
+
+				{#if hero.demoUrl}
+					<div
+						class="w-full  mt-16 sm:mt-0 {hero.theme?.isVertical ? '' : 'sm:ml-8 sm:max-w-[600px]'}"
+					>
+						<RenderUrl
+							isLazy={false}
+							class="w-full flex justify-end {hero.theme?.isVertical ? 'mt-8' : ''}"
+							url={hero.demoUrl}
+							imgClass="{hero.imgMaxWidth
+								? `max-w-[${hero.imgMaxWidth}px] mx-auto rounded-lg`
+								: 'w-full rounded-xl'}  shadow-md object-cover"
+						/>
+					</div>
+				{/if}
 			</div>
-		{:else}
-			<div style="height: 72px;" class="mb-16" />
-			<RenderArticleHeader {page} />
-		{/if}
+		</div>
 	</div>
 </div>
 
@@ -210,7 +222,6 @@
 
 	._subtitle {
 		margin-bottom: 40px;
-		max-width: 650px;
 		font-family: var(--subtitle-font);
 	}
 </style>

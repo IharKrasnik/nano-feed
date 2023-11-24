@@ -23,7 +23,6 @@
 	import EditPricing from '$lib/components/edit/Pricing.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
-	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
 
@@ -352,6 +351,34 @@
 			<div class="flex items-center">
 				<FileInput class="w-full" bind:url={hero.demoUrl} theme="light" isCanSearch />
 			</div>
+
+			{#if hero.demoUrl}
+				<div class="text-xs mt-2 flex gap-2 items-center">
+					<div
+						class="cursor-pointer"
+						on:click={() => {
+							hero.imgMaxWidth = 0;
+						}}
+						class:font-bold={!hero.imgMaxWidth}
+					>
+						Stretch
+					</div>
+
+					<div
+						class="cursor-pointer"
+						on:click={() => {
+							if (page.renderType === 'article') {
+								hero.imgMaxWidth = 768;
+							} else {
+								hero.imgMaxWidth = 600;
+							}
+						}}
+						class:font-bold={hero.imgMaxWidth === 600 || hero.imgMaxWidth === 768}
+					>
+						Medium
+					</div>
+				</div>
+			{/if}
 
 			{#if isShowTips && !hero.demoUrl && hero.subtitle && hero.title}
 				<div

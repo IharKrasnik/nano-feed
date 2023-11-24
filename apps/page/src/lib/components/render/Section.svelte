@@ -284,7 +284,7 @@
 				: ''} {clazz
 				? clazz
 				: section.renderType === 'article'
-				? 'px-8 sm:pb-16'
+				? 'sm:pb-16'
 				: `${
 						section.items?.length
 							? `${isFooter ? 'p-0' : 'px-4 py-8 sm:py-16'}`
@@ -298,7 +298,7 @@
 					section.isTitleLeft ||
 					section.renderType === 'article'
 						? 'sm:text-left'
-						: 'text-center'} {page.renderType === 'article' ? 'px-8' : ''}"
+						: 'text-center'}"
 				>
 					{#if section.emoji}
 						<div
@@ -702,6 +702,7 @@
 													<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
 												</div>
 											{/if}
+
 											<ContentEditableIf
 												class="_item-description whitespace-pre-wrap"
 												bind:innerHTML={item.description}
