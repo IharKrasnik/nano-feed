@@ -11,7 +11,7 @@
 	export let isEdit;
 </script>
 
-<div class="max-w-[768px] mx-auto w-full">
+<div class="max-w-[712px] mx-auto w-full">
 	<div class="flex items-center my-8 {clazz} w-full">
 		<Avatar user={page.creator} size="20px" class="mr-2" />
 		<b class="mx-1">{page.creator?.fullName}</b>

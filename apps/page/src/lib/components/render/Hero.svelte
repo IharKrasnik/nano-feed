@@ -99,7 +99,7 @@
 								: ''} _title 
 											{!hero.demoUrl || hero.theme?.isVertical
 								? page.renderType === 'article'
-									? 'sm:max-w-[768px]'
+									? 'sm:max-w-[712px]'
 									: 'sm:max-w-[912px]'
 								: ''}"
 							style={hero.title ? '' : 'opacity: 20%;'}
@@ -121,7 +121,7 @@
 								? 'text-xl'
 								: 'text-xl'}  whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
 								? page.renderType === 'article'
-									? 'max-w-[768px]'
+									? 'max-w-[712px]'
 									: 'max-w-[650px]'
 								: 'max-w-[600px]'}"
 							in:fly={{ y: 50, duration: 800 }}

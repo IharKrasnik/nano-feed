@@ -338,7 +338,7 @@
 									? 'text-xl leading-8'
 									: 'text-lg font-medium'} whitespace-pre-wrap opacity-90 {section.renderType ===
 								'article'
-									? 'sm:max-w-[768px]'
+									? 'sm:max-w-[712px]'
 									: page.theme.isTitlesLeft || section.isTitleLeft
 									? 'sm:max-w-[712px]'
 									: 'sm:max-w-[592px] sm:mx-auto'}"
@@ -963,7 +963,8 @@
 																<RenderInteractiveOptions
 																	class={`${
 																		section.columns === 1 &&
-																		section.interactiveRenderType === 'single_choice'
+																		(section.interactiveRenderType === 'single_choice' ||
+																			section.interactiveRenderType === 'multiple_choice')
 																			? 'justify-center'
 																			: 'justify-start'
 																	} ${item.pricing ? 'w-full' : ''}`}

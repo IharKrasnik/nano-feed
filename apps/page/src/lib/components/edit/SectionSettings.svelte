@@ -109,28 +109,6 @@
 				bind:url={sectionItem.bgImageUrl}
 			/>
 		</div>
-		<!-- <select
-			class="w-full"
-			bind:value={sectionItem.interactiveRenderType}
-			on:change={() => {
-				if (sectionItem.interactiveRenderType === 'email') {
-					sectionItem.varName = 'email';
-				} else {
-					sectionItem.varName = '';
-				}
-
-				if (sectionItem.interactiveRenderType === 'single_choice') {
-					sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
-				}
-			}}
-		>
-			<option value="">None</option>
-			<option value="button">Click Button</option>
-			<option value="link">Click Link</option>
-			<option value="email">Submit Email</option>
-			<option value="single_choice">Select Single Choice</option>
-			<option value="short_answer">Short Answer</option>
-		</select> -->
 
 		<button class="_button _primary _small mt-8 mb-2 w-full" on:click={close}>Save & Close</button>
 	</div>

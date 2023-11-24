@@ -332,6 +332,22 @@
 	{:else}
 		<div class="" bind:this={previewEl}>
 			<div class="relative color-site min-h-screen" style="{cssVarStyles};">
+				{#if page.interactiveAnswers}
+					{#if scrollY > 100}
+						<div
+							class="fixed bottom-0 w-full w-screen z-10"
+							style="z-index: 40;"
+							in:slide={{ duration: 150 }}
+						>
+							<RenderInteractiveOptions
+								class="w-full justify-center"
+								trackId={`${page._id}`}
+								bind:sectionItem={page}
+								bind:page
+							/>
+						</div>
+					{/if}
+				{/if}
 				<!-- SQUARES -->
 				{#if page?.activeHero?.theme?.bgPattern}
 					{#if page?.theme?.theme === 'dark'}

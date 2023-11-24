@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import SvelteMarkdown from 'svelte-markdown';
 	import { fly, fade, slide } from 'svelte/transition';
 	import { v4 as uuidv4 } from 'uuid';
@@ -38,7 +39,7 @@
 
 	let isAnswerSubmitted;
 
-	let LOCAL_STORAGE_KEY = `ANSWER_` + sectionItem.id;
+	let LOCAL_STORAGE_KEY = `ANSWER_` + (sectionItem.id || sectionItem._id);
 
 	let myAnswer = JSON.parse(localStorage[LOCAL_STORAGE_KEY] || null) || null;
 
@@ -52,9 +53,13 @@
 	}));
 
 	if (myAnswer) {
-		sectionItem.interactiveAnswers = sectionItem.interactiveAnswers.map((a) => {
-			a.isSelected = a.emoji === myAnswer.emoji;
-			return a;
+		(_.isArray(myAnswer) ? myAnswer : [myAnswer]).forEach((answer) => {
+			sectionItem.interactiveAnswers = sectionItem.interactiveAnswers.map((a) => {
+				if (a.emoji === answer.emoji) {
+					a.isSelected = true;
+				}
+				return a;
+			});
 		});
 	}
 
@@ -82,16 +87,27 @@
 
 		if (
 			(!sectionItem.interactiveRenderType ||
-				sectionItem.interactiveRenderType === 'single_choice') &&
+				sectionItem.interactiveRenderType === 'single_choice' ||
+				sectionItem.interactiveRenderType === 'multiple_choice') &&
 			answer.isSelected
 		) {
 			let foundAnswer = sectionItem.answersResults.find((a) => a.emoji === answer.emoji);
-			foundAnswer.count--;
-			sectionItem.answersResults = [...sectionItem.answersResults];
+
+			if (foundAnswer) {
+				foundAnswer.count--;
+				sectionItem.answersResults = [...sectionItem.answersResults];
+			}
+
 			answer.isSelected = false;
 
-			myAnswer = null;
-			localStorage[LOCAL_STORAGE_KEY] = null;
+			if (sectionItem.interactiveRenderType === 'multiple_choice') {
+				myAnswer = myAnswer ? (_.isArray(myAnswer) ? myAnswer : [myAnswer]) : [];
+				myAnswer = myAnswer.filter((a) => a.emoji !== answer.emoji);
+				localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(myAnswer);
+			} else {
+				myAnswer = null;
+				localStorage[LOCAL_STORAGE_KEY] = null;
+			}
 
 			if (sectionItem.varName) {
 				delete $currentCustomer.vars[sectionItem.varName];
@@ -100,33 +116,39 @@
 			return;
 		}
 
-		if (sectionItem.id) {
-			post(`pages/${page._id}/questions/${sectionItem.id}`, {
-				parentSectionId,
-				answer
-			});
+		post(`pages/${page._id}/questions/${sectionItem.id || `main-${page._id}`}`, {
+			parentSectionId,
+			answer,
+			interactiveRenderType: sectionItem.interactiveRenderType
+		});
 
-			trackInteractiveAnswer({
-				sectionId: parentSectionId || sectionItem.id,
-				sectionItemId: parentSectionId ? sectionItem.id : null,
+		trackInteractiveAnswer({
+			sectionId: parentSectionId || sectionItem.id,
+			sectionItemId: parentSectionId ? sectionItem.id : null,
 
-				emoji: answer.emoji,
-				text: answer.text,
-				value: answer.value
-			});
-		}
+			emoji: answer.emoji,
+			text: answer.text,
+			value: answer.value
+		});
 
 		isAnswerSubmitted = true;
 		answer.isSelected = true;
 
-		myAnswer = answer;
-		localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(answer);
+		if (sectionItem.interactiveRenderType === 'multiple_choice') {
+			myAnswer = myAnswer ? (_.isArray(myAnswer) ? myAnswer : [myAnswer]) : [];
+			myAnswer.push(answer);
+		} else {
+			myAnswer = answer;
+		}
+
+		localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(myAnswer);
 
 		sectionItem.answersResults = sectionItem.answersResults || [];
 
 		if (
 			!sectionItem.interactiveRenderType ||
-			sectionItem.interactiveRenderType === 'single_choice'
+			sectionItem.interactiveRenderType === 'single_choice' ||
+			sectionItem.interactiveRenderType === 'multiple_choice'
 		) {
 			let foundAnswer = sectionItem.answersResults.find((a) => a.emoji === answer.emoji);
 
@@ -145,9 +167,14 @@
 			interactiveAnswers: sectionItem.interactiveAnswers.map((qa) => {
 				if (
 					!sectionItem.interactiveRenderType ||
-					sectionItem.interactiveRenderType === 'single_choice'
+					sectionItem.interactiveRenderType === 'single_choice' ||
+					sectionItem.interactiveRenderType === 'multiple_choice'
 				) {
-					if (qa.isSelected && qa !== answer) {
+					if (
+						sectionItem.interactiveRenderType === 'single_choice' &&
+						qa.isSelected &&
+						qa !== answer
+					) {
 						let foundPreviousAnswer = sectionItem.answersResults.find((a) => a.emoji === qa.emoji);
 
 						if (foundPreviousAnswer) {
@@ -207,7 +234,7 @@
 
 {#if sectionItem}
 	<div class="{clazz} flex flex-wrap ">
-		{#if sectionItem.interactiveRenderType === 'single_choice'}
+		{#if sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice'}
 			{#each sectionItem.interactiveAnswers as answer}
 				<div
 					on:click={() => submitAnswer(answer)}
@@ -414,7 +441,7 @@
 		</div>
 	{/if}
 
-	{#if sectionItem.interactiveRenderType === 'short_answer' || sectionItem.interactiveRenderType === 'single_choice'}
+	{#if ['short_answer', 'single_choice', 'multiple_choice'].includes(sectionItem.interactiveRenderType)}
 		<div class="flex w-full items-center mt-4 ">
 			<div class="opacity-80 text-sm">Live answers from the community</div>
 			<div class="ml-2 w-[7px] h-[7px] rounded-full bg-green-300" />

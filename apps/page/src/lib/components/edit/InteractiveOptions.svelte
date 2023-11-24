@@ -79,6 +79,10 @@
 				if (sectionItem.interactiveRenderType === 'single_choice') {
 					sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
 				}
+
+				if (sectionItem.interactiveRenderType === 'multiple_choice') {
+					sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '🎉' }, { emoji: '💯' }];
+				}
 			}}
 		>
 			{#if sectionItem.isActionSuccessSection}
@@ -86,6 +90,7 @@
 				<option value="link">Click 1 Link</option>
 				<option value="links">Click Few Links</option>
 				<option value="single_choice">Community Single Choice</option>
+				<option value="multiple_choice">Community Multiple Choice</option>
 				<option value="short_answer">Community Answer</option>
 			{:else if section?.renderType === 'form'}
 				<option value="email">Email</option>
@@ -97,6 +102,7 @@
 				<option value="links">Click Few Links</option>
 				<option value="email">Submit Email</option>
 				<option value="single_choice">Community Single Choice</option>
+				<option value="multiple_choice">Community Multiple Choice</option>
 				<option value="short_answer">Community Answer</option>
 				<option value="wave_analytics">See Public Web Analytics</option>
 			{/if}
@@ -170,7 +176,7 @@
 			{/if}
 		{:else}
 			<div>
-				{#if sectionItem.interactiveAnswers?.length && (!sectionItem.interactiveRenderType || sectionItem.interactiveRenderType === 'single_choice')}
+				{#if sectionItem.interactiveAnswers?.length && (!sectionItem.interactiveRenderType || sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice')}
 					{#each sectionItem.interactiveAnswers as answer}
 						<div class="flex justify-between">
 							<EmojiPicker

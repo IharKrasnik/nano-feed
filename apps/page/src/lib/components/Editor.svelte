@@ -24,6 +24,7 @@
 	import EditNewsletter from '$lib/components/edit/Newsletter.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import EditPost from 'lib/components/post/EditPost.svelte';
+	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
@@ -1010,6 +1011,37 @@
 										{#if !page.heros?.length}
 											<button class="_secondary" on:click={addDefaultHero}>Add Hero Section</button>
 										{/if}
+									{/if}
+
+									{#if page._id}
+										<!-- <div class="font-bold mr-2 py-4 my-4">🕹 Audience Interacton</div>
+
+										{#each page.interactiveAnswers as answer}
+											<div class="flex justify-between">
+												<EmojiPicker
+													isNoCustom
+													class="w-full p-2 bg-[#fafafa] my-2 text-center"
+													bind:icon={answer.emoji}
+												/>
+
+												<button on:click={() => removeAnswerFromItem(sectionItem, answer)}>🗑</button
+												>
+											</div>
+										{/each}
+										{#if page.interactiveAnswers.length === 3}
+											<div class="text-sm">You can add up to 3 answers</div>
+										{:else}
+											<button
+												class="_small _secondary w-full"
+												on:click={() => addAnswer(sectionItem)}
+												>Add another interactive answer</button
+											>
+										{/if} -->
+										<EditInteractiveOptions
+											section={page}
+											sectionItem={page}
+											isWithButton={false}
+										/>
 									{/if}
 									<!-- 
 									{#if page?._id}
