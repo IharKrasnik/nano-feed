@@ -6,8 +6,8 @@ const getPageMetaTags = ({ page }) => {
 
 	if (!pageTitle) {
 		pageTitle =
-			(page.heros[0] && page.heros[0].title) ||
-			(page.sections && page.sections[0].title) ||
+			(page.heros && page.heros[0] && page.heros[0].title) ||
+			(page.sections && page.sections && page.sections[0].title) ||
 			page.title;
 
 		pageTitle = `${page.name}${pageTitle ? ` — ${pageTitle}` : ''}`;
@@ -15,8 +15,8 @@ const getPageMetaTags = ({ page }) => {
 
 	let pageSubtitle =
 		page.openGraph?.description ||
-		(page.heros[0] && page.heros[0].subtitle) ||
-		(page.sections && page.sections[0].ogDescription) ||
+		(page.heros && page.heros[0] && page.heros[0].subtitle) ||
+		(page.sections && page.sections && page.sections[0].description) ||
 		page.subtitle ||
 		page.callToAction ||
 		'';
