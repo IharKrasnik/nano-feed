@@ -11,16 +11,33 @@
 
 	export let noStickyHeader;
 
+	let prevPageId;
+
 	if (browser && $currentPage) {
-		window.MWAVE_CONFIG = window.MWAVE_CONFIG || {};
+		prevPageId = $currentPage._id;
+
+		window.MWAVE_CONFIG = window.MWAVE_CONFIG || {
+			isSkipLocationChange: true
+		};
 
 		window.MWAVE_CONFIG.subProjectId = $currentPage.parentPage?._id || $currentPage._id;
 		window.MWAVE_CONFIG.pageId = $currentPage._id;
 	}
 
 	$: if (browser && $currentPage?._id) {
-		window.MWAVE_CONFIG = window.MWAVE_CONFIG || {};
+		window.MWAVE_CONFIG = window.MWAVE_CONFIG || {
+			isSkipLocationChange: true
+		};
 		window.MWAVE_CONFIG.pageId = $currentPage._id;
+
+		if (prevPageId !== $currentPage._id) {
+			window.mwave.sendTrackEvent({
+				type: 'pathChange',
+				payload: {
+					value: window.location.href
+				}
+			});
+		}
 	}
 </script>
 
