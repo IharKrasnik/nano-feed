@@ -110,7 +110,7 @@
 
 		{#if !sectionItem.interactiveRenderType}
 			<div class="text-sm mb-2 mt-4">Item URL</div>
-			<input type="url" bind:value={sectionItem.url} />
+			<input class="w-full" type="url" bind:value={sectionItem.url} />
 		{/if}
 
 		{#if section?.renderType === 'form' && ['text', 'textarea', 'email'].includes(sectionItem.interactiveRenderType)}

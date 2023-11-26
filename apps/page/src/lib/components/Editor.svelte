@@ -1024,7 +1024,7 @@
 										{/if}
 									{/if}
 
-									{#if page._id}
+									{#if page._id && page.renderType === 'article'}
 										<!-- <div class="font-bold mr-2 py-4 my-4">🕹 Audience Interacton</div>
 
 										{#each page.interactiveAnswers as answer}
@@ -1511,10 +1511,11 @@
 									>
 										<div class="flex cursor-pointer" slot="header">
 											<div
-												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100"
+												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100 flex items-center"
 												use:tooltip
 												title="Free plan includes 300 subscribers"
 											>
+												<FeatherIcon class="mr-2" color="#fff" name="clipboard" size="15" />
 												{page.totalSignupsCount || 0}/300
 											</div>
 
