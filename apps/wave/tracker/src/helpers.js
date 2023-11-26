@@ -114,7 +114,12 @@ export const sendTrackData = (userData, url, data) =>
 		projectId: userData.projectId,
 		visitorId: userData.visitorId,
 		sessionId: userData.sessionId,
-		subProjectId: window.WAVE_SUBPROJECT_ID
+		...(window.MWAVE_CONFIG
+			? {
+					subProjectId: window.MWAVE_CONFIG?.subProjectId,
+					pageId: window.MWAVE_CONFIG?.pageId
+			  }
+			: {})
 	}).then((trackData) => {
 		if (trackData.sessionId) {
 			// eslint-disable-next-line no-param-reassign
@@ -131,7 +136,13 @@ export const sendTrackEvent = ({ type, timestamp = Date.now(), payload }) => {
 		projectId: userData.projectId,
 		visitorId: userData.visitorId,
 		sessionId: userData.sessionId,
-		subProjectId: window.WAVE_SUBPROJECT_ID,
+
+		...(window.MWAVE_CONFIG
+			? {
+					subProjectId: window.MWAVE_CONFIG?.subProjectId,
+					pageId: window.MWAVE_CONFIG?.pageId
+			  }
+			: {}),
 
 		type,
 		timestamp,

@@ -12,7 +12,15 @@
 	export let noStickyHeader;
 
 	if (browser && $currentPage) {
-		window.WAVE_SUBPROJECT_ID = $currentPage.parentPage?._id || $currentPage._id;
+		window.MWAVE_CONFIG = window.MWAVE_CONFIG || {};
+
+		window.MWAVE_CONFIG.subProjectId = $currentPage.parentPage?._id || $currentPage._id;
+		window.MWAVE_CONFIG.pageId = $currentPage._id;
+	}
+
+	$: if (browser && $currentPage?._id) {
+		window.MWAVE_CONFIG = window.MWAVE_CONFIG || {};
+		window.MWAVE_CONFIG.pageId = $currentPage._id;
 	}
 </script>
 
