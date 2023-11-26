@@ -325,6 +325,11 @@ button._promo {
 	border: none;
 }
 
+button._bare {
+	background: none;
+	border: none;
+}
+
 .bg-green-600,
 .bg-green-700 {
 	background: #6c8a6f;

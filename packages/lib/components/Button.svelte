@@ -45,7 +45,13 @@
 	{/if}
 
 	{#if isJustDone}
-		<div class="" in:scale={{ duration: 150 }}>👌</div>
+		<div
+			class="absolute left-[50%] top-[50%]"
+			style="transform: translateX(-50%) translateY(-50%);"
+			in:scale={{ duration: 150 }}
+		>
+			👌
+		</div>
 	{:else if isJustFailed}
 		<div class="" in:scale={{ duration: 150 }}>❌</div>
 	{:else}

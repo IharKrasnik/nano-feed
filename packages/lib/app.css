@@ -135,6 +135,11 @@ a.button.danger {
 	border-color: #f44747;
 }
 
+button._bare {
+	background: none;
+	border: none;
+}
+
 .number-tag {
 	background-color: #aaaaaa;
 	color: black;

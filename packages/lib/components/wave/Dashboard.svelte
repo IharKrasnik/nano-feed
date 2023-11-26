@@ -10,6 +10,7 @@
 	import countryCodeLoockup from 'country-code-lookup';
 	import getDomain from 'lib/helpers/getDomain';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import Button from 'lib/components/Button.svelte';
 
 	export let stats;
 	export let project;
@@ -152,8 +153,14 @@
 					? 'bg-green-400'
 					: 'bg-gray-600'} w-[10px] h-[10px] rounded-full ml-4 mr-2"
 			/>
-			<div>{onlineUsersCount} online</div>
 		{/if}
+		<div>{onlineUsersCount} online</div>
+		<Button
+			class="ml-2 opacity-50 hover:opacity-100 transition cursor-pointer _bare"
+			onClick={getOnlineCount}
+		>
+			<FeatherIcon name="refresh-cw" color="#fff" size="15" />
+		</Button>
 		<!-- {#if project}
 			<h3>
 				<a target="_blank" href={project.url}>
