@@ -45,5 +45,11 @@ export default (userData) => {
 		window.dispatchEvent(new Event('locationchange'));
 	});
 
-	return window.addEventListener('locationchange', () => handleLocationChange(userData));
+	return window.addEventListener('locationchange', () => {
+		let isSkipLocationChange = window.MWAVE_CONFIG?.isSkipLocationChange;
+
+		if (!isSkipLocationChange) {
+			handleLocationChange(userData);
+		}
+	});
 };
