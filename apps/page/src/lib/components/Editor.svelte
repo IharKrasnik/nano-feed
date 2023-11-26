@@ -2,6 +2,7 @@
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
 	import { browser } from '$app/environment';
+	import { onDestroy } from 'svelte';
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
@@ -136,7 +137,10 @@
 			return;
 		}
 
-		let stats = await get(`pages/${page.parentPage?._id || page._id}/conversions-optimised`);
+		let stats = await get(`pages/${page._id}/conversions-optimised`, {
+			...(page.parentPage ? { parentPageId: page.parentPage._id } : {})
+		});
+
 		page.totalUniqueViews = stats.totalVisitorsCount;
 		page.totalUniqueClicksCount = stats.uniqueClicksCount;
 		page.totalSignupsCount = stats.totalSubmissionsCount;
@@ -630,6 +634,28 @@
 	let selectedSubmission;
 	let selectedTrigger;
 	let selectedChatRoom;
+
+	let onlineUsersCount = -1;
+
+	let getOnlineCount = async () => {
+		if (page) {
+			onlineUsersCount = await get(`waveActions/page.mmntm.build/online-users`, {
+				subProjectId: page?.parentPage?._id || page?._id
+			});
+		}
+	};
+
+	let onlineInterval;
+
+	getOnlineCount();
+
+	onlineInterval = setInterval(() => {
+		getOnlineCount();
+	}, 30000);
+
+	onDestroy(() => {
+		clearInterval(onlineInterval);
+	});
 </script>
 
 {#if isSettingsModalShown}
@@ -907,11 +933,17 @@
 										/>
 									</div>
 								{:else}
-									<div
-										class="text-lg font-bold mb-4 block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
-										on:click={() => (isBrandNameEdit = true)}
-									>
-										{page.name}
+									<div class="flex justify-between items-center mb-4 ">
+										<div
+											class="text-lg font-bold block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
+											on:click={() => (isBrandNameEdit = true)}
+										>
+											{page.name}
+										</div>
+										<div class="flex items-center">
+											<FeatherIcon size="15" class="mr-2" name="eye" />
+											{page.totalUniqueViews}
+										</div>
 									</div>
 								{/if}
 
@@ -932,6 +964,19 @@
 												⚙️
 											</div>
 										</div>
+										<div>
+											{#if onlineUsersCount !== -1}
+												<div class="flex items-center">
+													<div
+														class="{onlineUsersCount
+															? 'bg-green-400'
+															: 'bg-gray-600'} w-[10px] h-[10px] rounded-full ml-4 mr-2"
+													/>
+													<div>{onlineUsersCount} online</div>
+												</div>
+											{/if}
+										</div>
+
 										<div class="flex">
 											<input
 												class="mr-2"
@@ -944,7 +989,7 @@
 														$heatmap = null;
 													}
 												}}
-											/> Show Heatmap 🔥
+											/> Heatmap 🔥
 										</div>
 									</div>
 								{/if}
