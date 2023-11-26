@@ -1,10 +1,13 @@
 import './lib/fingerprint2.min';
+import './lib/lifecycle';
 import clickHandler from './actions/click';
 import pageResizeHandler from './actions/pageResize';
 import pageScrollingHandler from './actions/pageScrolling';
 import signupHandler from './actions/signup';
 import mouseMoveHandler from './actions/mouseMove';
 import pathChangeHandler, { handleLocationChange } from './actions/pathChange';
+import onExit from './actions/onExit';
+
 import trackerMutationObserver from './records/observer';
 
 import {
@@ -17,6 +20,10 @@ import {
 	sendTrackEvent,
 	sendPing
 } from './helpers';
+
+try {
+	onExit.register();
+} catch (err) {}
 
 window.mwave = {
 	sendTrackEvent,

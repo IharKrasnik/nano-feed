@@ -10,7 +10,8 @@ const outputConfig = {
 	sourcemap: false,
 	globals: {
 		tracker: 'tracker',
-		Fingerprint2: 'Fingerprint2'
+		Fingerprint2: 'Fingerprint2',
+		lifecycle: 'lifecycle'
 	}
 };
 
