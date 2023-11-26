@@ -22,6 +22,10 @@
 
 		window.MWAVE_CONFIG.subProjectId = $currentPage.parentPage?._id || $currentPage._id;
 		window.MWAVE_CONFIG.pageId = $currentPage._id;
+
+		setInterval(() => {
+			window.mwave.sendPing();
+		}, 5000);
 	}
 
 	$: if (browser && $currentPage?._id) {
