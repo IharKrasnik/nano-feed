@@ -116,7 +116,13 @@ const init =
 							url: window.location.href,
 							payload,
 							projectId: userData.projectId,
-							subProjectId: window.WAVE_SUBPROJECT_ID
+
+							...(window.MWAVE_CONFIG
+								? {
+										subProjectId: window.MWAVE_CONFIG?.subProjectId,
+										pageId: window.MWAVE_CONFIG?.pageId
+								  }
+								: {})
 						});
 					});
 			})

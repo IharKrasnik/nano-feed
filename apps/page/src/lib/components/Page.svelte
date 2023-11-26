@@ -6,17 +6,16 @@
 
 	import SitePreview from '$lib/components/site-preview.svelte';
 
-	export let slug;
-
 	export let isNoBadge;
 
 	export let noStickyHeader;
-
 	export let currentPage = $page.data.page;
 
 	if (browser && currentPage) {
-		window.WAVE_SUBPROJECT_ID = currentPage._id;
-		slug = $page.params.pageSlug || slug;
+		window.MWAVE_CONFIG = window.MWAVE_CONFIG || {};
+
+		window.MWAVE_CONFIG.subProjectId = currentPage.parentPage?._id || currentPage._id;
+		window.MWAVE_CONFIG.pageId = currentPage._id;
 	}
 </script>
 
