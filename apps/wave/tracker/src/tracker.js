@@ -14,11 +14,13 @@ import {
 	getBrowserName,
 	getConnectionType,
 	getOS,
-	sendTrackEvent
+	sendTrackEvent,
+	sendPing
 } from './helpers';
 
 window.mwave = {
-	sendTrackEvent
+	sendTrackEvent,
+	sendPing
 };
 
 if (process.env.BUILD === 'dev') {

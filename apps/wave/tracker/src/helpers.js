@@ -157,6 +157,23 @@ export const sendTrackEvent = ({ type, timestamp = Date.now(), payload }) => {
 	});
 };
 
+export const sendPing = () => {
+	let userData = window.WAVE_USER_DATA;
+
+	return sendData('waveActions/ping', {
+		projectId: userData.projectId,
+		visitorId: userData.visitorId,
+		sessionId: userData.sessionId,
+
+		...(window.MWAVE_CONFIG
+			? {
+					subProjectId: window.MWAVE_CONFIG?.subProjectId,
+					pageId: window.MWAVE_CONFIG?.pageId
+			  }
+			: {})
+	});
+};
+
 export const registerHandlers = (userData, handlers) => {
 	handlers.forEach((handler) => handler(userData));
 };
