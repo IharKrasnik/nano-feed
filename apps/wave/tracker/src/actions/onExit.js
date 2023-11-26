@@ -15,7 +15,10 @@ export default {
 						sessionId: userData.sessionId
 					};
 
-					navigator.sendBeacon(`${window.WAVE_API_URL || API_URL}/waveActions/ping`, data);
+					navigator.sendBeacon(
+						`${window.WAVE_API_URL || API_URL}/waveActions/ping`,
+						JSON.stringify(data)
+					);
 				}
 			}
 		});
