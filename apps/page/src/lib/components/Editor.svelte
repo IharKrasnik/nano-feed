@@ -918,6 +918,17 @@
 								<ABToggle></ABToggle>
 								</div> -->
 
+							{#if onlineUsersCount !== -1}
+								<div class="flex items-center mb-4 flex border border-green-300 p-4">
+									<div
+										class="{onlineUsersCount
+											? 'bg-green-400'
+											: 'bg-gray-600'} w-[10px] h-[10px] rounded-full ml-4 mr-2"
+									/>
+									<div>{onlineUsersCount} users online</div>
+								</div>
+							{/if}
+
 							{#if $postDraft}
 								<BackTo to={'Editor'} onClick={() => ($postDraft = null)} />
 								<EditPost class="none" bind:blog={page.blog} bind:post={$postDraft} />
@@ -935,12 +946,12 @@
 								{:else}
 									<div class="flex justify-between items-center mb-4 ">
 										<div
-											class="text-lg font-bold block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
+											class="w-full mr-2 text-lg font-bold block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
 											on:click={() => (isBrandNameEdit = true)}
 										>
 											{page.name}
 										</div>
-										<div class="flex items-center">
+										<div class="flex items-center ">
 											<FeatherIcon size="15" class="mr-2" name="eye" />
 											{page.totalUniqueViews}
 										</div>
@@ -963,18 +974,6 @@
 											>
 												⚙️
 											</div>
-										</div>
-										<div>
-											{#if onlineUsersCount !== -1}
-												<div class="flex items-center">
-													<div
-														class="{onlineUsersCount
-															? 'bg-green-400'
-															: 'bg-gray-600'} w-[10px] h-[10px] rounded-full ml-4 mr-2"
-													/>
-													<div>{onlineUsersCount} online</div>
-												</div>
-											{/if}
 										</div>
 
 										<div class="flex">
