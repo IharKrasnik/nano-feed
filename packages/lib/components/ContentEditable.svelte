@@ -212,7 +212,7 @@
 			document.execCommand(
 				'insertHTML',
 				false,
-				'<a href="' + text + '" target="_blank">' + selection + '</a>'
+				'<a href="' + text + '" class="_link" target="_blank">' + selection + '</a>'
 			);
 			console.log('inserthtml');
 		} else {
