@@ -84,7 +84,7 @@
 		{#if chartData && chartWidth}
 			<LinkedChart
 				linked="chart"
-				uid="users"
+				uid={actionType}
 				data={chartData}
 				fill="#8B786D"
 				grow={true}
@@ -107,7 +107,7 @@
 		</div>
 		<div class="w-full text-center py-4">
 			<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
-			<LinkedValue uid="users" empty={stats.totalCount} />
+			<LinkedValue uid={actionType} empty={stats.totalCount} />
 			{actionLabels[actionType].toLowerCase()}
 		</div>
 

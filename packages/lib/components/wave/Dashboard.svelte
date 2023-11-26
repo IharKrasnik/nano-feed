@@ -104,7 +104,7 @@
 			dateFrom.add(1, unitToAdd);
 		}
 
-		debugger;
+		console.log('userChartData', userChartData);
 
 		setTimeout(() => {
 			if (widthEl) {
@@ -202,7 +202,7 @@
 					<LinkedChart
 						linked="chart"
 						uid="users"
-						data={userChartData}
+						data={{ ...userChartData }}
 						fill="#8B786D"
 						grow={true}
 						barMinWidth={5}
@@ -224,8 +224,10 @@
 				</div>
 
 				<div class="w-full text-center py-4">
-					<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
-					<LinkedValue uid="users" empty={stats.totalUsersCount} /> users
+					{#key stats}
+						<LinkedLabel linked="chart" empty={timeframeLabels[timeframe]} /> —
+						<LinkedValue uid="users" empty={stats.totalUsersCount} /> users
+					{/key}
 				</div>
 
 				{#if isShowSignups}
