@@ -2,6 +2,7 @@
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
 	import { get } from 'lib/api';
+	import { onDestroy } from 'svelte';
 	import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
 	import SingleStat from 'lib/components/wave/SingleStat.svelte';
 	import { fade, fly } from 'svelte/transition';
@@ -26,13 +27,19 @@
 		});
 	};
 
+	let onlineInterval;
+
 	if (project) {
 		getOnlineCount();
 
-		setInterval(() => {
+		onlineInterval = setInterval(() => {
 			getOnlineCount();
 		}, 30000);
 	}
+
+	onDestroy(() => {
+		clearInterval(onlineInterval);
+	});
 
 	let widthEl;
 	let chartWidth;
