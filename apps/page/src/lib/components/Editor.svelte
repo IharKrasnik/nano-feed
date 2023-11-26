@@ -136,7 +136,7 @@
 			return;
 		}
 
-		let stats = await get(`pages/${page.parentPage?._id || page._id}/conversions`);
+		let stats = await get(`pages/${page.parentPage?._id || page._id}/conversions-optimised`);
 		page.totalUniqueViews = stats.totalVisitorsCount;
 		page.totalUniqueClicksCount = stats.uniqueClicksCount;
 		page.totalSignupsCount = stats.totalSubmissionsCount;

@@ -47,7 +47,7 @@ export default (stats, timeframe = '7_days') => {
 		let dateLabel = dateFrom.format(dateLabelFormat);
 
 		userChartData[dateLabel] = stats.userStats.find((s) => s.date === dateLabel)?.count || 0;
-		viewChartData[dateLabel] = stats.viewStats.find((s) => s.date === dateLabel)?.count || 0;
+		viewChartData[dateLabel] = stats.viewStats?.find((s) => s.date === dateLabel)?.count || 0;
 		dateFrom.add(1, unitToAdd);
 	}
 

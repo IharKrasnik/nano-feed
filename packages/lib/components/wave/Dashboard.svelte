@@ -45,7 +45,7 @@
 					: project.blog
 					? 'post.mmntm.build'
 					: project.waveProject._id || project.url
-			}/stats`,
+			}/stats-optimised`,
 			{
 				timeframe: timeframe,
 				timezone: moment.tz.guess(),
@@ -100,9 +100,11 @@
 			let dateLabel = dateFrom.format(dateLabelFormat);
 
 			userChartData[dateLabel] = stats.userStats.find((s) => s.date === dateLabel)?.count || 0;
-			viewChartData[dateLabel] = stats.viewStats.find((s) => s.date === dateLabel)?.count || 0;
+			viewChartData[dateLabel] = stats.viewStats?.find((s) => s.date === dateLabel)?.count || 0;
 			dateFrom.add(1, unitToAdd);
 		}
+
+		debugger;
 
 		setTimeout(() => {
 			if (widthEl) {

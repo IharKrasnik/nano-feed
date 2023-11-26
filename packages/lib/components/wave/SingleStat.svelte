@@ -25,7 +25,7 @@
 	let growth = 0;
 
 	let fetchStats = async () => {
-		stats = await get(`waveProjects/${projectId || subProjectId}/action-stats`, {
+		stats = await get(`waveProjects/${projectId || subProjectId}/action-stats-optimised`, {
 			...(subProjectId ? { subProjectId } : {}),
 			actionType,
 			timeframe,
