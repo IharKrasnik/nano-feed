@@ -919,13 +919,23 @@
 								</div> -->
 
 							{#if onlineUsersCount !== -1}
-								<div class="flex items-center mb-4 flex border border-green-300 p-4">
-									<div
-										class="{onlineUsersCount
-											? 'bg-green-400'
-											: 'bg-gray-600'} w-[10px] h-[10px] rounded-full ml-4 mr-2"
-									/>
-									<div>{onlineUsersCount} users online</div>
+								<div
+									class="flex items-center justify-between mb-4 flex border border-green-300 p-4"
+								>
+									<div class="flex items-center">
+										<div
+											class="{onlineUsersCount
+												? 'bg-green-400'
+												: 'bg-gray-600'} w-[10px] h-[10px] rounded-full ml-4 mr-2"
+										/>
+										<div>{onlineUsersCount} users online</div>
+									</div>
+									<Button
+										class="ml-2 opacity-50 hover:opacity-100 transition cursor-pointer _bare"
+										onClick={getOnlineCount}
+									>
+										<FeatherIcon name="refresh-cw" theme="light" size="15" />
+									</Button>
 								</div>
 							{/if}
 
