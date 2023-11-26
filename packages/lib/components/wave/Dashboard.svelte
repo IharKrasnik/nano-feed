@@ -18,6 +18,22 @@
 
 	export let isSinglePage = false;
 
+	let onlineUsersCount = -1;
+
+	let getOnlineCount = async () => {
+		onlineUsersCount = await get(`waveActions/${project._id}/online-users`, {
+			subProjectId: project?.page?._id
+		});
+	};
+
+	if (project) {
+		getOnlineCount();
+
+		setInterval(() => {
+			getOnlineCount();
+		}, 30000);
+	}
+
 	let widthEl;
 	let chartWidth;
 
@@ -121,8 +137,16 @@
 </script>
 
 <div class="flex justify-between items-center mb-4">
-	<div>
-		<h2 class="text-lg font-bold mb-4">Website Analytics</h2>
+	<div class="flex items-center">
+		<h2 class="text-xl font-bold">Website Analytics</h2>
+		{#if onlineUsersCount !== -1}
+			<div
+				class="{onlineUsersCount
+					? 'bg-green-400'
+					: 'bg-gray-600'} w-[10px] h-[10px] rounded-full ml-4 mr-2"
+			/>
+			<div>{onlineUsersCount} online</div>
+		{/if}
 		<!-- {#if project}
 			<h3>
 				<a target="_blank" href={project.url}>
