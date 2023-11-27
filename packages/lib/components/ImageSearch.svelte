@@ -44,23 +44,38 @@
 			search();
 		}
 	};
+
+	let hints = _.shuffle(['confetti', 'rocket', 'launch', 'space', 'nature', 'crowd', 'dashboard']);
 </script>
 
 <div on:click={search}>🔎</div>
 
 {#if isSearching}
 	<Modal isShown onClosed={() => close()} maxWidth={600}>
-		<div>
-			<div class="p-8">
+		<div class="h-screen">
+			<div class="p-8 h-full">
 				<h2 class="font-bold text-2xl mb-4">Search Image</h2>
 
 				<input
-					placeholder="Start Searching Images.."
+					placeholder="Searching Images.."
 					use:autofocus
 					bind:value={searchText}
 					on:input={_.debounce(search, 500)}
 				/>
 
+				<div class="flex items-center gap-2">
+					{#each hints as hint}
+						<div
+							class="mt-2 text-sm cursor-pointer hover:font-bold"
+							on:click={() => {
+								searchText = hint;
+								search();
+							}}
+						>
+							{hint}
+						</div>
+					{/each}
+				</div>
 				<div class="mt-4 flex">
 					<div
 						class="_section cursor-pointer px-4 mr-2"
@@ -105,7 +120,7 @@
 									/>
 
 									{#if image.user}
-										<div class="mb-4 text-sm opacity-80">
+										<div class="mb-4 opacity-80" style="font-size: 8px;">
 											By
 											<a
 												target="_blank"
@@ -137,6 +152,9 @@
 
 					{#if !images?.length}
 						<div class="grid grid-cols-3 gap-4">
+							<div class="p-4 bg-[#fafafa] min-h-[100px]" />
+							<div class="p-4 bg-[#fafafa] min-h-[100px]" />
+							<div class="p-4 bg-[#fafafa] min-h-[100px]" />
 							<div class="p-4 bg-[#fafafa] min-h-[100px]" />
 							<div class="p-4 bg-[#fafafa] min-h-[100px]" />
 							<div class="p-4 bg-[#fafafa] min-h-[100px]" />

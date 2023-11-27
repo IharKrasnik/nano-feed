@@ -346,7 +346,7 @@
 				</div>
 
 				<div class="_title flex items-center">
-					{#if page.demoUrl}
+					{#if hero.demoUrl}
 						<div>Vertical</div>
 						<input class="ml-2" type="checkbox" bind:checked={hero.theme.isVertical} />
 					{/if}

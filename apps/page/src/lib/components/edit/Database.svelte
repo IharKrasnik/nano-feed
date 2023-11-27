@@ -8,6 +8,7 @@
 	import EditFeedItem from '$lib/components/edit/FeedItem.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import csv from 'csvtojson';
+	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 
 	let posts = [];
 
@@ -15,7 +16,6 @@
 	export let selectedStreamSlug;
 	export let selectedCustomer;
 
-	let childStreams = [];
 	let activeStream = null;
 
 	let lastStreamSlug = 'LAST_DATABASE_STREAM_SLUG';
@@ -25,15 +25,11 @@
 	let loadChildStreams = async () => {
 		isLoading = true;
 
-		let { results } = await get('projects', {
-			hubStreamSlug: page.parentPage?.streamSlug || page.streamSlug
-		});
-
-		childStreams = results;
+		$childStreams = await refreshChildStreams({ page });
 
 		activeStream = localStorage[lastStreamSlug]
-			? childStreams.find((s) => s.slug === localStorage[lastStreamSlug]) || childStreams[0]
-			: childStreams[0];
+			? $childStreams.find((s) => s.slug === localStorage[lastStreamSlug]) || $childStreams[0]
+			: $childStreams[0];
 
 		selectedStreamSlug = activeStream?.slug;
 		localStorage[lastStreamSlug] = selectedStreamSlug;
@@ -54,16 +50,6 @@
 		localStorage[lastStreamSlug] = selectedStreamSlug;
 	};
 
-	if (!(page.parentPage?.streamSlug || page.streamSlug)) {
-		put(`pages/${page.parentPage?._id || page._id}/embed-stream`, {}).then(({ streamSlug }) => {
-			if (page.parentPage) {
-				page.parentPage.streamSlug = streamSlug;
-			} else {
-				page.streamSlug = streamSlug;
-			}
-		});
-	}
-
 	let newDatabaseName = '';
 	let activeTabName = 'main';
 
@@ -73,26 +59,14 @@
 
 	let createDatabase = async () => {
 		if (newDatabaseName) {
-			if (!page.streamSlug) {
-				let { streamSlug = parentPageSlug } = await put(
-					`pages/${page.parentPage?._id || page._id}/embed-stream`,
-					{
-						title: page.name
-					}
-				);
-
-				page.streamSlug = parentPageSlug;
-			}
-
 			const { streamSlug, project: newStream } = await put(
 				`pages/${page.parentPage?._id || page._id}/embed-stream`,
 				{
-					title: newDatabaseName,
-					hubStreamSlug: page.streamSlug
+					title: newDatabaseName
 				}
 			);
 
-			childStreams = [newStream, ...childStreams];
+			$childStreams = [newStream, ...$childStreams];
 			activeStream = newStream;
 			selectedStreamSlug = streamSlug;
 			newDatabaseName = '';
@@ -258,7 +232,7 @@
 	};
 </script>
 
-{#if !isLoading && !childStreams?.length}
+{#if !isLoading && !$childStreams?.length}
 	<div class="my-8">
 		<input placeholder="Tools" bind:value={newDatabaseName} />
 		<Button class="mt-2 _primary" onClick={createDatabase}>Create new database</Button>
@@ -270,7 +244,7 @@
 
 			{#if isStreamEdit}
 				<div class="_section w-full flex flex-col" in:fade={{ duration: 150 }}>
-					{#each childStreams.filter((s) => s.slug !== (page?.parentPage?.streamSlug || page.streamSlug)) as childStream}
+					{#each $childStreams.filter((s) => s.slug !== (page?.parentPage?.streamSlug || page.streamSlug)) as childStream}
 						<div
 							class="cursor-pointer py-2"
 							on:click={(evt) => {

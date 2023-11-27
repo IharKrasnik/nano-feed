@@ -57,6 +57,24 @@
 		bgColor: '#D98324'
 	};
 
+	let isLoading = false;
+
+	let feedItem;
+
+	let loadFeedItem = async () => {
+		isLoading = true;
+		let { feedItemSlug } = $sveltePage.params;
+
+		feedItem = await get(`feedItems/bySlug`, {
+			projectSlug: page.streamSlug,
+			slug: feedItemSlug
+		});
+	};
+
+	if (page.slug.includes(':')) {
+		loadFeedItem();
+	}
+
 	if (page.blog) {
 		if (!page.blog.url) {
 			let domain = (page.blog.domains || []).filter((d) => d.isConfigured)[0];
@@ -453,7 +471,7 @@
 											>
 										{/each}
 
-										{#if !page._id}
+										{#if !page._id && page.parentPage && !page.isUseDatabase}
 											<span>{page.name}</span>
 										{/if}
 									</div>

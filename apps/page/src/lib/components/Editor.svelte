@@ -1,5 +1,6 @@
 <script>
 	import _ from 'lodash';
+	import { isDev } from 'lib/env';
 	import moment from 'moment-timezone';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
@@ -41,6 +42,8 @@
 	import MomentumHub from 'lib/components/MomentumHub.svelte';
 	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
 
+	import contenteditable from 'lib/use/contenteditable';
+
 	import SitePreview from '$lib/components/site-preview.svelte';
 
 	import AnalyticsTab from '$lib/components/tabs/AnalyticsTab.svelte';
@@ -75,6 +78,8 @@
 	import postDraft from 'lib/stores/postDraft';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
+	import subPages, { refreshSubPages } from 'lib/stores/subPages';
+	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 	import heatmap from '$lib/stores/heatmap';
 
 	//
@@ -109,12 +114,16 @@
 	let defaultPage = {
 		_id: undefined,
 		name: '',
-		title: '',
-		subtitle: '',
-		callToAction: 'Join Waitlist',
-		bgColor: '',
+		heros: [
+			{
+				title: '',
+				subtitle: '',
+				interactiveRenderType: 'email',
+				callToActionText: 'Join Waitlist',
+				theme: {}
+			}
+		],
 		slug: '_new',
-		isCollectEmails: true,
 		welcomeEmail: null
 	};
 
@@ -137,7 +146,11 @@
 			return;
 		}
 
-		let stats = await get(`pages/${page._id}/conversions-optimised`, {
+		let endpointName = isDev
+			? `pages/${page._id}/conversions`
+			: `pages/${page._id}/conversions-optimised`;
+
+		let stats = await get(endpointName, {
 			...(page.parentPage ? { parentPageId: page.parentPage._id } : {})
 		});
 
@@ -221,6 +234,8 @@
 		page.activeHero = page.heros[0];
 
 		refreshPageConversionStats();
+		refreshSubPages({ page });
+		refreshChildStreams({ page });
 	};
 
 	let addNewHero = () => {
@@ -261,6 +276,24 @@
 		// 	isSignupFormShown = true;
 		// 	return;
 		// }
+		if (page.isUseDatabase) {
+			if (newStreamName) {
+				const { streamSlug, project: newStream } = await put(
+					`pages/${page.parentPage?._id || page._id}/embed-stream`,
+					{
+						title: newStreamName
+					}
+				);
+
+				$childStreams = [newStream, ...$childStreams];
+				newStreamName = '';
+
+				page.streamSlug = streamSlug;
+			}
+
+			page.slug = `${page.name.trim().toLowerCase().replace(' ', '-')}/$data.slug`;
+		}
+
 		let isNewPage = !page._id;
 
 		if (!isNewPage && page.creator && !$currentUser) {
@@ -272,6 +305,10 @@
 
 			page.testimonials = page.testimonials || [];
 			page.benefits = page.benefits || [];
+
+			if (!page._id && page.name?.includes(':')) {
+				page.slug = page.name;
+			}
 
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
 
@@ -580,11 +617,11 @@
 
 	let getConversionColor = (conversion) => {
 		if (conversion < 5) {
-			return 'red';
+			return 'border-red-300';
 		} else if (conversion < 10) {
-			return 'orange';
+			return 'border-orange-300';
 		} else {
-			return 'green';
+			return 'border-green-300';
 		}
 	};
 
@@ -610,21 +647,20 @@
 			}
 		];
 
-		setPageAndDraft(
-			{
-				_id: null,
-				slug: '_new',
-				heros,
-				activeHero: heros[0],
-				name: '',
-				title: '',
-				subtitle: '',
-				ctaExplainer: '',
-				parentPage: { ...page },
-				variablesValues: page.variablesValues
-			},
-			{ force: true }
-		);
+		page = {
+			_id: null,
+			slug: '_new',
+			heros,
+			activeHero: heros[0],
+			name: '',
+			title: '',
+			subtitle: '',
+			ctaExplainer: '',
+			parentPage: { ...page },
+			variablesValues: page.variablesValues
+		};
+
+		pageSlug = page.slug;
 	};
 
 	let createSubPage = () => {};
@@ -656,6 +692,8 @@
 	onDestroy(() => {
 		clearInterval(onlineInterval);
 	});
+
+	let newStreamName = '';
 </script>
 
 {#if isSettingsModalShown}
@@ -918,24 +956,30 @@
 								<ABToggle></ABToggle>
 								</div> -->
 
-							{#if onlineUsersCount !== -1}
+							{#if page._id && onlineUsersCount !== -1}
 								<div
-									class="flex items-center justify-between mb-4 flex border border-green-300 p-4"
+									class="flex shrink-0 items-center justify-between mb-8 flex border {onlineUsersCount
+										? 'border-green-300'
+										: 'border-gray-300'} {onlineUsersCount
+										? 'bg-green-300/10'
+										: 'bg-gray-300/10'} transition px-4 py-2 rounded-lg"
 								>
-									<div class="flex items-center">
+									<div class="flex justify-between items-center w-full">
+										<div class="flex items-center">
+											<div
+												class="{onlineUsersCount
+													? 'bg-green-400'
+													: 'bg-gray-600 opacity-30'} w-[10px] h-[10px] rounded-full mr-2"
+											/>
+											{onlineUsersCount} users online
+										</div>
 										<div
-											class="{onlineUsersCount
-												? 'bg-green-400'
-												: 'bg-gray-600'} w-[10px] h-[10px] rounded-full ml-4 mr-2"
-										/>
-										<div>{onlineUsersCount} users online</div>
+											class="ml-2 opacity-30 hover:opacity-100 transition cursor-pointer _bare"
+											on:click={getOnlineCount}
+										>
+											<FeatherIcon name="refresh-cw" theme="light" size="15" />
+										</div>
 									</div>
-									<Button
-										class="ml-2 opacity-50 hover:opacity-100 transition cursor-pointer _bare"
-										onClick={getOnlineCount}
-									>
-										<FeatherIcon name="refresh-cw" theme="light" size="15" />
-									</Button>
 								</div>
 							{/if}
 
@@ -945,14 +989,77 @@
 							{:else if selectedTab === 'editor'}
 								{#if !page._id || isBrandNameEdit}
 									<div class="_section">
-										<div class="_title">Page Name</div>
-										<input
-											class="w-full"
-											bind:value={page.name}
-											placeholder="Momentum"
-											use:autofocus
-										/>
+										<div class="flex justify-between">
+											<div class="_title">Page Name</div>
+											<div>
+												{#if page.parentPage}
+													<input type="checkbox" bind:checked={page.isUseDatabase} /> Attach to Database
+												{/if}
+											</div>
+										</div>
+										<div class="w-full flex justify-between items-center">
+											<input
+												class="w-full"
+												bind:value={page.name}
+												placeholder="Momentum"
+												use:autofocus
+											/>
+										</div>
+										{#if page.isUseDatabase}
+											<div class="mt-2">
+												Page url: /{page.name.toLowerCase().replace(' ', '-')}/$data.slug
+											</div>
+										{/if}
 									</div>
+
+									{#if page.isUseDatabase}
+										<div class="_section">
+											<div class="_title">Database</div>
+
+											{#if childStreams?.length}
+												<select class="w-full">
+													{#each $childStreams as childStream}
+														{childStream.name}
+													{/each}
+												</select>
+											{:else}
+												<input
+													class="w-full"
+													placeholder="templates"
+													type="text"
+													bind:value={newStreamName}
+												/>
+											{/if}
+										</div>
+									{/if}
+
+									{#if page.name && page.activeHero && !page.parentPage}
+										<div class="_section" in:fade>
+											<div class="_title">Tagline</div>
+
+											<div
+												class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
+												contenteditable
+												use:contenteditable
+												data-placeholder="Build a better product in public."
+												bind:innerHTML={page.activeHero.title}
+												on:focus={() => (focuses.title = true)}
+												on:blur={() => (focuses.title = false)}
+											/>
+										</div>
+
+										<div
+											class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
+											in:fly={{ y: 50, duration: 150 }}
+										>
+											Start with a bold tagline
+
+											<div class="font-normal mt-2">
+												Make a big promise to your customer. Start with a verb. Spark curiosity and
+												hook their attention.
+											</div>
+										</div>
+									{/if}
 								{:else}
 									<div class="flex justify-between items-center mb-4 ">
 										<div
@@ -960,10 +1067,6 @@
 											on:click={() => (isBrandNameEdit = true)}
 										>
 											{page.name}
-										</div>
-										<div class="flex items-center ">
-											<FeatherIcon size="15" class="mr-2" name="eye" />
-											{page.totalUniqueViews}
 										</div>
 									</div>
 								{/if}
@@ -1003,61 +1106,116 @@
 									</div>
 								{/if}
 
-								{#if page.parentPage}
-									<button
-										class="_secondary _small w-full my-8"
-										on:click={() => {
-											setPageAndDraft(
-												$allPages.find((p) => p.slug === page.parentPage.slug),
-												{ force: true }
-											);
-										}}>Back to the home page</button
-									>
-								{/if}
-
-								<div
-									on:click={() => {
-										$aboveTheFoldEl &&
-											$aboveTheFoldEl.scrollIntoView({
-												behavior: 'smooth',
-												block: 'start',
-												inline: 'nearest'
-											});
-
-										// $sectionToEdit = null;
-									}}
-								>
+								<div>
 									{#if page.name}
-										{#if !page?.parentPage && page._id}
-											<div class="_section flex justify-between items-center  mb-4">
-												<select
-													class="w-full"
-													bind:value={page._id}
-													on:change={async (evt) => {
-														setPageAndDraft(
-															await get(`pages/${evt.target.value}`, {
-																parentPageSlug: page.slug
-															}),
-															{ force: true }
-														);
-														evt.preventDefault();
-													}}
-												>
-													<option value={page._id}>Home</option>
-													{#if page.subPages?.length}
-														{#each page.subPages as subpage (subpage._id)}
-															<option value={subpage._id}>/{subpage.slug}</option>
-														{/each}
-													{/if}
-												</select>
+										{#if page._id}
+											<div class="_section  mb-4">
+												{#if !page?.parentPage}
+													<div class="flex justify-between items-center ">
+														<select
+															class="w-full"
+															bind:value={page._id}
+															on:change={async (evt) => {
+																setPageAndDraft(
+																	await get(`pages/${evt.target.value}`, {
+																		parentPageSlug: page.slug
+																	}),
+																	{ force: true }
+																);
+																evt.preventDefault();
+															}}
+														>
+															<option value={page._id}>Home</option>
+															{#if $subPages?.length}
+																{#each $subPages as subpage (subpage._id)}
+																	<option value={subpage._id}>/{subpage.slug}</option>
+																{/each}
+															{/if}
+														</select>
 
-												{#if !page.parentPage}
-													<Button class="_secondary _small shrink-0 ml-4" onClick={addSubpage}
-														>Add Subpage</Button
+														{#if !page.parentPage}
+															<Button
+																class="_secondary _small shrink-0 ml-4 opacity-50 transition hover:opacity-100"
+																onClick={addSubpage}>Add Subpage</Button
+															>
+														{/if}
+													</div>
+												{:else}
+													<button
+														class="_secondary _small w-full mb-2"
+														on:click={() => {
+															setPageAndDraft(
+																$allPages.find((p) => p.slug === page.parentPage.slug),
+																{ force: true }
+															);
+														}}>Back to the Home page</button
 													>
+												{/if}
+												<div
+													class="flex w-full shrink-0 justify-between items-center bg-gray-300/10  border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer "
+													on:click={() => (selectedTab = 'analytics')}
+												>
+													<div class="border-gray-300 text-sm font-semibold opacity-300">
+														Unique Views
+													</div>
+													<div class="ml-2 font-bold">
+														{page.totalUniqueViews || 0}
+													</div>
+												</div>
+
+												{#if conversions?.forms}
+													<div
+														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  {getConversionColor(
+															conversions.forms
+														)}"
+														on:click={() => (selectedTab = 'audience')}
+													>
+														<div class="border-gray-300 text-sm font-semibold opacity-300">
+															Forms Conversion Rate
+														</div>
+														<div class="ml-2 font-bold">
+															{conversions.forms}%
+														</div>
+													</div>
+													<div class="text-sm semibold text-right mt-2">Target: 10%</div>
+												{/if}
+												{#if conversions?.clicks && !conversions?.forms}
+													<div
+														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer {getConversionColor(
+															conversions.clicks
+														)}"
+														on:click={() => (selectedTab = 'analytics')}
+													>
+														<div class="text-sm font-semibold">Clicks Conversion Rate</div>
+														<div class="ml-2 font-bold">
+															{conversions.clicks}%
+														</div>
+													</div>
+													<div class="text-sm semibold text-right mt-2">Target: 30%</div>
+												{/if}
+
+												{#if !conversions?.clicks && !conversions?.forms}
+													<div
+														class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg"
+													>
+														<div class="">Conversion Rate</div>
+														<div class="ml-2 font-bold opacity-30">N/A%</div>
+													</div>
 												{/if}
 											</div>
 										{/if}
+									{/if}
+
+									{#if !page._id && page.parentPage}
+										<button
+											class="_secondary _small w-full mb-2 opacity-50 hover:opacity-100"
+											on:click={() => {
+												setPageAndDraft(
+													$allPages.find((p) => p.slug === page.parentPage.slug),
+													{ force: true }
+												);
+											}}>Back to the Home page</button
+										>
 									{/if}
 
 									{#if page._id}
@@ -1119,74 +1277,6 @@
 											</button>
 										</div>
 									{/if} -->
-
-									{#if page?._id && !page.parentPage}
-										<div class="_section bg-[#e8ffef] my-8" style="border: none;">
-											<div class="flex items-center justify-between w-full">
-												<div class="">
-													<div class="font-bold">Design your product with Momentum team</div>
-
-													<div class="text-sm">Working with us is as easy as using Momentum</div>
-												</div>
-											</div>
-											<a
-												href="https://studio.saltnbold.com/new"
-												class="w-full"
-												class:hidden={!page._id}
-												target="_blank"
-											>
-												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
-											</a>
-										</div>
-									{/if}
-
-									{#if page._id && !page.parentPage}
-										<div class="_section my-8">
-											<div class="_title flex justify-between w-full">
-												Social Links
-
-												<!-- <div class="flex font-normal items-center">
-													Hide Hero <input
-														bind:checked={page.isHeroHidden}
-														class="ml-2"
-														type="checkbox"
-													/> -->
-												<!-- </div> -->
-											</div>
-
-											<div class="font-normal text-sm opacity-70 mb-4">
-												Add your social links: Twitter, LinkedIn, Instagram etc.
-											</div>
-
-											{#each page.links || [] as link}
-												<div class="flex gap-4 justify-between text-sm mb-2">
-													<input
-														placeholder="https://twitter.com/_that_igor"
-														type="url"
-														class="w-full"
-														theme="light"
-														bind:value={link.url}
-													/>
-													<button
-														on:click={() => {
-															page.links = page.links.filter((l) => l === link);
-														}}>🗑</button
-													>
-												</div>
-											{/each}
-											<div class="mt-4 w-full">
-												<button
-													class="_secondary _small w-full text-center"
-													on:click={() => {
-														page.links = page.links || [];
-														page.links.push({
-															url: ''
-														});
-													}}>🔗 Add Social Link</button
-												>
-											</div>
-										</div>
-									{/if}
 
 									<!-- <EditTestimonials bind:page /> -->
 
@@ -1324,12 +1414,60 @@
 										</div>
 									{/if}
 
+									{#if page._id && !page.parentPage}
+										<div class="_section my-8">
+											<div class="_title flex justify-between w-full">
+												Social Links
+
+												<!-- <div class="flex font-normal items-center">
+													Hide Hero <input
+														bind:checked={page.isHeroHidden}
+														class="ml-2"
+														type="checkbox"
+													/> -->
+												<!-- </div> -->
+											</div>
+
+											<div class="font-normal text-sm opacity-70 mb-4">
+												Add your social links: Twitter, LinkedIn, Instagram etc.
+											</div>
+
+											{#each page.links || [] as link}
+												<div class="flex gap-4 justify-between text-sm mb-2">
+													<input
+														placeholder="https://twitter.com/_that_igor"
+														type="url"
+														class="w-full"
+														theme="light"
+														bind:value={link.url}
+													/>
+													<button
+														on:click={() => {
+															page.links = page.links.filter((l) => l === link);
+														}}>🗑</button
+													>
+												</div>
+											{/each}
+											<div class="mt-4 w-full">
+												<button
+													class="_secondary _small w-full text-center"
+													on:click={() => {
+														page.links = page.links || [];
+														page.links.push({
+															url: ''
+														});
+													}}>🔗 Add Social Link</button
+												>
+											</div>
+										</div>
+									{/if}
+
 									{#if page._id && page.name && page.title}
 										<hr class="my-8 border-[#8B786D] opacity-30" />
 									{/if}
 								</div>
 
-								<div class="flex items-center w-full justify-between mt-8 mb-32">
+								<div class="flex items-center w-full justify-between mt-8">
 									{#if page.name}
 										{#if page.renderType === 'article'}
 											<Button class="_primary" onClick={publishPage}>Publish Article</Button>
@@ -1355,6 +1493,28 @@
 										</div>
 									{/if}
 								</div>
+								{#if page?._id}
+									<hr class="my-16" />
+									<div class="mb-32">
+										<div class="_section bg-[#e8ffef] mt-16" style="border: none;">
+											<div class="flex items-center justify-between w-full">
+												<div class="">
+													<div class="font-bold">Design your product with Momentum team</div>
+
+													<div class="text-sm">Working with us is as easy as using Momentum</div>
+												</div>
+											</div>
+											<a
+												href="https://studio.saltnbold.com/new"
+												class="w-full"
+												class:hidden={!page._id}
+												target="_blank"
+											>
+												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
+											</a>
+										</div>
+									</div>
+								{/if}
 							{:else}
 								<BackTo to={'Editor'} onClick={() => (selectedTab = 'editor')} />
 
@@ -1388,7 +1548,7 @@
 
 				{#if page.name || page.title}
 					<div class="relative ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]" in:fade={{ delay: 150 }}>
-						{#if conversions}
+						<!-- {#if conversions}
 							<div
 								class="flex items-center justify-center mt-1 absolute left-[160px] top-[20px] cursor-pointer"
 								style="z-index: 10;"
@@ -1424,7 +1584,7 @@
 									</div>
 								{/if}
 							</div>
-						{/if}
+						{/if} -->
 
 						{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">

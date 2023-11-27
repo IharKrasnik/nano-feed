@@ -16,17 +16,30 @@ export async function load({ url, params, session, cookies }) {
 			? url.searchParams.get('pageSlug')
 			: currentDomain;
 
-	const { subPageSlug } = params;
+	const { subPageSlug, feedItemSlug } = params;
 
 	let extend = {
 		pageSlug
 	};
 
 	if (pageSlug) {
-		let page = await get(`pages/${subPageSlug || pageSlug}`, {
-			parentPageSlug: subPageSlug ? pageSlug : '',
-			isServer: true
-		});
+		let page;
+
+		if (feedItemSlug) {
+			[page] = await Promise.all([
+				get(`pages/bySlug`, {
+					slug: `${subPageSlug}/$data.slug`,
+					parentPageSlug: pageSlug
+				})
+			]);
+		} else {
+			page = await get(`pages/${subPageSlug || pageSlug}`, {
+				parentPageSlug: subPageSlug ? pageSlug : '',
+				isServer: true
+			});
+		}
+
+		console.log('page', page);
 
 		let metatags = getPageMetaTags({ page });
 
