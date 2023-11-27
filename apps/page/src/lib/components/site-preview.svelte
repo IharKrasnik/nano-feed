@@ -4,7 +4,7 @@
 	import _ from 'lodash';
 
 	import { browser } from '$app/environment';
-	import { post } from 'lib/api';
+	import { get, post } from 'lib/api';
 	import { POST_URL } from 'lib/env';
 	import { page as sveltePage } from '$app/stores';
 	import { fly, fade, slide } from 'svelte/transition';
@@ -56,24 +56,6 @@
 		callToAction: 'Join Waitlist',
 		bgColor: '#D98324'
 	};
-
-	let isLoading = false;
-
-	let feedItem;
-
-	let loadFeedItem = async () => {
-		isLoading = true;
-		let { feedItemSlug } = $sveltePage.params;
-
-		feedItem = await get(`feedItems/bySlug`, {
-			projectSlug: page.streamSlug,
-			slug: feedItemSlug
-		});
-	};
-
-	if (page.slug.includes(':')) {
-		loadFeedItem();
-	}
 
 	if (page.blog) {
 		if (!page.blog.url) {
@@ -136,10 +118,36 @@
 	export let isAboveTheFold = false;
 	let previewEl;
 
+	let isLoading = false;
+
+	let feedItem;
+	let prevFeedItemSlug;
+
+	let loadFeedItem = async () => {
+		let { feedItemSlug } = $sveltePage.params;
+
+		if (prevFeedItemSlug !== feedItemSlug) {
+			isLoading = true;
+			prevFeedItemSlug = feedItemSlug;
+			feedItem = await get(`feed/bySlug`, {
+				projectSlug: page.streamSlug,
+				slug: feedItemSlug
+			});
+
+			refreshVariables();
+
+			isLoading = false;
+		}
+	};
+
 	$: if (page) {
 		let res = getPageCssStyles(page);
 		cssVarStyles = res.cssVarStyles;
 		styles = res.styles;
+	}
+
+	$: if (browser && page._id && page.isUseDatabase) {
+		loadFeedItem();
 	}
 
 	if (browser) {
@@ -227,52 +235,68 @@
 
 		let variablesValues = {};
 
-		[...systemVariables, ...userVariables, ...(isNoVars ? [] : page.variables)].forEach(
-			(variable) => {
-				if (variable.calculateCode) {
-					variablesValues[variable.name] = eval(`(function(){${variable.calculateCode}})()`);
-					variablesValues[variable.name + 'Capitalised'] = _.capitalize(
-						variablesValues[variable.name]
-					);
-				} else if (variable.calculateFn) {
-					variablesValues[variable.name] = variable.calculateFn();
-				} else {
-					variablesValues[variable.name] = variable.value;
-				}
+		let feedItemVariables = feedItem
+			? [
+					{
+						name: 'data.title',
+						value: feedItem.title
+					},
+					{
+						name: 'data.content',
+						value: feedItem.content
+					}
+			  ]
+			: [];
 
-				let activeHero = page.activeHero;
-
-				if (activeHero) {
-					['title', 'subtitle', 'ctaExplainer'].forEach((fieldName) => {
-						let str = activeHero[fieldName];
-
-						activeHero[fieldName] = replaceVariable({
-							str,
-							varName: variable.name,
-							varValue: variablesValues[variable.name]
-						});
-					});
-				}
-
-				if (page.sections?.length) {
-					page.sections = page.sections.map((s) => {
-						s.title = replaceVariable({
-							str: s.title,
-							varName: variable.name,
-							varValue: variablesValues[variable.name]
-						});
-
-						s.description = replaceVariable({
-							str: s.description,
-							varName: variable.name,
-							varValue: variablesValues[variable.name]
-						});
-
-						return s;
-					});
-				}
+		[
+			...systemVariables,
+			...userVariables,
+			...(isNoVars ? [] : page.variables),
+			...feedItemVariables
+		].forEach((variable) => {
+			if (variable.calculateCode) {
+				variablesValues[variable.name] = eval(`(function(){${variable.calculateCode}})()`);
+				variablesValues[variable.name + 'Capitalised'] = _.capitalize(
+					variablesValues[variable.name]
+				);
+			} else if (variable.calculateFn) {
+				variablesValues[variable.name] = variable.calculateFn();
+			} else {
+				variablesValues[variable.name] = variable.value;
 			}
-		);
+
+			let activeHero = page.activeHero;
+
+			if (activeHero) {
+				['title', 'subtitle', 'ctaExplainer'].forEach((fieldName) => {
+					let str = activeHero[fieldName];
+
+					activeHero[fieldName] = replaceVariable({
+						str,
+						varName: variable.name,
+						varValue: variablesValues[variable.name]
+					});
+				});
+			}
+
+			if (page.sections?.length) {
+				page.sections = page.sections.map((s) => {
+					s.title = replaceVariable({
+						str: s.title,
+						varName: variable.name,
+						varValue: variablesValues[variable.name]
+					});
+
+					s.description = replaceVariable({
+						str: s.description,
+						varName: variable.name,
+						varValue: variablesValues[variable.name]
+					});
+
+					return s;
+				});
+			}
+		});
 	};
 
 	if (browser && !page.activeHero) {
@@ -554,53 +578,60 @@
 								class="absolute top-0 left-0 z-0 w-full h-screen opacity-20 rounded-full"
 								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
 							/> -->
-						{#if page.activeHero?.theme?.bgGradient}
-							<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
-						{/if}
+						{#if !isLoading}
+							{#if page.activeHero?.theme?.bgGradient}
+								<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
+							{/if}
 
-						{#if page.activeHero}
-							<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
-						{/if}
+							{#if page.activeHero}
+								<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
+							{/if}
 
-						<div class="relative _root bg-site pt-[60px]" style="background: none;">
-							{#if !isAboveTheFold}
-								{#if page.sections?.length}
-									<div class="relative z-10 {page.streamSlug ? '' : ''}">
-										{#each page.sections as section, i}
-											{#if $sectionToEdit && $sectionToEdit.id === section.id}
-												<div bind:this={editEl}>
-													<div class="p-2 my-4 bg-green-200 text-center">🚧🚧🚧🚧🚧</div>
-													<div>
+							<div class="relative _root bg-site pt-[60px]" style="background: none;">
+								{#if !isAboveTheFold}
+									{#if page.sections?.length}
+										<div class="relative z-10 {page.streamSlug ? '' : ''}">
+											{#each page.sections as section, i}
+												{#if $sectionToEdit && $sectionToEdit.id === section.id}
+													<div bind:this={editEl}>
+														<div class="p-2 my-4 bg-green-200 text-center">🚧🚧🚧🚧🚧</div>
+														<div>
+															<RenderSection
+																bind:page
+																bind:themeStyles={styles}
+																bind:section={$sectionToEdit}
+																bind:isEdit
+															/>
+														</div>
+														<div class="p-2 my-4 bg-green-200 text-center text-white">
+															🚧🚧🚧🚧🚧
+														</div>
+													</div>
+													{focusEditEl() || ''}
+												{:else}
+													<div class="bg-site">
 														<RenderSection
 															bind:page
+															bind:section
 															bind:themeStyles={styles}
-															bind:section={$sectionToEdit}
 															bind:isEdit
+															style={false && page.theme?.isZebra && i % 2 === 0
+																? page.theme?.theme === 'dark'
+																	? `background-color: ${lighten(
+																			styles['background-color'],
+																			0.01
+																	  )};`
+																	: `background-color: ${darken(styles['background-color'], 0.08)};`
+																: ''}
 														/>
 													</div>
-													<div class="p-2 my-4 bg-green-200 text-center text-white">🚧🚧🚧🚧🚧</div>
-												</div>
-												{focusEditEl() || ''}
-											{:else}
-												<div class="bg-site">
-													<RenderSection
-														bind:page
-														bind:section
-														bind:themeStyles={styles}
-														bind:isEdit
-														style={false && page.theme?.isZebra && i % 2 === 0
-															? page.theme?.theme === 'dark'
-																? `background-color: ${lighten(styles['background-color'], 0.01)};`
-																: `background-color: ${darken(styles['background-color'], 0.08)};`
-															: ''}
-													/>
-												</div>
-											{/if}
-										{/each}
-									</div>
+												{/if}
+											{/each}
+										</div>
+									{/if}
 								{/if}
-							{/if}
-						</div>
+							</div>
+						{/if}
 					</div>
 				{/if}
 

@@ -29,6 +29,11 @@
 		}
 	});
 
+	if (!page.theme.titleFont) {
+		page.theme.titleFont = fontPairs[0].title;
+		page.theme.textFont = fontPairs[0].text;
+	}
+
 	let sectionBackgroundColors = {
 		'#ffffff': 'rgba(0,0,0, .3)'
 	};

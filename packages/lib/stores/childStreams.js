@@ -8,7 +8,8 @@ export const refreshChildStreams = async ({ page }) => {
 		hubStreamSlug: page.parentPage?.streamSlug || page.streamSlug
 	});
 
-	subPagesStore.set(results);
+	childStreamsStore.set(results);
+	return results;
 };
 
 export default childStreamsStore;

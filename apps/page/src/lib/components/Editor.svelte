@@ -1116,6 +1116,7 @@
 															class="w-full"
 															bind:value={page._id}
 															on:change={async (evt) => {
+																debugger;
 																setPageAndDraft(
 																	await get(`pages/${evt.target.value}`, {
 																		parentPageSlug: page.slug
