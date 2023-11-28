@@ -322,11 +322,11 @@
 							<h2
 								class="_title text-3xl {page.theme.isTitlesHuge
 									? 'sm:text-6xl font-medium'
-									: 'sm:text-4xl font-semibold'} mb-4 sm:max-w-[768px]  {page.theme.isTitlesLeft ||
+									: 'sm:text-4xl font-semibold'} mb-4 {page.theme.isTitlesLeft ||
 								section.isTitleLeft ||
 								section.renderType === 'article'
-									? ''
-									: 'sm:mx-auto'}"
+									? 'sm:max-w-[712px]'
+									: 'sm:max-w-[768px] sm:mx-auto'}"
 							>
 								<ContentEditableIf class="mb-2" bind:innerHTML={section.title} condition={isEdit} />
 							</h2>
@@ -1031,7 +1031,7 @@
 
 <style>
 	._section-container.article {
-		max-width: 768px;
+		max-width: 712px;
 		margin: 0 auto;
 	}
 

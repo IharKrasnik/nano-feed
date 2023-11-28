@@ -88,7 +88,9 @@
 					class="{hero.demoUrl || hero.theme?.isLeft
 						? `w-full text-center ${
 								hero.theme?.isVertical ? 'flex flex-col items-center mb-8' : 'sm:text-left'
-						  }  ${hero.demoUrl ? '' : 'sm:max-w-[900px]'} items-center`
+						  }  ${
+								hero.demoUrl ? '' : page.renderType === 'article' ? '' : 'sm:max-w-[900px]'
+						  } items-center`
 						: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
 										{hero.theme?.isLeft ? 'sm:text-left' : ''}"
 				>
@@ -123,6 +125,8 @@
 								? page.renderType === 'article'
 									? 'max-w-[712px]'
 									: 'max-w-[650px]'
+								: page.renderType === 'article'
+								? 'max-w-[712px]'
 								: 'max-w-[600px]'}"
 							in:fly={{ y: 50, duration: 800 }}
 						>
