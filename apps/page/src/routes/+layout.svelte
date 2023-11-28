@@ -33,9 +33,15 @@
 		(!$sveltePage.params.subPageSlug &&
 			$sveltePage.data.pageSlug &&
 			$sveltePage.data.pageSlug !== prevSlug) ||
-		($sveltePage.params.subPageSlug && $sveltePage.params.subPageSlug !== prevSlug)
+		(!$sveltePage.params.feedItemSlug &&
+			$sveltePage.params.subPageSlug &&
+			$sveltePage.params.subPageSlug !== prevSlug) ||
+		($sveltePage.params.feedItemSlug && $sveltePage.params.feedItemSlug !== prevSlug)
 	) {
-		prevSlug = $sveltePage.params.subPageSlug || $sveltePage.data.pageSlug;
+		prevSlug =
+			$sveltePage.params.feedItemSlug ||
+			$sveltePage.params.subPageSlug ||
+			$sveltePage.data.pageSlug;
 
 		$currentPage = $sveltePage.data.page;
 

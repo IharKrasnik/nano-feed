@@ -40,6 +40,16 @@ export async function load({ url, params, session, cookies }) {
 			});
 
 			setPageVars({ page, feedItem });
+		} else if (url.href.includes('/blog')) {
+			if (subPageSlug) {
+				page = await get(`pages/${pageSlug}/subpages/${subPageSlug}`, {
+					renderType: 'article'
+				});
+			} else {
+				page = await get(`pages/${pageSlug}/subpages/blog`, {
+					renderType: 'article'
+				});
+			}
 		} else {
 			page = await get(`pages/${subPageSlug || pageSlug}`, {
 				parentPageSlug: subPageSlug ? pageSlug : '',
