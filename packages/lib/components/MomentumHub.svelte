@@ -39,10 +39,10 @@
 	};
 
 	let createBlog = async () => {
-		let page = await post('blogs', {
-			name: blog.name,
-			title: blog.title,
-			subtitle: blog.subtitle,
+		await post('blogs', {
+			name: page.name,
+			title: page.title,
+			subtitle: page.subtitle,
 			pageId: page._id
 		});
 
