@@ -283,16 +283,24 @@
 											/>
 											<div class="text-xs mt-2">Leave 0 for pagination</div>
 										</div>
-
 										<div class="_section">
-											<div class="text-sm mb-2">Sort</div>
-
-											<select bind:value={section.streamSettings.sortBy}>
-												<option value="_sample">Random</option>
-												<option value="-publishedOn">Newest First</option>
-												<option value="-viewsCount">Popular First</option>
-											</select>
+											<div class="text-sm mb-2">Filter by tags</div>
+											<input
+												type="text"
+												class="w-full"
+												bind:value={section.streamSettings.filterTags}
+											/>
+											<div class="text-xs mt-2">Leave empty to not filter</div>
 										</div>
+									</div>
+									<div class="_section">
+										<div class="text-sm mb-2">Sort</div>
+
+										<select class="w-full" bind:value={section.streamSettings.sortBy}>
+											<option value="_sample">Random</option>
+											<option value="-publishedOn">Newest First</option>
+											<option value="-viewsCount">Popular First</option>
+										</select>
 									</div>
 									<div class="_section">
 										<div class="text-sm mb-2">Show best sample</div>
@@ -340,7 +348,7 @@
 			</div>
 
 			{#if section.collectionType === 'feed' || section.collectionType === 'global_feed'}
-				<button class="w-full _small _secondary mt-4" on:click={() => (isDatabaseModalShown = true)}
+				<button class="w-full _small _secondary mb-8" on:click={() => (isDatabaseModalShown = true)}
 					>Edit Data</button
 				>
 			{/if}

@@ -293,6 +293,14 @@
 						varValue: variablesValues[variable.name]
 					});
 
+					if (s.streamSettings && s.streamSettings.filterTags) {
+						s.streamSettings.filterTags = replaceVariable({
+							str: s.streamSettings.filterTags,
+							varName: variable.name,
+							varValue: variablesValues[variable.name]
+						});
+					}
+
 					return s;
 				});
 			}

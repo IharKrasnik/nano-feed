@@ -12,7 +12,7 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
-	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
+	import EditFeedItemSettings from '$lib/components/edit/FeedItemSettings.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import clickOutside from 'lib/use/clickOutside';
@@ -129,7 +129,7 @@
 				{#if feedItem.url}
 					<Button class="ml-2 rounded-full bg-[#f6f5f4]" onClick={fetchMetaTags}>🪄</Button>
 				{/if}
-				<!-- <EditSectionSettings bind:sectionItem={feedItem} /> -->
+				<EditFeedItemSettings bind:feedItem />
 			</div>
 
 			<div
@@ -190,13 +190,7 @@
 
 		<div class="mt-2 flex items-center">
 			<div class="text-sm mr-4 opacity-80">Tags</div>
-			<input
-				class="w-full"
-				placeholder="Tags"
-				type="url"
-				bind:value={feedItem.tagsStr}
-				theme="light"
-			/>
+			<input class="w-full" placeholder="Tags" bind:value={feedItem.tagsStr} theme="light" />
 		</div>
 
 		<hr class="my-4" />

@@ -160,9 +160,11 @@
 
 		conversions = {
 			clicks: page.totalUniqueViews
-				? (page.totalUniqueClicksCount / page.totalUniqueViews) * 100
+				? ((page.totalUniqueClicksCount / page.totalUniqueViews) * 100).toFixed(2)
 				: 0,
-			forms: page.totalUniqueViews ? (page.totalSignupsCount / page.totalUniqueViews) * 100 : 0
+			forms: page.totalUniqueViews
+				? ((page.totalSignupsCount / page.totalUniqueViews) * 100).toFixed(2)
+				: 0
 		};
 	};
 

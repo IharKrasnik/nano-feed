@@ -24,6 +24,7 @@ export const fetchFeed = async ({
 	perPage = 20,
 	source,
 	streamSlug = '',
+	tag = null,
 	cacheId = streamSlug,
 	creatorUsername,
 	isExplore,
@@ -66,6 +67,10 @@ export const fetchFeed = async ({
 		query.isWithImageOnly = true;
 	}
 
+	if (tag) {
+		query.tag = tag;
+	}
+
 	const { results: feed, count } = await get('feed', query);
 
 	feedStore.update((st) => {
@@ -98,6 +103,8 @@ export const getFeed = async ({
 		}
 	}
 
+	let tag = '';
+
 	if (streamSettings) {
 		if (streamSettings.sortBy) {
 			sort = streamSettings.sortBy;
@@ -106,6 +113,10 @@ export const getFeed = async ({
 		if (streamSettings.limit) {
 			perPage = streamSettings.limit;
 		}
+
+		if (streamSettings.filterTags) {
+			tag = streamSettings.filterTags;
+		}
 	}
 
 	return fetchFeed({
@@ -113,6 +124,7 @@ export const getFeed = async ({
 		sort,
 		perPage,
 		streamSlug,
+		tag,
 		isWithUrlOnly: streamSettings?.isWithUrlOnly,
 		isWithImageOnly: streamSettings?.isWithImageOnly,
 		page

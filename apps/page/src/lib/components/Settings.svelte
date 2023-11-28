@@ -121,11 +121,13 @@
 		</div>
 
 		{#if isDeleteIntent}
-			<Button class="_primary _small _red" onClick={() => (isDeleteIntent = true)}
+			<Button class="_primary _small _red" onClick={deletePage}>
 				>😱 I am sure, delete {page.name} forever</Button
 			>
 		{:else}
-			<Button class="_primary _small _red" onClick={deletePage}>🙈 Delete {page.name}</Button>
+			<Button class="_primary _small _red" onClick={() => (isDeleteIntent = true)}
+				>🙈 Delete {page.name}</Button
+			>
 		{/if}
 	</div>
 </div>
