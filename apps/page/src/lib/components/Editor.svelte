@@ -1708,20 +1708,28 @@ See you!
 											<div
 												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100"
 												use:tooltip
-												title="Free plan includes 300 subscribers"
+												title="{page.subscription
+													? 'You plan (To The Moon)'
+													: 'Free plan'} includes 300 subscribers"
 											>
 												{page.totalSignupsCount || 0}/300
 											</div>
 
-											<button
-												class="px-4 mr-4 text-white bg-green-700"
-												style="padding-top: 0px; padding-bottom: 0px;"
-												on:click={subscribe}
-												use:tooltip
-												title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
-											>
-												🚀 Upgrade
-											</button>
+											{#if !page.subscription}
+												<button
+													class="px-4 mr-4 text-white bg-green-700"
+													style="padding-top: 0px; padding-bottom: 0px;"
+													on:click={subscribe}
+													use:tooltip
+													title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
+												>
+													🚀 Upgrade
+												</button>
+											{:else}
+												<div class="border border-green-300 rounded-lg mr-2 px-2 text-white">
+													{page.subscription.plan === 'to_the_moon' ? '🌝 To The Moon' : ''}
+												</div>
+											{/if}
 
 											<!-- <button class="_small _primary">Upgrade</button> -->
 											<!-- {#if page.subscription}
