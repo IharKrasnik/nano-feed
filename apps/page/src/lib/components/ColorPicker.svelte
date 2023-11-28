@@ -29,7 +29,7 @@
 		}
 	});
 
-	if (!page.theme.titleFont) {
+	if (page.theme && !page.theme.titleFont) {
 		page.theme.titleFont = fontPairs[0].title;
 		page.theme.textFont = fontPairs[0].text;
 	}
