@@ -300,25 +300,43 @@
 						</div>
 					{/if}
 				{/if}
-				<!-- SQUARES -->
+
 				{#if page?.activeHero?.theme?.bgPattern}
-					{#if page?.theme?.theme === 'dark'}
-						{#if page?.activeHero?.theme?.bgPattern === 'squares'}
-							<div
-								class="bg-root absolute z-10 inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
-							/>
-						{:else if page?.activeHero?.theme?.bgPattern === 'dots'}
-							<div
-								class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(rgba(255,255,255,.1)_0.5px,transparent_1px)] [background-size:32px_32px]"
-							/>
-						{/if}
-					{:else if page?.activeHero?.theme?.bgPattern === 'squares'}
+					{#if page?.activeHero?.theme?.bgPattern === 'squares'}
 						<div
-							class="bg-root  z-10 absolute inset-0 -z-50 h-screen-plus w-screen bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] [background-size:90px_90px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]"
+							class="bg-root absolute z-10 inset-0 -z-50 h-screen w-screen bg-[linear-gradient(to_right,{page
+								?.theme?.theme === 'dark'
+								? '#ffffff'
+								: '#000000'}12_1px,transparent_1px),linear-gradient(to_bottom,{page?.theme
+								?.theme === 'dark'
+								? '#ffffff'
+								: '#000000'}12_1px,transparent_1px)] [background-size:80px_80px] {page.activeHero
+								?.theme?.bgGradient.type === 'ray' ||
+							page.activeHero?.theme?.bgGradient.type === 'cobalt'
+								? '[mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]'
+								: ''}"
 						/>
-					{:else if page?.activeHero?.theme?.bgPattern === 'dots'}
+						<!-- {:else if page?.activeHero?.theme?.bgPattern === 'dots'}
 						<div
-							class="absolute  z-10 h-screen-plus w-screen bg-[radial-gradient(#c8c8c8.5px,transparent_1px)] [background-size:32px_32px]"
+							class="absolute  z-10 h-screen w-screen bg-[radial-gradient(rgba(255,255,255,.1)_0.5px,transparent_1px)] [background-size:32px_32px]"
+						/> -->
+					{:else}
+						<div
+							class="bg-root absolute z-10 inset-0 -z-50 h-screen w-screen pattern-{page?.activeHero
+								?.theme?.bgPattern} {page.theme?.theme === 'dark'
+								? 'pattern-white pattern-bg-black pattern-opacity-10'
+								: 'pattern-black pattern-bg-white'} 
+								{page?.activeHero?.theme?.bgPattern === 'wavy' ? 'pattern-size-8' : 'pattern-size-4'} {page
+								.activeHero?.theme?.bgGradient.type === 'cobalt'
+								? '[mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]'
+								: ''}
+								{page.activeHero?.theme?.bgGradient.type === 'ray'
+								? '[mask-image:radial-gradient(50%_70%_at_top_center,white,transparent)]'
+								: ''}
+								"
+							style="--pattern-color: {page.theme.accentColor};
+								--pattern-color-55: {page.theme.accentColor}55;
+								--pattern-color-77: {page.theme.accentColor}77;"
 						/>
 					{/if}
 				{/if}

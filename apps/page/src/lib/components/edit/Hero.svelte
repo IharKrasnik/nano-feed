@@ -94,6 +94,14 @@
 			label: 'Dots'
 		},
 		{
+			key: 'cross',
+			label: 'Crosses'
+		},
+		{
+			key: 'wavy',
+			label: 'Wavy'
+		},
+		{
 			key: 'stars',
 			label: 'Stars 🔥'
 		},
@@ -111,6 +119,14 @@
 		{
 			key: 'ship',
 			label: 'Subtle'
+		},
+		{
+			key: 'cobalt',
+			label: 'From Up'
+		},
+		{
+			key: 'ray',
+			label: 'Light Ray'
 		},
 		{
 			key: 'turborepo',
