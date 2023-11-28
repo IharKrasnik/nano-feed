@@ -2,6 +2,7 @@ import authServerGuard from 'lib/guards/auth.server';
 import { BRAND_URL } from 'lib/env';
 import { get } from 'lib/api';
 import getPageMetaTags from 'lib/helpers/getPageMetaTags';
+import setPageVars from '$lib/helpers/setPageVars';
 
 let getDomain = (href) => {
 	let res = /:\/\/([^\/]+)/.exec(href);
@@ -32,14 +33,19 @@ export async function load({ url, params, session, cookies }) {
 					parentPageSlug: pageSlug
 				})
 			]);
+
+			let feedItem = await get(`feed/bySlug`, {
+				projectSlug: page.streamSlug,
+				slug: feedItemSlug
+			});
+
+			setPageVars({ page, feedItem });
 		} else {
 			page = await get(`pages/${subPageSlug || pageSlug}`, {
 				parentPageSlug: subPageSlug ? pageSlug : '',
 				isServer: true
 			});
 		}
-
-		console.log('page', page);
 
 		let metatags = getPageMetaTags({ page });
 

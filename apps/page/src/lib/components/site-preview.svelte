@@ -10,6 +10,8 @@
 	import { fly, fade, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { darken, lighten } from 'lib/helpers/color';
+	import setPageVars from '$lib/helpers/setPageVars';
+
 	import striptags from 'striptags';
 
 	import PortfolioPage from '$lib/layouts/PortfolioPage.svelte';
@@ -36,7 +38,6 @@
 	import PageBadge from '$lib/components/PageBadge.svelte';
 	import LinkedInIcon from '$lib/icons/LinkedIn.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
-	import userVars, { varsLastUpdatedOn } from '$lib/stores/userVars';
 	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
 
 	import { STREAM_URL, PAGE_URL } from 'lib/env';
@@ -134,7 +135,7 @@
 				slug: feedItemSlug
 			});
 
-			refreshVariables();
+			setPageVars({ page, feedItem, isNoVars });
 
 			isLoading = false;
 		}
@@ -193,10 +194,6 @@
 		}
 	];
 
-	let replaceVariable = ({ str, varName, varValue }) => {
-		return str ? str.replace(`$${varName}`, varValue) : '';
-	};
-
 	if (localStorage.visitsCount) {
 		localStorage.visitsCount = parseInt(localStorage.visitsCount) + 1;
 	} else {
@@ -212,107 +209,12 @@
 		ctaExplainer: page.ctaExplainer
 	};
 
-	let refreshVariables = (varTemplates) => {
-		let systemVariables = [
-			{
-				name: 'visitsCount',
-				value: localStorage.visitsCount || 1
-			},
-			{
-				name: 'totalSignupsCount',
-				value: page.totalSignupsCount || 0
-			}
-		];
-
-		let userVariables = [];
-
-		Object.keys($userVars).forEach((varName) => {
-			userVariables.push({
-				name: `user.${varName}`,
-				value: $userVars[varName].value || $userVars[varName].emoji
-			});
-		});
-
-		let variablesValues = {};
-
-		let feedItemVariables = feedItem
-			? [
-					{
-						name: 'data.title',
-						value: feedItem.title
-					},
-					{
-						name: 'data.content',
-						value: feedItem.content
-					}
-			  ]
-			: [];
-
-		[
-			...systemVariables,
-			...userVariables,
-			...(isNoVars ? [] : page.variables),
-			...feedItemVariables
-		].forEach((variable) => {
-			if (variable.calculateCode) {
-				variablesValues[variable.name] = eval(`(function(){${variable.calculateCode}})()`);
-				variablesValues[variable.name + 'Capitalised'] = _.capitalize(
-					variablesValues[variable.name]
-				);
-			} else if (variable.calculateFn) {
-				variablesValues[variable.name] = variable.calculateFn();
-			} else {
-				variablesValues[variable.name] = variable.value;
-			}
-
-			let activeHero = page.activeHero;
-
-			if (activeHero) {
-				['title', 'subtitle', 'ctaExplainer'].forEach((fieldName) => {
-					let str = activeHero[fieldName];
-
-					activeHero[fieldName] = replaceVariable({
-						str,
-						varName: variable.name,
-						varValue: variablesValues[variable.name]
-					});
-				});
-			}
-
-			if (page.sections?.length) {
-				page.sections = page.sections.map((s) => {
-					s.title = replaceVariable({
-						str: s.title,
-						varName: variable.name,
-						varValue: variablesValues[variable.name]
-					});
-
-					s.description = replaceVariable({
-						str: s.description,
-						varName: variable.name,
-						varValue: variablesValues[variable.name]
-					});
-
-					if (s.streamSettings && s.streamSettings.filterTags) {
-						s.streamSettings.filterTags = replaceVariable({
-							str: s.streamSettings.filterTags,
-							varName: variable.name,
-							varValue: variablesValues[variable.name]
-						});
-					}
-
-					return s;
-				});
-			}
-		});
-	};
-
 	if (browser && !page.activeHero) {
 		page.activeHero = _.shuffle(page.heros)[0];
 	}
 
 	if (browser && !isEdit) {
-		refreshVariables(varTemplatesBig);
+		setPageVars({ page, feedItem, isNoVars });
 	}
 
 	let isMenuOpen = false;
