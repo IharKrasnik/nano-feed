@@ -215,7 +215,7 @@
 				{/if}
 			</div>
 		{:else}
-			{#each page.sections as section (section.id)}
+			{#each page.sections || [] as section (section.id)}
 				<RenderSection
 					class="_horizontal-padding-none px-4 "
 					bind:page

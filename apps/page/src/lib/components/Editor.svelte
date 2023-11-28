@@ -159,8 +159,10 @@
 		page.totalSignupsCount = stats.totalSubmissionsCount;
 
 		conversions = {
-			clicks: (page.totalUniqueClicksCount / page.totalUniqueViews) * 100,
-			forms: (page.totalSignupsCount / page.totalUniqueViews) * 100
+			clicks: page.totalUniqueViews
+				? (page.totalUniqueClicksCount / page.totalUniqueViews) * 100
+				: 0,
+			forms: page.totalUniqueViews ? (page.totalSignupsCount / page.totalUniqueViews) * 100 : 0
 		};
 	};
 
@@ -694,6 +696,10 @@
 	});
 
 	let newStreamName = '';
+
+	if (page.renderType === 'article') {
+		page.interactiveRenderType = 'multiple_choice';
+	}
 </script>
 
 {#if isSettingsModalShown}
@@ -1116,7 +1122,6 @@
 															class="w-full"
 															bind:value={page._id}
 															on:change={async (evt) => {
-																debugger;
 																setPageAndDraft(
 																	await get(`pages/${evt.target.value}`, {
 																		parentPageSlug: page.slug

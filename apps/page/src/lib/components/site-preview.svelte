@@ -591,7 +591,7 @@
 								{#if !isAboveTheFold}
 									{#if page.sections?.length}
 										<div class="relative z-10 {page.streamSlug ? '' : ''}">
-											{#each page.sections as section, i}
+											{#each page.sections || [] as section, i}
 												{#if $sectionToEdit && $sectionToEdit.id === section.id}
 													<div bind:this={editEl}>
 														<div class="p-2 my-4 bg-green-200 text-center">🚧🚧🚧🚧🚧</div>

@@ -400,10 +400,12 @@
 			{/if}
 		</div>
 
-		<div class="_section">
-			<div class="_title flex justify-between w-full">Call To Action</div>
+		{#if hero}
+			<div class="_section">
+				<div class="_title flex justify-between w-full">Call To Action</div>
 
-			<EditInteractiveOptions bind:section={hero} bind:sectionItem={hero} isWithButton={false} />
-		</div>
+				<EditInteractiveOptions bind:section={hero} bind:sectionItem={hero} isWithButton={false} />
+			</div>
+		{/if}
 	</div>
 {/if}
