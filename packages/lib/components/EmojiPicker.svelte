@@ -21,9 +21,12 @@
 
 	export let theme = 'light';
 
-	let url = icon?.startsWith('http') ? icon : null;
+	let url =
+		icon?.startsWith('http') || icon?.startsWith('feather:') || icon?.startsWith('<svg')
+			? icon
+			: null;
 
-	$: if (url && (url.startsWith('http') || url.startsWith('feather:'))) {
+	$: if (url && (url.startsWith('http') || url.startsWith('feather:') || url.startsWith('<svg'))) {
 		icon = url;
 		isEmojiPickerShown = false;
 	}

@@ -28,6 +28,10 @@
 		{/key}
 	{:else if emoji?.startsWith('feather:')}
 		<FeatherIcon name={emoji.replace('feather:', '')} {color} />
+	{:else if emoji?.startsWith('<svg')}
+		<div style="max-width: {width}px;">
+			{@html emoji}
+		</div>
 	{:else}
 		{emoji || '✨'}
 	{/if}

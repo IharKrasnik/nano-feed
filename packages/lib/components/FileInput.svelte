@@ -112,7 +112,7 @@
 		on:filedrop={onFileUpload}
 		on:keydown={(evt) => {
 			if (evt.key === 'Enter') {
-				if (evt.target.value.startsWith('feather:')) {
+				if (evt.target.value.startsWith('feather:') || evt.target.value.startsWith('<svg')) {
 					url = evt.target.value;
 					innerUrlValue = url;
 					dispatch('fileUploaded', {
