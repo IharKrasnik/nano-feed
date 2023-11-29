@@ -398,6 +398,15 @@
 												class="mr-2 rounded"
 												emoji={page.parentPage?.logo || page.logo}
 											/>
+
+											{#if page.theme?.isShowNameWithLogo}
+												<span
+													class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
+													style="font-family: var(--logo-font)"
+												>
+													{page.parentPage?.name || page.name}
+												</span>
+											{/if}
 										{:else}
 											<span
 												class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
