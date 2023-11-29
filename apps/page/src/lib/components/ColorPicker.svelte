@@ -275,7 +275,7 @@
 {#key page._id}
 	<div
 		class="relative flex justify-center items-center cursor-pointer w-[25px] h-[25px] rounded-full"
-		style="border: 1px {page.theme.accentColor} solid; background-color: {page.theme
+		style="border: 2px {page.theme.accentColor} solid; background-color: {page.theme
 			.backgroundColor}; color: {page.theme.textColor}"
 		on:click={() => {
 			isColorPickerShown = true;

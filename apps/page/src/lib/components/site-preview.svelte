@@ -210,6 +210,19 @@
 	};
 
 	if (browser && !page.activeHero) {
+		if (!page.heros) {
+			page.heros = [
+				{
+					title: page.title,
+					subtitle: page.subtitle,
+					callToActionText: page.callToActionText,
+					isUrlButton: true,
+					interactiveRenderType: page.isCollectEmails ? 'email' : 'link',
+					bgImageUrl: page.theme?.headerBackgroundImageUrl,
+					theme: {}
+				}
+			];
+		}
 		page.activeHero = _.shuffle(page.heros)[0];
 	}
 
@@ -273,7 +286,10 @@
 <svelte:window bind:scrollY />
 
 <div
-	class="hidden sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-12 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4 sm:min-h-screen"
+	class="hidden sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-12 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4 sm:min-h-screen
+	bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]
+	bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)]
+	pattern-dots pattern-wavy pattern-cross"
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
@@ -340,11 +356,6 @@
 						/>
 					{/if}
 				{/if}
-
-				<div
-					class="absolute top-0 left-0"
-					style="background-image: linear-gradient(rgba(0, 0, 0, 0) 82%, #0c120c), linear-gradient(rgba(12, 18, 12, .8), rgba(12, 18, 12, .8)), url('https://assets.website-files.com/636cf54cf20a6ac090f7deb0/636cfb105b88e07b40e1e494_hero-bg.svg')"
-				/>
 
 				{#if isMounted}
 					<div

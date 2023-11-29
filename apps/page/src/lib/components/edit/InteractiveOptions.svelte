@@ -220,8 +220,9 @@
 		{/if}
 
 		{#if ['email', 'link', 'links'].includes(sectionItem.interactiveRenderType) && section?.renderType !== 'form'}
-			<div class="font-normal text-sm opacity-70 mb-2 mt-4">Button text</div>
-
+			<div class="flex w-full justify-between items-center  mb-2 mt-4">
+				<div class="font-normal text-sm opacity-70">Button text →</div>
+			</div>
 			<input
 				class="mb-4 w-full"
 				bind:value={sectionItem.callToActionText}

@@ -239,6 +239,7 @@
 								<div class="text-sm mb-4 opacity-80">
 									Nice subtle backgrounds to catch attention
 								</div>
+
 								{#each bgPatterns as bgPattern}
 									<button
 										class="_secondary _small mr-2 mb-2"
@@ -255,7 +256,7 @@
 
 								{#each bgGradients as bgGradient}
 									<button
-										class="_secondary _small mr-2"
+										class="_secondary _small mr-2 mb-2"
 										on:click={() => {
 											if (!bgGradient.key) {
 												hero.theme.bgGradient = null;

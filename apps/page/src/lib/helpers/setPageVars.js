@@ -61,7 +61,7 @@ export default ({ page, feedItem, isNoVars = false }) => {
 			variablesValues[variable.name] = variable.value;
 		}
 
-		let activeHero = page.activeHero || page.heros[0];
+		let activeHero = page.activeHero || (page.heros && page.heros[0]);
 
 		if (activeHero) {
 			['title', 'subtitle', 'ctaExplainer'].forEach((fieldName) => {
