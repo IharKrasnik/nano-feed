@@ -133,6 +133,10 @@
 			label: 'Bright'
 		},
 		{
+			key: 'senja',
+			label: 'Radial'
+		},
+		{
 			key: null,
 			label: 'None'
 		}

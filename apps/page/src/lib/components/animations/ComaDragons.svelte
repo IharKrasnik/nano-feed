@@ -22,7 +22,7 @@
 						<g filter="url(#filter0_d_111_107)">
 							<path
 								d="M10.6311 23.1341L7.46649 6.67818C7.30381 5.83223 8.21557 5.19016 8.95722 5.62841L22.9517 13.8979C23.7127 14.3475 23.5588 15.491 22.7061 15.7236L16.4055 17.4419C16.1567 17.5097 15.9438 17.6711 15.8111 17.8922L12.4706 23.4597C11.9984 24.2466 10.8044 24.0352 10.6311 23.1341Z"
-								fill="currentColor"
+								style="stroke: var(--accent-color); fill: var(--text-color); opacity: .8;"
 							/>
 							<path
 								d="M6.66569 6.83218L9.83028 23.2881C10.1449 24.9241 12.3127 25.3079 13.1698 23.8793L16.5104 18.3117C16.5349 18.2709 16.5742 18.2412 16.6201 18.2286L22.9206 16.5103C24.4688 16.0881 24.7481 14.0122 23.3665 13.1958L9.37208 4.92635C8.02563 4.13072 6.37034 5.29637 6.66569 6.83218Z"
@@ -66,7 +66,12 @@
 						</defs>
 					</svg>
 				</div>
-				<div class="multiplayer_text"><div>Product Manager</div></div>
+				<div
+					class="multiplayer_text"
+					style="border: 1px var(--accent-color) solid; color: var(--text-color);"
+				>
+					<div>Product Manager</div>
+				</div>
 			</div>
 		</div>
 		<div class="cursor-animation2">
@@ -82,7 +87,7 @@
 						<g filter="url(#filter0_d_111_107)">
 							<path
 								d="M10.6311 23.1341L7.46649 6.67818C7.30381 5.83223 8.21557 5.19016 8.95722 5.62841L22.9517 13.8979C23.7127 14.3475 23.5588 15.491 22.7061 15.7236L16.4055 17.4419C16.1567 17.5097 15.9438 17.6711 15.8111 17.8922L12.4706 23.4597C11.9984 24.2466 10.8044 24.0352 10.6311 23.1341Z"
-								fill="currentColor"
+								style="stroke: var(--accent-color); fill: var(--text-color); opacity: .8;"
 							/>
 							<path
 								d="M6.66569 6.83218L9.83028 23.2881C10.1449 24.9241 12.3127 25.3079 13.1698 23.8793L16.5104 18.3117C16.5349 18.2709 16.5742 18.2412 16.6201 18.2286L22.9206 16.5103C24.4688 16.0881 24.7481 14.0122 23.3665 13.1958L9.37208 4.92635C8.02563 4.13072 6.37034 5.29637 6.66569 6.83218Z"
@@ -126,12 +131,17 @@
 						</defs>
 					</svg>
 				</div>
-				<div class="multiplayer_text is-white"><div>UI/UX designer</div></div>
+				<div
+					class="multiplayer_text"
+					style="border: 1px var(--accent-color) solid; color: var(--text-color);"
+				>
+					<div>UI/UX designer</div>
+				</div>
 			</div>
 		</div>
 		<div class="cursor-animation3">
 			<div class="multiplayer_item copywriter">
-				<div class="multiplayer_icon is-pink w-embed">
+				<div class="multiplayer_icon">
 					<svg
 						width="100%"
 						height="100%"
@@ -142,7 +152,7 @@
 						<g filter="url(#filter0_d_111_107)">
 							<path
 								d="M10.6311 23.1341L7.46649 6.67818C7.30381 5.83223 8.21557 5.19016 8.95722 5.62841L22.9517 13.8979C23.7127 14.3475 23.5588 15.491 22.7061 15.7236L16.4055 17.4419C16.1567 17.5097 15.9438 17.6711 15.8111 17.8922L12.4706 23.4597C11.9984 24.2466 10.8044 24.0352 10.6311 23.1341Z"
-								fill="currentColor"
+								style="stroke: var(--accent-color); fill: var(--text-color); opacity: .8;"
 							/>
 							<path
 								d="M6.66569 6.83218L9.83028 23.2881C10.1449 24.9241 12.3127 25.3079 13.1698 23.8793L16.5104 18.3117C16.5349 18.2709 16.5742 18.2412 16.6201 18.2286L22.9206 16.5103C24.4688 16.0881 24.7481 14.0122 23.3665 13.1958L9.37208 4.92635C8.02563 4.13072 6.37034 5.29637 6.66569 6.83218Z"
@@ -186,7 +196,12 @@
 						</defs>
 					</svg>
 				</div>
-				<div class="multiplayer_text is-pink"><div>Video Creator</div></div>
+				<div
+					class="multiplayer_text"
+					style="border: 1px var(--accent-color) solid; color: var(--text-color);"
+				>
+					<div>Video Creator</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -3693,11 +3708,6 @@
 		background-color: rgba(255, 255, 255, 0.1);
 	}
 
-	.button.is-pink {
-		color: #fff;
-		background-color: #e4105d;
-	}
-
 	.fs-styleguide_classes {
 		grid-column-gap: 1px;
 		grid-row-gap: 1px;
@@ -3961,7 +3971,6 @@
 		align-items: center;
 		display: flex;
 		position: absolute;
-		z-index: 30;
 		width: 100vw;
 	}
 
@@ -4001,7 +4010,7 @@
 	.multiplayer_icon {
 		width: 1.63rem;
 		height: 1.63rem;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		/* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 	}
 
 	.multiplayer_icon.is-grey {
@@ -4019,12 +4028,9 @@
 	}
 
 	.multiplayer_text {
-		color: #fff;
-		background-color: #6d6d6d;
 		border-radius: 1.38rem;
 		margin-left: 1.63rem;
 		padding: 0.25rem 1.13rem;
-		font-family: Inter, sans-serif;
 		font-size: 1.13rem;
 		font-weight: 500;
 		line-height: 1.44444;
@@ -4405,21 +4411,21 @@
 	}
 
 	.cursor-animation1 {
-		z-index: 2;
+		z-index: 0;
 		position: absolute;
 		bottom: 50%;
 		right: -8.75rem;
 	}
 
 	.cursor-animation2 {
-		z-index: 2;
+		z-index: 0;
 		position: absolute;
 		bottom: 37%;
 		left: -1rem;
 	}
 
 	.cursor-animation3 {
-		z-index: 2;
+		z-index: 0;
 		position: absolute;
 		bottom: -1rem;
 		right: 7%;

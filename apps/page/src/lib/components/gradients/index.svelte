@@ -19,7 +19,7 @@
 
 	let types = {
 		ship: {
-			className: '',
+			className: () => '',
 			style: ({
 				from = 'rgba(225, 174, 255, 0.3)',
 				to = page.theme?.backgroundColor || '#030303'
@@ -29,9 +29,18 @@
 					0.2
 				)}, rgba(0, 108, 104, 0.3) 42%, ${to});`
 		},
-		coma: { className: '', gradient: '' },
+		coma: { className: () => '', gradient: '' },
+		senja: {
+			style: () =>
+				`background-image:radial-gradient(circle at 50% 50%, ${hexToRgbA(
+					page.theme.accentColor,
+					0.2
+				)} 0%, transparent 100%);`
+		},
 		turborepo: {
-			className: 'opacity-20 rounded-full',
+			className: () => {
+				return 'opacity-20 rounded-full';
+			},
 			style: ({ from = '#2a8af6', to = '#a853ba' }) =>
 				`background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,${from} 180deg,${to} 1turn); filter: blur(75px); will-change: filter;`
 		},
@@ -67,10 +76,14 @@
 				.accentColor}; --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);"
 		/> -->
 	</div>
-{:else if types[gradientType].style}
+{:else if types[gradientType]}
 	<div
-		class="absolute top-0 left-0 z-0 w-full h-screen {types[gradientType].className}"
-		style="{types[gradientType].style({ from: page.theme.accentColor })}; z-index: 2;"
+		class="_gradient absolute top-0 left-0 z-0 w-full h-screen {types[gradientType].className
+			? types[gradientType].className()
+			: ''}"
+		style="{types[gradientType].style
+			? types[gradientType].style({ from: page.theme.accentColor })
+			: ''}; z-index: 2;"
 	/>
 {:else if types[gradientType].url}
 	<img

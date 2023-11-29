@@ -327,8 +327,8 @@
 								?.theme === 'dark'
 								? '#ffffff'
 								: '#000000'}12_1px,transparent_1px)] [background-size:80px_80px] {page.activeHero
-								?.theme?.bgGradient.type === 'ray' ||
-							page.activeHero?.theme?.bgGradient.type === 'cobalt'
+								?.theme?.bgGradient?.type === 'ray' ||
+							page.activeHero?.theme?.bgGradient?.type === 'cobalt'
 								? '[mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]'
 								: ''}"
 						/>
@@ -343,10 +343,10 @@
 								? 'pattern-white pattern-bg-black pattern-opacity-10'
 								: 'pattern-black pattern-bg-white'} 
 								{page?.activeHero?.theme?.bgPattern === 'wavy' ? 'pattern-size-8' : 'pattern-size-4'} {page
-								.activeHero?.theme?.bgGradient.type === 'cobalt'
+								.activeHero?.theme?.bgGradient?.type === 'cobalt'
 								? '[mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]'
 								: ''}
-								{page.activeHero?.theme?.bgGradient.type === 'ray'
+								{page.activeHero?.theme?.bgGradient?.type === 'ray'
 								? '[mask-image:radial-gradient(50%_70%_at_top_center,white,transparent)]'
 								: ''}
 								"
@@ -518,7 +518,7 @@
 								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
 							/> -->
 						{#if !isLoading}
-							{#if page.activeHero?.theme?.bgGradient}
+							{#if page.activeHero?.theme?.bgGradient?.type}
 								<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
 							{/if}
 
@@ -645,11 +645,6 @@
 <!-- {#if page?.activeHero?.theme?.bgPattern === 'stars'}
 	<Background />
 {/if} -->
-
-{#if page?.activeHero?.theme?.bgPattern === 'cursors'}
-	<ComaDragons />
-{/if}
-
 <style>
 	/* :global(.bg-site) {
 		background-color: var(--background-color, white);
