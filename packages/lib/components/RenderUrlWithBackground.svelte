@@ -36,7 +36,9 @@
 		{#if imageBackgroundUrl}
 			<img
 				class="absolute left-0 top-0 w-full h-full {urlImgClass.includes('rounded-b')
-					? 'rounded-b-xl'
+					? 'sm:rounded-b-xl rounded-xl'
+					: urlImgClass.includes('rounded-r')
+					? 'sm:rounded-r-xl sm:rounded-tl-none sm:rounded-bl-none rounded-b-xl'
 					: 'rounded-xl'}"
 				src={imageBackgroundUrl}
 			/>{/if}

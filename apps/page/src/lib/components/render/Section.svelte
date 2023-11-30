@@ -656,7 +656,7 @@
 					{:else if section.columns === 1}
 						{#each section.items as item}
 							<div
-								class="_section-item grid grid-cols-12 items-center {section.renderType ===
+								class="_section-item grid sm:grid-cols-12 items-center {section.renderType ===
 								'article'
 									? '_article mb-8'
 									: 'mb-4'}"
@@ -721,10 +721,14 @@
 									
 									{item.isReversed ? 'order-first' : ''}"
 								>
-									<RenderUrl
-										class="col-span-2"
-										imgClass="object-cover rounded-b-lg"
-										url={item.imageUrl}
+									<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
+
+									<RenderUrlWithBackground
+										isIframeFallback={false}
+										aspectRatio={item.imageAspectRatio}
+										urlImgClass="object-cover rounded-r-lg"
+										imageUrl={item.imageUrl}
+										imageBackgroundUrl={item.imageBackgroundUrl}
 									/>
 								</div>
 							</div>
