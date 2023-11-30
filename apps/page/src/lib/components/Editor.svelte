@@ -589,6 +589,9 @@ See you!
 	let isSettingsModalShown = false;
 
 	let subscribe = async () => {
+		if (!$currentUser) {
+			showErrorMessage('Please log in to upgrade your page.');
+		}
 		let { url } = await get('stripe/subscribe', { pageId: page._id });
 		window.location.href = url;
 	};
