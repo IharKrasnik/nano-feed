@@ -3,6 +3,8 @@
 	import clickOutside from 'lib/use/clickOutside';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import feather from 'feather-icons/dist/icons.json';
 
 	let isEmojiPickerShown = false;
 
@@ -30,11 +32,16 @@
 		icon = url;
 		isEmojiPickerShown = false;
 	}
+
+	let selectedTab = 'emoji';
+
+	let featherIconNames = Object.keys(feather);
+
+	let iconSearchStr = '';
 </script>
 
 <div
 	class="relative cursor-pointer {clazz}"
-	on:click={() => (isEmojiPickerShown = true)}
 	use:clickOutside
 	on:clickOutside={() => {
 		isEmojiPickerShown = false;
@@ -42,6 +49,7 @@
 >
 	<div
 		class="border rounded-full aspect-square shrink-0 w-[30px] h-[30px] flex items-center justify-center"
+		on:click={() => (isEmojiPickerShown = true)}
 	>
 		<Emoji bind:emoji={icon} />
 	</div>
@@ -61,16 +69,61 @@
 					/>
 				</div>
 			{/if}
+			<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} flex gap-4 py-4">
+				<div
+					class="pb-2"
+					on:click={() => (selectedTab = 'emoji')}
+					class:_selected={selectedTab === 'emoji'}
+				>
+					✨ Emoji
+				</div>
 
-			<emoji-picker
-				class={theme}
-				on:emoji-click={(evt) => {
-					icon = evt.detail.unicode;
-					url = null;
-					isEmojiPickerShown = false;
-					onUpdated(icon);
-				}}
-			/>
+				<div
+					class="flex items-center pb-2"
+					on:click={() => (selectedTab = 'icon')}
+					class:_selected={selectedTab === 'icon'}
+				>
+					<FeatherIcon class="mr-2" size="15" name="feather" /> Mono Icon
+				</div>
+			</div>
+
+			{#if selectedTab === 'emoji'}
+				<emoji-picker
+					class={theme}
+					on:emoji-click={(evt) => {
+						icon = evt.detail.unicode;
+						url = null;
+						isEmojiPickerShown = false;
+						onUpdated(icon);
+					}}
+				/>
+			{:else if selectedTab === 'icon'}
+				<div
+					class="w-full _section min-w-[345px] min-h-[200px] {theme === 'light'
+						? 'bg-white'
+						: 'bg-black'}"
+				>
+					<div class="text-lg font-bold mb-2">SVG Icons</div>
+
+					<div class="my-2 w-full">
+						<input class="w-full" placeholder="Search icon" bind:value={iconSearchStr} />
+					</div>
+
+					<div class="mt-2 grid grid-cols-10 h-[400px] overflow-y-scroll">
+						{#each iconSearchStr ? featherIconNames.filter( (n) => n.includes(iconSearchStr.toLowerCase()) ) : featherIconNames as featherIconName}
+							<div
+								class="flex flex-col justify-center items-center p-4"
+								on:click={() => {
+									url = `feather:${featherIconName}`;
+									isEmojiPickerShown = false;
+								}}
+							>
+								<FeatherIcon size="20" name={featherIconName} />
+							</div>
+						{/each}
+					</div>
+				</div>
+			{/if}
 
 			{#if icon}
 				<div
@@ -94,3 +147,9 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	._selected {
+		@apply border-b-2 border-black;
+	}
+</style>
