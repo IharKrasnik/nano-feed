@@ -272,31 +272,6 @@
 			</div>
 
 			<div class="mb-8 mt-4 sm:mx-0 mx-8">
-				<div class="relative flex items-center">
-					<div
-						class="absolute top-0 left-0"
-						style="top: 50%; left: -16px; transform: translateX(-100%) translateY(-50%); z-index: 21;"
-					>
-						<EmojiPicker
-							onUpdated={(icon) => {
-								$lastEmoji = icon;
-							}}
-							isNoCustom
-							bind:icon={newTask.emoji}
-						/>
-					</div>
-
-					<input
-						class="w-full text-lg"
-						rows="1"
-						placeholder="Describe one achievement shortly..."
-						autofocus
-						on:paste={pasteImage}
-						bind:value={newTask.text}
-						on:keydown={onKeydown}
-					/>
-				</div>
-
 				{#each tasks as task, i}
 					<div class="relative flex items-center">
 						<div
@@ -334,6 +309,30 @@
 						</div>
 					</div>
 				{/each}
+				<div class="relative flex items-center">
+					<div
+						class="absolute top-0 left-0"
+						style="top: 50%; left: -16px; transform: translateX(-100%) translateY(-50%); z-index: 21;"
+					>
+						<EmojiPicker
+							onUpdated={(icon) => {
+								$lastEmoji = icon;
+							}}
+							isNoCustom
+							bind:icon={newTask.emoji}
+						/>
+					</div>
+
+					<input
+						class="w-full text-lg"
+						rows="1"
+						placeholder="Describe one achievement shortly..."
+						autofocus
+						on:paste={pasteImage}
+						bind:value={newTask.text}
+						on:keydown={onKeydown}
+					/>
+				</div>
 
 				{#if newTask.text}
 					<div
