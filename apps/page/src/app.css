@@ -129,14 +129,14 @@
 ._section-item:not(.bg_image):not(._article) > .flex {
 	background: var(--section-background-color);
 	text-align: left;
-	border: 1px rgba(255, 255, 255, 0.2) solid;
+	border: 1px rgba(255, 255, 255, 0.1) solid;
 	@apply rounded-xl;
 }
 
 ._section-container._bg-image,
 ._section-item._bg-image > .flex {
 	background: none !important;
-	color: #f6f5f4;
+	color: var(--text-color);
 	position: relative;
 	z-index: 10;
 }
@@ -507,7 +507,7 @@ button._wide {
 
 ._transparent {
 	background: rgba(0, 0, 0, 0.3) !important;
-	border: 1px var(--color-text) solid;
+	border: 1px var(--text-color) solid;
 }
 
 .container-width {

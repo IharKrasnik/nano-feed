@@ -45,7 +45,21 @@
 		}
 	};
 
-	let hints = _.shuffle(['confetti', 'rocket', 'launch', 'space', 'nature', 'crowd', 'dashboard']);
+	let hints = _.shuffle([
+		'waves',
+		'gradient',
+		'pattern wood',
+		'pattern glass',
+		'confetti',
+		'rocket',
+		'launch',
+		'space',
+		'nature',
+		'crowd',
+		'dashboard'
+	]);
+
+	// leaves, ice, snow, trees, wood, stars, cosmos, watercolor
 </script>
 
 <div on:click={search}>🔎</div>
@@ -63,10 +77,10 @@
 					on:input={_.debounce(search, 500)}
 				/>
 
-				<div class="flex items-center gap-2">
+				<div class="flex items-center mt-2 gap-2 flex-wrap">
 					{#each hints as hint}
 						<div
-							class="mt-2 text-sm cursor-pointer hover:font-bold"
+							class="text-sm cursor-pointer hover:font-bold"
 							on:click={() => {
 								searchText = hint;
 								search();

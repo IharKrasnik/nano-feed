@@ -18,6 +18,7 @@
 	export let isLazy = true;
 	export let url;
 	export let imgClass = '';
+	export let isIframeFallback = true;
 
 	export let isAutoplay = url?.includes('.mp4') || url?.includes('.mov');
 
@@ -168,7 +169,7 @@
 				{/key}
 			{:else if !isFilesOnly && url.includes('producthunt.com')}
 				<iframe src={url} class="w-full h-full {imgClass}" style="border:none; height: 1000px;" />
-			{:else if !isFilesOnly && url.startsWith('http')}
+			{:else if isIframeFallback && !isFilesOnly && url.startsWith('http')}
 				<iframe src={url} class="w-full h-full {imgClass}" style="border:none; height: 600px;" />
 			{/if}
 		</div>

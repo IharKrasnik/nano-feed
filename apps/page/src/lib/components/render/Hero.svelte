@@ -54,7 +54,9 @@
 		{#if !hero.theme.isNotBgImageDimmed}
 			<div
 				class="absolute top-0 left-0 w-screen h-screen z-1"
-				style="background-color: rgba(0,0,0, 0.7); z-index: 1;"
+				style="background-color: {page.theme?.theme === 'dark'
+					? 'rgba(0,0,0,0.7)'
+					: 'rgba(255,255,255,.7)'}; z-index: 1;"
 			/>
 		{/if}
 		<RenderUrl
@@ -67,7 +69,7 @@
 
 	<div
 		class="relative z-10 container container-width mx-auto {hero.theme?.isVertical ||
-		page.sections?.length
+		(page.sections?.length && hero.theme?.bgPattern !== 'cursors')
 			? ''
 			: 'min-h-screen h-screen'} pt-[60px] mb-[-60px]"
 		style="{styles};"

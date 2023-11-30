@@ -52,7 +52,7 @@ export default (page) => {
 			page.theme?.sectionBackgroundColor ||
 			(page.theme?.theme === 'dark'
 				? hexToRGBA(darken(page.theme?.accentColor, 0.993), 0.8)
-				: hexToRGBA(lighten(page.theme?.accentColor, 0.82), 0.8)),
+				: hexToRGBA(lighten(page.theme?.accentColor, 0.9), 0.15)),
 
 		'section-description-text-color':
 			page.theme?.theme === 'dark' ? 'rgb(229 231 235)' : 'rgba(4, 4, 4, 1)',

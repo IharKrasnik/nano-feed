@@ -400,10 +400,7 @@
 											/>
 
 											{#if page.theme?.isShowNameWithLogo}
-												<span
-													class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
-													style="font-family: var(--logo-font)"
-												>
+												<span class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}">
 													{page.parentPage?.name || page.name}
 												</span>
 											{/if}

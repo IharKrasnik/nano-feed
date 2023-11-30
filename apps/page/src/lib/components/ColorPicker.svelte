@@ -63,7 +63,8 @@
 			'#111111',
 			'#1c1c1c',
 			'#222222',
-			lighten(page?.theme?.accentColor || '#fff', 0.8)
+			lighten(page?.theme?.accentColor || '#fff', 0.8),
+			darken(page?.theme?.accentColor || '#fff', 0.99)
 		],
 		accent: [
 			'#a7d7c5',
@@ -254,10 +255,11 @@
 	let changeAccentColor = () => {
 		let newTheme = isDarkColor(page.theme.accentColor) ? 'dark' : 'light';
 
-		let bgColor = lighten(page.theme.accentColor, 0.8);
-
 		colors.background.pop();
-		colors.background.push(bgColor);
+		colors.background.pop();
+		colors.background.push(lighten(page.theme.accentColor, 0.8));
+		colors.background.push(darken(page.theme.accentColor, 0.997));
+
 		colors.background = [...colors.background];
 
 		if (page.theme.buttonTheme !== newTheme) {
@@ -352,80 +354,78 @@
 
 							<div class="flex gap-4 items-center col-span-2 my-2">
 								<div>
-									<input type="checkbox" bind:checked={page.theme.isShowNameWithLogo} />
-									Show name near the logo
-								</div>
+									<input type="checkbox" bind:checked={page.theme.is} />
 
+									Are Titles Gradient
+								</div>
 								<div>
 									<input type="checkbox" bind:checked={page.theme.isGradientTitle} />
 
 									Are Titles Gradient
 								</div>
-								<!-- 								
-								<div>
+								<!-- <div>
 									<input type="checkbox" bind:checked={page.theme.isTitlesLeft} />
 									Are Titles Left
 								</div>
 								<div>
 									<input type="checkbox" bind:checked={page.theme.isTitlesHuge} />
 									Are Titles Huge
-								</div>
-							</div> -->
-
-								<div class="grid grid-cols-2 gap-4 mb-2">
-									<div class="_section">
-										<div class="font-semibold">Fonts</div>
-										<div class="text-sm mb-4 opacity-80">Select your font below</div>
-
-										<select bind:value={page.theme.fontPairId} on:change={updateFonts}>
-											{#each fontPairs as fontPair}
-												<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
-											{/each}
-										</select>
-									</div>
-
-									<div class="_section">
-										<div class="font-semibold">Buttons Radius</div>
-										<button on:click={() => setButtonRadius('2px')}
-											>No <div class="text-xs">2px</div></button
-										>
-										<button on:click={() => setButtonRadius('8px')}
-											>SM <div class="text-xs">8px</div></button
-										><button on:click={() => setButtonRadius('16px')}
-											>MD
-											<div class="text-xs">16px</div></button
-										><button on:click={() => setButtonRadius('24px')}
-											>LG
-											<div class="text-xs">24px</div></button
-										>
-										<input type="checkbox" bind:checked={page.theme.isInputBorder} /> Transparent
-										Input
-										<div>
-											<div class="text-sm font-bold">Container Size:</div>
-											<button on:click={() => setContainerWidth('900px')}>SM (900px)</button><button
-												on:click={() => setContainerWidth('1080px')}>MD (1080px)</button
-											><button on:click={() => setContainerWidth('1200px')}>LG (1200px)</button>
-											<button on:click={() => setContainerWidth('1280px')}>XL (1280px)</button>
-										</div>
-									</div>
-								</div>
+								</div> -->
 							</div>
 
-							<div class="overflow-hidden w-full overflow-y-hidden max-w-[500px] rounded-xl">
-								<!-- <BrowserFrame scale={'0.4'}> -->
-								<div style="zoom: .5;" class="rounded-2xl transition" on:click={() => setTheme(t)}>
-									<BrowserFrame>
-										<div class="max-h-[1000px] overflow-y-scroll">
-											<SitePreview isEmbed isNoBadge page={{ ...page }} />
-										</div>
-									</BrowserFrame>
+							<div class="grid grid-cols-2 gap-4 mb-2">
+								<div class="_section">
+									<div class="font-semibold">Fonts</div>
+									<div class="text-sm mb-4 opacity-80">Select your font below</div>
+
+									<select bind:value={page.theme.fontPairId} on:change={updateFonts}>
+										{#each fontPairs as fontPair}
+											<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
+										{/each}
+									</select>
 								</div>
-								<!-- </BrowserFrame> -->
+
+								<div class="_section">
+									<div class="font-semibold">Buttons Radius</div>
+									<button on:click={() => setButtonRadius('2px')}
+										>No <div class="text-xs">2px</div></button
+									>
+									<button on:click={() => setButtonRadius('8px')}
+										>SM <div class="text-xs">8px</div></button
+									><button on:click={() => setButtonRadius('16px')}
+										>MD
+										<div class="text-xs">16px</div></button
+									><button on:click={() => setButtonRadius('24px')}
+										>LG
+										<div class="text-xs">24px</div></button
+									>
+									<input type="checkbox" bind:checked={page.theme.isInputBorder} /> Transparent
+									Input
+									<div>
+										<div class="text-sm font-bold">Container Size:</div>
+										<button on:click={() => setContainerWidth('900px')}>SM (900px)</button><button
+											on:click={() => setContainerWidth('1080px')}>MD (1080px)</button
+										><button on:click={() => setContainerWidth('1200px')}>LG (1200px)</button>
+										<button on:click={() => setContainerWidth('1280px')}>XL (1280px)</button>
+									</div>
+								</div>
 							</div>
 						</div>
+
+						<div class="overflow-hidden w-full overflow-y-hidden max-w-[1000px] rounded-xl">
+							<!-- <BrowserFrame scale={'0.4'}> -->
+							<div style="zoom: .5;" class="rounded-2xl transition" on:click={() => setTheme(t)}>
+								<BrowserFrame>
+									<div class="max-h-[1000px] overflow-y-scroll">
+										<SitePreview isEmbed isNoBadge page={{ ...page }} />
+									</div>
+								</BrowserFrame>
+							</div>
+							<!-- </BrowserFrame> -->
+						</div>
 					</div>
-				</div></Modal
-			>
+				</div>
+			</Modal>
 		{/if}
 	</div>
 {/key}

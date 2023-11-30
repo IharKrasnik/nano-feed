@@ -10,7 +10,7 @@
 		/> -->
 
 		<div class="cursor-animation1">
-			<div class="multiplayer_item designer">
+			<div class="multiplayer_item first">
 				<div class="multiplayer_icon is-grey w-embed">
 					<svg
 						width="100%"
@@ -75,7 +75,7 @@
 			</div>
 		</div>
 		<div class="cursor-animation2">
-			<div class="multiplayer_item marketer">
+			<div class="multiplayer_item second">
 				<div class="multiplayer_icon is-white w-embed">
 					<svg
 						width="100%"
@@ -140,7 +140,7 @@
 			</div>
 		</div>
 		<div class="cursor-animation3">
-			<div class="multiplayer_item copywriter">
+			<div class="multiplayer_item third">
 				<div class="multiplayer_icon">
 					<svg
 						width="100%"
@@ -259,7 +259,7 @@
 	@keyframes x-cursor1 {
 		15% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(-32rem);
+			transform: translateX(-2rem);
 		}
 
 		30% {
@@ -269,54 +269,54 @@
 
 		45% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(-45rem);
+			transform: translateX(-9rem);
 		}
 
 		60% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(-31rem);
+			transform: translateX(-15rem);
 		}
 
 		75% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(-40rem);
+			transform: translateX(5rem);
 		}
 
 		90% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(-20rem);
+			transform: translateX(-15rem);
 		}
 	}
 
 	@keyframes y-cursor1 {
 		15% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 0.41);
-			transform: translateY(82%);
+			transform: translateY(1rem);
 		}
 
 		30% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 0.41);
-			transform: translateY(0%);
+			transform: translateY(10rem);
 		}
 
 		45% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 0.41);
-			transform: translateY(-60%);
+			transform: translateY(-10rem);
 		}
 
 		60% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 0.41);
-			transform: translateY(-140%);
+			transform: translateY(-10rem);
 		}
 
 		75% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 0.41);
-			transform: translateY(-70%);
+			transform: translateY(-10rem);
 		}
 
 		90% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 0.41);
-			transform: translateY(-10%);
+			transform: translateY(-10rem);
 		}
 	}
 
@@ -333,7 +333,7 @@
 	@keyframes x-cursor2 {
 		15% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(24rem);
+			transform: translateX(10rem);
 		}
 
 		30% {
@@ -343,17 +343,17 @@
 
 		45% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(40rem);
+			transform: translateX(15rem);
 		}
 
 		60% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(31rem);
+			transform: translateX(-20rem);
 		}
 
 		75% {
 			animation-timing-function: cubic-bezier(0.02, 0.01, 0.78, 1);
-			transform: translateX(20rem);
+			transform: translateX(7rem);
 		}
 
 		90% {
@@ -439,32 +439,32 @@
 	@keyframes y-cursor3 {
 		15% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 1);
-			transform: translateY(-4rem);
+			transform: translateY(-10rem);
 		}
 
 		30% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 1);
-			transform: translateY(-24rem);
+			transform: translateY(-16rem);
 		}
 
 		45% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 1);
-			transform: translateY(-15rem);
+			transform: translateY(-3rem);
 		}
 
 		60% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 1);
-			transform: translateY(2rem);
+			transform: translateY(-15rem);
 		}
 
 		75% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 1);
-			transform: translateY(-21rem);
+			transform: translateY(-15rem);
 		}
 
 		90% {
 			animation-timing-function: cubic-bezier(0.3, 0.27, 0.54, 1);
-			transform: translateY(-10rem);
+			transform: translateY(10rem);
 		}
 	}
 
@@ -4002,7 +4002,7 @@
 		position: relative;
 	}
 
-	.multiplayer_item.marketer {
+	.multiplayer_item.second {
 		flex-direction: column;
 		align-items: flex-end;
 	}
@@ -4703,7 +4703,7 @@
 			top: -3rem;
 		}
 
-		.multiplayer_item.designer {
+		.multiplayer_item.first {
 			right: -2rem;
 		}
 
@@ -5009,7 +5009,7 @@
 			border-radius: 0;
 		}
 
-		.multiplayer_item.copywriter {
+		.multiplayer_item.third {
 			right: 0%;
 		}
 
@@ -5157,18 +5157,18 @@
 			max-width: none;
 		}
 
-		.multiplayer_item.designer {
+		.multiplayer_item.first {
 			top: -3rem;
 			bottom: auto;
 			right: -3rem;
 		}
 
-		.multiplayer_item.copywriter {
-			bottom: 5rem;
+		.multiplayer_item.third {
+			bottom: 10rem;
 			right: -4rem;
 		}
 
-		.multiplayer_item.marketer {
+		.multiplayer_item.second {
 			left: -3rem;
 		}
 

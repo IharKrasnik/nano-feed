@@ -24,6 +24,7 @@
 
 	import Emoji from '$lib/components/render/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
+	import toDollars from 'lib/helpers/toDollars';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import trackClick from 'lib/services/trackClick';
@@ -273,7 +274,9 @@
 			/>
 			<div
 				class="absolute top-0 left-0 w-full h-full rounded-xl"
-				style="background-color: rgba(0,0,0, 0.85); z-index: 1;"
+				style="background-color: {page.theme.theme === 'dark'
+					? 'rgba(0,0,0,0.85)'
+					: 'rgba(255,255,255,.85)'}; z-index: 1;"
 			/>
 		{/if}
 
@@ -312,7 +315,7 @@
 					{/if}
 
 					{#if section.subtitle}
-						<div class="text-sm mb-4 opacity-90" style="font-weight: 500;">
+						<div class="text-sm mb-4 opacity-50" style="font-weight: 500;">
 							<ContentEditableIf class="" bind:innerHTML={section.subtitle} condition={isEdit} />
 						</div>
 					{/if}
@@ -520,10 +523,9 @@
 
 											<div in:fade>
 												<RenderUrl
-													class="aspect-image"
-													imgClass="aspect-image object-cover {section.description
-														? 'rounded-b-lg'
-														: ''}"
+													class={section.imageClass || 'aspect-og'}
+													imgClass="{section.imageClass ||
+														'aspect-og'} object-cover {section.description ? 'rounded-b-lg' : ''}"
 													bind:url={selectedCarouselItem.imageUrl}
 												/>
 											</div>
@@ -649,28 +651,6 @@
 								</div>
 							</div>
 						{/if}
-
-						<!--
-						KLU:
-						<div>
-						{#each section.items as item}
-							<div class="_section-item w-full grid grid-cols-3 gap-4 mb-4">
-								<div class="p-4 sm:p-8 col-span-1">
-									<Emoji bind:emoji={item.emoji} />
-									<div class="_item-title mb-2">{@html item.title}</div>
-									<div class="_item-description whitespace-pre-wrap">{@html item.description}</div>
-								</div>
-
-								{#if item.imageUrl}
-									<RenderUrl
-										class="col-span-2"
-										imgClass="object-cover rounded-b-lg"
-										url={item.imageUrl}
-									/>
-								{/if}
-							</div>
-						{/each}
-					</div> -->
 					{:else if section.columns === 1}
 						{#each section.items as item}
 							<div
@@ -772,10 +752,10 @@
 											id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
 											class="_section-item block relative {item.bgImageUrl
 												? '_bg-image'
-												: ''} rounded-lg sm:rounded-xl {item.className ||
-												''} mb-2 sm:mb-8 {item.url && !item.interactiveRenderType
+												: ''} rounded-lg sm:rounded-xl {item.className || ''} mb-2 {item.url &&
+											!item.interactiveRenderType
 												? '_interactive'
-												: ''}"
+												: ''} h-full"
 											on:click={() => {
 												if (section.carousel) {
 													selectCarouselItem(item);
@@ -822,7 +802,9 @@
 												/>
 												<div
 													class="absolute top-0 left-0 w-full h-full rounded-xl"
-													style="background-color: rgba(0,0,0, 0.85); z-index: 1;"
+													style="background-color: {page.theme?.theme === 'dark'
+														? 'rgba(0,0,0,0.85)'
+														: 'rgba(255,255,255,.85)'}; z-index: 1;"
 												/>
 											{/if}
 
@@ -923,7 +905,7 @@
 														{#if item.pricing}
 															<div class="flex items-end mt-4 mb-4">
 																<div class="text-5xl font-bold mr-2">
-																	${item.pricing.amount?.toFixed(2) || '0'}
+																	{item.pricing.amount ? toDollars(item.pricing.amount * 100) : '0'}
 																</div>
 																<div class="text-lg">
 																	/{item.pricing.per}
@@ -988,9 +970,10 @@
 															: ''} {section.isShowSource ? 'px-4' : ''}"
 													>
 														<RenderUrl
-															class=""
-															imgClass="w-full aspect-image object-cover mx-auto {section.columns ===
-															1
+															class={section.imageClass || 'aspect-og'}
+															isIframeFallback={false}
+															imgClass="w-full {section.imageClass ||
+																'aspect-og'} object-cover mx-auto {section.columns === 1
 																? ''
 																: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
 																? 'w-full object-cover'
