@@ -15,17 +15,53 @@
 	let searchText;
 	let images;
 
-	let search = async () => {
+	let hints = _.shuffle([
+		'waves',
+		'gradient',
+		'pattern wood',
+		'pattern glass',
+		'confetti',
+		'rocket',
+		'launch',
+		'space',
+		'nature',
+		'crowd',
+		'dashboard',
+		'3d pattern'
+	]);
+
+	let page = 1;
+	let perPage = 18;
+
+	let search = async ({ isResetPage = true } = {}) => {
 		isSearching = true;
 		isLoading = true;
+		images = [];
+
+		if (isResetPage) {
+			page = 1;
+		}
+
+		if (!searchText) {
+			searchText = _.sample(hints);
+		}
 
 		try {
-			images = await get(type === 'gif' ? 'giphy' : 'unsplash', {
-				query: searchText || ''
+			let imagesResult = await get(type === 'gif' ? 'giphy' : 'unsplash', {
+				query: searchText || '',
+				page,
+				perPage
 			});
+
+			images = imagesResult;
 		} finally {
 			isLoading = false;
 		}
+	};
+
+	let loadMore = () => {
+		page++;
+		return search({ isResetPage: false });
 	};
 
 	let close = () => {
@@ -45,21 +81,10 @@
 		}
 	};
 
-	let hints = _.shuffle([
-		'waves',
-		'gradient',
-		'pattern wood',
-		'pattern glass',
-		'confetti',
-		'rocket',
-		'launch',
-		'space',
-		'nature',
-		'crowd',
-		'dashboard'
-	]);
-
-	let superCool = ['https://unsplash.com/photos/blue-and-black-digital-wallpaper-bKESVqfxass'];
+	let superCool = [
+		'https://unsplash.com/photos/blue-and-black-digital-wallpaper-bKESVqfxass',
+		'https://images.unsplash.com/photo-1506443432602-ac2fcd6f54e0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NDkxNzF8MHwxfHNlYXJjaHwyMnx8c3BhY2V8ZW58MHx8fHwxNzAxMzYwMjg3fDA&ixlib=rb-4.0.3&q=80&w=1080'
+	];
 
 	///https://unsplash.com/backgrounds/colors/gradient
 
@@ -151,13 +176,17 @@
 							{/each}
 						</div>
 
+						<div class="mt-4 p-4 w-full flex justify-center">
+							<button class="_primary" on:click={loadMore}>Load More</button>
+						</div>
 						{#if type === 'jpg'}
 							<div class="text-sm font-bold w-full mt-8 text-center opacity-60">
 								Powered by
 								<a
 									href="https://unsplash.com?utm_source=your_app_name&amp;utm_medium=referral"
-									target="_blank">Unsplash</a
-								>
+									target="_blank"
+									>Unsplash
+								</a>
 							</div>
 						{:else if type === 'gif'}
 							<div class="max-w-[100px] mx-auto mt-8">

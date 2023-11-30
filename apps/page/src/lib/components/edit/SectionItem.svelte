@@ -119,7 +119,7 @@
 			{/if}
 
 			{#if isWithSubtitle}
-				<input class="w-full" placeholder="Subtitle" bind:value={item.subtitle} />
+				<input class="ml-4 w-full" placeholder="Subtitle" bind:value={item.subtitle} />
 			{/if}
 		</div>
 
@@ -199,35 +199,69 @@
 		{#if item.imageUrl}
 			<div class="flex items-center mt-2 justify-between">
 				<div class="text-xs flex gap-2 items-center">
-					<div
-						class="cursor-pointer"
-						on:click={() => {
-							item.imageAspectRatio = 'og';
-						}}
-						class:font-bold={!item.imageAspectRatio || item.imageAspectRatio === 'og'}
-					>
-						OG (1200x630)
-					</div>
+					{#if item.id === section.id}
+						<div class="text-xs mt-2 flex gap-2 items-center">
+							<div
+								class="cursor-pointer"
+								on:click={() => {
+									section.imgMaxWidth = 0;
+								}}
+								class:font-bold={!section.imgMaxWidth}
+							>
+								Stretch
+							</div>
 
-					<div
-						class="cursor-pointer"
-						on:click={() => {
-							item.imageAspectRatio = 'image';
-						}}
-						class:font-bold={item.imageAspectRatio === 'image'}
-					>
-						Classic (4x3)
-					</div>
+							<div
+								class="cursor-pointer"
+								on:click={() => {
+									section.imgMaxWidth = 600;
+								}}
+								class:font-bold={section.imgMaxWidth === 600}
+							>
+								Medium
+							</div>
+						</div>
+					{:else}
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								item.imageAspectRatio = 'og';
+							}}
+							class:font-bold={item.imageAspectRatio === 'og'}
+						>
+							OG (120x63)
+						</div>
 
-					<div
-						class="cursor-pointer"
-						on:click={() => {
-							item.imageAspectRatio = 'square';
-						}}
-						class:font-bold={item.imageAspectRatio === 'square'}
-					>
-						Square
-					</div>
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								item.imageAspectRatio = 'image';
+							}}
+							class:font-bold={item.imageAspectRatio === 'image'}
+						>
+							4x3
+						</div>
+
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								item.imageAspectRatio = 'square';
+							}}
+							class:font-bold={item.imageAspectRatio === 'square'}
+						>
+							1x1
+						</div>
+
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								item.imageAspectRatio = null;
+							}}
+							class:font-bold={!item.imageAspectRatio}
+						>
+							Auto
+						</div>
+					{/if}
 				</div>
 				<div
 					class="ml-4"
@@ -242,29 +276,6 @@
 							<div class="px-2 cursor-pointer">no background</div>
 						{/if}
 					</div>
-				</div>
-			</div>
-		{/if}
-		{#if section.imageUrl && item === section}
-			<div class="text-xs mt-2 flex gap-2 items-center">
-				<div
-					class="cursor-pointer"
-					on:click={() => {
-						section.imgMaxWidth = 0;
-					}}
-					class:font-bold={!section.imgMaxWidth}
-				>
-					Stretch
-				</div>
-
-				<div
-					class="cursor-pointer"
-					on:click={() => {
-						section.imgMaxWidth = 600;
-					}}
-					class:font-bold={section.imgMaxWidth === 600}
-				>
-					Medium
 				</div>
 			</div>
 		{/if}

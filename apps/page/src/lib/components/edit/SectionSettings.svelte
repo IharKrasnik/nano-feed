@@ -7,6 +7,7 @@
 
 	export let section;
 	export let sectionItem;
+	export let theme = 'light';
 
 	export let isShown = false;
 
@@ -24,7 +25,7 @@
 </script>
 
 <div
-	class="ml-2 w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+	class="ml-2 w-[37px] h-[37px] shrink-0 bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
 	on:click={show}
 >
 	⚙️
@@ -65,34 +66,44 @@
 				</div>
 			{/if}
 
-			{#if sectionItem.imageUrl}
-				<input class="mr-2" type="checkbox" bind:checked={sectionItem.isReversed} /> reverse
+			{#if sectionItem !== section && sectionItem.imageUrl}
+				<div class="mr-2">
+					<input type="checkbox" bind:checked={sectionItem.isReversed} /> Reverse Image Position
+				</div>
 			{/if}
 
 			{#if sectionItem.items}
-				<input class="ml-2 mr-2" type="checkbox" bind:checked={sectionItem.isTitleLeft} /> left align
+				<div class="mr-2">
+					<input type="checkbox" bind:checked={sectionItem.isTitleLeft} /> Align Left
+				</div>
 			{/if}
 
 			{#if !sectionItem.bgImageUrl}
 				<div class="">
-					<div class="text-sm mb-2 mt-8">Style</div>
-					<select bind:value={sectionItem.className}>
-						<option value="">Default</option>
+					{#if sectionItem.id !== section.id}
+						<div class="text-sm mb-2 mt-8">Style</div>
+						<select bind:value={sectionItem.className}>
+							<option value="">Default</option>
 
-						{#if sectionItem.items}
-							<option value="_callout">Callout</option>
-						{/if}
-
-						<option value="_highlighted">Highlighted</option>
-						<option value="_darker">Dark</option>
-						<option value="_lighter">Light</option>
-						<option value="_transparent">Transparent</option>
-					</select>
-					<input class="ml-4" type="checkbox" bind:checked={sectionItem.isHugeTitle} /> Is Huge
-					Title
-					<input class="ml-4" type="checkbox" bind:checked={sectionItem.isGlowing} /> Is Glowing
+							<option value="_highlighted">Highlighted</option>
+							<option value="_darker">Dark</option>
+							<option value="_transparent">Transparent</option>
+						</select>
+					{/if}
 				</div>
 			{/if}
+
+			<div class="my-4">
+				<input class="" type="checkbox" bind:checked={sectionItem.isHugeTitle} /> Is Huge Title
+				{#if section === sectionItem}
+					<input class="ml-4" type="checkbox" bind:checked={sectionItem.isGlowing} /> Is Glowing
+				{/if}
+				{#if sectionItem.emoji}
+					<div class="mt-2">
+						<input type="checkbox" bind:checked={sectionItem.isIconLeft} /> Show Icon Near Title
+					</div>
+				{/if}
+			</div>
 		</div>
 
 		<div class="my-4">
@@ -101,6 +112,7 @@
 			<FileInput
 				class="w-full"
 				isCanSearch
+				{theme}
 				on:change={() => {
 					if (sectionItem.bgImageUrl) {
 						sectionItem.className = '_darker';

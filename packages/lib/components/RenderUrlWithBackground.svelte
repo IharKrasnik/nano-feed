@@ -8,26 +8,27 @@
 	export let imageBackgroundUrl;
 	export let urlImgMaxWidth = 0;
 	export let isIframeFallback;
-	export let aspectRatio = 'og';
+	export let aspectRatio;
 
 	export let urlClass = '';
 	export let urlImgClass = '';
 
 	let getAspectClass = (ratio) => {
-		if (!ratio || ratio === 'og') {
+		if (ratio === 'og') {
 			return 'aspect-og';
 		} else if (ratio === 'image') {
 			return 'aspect-image';
 		} else if (ratio === 'square') {
 			return 'aspect-square';
 		}
+		return '';
 	};
 </script>
 
-<div class=" {clazz}">
+<div class={clazz}>
 	<div
 		class="relative {urlImgMaxWidth
-			? `max-w-[${urlImgMaxWidth}px] mx-auto`
+			? `max-w-[${urlImgMaxWidth}px] ${urlImgClass?.includes('mx-auto') ? 'mx-auto' : ''}`
 			: 'w-full'} h-full {imageBackgroundUrl ? 'p-[5%]' : ''}
 			{getAspectClass(aspectRatio)}
 			flex items-center

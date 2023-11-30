@@ -47,14 +47,15 @@
 	const headerTextStyle = (item) => {
 		if (item.isHugeTitle) {
 			let defaultSize = 'text-3xl sm:text-4xl';
-			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize };
+			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
 		}
 
 		return {
 			1: item.imageUrl ? 'text-lg' : 'sm:text-4xl text-3xl',
 			2: 'text-lg',
 			3: 'text-lg _text-line-height',
-			4: ''
+			4: '',
+			12: ''
 		};
 	};
 
@@ -62,14 +63,16 @@
 		1: 'text-lg _text-line-height',
 		2: 'text-lg _text-line-height',
 		3: '',
-		4: ''
+		4: '',
+		12: ''
 	};
 
 	const emojiStyle = {
 		1: 'text-4xl mb-4',
 		2: 'text-3xl mb-4',
 		3: 'text-xl',
-		4: 'text-lg _text-line-height'
+		4: 'text-lg _text-line-height',
+		12: 'text-lg _text-line-height'
 	};
 
 	let focusEmailInput = () => {
@@ -267,7 +270,7 @@
 {/if}
 
 {#if section.isShown}
-	<div class="relative {section.bgImageUrl ? 'my-8 sm:my-16' : ''}">
+	<div class="relative {section.bgImageUrl ? 'p-8 my-8 sm:my-16' : ''}">
 		{#if section.bgImageUrl}
 			<img
 				src={section.bgImageUrl}
@@ -325,7 +328,7 @@
 					<div class="mb-8">
 						{#if section.title}
 							<h2
-								class="_title text-3xl {page.theme.isTitlesHuge
+								class="_title text-3xl {page.theme.isTitlesHuge || section.isHugeTitle
 									? 'sm:text-6xl font-medium'
 									: 'sm:text-4xl font-semibold'} mb-4 {page.theme.isTitlesLeft ||
 								section.isTitleLeft ||
@@ -339,7 +342,7 @@
 
 						{#if section.description}
 							<h3
-								class="mb-8 {page.theme.isTitlesHuge
+								class="mb-8 {page.theme.isTitlesHuge || section.isHugeTitle
 									? 'text-xl leading-8'
 									: 'text-lg font-medium'} whitespace-pre-wrap opacity-90 {section.renderType ===
 								'article'
@@ -379,12 +382,14 @@
 
 					{#if section.imageUrl}
 						<div class="my-8">
-							<RenderUrl
+							<RenderUrlWithBackground
 								class=""
-								imgClass="mx-auto {section.imgMaxWidth
-									? `max-w-[${section.imgMaxWidth}px]`
-									: ''} {isGif(section.imageUrl) ? 'w-full object-cover' : ''}"
-								url={section.imageUrl}
+								urlImgMaxWidth={section.imgMaxWidth}
+								urlImgClass="{section.isTitleLeft ? '' : 'mx-auto'} {isGif(section.imageUrl)
+									? 'w-full object-cover'
+									: ''}"
+								imageUrl={section.imageUrl}
+								imageBackgroundUrl={section.imageBackgroundUrl}
 							/>
 						</div>
 					{/if}
@@ -847,6 +852,12 @@
 												>
 													<div class="max-w-[600px]">
 														{#if item.title || item.emoji}
+															{#if item.emoji && !item.isIconLeft}
+																<div class="{emojiStyle[section.columns]} _section-img mr-2 mb-4">
+																	<Emoji bind:emoji={item.emoji} />
+																</div>
+															{/if}
+
 															<div
 																class="flex {page?.theme?.containerWidth
 																	? 'mb-2'
@@ -854,14 +865,8 @@
 																	? 'flex-col items-start'
 																	: 'items-center'}"
 															>
-																{#if item.emoji}
-																	<div
-																		class="{emojiStyle[
-																			section.columns
-																		]} _section-img {item.emoji.startsWith('feather:')
-																			? ''
-																			: 'grayscale-emoji'} mr-2"
-																	>
+																{#if item.emoji && item.isIconLeft}
+																	<div class="{emojiStyle[section.columns]} _section-img mr-2">
 																		<Emoji bind:emoji={item.emoji} />
 																	</div>
 																{/if}

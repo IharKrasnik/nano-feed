@@ -83,12 +83,18 @@
 
 ._section-container._darker {
 	background: var(--accent-color-darker-3xl);
+	color: var(--button-color);
 
 	@apply rounded-xl;
 }
 
 ._section-item._darker > .flex {
 	background: var(--accent-color-darker-xl) !important;
+	color: var(--button-color) !important;
+}
+
+._section-item._darker ._item-description {
+	color: var(--button-color) !important;
 }
 
 ._section-item._transparent {

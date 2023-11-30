@@ -5,7 +5,7 @@
 	import { fly } from 'svelte/transition';
 
 	import { get, put } from 'lib/api';
-	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
+	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 
@@ -230,6 +230,7 @@
 				<option value="testimonials">Testimonials</option>
 				<option value="carousel">Carousel Menu</option>
 				<option value="stepper">1-2-3 Stepper</option>
+				<option value="callout">Callout </option>
 				<option value="faq">FAQ</option>
 				<option value="article">Article</option>
 				<option value="form">Form</option>

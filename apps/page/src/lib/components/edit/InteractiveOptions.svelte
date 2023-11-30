@@ -46,7 +46,7 @@
 
 {#if isWithButton}
 	<div
-		class="ml-2 w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer {sectionItem.url
+		class="ml-2 w-[37px] h-[37px] shrink-0 bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer {sectionItem.url
 			? 'bg-green-200'
 			: ''}"
 		on:click={show}

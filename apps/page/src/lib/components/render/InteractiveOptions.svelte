@@ -453,13 +453,14 @@
 	button._ishuge {
 		font-size: 20px;
 		padding: 16px 32px;
-		border-radius: 32px;
+
+		border-radius: var(--button-huge-radius);
 	}
 
 	button._islarge {
 		font-size: 18px;
 		padding: 12px 24px;
-		border-radius: 24px;
+		border-radius: var(--button-large-radius);
 	}
 
 	.emoji-button:hover {

@@ -40,8 +40,11 @@
 		isEmojiPickerShown = false;
 	}}
 >
-	<Emoji bind:emoji={icon} />
-
+	<div
+		class="border rounded-full aspect-square shrink-0 w-[30px] h-[30px] flex items-center justify-center"
+	>
+		<Emoji bind:emoji={icon} />
+	</div>
 	{#if isEmojiPickerShown}
 		<div class="absolute top-0 mt-16" style="z-index: 100;" in:fly={{ y: 50, duration: 150 }}>
 			{#if !isNoCustom}

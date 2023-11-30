@@ -55,7 +55,7 @@
 
 	import SignupForm from '$lib/components/signup-form.svelte';
 
-	import EmojiPicker from '$lib/components/EmojiPicker.svelte';
+	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import ColorPicker from '$lib/components/ColorPicker.svelte';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
