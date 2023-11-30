@@ -28,7 +28,7 @@
 
 	import trackClick from 'lib/services/trackClick';
 
-	import Emoji from '$lib/components/render/Emoji.svelte';
+	import Emoji from 'lib/components/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 
@@ -393,8 +393,7 @@
 									>
 										{#if page?.parentPage?.logo || page?.logo}
 											<Emoji
-												width="auto"
-												height="25"
+												width="25"
 												class="mr-2 rounded"
 												emoji={page.parentPage?.logo || page.logo}
 											/>

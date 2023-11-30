@@ -23,7 +23,7 @@
 	import ArticleAuthorLabel from '$lib/components/render/ArticleAuthorLabel.svelte';
 	import SourceLogo from 'lib/components/SourceLogo.svelte';
 
-	import Emoji from '$lib/components/render/Emoji.svelte';
+	import Emoji from 'lib/components/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
 	import toDollars from 'lib/helpers/toDollars';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';

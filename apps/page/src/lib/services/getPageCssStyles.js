@@ -28,7 +28,6 @@ function hexToRGBA(hex, opacity = 1) {
 }
 
 export default (page) => {
-	debugger;
 	if (page.parentPage && !page.theme?.isOverride) {
 		page.theme = page.parentPage?.theme;
 	}
@@ -41,8 +40,8 @@ export default (page) => {
 			page.theme?.subtitleFont || page.theme?.textFont || page.theme?.titleFont || 'Inter',
 		'title-line-height': '1.0',
 		'button-radius': page.theme?.buttonRadius || '24px',
-		'button-huge-radius': `${parseInt(page.theme?.buttonRadius.replace('px', '') || '24') + 8}px`,
-		'button-large-radius': `${parseInt(page.theme?.buttonRadius.replace('px', '') || '24') + 4}px`,
+		'button-huge-radius': `${parseInt(page.theme?.buttonRadius?.replace('px', '') || '24') + 8}px`,
+		'button-large-radius': `${parseInt(page.theme?.buttonRadius?.replace('px', '') || '24') + 4}px`,
 		'text-font': page.theme?.textFont || fontPairs[0].text || 'Inter',
 		'text-font-size': '18px',
 		'text-line-height': 1.55,

@@ -8,7 +8,7 @@
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
 
-	import Emoji from '$lib/components/render/Emoji.svelte';
+	import Emoji from 'lib/components/Emoji.svelte';
 	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
 	import Popup from '$lib/components/Popup.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';

@@ -6,16 +6,11 @@
 	export let width = 25;
 	export let height = width;
 	export let color = '#111';
-	// let url;
 
-	// $: if (emoji?.startsWith('http')) {
-	// 	url = emoji;
-	// } else {
-	// 	url = null;
-	// }
+	let stylesStr = `--emoji-width: ${width}px; --emoji-height: ${height}px;`;
 </script>
 
-<div class={clazz}>
+<div class={clazz} style={stylesStr}>
 	{#if emoji?.startsWith('http')}
 		{#key emoji}
 			<img
@@ -29,10 +24,22 @@
 	{:else if emoji?.startsWith('feather:')}
 		<FeatherIcon name={emoji.replace('feather:', '')} {color} />
 	{:else if emoji?.startsWith('<svg')}
-		<div style="max-width: {width}px;">
+		<div
+			class="_svg inline-block"
+			style={width === 'auto'
+				? `max-height: ${height}px;`
+				: `max-width: ${width}px; max-height: ${height}px;`}
+		>
 			{@html emoji}
 		</div>
 	{:else}
 		{emoji || '✨'}
 	{/if}
 </div>
+
+<style>
+	:global(._svg svg) {
+		width: var(--emoji-width);
+		height: var(--emoji-height);
+	}
+</style>

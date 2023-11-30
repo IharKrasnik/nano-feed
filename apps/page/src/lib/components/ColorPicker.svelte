@@ -7,7 +7,7 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import SitePreview from '$lib/components/site-preview.svelte';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
-	import Emoji from '$lib/components/render/Emoji.svelte';
+	import Emoji from 'lib/components/Emoji.svelte';
 	import isDarkColor from 'is-dark-color';
 
 	let isColorPickerShown = false;
@@ -277,7 +277,7 @@
 {#key page._id}
 	<div
 		class="relative flex justify-center items-center cursor-pointer w-[25px] h-[25px] rounded-full"
-		style="border: 2px {page.theme.accentColor} solid; background-color: {page.theme
+		style="outline: 2px {page.theme.accentColor} solid; background-color: {page.theme
 			.backgroundColor}; color: {page.theme.textColor}"
 		on:click={() => {
 			isColorPickerShown = true;
