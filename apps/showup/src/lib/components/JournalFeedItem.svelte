@@ -23,6 +23,10 @@
 	{feedItem.content.replace('Report #buildinpublic', '')}
 </div>
 
+{#if feedItem.attachments && feedItem.attachments[0] && feedItem.attachments[0].url}
+	<img class="w-full my-4 rounded-xs" src={feedItem.attachments[0].url} />
+{/if}
+
 {#if feedItem.creator}
 	<a class="block mt-4 flex" href="@{feedItem.creator.username}">
 		<Avatar class="mr-2" user={feedItem.creator} />

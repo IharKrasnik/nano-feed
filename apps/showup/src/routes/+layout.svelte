@@ -1,6 +1,7 @@
 <script>
 	import 'lib/app.css';
 	import '../app.css';
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import isUrl from 'lib/helpers/isUrl';
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
@@ -8,6 +9,7 @@
 	import Avatar from 'lib/components/Avatar.svelte';
 	import { GOOGLE_LOGIN_URL } from 'lib/env';
 	import creators from '$lib/stores/creators';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 </script>
 
 <svelte:head>
@@ -27,6 +29,9 @@
 
 <div id="modal-portal" />
 
+{#if browser}
+	<SvelteToast />
+{/if}
 <div class="max-w-[700px] text-left mx-auto flex justify-between px-4 sm:p-0 my-8 ">
 	<div class="flex items-center">
 		<a class="text-lg font-bold block opacity-70 hover:opacity-100 transition" href="/"

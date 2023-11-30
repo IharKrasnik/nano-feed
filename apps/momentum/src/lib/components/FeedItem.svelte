@@ -138,7 +138,7 @@
 		{#if feedItem.attachments}
 			<div class="mt-2">
 				{#each feedItem.attachments as attachment}
-					{#if attachment.type === 'image'}
+					{#if !attachment.type || attachment.type === 'image'}
 						<img
 							data-src={attachment.url}
 							class="w-full lazyload"

@@ -1,4 +1,5 @@
 <script>
+	import { postFile } from 'lib/api';
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
 	import { onMount } from 'svelte';
@@ -21,6 +22,7 @@
 	import ArrowIcon from '$lib/icons/arrow.svelte';
 	import lastEmoji from '$lib/stores/lastEmoji';
 	import creators from '$lib/stores/creators';
+	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	import Twitter from 'lib/icons/twitter.svelte';
 
@@ -31,6 +33,7 @@
 	let tasks = [];
 
 	let newTask = { text: '', emoji: $lastEmoji };
+	let imageUrl = null;
 
 	let isToday = true;
 	let isYesterday = false;
@@ -106,6 +109,7 @@
 		let newEntry = await post('feed', {
 			title: formatDate(date),
 			projects: [{ slug: streamSlug }],
+			attachments: imageUrl ? [{ url: imageUrl }] : null,
 			content:
 				`${moment(date).format('MMM D')}, #buildinpublic report.` +
 				'\n\n' +
@@ -118,6 +122,8 @@
 
 		journalFeed = [newEntry, ...journalFeed];
 		tasks = [];
+		imageUrl = null;
+		showSuccessMessage('👏 The update was published. \n See you tomorrow!');
 	};
 
 	let removeFeedItem = async (feedId) => {
@@ -184,6 +190,18 @@
 
 		twitterModalFeedItem = null;
 	};
+
+	let uploadFile = async (evt) => {
+		if (!$currentUser) {
+			showErrorMessage('Please log in to upload files');
+		} else {
+			let file = evt.target.files[0];
+			const newFile = await postFile('files', file);
+
+			let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
+			imageUrl = fileUrl;
+		}
+	};
 </script>
 
 {#if twitterModalFeedItem}
@@ -237,98 +255,172 @@
 
 			<!-- {isToday ? 'today' : isYesterday ? 'yesterday' : date.format('ddd, MMM DD')}? -->
 		</h2>
-		<div class="mt-12 text-lg">
-			{moment(date).format('MMM D')}, #buildinpublic report. <br />
-		</div>
-
-		<div class="mb-8 mt-4 sm:mx-0 mx-8">
-			<div class="relative flex items-center">
-				<div
-					class="absolute top-0 left-0"
-					style="top: 50%; left: -16px; transform: translateX(-100%) translateY(-50%); z-index: 21;"
-				>
-					<EmojiPicker
-						onUpdated={(icon) => {
-							$lastEmoji = icon;
-						}}
-						isNoCustom
-						bind:icon={newTask.emoji}
-					/>
-				</div>
-
-				<input
-					class="w-full text-lg"
-					rows="1"
-					placeholder="Describe one achievement shortly..."
-					autofocus
-					bind:value={newTask.text}
-					on:keydown={onKeydown}
-				/>
+		<div>
+			<div class="mt-12 text-lg">
+				{moment(date).format('MMM D')}, #buildinpublic report. <br />
 			</div>
 
-			{#each tasks as task, i}
+			<div class="mb-8 mt-4 sm:mx-0 mx-8">
 				<div class="relative flex items-center">
 					<div
 						class="absolute top-0 left-0"
-						style="top: 50%; left: -16px; transform: translateX(-100%) translateY(-50%); z-index: {20 -
-							i};"
+						style="top: 50%; left: -16px; transform: translateX(-100%) translateY(-50%); z-index: 21;"
 					>
 						<EmojiPicker
 							onUpdated={(icon) => {
 								$lastEmoji = icon;
 							}}
 							isNoCustom
-							bind:icon={task.emoji}
+							bind:icon={newTask.emoji}
 						/>
 					</div>
 
 					<input
 						class="w-full text-lg"
 						rows="1"
-						placeholder="Describe one achievement shortly"
-						bind:value={task.text}
-						on:keydown={(e) => {
-							if (e.key === 'Enter') {
-								e.preventDefault();
-							}
-						}}
+						placeholder="Describe one achievement shortly..."
+						autofocus
+						bind:value={newTask.text}
+						on:keydown={onKeydown}
 					/>
+				</div>
 
-					<div
-						class="absolute top-0 right-0 cursor-pointer"
-						style="right: -16px; top: 50%; transform: translateX(100%) translateY(-50%);"
-						on:click={() => removeTask(task)}
-					>
-						<TrashIcon />
+				{#each tasks as task, i}
+					<div class="relative flex items-center">
+						<div
+							class="absolute top-0 left-0"
+							style="top: 50%; left: -16px; transform: translateX(-100%) translateY(-50%); z-index: {20 -
+								i};"
+						>
+							<EmojiPicker
+								onUpdated={(icon) => {
+									$lastEmoji = icon;
+								}}
+								isNoCustom
+								bind:icon={task.emoji}
+							/>
+						</div>
+
+						<input
+							class="w-full text-lg"
+							rows="1"
+							placeholder="Describe one achievement shortly"
+							bind:value={task.text}
+							on:keydown={(e) => {
+								if (e.key === 'Enter') {
+									e.preventDefault();
+								}
+							}}
+						/>
+
+						<div
+							class="absolute top-0 right-0 cursor-pointer"
+							style="right: -16px; top: 50%; transform: translateX(100%) translateY(-50%);"
+							on:click={() => removeTask(task)}
+						>
+							<TrashIcon />
+						</div>
 					</div>
-				</div>
-			{/each}
+				{/each}
 
-			{#if newTask.text}
-				<div
-					in:fade
-					class="flex items-center text-sm bg-[#e4e4e4] text-[#646972] mt-8 rounded flex-0 px-2 py-1 cursor-pointer"
-					on:click={addTask}
-					style="width: max-content;"
-				>
-					<EnterIcon />
-					<div class="ml-2">Add {tasks.length ? 'one more' : ''} achievement</div>
-				</div>
-			{/if}
+				{#if newTask.text}
+					<div
+						in:fade
+						class="flex items-center text-sm bg-[#e4e4e4] text-[#646972] mt-8 rounded flex-0 px-2 py-1 cursor-pointer"
+						on:click={addTask}
+						style="width: max-content;"
+					>
+						<EnterIcon />
+						<div class="ml-2">Add {tasks.length ? 'one more' : ''} achievement</div>
+					</div>
+				{/if}
 
-			<div class="flex justify-end mt-4">
-				<div>
-					{msgLength} / 280
+				{#if !newTask.text || imageUrl}
+					<div class="mt-8">
+						{#if imageUrl}
+							<div class="relative max-w-[300px] rounded-lg">
+								<div
+									class="absolute top-2 right-2 p-4 rounded-full bg-white cursor-pointer opacity-70 transition hover:opacity-100"
+									on:click={() => {
+										imageUrl = null;
+									}}
+								>
+									<svg
+										viewBox="0 0 24 24"
+										width="15"
+										height="15"
+										stroke="#111"
+										stroke-width="2"
+										fill="none"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="css-i6dzq1"
+										><polyline points="3 6 5 6 21 6" /><path
+											d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+										/><line x1="10" y1="11" x2="10" y2="17" /><line
+											x1="14"
+											y1="11"
+											x2="14"
+											y2="17"
+										/></svg
+									>
+								</div>
+								<img src={imageUrl} class="w-full" />
+							</div>
+						{:else}
+							<label
+								for="file-upload"
+								in:fade
+								class="flex items-center text-sm bg-[#e4e4e4] text-[#646972]rounded flex-0 px-2 py-1 cursor-pointer font-normal"
+								on:click={addTask}
+								style="width: max-content;"
+							>
+								<svg
+									viewBox="0 0 24 24"
+									width="15"
+									height="15"
+									stroke="currentColor"
+									stroke-width="2"
+									fill="none"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="css-i6dzq1"
+									><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline
+										points="17 8 12 3 7 8"
+									/><line x1="12" y1="3" x2="12" y2="15" /></svg
+								>
+								<div class="ml-2">Attach Image</div>
+								<input
+									id="file-upload"
+									type="file"
+									hidden
+									on:click={(evt) => {
+										if (!$currentUser) {
+											showErrorMessage('Please log in to upload files');
+											evt.preventDefault();
+										}
+									}}
+									on:change={uploadFile}
+								/>
+							</label>
+						{/if}
+					</div>
+				{/if}
+
+				<div class="flex justify-end mt-4">
+					<div>
+						{msgLength} / 280
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="mb-8  mx-4 sm:mx-0">
+	<div class="mx-4 sm:mx-0">
 		<button
 			class="text-lg nohover sm:w-auto w-full "
 			on:click={submitJournalEntry}
-			disabled={!tasks.length}>Publish</button
+			disabled={!tasks.length && !imageUrl}>Publish</button
 		>
 		<!-- <a href="/long" class="ml-4 cursor-pointer">Write article</a> -->
 	</div>
@@ -405,6 +497,10 @@
 			<div class="my-4 whitespace-pre-wrap text-lg">
 				{feedItem.content.replace('Report #buildinpublic', '')}
 			</div>
+
+			{#if feedItem.attachments && feedItem.attachments[0] && feedItem.attachments[0].url}
+				<img class="w-full my-4" src={feedItem.attachments[0].url} />
+			{/if}
 
 			<img
 				class="max-w-[150px] mx-auto my-4"
