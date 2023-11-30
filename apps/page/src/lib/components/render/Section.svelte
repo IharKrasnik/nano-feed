@@ -524,11 +524,11 @@
 											</div>
 
 											<div in:fade>
-												<RenderUrl
-													class={section.imageClass || 'aspect-og'}
-													imgClass="{section.imageClass ||
-														'aspect-og'} object-cover {section.description ? 'rounded-b-lg' : ''}"
-													bind:url={selectedCarouselItem.imageUrl}
+												<RenderUrlWithBackground
+													aspectRatio={selectCarouselItem.imageAspectRatio}
+													urlImgClass="object-cover {section.description ? 'rounded-b-lg' : ''}"
+													imageUrl={selectedCarouselItem.imageUrl}
+													imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
 												/>
 											</div>
 										</div>
@@ -642,10 +642,11 @@
 									{#if selectedCarouselItem}
 										<div class="col-span-2 p-8" in:fade>
 											{#key carouselKey}
-												<RenderUrl
-													class="aspect-image"
-													imgClass="aspect-image object-cover"
-													bind:url={selectedCarouselItem.imageUrl}
+												<RenderUrlWithBackground
+													aspectRatio={selectedCarouselItem.aspectRatio}
+													urlImgClass="asobject-cover"
+													imageUrl={selectedCarouselItem.imageUrl}
+													imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
 												/>
 											{/key}
 										</div>
