@@ -94,8 +94,8 @@
 <div on:click={search}>🔎</div>
 
 {#if isSearching}
-	<Modal isShown onClosed={() => close()} maxWidth={600}>
-		<div class="min-h-screen">
+	<Modal isShown onClosed={() => close()} maxWidth={800}>
+		<div class="min-h-screen my-8">
 			<div class="p-8 h-full">
 				<h2 class="font-bold text-2xl mb-4">Search Image</h2>
 
