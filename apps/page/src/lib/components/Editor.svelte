@@ -304,7 +304,10 @@
 
 				page.slug = `${page.name.trim().toLowerCase().replace(' ', '-')}/$data.slug`;
 			} else if (page.isInDir) {
-				page.slug = `${page.dirName.trim().toLowerCase()}/${page.name.trim().toLowerCase()}`;
+				page.slug = `${page.dirName.trim().toLowerCase().replace(' ', '-')}/${page.name
+					.trim()
+					.replace(' ', '-')
+					.toLowerCase()}`;
 			}
 		}
 
@@ -1026,23 +1029,27 @@
 												use:autofocus
 											/>
 										</div>
-										<div class="my-2 _section opacity-50 hover:opacity-100 mt-4">
-											{#if page.parentPage}
-												<div class="font-bold mb-2">⚙️ Advanced</div>
-												<div class="flex items-center">
-													{#if !page.isInDir}
-														<div class="mr-2">
-															<input type="checkbox" bind:checked={page.isUseDatabase} /> Attach to Database
-														</div>
-													{/if}
-													{#if !page.isUseDatabase}
-														<div>
-															<input type="checkbox" bind:checked={page.isInDir} /> Sub-directory
-														</div>
-													{/if}
-												</div>
-											{/if}
-										</div>
+
+										{#if page.parentPage}
+											<div class="my-2 _section opacity-50 hover:opacity-100 mt-4">
+												{#if page.parentPage}
+													<div class="font-bold mb-2">⚙️ Advanced</div>
+													<div class="flex items-center">
+														{#if !page.isInDir}
+															<div class="mr-2">
+																<input type="checkbox" bind:checked={page.isUseDatabase} /> Attach to
+																Database
+															</div>
+														{/if}
+														{#if !page.isUseDatabase}
+															<div>
+																<input type="checkbox" bind:checked={page.isInDir} /> Sub-directory
+															</div>
+														{/if}
+													</div>
+												{/if}
+											</div>
+										{/if}
 										{#if page.isUseDatabase}
 											<div class="mt-2">
 												Page url: /{page.name.toLowerCase().replace(' ', '-')}/$data.slug
