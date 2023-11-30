@@ -191,16 +191,27 @@
 		twitterModalFeedItem = null;
 	};
 
-	let uploadFile = async (evt) => {
+	let uploadFile = async (file) => {
 		if (!$currentUser) {
 			showErrorMessage('Please log in to upload files');
 		} else {
-			let file = evt.target.files[0];
 			const newFile = await postFile('files', file);
 
 			let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
 			imageUrl = fileUrl;
 		}
+	};
+
+	const pasteImage = (e) => {
+		Array.from(e.clipboardData.files).forEach(async (file) => {
+			if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+				uploadFile(file);
+			} else if (file.type.startsWith('text/')) {
+				// const textarea = document.createElement('textarea');
+				// textarea.value = await file.text();
+				// document.body.append(textarea);
+			}
+		});
 	};
 </script>
 
@@ -280,6 +291,7 @@
 						rows="1"
 						placeholder="Describe one achievement shortly..."
 						autofocus
+						on:paste={pasteImage}
 						bind:value={newTask.text}
 						on:keydown={onKeydown}
 					/>
@@ -368,41 +380,46 @@
 								<img src={imageUrl} class="w-full" />
 							</div>
 						{:else}
-							<label
-								for="file-upload"
-								in:fade
-								class="flex items-center text-sm bg-[#e4e4e4] text-[#646972]rounded flex-0 px-2 py-1 cursor-pointer font-normal"
-								on:click={addTask}
-								style="width: max-content;"
-							>
-								<svg
-									viewBox="0 0 24 24"
-									width="15"
-									height="15"
-									stroke="currentColor"
-									stroke-width="2"
-									fill="none"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									class="css-i6dzq1"
-									><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline
-										points="17 8 12 3 7 8"
-									/><line x1="12" y1="3" x2="12" y2="15" /></svg
+							<div class="group">
+								<label
+									for="file-upload"
+									in:fade
+									class="flex items-center text-sm bg-[#e4e4e4] text-[#646972]rounded flex-0 px-2 py-1 cursor-pointer font-normal"
+									on:click={addTask}
+									style="width: max-content;"
 								>
-								<div class="ml-2">Attach Image</div>
-								<input
-									id="file-upload"
-									type="file"
-									hidden
-									on:click={(evt) => {
-										if (!$currentUser) {
-											showErrorMessage('Please log in to upload files');
-											evt.preventDefault();
-										}
-									}}
-									on:change={uploadFile}
-								/>
-							</label>
+									<svg
+										viewBox="0 0 24 24"
+										width="15"
+										height="15"
+										stroke="currentColor"
+										stroke-width="2"
+										fill="none"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="css-i6dzq1"
+										><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline
+											points="17 8 12 3 7 8"
+										/><line x1="12" y1="3" x2="12" y2="15" /></svg
+									>
+									<div class="ml-2">Attach Image</div>
+									<input
+										id="file-upload"
+										type="file"
+										hidden
+										on:click={(evt) => {
+											if (!$currentUser) {
+												showErrorMessage('Please log in to upload files');
+												evt.preventDefault();
+											}
+										}}
+										on:change={(evt) => uploadFile(evt.target?.files[0])}
+									/>
+								</label>
+								<div class="group-hover:opacity-80 opacity-0 transition text-sm">
+									Tip: you can just paste the image from clipboard to the task input
+								</div>
+							</div>
 						{/if}
 					</div>
 				{/if}
