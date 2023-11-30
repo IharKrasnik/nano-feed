@@ -3,6 +3,7 @@
 	import _ from 'lodash';
 	import { fade, fly } from 'svelte/transition';
 	import { post } from 'lib/api';
+	import RenderUrlWithBackground from 'lib/components/RenderUrlWithBackground.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderFAQ from '$lib/components/render/FAQ.svelte';
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
@@ -262,6 +263,7 @@
 	<div
 		class="line-clamp-4 hover:line-clamp-5 row-span-1 row-span-2 row-span-3 row-span-4 row-span-5 row-span-6 row-span-7 row-span-8"
 	/>
+	<div class="aspect-og aspect-image aspect-square" />
 {/if}
 
 {#if section.isShown}
@@ -291,7 +293,7 @@
 				? 'sm:pb-16'
 				: `${
 						section.items?.length
-							? `${isFooter ? 'p-0' : 'px-4 py-8 sm:py-16'}`
+							? `${isFooter ? 'p-0' : 'px-4 xl:px-0 py-8 sm:py-16'}`
 							: 'p-4 sm:p-8 sm:py-32'
 				  }`}"
 			style="z-index: 10; {style || ''}"
@@ -729,7 +731,7 @@
 						{/each}
 					{:else}
 						<div
-							class="gap-2 sm:gap-4 {section.columns > 1
+							class="gap-4 sm:gap-4 {section.columns > 1
 								? 'items-stretch-or-not'
 								: ''} {section.carousel
 								? 'flex overflow-x-auto sm:grid'
@@ -969,17 +971,34 @@
 															? 'sm:order-last-off'
 															: ''} {section.isShowSource ? 'px-4' : ''}"
 													>
-														<RenderUrl
-															class={section.imageClass || 'aspect-og'}
+														<RenderUrlWithBackground
 															isIframeFallback={false}
-															imgClass="w-full {section.imageClass ||
-																'aspect-og'} object-cover mx-auto {section.columns === 1
+															aspectRatio={item.imageAspectRatio}
+															urlImgClass="w-full h-auto {section.imageClass ||
+																''} object-cover mx-auto {section.columns === 1 ? '' : ''}  {section
+																.items.length === 1
 																? ''
-																: ''}  {section.items.length === 1 ? '' : ''} {isGif(item.imageUrl)
+																: ''} {isGif(item.imageUrl)
+																? 'w-full object-cover'
+																: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl'}"
+															imageUrl={item.imageUrl}
+															imageBackgroundUrl={item.imageBackgroundUrl}
+														/>
+														<!-- <RenderUrl
+															urlClass={`${section.imageClass || ''} ${getAspectClass(
+																item.imageAspectRatio
+															)}`}
+															isIframeFallback={false}
+															urlImgClass="w-full {section.imageClass || ''} {getAspectClass(
+																item.imageAspectRatio
+															)} object-cover mx-auto {section.columns === 1 ? '' : ''}  {section
+																.items.length === 1
+																? ''
+																: ''} {isGif(item.imageUrl)
 																? 'w-full object-cover'
 																: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl '}"
 															url={item.imageUrl}
-														/>
+														/> -->
 													</div>
 												{/if}
 

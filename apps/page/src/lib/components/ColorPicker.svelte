@@ -201,7 +201,7 @@
 		}, 0);
 	};
 
-	if (!page.theme?.textColor && !page.parentPage?.theme?.textColor) {
+	if (!page.theme?.accentColor && !page.parentPage?.theme?.accentColor) {
 		page.theme = {
 			accentColor: '#000000',
 			backgroundColor: '#ffffff'

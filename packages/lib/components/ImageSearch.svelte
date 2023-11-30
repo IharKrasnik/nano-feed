@@ -59,6 +59,10 @@
 		'dashboard'
 	]);
 
+	let superCool = ['https://unsplash.com/photos/blue-and-black-digital-wallpaper-bKESVqfxass'];
+
+	///https://unsplash.com/backgrounds/colors/gradient
+
 	// leaves, ice, snow, trees, wood, stars, cosmos, watercolor
 </script>
 
@@ -66,7 +70,7 @@
 
 {#if isSearching}
 	<Modal isShown onClosed={() => close()} maxWidth={600}>
-		<div class="h-screen">
+		<div class="min-h-screen">
 			<div class="p-8 h-full">
 				<h2 class="font-bold text-2xl mb-4">Search Image</h2>
 

@@ -5,6 +5,7 @@
 	import { fly } from 'svelte/transition';
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import RenderUrlWithBackground from 'lib/components/RenderUrlWithBackground.svelte';
 	import RenderArticleHeader from '$lib/components/render/ArticleHeader.svelte';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
@@ -68,8 +69,9 @@
 	{/if}
 
 	<div
-		class="relative z-10 container container-width mx-auto {hero.theme?.isVertical ||
-		(page.sections?.length && hero.theme?.bgPattern !== 'cursors')
+		class="relative z-10 container container-width mx-auto {(hero.theme?.isVertical ||
+			page.sections?.length) &&
+		hero.theme?.bgPattern !== 'cursors'
 			? ''
 			: 'min-h-screen h-screen'} pt-[60px] mb-[-60px]"
 		style="{styles};"
@@ -82,7 +84,7 @@
 			style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 		>
 			<div
-				class="p-4 sm:p-0 flex h-full w-full {hero.demoUrl || hero.theme?.isLeft
+				class="p-4 xl:p-0 flex h-full w-full {hero.demoUrl || hero.theme?.isLeft
 					? `flex-col ${hero.theme?.isVertical ? '' : 'justify-between sm:flex-row'} items-center`
 					: 'text-center items-center'}"
 			>
@@ -137,7 +139,7 @@
 					{/if}
 					{#if hero.interactiveRenderType}
 						<RenderInteractiveOptions
-							class={hero.theme.isLeft ? '' : 'max-w-[600px] mx-auto'}
+							class={hero.theme.isLeft || !hero.theme?.isVertical ? '' : 'max-w-[600px] mx-auto'}
 							size={hero.theme.isHugeTitle ? 'huge' : 'large'}
 							bind:page
 							bind:sectionItem={hero}
@@ -175,14 +177,19 @@
 
 				{#if hero.demoUrl}
 					<div
-						class="w-full  mt-16 sm:mt-0 {hero.theme?.isVertical ? '' : 'sm:ml-8 sm:max-w-[600px]'}"
+						class="relative  w-full  mt-16 sm:mt-0 {hero.theme?.isVertical
+							? ''
+							: 'sm:ml-8 sm:max-w-[600px]'}"
 					>
-						<RenderUrl
+						<RenderUrlWithBackground
 							isLazy={false}
-							class="w-full flex justify-end {hero.theme?.isVertical ? 'mt-8' : ''}"
-							url={hero.demoUrl}
-							imgClass="{hero.imgMaxWidth
-								? `max-w-[${hero.imgMaxWidth}px] mx-auto rounded-lg`
+							imageUrl={hero.demoUrl}
+							class={hero.theme?.isVertical ? 'mt-8' : ''}
+							imageBackgroundUrl={hero.demoBackgroundUrl}
+							urlClass="relative w-full flex justify-end"
+							urlImgMaxWidth={hero.imgMaxWidth || 0}
+							urlImgClass="{hero.imgMaxWidth
+								? `rounded-lg`
 								: 'w-full rounded-xl'}  shadow-md object-cover"
 						/>
 					</div>

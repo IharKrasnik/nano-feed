@@ -14,6 +14,7 @@
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import contenteditable from 'lib/use/contenteditable';
+	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
 
 	let clazz = 'p-4';
 	export { clazz as class };
@@ -36,7 +37,26 @@
 		item.pricing.benefits = item.pricing.benefits || [];
 		item.pricing.benefits.push({ name: '' });
 	};
+
+	let isSelectBackgroundModalShown;
 </script>
+
+{#if isSelectBackgroundModalShown}
+	<Modal
+		isShown={isSelectBackgroundModalShown}
+		onClosed={() => {
+			isSelectBackgroundModalShown = false;
+		}}
+	>
+		<SelectBackgroundImage
+			bind:imageUrl={item.imageUrl}
+			bind:imageBackgroundUrl={item.imageBackgroundUrl}
+			onSelected={() => {
+				isSelectBackgroundModalShown = false;
+			}}
+		/>
+	</Modal>
+{/if}
 
 {#if isEmojiPickerShown}
 	<div class="fixed top-[200px] mt-8 z-40" in:fly={{ y: 50, duration: 150 }}>
@@ -176,6 +196,55 @@
 				theme="light"
 			/>
 		</div>
+		{#if item.imageUrl}
+			<div class="flex items-center mt-2 justify-between">
+				<div class="text-xs flex gap-2 items-center">
+					<div
+						class="cursor-pointer"
+						on:click={() => {
+							item.imageAspectRatio = 'og';
+						}}
+						class:font-bold={!item.imageAspectRatio || item.imageAspectRatio === 'og'}
+					>
+						OG (1200x630)
+					</div>
+
+					<div
+						class="cursor-pointer"
+						on:click={() => {
+							item.imageAspectRatio = 'image';
+						}}
+						class:font-bold={item.imageAspectRatio === 'image'}
+					>
+						Classic (4x3)
+					</div>
+
+					<div
+						class="cursor-pointer"
+						on:click={() => {
+							item.imageAspectRatio = 'square';
+						}}
+						class:font-bold={item.imageAspectRatio === 'square'}
+					>
+						Square
+					</div>
+				</div>
+				<div
+					class="ml-4"
+					on:click={() => {
+						isSelectBackgroundModalShown = true;
+					}}
+				>
+					<div class="flex items-center justify-center border rounded text-xs">
+						{#if item.imageBackgroundUrl}
+							<img class="w-[25px] h-[25px]" src={item.imageBackgroundUrl} />
+						{:else}
+							<div class="px-2 cursor-pointer">no background</div>
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/if}
 		{#if section.imageUrl && item === section}
 			<div class="text-xs mt-2 flex gap-2 items-center">
 				<div

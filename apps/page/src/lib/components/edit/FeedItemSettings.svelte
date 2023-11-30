@@ -15,7 +15,6 @@
 
 	let isValidJson = () => {
 		try {
-			debugger;
 			JSON.parse(feedItem.jsonData);
 
 			return true;

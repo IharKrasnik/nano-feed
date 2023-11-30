@@ -23,6 +23,7 @@
 	import EditPricing from '$lib/components/edit/Pricing.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
+	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
 
@@ -70,6 +71,8 @@
 
 	export let isCollapsedDefault = true;
 	let isCollapsed = isCollapsedDefault;
+
+	let isSelectBackgroundModalShown = false;
 
 	let isSettingsShown = false;
 
@@ -142,6 +145,23 @@
 		}
 	];
 </script>
+
+{#if isSelectBackgroundModalShown}
+	<Modal
+		isShown={isSelectBackgroundModalShown}
+		onClosed={() => {
+			isSelectBackgroundModalShown = false;
+		}}
+	>
+		<SelectBackgroundImage
+			bind:imageUrl={hero.demoUrl}
+			bind:imageBackgroundUrl={hero.demoBackgroundUrl}
+			onSelected={() => {
+				isSelectBackgroundModalShown = false;
+			}}
+		/>
+	</Modal>
+{/if}
 
 {#if isCollapsed}
 	<div
@@ -379,29 +399,45 @@
 			</div>
 
 			{#if hero.demoUrl}
-				<div class="text-xs mt-2 flex gap-2 items-center">
-					<div
-						class="cursor-pointer"
-						on:click={() => {
-							hero.imgMaxWidth = 0;
-						}}
-						class:font-bold={!hero.imgMaxWidth}
-					>
-						Stretch
-					</div>
+				<div class="flex items-center mt-2 justify-between">
+					<div class="text-xs flex gap-2 items-center">
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								hero.imgMaxWidth = 0;
+							}}
+							class:font-bold={!hero.imgMaxWidth}
+						>
+							Stretch
+						</div>
 
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								if (page.renderType === 'article') {
+									hero.imgMaxWidth = 768;
+								} else {
+									hero.imgMaxWidth = 600;
+								}
+							}}
+							class:font-bold={hero.imgMaxWidth === 600 || hero.imgMaxWidth === 768}
+						>
+							Medium
+						</div>
+					</div>
 					<div
-						class="cursor-pointer"
+						class="ml-4"
 						on:click={() => {
-							if (page.renderType === 'article') {
-								hero.imgMaxWidth = 768;
-							} else {
-								hero.imgMaxWidth = 600;
-							}
+							isSelectBackgroundModalShown = true;
 						}}
-						class:font-bold={hero.imgMaxWidth === 600 || hero.imgMaxWidth === 768}
 					>
-						Medium
+						<div class="flex items-center justify-center border rounded text-xs">
+							{#if hero.demoBackgroundUrl}
+								<img class="w-[25px] h-[25px]" src={hero.demoBackgroundUrl} />
+							{:else}
+								<div class="px-2 cursor-pointer">no background</div>
+							{/if}
+						</div>
 					</div>
 				</div>
 			{/if}
