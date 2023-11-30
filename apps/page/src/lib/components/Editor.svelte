@@ -280,25 +280,33 @@
 		// 	isSignupFormShown = true;
 		// 	return;
 		// }
-		if (page.isUseDatabase) {
-			if (newStreamName) {
-				const { streamSlug, project: newStream } = await put(
-					`pages/${page.parentPage?._id || page._id}/embed-stream`,
-					{
-						title: newStreamName
-					}
-				);
-
-				$childStreams = [newStream, ...$childStreams];
-				newStreamName = '';
-
-				page.streamSlug = streamSlug;
-			}
-
-			page.slug = `${page.name.trim().toLowerCase().replace(' ', '-')}/$data.slug`;
+		if (!page.isInDir) {
+			page.dirName = null;
 		}
 
 		let isNewPage = !page._id;
+
+		if (isNewPage) {
+			if (page.isUseDatabase) {
+				if (newStreamName) {
+					const { streamSlug, project: newStream } = await put(
+						`pages/${page.parentPage?._id || page._id}/embed-stream`,
+						{
+							title: newStreamName
+						}
+					);
+
+					$childStreams = [newStream, ...$childStreams];
+					newStreamName = '';
+
+					page.streamSlug = streamSlug;
+				}
+
+				page.slug = `${page.name.trim().toLowerCase().replace(' ', '-')}/$data.slug`;
+			} else if (page.isInDir) {
+				page.slug = `${page.dirName.trim().toLowerCase()}/${page.name.trim().toLowerCase()}`;
+			}
+		}
 
 		if (!isNewPage && page.creator && !$currentUser) {
 			return showErrorMessage('Please log in to update the page.');
@@ -999,13 +1007,18 @@
 									<div class="_section">
 										<div class="flex justify-between">
 											<div class="_title">Page Name</div>
-											<div>
-												{#if page.parentPage}
-													<input type="checkbox" bind:checked={page.isUseDatabase} /> Attach to Database
-												{/if}
-											</div>
 										</div>
 										<div class="w-full flex justify-between items-center">
+											{#if page.isInDir}
+												<input
+													class="w-full"
+													bind:value={page.dirName}
+													placeholder="Resources"
+													use:autofocus
+												/>
+
+												<div class="p-4">/</div>
+											{/if}
 											<input
 												class="w-full"
 												bind:value={page.name}
@@ -1013,9 +1026,33 @@
 												use:autofocus
 											/>
 										</div>
+										<div class="my-2 _section opacity-50 hover:opacity-100 mt-4">
+											{#if page.parentPage}
+												<div class="font-bold mb-2">⚙️ Advanced</div>
+												<div class="flex items-center">
+													{#if !page.isInDir}
+														<div class="mr-2">
+															<input type="checkbox" bind:checked={page.isUseDatabase} /> Attach to Database
+														</div>
+													{/if}
+													{#if !page.isUseDatabase}
+														<div>
+															<input type="checkbox" bind:checked={page.isInDir} /> Sub-directory
+														</div>
+													{/if}
+												</div>
+											{/if}
+										</div>
 										{#if page.isUseDatabase}
 											<div class="mt-2">
 												Page url: /{page.name.toLowerCase().replace(' ', '-')}/$data.slug
+											</div>
+										{/if}
+										{#if page.isInDir}
+											<div class="mt-2">
+												Page url: /{(page.dirName || '').toLowerCase()}/{page.name
+													.toLowerCase()
+													.replace(' ', '-')}
 											</div>
 										{/if}
 									</div>

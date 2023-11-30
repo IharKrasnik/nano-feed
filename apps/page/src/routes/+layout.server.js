@@ -29,15 +29,19 @@ export async function load({ url, params, session, cookies }) {
 		if (feedItemSlug) {
 			[page] = await Promise.all([
 				get(`pages/bySlug`, {
-					slug: `${subPageSlug}/$data.slug`,
+					slug: `${subPageSlug}/${feedItemSlug}`,
 					parentPageSlug: pageSlug
 				})
 			]);
 
-			let feedItem = await get(`feed/bySlug`, {
-				projectSlug: page.streamSlug,
-				slug: feedItemSlug
-			});
+			let feedItem;
+
+			if (page.slug.includes('$data.slug')) {
+				feedItem = await get(`feed/bySlug`, {
+					projectSlug: page.streamSlug,
+					slug: feedItemSlug
+				});
+			}
 
 			setPageVars({ page, feedItem });
 		} else if (url.href.includes('/blog')) {

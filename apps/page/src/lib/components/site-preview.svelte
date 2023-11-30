@@ -416,7 +416,7 @@
 									<div
 										class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
 									>
-										{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => s.renderType !== 'article') as subPage}
+										{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}
 											<a
 												href="/{subPage.slug}"
 												data-sveltekit-preload-data="hover"
@@ -439,7 +439,7 @@
 											>
 										{/each}
 
-										{#if !page._id && page.parentPage && !page.isUseDatabase}
+										{#if !page._id && page.parentPage && !page.isUseDatabase && !page.isInDir}
 											<span>{page.name}</span>
 										{/if}
 									</div>
@@ -496,9 +496,9 @@
 								{/if}
 
 								<div class="flex flex-col mt-8">
-									{#each page.subPages || page.parentPage?.subPages || [] as subPage}
+									{#each (page.subPages || page.parentPage?.subPages || []).filter((sp) => !sp.slug.includes('/')) as subPage}
 										<a class="block  py-4 border-b border-white/20" href="/{subPage.slug}"
-											>{subPage.name}</a
+											>{subPage.name} {subPage.slug}</a
 										>
 									{/each}
 								</div>
