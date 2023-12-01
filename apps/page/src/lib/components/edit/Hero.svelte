@@ -229,30 +229,80 @@
 							</div> -->
 						</div>
 
-						<div class="font-normal text-sm opacity-70 mb-2">Hero background image or video</div>
+						<div class="_section">
+							<div class="font-semibold mb-2">Background</div>
 
-						<FileInput isCanSearch class="w-full" theme="light" bind:url={hero.bgImageUrl} />
+							{#if !hero.bgImageUrl}
+								<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
 
-						{#if hero.bgImageUrl}
-							<div class="flex text-sm mt-2 font-normal items-center">
-								<input bind:checked={hero.theme.isNotBgImageDimmed} class="mr-2" type="checkbox" />
+								<div class="flex items-center">
+									{#if hero.theme.isOverrideColors}
+										<input
+											type="color"
+											id="head"
+											name="head"
+											class="mr-4"
+											bind:value={hero.theme.backgroundColor}
+										/>
+									{:else}
+										<div
+											class="w-[30px] h-[30px] rounded-full mr-4"
+											style="background-color: {page.theme.backgroundColor};"
+										/>
+									{/if}
+									<div>
+										<input
+											bind:checked={hero.theme.isOverrideColors}
+											class="mr-2"
+											type="checkbox"
+											on:change={() => {
+												if (!hero.theme.backgroundColor) {
+													hero.theme.backgroundColor = page.theme.backgroundColor;
+												}
+											}}
+										/>
 
-								Do not dim background image
-							</div>
-						{/if}
+										Override color
+									</div>
+								</div>
+							{/if}
+
+							{#if !hero.theme.isOverrideColors}
+								<div class="font-normal mt-4 text-sm opacity-70 mb-2">
+									Hero background image or video
+								</div>
+
+								<FileInput isCanSearch class="w-full" theme="light" bind:url={hero.bgImageUrl} />
+
+								{#if hero.bgImageUrl}
+									<div class="flex text-sm mt-4 font-normal items-center">
+										<input
+											bind:checked={hero.theme.isNotBgImageDimmed}
+											class="mr-2"
+											type="checkbox"
+										/>
+
+										Do not dim background image
+									</div>
+								{/if}
+							{/if}
+						</div>
 
 						{#if hero.theme}
-							<div class="flex gap-4 mt-4">
+							<div class="flex flex-wrap gap-4 mt-4">
 								{#if hero.demoUrl}
-									<div class="flex font-normal items-center">
+									<div class="flex shrink-0 font-normal items-center">
 										<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertocal
 									</div>
 								{/if}
-								<div class="flex font-normal items-center">
+								<div class="flex shrink-0 font-normal items-center">
 									<input bind:checked={hero.theme.isHugeTitle} class="mr-2" type="checkbox" /> Is Huge
 								</div>
-								<div class="flex font-normal items-center">
+								<div class="flex shrink-0 font-normal items-center">
 									<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
+								</div>
+								<div class="shrink-0">
+									<input type="checkbox" bind:checked={hero.theme.isColorsReversed} /> Reverse Colors
 								</div>
 							</div>
 						{/if}

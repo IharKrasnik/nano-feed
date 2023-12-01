@@ -118,6 +118,17 @@
 	color: var(--button-color);
 }
 
+._override-colors {
+	background: var(--section-bg-color-opacity-50);
+
+	/* color: var(--button-color); */
+}
+
+._reversed-colors ._subtitle,
+._reversed-colors ._title {
+	/* color: var(--button-color); */
+}
+
 . ._horizontal-padding-none {
 	padding-left: 0;
 	padding-right: 0;

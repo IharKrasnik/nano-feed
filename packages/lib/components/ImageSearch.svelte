@@ -83,7 +83,8 @@
 
 	let superCool = [
 		'https://unsplash.com/photos/blue-and-black-digital-wallpaper-bKESVqfxass',
-		'https://images.unsplash.com/photo-1506443432602-ac2fcd6f54e0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NDkxNzF8MHwxfHNlYXJjaHwyMnx8c3BhY2V8ZW58MHx8fHwxNzAxMzYwMjg3fDA&ixlib=rb-4.0.3&q=80&w=1080'
+		'https://images.unsplash.com/photo-1506443432602-ac2fcd6f54e0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NDkxNzF8MHwxfHNlYXJjaHwyMnx8c3BhY2V8ZW58MHx8fHwxNzAxMzYwMjg3fDA&ixlib=rb-4.0.3&q=80&w=1080',
+		'https://images.unsplash.com/photo-1597747729747-0828f54b0b79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NDkxNzF8MHwxfHNlYXJjaHwxNHx8cmFpbmJvd3xlbnwwfHx8fDE3MDE0MjI2MzF8MA&ixlib=rb-4.0.3&q=80&w=1080'
 	];
 
 	///https://unsplash.com/backgrounds/colors/gradient

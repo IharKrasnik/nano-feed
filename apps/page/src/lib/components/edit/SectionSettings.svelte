@@ -72,9 +72,13 @@
 				</div>
 			{/if}
 
-			{#if sectionItem.items}
+			{#if sectionItem === section}
 				<div class="mr-2">
 					<input type="checkbox" bind:checked={sectionItem.isTitleLeft} /> Align Left
+				</div>
+
+				<div class="mr-2">
+					<input type="checkbox" bind:checked={sectionItem.theme.isColorsReversed} /> Reverse Colors
 				</div>
 			{/if}
 

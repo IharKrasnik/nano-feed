@@ -10,6 +10,7 @@
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
 	import Background from '$lib/components/Background.svelte';
+	import hexToRgba from 'lib/helpers/hexToRgba';
 
 	export let page;
 
@@ -36,9 +37,19 @@
 	if (page.renderType === 'article') {
 		hero.theme.isVertical = true;
 	}
+	if (!hero.theme) {
+		hero.theme = {};
+	}
 </script>
 
-<div class="relative" style="z-index: 30;">
+<div
+	class="relative {hero.theme?.isOverrideColors ? '_override-colors' : ''}"
+	style="z-index: 30; {hero.theme.isOverrideColors
+		? `--section-bg-color: ${
+				hero.theme.backgroundColor
+		  }; --section-bg-color-opacity-50: ${hexToRgba(hero.theme.backgroundColor, 0.5)}`
+		: ''}"
+>
 	{#if hero.theme?.bgPattern === 'cursors'}
 		<ComaDragons />
 	{/if}

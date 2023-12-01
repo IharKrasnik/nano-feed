@@ -32,6 +32,8 @@ export default (page) => {
 		page.theme = page.parentPage?.theme;
 	}
 
+	let accentColor = page.theme?.accentColor || '#000';
+
 	let styles = {
 		'container-width': page.theme?.containerWidth || '1280px',
 		'logo-font': page.theme?.logoFont || 'monospace',
@@ -49,7 +51,9 @@ export default (page) => {
 		// 'background-color': 'transparent',
 		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
 		'text-color': page.theme?.theme === 'dark' ? '#fbf5ec' : '#111111',
-		'accent-color': page.theme?.accentColor || '#000',
+		'accent-color': accentColor,
+		'accent-color-darker': darken(accentColor, 0.5),
+		'accent-color-lighter': lighten(accentColor, 0.5),
 		'section-background-color':
 			page.theme?.sectionBackgroundColor ||
 			(page.theme?.theme === 'dark'
