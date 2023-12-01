@@ -91,7 +91,7 @@
 		hero.theme?.bgPattern !== 'cursors'
 			? ''
 			: 'min-h-screen h-screen'} "
-		style="{styles};"
+		style="{styles}; width: max-content;"
 	>
 		<div
 			bind:this={$aboveTheFoldEl}

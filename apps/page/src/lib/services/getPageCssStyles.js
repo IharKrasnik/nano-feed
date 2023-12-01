@@ -67,7 +67,10 @@ export default (page) => {
 		'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',
 
 		'input-background': page.theme?.inputBackground || 'transparent',
-		'input-color': page.theme?.inputColor || page.theme?.textColor || '#111',
+		'input-color':
+			page.theme?.inputColor || page.theme?.textColor || page.theme?.theme === 'dark'
+				? '#f6f5f4'
+				: '#111111',
 		'button-color': page.theme?.buttonColor || '#fff',
 		'input-container-border-width': page.theme?.isInputBorder ? '0px' : '1px 1px 1px 1px',
 		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px'
