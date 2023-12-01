@@ -1602,252 +1602,252 @@
 
 				<!-- PREVIEW -->
 
-				<div class="hidden sm:block">
-					{#if page.name || page.title}
-						<div
-							class="relative w-screen sm:w-full ml-[100%] sm:ml-[426px] _preview h-full p-4 mx-4 2xl:pl-[75px]"
-							in:fade={{ delay: 150 }}
-						>
-							{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
-								<div class="sticky top-[20px] w-full z-50 h-[0px]">
-									<div class="mx-auto">
-										{#if isJustCreated || isJustPaid}
-											<ConfettiExplosion particleCount={200} force={0.3} />
-										{/if}
-									</div>
+				{#if page.name || page.title}
+					<div
+						class="relative w-screen sm:w-full ml-[100%] sm:ml-[426px] _preview h-full p-4 mx-4 2xl:pl-[75px]"
+						in:fade={{ delay: 150 }}
+					>
+						{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
+							<div class="sticky top-[20px] w-full z-50 h-[0px]">
+								<div class="mx-auto">
+									{#if isJustCreated || isJustPaid}
+										<ConfettiExplosion particleCount={200} force={0.3} />
+									{/if}
+								</div>
 
-									<div class="max-w-[400px] mx-auto">
-										<div
-											class="relative _published-label flex justify-between items-center mt-4"
-											style="padding: 6px 10px;"
+								<div class="max-w-[400px] mx-auto">
+									<div
+										class="relative _published-label flex justify-between items-center mt-4"
+										style="padding: 6px 10px;"
+									>
+										<a
+											href={page.domains?.length &&
+											page.domains.filter((d) => d.isConfigured).length
+												? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
+												: `${PAGE_URL}/${page.slug}`}
+											class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
+											style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
+											target="_blank"
+											rel="noreferrer"
 										>
-											<a
-												href={page.domains?.length &&
-												page.domains.filter((d) => d.isConfigured).length
-													? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
-													: `${PAGE_URL}/${page.slug}`}
-												class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
-												style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
-												target="_blank"
-												rel="noreferrer"
+											<div
+												class="mr-2 z-20"
+												use:tooltip
+												title={page.isDirty ? 'Pending Changes' : 'Published'}
 											>
-												<div
-													class="mr-2 z-20"
-													use:tooltip
-													title={page.isDirty ? 'Pending Changes' : 'Published'}
-												>
-													{#if !page.isDirty}
-														✅
-													{:else}
-														🌝
-													{/if}
-												</div>
+												{#if !page.isDirty}
+													✅
+												{:else}
+													🌝
+												{/if}
+											</div>
 
-												<div
-													class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
-												>
-													{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
-														{page.domains.filter((d) => d.isConfigured)[0].url}
-													{:else}
-														/{page.slug}
-													{/if}
-												</div>
-											</a>
+											<div
+												class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
+											>
+												{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
+													{page.domains.filter((d) => d.isConfigured)[0].url}
+												{:else}
+													/{page.slug}
+												{/if}
+											</div>
+										</a>
 
-											{#if page.isDirty}
-												<div transition:fly={{ x: 50, duration: 150 }}>
-													<Button
-														class="bg-yellow-500 right-0 _primary flex justify-center w-full"
-														onClick={publishPage}
-														style="margin-left: 78px;
+										{#if page.isDirty}
+											<div transition:fly={{ x: 50, duration: 150 }}>
+												<Button
+													class="bg-yellow-500 right-0 _primary flex justify-center w-full"
+													onClick={publishPage}
+													style="margin-left: 78px;
 										border-radius: 30px;
 										padding: 4px 45px;
 										right: 3px;
 										width: auto;
 										margin: -4px -10px -4px 0px;
 										"
-													>
-														Publish
-													</Button>
-												</div>
-											{/if}
-										</div>
+												>
+													Publish
+												</Button>
+											</div>
+										{/if}
 									</div>
 								</div>
-							{/if}
+							</div>
+						{/if}
 
-							<!-- {#if page}
+						<!-- {#if page}
 						<div class="w-full flex justify-center">
 							<a href="{PAGE_URL}/explore">Explore</a>
 						</div>
 					{/if} -->
-							<!-- frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'} -->
+						<!-- frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'} -->
 
-							{#if page}
-								{#key page._id}
-									<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
-										<BrowserFrame
-											class="max-h-screen overflow-y-scroll"
-											links={[
-												{
-													action: () => {
-														selectedTab = 'editor';
-													},
-													title: 'Editor',
-													featherIcon: 'file-text'
+						{#if page}
+							{#key page._id}
+								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
+									<BrowserFrame
+										class="max-h-screen overflow-y-scroll"
+										links={[
+											{
+												action: () => {
+													selectedTab = 'editor';
 												},
-												{
-													action: () => {
-														selectedTab = 'analytics';
-														selectedCustomer = null;
-													},
-													title: `Customers`,
-													featherIcon: 'activity'
+												title: 'Editor',
+												featherIcon: 'file-text'
+											},
+											{
+												action: () => {
+													selectedTab = 'analytics';
+													selectedCustomer = null;
 												},
-												{
-													action: () => {
-														selectedTab = 'audience';
-														selectedSubmission = null;
-													},
-													title: `Submissions`,
-													featherIcon: 'check-square'
+												title: `Customers`,
+												featherIcon: 'activity'
+											},
+											{
+												action: () => {
+													selectedTab = 'audience';
+													selectedSubmission = null;
 												},
-												{
-													action: () => {
-														selectedTab = 'messaging';
-														selectedTrigger = null;
-														selectedChatRoom = null;
-													},
-													title: 'Messaging',
-													featherIcon: 'message-square'
+												title: `Submissions`,
+												featherIcon: 'check-square'
+											},
+											{
+												action: () => {
+													selectedTab = 'messaging';
+													selectedTrigger = null;
+													selectedChatRoom = null;
 												},
-												{
-													action: () => {
-														selectedTab = 'database';
-													},
-													title: 'Databases',
-													featherIcon: 'database'
+												title: 'Messaging',
+												featherIcon: 'message-square'
+											},
+											{
+												action: () => {
+													selectedTab = 'database';
 												},
-												{
-													action: () => {
-														selectedTab = 'blog';
-													},
-													title: 'Blog',
-													featherIcon: 'book-open'
+												title: 'Databases',
+												featherIcon: 'database'
+											},
+											{
+												action: () => {
+													selectedTab = 'blog';
 												},
-												{
-													action: () => {
-														selectedTab = 'newsletter';
-													},
-													title: 'Newsletter',
-													featherIcon: 'mail'
-												}
-											]}
-											frameBgColor="#494949"
-										>
-											<div class="flex cursor-pointer" slot="header">
-												<div
-													class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100 flex items-center"
-													use:tooltip
-													title="Free plan includes 300 subscribers"
-												>
-													<FeatherIcon class="mr-2" color="#fff" name="clipboard" size="15" />
-													{page.totalSignupsCount || 0}/300
-												</div>
-
-												<button
-													class="px-4 mr-4 text-white bg-green-700"
-													style="padding-top: 0px; padding-bottom: 0px;"
-													on:click={subscribe}
-													use:tooltip
-													title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
-												>
-													🚀 Upgrade
-												</button>
+												title: 'Blog',
+												featherIcon: 'book-open'
+											},
+											{
+												action: () => {
+													selectedTab = 'newsletter';
+												},
+												title: 'Newsletter',
+												featherIcon: 'mail'
+											}
+										]}
+										frameBgColor="#494949"
+									>
+										<div class="flex cursor-pointer" slot="header">
+											<div
+												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100 flex items-center"
+												use:tooltip
+												title="Free plan includes 300 subscribers"
+											>
+												<FeatherIcon class="mr-2" color="#fff" name="clipboard" size="15" />
+												{page.totalSignupsCount || 0}/300
 											</div>
 
-											{#if page}
-												{#if $postDraft}
-													<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
-												{:else if selectedTab === 'editor'}
-													<SitePreview
-														class="p-4"
-														isNoVars
-														isEmbed
-														noStickyHeader={true}
-														isNoBadge={true}
-														isEdit
-														bind:page
-													/>
-												{:else if selectedTab === 'database'}
-													<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
-												{:else if selectedTab === 'analytics'}
-													<AnalyticsTab bind:page bind:customer={selectedCustomer} />
-												{:else if selectedTab === 'messaging'}
-													<MessagingTab
-														bind:page
-														bind:trigger={selectedTrigger}
-														bind:chatRoom={selectedChatRoom}
-													/>
-												{:else if selectedTab === 'audience'}
-													<AudienceTab bind:page bind:selectedSubmission />
-												{:else if selectedTab === 'database'}
-													<DatabaseTab bind:page />
-												{:else if selectedTab === 'blog'}
-													<BlogTab bind:page bind:setPageAndDraft />
-												{:else if selectedTab === 'newsletter'}
-													<NewsletterTab bind:page />
-												{/if}
+											<button
+												class="px-4 mr-4 text-white bg-green-700"
+												style="padding-top: 0px; padding-bottom: 0px;"
+												on:click={subscribe}
+												use:tooltip
+												title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
+											>
+												🚀 Upgrade
+											</button>
+										</div>
+
+										{#if page}
+											{#if $postDraft}
+												<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
+											{:else if selectedTab === 'editor'}
+												<SitePreview
+													class="p-4"
+													isNoVars
+													isEmbed
+													noStickyHeader={true}
+													isNoBadge={true}
+													isEdit
+													bind:page
+												/>
+											{:else if selectedTab === 'database'}
+												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
+											{:else if selectedTab === 'analytics'}
+												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+											{:else if selectedTab === 'messaging'}
+												<MessagingTab
+													bind:page
+													bind:trigger={selectedTrigger}
+													bind:chatRoom={selectedChatRoom}
+												/>
+											{:else if selectedTab === 'audience'}
+												<AudienceTab bind:page bind:selectedSubmission />
+											{:else if selectedTab === 'database'}
+												<DatabaseTab bind:page />
+											{:else if selectedTab === 'blog'}
+												<BlogTab bind:page bind:setPageAndDraft />
+											{:else if selectedTab === 'newsletter'}
+												<NewsletterTab bind:page />
 											{/if}
-										</BrowserFrame>
-									</div>
-								{/key}
-							{/if}
+										{/if}
+									</BrowserFrame>
+								</div>
+							{/key}
+						{/if}
 
-							{#if page._id && !$sectionToEdit}
+						{#if page._id && !$sectionToEdit}
+							<div class="hidden sm:block">
 								<MomentumWidget bind:page />
-							{/if}
-						</div>
-					{:else}
-						<div
-							class="w-full h-screen sm:ml-[426px] self-stretch flex-col flex items-center justify-center"
-							in:slide
+							</div>
+						{/if}
+					</div>
+				{:else}
+					<div
+						class="w-full h-screen sm:ml-[426px] self-stretch flex-col flex items-center justify-center"
+						in:slide
+					>
+						<svg
+							width="190"
+							height="114"
+							viewBox="0 0 190 114"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
 						>
-							<svg
-								width="190"
-								height="114"
-								viewBox="0 0 190 114"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<rect width="190" height="114" rx="7" fill="#F5F5F5" />
-								<path
-									d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
-									stroke="#828282"
-									stroke-width="3"
-									stroke-linecap="round"
-								/>
-								<path
-									d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
-									stroke="#828282"
-									stroke-width="3"
-									stroke-linecap="round"
-								/>
-								<line
-									x1="89.5"
-									y1="84.5"
-									x2="100.5"
-									y2="84.5"
-									stroke="#828282"
-									stroke-width="3"
-									stroke-linecap="round"
-								/>
-							</svg>
+							<rect width="190" height="114" rx="7" fill="#F5F5F5" />
+							<path
+								d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
+								stroke="#828282"
+								stroke-width="3"
+								stroke-linecap="round"
+							/>
+							<path
+								d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
+								stroke="#828282"
+								stroke-width="3"
+								stroke-linecap="round"
+							/>
+							<line
+								x1="89.5"
+								y1="84.5"
+								x2="100.5"
+								y2="84.5"
+								stroke="#828282"
+								stroke-width="3"
+								stroke-linecap="round"
+							/>
+						</svg>
 
-							<div class="text-[#828282] mt-4">Your design will appear here</div>
-						</div>
-					{/if}
-				</div>
+						<div class="text-[#828282] mt-4">Your design will appear here</div>
+					</div>
+				{/if}
 				<!-- END PREVIEW -->
 			</div>
 		</div>
