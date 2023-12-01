@@ -91,8 +91,8 @@
 				page.sections?.length) &&
 			hero.theme?.bgPattern !== 'cursors'
 				? ''
-				: 'min-h-screen h-screen'} "
-			style="{styles}; max-width: max-content;"
+				: 'min-h-screen h-screen'} {hero.theme?.bgPattern === 'canvas' ? 'max-w-max' : ''}"
+			style="{styles};"
 		>
 			<div
 				bind:this={$aboveTheFoldEl}
