@@ -43,178 +43,182 @@
 	}
 </script>
 
-<div
-	class="relative {hero.theme?.isOverrideColors ? '_override-colors' : ''}"
-	style="z-index: 30; {hero.theme.isOverrideColors
-		? `--section-bg-color: ${
-				hero.theme.backgroundColor
-		  }; --section-bg-color-opacity-50: ${hexToRgba(hero.theme.backgroundColor, 0.5)}`
-		: ''}"
->
-	{#if hero.theme?.bgPattern === 'cursors'}
-		<ComaDragons />
-	{/if}
+{#if hero.title || hero.subtitle || hero.demoUrl}
+	<div
+		class="relative {hero.theme?.isOverrideColors ? '_override-colors' : ''}"
+		style="z-index: 30; {hero.theme.isOverrideColors
+			? `--section-bg-color: ${
+					hero.theme.backgroundColor
+			  }; --section-bg-color-opacity-50: ${hexToRgba(hero.theme.backgroundColor, 0.5)}`
+			: ''}"
+	>
+		{#if hero.theme?.bgPattern === 'cursors'}
+			<ComaDragons />
+		{/if}
 
-	{#if hero.theme?.bgPattern === 'canvas'}
-		<CanvasAnimation animationCode={hero.theme?.canvasAnimationCode} />
-	{/if}
+		{#if hero.theme?.bgPattern === 'canvas'}
+			<CanvasAnimation animationCode={hero.theme?.canvasAnimationCode} />
+		{/if}
 
-	{#if hero.theme?.bgPattern === 'stars'}
-		<Background />
-	{/if}
+		{#if hero.theme?.bgPattern === 'stars'}
+			<Background />
+		{/if}
 
-	<!-- <img
+		<!-- <img
 				class="absolute w-screen h-screen object-cover"
 				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
 			/> -->
-	{#if hero.bgImageUrl}
-		{#if !hero.theme.isNotBgImageDimmed}
-			<div
-				class="absolute top-0 left-0 w-screen h-screen z-1"
-				style="background-color: {page.theme?.theme === 'dark'
-					? 'rgba(0,0,0,0.7)'
-					: 'rgba(255,255,255,.7)'}; z-index: 1;"
+		{#if hero.bgImageUrl}
+			{#if !hero.theme.isNotBgImageDimmed}
+				<div
+					class="absolute top-0 left-0 w-screen h-screen z-1"
+					style="background-color: {page.theme?.theme === 'dark'
+						? 'rgba(0,0,0,0.7)'
+						: 'rgba(255,255,255,.7)'}; z-index: 1;"
+				/>
+			{/if}
+			<RenderUrl
+				class="absolute left-0 top-0 w-screen h-screen opacity-90 overflow-hidden z-0"
+				isAutoplay={!isEdit}
+				imgClass="w-screen h-screen object-cover overflow-hidden"
+				url={hero.bgImageUrl}
 			/>
 		{/if}
-		<RenderUrl
-			class="absolute left-0 top-0 w-screen h-screen opacity-90 overflow-hidden z-0"
-			isAutoplay={!isEdit}
-			imgClass="w-screen h-screen object-cover overflow-hidden"
-			url={hero.bgImageUrl}
-		/>
-	{/if}
 
-	<div
-		class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {(hero.theme
-			?.isVertical ||
-			page.sections?.length) &&
-		hero.theme?.bgPattern !== 'cursors'
-			? ''
-			: 'min-h-screen h-screen'} "
-		style="{styles}; max-width: max-content;"
-	>
 		<div
-			bind:this={$aboveTheFoldEl}
-			class="{hero.theme?.bgImage ? 'light-colors' : ''} {hero.theme?.isVertical
+			class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {(hero.theme
+				?.isVertical ||
+				page.sections?.length) &&
+			hero.theme?.bgPattern !== 'cursors'
 				? ''
-				: ''} h-full py-16 sm:py-24 {!hero.testimonials?.length ? `flex items-center` : ''}"
-			style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
+				: 'min-h-screen h-screen'} "
+			style="{styles}; max-width: max-content;"
 		>
 			<div
-				class="p-4 xl:p-0 flex h-full w-full {hero.demoUrl || hero.theme?.isLeft
-					? `flex-col ${hero.theme?.isVertical ? '' : 'justify-between sm:flex-row'} items-center`
-					: 'text-center items-center'}"
+				bind:this={$aboveTheFoldEl}
+				class="{hero.theme?.bgImage ? 'light-colors' : ''} {hero.theme?.isVertical
+					? ''
+					: ''} h-full py-16 sm:py-24 {!hero.testimonials?.length ? `flex items-center` : ''}"
+				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 			>
 				<div
-					class="{hero.demoUrl || hero.theme?.isLeft
-						? `w-full text-center ${
-								hero.theme?.isVertical ? 'flex flex-col items-center mb-8' : 'sm:text-left'
-						  }  ${
-								hero.demoUrl ? '' : page.renderType === 'article' ? '' : 'sm:max-w-[900px]'
-						  } items-center`
-						: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-										{hero.theme?.isLeft ? 'sm:text-left' : ''}"
+					class="p-4 xl:p-0 flex h-full w-full {hero.demoUrl || hero.theme?.isLeft
+						? `flex-col ${hero.theme?.isVertical ? '' : 'justify-between sm:flex-row'} items-center`
+						: 'text-center items-center'}"
 				>
-					{#if isMounted}
-						<h1
-							class="{page.theme?.isGradientTitle
-								? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
-								: ''} _title 
+					<div
+						class="{hero.demoUrl || hero.theme?.isLeft
+							? `w-full text-center ${
+									hero.theme?.isVertical ? 'flex flex-col items-center mb-8' : 'sm:text-left'
+							  }  ${
+									hero.demoUrl ? '' : page.renderType === 'article' ? '' : 'sm:max-w-[900px]'
+							  } items-center`
+							: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
+										{hero.theme?.isLeft ? 'sm:text-left' : ''}"
+					>
+						{#if isMounted}
+							<h1
+								class="{page.theme?.isGradientTitle
+									? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
+									: ''} _title 
 											{!hero.demoUrl || hero.theme?.isVertical
-								? page.renderType === 'article'
-									? 'sm:max-w-[712px]'
-									: 'sm:max-w-[912px]'
-								: ''}"
-							style={hero.title ? '' : 'opacity: 20%;'}
-							in:fly={{ y: 50, duration: 800 }}
-						>
-							{#if hero.title}
-								<div>{@html hero.title || ''}</div>
-							{:else if isEmbed && !page.parentPage}
-								{#if page.renderType !== 'article'}
-									{'Type Tagline...'}
+									? page.renderType === 'article'
+										? 'sm:max-w-[712px]'
+										: 'sm:max-w-[912px]'
+									: ''}"
+								style={hero.title ? '' : 'opacity: 20%;'}
+								in:fly={{ y: 50, duration: 800 }}
+							>
+								{#if hero.title}
+									<div>{@html hero.title || ''}</div>
+								{:else if isEmbed && !page.parentPage}
+									{#if page.renderType !== 'article'}
+										{'Type Tagline...'}
+									{/if}
 								{/if}
-							{/if}
-						</h1>
-					{/if}
+							</h1>
+						{/if}
 
-					{#if hero.subtitle}
-						<h2
-							class="_subtitle {hero.theme.isHugeTitle
-								? 'text-xl'
-								: 'text-xl'}  whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
-								? page.renderType === 'article'
+						{#if hero.subtitle}
+							<h2
+								class="_subtitle {hero.theme.isHugeTitle
+									? 'text-xl'
+									: 'text-xl'}  whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
+									? page.renderType === 'article'
+										? 'max-w-[712px]'
+										: 'max-w-[650px]'
+									: page.renderType === 'article'
 									? 'max-w-[712px]'
-									: 'max-w-[650px]'
-								: page.renderType === 'article'
-								? 'max-w-[712px]'
-								: 'max-w-[600px]'}"
-							in:fly={{ y: 50, duration: 800 }}
-						>
-							{@html hero.subtitle}
-						</h2>
-					{/if}
-					{#if hero.interactiveRenderType}
-						<RenderInteractiveOptions
-							class={hero.theme.isLeft || !hero.theme?.isVertical ? '' : 'max-w-[600px] mx-auto'}
-							size={hero.theme.isHugeTitle ? 'huge' : 'large'}
-							bind:page
-							bind:sectionItem={hero}
-						/>
-					{/if}
+									: 'max-w-[600px]'}"
+								in:fly={{ y: 50, duration: 800 }}
+							>
+								{@html hero.subtitle}
+							</h2>
+						{/if}
+						{#if hero.interactiveRenderType}
+							<RenderInteractiveOptions
+								class={hero.theme.isLeft || !hero.theme?.isVertical ? '' : 'max-w-[600px] mx-auto'}
+								size={hero.theme.isHugeTitle ? 'huge' : 'large'}
+								bind:page
+								bind:sectionItem={hero}
+							/>
+						{/if}
 
-					{#if page.renderType === 'article'}
-						<RenderArticleHeader
-							class={hero.theme.isLeft ? 'justify-start' : 'justify-center'}
-							{page}
-						/>
-					{/if}
+						{#if page.renderType === 'article'}
+							<RenderArticleHeader
+								class={hero.theme.isLeft ? 'justify-start' : 'justify-center'}
+								{page}
+							/>
+						{/if}
 
-					{#if isMounted && hero.socialProof}
-						<div
-							class="mt-16 py-4 {hero.socialProof.className || ''} {hero.demoUrl ||
-							(hero.theme?.isLeft && !hero.theme?.isVertical)
-								? ''
-								: 'flex justify-center w-full'} }"
-						>
-							<div>
-								<div class="flex gap-2">
-									{#each _.shuffle(hero.socialProof.logos) as logo}
-										<img class="w-[50px] h-[50px] rounded-full" src={logo.url} />
-									{/each}
-								</div>
+						{#if isMounted && hero.socialProof}
+							<div
+								class="mt-16 py-4 {hero.socialProof.className || ''} {hero.demoUrl ||
+								(hero.theme?.isLeft && !hero.theme?.isVertical)
+									? ''
+									: 'flex justify-center w-full'} }"
+							>
+								<div>
+									<div class="flex gap-2">
+										{#each _.shuffle(hero.socialProof.logos) as logo}
+											<img class="w-[50px] h-[50px] rounded-full" src={logo.url} />
+										{/each}
+									</div>
 
-								<div class="text-sm mt-4 opacity-80 max-w-[400px]">
-									{@html hero.socialProof.title || ''}
+									<div class="text-sm mt-4 opacity-80 max-w-[400px]">
+										{@html hero.socialProof.title || ''}
+									</div>
 								</div>
 							</div>
+						{/if}
+					</div>
+
+					{#if hero.demoUrl}
+						<div
+							class="relative  w-full  mt-16 sm:mt-0 {hero.theme?.isVertical
+								? ''
+								: 'sm:ml-8 sm:max-w-[600px]'}"
+						>
+							<RenderUrlWithBackground
+								isLazy={false}
+								imageUrl={hero.demoUrl}
+								class={hero.theme?.isVertical ? 'mt-8' : ''}
+								imageBackgroundUrl={hero.demoBackgroundUrl}
+								urlClass="relative w-full flex justify-end"
+								urlImgMaxWidth={hero.imgMaxWidth || 0}
+								urlImgClass="{hero.imgMaxWidth
+									? `rounded-lg`
+									: 'w-full rounded-xl'}  shadow-md object-cover"
+							/>
 						</div>
 					{/if}
 				</div>
-
-				{#if hero.demoUrl}
-					<div
-						class="relative  w-full  mt-16 sm:mt-0 {hero.theme?.isVertical
-							? ''
-							: 'sm:ml-8 sm:max-w-[600px]'}"
-					>
-						<RenderUrlWithBackground
-							isLazy={false}
-							imageUrl={hero.demoUrl}
-							class={hero.theme?.isVertical ? 'mt-8' : ''}
-							imageBackgroundUrl={hero.demoBackgroundUrl}
-							urlClass="relative w-full flex justify-end"
-							urlImgMaxWidth={hero.imgMaxWidth || 0}
-							urlImgClass="{hero.imgMaxWidth
-								? `rounded-lg`
-								: 'w-full rounded-xl'}  shadow-md object-cover"
-						/>
-					</div>
-				{/if}
 			</div>
 		</div>
 	</div>
-</div>
+{:else}
+	<div class="my-[70px]" />
+{/if}
 
 <style>
 	._title {

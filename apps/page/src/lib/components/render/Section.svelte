@@ -314,7 +314,10 @@
 						section.items?.length
 							? `px-4 xl:px-0 ${isFooter ? '' : 'py-8 sm:py-16'}`
 							: 'px-4 xl:px-0 py-8 sm:py-16'
-				  }`}"
+				  }`}
+					{section.renderType === 'changelog' ? 'sm:w-[600px] mx-auto' : ''}
+					
+					"
 			style="z-index: 10; {section.theme?.isOverrideGlowingColor
 				? `--glowing-color: ${section.theme.glowingColor};`
 				: ''} {section.theme?.glowingIntensity
@@ -325,9 +328,12 @@
 				<div
 					class="_section_titles relative w-full {page.theme.isTitlesLeft ||
 					section.isTitleLeft ||
-					section.renderType === 'article'
+					section.renderType === 'article' ||
+					section.renderType === 'changelog'
 						? 'sm:text-left'
-						: 'text-center'}"
+						: 'text-center'}
+						
+						"
 				>
 					{#if section.emoji}
 						<div
@@ -390,9 +396,15 @@
 					</div>
 
 					{#if section.interactiveRenderType}
-						<div class="sm:max-w-[600px] sm:mx-auto mt-8">
+						<div
+							class="{section.renderType === 'changelog'
+								? 'mb-32'
+								: 'sm:max-w-[600px] sm:mx-auto'} mt-8"
+						>
 							<RenderInteractiveOptions
-								class="justify-center mb-8"
+								class="{section.renderType === 'changelog'
+									? 'justify-start'
+									: 'justify-center'} mb-8"
 								bind:sectionItem={section}
 								size="large"
 								bind:page
@@ -687,7 +699,7 @@
 										? '_article mb-8'
 										: 'mb-4'}
 							{section.renderType === 'changelog'
-										? '_transparent _no-padding max-w-[600px] mx-auto'
+										? '_transparent _no-padding sm:w-[600px] mx-auto'
 										: 'grid sm:grid-cols-12 '}		
 									
 									"
