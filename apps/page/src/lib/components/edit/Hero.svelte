@@ -113,6 +113,11 @@
 			label: 'Cursors 🤩'
 		},
 		{
+			key: 'canvas',
+			label: 'JavaScript Canvas 🤓'
+		},
+
+		{
 			key: null,
 			label: 'None'
 		}
@@ -321,6 +326,25 @@
 										>{bgPattern.key === hero.theme.bgPattern ? '✅' : ''} {bgPattern.label}</button
 									>
 								{/each}
+
+								{#if hero.theme.bgPattern === 'canvas'}
+									<div class="mb-2">Your JavaScript Code</div>
+
+									<textarea
+										placeholder="let canvas = window.backgroundCanvas;"
+										bind:value={hero.theme.canvasAnimationCode}
+										class="w-full"
+										lines="6"
+									/>
+
+									<div>Access canvas via <b>window.backgroundCanvas</b></div>
+
+									<div class="text-sm opacity-70">
+										<b>Hint</b>: copy open animations from CodePen, like
+										<a target="_blank" href="https://codepen.io/towc/pen/OgWeXw">this</a>
+										and <a target="_blank" href="https://codepen.io/devamar/pen/ExYWPWB">this</a>
+									</div>
+								{/if}
 							</div>
 							<div class="_section">
 								<div class="font-semibold">Background gradients</div>

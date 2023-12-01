@@ -24,7 +24,6 @@
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
 	import Gradients from '$lib/components/gradients/index.svelte';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
-	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
 
 	import trackClick from 'lib/services/trackClick';
 

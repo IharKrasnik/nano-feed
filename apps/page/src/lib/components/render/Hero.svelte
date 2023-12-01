@@ -9,6 +9,7 @@
 	import RenderArticleHeader from '$lib/components/render/ArticleHeader.svelte';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
+	import CanvasAnimation from '$lib/components/animations/CanvasAnimation.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import hexToRgba from 'lib/helpers/hexToRgba';
 
@@ -52,6 +53,10 @@
 >
 	{#if hero.theme?.bgPattern === 'cursors'}
 		<ComaDragons />
+	{/if}
+
+	{#if hero.theme?.bgPattern === 'canvas'}
+		<CanvasAnimation animationCode={hero.theme?.canvasAnimationCode} />
 	{/if}
 
 	{#if hero.theme?.bgPattern === 'stars'}
