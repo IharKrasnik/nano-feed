@@ -530,10 +530,10 @@
 								<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
 							{/if}
 
-							<div class="relative _root bg-site" style="background: none;">
+							<div class="relative _root bg-site overflow-hidden" style="background: none;">
 								{#if !isAboveTheFold}
 									{#if page.sections?.length}
-										<div class="relative z-10 {page.streamSlug ? '' : ''}">
+										<div class="relative z-10 {page.streamSlug ? '' : ''}" style="z-index: 40;">
 											{#each page.sections || [] as section, i}
 												{#if $sectionToEdit && $sectionToEdit.id === section.id}
 													<div bind:this={editEl}>
