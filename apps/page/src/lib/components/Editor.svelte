@@ -1603,7 +1603,7 @@
 
 				{#if page.name || page.title}
 					<div
-						class="relative ml-[100%] sm:ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]"
+						class="relative w-screen sm:w-full ml-[100%] sm:ml-[426px] _preview h-full p-4 mx-4 2xl:pl-[75px]"
 						in:fade={{ delay: 150 }}
 					>
 						<!-- {#if conversions}
@@ -1892,8 +1892,6 @@
 
 <style>
 	._preview {
-		width: 100%;
-		height: 100%;
 		border-left: 1px #e0dede solid;
 	}
 
