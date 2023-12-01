@@ -1793,42 +1793,42 @@
 											>
 												🚀 Upgrade
 											</button>
+										</div>
 
-											{#if page}
-												{#if $postDraft}
-													<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
-												{:else if selectedTab === 'editor'}
-													<SitePreview
-														class="p-4"
-														isNoVars
-														isEmbed
-														noStickyHeader={true}
-														isNoBadge={true}
-														isEdit
-														bind:page
-													/>
-												{:else if selectedTab === 'database'}
-													<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
-												{:else if selectedTab === 'analytics'}
-													<AnalyticsTab bind:page bind:customer={selectedCustomer} />
-												{:else if selectedTab === 'messaging'}
-													<MessagingTab
-														bind:page
-														bind:trigger={selectedTrigger}
-														bind:chatRoom={selectedChatRoom}
-													/>
-												{:else if selectedTab === 'audience'}
-													<AudienceTab bind:page bind:selectedSubmission />
-												{:else if selectedTab === 'database'}
-													<DatabaseTab bind:page />
-												{:else if selectedTab === 'blog'}
-													<BlogTab bind:page bind:setPageAndDraft />
-												{:else if selectedTab === 'newsletter'}
-													<NewsletterTab bind:page />
-												{/if}
+										{#if page}
+											{#if $postDraft}
+												<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
+											{:else if selectedTab === 'editor'}
+												<SitePreview
+													class="p-4"
+													isNoVars
+													isEmbed
+													noStickyHeader={true}
+													isNoBadge={true}
+													isEdit
+													bind:page
+												/>
+											{:else if selectedTab === 'database'}
+												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
+											{:else if selectedTab === 'analytics'}
+												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+											{:else if selectedTab === 'messaging'}
+												<MessagingTab
+													bind:page
+													bind:trigger={selectedTrigger}
+													bind:chatRoom={selectedChatRoom}
+												/>
+											{:else if selectedTab === 'audience'}
+												<AudienceTab bind:page bind:selectedSubmission />
+											{:else if selectedTab === 'database'}
+												<DatabaseTab bind:page />
+											{:else if selectedTab === 'blog'}
+												<BlogTab bind:page bind:setPageAndDraft />
+											{:else if selectedTab === 'newsletter'}
+												<NewsletterTab bind:page />
 											{/if}
-										</div></BrowserFrame
-									>
+										{/if}
+									</BrowserFrame>
 								</div>
 							{/key}
 						{/if}
