@@ -681,81 +681,121 @@
 						{/if}
 					{:else if section.columns === 1}
 						{#each section.items as item}
-							<div
-								class="_section-item grid sm:grid-cols-12 items-center {section.renderType ===
-								'article'
-									? '_article mb-8'
-									: 'mb-4'}"
-							>
+							<div class="flex justify-between">
 								<div
-									class="sm:col-span-{item.colSpan || (item.imageUrl ? 6 : 12)} {item.isReversed
-										? 'order-last'
-										: ''} {(!item.colSpan || item.colSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
+									class="_section-item relative items-center {section.renderType === 'article'
+										? '_article mb-8'
+										: 'mb-4'}
+							{section.renderType === 'changelog'
+										? '_transparent _no-padding max-w-[600px] mx-auto'
+										: 'grid sm:grid-cols-12 '}		
+									
+									"
 								>
-									<div>
+									{#if section.renderType === 'changelog'}
 										<div
-											class="{section.renderType === 'article'
-												? 'sm:px-8'
-												: '_section-item _borderless p-4 sm:p-8'} col-span-1"
+											class="sm:absolute sm:top-0 sm:left-0 sm:transform _translate-x-full-reverse overflow-auto"
 										>
-											<!-- {#if item.emoji !== '✨'}
+											<div class="sm:sticky sm:top-28 sm:mr-32 text-sm min-w-[200px] mb-2">
+												<time>
+													{moment(item.publishedOn).format('MMM DD YYYY')}
+												</time>
+											</div>
+										</div>
+									{/if}
+
+									<div
+										class="{section.renderType === 'changelog'
+											? 'col-span-12'
+											: `sm:col-span-${item.colSpan || (item.imageUrl ? 6 : 12)}`}
+									
+									{item.isReversed ? 'order-last' : ''}
+									{(!item.colSpan || item.colSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
+									>
+										<div>
+											<div
+												class="{section.renderType === 'article'
+													? 'sm:px-8'
+													: '_section-item _borderless p-4 sm:p-8'}
+													{section.renderType === 'changelog' ? '_transparent _no-padding' : ''}
+													
+													col-span-1"
+											>
+												<!-- {#if item.emoji !== '✨'}
 									<Emoji bind:emoji={item.emoji} />
 									{/if} -->
-											{#if item.url}
-												<a
-													class="_item-title block mb-2"
-													href={item.url || ''}
-													target={item.url?.startsWith('http') ? '_blank' : ''}
-												>
-													<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
-												</a>
-											{:else}
-												<div class="_item-title mb-2">
-													<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
-												</div>
-											{/if}
+												{#if item.url}
+													<a
+														class="_item-title block mb-2"
+														href={item.url || ''}
+														target={item.url?.startsWith('http') ? '_blank' : ''}
+													>
+														<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+													</a>
+												{:else}
+													<div class="_item-title mb-2">
+														<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+													</div>
+												{/if}
 
-											{#if isShowAuthor}
-												<div>
-													<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
-												</div>
-											{/if}
+												{#if section.renderType === 'changelog'}
+													<RenderUrlWithBackground
+														isIframeFallback={false}
+														aspectRatio={item.imageAspectRatio}
+														class="my-4"
+														urlImgClass="object-cover rounded-r-lg"
+														imageUrl={item.imageUrl}
+														imageBackgroundUrl={item.imageBackgroundUrl}
+													/>
+												{/if}
 
-											<ContentEditableIf
-												class="_item-description whitespace-pre-wrap"
-												bind:innerHTML={item.description}
-												condition={isEdit}
-											/>
+												{#if isShowAuthor}
+													<div>
+														<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
+													</div>
+												{/if}
+
+												<ContentEditableIf
+													class="_item-description whitespace-pre-wrap"
+													bind:innerHTML={item.description}
+													condition={isEdit}
+												/>
+											</div>
 										</div>
-									</div>
 
-									{#if item.interactiveAnswers?.length}
-										<div class={page?.theme?.containerWidth ? 'p-4' : 'px-8 pb-4'}>
-											<RenderInteractiveOptions
-												bind:sectionItem={item}
-												parentSectionId={section.id}
-												bind:page
-												itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+										{#if item.interactiveAnswers?.length}
+											<div class={page?.theme?.containerWidth ? 'p-4' : 'px-8 pb-4'}>
+												<RenderInteractiveOptions
+													bind:sectionItem={item}
+													parentSectionId={section.id}
+													bind:page
+													itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+												/>
+											</div>
+										{/if}
+									</div>
+									{#if section.renderType !== 'changelog'}
+										<div
+											class="
+									{`sm:col-span-${
+												!item.colSpan
+													? 6
+													: 12 - (item.title || item.description ? item.colSpan || 6 : 0) || 12
+											}`} 
+									
+									{item.isReversed || section.renderType === 'changelog' ? 'order-first' : ''}"
+										>
+											<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
+
+											<RenderUrlWithBackground
+												isIframeFallback={false}
+												aspectRatio={item.imageAspectRatio}
+												urlImgClass="object-cover rounded-r-lg"
+												imageUrl={item.imageUrl}
+												imageBackgroundUrl={item.imageBackgroundUrl}
 											/>
 										</div>
 									{/if}
-								</div>
-								<div
-									class="sm:col-span-{!item.colSpan
-										? 6
-										: 12 - (item.title || item.description ? item.colSpan || 6 : 0) || 12} 
-									
-									{item.isReversed ? 'order-first' : ''}"
-								>
-									<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
-
-									<RenderUrlWithBackground
-										isIframeFallback={false}
-										aspectRatio={item.imageAspectRatio}
-										urlImgClass="object-cover rounded-r-lg"
-										imageUrl={item.imageUrl}
-										imageBackgroundUrl={item.imageBackgroundUrl}
-									/>
 								</div>
 							</div>
 						{/each}
@@ -913,7 +953,7 @@
 																]} _item-description whitespace-pre-wrap "
 															>
 																<ContentEditableIf
-																	class={section.renderType === 'feed'
+																	class={section.isDatabase
 																		? '_line-clamp-4 hover:line-clamp-5'
 																		: ''}
 																	bind:innerHTML={item.description}

@@ -414,6 +414,7 @@
 
 									<div
 										class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
+										style="z-index: 50"
 									>
 										{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}
 											<a
@@ -700,7 +701,7 @@
 
 	._header {
 		@apply p-1 w-full;
-		z-index: 40;
+		z-index: 50;
 	}
 
 	._header ._header-content {

@@ -213,7 +213,7 @@
 						/>
 					{:else}
 						<div
-							class="w-[30px] h-[30px] rounded-full mr-4"
+							class="w-[30px] h-[30px] border rounded-full mr-4"
 							style="background-color: {page.theme.backgroundColor};"
 						/>
 					{/if}

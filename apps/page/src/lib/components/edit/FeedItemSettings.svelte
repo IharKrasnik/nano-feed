@@ -3,6 +3,7 @@
 
 	import isUrl from 'lib/helpers/isUrl';
 	import FileInput from 'lib/components/FileInput.svelte';
+	import DateTimeInput from 'lib/components/DateTimeInput.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	export let feedItem;
@@ -32,6 +33,7 @@
 	};
 
 	let textareaPlaceholder = `{ "customField": "My Field" }`;
+	debugger;
 </script>
 
 <div
@@ -47,6 +49,12 @@
 		in:fly={{ y: 50, duration: 150 }}
 	>
 		<div class="w-full py-4">
+			<div class="mb-4">
+				<div class="text-sm font-bold mb-2">Published Date</div>
+
+				<DateTimeInput bind:date={feedItem.publishedOn} />
+			</div>
+
 			<div class="text-sm font-bold mb-2">Custom Data (JSON format)</div>
 
 			<textarea

@@ -112,9 +112,17 @@
 	border: none !important;
 }
 
+._translate-x-full-reverse {
+	--tw-translate-x: -100%;
+}
+
 ._section-item._transparent > .flex {
 	background: none !important;
 	border: none !important;
+}
+
+._no-padding {
+	padding: 0 !important;
 }
 
 ._section-container._lighter,
@@ -303,7 +311,7 @@ textarea {
 ._editor select,
 ._editor textarea,
 ._editor input {
-	background: #f6f5f5;
+	background: #f6f5f5 !important;
 }
 
 button {
@@ -533,8 +541,7 @@ button._wide {
 }
 
 ._transparent {
-	background: rgba(0, 0, 0, 0.3) !important;
-	border: 1px var(--text-color) solid;
+	background: none !important;
 }
 
 ._container-width {

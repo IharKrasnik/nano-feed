@@ -119,7 +119,9 @@
 			isDatabaseModalShown = false;
 		}}
 	>
-		<EditDatabase bind:page />
+		<div class="p-32">
+			<EditDatabase bind:page />
+		</div>
 	</Modal>
 {/if}
 
@@ -232,6 +234,7 @@
 				<option value="carousel">Carousel Menu</option>
 				<option value="stepper">1-2-3 Stepper</option>
 				<option value="callout">Call-To-Action</option>
+				<option value="changelog">Changelog</option>
 				<option value="faq">FAQ</option>
 				<option value="article">Article</option>
 				<option value="form">Form</option>

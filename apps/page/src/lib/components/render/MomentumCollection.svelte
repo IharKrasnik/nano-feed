@@ -22,7 +22,8 @@
 	let databaseSection = {
 		id: section.id,
 		isShowSource: section.isShowSource,
-		renderType: 'feed',
+		renderType: section.renderType,
+		isDatabase: true,
 		columns: section.columns,
 		items: [],
 		linkType: 'interactive',
