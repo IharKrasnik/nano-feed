@@ -184,7 +184,7 @@
 
 {#if !section.streamSettings?.limit && $feedCache[cacheId]?.tags?.length}
 	<div
-		class="flex w-full {section.isTitleLeft
+		class="flex w-full {section.theme?.isTitleLeft
 			? ''
 			: 'sm:justify-center'} gap-3 mt-4 mb-8 overflow-x-scroll sm:overflow-visible sm:flex-wrap max-w-screen"
 	>

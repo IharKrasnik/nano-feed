@@ -531,7 +531,7 @@
 								<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
 							{/if}
 
-							<div class="relative _root bg-site pt-[60px]" style="background: none;">
+							<div class="relative _root bg-site" style="background: none;">
 								{#if !isAboveTheFold}
 									{#if page.sections?.length}
 										<div class="relative z-10 {page.streamSlug ? '' : ''}">
@@ -553,21 +553,48 @@
 													</div>
 													{focusEditEl() || ''}
 												{:else}
-													<div class="bg-site">
-														<RenderSection
-															bind:page
-															bind:section
-															bind:themeStyles={styles}
-															bind:isEdit
-															style={false && page.theme?.isZebra && i % 2 === 0
-																? page.theme?.theme === 'dark'
-																	? `background-color: ${lighten(
-																			styles['background-color'],
-																			0.01
-																	  )};`
-																	: `background-color: ${darken(styles['background-color'], 0.08)};`
-																: ''}
-														/>
+													<div class="relative">
+														{#if section.containerBgImageUrl}
+															<div class="absolute left-0 top-0 w-screen h-full">
+																<img
+																	class="w-full h-full object-cover"
+																	src={section.containerBgImageUrl}
+																/>
+															</div>
+
+															{#if !section.theme.isNotContainerBgImageDimmed}
+																<div
+																	class="absolute top-0 left-0 w-screen h-full z-1"
+																	style="background-color: {page.theme?.theme === 'dark'
+																		? 'rgba(0,0,0,0.7)'
+																		: 'rgba(255,255,255,.7)'}; z-index: 1;"
+																/>
+															{/if}
+														{/if}
+
+														<div
+															class="bg-site _container-width mx-auto {section.containerBgImageUrl
+																? 'py-8'
+																: ''}"
+														>
+															<RenderSection
+																bind:page
+																bind:section
+																bind:themeStyles={styles}
+																bind:isEdit
+																style={false && page.theme?.isZebra && i % 2 === 0
+																	? page.theme?.theme === 'dark'
+																		? `background-color: ${lighten(
+																				styles['background-color'],
+																				0.01
+																		  )};`
+																		: `background-color: ${darken(
+																				styles['background-color'],
+																				0.08
+																		  )};`
+																	: ''}
+															/>
+														</div>
 													</div>
 												{/if}
 											{/each}
@@ -669,7 +696,6 @@
 
 	._root {
 		width: 100%;
-		max-width: var(--container-width);
 		margin: 0 auto;
 	}
 

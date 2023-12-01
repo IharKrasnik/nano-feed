@@ -128,7 +128,7 @@
 
 	{#key page._id}
 		<div
-			class="relative z-10 container container-width mx-auto px-4 sm:px-8 {page.parentPage
+			class="relative z-10 container _container-width mx-auto px-4 sm:px-8 {page.parentPage
 				? ''
 				: ''}"
 		>
@@ -177,7 +177,7 @@
 			<hr class="my-8" />
 		{/if}
 		{#if !page.parentPage}
-			<div class="container-width flex items-center justify-between">
+			<div class="_container-width flex items-center justify-between">
 				<div class="flex gap-4 mt-8 text-lg px-8 py-4">
 					{#each page.parentPage?.sections || page.sections || [] as section}
 						<div
@@ -196,7 +196,7 @@
 				style="border-color: var(--accent-color-lighter); margin-top: -16px;"
 			/>
 
-			<div class="relative z-10 container container-width mx-auto">
+			<div class="relative z-10 container _container-width mx-auto">
 				{#if activeSection}
 					<div class="mt-8 px-8 py-4">
 						<div class="_title">{@html activeSection.title}</div>
@@ -242,7 +242,7 @@
 		@apply text-xl;
 	}
 
-	.container-width {
+	._container-width {
 		max-width: var(--container-width);
 		@apply mx-auto;
 	}

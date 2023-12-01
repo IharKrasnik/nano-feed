@@ -26,6 +26,7 @@
 
 	export let item;
 	export let section;
+	export let page;
 
 	export let onRemove = () => {
 		section.items = section.items.filter((i) => i !== item);
@@ -115,7 +116,7 @@
 			{/if}
 
 			{#if (isWithSettings && section.renderType !== 'form' && section.renderType !== 'carousel') || item.isActionSuccessSection}
-				<EditSectionSettings bind:section bind:sectionItem={item} />
+				<EditSectionSettings bind:page bind:section bind:sectionItem={item} />
 			{/if}
 
 			{#if isWithSubtitle}

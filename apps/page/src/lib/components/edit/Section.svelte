@@ -214,6 +214,7 @@
 				isWithSubtitle
 				isWithInteractive
 				onRemove={null}
+				bind:page
 				bind:section
 				bind:item={section}
 			/>
@@ -484,7 +485,7 @@
 			{/if}
 
 			{#each section.items || [] as item}
-				<EditSectionItem bind:section bind:item />
+				<EditSectionItem bind:page bind:section bind:item />
 
 				<hr class=" border-[#8B786D] opacity-30" />
 			{/each}
@@ -543,7 +544,12 @@
 									'https://media3.giphy.com/media/PMV7yRpwGO5y9p3DBx/giphy.gif?cid=54dcf3bfllvlfmn72sc3m0wa7l2sygeg0lf30hhuotmgye4v&ep=v1_gifs_search&rid=giphy.gif&ct=g'
 						  }) && ''}
 					<div class="_section mt-4">
-						<EditSectionItem class="" {section} bind:item={section.actionSuccessSection} />
+						<EditSectionItem
+							class=""
+							{section}
+							bind:page
+							bind:item={section.actionSuccessSection}
+						/>
 					</div>
 				{/if}
 
@@ -575,6 +581,7 @@
 					isWithSubtitle
 					isWithInteractive
 					onRemove={null}
+					bind:page
 					bind:section
 					bind:item={section.footer}
 				/>

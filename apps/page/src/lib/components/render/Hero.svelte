@@ -80,11 +80,12 @@
 	{/if}
 
 	<div
-		class="relative z-10 container container-width mx-auto {(hero.theme?.isVertical ||
+		class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {(hero.theme
+			?.isVertical ||
 			page.sections?.length) &&
 		hero.theme?.bgPattern !== 'cursors'
 			? ''
-			: 'min-h-screen h-screen'} pt-[60px] mb-[-60px]"
+			: 'min-h-screen h-screen'} "
 		style="{styles};"
 	>
 		<div

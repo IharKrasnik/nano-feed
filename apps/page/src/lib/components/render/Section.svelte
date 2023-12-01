@@ -230,6 +230,16 @@
 			`var d=document;var s=d.createElement("script"); s.src="${section.thirdPartyScriptUrl}";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);`
 		);
 	}
+
+	let getGlowingOpacity = () => {
+		if (section.theme.glowingIntensity === 'sm') {
+			return '0.11';
+		} else if (section.theme.glowingIntensity === 'lg') {
+			return '0.3';
+		} else if (section.theme.glowingIntensity === 'xl') {
+			return '0.5';
+		}
+	};
 </script>
 
 <!-- <div class="section-bg" /> -->
@@ -270,11 +280,15 @@
 {/if}
 
 {#if section.isShown}
-	<div class="relative {section.bgImageUrl ? 'p-8 my-8 sm:my-16' : ''}">
+	<div
+		class="relative {section.bgImageUrl ? 'p-8 my-16' : ''} {section.renderType === 'callout'
+			? 'min-h-screen sm:min-h-min'
+			: ''}"
+	>
 		{#if section.bgImageUrl}
 			<img
 				src={section.bgImageUrl}
-				class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
+				class="absolute left-0 top-0 w-full h-full object-cover rounded-xl "
 				style="z-index: 0;"
 			/>
 			<div
@@ -287,19 +301,25 @@
 
 		<div
 			class=" _section-container {section.isGlowing
-				? '_glowing'
-				: ''} {section.className} {section.type} {section.renderType} {section.bgImageUrl
-				? '_bg-image'
-				: ''} {clazz
+				? `_glowing ${section.theme?.isOverrideGlowingColor ? '_override-glowing-color' : ''}
+	${section.theme?.glowingIntensity ? `_intensity` : ''}`
+				: ''} {section.className} {section.type} {section.renderType} 
+				{section.bgImageUrl ? '_bg-image' : ''}
+				
+				{clazz
 				? clazz
 				: section.renderType === 'article'
 				? 'sm:pb-16'
 				: `${
 						section.items?.length
-							? `${isFooter ? 'p-0' : 'px-4 xl:px-0 py-8 sm:py-16'}`
+							? `px-4 xl:px-0 ${isFooter ? '' : 'py-8 sm:py-16'}`
 							: 'px-4 xl:px-0 py-8 sm:py-16'
 				  }`}"
-			style="z-index: 10; {style || ''}"
+			style="z-index: 10; {section.theme?.isOverrideGlowingColor
+				? `--glowing-color: ${section.theme.glowingColor};`
+				: ''} {section.theme?.glowingIntensity
+				? `--glowing-opacity: ${getGlowingOpacity()};`
+				: ''} {style || ''}"
 		>
 			{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
 				<div

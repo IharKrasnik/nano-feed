@@ -8,6 +8,7 @@
 	export let section;
 	export let sectionItem;
 	export let theme = 'light';
+	export let page;
 
 	export let isShown = false;
 
@@ -21,6 +22,10 @@
 
 	$: if (sectionItem.bgImageUrl) {
 		sectionItem.className = '';
+	}
+
+	if (!sectionItem.theme) {
+		sectionItem.theme = {};
 	}
 </script>
 
@@ -66,21 +71,31 @@
 				</div>
 			{/if}
 
-			{#if sectionItem !== section && sectionItem.imageUrl}
-				<div class="mr-2">
-					<input type="checkbox" bind:checked={sectionItem.isReversed} /> Reverse Image Position
-				</div>
-			{/if}
+			<div class="_section">
+				<div class="mb-2 font-bold">Alignment & Size</div>
 
-			{#if sectionItem === section}
-				<div class="mr-2">
-					<input type="checkbox" bind:checked={sectionItem.isTitleLeft} /> Align Left
+				{#if sectionItem !== section && sectionItem.imageUrl}
+					<div class="my-2">
+						<input type="checkbox" bind:checked={sectionItem.theme.isReversedImage} /> Reverse Image
+						Position
+					</div>
+				{/if}
+
+				{#if sectionItem === section}
+					<div class="my-2">
+						<input type="checkbox" bind:checked={sectionItem.theme.isTitleLeft} /> Align Left
+					</div>
+				{/if}
+				<div class="my-2">
+					<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Is Huge Title
 				</div>
 
-				<div class="mr-2">
-					<input type="checkbox" bind:checked={sectionItem.theme.isColorsReversed} /> Reverse Colors
-				</div>
-			{/if}
+				{#if sectionItem.emoji}
+					<div class="my-2">
+						<input type="checkbox" bind:checked={sectionItem.isIconLeft} /> Show Icon Near Title
+					</div>
+				{/if}
+			</div>
 
 			{#if !sectionItem.bgImageUrl}
 				<div class="">
@@ -98,19 +113,172 @@
 			{/if}
 
 			<div class="my-4">
-				<input class="" type="checkbox" bind:checked={sectionItem.isHugeTitle} /> Is Huge Title
 				{#if section === sectionItem}
-					<input class="ml-4" type="checkbox" bind:checked={sectionItem.isGlowing} /> Is Glowing
-				{/if}
-				{#if sectionItem.emoji}
-					<div class="mt-2">
-						<input type="checkbox" bind:checked={sectionItem.isIconLeft} /> Show Icon Near Title
+					<div class="_section my-4">
+						<div class="mb-2 font-bold">Glowing</div>
+
+						<div class="my-2">
+							<input type="checkbox" bind:checked={sectionItem.isGlowing} /> Section Is Glowing
+
+							{#if sectionItem.isGlowing}
+								<div class="font-normal opacity-70 mb-4 mt-2">Glowing color</div>
+
+								<div class="flex items-center">
+									{#if sectionItem.theme?.isOverrideGlowingColor}
+										<input
+											type="color"
+											id="head"
+											name="head"
+											class="mr-4"
+											bind:value={sectionItem.theme.glowingColor}
+										/>
+									{:else}
+										<div
+											class="w-[30px] h-[30px] rounded-full border mr-4 blur"
+											style="background-color: {sectionItem.theme.glowingColor};"
+										/>
+									{/if}
+									<div>
+										<input
+											bind:checked={sectionItem.theme.isOverrideGlowingColor}
+											class="mr-2"
+											type="checkbox"
+											on:change={() => {
+												if (
+													!sectionItem.theme.glowingColor ||
+													!sectionItem.theme.isOverrideGlowingColor
+												) {
+													sectionItem.theme.glowingColor = (
+														page.parentPage?.theme || page.theme
+													)?.accentColor;
+												}
+											}}
+										/>
+
+										Override color
+									</div>
+								</div>
+
+								<div class="mt-8">
+									<div class="mb-2 opacity-70">Intensity</div>
+
+									<div class="flex gap-2 flex-wrap">
+										<div
+											class="border cursor-pointer p-2"
+											on:click={() => (sectionItem.theme.glowingIntensity = 'sm')}
+										>
+											{!sectionItem.theme.glowingIntensity ||
+											sectionItem.theme.glowingIntensity === 'sm'
+												? '✅ '
+												: ''}
+											Small
+										</div>
+										<div
+											class="border cursor-pointer p-2"
+											on:click={() => (sectionItem.theme.glowingIntensity = 'lg')}
+										>
+											{sectionItem.theme.glowingIntensity === 'lg' ? '✅ ' : ''}
+											Large
+										</div>
+										<div
+											class="border cursor-pointer p-2"
+											on:click={() => (sectionItem.theme.glowingIntensity = 'xl')}
+										>
+											{sectionItem.theme.glowingIntensity === 'xl' ? '✅ ' : ''}
+											Huge
+										</div>
+									</div>
+								</div>
+							{/if}
+						</div>
 					</div>
 				{/if}
 			</div>
 		</div>
 
-		<div class="my-4">
+		<div class="_section">
+			<div class="font-semibold mb-2">Background</div>
+
+			{#if !sectionItem.bgImageUrl}
+				<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
+
+				<div class="flex items-center">
+					{#if sectionItem.theme.isOverrideColors}
+						<input
+							type="color"
+							id="head"
+							name="head"
+							class="mr-4"
+							bind:value={sectionItem.theme.backgroundColor}
+						/>
+					{:else}
+						<div
+							class="w-[30px] h-[30px] rounded-full mr-4"
+							style="background-color: {page.theme.backgroundColor};"
+						/>
+					{/if}
+					<div>
+						<input
+							bind:checked={sectionItem.theme.isOverrideColors}
+							class="mr-2"
+							type="checkbox"
+							on:change={() => {
+								if (!sectionItem.theme.backgroundColor) {
+									sectionItem.theme.backgroundColor = sectionItem.theme.backgroundColor;
+								}
+							}}
+						/>
+
+						Override color
+					</div>
+				</div>
+			{/if}
+
+			{#if !sectionItem.theme.isOverrideColors}
+				<div class="font-normal mt-4 text-sm opacity-70 mb-2">
+					Section background image or video
+				</div>
+
+				<FileInput isCanSearch class="w-full" theme="light" bind:url={sectionItem.bgImageUrl} />
+
+				{#if sectionItem.bgImageUrl}
+					<div class="flex text-sm mt-4 font-normal items-center">
+						<input
+							bind:checked={sectionItem.theme.isNotBgImageDimmed}
+							class="mr-2"
+							type="checkbox"
+						/>
+
+						Do not dim background image
+					</div>
+				{/if}
+
+				<div class="font-normal mt-4 text-sm opacity-70 mb-2">
+					Container background image or video
+				</div>
+
+				<FileInput
+					isCanSearch
+					class="w-full"
+					theme="light"
+					bind:url={sectionItem.containerBgImageUrl}
+				/>
+
+				{#if sectionItem.bgImageUrl}
+					<div class="flex text-sm mt-4 font-normal items-center">
+						<input
+							bind:checked={sectionItem.theme.isNotContainerBgImageDimmed}
+							class="mr-2"
+							type="checkbox"
+						/>
+
+						Do not dim background image
+					</div>
+				{/if}
+			{/if}
+		</div>
+
+		<!-- <div class="my-4">
 			<div class="text-sm mb-2">Background Image</div>
 
 			<FileInput
@@ -124,7 +292,7 @@
 				}}
 				bind:url={sectionItem.bgImageUrl}
 			/>
-		</div>
+		</div> -->
 
 		<button class="_button _primary _small mt-8 mb-2 w-full" on:click={close}>Save & Close</button>
 	</div>

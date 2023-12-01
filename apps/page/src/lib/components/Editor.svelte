@@ -28,7 +28,6 @@
 	import EditPost from 'lib/components/post/EditPost.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 
-	import RenderSection from '$lib/components/render/Section.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import PostPreview from 'lib/components/post/PostPreview.svelte';
 	import Modal from 'lib/components/Modal.svelte';
@@ -1795,53 +1794,41 @@
 												🚀 Upgrade
 											</button>
 
-											<!-- <button class="_small _primary">Upgrade</button> -->
-											<!-- {#if page.subscription}
-												🚀 To The Moon
-											{:else}
-												🔨 Build in Public
-											{/if} -->
-										</div>
-										<!-- {#if $sectionToEdit}
-										<div class="h-screen bg-white flex flex-col justify-center">
-											<RenderSection bind:section={$sectionToEdit} />
-										</div>
-									{/if} -->
-
-										{#if page}
-											{#if $postDraft}
-												<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
-											{:else if selectedTab === 'editor'}
-												<SitePreview
-													class="p-4"
-													isNoVars
-													isEmbed
-													noStickyHeader={true}
-													isNoBadge={true}
-													isEdit
-													bind:page
-												/>
-											{:else if selectedTab === 'database'}
-												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
-											{:else if selectedTab === 'analytics'}
-												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
-											{:else if selectedTab === 'messaging'}
-												<MessagingTab
-													bind:page
-													bind:trigger={selectedTrigger}
-													bind:chatRoom={selectedChatRoom}
-												/>
-											{:else if selectedTab === 'audience'}
-												<AudienceTab bind:page bind:selectedSubmission />
-											{:else if selectedTab === 'database'}
-												<DatabaseTab bind:page />
-											{:else if selectedTab === 'blog'}
-												<BlogTab bind:page bind:setPageAndDraft />
-											{:else if selectedTab === 'newsletter'}
-												<NewsletterTab bind:page />
+											{#if page}
+												{#if $postDraft}
+													<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
+												{:else if selectedTab === 'editor'}
+													<SitePreview
+														class="p-4"
+														isNoVars
+														isEmbed
+														noStickyHeader={true}
+														isNoBadge={true}
+														isEdit
+														bind:page
+													/>
+												{:else if selectedTab === 'database'}
+													<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
+												{:else if selectedTab === 'analytics'}
+													<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+												{:else if selectedTab === 'messaging'}
+													<MessagingTab
+														bind:page
+														bind:trigger={selectedTrigger}
+														bind:chatRoom={selectedChatRoom}
+													/>
+												{:else if selectedTab === 'audience'}
+													<AudienceTab bind:page bind:selectedSubmission />
+												{:else if selectedTab === 'database'}
+													<DatabaseTab bind:page />
+												{:else if selectedTab === 'blog'}
+													<BlogTab bind:page bind:setPageAndDraft />
+												{:else if selectedTab === 'newsletter'}
+													<NewsletterTab bind:page />
+												{/if}
 											{/if}
-										{/if}
-									</BrowserFrame>
+										</div></BrowserFrame
+									>
 								</div>
 							{/key}
 						{/if}

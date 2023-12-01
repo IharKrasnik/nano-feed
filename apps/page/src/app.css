@@ -24,13 +24,14 @@
 
 ._glowing {
 	position: relative;
+	z-index: 0;
 }
 
 ._glowing::before {
 	content: '';
 	position: absolute;
-	opacity: 0.11;
-	z-index: -1;
+	opacity: var(--blob-opacity, 0.11);
+	z-index: 0;
 
 	bottom: 30%;
 	right: 50%;
@@ -44,21 +45,30 @@
 	filter: blur(80px);
 
 	--page-edge: calc((100vw - 1280px) / 2);
-	--blobBg: var(--accent-color);
+
+	--blob-color: var(--accent-color);
 
 	background: radial-gradient(
 			400px circle at calc(100% - var(--page-edge) - 10%) 45%,
-			var(--blobBg),
+			var(--blob-color),
 			70%,
 			transparent
 		),
-		radial-gradient(600px circle at 50% 55%, var(--blobBg), 60%, transparent),
+		radial-gradient(600px circle at 50% 55%, var(--blob-color), 60%, transparent),
 		radial-gradient(
 			400px circle at calc(var(--page-edge) + 15%) 40%,
-			var(--blobBg),
+			var(--blob-color),
 			60%,
 			transparent
 		);
+}
+
+._glowing._override-glowing-color::before {
+	--blob-color: var(--glowing-color) !important;
+}
+
+._glowing._intensity {
+	--blob-opacity: var(--glowing-opacity) !important;
 }
 
 ._title {
@@ -527,7 +537,7 @@ button._wide {
 	border: 1px var(--text-color) solid;
 }
 
-.container-width {
+._container-width {
 	max-width: var(--container-width);
 }
 
