@@ -120,6 +120,8 @@
 	</div>
 {/if}
 
-<div class:hidden={!($currentUser && !$sveltePage.data.pageSlug && !$sectionToEdit)}>
-	<Dock activeIcon="page" />
+<div class:sm:hidden={!($currentUser && !$sveltePage.data.pageSlug && !$sectionToEdit)}>
+	<div class="hidden sm:block">
+		<Dock activeIcon="page" />
+	</div>
 </div>

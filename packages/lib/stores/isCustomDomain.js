@@ -8,9 +8,10 @@ if (browser) {
 	let currentDomain = getDomain(document.URL);
 
 	if (
-		currentDomain !== 'post.mmntm.build' &&
-		currentDomain !== 'mmntm.blog' &&
-		!currentDomain.includes('localhost')
+		(currentDomain !== 'post.mmntm.build' &&
+			currentDomain !== 'mmntm.blog' &&
+			!currentDomain.includes('localhost'),
+		!currentDomain.includes('192.168'))
 	) {
 		isCustomDomainStore.set(currentDomain);
 	}

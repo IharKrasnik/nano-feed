@@ -30,7 +30,8 @@ export async function load({ url, params, session, cookies }) {
 	if (
 		currentDomain !== 'post.mmntm.build' &&
 		currentDomain !== 'mmntm.blog' &&
-		!currentDomain.includes('localhost')
+		!currentDomain.includes('localhost') &&
+		!currentDomain.includes('192.168')
 	) {
 		if (blogSlug && !postSlug) {
 			postSlug = blogSlug;

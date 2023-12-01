@@ -782,9 +782,10 @@
 			<div class="flex relative ml-4">
 				<!-- EDITOR-->
 				<div
-					class="_editor fixed mt-[70px] sm:min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white"
+					class="_editor fixed left-0 sm:left-auto w-screen min:w-auto sm:min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white"
+					style="min-width: 100vw;"
 				>
-					<div class="fixed top-0 z-10 sm:w-[426px] mb-[70px]  bg-white">
+					<div class="fixed top-0 w-full z-10 sm:w-[426px] mb-[70px] bg-white px-4">
 						<div
 							class="flex items-center justify-between w-full py-4 pr-4"
 							class:justify-between={!$currentUser}
@@ -863,12 +864,12 @@
 					</div>
 
 					{#if !page._id}
-						<div class="mt-8">Launch your landing page in seconds 👇</div>
+						<div class="mt-8 px-4">Launch your landing page in seconds 👇</div>
 					{:else if page.sections}
 						{addGuids(page.sections) && ''}
 					{/if}
 
-					<div class="sm:w-[426px] px-4 pl-0 mr-4" style="max-width: 100vw;">
+					<div class="sm:w-[426px] px-4 mr-4 mt-[70px]" style="max-width: 100vw;">
 						{#if $sectionToEdit}
 							<div
 								class="bg-white p-4 pl-0 z-40 fixed pb-32 h-screen overflow-y-scroll sm:w-[426px]"
@@ -1601,289 +1602,252 @@
 
 				<!-- PREVIEW -->
 
-				{#if page.name || page.title}
-					<div
-						class="relative w-screen sm:w-full ml-[100%] sm:ml-[426px] _preview h-full p-4 mx-4 2xl:pl-[75px]"
-						in:fade={{ delay: 150 }}
-					>
-						<!-- {#if conversions}
-							<div
-								class="flex items-center justify-center mt-1 absolute left-[160px] top-[20px] cursor-pointer"
-								style="z-index: 10;"
-								on:click={() => {
-									selectedTab = 'analytics';
-								}}
-							>
-								{#if page.totalUniqueClicksCount}
-									<div
-										class="flex items-center mr-4 opacity-90 text-center px-4 rounded-xl "
-										style="background-color: {getConversionColor(
-											conversions.clicks
-										)}; color:white; left:50%;"
-										use:tooltip
-										title="Clicks conversion rate. Target 10+%"
-									>
-										<FeatherIcon name="mouse-pointer" theme="dark" class="mr-1" size="15px" />
-										{conversions.clicks.toFixed(2)}%
+				<div class="hidden sm:block">
+					{#if page.name || page.title}
+						<div
+							class="relative w-screen sm:w-full ml-[100%] sm:ml-[426px] _preview h-full p-4 mx-4 2xl:pl-[75px]"
+							in:fade={{ delay: 150 }}
+						>
+							{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
+								<div class="sticky top-[20px] w-full z-50 h-[0px]">
+									<div class="mx-auto">
+										{#if isJustCreated || isJustPaid}
+											<ConfettiExplosion particleCount={200} force={0.3} />
+										{/if}
 									</div>
-								{/if}
 
-								{#if page.totalSignupsCount}
-									<div
-										class="flex items-center mr-4 opacity-80 text-center px-4 rounded-xl"
-										style="background-color: {getConversionColor(
-											conversions.forms
-										)}; color:white; left:50%;"
-										use:tooltip
-										title="Form conversion rate. Target 10+%"
-									>
-										<FeatherIcon name="clipboard" theme="dark" class="mr-1" size="15px" />
-										{conversions.forms.toFixed(2)}%
-									</div>
-								{/if}
-							</div>
-						{/if} -->
-
-						{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
-							<div class="sticky top-[20px] w-full z-50 h-[0px]">
-								<div class="mx-auto">
-									{#if isJustCreated || isJustPaid}
-										<ConfettiExplosion particleCount={200} force={0.3} />
-									{/if}
-								</div>
-
-								<div class="max-w-[400px] mx-auto">
-									<div
-										class="relative _published-label flex justify-between items-center mt-4"
-										style="padding: 6px 10px;"
-									>
-										<a
-											href={page.domains?.length &&
-											page.domains.filter((d) => d.isConfigured).length
-												? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
-												: `${PAGE_URL}/${page.slug}`}
-											class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
-											style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
-											target="_blank"
-											rel="noreferrer"
+									<div class="max-w-[400px] mx-auto">
+										<div
+											class="relative _published-label flex justify-between items-center mt-4"
+											style="padding: 6px 10px;"
 										>
-											<div
-												class="mr-2 z-20"
-												use:tooltip
-												title={page.isDirty ? 'Pending Changes' : 'Published'}
+											<a
+												href={page.domains?.length &&
+												page.domains.filter((d) => d.isConfigured).length
+													? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
+													: `${PAGE_URL}/${page.slug}`}
+												class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
+												style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
+												target="_blank"
+												rel="noreferrer"
 											>
-												{#if !page.isDirty}
-													✅
-												{:else}
-													🌝
-												{/if}
-											</div>
+												<div
+													class="mr-2 z-20"
+													use:tooltip
+													title={page.isDirty ? 'Pending Changes' : 'Published'}
+												>
+													{#if !page.isDirty}
+														✅
+													{:else}
+														🌝
+													{/if}
+												</div>
 
-											<div
-												class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
-											>
-												{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
-													{page.domains.filter((d) => d.isConfigured)[0].url}
-												{:else}
-													/{page.slug}
-												{/if}
-											</div>
-										</a>
+												<div
+													class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
+												>
+													{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
+														{page.domains.filter((d) => d.isConfigured)[0].url}
+													{:else}
+														/{page.slug}
+													{/if}
+												</div>
+											</a>
 
-										{#if page.isDirty}
-											<div transition:fly={{ x: 50, duration: 150 }}>
-												<Button
-													class="bg-yellow-500 right-0 _primary flex justify-center w-full"
-													onClick={publishPage}
-													style="margin-left: 78px;
+											{#if page.isDirty}
+												<div transition:fly={{ x: 50, duration: 150 }}>
+													<Button
+														class="bg-yellow-500 right-0 _primary flex justify-center w-full"
+														onClick={publishPage}
+														style="margin-left: 78px;
 										border-radius: 30px;
 										padding: 4px 45px;
 										right: 3px;
 										width: auto;
 										margin: -4px -10px -4px 0px;
 										"
-												>
-													Publish
-												</Button>
-											</div>
-										{/if}
+													>
+														Publish
+													</Button>
+												</div>
+											{/if}
+										</div>
 									</div>
 								</div>
-							</div>
-						{/if}
+							{/if}
 
-						<!-- {#if page}
+							<!-- {#if page}
 						<div class="w-full flex justify-center">
 							<a href="{PAGE_URL}/explore">Explore</a>
 						</div>
 					{/if} -->
-						<!-- frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'} -->
+							<!-- frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'} -->
 
-						{#if page}
-							{#key page._id}
-								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
-									<BrowserFrame
-										class="max-h-screen overflow-y-scroll"
-										links={[
-											{
-												action: () => {
-													selectedTab = 'editor';
+							{#if page}
+								{#key page._id}
+									<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
+										<BrowserFrame
+											class="max-h-screen overflow-y-scroll"
+											links={[
+												{
+													action: () => {
+														selectedTab = 'editor';
+													},
+													title: 'Editor',
+													featherIcon: 'file-text'
 												},
-												title: 'Editor',
-												featherIcon: 'file-text'
-											},
-											{
-												action: () => {
-													selectedTab = 'analytics';
-													selectedCustomer = null;
+												{
+													action: () => {
+														selectedTab = 'analytics';
+														selectedCustomer = null;
+													},
+													title: `Customers`,
+													featherIcon: 'activity'
 												},
-												title: `Customers`,
-												featherIcon: 'activity'
-											},
-											{
-												action: () => {
-													selectedTab = 'audience';
-													selectedSubmission = null;
+												{
+													action: () => {
+														selectedTab = 'audience';
+														selectedSubmission = null;
+													},
+													title: `Submissions`,
+													featherIcon: 'check-square'
 												},
-												title: `Submissions`,
-												featherIcon: 'check-square'
-											},
-											{
-												action: () => {
-													selectedTab = 'messaging';
-													selectedTrigger = null;
-													selectedChatRoom = null;
+												{
+													action: () => {
+														selectedTab = 'messaging';
+														selectedTrigger = null;
+														selectedChatRoom = null;
+													},
+													title: 'Messaging',
+													featherIcon: 'message-square'
 												},
-												title: 'Messaging',
-												featherIcon: 'message-square'
-											},
-											{
-												action: () => {
-													selectedTab = 'database';
+												{
+													action: () => {
+														selectedTab = 'database';
+													},
+													title: 'Databases',
+													featherIcon: 'database'
 												},
-												title: 'Databases',
-												featherIcon: 'database'
-											},
-											{
-												action: () => {
-													selectedTab = 'blog';
+												{
+													action: () => {
+														selectedTab = 'blog';
+													},
+													title: 'Blog',
+													featherIcon: 'book-open'
 												},
-												title: 'Blog',
-												featherIcon: 'book-open'
-											},
-											{
-												action: () => {
-													selectedTab = 'newsletter';
-												},
-												title: 'Newsletter',
-												featherIcon: 'mail'
-											}
-										]}
-										frameBgColor="#494949"
-									>
-										<div class="flex cursor-pointer" slot="header">
-											<div
-												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100 flex items-center"
-												use:tooltip
-												title="Free plan includes 300 subscribers"
-											>
-												<FeatherIcon class="mr-2" color="#fff" name="clipboard" size="15" />
-												{page.totalSignupsCount || 0}/300
+												{
+													action: () => {
+														selectedTab = 'newsletter';
+													},
+													title: 'Newsletter',
+													featherIcon: 'mail'
+												}
+											]}
+											frameBgColor="#494949"
+										>
+											<div class="flex cursor-pointer" slot="header">
+												<div
+													class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100 flex items-center"
+													use:tooltip
+													title="Free plan includes 300 subscribers"
+												>
+													<FeatherIcon class="mr-2" color="#fff" name="clipboard" size="15" />
+													{page.totalSignupsCount || 0}/300
+												</div>
+
+												<button
+													class="px-4 mr-4 text-white bg-green-700"
+													style="padding-top: 0px; padding-bottom: 0px;"
+													on:click={subscribe}
+													use:tooltip
+													title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
+												>
+													🚀 Upgrade
+												</button>
 											</div>
 
-											<button
-												class="px-4 mr-4 text-white bg-green-700"
-												style="padding-top: 0px; padding-bottom: 0px;"
-												on:click={subscribe}
-												use:tooltip
-												title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
-											>
-												🚀 Upgrade
-											</button>
-										</div>
-
-										{#if page}
-											{#if $postDraft}
-												<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
-											{:else if selectedTab === 'editor'}
-												<SitePreview
-													class="p-4"
-													isNoVars
-													isEmbed
-													noStickyHeader={true}
-													isNoBadge={true}
-													isEdit
-													bind:page
-												/>
-											{:else if selectedTab === 'database'}
-												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
-											{:else if selectedTab === 'analytics'}
-												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
-											{:else if selectedTab === 'messaging'}
-												<MessagingTab
-													bind:page
-													bind:trigger={selectedTrigger}
-													bind:chatRoom={selectedChatRoom}
-												/>
-											{:else if selectedTab === 'audience'}
-												<AudienceTab bind:page bind:selectedSubmission />
-											{:else if selectedTab === 'database'}
-												<DatabaseTab bind:page />
-											{:else if selectedTab === 'blog'}
-												<BlogTab bind:page bind:setPageAndDraft />
-											{:else if selectedTab === 'newsletter'}
-												<NewsletterTab bind:page />
+											{#if page}
+												{#if $postDraft}
+													<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
+												{:else if selectedTab === 'editor'}
+													<SitePreview
+														class="p-4"
+														isNoVars
+														isEmbed
+														noStickyHeader={true}
+														isNoBadge={true}
+														isEdit
+														bind:page
+													/>
+												{:else if selectedTab === 'database'}
+													<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
+												{:else if selectedTab === 'analytics'}
+													<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+												{:else if selectedTab === 'messaging'}
+													<MessagingTab
+														bind:page
+														bind:trigger={selectedTrigger}
+														bind:chatRoom={selectedChatRoom}
+													/>
+												{:else if selectedTab === 'audience'}
+													<AudienceTab bind:page bind:selectedSubmission />
+												{:else if selectedTab === 'database'}
+													<DatabaseTab bind:page />
+												{:else if selectedTab === 'blog'}
+													<BlogTab bind:page bind:setPageAndDraft />
+												{:else if selectedTab === 'newsletter'}
+													<NewsletterTab bind:page />
+												{/if}
 											{/if}
-										{/if}
-									</BrowserFrame>
-								</div>
-							{/key}
-						{/if}
+										</BrowserFrame>
+									</div>
+								{/key}
+							{/if}
 
-						{#if page._id && !$sectionToEdit}
-							<MomentumWidget bind:page />
-						{/if}
-					</div>
-				{:else}
-					<div
-						class="w-full h-screen ml-[100%] sm:ml-[426px] self-stretch flex-col flex items-center justify-center"
-						in:slide
-					>
-						<svg
-							width="190"
-							height="114"
-							viewBox="0 0 190 114"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
+							{#if page._id && !$sectionToEdit}
+								<MomentumWidget bind:page />
+							{/if}
+						</div>
+					{:else}
+						<div
+							class="w-full h-screen sm:ml-[426px] self-stretch flex-col flex items-center justify-center"
+							in:slide
 						>
-							<rect width="190" height="114" rx="7" fill="#F5F5F5" />
-							<path
-								d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
-								stroke="#828282"
-								stroke-width="3"
-								stroke-linecap="round"
-							/>
-							<path
-								d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
-								stroke="#828282"
-								stroke-width="3"
-								stroke-linecap="round"
-							/>
-							<line
-								x1="89.5"
-								y1="84.5"
-								x2="100.5"
-								y2="84.5"
-								stroke="#828282"
-								stroke-width="3"
-								stroke-linecap="round"
-							/>
-						</svg>
+							<svg
+								width="190"
+								height="114"
+								viewBox="0 0 190 114"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<rect width="190" height="114" rx="7" fill="#F5F5F5" />
+								<path
+									d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
+									stroke="#828282"
+									stroke-width="3"
+									stroke-linecap="round"
+								/>
+								<path
+									d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
+									stroke="#828282"
+									stroke-width="3"
+									stroke-linecap="round"
+								/>
+								<line
+									x1="89.5"
+									y1="84.5"
+									x2="100.5"
+									y2="84.5"
+									stroke="#828282"
+									stroke-width="3"
+									stroke-linecap="round"
+								/>
+							</svg>
 
-						<div class="text-[#828282] mt-4">Your design will appear here</div>
-					</div>
-				{/if}
-
+							<div class="text-[#828282] mt-4">Your design will appear here</div>
+						</div>
+					{/if}
+				</div>
 				<!-- END PREVIEW -->
 			</div>
 		</div>

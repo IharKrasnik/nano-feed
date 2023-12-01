@@ -13,7 +13,9 @@ export async function load({ url, params, session, cookies }) {
 	let currentDomain = getDomain(url.href);
 
 	let pageSlug =
-		currentDomain.includes('localhost') || currentDomain.includes('ide.momentum.page')
+		currentDomain.includes('localhost') ||
+		currentDomain.includes('192.168') ||
+		currentDomain.includes('ide.momentum.page')
 			? url.searchParams.get('pageSlug')
 			: currentDomain;
 

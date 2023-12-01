@@ -5,6 +5,7 @@ import fs from 'fs';
 const config = {
 	plugins: [sveltekit(), rawFonts(['.ttf'])],
 	server: {
+		host: true,
 		port: process.env.PORT || 5177
 	},
 	build: {

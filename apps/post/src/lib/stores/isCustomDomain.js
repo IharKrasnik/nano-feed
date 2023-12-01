@@ -10,7 +10,8 @@ if (browser) {
 	if (
 		currentDomain !== 'post.mmntm.build' &&
 		currentDomain !== 'mmntm.blog' &&
-		!currentDomain.includes('localhost')
+		!currentDomain.includes('localhost') &&
+		!currentDomain.includes('192.168')
 	) {
 		isCustomDomainStore.set(currentDomain);
 	}

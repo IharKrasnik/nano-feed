@@ -16,7 +16,8 @@ export default async ({ url, cookies }, pageName = 'Momentum') => {
 				if (url.href.includes('mmntm.build')) {
 					cookies.set('access_token', accessToken, { httpOnly: false, domain: '.mmntm.build' });
 				} else {
-					cookies.set('access_token', accessToken, { httpOnly: false });
+					console.log('setting cookie', accessToken);
+					cookies.set('access_token', accessToken, { httpOnly: false, secure: false });
 				}
 			} catch (err) {
 				console.log('err', err);
