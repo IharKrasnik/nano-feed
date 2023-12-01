@@ -297,7 +297,7 @@
 				: `${
 						section.items?.length
 							? `${isFooter ? 'p-0' : 'px-4 xl:px-0 py-8 sm:py-16'}`
-							: 'p-4 sm:p-8 sm:py-32'
+							: 'px-4 xl:px-0 py-8 sm:py-16'
 				  }`}"
 			style="z-index: 10; {style || ''}"
 		>

@@ -38,7 +38,7 @@
 	}
 </script>
 
-<div class="relative">
+<div class="relative" style="z-index: 30;">
 	{#if hero.theme?.bgPattern === 'cursors'}
 		<ComaDragons />
 	{/if}
