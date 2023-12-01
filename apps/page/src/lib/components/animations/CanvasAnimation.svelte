@@ -7,7 +7,6 @@
 
 	onMount(() => {
 		window.backgroundCanvas = canvasEl;
-		debugger;
 		eval(animationCode);
 	});
 </script>

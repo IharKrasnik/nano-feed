@@ -778,11 +778,13 @@
 		<SignupForm />
 	{/if} -->
 
-		<div class="xl:max-w-[1600px] mx-auto relative px-16 sm:px-0">
+		<div class="xl:max-w-[1600px] mx-auto relative ">
 			<div class="flex relative ml-4">
 				<!-- EDITOR-->
-				<div class="_editor fixed mt-[70px] min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white">
-					<div class="fixed top-0 z-10 w-[426px] mb-[70px]  bg-white">
+				<div
+					class="_editor fixed mt-[70px] sm:min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white"
+				>
+					<div class="fixed top-0 z-10 sm:w-[426px] mb-[70px]  bg-white">
 						<div
 							class="flex items-center justify-between w-full py-4 pr-4"
 							class:justify-between={!$currentUser}
@@ -866,9 +868,11 @@
 						{addGuids(page.sections) && ''}
 					{/if}
 
-					<div class="w-[426px] px-4 pl-0 mr-4">
+					<div class="sm:w-[426px] px-4 pl-0 mr-4" style="max-width: 100vw;">
 						{#if $sectionToEdit}
-							<div class="bg-white p-4 pl-0 z-40 fixed pb-32 h-screen overflow-y-scroll w-[426px]">
+							<div
+								class="bg-white p-4 pl-0 z-40 fixed pb-32 h-screen overflow-y-scroll sm:w-[426px]"
+							>
 								<div
 									class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 									on:click={() => {
@@ -903,7 +907,7 @@
 
 						{#if $sectionToEdit}
 							<div
-								class="bg-white p-4 pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll w-[426px]"
+								class="bg-white p-4 pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll sm:w-[426px]"
 							>
 								<div
 									class="flex items-center cursor-pointer text-[#8B786D] mb-4"
@@ -1333,7 +1337,7 @@
 
 									{#if page._id}
 										<div
-											class="bg-white rounded-xl w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
+											class="bg-white rounded-xl sm:w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
 										>
 											<div class="flex items-center">
 												<div class="font-bold">🧱 Sections</div>
@@ -1598,7 +1602,10 @@
 				<!-- PREVIEW -->
 
 				{#if page.name || page.title}
-					<div class="relative ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]" in:fade={{ delay: 150 }}>
+					<div
+						class="relative ml-[100%] sm:ml-[426px] _preview p-4 mx-4 2xl:pl-[75px]"
+						in:fade={{ delay: 150 }}
+					>
 						<!-- {#if conversions}
 							<div
 								class="flex items-center justify-center mt-1 absolute left-[160px] top-[20px] cursor-pointer"
@@ -1839,7 +1846,7 @@
 					</div>
 				{:else}
 					<div
-						class="w-full h-screen ml-[426px] self-stretch flex-col flex items-center justify-center"
+						class="w-full h-screen ml-[100%] sm:ml-[426px] self-stretch flex-col flex items-center justify-center"
 						in:slide
 					>
 						<svg
