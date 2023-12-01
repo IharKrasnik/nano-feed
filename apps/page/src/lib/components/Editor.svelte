@@ -1708,15 +1708,23 @@ See you!
 										frameBgColor="#494949"
 									>
 										<div class="flex cursor-pointer" slot="header">
-											<div
-												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100"
-												use:tooltip
-												title="{page.subscription
-													? 'You plan (To The Moon)'
-													: 'Free plan'} includes 300 subscribers"
-											>
-												{page.totalSignupsCount || 0}/300
-											</div>
+											{#if page.subscription}
+												<div
+													class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100"
+													use:tooltip
+													title="Your plan (To The Moon) includes up to 300 subscribers"
+												>
+													🚀 {page.totalSignupsCount || 0}/300
+												</div>
+											{:else}
+												<div
+													class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100"
+													use:tooltip
+													title="Free plan includes up to 100 subscribers"
+												>
+													{page.totalSignupsCount || 0}/100
+												</div>
+											{/if}
 
 											{#if !page.subscription}
 												<button
