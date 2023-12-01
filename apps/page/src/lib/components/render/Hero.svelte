@@ -217,7 +217,7 @@
 		</div>
 	</div>
 {:else}
-	<div class="my-[70px]" />
+	<div class="my-[60px]" />
 {/if}
 
 <style>
