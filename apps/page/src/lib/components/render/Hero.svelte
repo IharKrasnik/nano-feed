@@ -123,6 +123,12 @@
 										{hero.theme?.isLeft ? 'sm:text-left' : ''}"
 					>
 						{#if isMounted}
+							{#if hero.embedAboveHtml}
+								<div class="mb-4" in:fly={{ delay: 300, y: -25, duration: 600 }}>
+									{@html hero.embedAboveHtml}
+								</div>
+							{/if}
+
 							<h1
 								class="{page.theme?.isGradientTitle
 									? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'

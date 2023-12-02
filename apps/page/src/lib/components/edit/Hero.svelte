@@ -236,6 +236,18 @@
 							</div> -->
 						</div>
 
+						<!-- <a
+							href="https://www.producthunt.com/posts/momentum-page?utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-momentum&#0045;page"
+							target="_blank"
+							><img
+								src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=392337&theme=light&period=monthly&topic_id=164"
+								alt="Momentum&#0032;Page - Launch&#0032;your&#0032;website&#0032;in&#0032;seconds&#0044;&#0032;get&#0032;users&#0032;in&#0032;minutes | Product Hunt"
+								style="width: 250px; height: 54px;"
+								width="250"
+								height="54"
+							/></a
+						> -->
+
 						<div class="_section">
 							<div class="font-semibold mb-2">Background</div>
 
@@ -308,9 +320,6 @@
 								<div class="flex shrink-0 font-normal items-center">
 									<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
 								</div>
-								<div class="shrink-0">
-									<input type="checkbox" bind:checked={hero.theme.isColorsReversed} /> Reverse Colors
-								</div>
 							</div>
 						{/if}
 
@@ -372,6 +381,17 @@
 									>
 								{/each}
 							</div>
+						</div>
+
+						<div class="_section">
+							<div class="font-semibold">Embed Component (HTML)</div>
+							<div class="text-sm  mb-2">The Custom component to show above the title</div>
+
+							<textarea
+								class="w-full"
+								placeholder="<div>Hello World</div>"
+								bind:value={hero.embedAboveHtml}
+							/>
 						</div>
 
 						<hr class="my-8 opacity-80" />
