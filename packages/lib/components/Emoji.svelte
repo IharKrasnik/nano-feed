@@ -22,7 +22,7 @@
 			/>
 		{/key}
 	{:else if emoji?.startsWith('feather:')}
-		<FeatherIcon name={emoji.replace('feather:', '')} {color} />
+		<FeatherIcon name={emoji.replace('feather:', '')} {color} size={width} />
 	{:else if emoji?.startsWith('<svg')}
 		<div
 			class="_svg inline-block"

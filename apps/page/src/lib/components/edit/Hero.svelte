@@ -149,6 +149,8 @@
 			label: 'None'
 		}
 	];
+
+	let isShowKeyFeatures = !!hero.keyFeaturesStr;
 </script>
 
 {#if isSelectBackgroundModalShown}
@@ -442,6 +444,29 @@
 			<div class="text-sm opacity-90 my-4">
 				Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word or two.
 			</div>
+		</div>
+
+		<div class="_section">
+			<div class="flex items-center justify-between">
+				<div class="font-bold text-sm">Key Features</div>
+
+				{#if !hero.keyFeaturesStr && !isShowKeyFeatures}
+					<div
+						class="cursor-pointer"
+						on:click={() => {
+							isShowKeyFeatures = true;
+						}}
+					>
+						Add
+					</div>
+				{/if}
+			</div>
+			{#if isShowKeyFeatures}
+				<div class="mt-4">
+					<textarea class="w-full" bind:value={hero.keyFeaturesStr} />
+					<div class="text-sm opacity-70">Separate features with a new line</div>
+				</div>
+			{/if}
 		</div>
 
 		<div class="_section">

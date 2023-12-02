@@ -367,7 +367,7 @@
 								: 'fixed top-0 left-0'} _header backdrop-blur-lg _border-b-theme"
 						>
 							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
-								<div class="flex  py-4 sm:py-0">
+								<div class="flex w-full py-4 sm:py-0">
 									<a
 										class="flex items-center shrink-0 _logo"
 										href="/"
@@ -398,7 +398,7 @@
 
 											{#if page.theme?.isShowNameWithLogo}
 												<span
-													class="font-semibold text-base {page.theme?.heroBgImage
+													class="font-medium text-base {page.theme?.heroBgImage
 														? 'light-colors'
 														: ''}"
 												>
@@ -416,7 +416,7 @@
 									</a>
 
 									<div
-										class="hidden ml-8 sm:flex items-center justify-center text-sm py-1 gap-4"
+										class="hidden ml-8 sm:flex items-center justify-center text-sm py-1 gap-4 w-full"
 										style="z-index: 50"
 									>
 										{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}
@@ -501,7 +501,7 @@
 								<div class="flex flex-col mt-8">
 									{#each (page.subPages || page.parentPage?.subPages || []).filter((sp) => !sp.slug.includes('/')) as subPage}
 										<a class="block  py-4 border-b border-white/20" href="/{subPage.slug}"
-											>{subPage.name} {subPage.slug}</a
+											>{subPage.name}</a
 										>
 									{/each}
 								</div>

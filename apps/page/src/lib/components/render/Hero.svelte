@@ -2,11 +2,12 @@
 	import _ from 'lodash';
 
 	import { onMount } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fly, fade } from 'svelte/transition';
 	import RenderInteractiveOptions from '$lib/components/render/InteractiveOptions.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderUrlWithBackground from 'lib/components/RenderUrlWithBackground.svelte';
 	import RenderArticleHeader from '$lib/components/render/ArticleHeader.svelte';
+	import Emoji from 'lib/components/Emoji.svelte';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
 	import CanvasAnimation from '$lib/components/animations/CanvasAnimation.svelte';
@@ -159,6 +160,23 @@
 							>
 								{@html hero.subtitle}
 							</h2>
+						{/if}
+						{#if hero.keyFeaturesStr}
+							<div class="my-8" in:fade={{ delay: 800 }}>
+								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
+									<div class="flex items-center  mb-2">
+										<div
+											class="mr-2 rounded-full p-1"
+											style="background-color: var(--accent-color);"
+										>
+											<Emoji color={page.theme?.buttonColor} emoji="feather:check" width={15} />
+										</div>
+										<div>
+											{keyFeature}
+										</div>
+									</div>
+								{/each}
+							</div>
 						{/if}
 						{#if hero.interactiveRenderType}
 							<RenderInteractiveOptions

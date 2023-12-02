@@ -292,7 +292,13 @@
 			<WaveIndicator project={{ page }} class="mt-4 _alternative" />
 		{:else if sectionItem.interactiveRenderType === 'email'}
 			{#if isHeader}
-				<button type="submit">{sectionItem.callToActionText || 'Subscribe'}</button>
+				<button
+					class="shrink-0 ring-1"
+					style="--tw-ring-color: {(page.parentPage?.theme || page.theme).theme === 'dark'
+						? 'var(--accent-color-lighter)'
+						: 'var(--accent-color-darker)'};"
+					type="submit">{sectionItem.callToActionText || 'Subscribe'}</button
+				>
 			{:else if $currentCustomer.email && !isResetEmail}
 				<div class={clazz?.includes('mx-auto') ? 'mx-auto' : ''}>
 					<div>👏 Thank you!</div>
@@ -315,9 +321,18 @@
 						<input
 							placeholder="myemail@gmail.com"
 							bind:value={emailAddress}
-							class="_input _email-input w-full"
+							class="_input _email-input w-full ring-2 ring-white/20"
+							style="background: var(--section-background-color) !important;
+							--tw-ring-color: {(page.parentPage?.theme || page.theme).theme === 'dark'
+								? 'var(--accent-color-lighter)'
+								: 'var(--accent-color-darker)'};"
 						/>
-						<button type="submit" class="_input_button _wide text-center sm:absolute"
+						<button
+							type="submit"
+							class="_input_button _wide text-center sm:absolute ring-2"
+							style="--tw-ring-color: {(page.parentPage?.theme || page.theme).theme === 'dark'
+								? 'var(--accent-color-lighter)'
+								: 'var(--accent-color-darker)'};"
 							>{sectionItem.callToActionText || 'Subscribe'}</button
 						>
 					</form>
@@ -452,6 +467,10 @@
 {/if}
 
 <style>
+	._input:focus {
+		outline-color: var(--accent-color);
+	}
+
 	button._ishuge {
 		font-size: 20px;
 		padding: 16px 32px;

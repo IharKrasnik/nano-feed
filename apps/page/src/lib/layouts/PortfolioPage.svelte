@@ -193,7 +193,9 @@
 
 			<hr
 				class="border w-full"
-				style="border-color: var(--accent-color-lighter); margin-top: -16px;"
+				style="border-color: {(page.parentPage?.theme || page.theme).theme === 'dark'
+					? 'var(--accent-color-lighter-lg)'
+					: 'var(--accent-color-darker)'}; margin-top: -16px;"
 			/>
 
 			<div class="relative z-10 container _container-width mx-auto">

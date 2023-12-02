@@ -863,13 +863,13 @@
 						</div>
 					</div>
 
-					{#if !page._id}
-						<div class="mt-8 px-4">Launch your landing page in seconds 👇</div>
-					{:else if page.sections}
-						{addGuids(page.sections) && ''}
-					{/if}
-
 					<div class="sm:w-[426px] px-4 mr-4 mt-[70px]" style="max-width: 100vw;">
+						{#if !page._id}
+							<div class="pt-8 px-4">Launch your landing page in seconds 👇</div>
+						{:else if page.sections}
+							{addGuids(page.sections) && ''}
+						{/if}
+
 						{#if $sectionToEdit}
 							<div
 								class="bg-white p-4 pl-0 z-40 fixed pb-32 h-screen overflow-y-scroll sm:w-[426px]"

@@ -731,7 +731,7 @@
 											<div
 												class="{section.renderType === 'article'
 													? 'sm:px-8'
-													: '_section-item _borderless p-4 sm:p-8'}
+													: ' _borderless p-4 sm:p-8'}
 													{section.renderType === 'changelog' ? '_transparent _no-padding' : ''}
 													
 													col-span-1"

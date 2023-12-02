@@ -79,7 +79,8 @@ export default (page) => {
 	styles['accent-color-darker-lg'] = darken(styles['accent-color'], 0.8);
 	styles['accent-color-darker-xl'] = darken(styles['accent-color'], 0.9);
 	styles['accent-color-darker-3xl'] = darken(styles['accent-color'], 0.99);
-	styles['accent-color-lighter'] = lighten(styles['accent-color'], 0.6);
+	styles['accent-color-lighter'] = lighten(styles['accent-color'], 0.3);
+	styles['accent-color-lighter-lg'] = lighten(styles['accent-color'], 0.6);
 
 	let cssVarStyles = Object.entries(styles)
 		.map(([key, value]) => `--${key}:${value}`)
