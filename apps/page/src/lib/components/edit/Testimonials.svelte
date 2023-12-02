@@ -23,12 +23,9 @@
 	<div class="_section">
 		<div class="flex justify-between items-center">
 			<div class="_title" style="margin: 0;">Testimonials</div>
-
-			{#if !section.items?.length}
-				<div class="text-right w-full">
-					<a class="cursor-pointer text-[#8B786D]" on:click={addNewTestimonial}>Add Testimonial</a>
-				</div>
-			{/if}
+			<div>
+				✩✩✩✩✩✩ <input type="checkbox" bind:checked={section.isShowStars} />
+			</div>
 		</div>
 
 		{#each section.items || [] as item}
@@ -62,11 +59,9 @@
 			<hr class="my-4 border-[#8B786D] opacity-30" />
 		{/each}
 
-		{#if section.items?.length > 0}
-			<a
-				class="w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
-				on:click={addNewTestimonial}>Add Testimonial</a
-			>
-		{/if}
+		<a
+			class="w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
+			on:click={addNewTestimonial}>Add Testimonial</a
+		>
 	</div>
 {/if}

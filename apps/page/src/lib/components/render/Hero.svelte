@@ -168,7 +168,7 @@
 							</h2>
 						{/if}
 						{#if hero.keyFeaturesStr}
-							<div class="my-8" in:fade={{ delay: 800 }}>
+							<div class="my-8" in:fade={{ delay: 300, duration: 600 }}>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center  mb-2">
 										<div
