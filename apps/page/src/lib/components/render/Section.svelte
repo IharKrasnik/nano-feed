@@ -438,7 +438,7 @@
 			{:else if section.renderType === 'faq'}
 				<RenderFAQ bind:section bind:page bind:isEdit />
 			{:else if section.renderType === 'testimonials'}
-				<RenderTestimonials bind:section />
+				<RenderTestimonials bind:page bind:section />
 			{:else if section.collectionType}
 				<RenderMomentumCollection bind:section bind:page bind:themeStyles bind:isEdit />
 			{:else if section.type === 'momentum_feed'}

@@ -1,6 +1,5 @@
 <script>
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
-	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
 	import RenderMomentumFeed from '$lib/components/render/MomentumFeed.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
