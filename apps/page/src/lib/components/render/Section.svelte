@@ -45,7 +45,7 @@
 	export let style = null;
 
 	const headerTextStyle = (item) => {
-		if (item.isHugeTitle) {
+		if (item.theme?.isHugeTitle) {
 			let defaultSize = 'text-3xl sm:text-4xl';
 			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
 		}
@@ -327,7 +327,7 @@
 			{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
 				<div
 					class="_section_titles relative w-full {page.theme.isTitlesLeft ||
-					section.isTitleLeft ||
+					section.theme?.isTitleLeft ||
 					section.renderType === 'article' ||
 					section.renderType === 'changelog'
 						? 'sm:text-left'
@@ -337,8 +337,8 @@
 				>
 					{#if section.emoji}
 						<div
-							class="{emojiStyle[1]} {page.theme?.isTitlesLeft || section.isTitleLeft
-								? `absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
+							class="{emojiStyle[1]} {page.theme?.isTitlesLeft || section.theme?.isTitleLeft
+								? `sm:absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
 								: ''} {page.theme?.isTitlesHuge ? 'text-[70px]' : ''}"
 						>
 							<Emoji color={'white'} bind:emoji={section.emoji} />
@@ -354,10 +354,10 @@
 					<div class="mb-8">
 						{#if section.title}
 							<h2
-								class="_title text-3xl {page.theme.isTitlesHuge || section.isHugeTitle
+								class="_title text-3xl {page.theme.isTitlesHuge || section.theme?.isHugeTitle
 									? 'sm:text-6xl font-medium'
 									: 'sm:text-4xl font-semibold'} mb-4 {page.theme.isTitlesLeft ||
-								section.isTitleLeft ||
+								section.theme?.isTitleLeft ||
 								section.renderType === 'article'
 									? 'sm:max-w-[712px]'
 									: 'sm:max-w-[768px] sm:mx-auto'}"
@@ -365,15 +365,14 @@
 								<ContentEditableIf class="mb-2" bind:innerHTML={section.title} condition={isEdit} />
 							</h2>
 						{/if}
-
 						{#if section.description}
 							<h3
-								class="mb-8 {page.theme.isTitlesHuge || section.isHugeTitle
+								class="mb-8 {page.theme.isTitlesHuge || section.theme?.isHugeTitle
 									? 'text-xl leading-8'
 									: 'text-lg font-medium'} whitespace-pre-wrap opacity-90 {section.renderType ===
 								'article'
 									? 'sm:max-w-[712px]'
-									: page.theme.isTitlesLeft || section.isTitleLeft
+									: page.theme.isTitlesLeft || section.theme?.isTitleLeft
 									? 'sm:max-w-[712px]'
 									: 'sm:max-w-[592px] sm:mx-auto'}"
 							>
@@ -397,12 +396,16 @@
 
 					{#if section.interactiveRenderType}
 						<div
-							class="{section.renderType === 'changelog'
+							class="{section.renderType === 'changelog' ||
+							page.theme?.isTitlesLeft ||
+							section.theme?.isTitleLeft
 								? 'mb-32'
 								: 'sm:max-w-[600px] sm:mx-auto'} mt-8"
 						>
 							<RenderInteractiveOptions
-								class="{section.renderType === 'changelog'
+								class="{section.renderType === 'changelog' ||
+								page.theme?.isTitlesLeft ||
+								section.theme?.isTitleLeft
 									? 'justify-start'
 									: 'justify-center'} mb-8"
 								bind:sectionItem={section}
@@ -417,7 +420,7 @@
 							<RenderUrlWithBackground
 								class=""
 								urlImgMaxWidth={section.imgMaxWidth}
-								urlImgClass="{section.isTitleLeft ? '' : 'mx-auto'} {isGif(section.imageUrl)
+								urlImgClass="{section.theme?.isTitleLeft ? '' : 'mx-auto'} {isGif(section.imageUrl)
 									? 'w-full object-cover'
 									: ''}"
 								imageUrl={section.imageUrl}

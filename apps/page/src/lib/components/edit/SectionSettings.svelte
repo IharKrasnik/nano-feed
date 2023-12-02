@@ -134,7 +134,7 @@
 										/>
 									{:else}
 										<div
-											class="w-[30px] h-[30px] rounded-full border mr-4 blur"
+											class="w-[30px] h-[30px] rounded-full border border-black mr-4 blur"
 											style="background-color: {sectionItem.theme.glowingColor};"
 										/>
 									{/if}
