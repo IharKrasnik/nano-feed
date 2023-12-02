@@ -10,6 +10,7 @@
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import ComaDragons from '$lib/components/animations/ComaDragons.svelte';
 	import CanvasAnimation from '$lib/components/animations/CanvasAnimation.svelte';
+	import Gradients from '$lib/components/gradients/index.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import hexToRgba from 'lib/helpers/hexToRgba';
 
@@ -83,6 +84,10 @@
 				imgClass="w-screen h-screen object-cover overflow-hidden"
 				url={hero.bgImageUrl}
 			/>
+		{/if}
+
+		{#if page.activeHero?.theme?.bgGradient?.type}
+			<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
 		{/if}
 
 		<div

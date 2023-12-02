@@ -190,7 +190,7 @@
 			: 'sm:justify-center'} gap-3 mt-4 mb-8 overflow-x-scroll sm:overflow-visible sm:flex-wrap max-w-screen"
 	>
 		<div
-			class="px-2 py-1 text-sm opacity-80 _border-accent rounded-xl cursor-pointer shrink-0 _tag {filterTag
+			class="px-4 py-1 opacity-80 t rounded-full cursor-pointer shrink-0 _tag bg-zinc-900 ring-1 ring-zinc-800 {filterTag
 				? ''
 				: 'selected'}"
 			class:heatmap={$heatmap}
@@ -207,7 +207,7 @@
 
 		{#each $feedCache[cacheId]?.tags as tag}
 			<div
-				class="px-2 py-1 text-sm opacity-80 _border-accent rounded-xl cursor-pointer shrink-0 _tag {filterTag ===
+				class="px-4 py-1 opacity-80 rounded-full cursor-pointer shrink-0 _tag bg-zinc-900  ring-1 ring-zinc-800 {filterTag ===
 				tag
 					? 'selected'
 					: ''}"
@@ -252,7 +252,7 @@
 
 	._tag.selected {
 		/* outline: 2px var(--accent-color) solid; */
-		@apply shadow-md font-semibold;
+		@apply shadow-md border-2;
 	}
 
 	._tag:not(.selected):hover {

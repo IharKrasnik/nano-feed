@@ -22,7 +22,6 @@
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
-	import Gradients from '$lib/components/gradients/index.svelte';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 
 	import trackClick from 'lib/services/trackClick';
@@ -523,12 +522,10 @@
 								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
 							/> -->
 						{#if !isLoading}
-							{#if page.activeHero?.theme?.bgGradient?.type}
-								<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
-							{/if}
-
 							{#if page.activeHero}
-								<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
+								<div class="relative">
+									<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
+								</div>
 							{/if}
 
 							<div class="relative _root bg-site overflow-hidden" style="background: none;">
