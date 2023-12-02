@@ -582,6 +582,58 @@
 
 				<EditInteractiveOptions bind:section={hero} bind:sectionItem={hero} isWithButton={false} />
 			</div>
+
+			<div class="_section">
+				<div class="_title flex justify-between w-full">Social Proof</div>
+
+				<div class="text-sm mb-2">Title</div>
+				<input
+					class="mb-4 w-full"
+					bind:value={hero.socialProof.title}
+					placeholder="Join 100+ creators"
+				/>
+
+				<div class="text-sm mb-2">Avatars (or logos)</div>
+				{#each hero.socialProof?.logos || [] as logo}
+					<div class="flex gap-4 justify-between text-sm mb-2">
+						<FileInput class="w-full" theme="light" bind:url={logo.url} />
+
+						<button
+							on:click={() => {
+								hero.socialProof.logos = hero.socialProof.logos.filter((l) => l.url !== logo.url);
+							}}>🗑</button
+						>
+					</div>
+				{/each}
+				<div class="mt-4 w-full">
+					<button
+						class="_secondary _small w-full text-center"
+						on:click={() => {
+							let defaultLogos = [
+								{
+									url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537402054-image.png'
+								},
+								{
+									url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537317691-image.png'
+								},
+								{
+									url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537348214-image.png'
+								},
+								{
+									url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537378909-image.png'
+								}
+							];
+
+							hero.socialProof = hero.socialProof || {
+								title: 'Join 100+ creators',
+								logos: defaultLogos
+							};
+
+							hero.socialProof.logos.push(_.sample(defaultLogos));
+						}}>😎 Add Avatar</button
+					>
+				</div>
+			</div>
 		{/if}
 	</div>
 {/if}

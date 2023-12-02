@@ -430,7 +430,7 @@ a[href] {
 	font-weight: bold;
 }
 
-.dense img {
+.dense img:first-child {
 	margin-right: -25px;
 }
 

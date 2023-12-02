@@ -202,21 +202,19 @@
 
 						{#if isMounted && hero.socialProof}
 							<div
-								class="mt-16 py-4 {hero.socialProof.className || ''} {hero.demoUrl ||
-								(hero.theme?.isLeft && !hero.theme?.isVertical)
+								class="_social-proof _dense _small mt-16 py-4 {hero.socialProof.className ||
+									''} {hero.demoUrl || (hero.theme?.isLeft && !hero.theme?.isVertical)
 									? ''
-									: 'flex justify-center w-full'} }"
+									: 'flex justify-center w-full'}"
 							>
-								<div>
-									<div class="flex gap-2">
-										{#each _.shuffle(hero.socialProof.logos) as logo}
-											<img class="w-[50px] h-[50px] rounded-full" src={logo.url} />
-										{/each}
-									</div>
+								<div class="flex">
+									{#each _.shuffle(hero.socialProof.logos).filter((l) => l.url) as logo}
+										<img class="rounded-full" src={logo.url} />
+									{/each}
+								</div>
 
-									<div class="text-sm mt-4 opacity-80 max-w-[400px]">
-										{@html hero.socialProof.title || ''}
-									</div>
+								<div class="text-sm mt-4 opacity-80 max-w-[400px]">
+									{@html hero.socialProof.title || ''}
 								</div>
 							</div>
 						{/if}
@@ -250,6 +248,19 @@
 {/if}
 
 <style>
+	._social-proof img {
+		width: 50px;
+		height: 50px;
+		margin-right: -20px;
+		border: 1px var(--text-color) solid;
+	}
+
+	._social-proof._small img {
+		width: 30px;
+		height: 30px;
+		margin-right: -10px;
+	}
+
 	._title {
 		font-family: var(--title-font);
 
