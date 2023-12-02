@@ -291,7 +291,9 @@
 		{:else if sectionItem.interactiveRenderType === 'wave_analytics'}
 			<WaveIndicator project={{ page }} class="mt-4 _alternative" />
 		{:else if sectionItem.interactiveRenderType === 'email'}
-			{#if $currentCustomer.email && !isResetEmail}
+			{#if isHeader}
+				<button type="submit">{sectionItem.callToActionText || 'Subscribe'}</button>
+			{:else if $currentCustomer.email && !isResetEmail}
 				<div class={clazz?.includes('mx-auto') ? 'mx-auto' : ''}>
 					<div>👏 Thank you!</div>
 					<div

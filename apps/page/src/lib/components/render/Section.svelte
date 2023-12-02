@@ -981,7 +981,11 @@
 															<div class="my-4 flex flex-wrap gap-2">
 																{#each item.tagsStr.split(',') as tag}
 																	<div
-																		class="px-4 py-1 opacity-80 rounded-full inline ring ring-zinc-900 bg-zinc-900"
+																		class="px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-zinc-900 bg-black"
+																		style={page.parentPage?.theme?.theme ||
+																		page.theme?.theme === 'dark'
+																			? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
+																			: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
 																	>
 																		{tag}
 																	</div>

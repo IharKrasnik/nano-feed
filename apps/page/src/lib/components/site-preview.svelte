@@ -397,7 +397,11 @@
 											/>
 
 											{#if page.theme?.isShowNameWithLogo}
-												<span class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}">
+												<span
+													class="font-semibold text-base {page.theme?.heroBgImage
+														? 'light-colors'
+														: ''}"
+												>
 													{page.parentPage?.name || page.name}
 												</span>
 											{/if}
@@ -412,7 +416,7 @@
 									</a>
 
 									<div
-										class="hidden ml-8 sm:flex items-center justify-center font-semibold text-sm py-1 gap-4"
+										class="hidden ml-8 sm:flex items-center justify-center text-sm py-1 gap-4"
 										style="z-index: 50"
 									>
 										{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}
