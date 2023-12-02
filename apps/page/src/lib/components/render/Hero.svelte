@@ -124,7 +124,7 @@
 					>
 						{#if isMounted}
 							{#if hero.embedAboveHtml}
-								<div class="mb-4" in:fly={{ delay: 300, y: -25, duration: 600 }}>
+								<div class="mb-4" in:fly={{ y: -25, duration: 800 }}>
 									{@html hero.embedAboveHtml}
 								</div>
 							{/if}
