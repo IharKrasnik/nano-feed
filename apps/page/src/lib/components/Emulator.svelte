@@ -134,7 +134,7 @@
 
 					<div class="flex justify-center w-full">
 						<input class="website" type="email" placeholder="hi@email.com" />
-						<button>Join -> </button>
+						<button>Join → </button>
 					</div>
 
 					{#if feedItems.length}
