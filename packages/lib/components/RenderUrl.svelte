@@ -6,6 +6,7 @@
 	import TallyIcon from 'lib/icons/tally.svelte';
 	import TypeformIcon from 'lib/icons/typeform.svelte';
 	import SenjaIcon from 'lib/icons/senja.svelte';
+	import iframeResize from 'iframe-resizer/js/iframeResizer';
 
 	import { onMount } from 'svelte';
 
@@ -44,6 +45,8 @@
 	let videoEl;
 
 	onMount(() => {
+		window.iFrameResize = iFrameResize;
+
 		setTimeout(
 			() => {
 				isMounted = true;
@@ -168,9 +171,18 @@
 					{/if}
 				{/key}
 			{:else if !isFilesOnly && url.includes('producthunt.com')}
-				<iframe src={url} class="w-full h-full {imgClass}" style="border:none; height: 1000px;" />
+				<iframe
+					src={url}
+					class="iframe-resize w-full h-full {imgClass}"
+					style="border:none; height: 1000px;"
+				/>
 			{:else if isIframeFallback && !isFilesOnly && url.startsWith('http')}
-				<iframe src={url} class="w-full h-full {imgClass}" style="border:none; height: 600px;" />
+				<iframe
+					src={url}
+					class="mmntm-iframe w-full h-full {imgClass}"
+					style="border:none; height: 600px;"
+					onload={`iFrameResize({}, '.mmntm-iframe')`}
+				/>
 			{/if}
 		</div>
 	{:else}
