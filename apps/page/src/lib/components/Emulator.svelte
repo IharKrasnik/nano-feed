@@ -42,6 +42,8 @@
 	Object.keys(firstChart).forEach((key) => {
 		if (key !== weekAgoM.format(DATE_FORMAT)) {
 			firstChart[key] = 0;
+		} else {
+			firstChart[key] = 1;
 		}
 	});
 
@@ -391,7 +393,7 @@
 				Customers
 			</div>
 			<div class="px-2 rounded-full ring-1 ring-white/50 ml-1 h-auto" style="font-size: 10px;">
-				{customers.length}
+				{$customers.length}
 			</div>
 		</div>
 
@@ -506,6 +508,86 @@
 			</div>
 		{/if}
 	</div>
+
+	<div
+		class="col-span-8 border border-white  h-[150px] transition {$customers?.length
+			? 'opacity-100'
+			: 'opacity-50'}"
+	>
+		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
+			<FeatherIcon class="mr-1" size={12} color="white" name="rss" />
+
+			Feed
+		</div>
+
+		{#if customers.length > 1 || selectedCustomer?.messages.length > 1}
+			<div class="m-2">
+				<div class="columns-2">
+					<div class="break-inside-avoid">
+						<div class="flex gap-1 text-xs mb-2">
+							<div
+								class="{selectedFeedTab === 'post'
+									? 'border-b border-white/80'
+									: 'opacity-80 hover:opacity-100'} transition cursor-pointer"
+								on:click={() => (selectedFeedTab = 'post')}
+							>
+								Post
+							</div>
+							<div
+								class="{selectedFeedTab === 'url'
+									? 'border-b  border-white/80'
+									: 'opacity-80 hover:opacity-100'} ml-2 transition cursor-pointer"
+								on:click={() => (selectedFeedTab = 'url')}
+							>
+								Link
+							</div>
+						</div>
+
+						<div class="flex items-start mt-2">
+							{#if selectedFeedTab === 'url'}
+								<input
+									bind:value={feedItem.url}
+									type="url"
+									placeholder="https://twitter.com/that_igor_/status/1725470197732065618"
+								/>
+							{:else if selectedFeedTab === 'post'}
+								<div>
+									<textarea bind:value={feedItem.content} placeholder="Your Message" />
+								</div>
+							{/if}
+						</div>
+
+						<div class="flex items-center mt-2">
+							<Button class="mr-2 emu" onClick={sendToFeed}>Publish</Button>
+
+							{#if selectedFeedTab === 'post'}
+								<div class="text-xs">
+									<input type="checkbox" bind:value={feedItem.isSyncToTwitter} /> Sync To x.com
+								</div>
+							{/if}
+						</div>
+					</div>
+
+					<div class="relative break-inside-avoid">
+						<img
+							class="absolute left-0 top-0 w-full h-full"
+							src="https://images.unsplash.com/photo-1614854262178-03c96e9c8c28?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+						/>
+						<div class="relative p-4">
+							<div
+								class="p-2 bg-white rounded text-center text-black text-xxs flex flex-col items-center"
+								style="font-family: Cabin;"
+							>
+								<div class="my-1">✨</div>
+								{feedItem.content || 'Check out my awesome website!'}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{/if}
+	</div>
+
 	<div class="col-span-4 text-xs border border-white  h-[150px]">
 		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center mb-2">
 			<FeatherIcon class="mr-1" size={12} color="white" name="compass" />
@@ -542,87 +624,6 @@
 				</div>
 			{/if}
 		</div>
-	</div>
-
-	<div
-		class="col-span-8 border border-white  h-[150px] transition {$customers?.length
-			? 'opacity-100'
-			: 'opacity-50'}"
-	>
-		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
-			<FeatherIcon class="mr-1" size={12} color="white" name="rss" />
-
-			Feed
-		</div>
-
-		{#if customers.length > 1 || selectedCustomer?.messages.length > 1}
-			<div class="m-2">
-				<div class="columns-2">
-					<div class="break-inside-avoid">
-						{#if isFirstPostSent}
-							<div class="flex gap-1 text-xs mb-2">
-								<div
-									class="{selectedFeedTab === 'post'
-										? 'border-b border-white/80'
-										: 'opacity-80 hover:opacity-100'} transition cursor-pointer"
-									on:click={() => (selectedFeedTab = 'post')}
-								>
-									Post
-								</div>
-								<div
-									class="{selectedFeedTab === 'url'
-										? 'border-b  border-white/80'
-										: 'opacity-80 hover:opacity-100'} ml-2 transition cursor-pointer"
-									on:click={() => (selectedFeedTab = 'url')}
-								>
-									Link
-								</div>
-							</div>
-
-							<div class="flex items-start mt-2">
-								{#if selectedFeedTab === 'url'}
-									<input
-										bind:value={feedItem.url}
-										type="url"
-										placeholder="https://twitter.com/that_igor_/status/1725470197732065618"
-									/>
-								{:else if selectedFeedTab === 'post'}
-									<div>
-										<textarea bind:value={feedItem.content} placeholder="Your Message" />
-									</div>
-								{/if}
-							</div>
-						{/if}
-
-						<div class="flex items-center mt-2">
-							<Button class="mr-2 emu" onClick={sendToFeed}>Publish</Button>
-
-							{#if selectedFeedTab === 'post'}
-								<div class="text-xs">
-									<input type="checkbox" bind:value={feedItem.isSyncToTwitter} /> Sync To x.com
-								</div>
-							{/if}
-						</div>
-					</div>
-
-					<div class="relative break-inside-avoid">
-						<img
-							class="absolute left-0 top-0 w-full h-full"
-							src="https://images.unsplash.com/photo-1614854262178-03c96e9c8c28?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-						/>
-						<div class="relative p-4">
-							<div
-								class="p-2 bg-white rounded text-center text-black text-xxs flex flex-col items-center"
-								style="font-family: Cabin;"
-							>
-								<div class="my-1">✨</div>
-								{feedItem.content || 'Check out my awesome website!'}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
 	</div>
 </div>
 
