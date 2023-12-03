@@ -521,7 +521,9 @@
 											}}
 										>
 											<FeatherIcon
-												color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
+												color={(page.parentPage?.theme || page.theme)?.theme === 'dark'
+													? '#ffffff'
+													: '#111111'}
 												name="arrow-left"
 											/>
 										</div>
@@ -541,7 +543,9 @@
 										>
 											<FeatherIcon
 												class="cursor-pointer"
-												color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
+												color={(page.parentPage?.theme || page.theme)?.theme === 'dark'
+													? '#ffffff'
+													: '#111111'}
 												name="arrow-right"
 											/>
 										</div>
@@ -842,7 +846,7 @@
 												: ''} rounded-lg sm:rounded-xl {item.className || ''} mb-2 {item.url &&
 											!item.interactiveRenderType
 												? '_interactive'
-												: ''} h-full"
+												: ''} h-full overflow-hidden"
 											on:click={() => {
 												if (section.carousel) {
 													selectCarouselItem(item);
@@ -881,6 +885,16 @@
 												: ''}
 											style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
 										>
+											{#if item.theme?.bgPattern}
+												<div
+													class="absolute top-0 left-0 w-full h-full pattern-size-4 rounded-xl pattern-{item
+														.theme.bgPattern} {page.theme?.theme === 'dark'
+														? 'pattern-white pattern-bg-black'
+														: 'pattern-black pattern-bg-white'} [mask-image:radial-gradient(52%_85%_at_top_center,white,transparent)]"
+													style="opacity: {item.theme.bgPattern === 'boxes' ? '.03' : '.15'};"
+												/>
+											{/if}
+
 											{#if item.bgImageUrl}
 												<img
 													src={item.bgImageUrl}
@@ -929,7 +943,12 @@
 														{#if item.title || item.emoji}
 															{#if item.emoji && !item.isIconLeft}
 																<div class="{emojiStyle[section.columns]} _section-img mr-2 mb-4">
-																	<Emoji bind:emoji={item.emoji} />
+																	<Emoji
+																		color={(page.parentPage?.theme || page.theme)?.theme === 'dark'
+																			? '#ffffff'
+																			: '#111111'}
+																		bind:emoji={item.emoji}
+																	/>
 																</div>
 															{/if}
 

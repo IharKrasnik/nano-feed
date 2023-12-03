@@ -27,6 +27,25 @@
 	if (!sectionItem.theme) {
 		sectionItem.theme = {};
 	}
+
+	let bgPatterns = [
+		{
+			key: 'boxes',
+			label: 'Squares'
+		},
+		{
+			key: 'dots',
+			label: 'Dots'
+		},
+		{
+			key: 'cross',
+			label: 'Crosses'
+		},
+		{
+			key: null,
+			label: 'None'
+		}
+	];
 </script>
 
 <div
@@ -98,9 +117,9 @@
 			</div>
 
 			{#if !sectionItem.bgImageUrl}
-				<div class="">
+				<div class="_section">
 					{#if sectionItem.id !== section.id}
-						<div class="text-sm mb-2 mt-8">Style</div>
+						<div class="text-sm mb-2 mt-8 font-bold">Style</div>
 						<select bind:value={sectionItem.className}>
 							<option value="">Default</option>
 
@@ -199,7 +218,7 @@
 		<div class="_section">
 			<div class="font-semibold mb-2">Background</div>
 
-			{#if !sectionItem.bgImageUrl}
+			{#if sectionItem === section && !sectionItem.bgImageUrl}
 				<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
 
 				<div class="flex items-center">
@@ -217,6 +236,7 @@
 							style="background-color: {page.theme.backgroundColor};"
 						/>
 					{/if}
+
 					<div>
 						<input
 							bind:checked={sectionItem.theme.isOverrideColors}
@@ -232,6 +252,21 @@
 						Override color
 					</div>
 				</div>
+			{/if}
+
+			{#if !sectionItem.bgImageUrl}
+				<div>
+					<div class="font-normal text-sm opacity-70 mb-2">Background pattern</div>
+					<div class="text-sm">Subtle background</div>
+				</div>
+
+				{#each bgPatterns as bgPattern}
+					<button
+						class="_secondary _small mr-2 mb-2"
+						on:click={() => (sectionItem.theme.bgPattern = bgPattern.key)}
+						>{bgPattern.key === sectionItem.theme.bgPattern ? '✅' : ''} {bgPattern.label}</button
+					>
+				{/each}
 			{/if}
 
 			{#if !sectionItem.theme.isOverrideColors}
@@ -253,16 +288,18 @@
 					</div>
 				{/if}
 
-				<div class="font-normal mt-4 text-sm opacity-70 mb-2">
-					Container background image or video
-				</div>
+				{#if sectionItem === section}
+					<div class="font-normal mt-4 text-sm opacity-70 mb-2">
+						Container background image or video
+					</div>
 
-				<FileInput
-					isCanSearch
-					class="w-full"
-					theme="light"
-					bind:url={sectionItem.containerBgImageUrl}
-				/>
+					<FileInput
+						isCanSearch
+						class="w-full"
+						theme="light"
+						bind:url={sectionItem.containerBgImageUrl}
+					/>
+				{/if}
 
 				{#if sectionItem.bgImageUrl}
 					<div class="flex text-sm mt-4 font-normal items-center">

@@ -14,6 +14,7 @@
 	import Gradients from '$lib/components/gradients/index.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import hexToRgba from 'lib/helpers/hexToRgba';
+	import Emulator from '$lib/components/Emulator.svelte';
 
 	export let page;
 
@@ -94,7 +95,7 @@
 		<div
 			class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {(hero.theme
 				?.isVertical ||
-				page.sections?.length) &&
+				(page.sections?.length && !hero.demoUrl)) &&
 			hero.theme?.bgPattern !== 'cursors'
 				? ''
 				: 'min-h-screen h-screen'} {hero.theme?.bgPattern === 'canvas' ? 'max-w-max' : ''}"
@@ -226,6 +227,7 @@
 								? ''
 								: 'sm:ml-8 sm:max-w-[600px]'}"
 						>
+							<!-- <Emulator /> -->
 							<RenderUrlWithBackground
 								isLazy={false}
 								imageUrl={hero.demoUrl}

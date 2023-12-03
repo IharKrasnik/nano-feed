@@ -586,25 +586,27 @@
 			<div class="_section">
 				<div class="_title flex justify-between w-full">Social Proof</div>
 
-				<div class="text-sm mb-2">Title</div>
-				<input
-					class="mb-4 w-full"
-					bind:value={hero.socialProof.title}
-					placeholder="Join 100+ creators"
-				/>
+				{#if hero.socialProof}
+					<div class="text-sm mb-2">Title</div>
+					<input
+						class="mb-4 w-full"
+						bind:value={hero.socialProof.title}
+						placeholder="Join 100+ creators"
+					/>
 
-				<div class="text-sm mb-2">Avatars (or logos)</div>
-				{#each hero.socialProof?.logos || [] as logo}
-					<div class="flex gap-4 justify-between text-sm mb-2">
-						<FileInput class="w-full" theme="light" bind:url={logo.url} />
+					<div class="text-sm mb-2">Avatars (or logos)</div>
+					{#each hero.socialProof?.logos || [] as logo}
+						<div class="flex gap-4 justify-between text-sm mb-2">
+							<FileInput class="w-full" theme="light" bind:url={logo.url} />
 
-						<button
-							on:click={() => {
-								hero.socialProof.logos = hero.socialProof.logos.filter((l) => l.url !== logo.url);
-							}}>🗑</button
-						>
-					</div>
-				{/each}
+							<button
+								on:click={() => {
+									hero.socialProof.logos = hero.socialProof.logos.filter((l) => l.url !== logo.url);
+								}}>🗑</button
+							>
+						</div>
+					{/each}
+				{/if}
 				<div class="mt-4 w-full">
 					<button
 						class="_secondary _small w-full text-center"
