@@ -124,7 +124,7 @@
 				<div class="relative border-b  border-black/20 text-xs grayscale px-4">🔥 coolco</div>
 			</div>
 
-			<div class=" max-h-[230px] bg-[#fefefe] overflow-y-auto">
+			<div class="h-[230px] bg-[#fefefe] overflow-y-auto">
 				<div class="py-8 flex flex-col items-center justify-center h-full ">
 					<div
 						class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2"
@@ -322,7 +322,7 @@
 		</div>
 	</div>
 
-	<div class="col-span-8 border border-white">
+	<div class="col-span-8 border border-white  h-[150px]">
 		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
 			<FeatherIcon class="mr-1" size={12} color="white" name="rss" />
 
@@ -349,17 +349,24 @@
 				</div>
 			</div>
 
-			{#if selectedFeedTab === 'url'}
-				<input
-					bind:value={feedItem.url}
-					type="url"
-					placeholder="https://twitter.com/that_igor_/status/1725470197732065618"
-				/>
-			{:else if selectedFeedTab === 'post'}
-				<textarea bind:value={feedItem.content} placeholder="Your Message" />
-			{/if}
-			<div class="mt-2">
-				<Button onClick={sendToFeed}>Send</Button>
+			<div class="flex items-start mt-2">
+				{#if selectedFeedTab === 'url'}
+					<input
+						bind:value={feedItem.url}
+						type="url"
+						placeholder="https://twitter.com/that_igor_/status/1725470197732065618"
+					/>
+				{:else if selectedFeedTab === 'post'}
+					<div>
+						<textarea bind:value={feedItem.content} placeholder="Your Message" />
+						<div class="text-xs">
+							<input type="checkbox" /> Sync To x.com
+						</div>
+					</div>
+				{/if}
+				<div>
+					<Button class="ml-2 emu mt-[2px]" onClick={sendToFeed}>Send</Button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -371,6 +378,11 @@
 		line-height: 1.1;
 	}
 
+	:global(.emu) {
+		font-size: 12px !important;
+		@apply bg-white/20 ring-1 ring-white px-2 py-0 text-sm font-normal;
+	}
+
 	input,
 	textarea {
 		border: 1px #fafafa solid;
@@ -380,6 +392,11 @@
 		border-radius: 0 !important;
 		font-size: 12px !important;
 		@apply text-sm;
+	}
+
+	input[type='checkbox'] {
+		background: none !important;
+		border: 1px white solid;
 	}
 
 	input.website {
