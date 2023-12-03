@@ -123,7 +123,9 @@
 {/if}
 
 <div class:sm:hidden={!($currentUser && !$sveltePage.data.pageSlug && !$sectionToEdit)}>
-	<div class="hidden sm:block">
-		<Dock activeIcon="page" />
-	</div>
+	{#if !$sveltePage.url.href.includes('/emulator')}
+		<div class="hidden sm:block">
+			<Dock activeIcon="page" />
+		</div>
+	{/if}
 </div>
