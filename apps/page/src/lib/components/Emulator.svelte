@@ -353,18 +353,20 @@
 							<div class="mr-1 text-xs">Online Users</div>
 						</div>
 						<div class="border border-white/40 p-2 mt-2">
-							<LinkedChart
-								linked="chart"
-								uid="views"
-								data={firstChart}
-								fill="#fafafa"
-								grow={true}
-								width="135"
-								barMinWidth={1}
-								gap={2}
-								height={50}
-								transition={500}
-							/>
+							{#key firstChart}
+								<LinkedChart
+									linked="chart"
+									uid="views"
+									data={firstChart}
+									fill="#fafafa"
+									grow={true}
+									width="135"
+									barMinWidth={1}
+									gap={2}
+									height={50}
+									transition={500}
+								/>
+							{/key}
 							<div class="text-xs opacity-100 mt-2">Page Views ({$totalViews})</div>
 						</div>
 					</div>
@@ -482,7 +484,7 @@
 					</div>
 					{#if message.isAuto}
 						<div class="text-green-300 text-end w-full" style="font-size: 8px;">
-							Sent Automatically
+							Sent automatically on your behalf
 						</div>
 					{/if}
 				</div>
