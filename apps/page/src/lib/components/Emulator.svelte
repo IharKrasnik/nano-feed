@@ -1,7 +1,10 @@
 <script>
 	import moment from 'moment';
 	import _ from 'lodash';
+	import { get } from 'lib/api';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import Button from 'lib/components/Button.svelte';
+	import SourceLogo from 'lib/components/SourceLogo.svelte';
 	import { LinkedChart, LinkedLabel, LinkedValue } from 'svelte-tiny-linked-charts';
 	import { countryCodeEmoji } from 'country-code-emoji';
 
@@ -76,33 +79,99 @@
 	};
 
 	let selectedFeedTab = 'url';
+
+	let FEED_ITEMS_LS_KEY = 'FEED_ITEMS';
+
+	let feedItems = JSON.parse(localStorage[FEED_ITEMS_LS_KEY] || '[]');
+
+	let feedItem = {};
+
+	let sendToFeed = async () => {
+		if (feedItem.url) {
+			const data = await get('utils/fetch-meta-tags', {
+				url: feedItem.url
+			});
+
+			feedItem.url = data.url || feedItem.url;
+			feedItem.embedUrl = data.embedUrl;
+
+			feedItem.source = data.source;
+
+			feedItem.title = data.title;
+			feedItem.content = data.description;
+
+			if (data.image) {
+				feedItem.attachments = [{ type: 'image', url: data.image }];
+			}
+
+			feedItems = [{ ...feedItem }, ...feedItems];
+
+			localStorage[FEED_ITEMS_LS_KEY] = JSON.stringify(feedItems);
+
+			feedItem = {};
+		}
+	};
 </script>
 
 <div class="grid grid-cols-12 items-stretch gap-4 p-2 text-white">
-	<div
-		class="relative col-span-8 h-full overflow-hidden bg-[#fefefe] text-[#111] shadow shadow-white max-h-[345px] overflow-y-auto"
-	>
+	<div class="relative col-span-8 h-full overflow-hidden text-[#111] shadow shadow-white">
 		<div
-			class="bg-root absolute z-10 inset-0 -z-50 h-screen w-screen bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] [background-size:20px_20px] "
+			class="bg-root absolute z-10 inset-0 -z-50 w-full h-full bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]"
 		/>
 
 		<div class="relative z-10 border border-white h-full">
-			<div class="absolute w-full left-0 top-0">
-				<div class="relative border-b bg-white border-black/20 text-xs grayscale px-4">
-					🔥 coolco
-				</div>
+			<div class="absolute w-full left-0 top-0 bg-[rgba(255,255,255,.3)] backdrop-blur">
+				<div class="relative border-b  border-black/20 text-xs grayscale px-4">🔥 coolco</div>
 			</div>
 
-			<div class="py-8 flex flex-col items-center justify-center h-full ">
-				<div
-					class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2"
-				>
-					My Awesome Website
-				</div>
+			<div class=" max-h-[230px] bg-[#fefefe] overflow-y-auto">
+				<div class="py-8 flex flex-col items-center justify-center h-full ">
+					<div
+						class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2"
+					>
+						My Awesome Website
+					</div>
 
-				<div class="flex justify-center w-full">
-					<input class="website" type="email" placeholder="hi@email.com" />
-					<button>Join -> </button>
+					<div class="flex justify-center w-full">
+						<input class="website" type="email" placeholder="hi@email.com" />
+						<button>Join -> </button>
+					</div>
+
+					{#if feedItems.length}
+						<div class="flex flex-col justify-center mt-2 p-2">
+							<div
+								class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2 text-sm"
+							>
+								We Build in Public
+							</div>
+
+							<div class="columns-3 gap-2 ">
+								{#each feedItems as feedItem}
+									<div class="p-1 border border-black break-inside-avoid">
+										<div class="text-xxs _line-clamp-4 " style="line-height: 1;">
+											{feedItem.content}
+										</div>
+										<div>
+											{#if feedItem.attachments?.length}
+												<img
+													src={feedItem.attachments[0].url}
+													class="w-full max-h-[50px] object-cover my-1"
+												/>
+											{/if}
+										</div>
+										<hr class="bg-black/20 my-1" />
+										<div class="flex justify-between items-center" style="font-size: 10px;">
+											{moment(feedItem.createdOn).format('MMM DD')}
+
+											<div class="source-logo w-[10px]">
+												<SourceLogo theme="light" url={feedItem.url} />
+											</div>
+										</div>
+									</div>
+								{/each}
+							</div>
+						</div>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -281,18 +350,27 @@
 			</div>
 
 			{#if selectedFeedTab === 'url'}
-				<input type="url" placeholder="https://twitter.com/that_igor_/status/1725470197732065618" />
+				<input
+					bind:value={feedItem.url}
+					type="url"
+					placeholder="https://twitter.com/that_igor_/status/1725470197732065618"
+				/>
 			{:else if selectedFeedTab === 'post'}
-				<textarea placeholder="Your Message" />
+				<textarea bind:value={feedItem.content} placeholder="Your Message" />
 			{/if}
 			<div class="mt-2">
-				<button>Send</button>
+				<Button onClick={sendToFeed}>Send</Button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <style>
+	.text-xxs {
+		font-size: 11px;
+		line-height: 1.1;
+	}
+
 	input,
 	textarea {
 		border: 1px #fafafa solid;
@@ -320,5 +398,10 @@
 		@apply text-sm;
 		border: 1px #111 solid;
 		background: rgba(255, 255, 255, 0.3);
+	}
+
+	:global(.source-logo svg) {
+		width: 10px !important;
+		height: 10px !important;
 	}
 </style>
