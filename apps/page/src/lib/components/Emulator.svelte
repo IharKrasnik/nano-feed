@@ -19,11 +19,18 @@
 	import totalViews from 'lib/stores/emulator/totalViews';
 	import emailAddress from 'lib/stores/emulator/emailAddress';
 	import feed from 'lib/stores/emulator/feed';
+	import pageTitle from 'lib/stores/emulator/pageTitle';
 
 	let viewChartData = {};
 
 	let DATE_FORMAT = 'MMM DD';
 	let TOTAL_VIEWS_LS_KEY = 'TOTAL_VIEWS';
+
+	let isLaunched = !!$pageTitle;
+
+	if (!isLaunched) {
+		$pageTitle = 'My Awesome Website';
+	}
 
 	let weekAgoM = moment().subtract(7, 'days');
 	let weekAgoViews = Math.random() * 100 + 420;
@@ -348,6 +355,18 @@
 	let offlineTimeout;
 
 	let pageTagline = '';
+
+	let reset = () => {
+		$feed = [];
+		$customers = [];
+		$pageTitle = '';
+		$emailAddress = '';
+		$totalViews = -1;
+		isLaunched = false;
+		isJoined = false;
+		selectedCustomer = null;
+		[chatEl, customersEl, analyticsEl, feedEl, moreEl].forEach((el) => (el.isHighlighted = false));
+	};
 </script>
 
 <div class="highlighted hidden" />
@@ -364,16 +383,18 @@
 		<div
 			class="relative z-10 border border-white h-full"
 			on:click={() => {
-				if (usersOnline === -1 || usersOnline === 0) {
-					usersOnline = 1;
-				}
+				if (isLaunched) {
+					if (usersOnline === -1 || usersOnline === 0) {
+						usersOnline = 1;
+					}
 
-				if ($totalViews === -1) {
-					$totalViews = 1;
-				}
+					if ($totalViews === -1) {
+						$totalViews = 1;
+					}
 
-				if (offlineTimeout) {
-					clearTimeout(offlineTimeout);
+					if (offlineTimeout) {
+						clearTimeout(offlineTimeout);
+					}
 				}
 			}}
 			use:clickOutside
@@ -385,103 +406,121 @@
 				}, 1000);
 			}}
 		>
-			<div class="absolute w-full left-0 top-0 bg-[rgba(255,255,255,.3)] backdrop-blur z-10">
-				<div
-					class="relative border-b  border-black/20 px-4 flex items-center justify-between text-xxs"
-				>
-					<div class="">🔥 coolco</div>
-					<div class="flex gap-2">
-						<div>About</div>
-						<div>Blog</div>
+			{#if isLaunched}
+				<div class="absolute w-full left-0 top-0 bg-[rgba(255,255,255,.3)] backdrop-blur z-10">
+					<div
+						class="relative border-b  border-black/20 px-4 flex items-center justify-between text-xxs"
+					>
+						<div class="">🔥 coolco</div>
+						<div class="flex gap-2">
+							<div>About</div>
+							<div>Blog</div>
+						</div>
 					</div>
 				</div>
-			</div>
+			{/if}
 
-			<div class="h-[230px] bg-[#fefefe]  overflow-y-auto">
-				{#if isJustJoined}
-					<ConfettiExplosion particleCount={300} force={0.3} />
-				{/if}
-				<div
-					class="relative py-8 flex {$feed.filter((f) => f.url).length
-						? 'flex-col justify-start items-center'
-						: 'flex-col justify-center items-center'}  h-full "
-				>
+			{#if isLaunched}
+				<div class="h-[230px] bg-[#fefefe]  overflow-y-auto" in:fly={{ y: 25 }}>
+					{#if isJustJoined}
+						<ConfettiExplosion particleCount={300} force={0.3} />
+					{/if}
 					<div
-						class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2"
+						class="relative py-8 flex {$feed.filter((f) => f.url).length
+							? 'flex-col justify-start items-center'
+							: 'flex-col justify-center items-center'}  h-full "
 					>
-						My Awesome Website
-					</div>
+						<div
+							class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2"
+						>
+							{$pageTitle}
+						</div>
 
-					<div class="flex justify-center w-full">
-						{#if isJoined}
-							<div class="w-full text-center text-xs opacity-90 my-2" in:fade={{}}>
-								<div>Thank you 👏</div>
-								<div>
-									Your email is <span
-										clas="text-underline cursor-pointer"
-										on:click={() => {
-											isJoined = false;
-										}}>{$emailAddress}</span
-									>
+						<div class="flex justify-center w-full">
+							{#if isJoined}
+								<div class="w-full text-center text-xs opacity-90 my-2" in:fade={{}}>
+									<div>Thank you 👏</div>
+									<div>
+										Your email is <span
+											clas="text-underline cursor-pointer"
+											on:click={() => {
+												isJoined = false;
+											}}>{$emailAddress}</span
+										>
+									</div>
+								</div>
+							{:else}
+								<input
+									class="website"
+									type="email"
+									bind:value={$emailAddress}
+									placeholder="hi@email.com"
+									on:keypress={(e) => {
+										if (e.key === 'Enter') {
+											join();
+										}
+									}}
+								/>
+								<button class="in-app" on:click={join}>Join → </button>
+							{/if}
+						</div>
+
+						{#if $feed.filter((f) => f.url).length}
+							<div class="flex flex-col justify-center mt-2 p-2">
+								<div
+									class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2 text-sm"
+								>
+									We Build in Public
+								</div>
+
+								<div class="columns-3 gap-2 ">
+									{#each $feed.filter((f) => f.url) as feedItem (feedItem.guid)}
+										<a
+											href={feedItem.url}
+											target="_blank"
+											class="block mb-2 p-1 border hover:outline-black/20 cursor-pointer hover:outline hover:outline-1 transition border-black break-inside-avoid"
+										>
+											<div class="text-xxs _line-clamp-4 " style="line-height: 1;">
+												{feedItem.content}
+											</div>
+											<div>
+												{#if feedItem.attachments?.length}
+													<img
+														src={feedItem.attachments[0].url}
+														class="w-full max-h-[50px] object-cover my-1"
+													/>
+												{/if}
+											</div>
+											<hr class="bg-black/20 my-1" />
+											<div class="flex justify-between items-center" style="font-size: 10px;">
+												{moment(feedItem.createdOn).format(DATE_FORMAT)}
+
+												<div class="source-logo w-[10px]">
+													<SourceLogo theme="light" url={feedItem.url} />
+												</div>
+											</div>
+										</a>
+									{/each}
 								</div>
 							</div>
-						{:else}
-							<input
-								class="website"
-								type="email"
-								bind:value={$emailAddress}
-								placeholder="hi@email.com"
-								on:keypress={(e) => {
-									if (e.key === 'Enter') {
-										join();
-									}
-								}}
-							/>
-							<button class="in-app" on:click={join}>Join → </button>
 						{/if}
 					</div>
-
-					{#if $feed.filter((f) => f.url).length}
-						<div class="flex flex-col justify-center mt-2 p-2">
-							<div
-								class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2 text-sm"
-							>
-								We Build in Public
-							</div>
-
-							<div class="columns-3 gap-2 ">
-								{#each $feed.filter((f) => f.url) as feedItem (feedItem.guid)}
-									<a
-										href={feedItem.url}
-										target="_blank"
-										class="block mb-2 p-1 border hover:outline-black/20 cursor-pointer hover:outline hover:outline-1 transition border-black break-inside-avoid"
-									>
-										<div class="text-xxs _line-clamp-4 " style="line-height: 1;">
-											{feedItem.content}
-										</div>
-										<div>
-											{#if feedItem.attachments?.length}
-												<img
-													src={feedItem.attachments[0].url}
-													class="w-full max-h-[50px] object-cover my-1"
-												/>
-											{/if}
-										</div>
-										<hr class="bg-black/20 my-1" />
-										<div class="flex justify-between items-center" style="font-size: 10px;">
-											{moment(feedItem.createdOn).format(DATE_FORMAT)}
-
-											<div class="source-logo w-[10px]">
-												<SourceLogo theme="light" url={feedItem.url} />
-											</div>
-										</div>
-									</a>
-								{/each}
-							</div>
-						</div>
-					{/if}
 				</div>
-			</div>
+			{:else}
+				<div
+					class="h-[230px] flex flex-col justify-center items-center h-full text-white bg-[#111]  overflow-y-auto"
+				>
+					<div class="mb-2 text-sm font-medium">What's your 1-line pitch?</div>
+					<input placeholder="Launch in seconds" bind:value={$pageTitle} />
+					<div class="mt-4">
+						<button
+							on:click={() => {
+								isLaunched = true;
+							}}>Launch my page</button
+						>
+					</div>
+				</div>
+			{/if}
 		</div>
 	</div>
 
@@ -800,14 +839,19 @@
 	</div>
 
 	<div
-		class="col-span-4 text-xs border border-white h-[150px]"
+		class="col-span-4  text-xs border border-white h-[150px]"
 		bind:this={moreEl}
 		class:highlighted={moreEl?.isHighlighted}
 	>
-		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
-			<FeatherIcon class="mr-1" size={12} color="white" name="compass" />
+		<div
+			class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center justify-between"
+		>
+			<div class="flex items-center">
+				<FeatherIcon class="mr-1" size={12} color="white" name="compass" />
 
-			Tips
+				Tips
+			</div>
+			<div class="text-xxs text-orange-300 cursor-pointer" on:click={reset}>Reset</div>
 		</div>
 
 		<div
@@ -815,53 +859,60 @@
 				? 'bg-launch text-[#111]'
 				: 'bg-green-100/30'}"
 		>
-			{#if !$totalViews}
-				<b>Be your first visitor!</b>
-				<div class="mt-1">Click your website</div>
-			{:else if $customers?.length}
-				{#if $customers.length > 1 || selectedCustomer?.messages.length > 1}
-					{#if $customers.length > 1}
-						{#if elon.messages?.length === 1}
-							<b>👏 You've got a new signup!</b>
-							<div class="mt-1">Click on Elon to see the analytics profile.</div>
-						{:else if !$customers.find((c) => c.email === 'satya@microsoft.com')}
-							<b>🤑 Social feed worked! </b>
-							<div class="mt-1">
-								You've got a signup that led to conversation after auto-welcome email. <br />
-								It's time to do it again. Now, publish your win to LinkedIn.
-							</div>
-						{:else if $feed.filter((f) => f.url).length}
-							<b class="block">🚀 Get Started</b>
-							There's much more to Momentum: blogs, databases, interactive elements.
-							<a href="https://ide.momentum.page" target="_blank"
-								><button class="mt-2 launch-button">Launch my page </button></a
-							>
+			{#if isLaunched}
+				{#if !$totalViews}
+					<b>Be your first visitor!</b>
+					<div class="mt-1">Click your website</div>
+				{:else if $customers?.length}
+					{#if $customers.length > 1 || selectedCustomer?.messages.length > 1}
+						{#if $customers.length > 1}
+							{#if elon.messages?.length === 1}
+								<b>👏 You've got a new signup!</b>
+								<div class="mt-1">Click on Elon to see the analytics profile.</div>
+							{:else if !$customers.find((c) => c.email === 'satya@microsoft.com')}
+								<b>🤑 Social feed worked! </b>
+								<div class="mt-1">
+									You've got a signup that led to conversation after auto-welcome email. <br />
+									It's time to do it again. Now, publish your win to LinkedIn.
+								</div>
+							{:else if $feed.filter((f) => f.url).length}
+								<b class="block">🚀 Get Started</b>
+								There's much more to Momentum: blogs, databases, interactive elements.
+								<a href="https://ide.momentum.page" target="_blank"
+									><button class="mt-2 launch-button">Launch my page </button></a
+								>
+							{:else}
+								<b>🕺 Embed content to your page</b>
+								<div class="mt-1">
+									You have lot's of content elsewhere. Embed your links to your page to gain trust.
+								</div>
+							{/if}
 						{:else}
-							<b>🕺 Embed content to your page</b>
-							<div class="mt-1">
-								You have lot's of content elsewhere. Embed your links to your page to gain trust.
-							</div>
+							<b>😅 Get real customers</b>
+							<div class="mt-1">Distribute your website to social networks</div>
 						{/if}
 					{:else}
-						<b>😅 Get real customers</b>
-						<div class="mt-1">Distribute your website to social networks</div>
+						<b>✉️ Send a email message</b>
+						<div class="mt-1">Send any message to chat. It will be sent via email.</div>
 					{/if}
 				{:else}
-					<b>✉️ Send a email message</b>
-					<div class="mt-1">Send any message to chat. It will be sent via email.</div>
+					<b>😏 Be your first customer!</b>
+					<div class="mt-1">Submit any test email to your website</div>
+				{/if}
+				{#if false}
+					<div class="p-2">
+						<div class="bg-white/20 ring-1 ring-white p-1" style="font-size: 12px;">
+							Send Newsletter
+						</div>
+						<div class="bg-white/20 ring-1 ring-white mt-2 p-1" style="font-size: 12px;">
+							Connect Blog
+						</div>
+					</div>
 				{/if}
 			{:else}
-				<b>😏 Be your first customer!</b>
-				<div class="mt-1">Submit any test email to your website</div>
-			{/if}
-			{#if false}
-				<div class="p-2">
-					<div class="bg-white/20 ring-1 ring-white p-1" style="font-size: 12px;">
-						Send Newsletter
-					</div>
-					<div class="bg-white/20 ring-1 ring-white mt-2 p-1" style="font-size: 12px;">
-						Connect Blog
-					</div>
+				<b>Launch your page</b>
+				<div class="mt-1">
+					It's super easy: you just write a 1-line pitch, click publish and you're live!
 				</div>
 			{/if}
 		</div>
@@ -931,6 +982,7 @@
 	}
 
 	.highlighted {
+		@apply transition;
 		outline: 3px #ffb100 solid;
 		/* @apply shadow-lg shadow-green-300; */
 	}
