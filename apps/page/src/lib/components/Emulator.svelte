@@ -534,52 +534,54 @@
 				<FeatherIcon class="mr-1" size={12} color="white" name="pie-chart" />
 				Analytics
 			</div>
-			<div class="p-2">
-				{#if usersOnline !== -1}
-					<div in:fly={{ y: 25, duration: 150 }}>
-						<div class="flex items-center text-sm border border-white/40 px-2">
-							<div class="flex items-center">
-								<div
-									class="{usersOnline
-										? 'bg-green-500'
-										: 'bg-gray-300'} transition w-[5px] h-[5px] rounded-full mr-2"
-									style="animation: pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;"
-								/>
-								<div class="font-medium mr-2">{usersOnline}</div>
+			{#if isLaunched}
+				<div class="p-2">
+					{#if usersOnline !== -1}
+						<div in:fly={{ y: 25, duration: 150 }}>
+							<div class="flex items-center text-sm border border-white/40 px-2">
+								<div class="flex items-center">
+									<div
+										class="{usersOnline
+											? 'bg-green-500'
+											: 'bg-gray-300'} transition w-[5px] h-[5px] rounded-full mr-2"
+										style="animation: pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;"
+									/>
+									<div class="font-medium mr-2">{usersOnline}</div>
+								</div>
+								<div class="mr-1 text-xs">Online Users</div>
 							</div>
-							<div class="mr-1 text-xs">Online Users</div>
+							{#if $totalViews !== -1}
+								<div class="border border-white/40 p-2 mt-2">
+									{#key chartRefreshTimestamp}
+										<div in:fade>
+											<LinkedChart
+												linked="chart"
+												uid="views"
+												data={firstChart}
+												fill="#fafafa"
+												grow={true}
+												width="135"
+												barMinWidth={1}
+												gap={2}
+												height={50}
+												transition={500}
+											/>
+										</div>
+									{/key}
+									<div class="text-xs opacity-100 mt-2">Page Views ({$totalViews})</div>
+								</div>
+							{/if}
 						</div>
-						{#if $totalViews !== -1}
-							<div class="border border-white/40 p-2 mt-2">
-								{#key chartRefreshTimestamp}
-									<div in:fade>
-										<LinkedChart
-											linked="chart"
-											uid="views"
-											data={firstChart}
-											fill="#fafafa"
-											grow={true}
-											width="135"
-											barMinWidth={1}
-											gap={2}
-											height={50}
-											transition={500}
-										/>
-									</div>
-								{/key}
-								<div class="text-xs opacity-100 mt-2">Page Views ({$totalViews})</div>
-							</div>
-						{/if}
-					</div>
-				{/if}
+					{/if}
 
-				{#if $totalViews}
-					<div class="border border-white/40 p-2 mt-2">
-						<div class="font-bold">{conversionRate}%</div>
-						<div class="text-xs">Conversion Rate</div>
-					</div>
-				{/if}
-			</div>
+					{#if $totalViews}
+						<div class="border border-white/40 p-2 mt-2">
+							<div class="font-bold">{conversionRate}%</div>
+							<div class="text-xs">Conversion Rate</div>
+						</div>
+					{/if}
+				</div>
+			{/if}
 		</div>
 	</div>
 

@@ -98,7 +98,7 @@
 				(page.sections?.length && !hero.demoUrl)) &&
 			hero.theme?.bgPattern !== 'cursors'
 				? ''
-				: 'min-h-screen h-screen'} {hero.theme?.bgPattern === 'canvas' ? 'max-w-max' : ''}"
+				: 'min-h-screen sm:h-screen'} {hero.theme?.bgPattern === 'canvas' ? 'max-w-max' : ''}"
 			style="{styles};"
 		>
 			<div
