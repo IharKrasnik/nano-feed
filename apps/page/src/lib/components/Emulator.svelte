@@ -80,10 +80,6 @@
 
 	let selectedFeedTab = 'post';
 
-	let FEED_ITEMS_LS_KEY = 'FEED_ITEMS';
-
-	let feedItems = JSON.parse(localStorage[FEED_ITEMS_LS_KEY] || '[]');
-
 	let feedItem = {
 		content: 'Check out my awesome website!',
 		isSyncToTwitter: true,
@@ -216,7 +212,7 @@
 		messages: [
 			{
 				guid: uuidv4(),
-				content: 'Hey, Elon! Welcome to coolco. Reply to this email to jump on a call with me!',
+				content: 'Hey, Satya! Welcome to coolco. Reply to this email to jump on a call with me!',
 				isAuto: true
 			}
 		]
@@ -236,6 +232,10 @@
 		});
 
 		$customers = [...$customers, satya];
+
+		feedItem.content = '';
+		selectedFeedTab = 'url';
+		feedItem.url = 'https://twitter.com/that_igor_/status/1731356427292168443';
 	};
 
 	let sendToFeed = async () => {
@@ -244,7 +244,6 @@
 		}
 
 		feedItem.createdOn = new Date();
-		$feed = [feedItem, ...$feed];
 
 		if (feedItem.isSyncToTwitter) {
 			signupElon();
@@ -269,8 +268,6 @@
 				firstChart = { ...firstChart };
 				firstChart._refreshTimestamp = new Date();
 			});
-
-			return;
 		}
 
 		if (feedItem.url) {
@@ -290,14 +287,12 @@
 				feedItem.attachments = [{ type: 'image', url: data.image }];
 			}
 
-			feedItems = [{ ...feedItem }, ...feedItems];
-
-			localStorage[FEED_ITEMS_LS_KEY] = JSON.stringify(feedItems);
-
-			feedItem = {};
+			feedItem = { content: '' };
 		} else {
 			feedItem.content = feedItem.content || 'Check out my awesome website';
 		}
+
+		$feed = [{ ...feedItem }, ...$feed];
 	};
 
 	let offlineTimeout;
@@ -345,7 +340,7 @@
 				</div>
 			</div>
 
-			<div class="h-[230px] {feedItems?.length ? 'pt-[50px]' : ''} bg-[#fefefe] overflow-y-auto">
+			<div class="h-[230px] {$feed?.length ? 'pt-[50px]' : ''} bg-[#fefefe] overflow-y-auto">
 				{#if isJustJoined}
 					<ConfettiExplosion particleCount={300} force={0.3} />
 				{/if}
@@ -385,7 +380,7 @@
 						{/if}
 					</div>
 
-					{#if feedItems.length}
+					{#if $feed.filter((f) => f.url).length}
 						<div class="flex flex-col justify-center mt-2 p-2">
 							<div
 								class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2 text-sm"
@@ -394,7 +389,7 @@
 							</div>
 
 							<div class="columns-3 gap-2 ">
-								{#each feedItems as feedItem}
+								{#each $feed.filter((f) => f.url) as feedItem}
 									<div class="p-1 border border-black break-inside-avoid">
 										<div class="text-xxs _line-clamp-4 " style="line-height: 1;">
 											{feedItem.content}
@@ -574,16 +569,14 @@
 		</div>
 	</div>
 
-	<div
-		class="col-span-7 border border-white relative h-[275px] {selectedCustomer ? '' : 'opacity-50'}"
-	>
+	<div class="col-span-7 border border-white relative  {selectedCustomer ? '' : 'opacity-50'}">
 		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
 			<FeatherIcon class="mr-1" size={12} color="white" name="message-square" />
 
 			Chat
 		</div>
 
-		<div class="flex flex-col p-2">
+		<div class="flex flex-col p-2 overflow-y-auto h-[230px] pb-8">
 			{#each selectedCustomer?.messages || [] as message (message.guid)}
 				<div
 					in:fly={{ y: 25 }}
@@ -606,7 +599,7 @@
 			{/each}
 		</div>
 		{#if selectedCustomer}
-			<div class="absolute flex items-center bottom-0 left-0 w-full p-1">
+			<div class="absolute flex items-center bottom-0 left-0 w-full p-1 bg-black">
 				<textarea bind:value={newMessage.content} rows="1" class="w-full" placeholder="Hello!" />
 				<button
 					class="shrink-0 ml-3"
@@ -695,7 +688,9 @@
 					<div class="relative break-inside-avoid">
 						<img
 							class="absolute left-0 top-0 w-full h-full"
-							src="https://images.unsplash.com/photo-1614854262178-03c96e9c8c28?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+							src={$feed.length === 0
+								? 'https://images.unsplash.com/photo-1614854262178-03c96e9c8c28?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+								: 'https://images.unsplash.com/photo-1641326038434-01b0217c18f1?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
 						/>
 						<div class="relative p-4">
 							<div
