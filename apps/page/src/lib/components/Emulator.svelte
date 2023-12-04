@@ -314,6 +314,8 @@
 	};
 
 	let offlineTimeout;
+
+	let pageTagline = '';
 </script>
 
 <div class="grid grid-cols-12 items-stretch gap-4 p-2 text-white">
@@ -738,14 +740,18 @@
 		{/if}
 	</div>
 
-	<div class="col-span-4 text-xs border border-white  h-[150px]">
+	<div class="col-span-4 text-xs border border-white h-[150px]">
 		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
 			<FeatherIcon class="mr-1" size={12} color="white" name="compass" />
 
 			Tips
 		</div>
 
-		<div class=" h-full w-full p-2 bg-green-100/30">
+		<div
+			class=" h-[125px] w-full p-2 {$feed.filter((f) => f.url).length
+				? 'bg-launch text-[#111]'
+				: 'bg-green-100/30'}"
+		>
 			{#if !$totalViews}
 				<b>Be your first visitor!</b>
 				<div class="mt-1">Click your website</div>
@@ -761,6 +767,12 @@
 								You've got a signup that led to conversation after auto-welcome email. <br />
 								It's time to do it again. Now, publish your win to LinkedIn.
 							</div>
+						{:else if $feed.filter((f) => f.url).length}
+							<b class="block">🚀 Get Started</b>
+							There's much more to Momentum: blogs, databases, interactive elements.
+							<a href="https://ide.momentum.page" target="_blank"
+								><button class="mt-2 launch-button">Launch my page </button></a
+							>
 						{:else}
 							<b>🕺 Embed content to your page</b>
 							<div class="mt-1">
@@ -794,6 +806,16 @@
 </div>
 
 <style>
+	.launch-button {
+		background: #0a3d1d !important;
+		--tw-ring-color: #24fa74;
+		color: #f6f5f4;
+	}
+
+	.bg-launch {
+		background-color: #00ff01;
+	}
+
 	.text-xxs {
 		font-size: 11px;
 		line-height: 1.1;
