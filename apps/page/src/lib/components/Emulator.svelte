@@ -851,7 +851,9 @@
 
 				Tips
 			</div>
-			<div class="text-xxs text-orange-300 cursor-pointer" on:click={reset}>Reset</div>
+			{#if isLaunched}
+				<div class="text-xxs text-orange-300 cursor-pointer" on:click={reset}>Reset</div>
+			{/if}
 		</div>
 
 		<div
