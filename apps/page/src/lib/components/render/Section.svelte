@@ -291,12 +291,15 @@
 				class="absolute left-0 top-0 w-full h-full object-cover rounded-xl "
 				style="z-index: 0;"
 			/>
-			<div
-				class="absolute top-0 left-0 w-full h-full rounded-xl"
-				style="background-color: {page.theme.theme === 'dark'
-					? 'rgba(0,0,0,0.85)'
-					: 'rgba(255,255,255,.85)'}; z-index: 1;"
-			/>
+
+			{#if !section.theme?.isNotBgImageDimmed}
+				<div
+					class="absolute top-0 left-0 w-full h-full rounded-xl"
+					style="background-color: {page.theme.theme === 'dark'
+						? 'rgba(0,0,0,0.85)'
+						: 'rgba(255,255,255,.85)'}; z-index: 1;"
+				/>
+			{/if}
 		{/if}
 
 		<div
@@ -901,12 +904,14 @@
 													class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
 													style="z-index: 0;"
 												/>
-												<div
-													class="absolute top-0 left-0 w-full h-full rounded-xl"
-													style="background-color: {page.theme?.theme === 'dark'
-														? 'rgba(0,0,0,0.85)'
-														: 'rgba(255,255,255,.85)'}; z-index: 1;"
-												/>
+												{#if !item.theme?.isNotBgImageDimmed}
+													<div
+														class="absolute top-0 left-0 w-full h-full rounded-xl"
+														style="background-color: {page.theme?.theme === 'dark'
+															? 'rgba(0,0,0,0.85)'
+															: 'rgba(255,255,255,.85)'}; z-index: 1;"
+													/>
+												{/if}
 											{/if}
 
 											<div

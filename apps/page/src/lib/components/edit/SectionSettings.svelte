@@ -301,7 +301,7 @@
 					/>
 				{/if}
 
-				{#if sectionItem.bgImageUrl}
+				{#if sectionItem.containerBgImageUrl}
 					<div class="flex text-sm mt-4 font-normal items-center">
 						<input
 							bind:checked={sectionItem.theme.isNotContainerBgImageDimmed}
@@ -309,7 +309,7 @@
 							type="checkbox"
 						/>
 
-						Do not dim background image
+						Do not dim container background image
 					</div>
 				{/if}
 			{/if}
