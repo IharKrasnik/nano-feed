@@ -15,12 +15,15 @@
 	import Background from '$lib/components/Background.svelte';
 	import hexToRgba from 'lib/helpers/hexToRgba';
 	import Emulator from '$lib/components/Emulator.svelte';
+	import Popup from '$lib/components/Popup.svelte';
 
 	export let page;
 
 	export let hero;
 	export let isEmbed;
 	export let isEdit;
+
+	let isDemoPopupShown = false;
 
 	let styles = '';
 
@@ -44,7 +47,28 @@
 	if (!hero.theme) {
 		hero.theme = {};
 	}
+
+	let demoEl;
 </script>
+
+<!-- 
+{#if isDemoPopupShown}
+	<Popup
+		{page}
+		isShown={isDemoPopupShown}
+		maxWidth={1000}
+		onClosed={() => {
+			isDemoPopupShown = false;
+		}}
+	>
+		<div class="origin-top-left bg-[#111111]">
+			<div class="my-16 max-w-[600px] mx-auto scale-110 origin-top-left">
+				<Emulator />
+			</div>
+		
+		</div>
+	</Popup>
+{/if} -->
 
 {#if hero.title || hero.subtitle || hero.demoUrl}
 	<div
@@ -223,22 +247,31 @@
 
 					{#if hero.demoUrl}
 						<div
-							class="relative  w-full  mt-16 sm:mt-0 {hero.theme?.isVertical
+							class="relative  w-full mt-16 sm:mt-0 {hero.theme?.isVertical
 								? ''
 								: 'sm:ml-8 sm:max-w-[600px]'}"
+							on:click={() => {
+								// if (hero.demoUrl.includes('/emulator-full')) {
+								// 	isDemoPopupShown = true;
+								// }
+							}}
 						>
-							<!-- <Emulator /> -->
-							<RenderUrlWithBackground
-								isLazy={false}
-								imageUrl={hero.demoUrl}
-								class={hero.theme?.isVertical ? 'mt-8' : ''}
-								imageBackgroundUrl={hero.demoBackgroundUrl}
-								urlClass="relative w-full flex justify-end"
-								urlImgMaxWidth={hero.imgMaxWidth || 0}
-								urlImgClass="{hero.imgMaxWidth
-									? `rounded-lg`
-									: 'w-full rounded-xl'}  shadow-md object-cover"
-							/>
+							{#if hero.demoUrl.includes('/emulator-full')}
+								<Emulator />
+							{:else}
+								<RenderUrlWithBackground
+									bind:this={demoEl}
+									isLazy={false}
+									imageUrl={hero.demoUrl}
+									class={hero.theme?.isVertical ? 'mt-8' : ''}
+									imageBackgroundUrl={hero.demoBackgroundUrl}
+									urlClass="relative w-full flex justify-end"
+									urlImgMaxWidth={hero.imgMaxWidth || 0}
+									urlImgClass="{hero.imgMaxWidth
+										? `rounded-lg`
+										: 'w-full rounded-xl'}  shadow-md object-cover"
+								/>
+							{/if}
 						</div>
 					{/if}
 				</div>

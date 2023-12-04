@@ -28,10 +28,6 @@
 
 	let isLaunched = !!$pageTitle;
 
-	if (!isLaunched) {
-		$pageTitle = 'My Awesome Website';
-	}
-
 	let weekAgoM = moment().subtract(7, 'days');
 	let weekAgoViews = Math.random() * 100 + 420;
 
@@ -367,9 +363,44 @@
 		selectedCustomer = null;
 		[chatEl, customersEl, analyticsEl, feedEl, moreEl].forEach((el) => (el.isHighlighted = false));
 	};
+
+	let launchPage = () => {
+		if (!$pageTitle.trim()) {
+			$pageTitle = 'My Awesome Website';
+		}
+		isLaunched = true;
+	};
+
+	let sendMessage = () => {
+		if (!newMessage.content) {
+			return;
+		}
+
+		if (!newMessage.guid) {
+			newMessage.guid = uuidv4();
+		}
+
+		newMessage.sentOn = new Date();
+		selectedCustomer.messages = [...selectedCustomer.messages, { ...newMessage }];
+		$customers = [...$customers];
+
+		newMessage.content = '';
+		newMessage.guid = uuidv4();
+
+		chatEl.isHighlighted = false;
+
+		if (!$feed.length) {
+			highlightSection(feedEl);
+		}
+	};
 </script>
 
 <div class="highlighted hidden" />
+
+<div class="text-white font-medium text-center mb-2">Try Momentum Now</div>
+<div class="text-white text-xs text-center mb-2 opacity-80">
+	Use our emulator to see how Momentum works
+</div>
 
 <div class="grid grid-cols-12 items-stretch gap-4 p-2 text-white">
 	<div
@@ -511,13 +542,18 @@
 					class="h-[230px] flex flex-col justify-center items-center h-full text-white bg-[#111]  overflow-y-auto"
 				>
 					<div class="mb-2 text-sm font-medium">What's your 1-line pitch?</div>
-					<input placeholder="Launch in seconds" bind:value={$pageTitle} />
+					<input
+						autofocus
+						placeholder="Launch in seconds"
+						bind:value={$pageTitle}
+						on:keypress={(e) => {
+							if (e.key === 'Enter') {
+								launchPage();
+							}
+						}}
+					/>
 					<div class="mt-4">
-						<button
-							on:click={() => {
-								isLaunched = true;
-							}}>Launch my page</button
-						>
+						<button on:click={launchPage}>Launch my page</button>
 					</div>
 				</div>
 			{/if}
@@ -722,32 +758,18 @@
 		</div>
 		{#if selectedCustomer}
 			<div class="absolute flex items-center bottom-0 left-0 w-full p-1 bg-black">
-				<textarea bind:value={newMessage.content} rows="1" class="w-full" placeholder="Hello!" />
-				<button
-					class="shrink-0 ml-3"
-					on:click={() => {
-						if (!newMessage.content) {
-							return;
+				<input
+					bind:value={newMessage.content}
+					rows="1"
+					class="w-full"
+					placeholder="Hello!"
+					on:keypress={(e) => {
+						if (e.key === 'Enter') {
+							sendMessage();
 						}
-
-						if (!newMessage.guid) {
-							newMessage.guid = uuidv4();
-						}
-
-						newMessage.sentOn = new Date();
-						selectedCustomer.messages = [...selectedCustomer.messages, { ...newMessage }];
-						$customers = [...$customers];
-
-						newMessage.content = '';
-						newMessage.guid = uuidv4();
-
-						chatEl.isHighlighted = false;
-
-						if (!$feed.length) {
-							highlightSection(feedEl);
-						}
-					}}>Send Email</button
-				>
+					}}
+				/>
+				<button class="shrink-0 ml-3" on:click={sendMessage}>Send Email</button>
 			</div>
 		{/if}
 	</div>
@@ -924,6 +946,10 @@
 </div>
 
 <style>
+	button {
+		border-radius: 0 !important;
+	}
+
 	.launch-button {
 		background: #0a3d1d !important;
 		--tw-ring-color: #24fa74;
@@ -937,11 +963,6 @@
 	.text-xxs {
 		font-size: 11px;
 		line-height: 1.1;
-	}
-
-	:global(.emu) {
-		font-size: 12px !important;
-		@apply bg-white/20 ring-1 ring-white px-2 py-0 text-sm font-normal;
 	}
 
 	input,
@@ -973,11 +994,18 @@
 	button {
 		padding: 2px 16px;
 		font-size: 12px !important;
-		@apply bg-white/20 ring-1 ring-white px-2 py-0 text-sm font-normal;
+		@apply bg-white/20 ring-1 ring-white px-2 py-0 text-sm font-normal text-white;
+	}
+
+	:global(.emu) {
+		font-size: 12px !important;
+		border-radius: 0;
+		@apply bg-white/20 ring-1 ring-white px-2 py-0 text-sm font-normal text-white;
 	}
 
 	button.in-app {
 		border: 1px black solid;
+		@apply text-black;
 	}
 
 	:global(.source-logo svg) {
