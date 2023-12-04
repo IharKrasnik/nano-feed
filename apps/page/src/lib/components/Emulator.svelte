@@ -412,7 +412,7 @@
 		/>
 
 		<div
-			class="relative z-10 border border-white h-full"
+			class="relative z-10 border border-white/80 rounded-sm h-full"
 			on:click={() => {
 				if (isLaunched) {
 					if (usersOnline === -1 || usersOnline === 0) {
@@ -565,7 +565,9 @@
 		bind:this={analyticsEl}
 		class:highlighted={analyticsEl?.isHighlighted}
 	>
-		<div class="border border-white h-[230px] {$totalViews !== -1 ? '' : 'opacity-50'}">
+		<div
+			class="border border-white/80 rounded-sm h-[230px] {$totalViews !== -1 ? '' : 'opacity-50'}"
+		>
 			<div class="flex items-center text-xs p-1 px-2 bg-white/10 border-b border-white/20">
 				<FeatherIcon class="mr-1" size={12} color="white" name="pie-chart" />
 				Analytics
@@ -622,7 +624,7 @@
 	</div>
 
 	<div
-		class="col-span-5 border border-white h-[275px] transition {$customers.length
+		class="col-span-5 border border-white/80 rounded-sm h-[275px] transition {$customers.length
 			? 'opacity-100'
 			: 'opacity-50'}"
 		bind:this={customersEl}
@@ -724,7 +726,9 @@
 	</div>
 
 	<div
-		class="col-span-7 border border-white relative  {selectedCustomer ? '' : 'opacity-50'}"
+		class="col-span-7 border border-white/80 rounded-sm relative  {selectedCustomer
+			? ''
+			: 'opacity-50'}"
 		bind:this={chatEl}
 		class:highlighted={chatEl?.isHighlighted}
 	>
@@ -775,7 +779,7 @@
 	</div>
 
 	<div
-		class="col-span-8 border border-white  h-[150px] transition {$customers?.length
+		class="col-span-8 border border-white/80 rounded-sm h-[150px] transition {$customers?.length
 			? 'opacity-100'
 			: 'opacity-50'}"
 		bind:this={feedEl}
@@ -863,7 +867,7 @@
 	</div>
 
 	<div
-		class="col-span-4  text-xs border border-white h-[150px]"
+		class="col-span-4  text-xs border border-white/80 rounded-sm h-[150px]"
 		bind:this={moreEl}
 		class:highlighted={moreEl?.isHighlighted}
 	>
@@ -947,7 +951,7 @@
 
 <style>
 	button {
-		border-radius: 0 !important;
+		border-radius: 2px !important;
 	}
 
 	.launch-button {
@@ -971,7 +975,7 @@
 		padding: 2px 8px !important;
 		background: none !important;
 		color: #fafafa;
-		border-radius: 0 !important;
+		border-radius: 2px !important;
 		font-size: 12px !important;
 		@apply text-sm;
 	}
@@ -986,7 +990,7 @@
 		padding: 2px 8px !important;
 		background: none !important;
 		color: #111;
-		border-radius: 0 !important;
+		border-radius: 2px !important;
 		font-size: 12px !important;
 		@apply text-sm;
 	}
@@ -999,7 +1003,7 @@
 
 	:global(.emu) {
 		font-size: 12px !important;
-		border-radius: 0;
+		border-radius: 2px;
 		@apply bg-white/20 ring-1 ring-white px-2 py-0 text-sm font-normal text-white;
 	}
 
