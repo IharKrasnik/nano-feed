@@ -32,6 +32,23 @@
 
 	let iterateM = weekAgoM.clone();
 
+	let websiteEl;
+	let analyticsEl;
+	let customersEl;
+	let chatEl;
+	let feedEl;
+	let moreEl;
+
+	let highlightSection = (sectionEl, { timeout = 0 } = {}) => {
+		sectionEl.isHighlighted = true;
+
+		if (timeout) {
+			setTimeout(() => {
+				sectionEl.isHighlighted = false;
+			}, timeout);
+		}
+	};
+
 	_.range(0, 7).map((i) => {
 		prevViewsCount = prevViewsCount + i * (Math.random() * 50);
 		viewChartData[iterateM.format(DATE_FORMAT)] = prevViewsCount;
@@ -126,6 +143,8 @@
 			];
 			$customers = [...$customers];
 		}, 1000);
+
+		highlightSection(chatEl);
 	};
 
 	let elon = $customers.find((c) => c.email === 'elon@x.com') || {
@@ -163,13 +182,17 @@
 
 		elon.createdOn = new Date();
 		$customers = [...$customers, elon];
+		highlightSection(customersEl);
 	};
 
 	let selectElon = () => {
 		selectedCustomer = elon;
+		customersEl.isHighlighted = false;
 
 		if (elon.messages?.length === 1) {
 			setTimeout(() => {
+				chatEl.isHighlighted = true;
+
 				elon.messages = selectedCustomer.messages = [
 					...elon.messages,
 					{
@@ -183,6 +206,8 @@
 
 				feedItem.content = `I've got ${$totalViews} views to my page! And a BIG signup.`;
 				feedItem.isSyncToLinkedin = true;
+
+				feedEl.isHighlighted = true;
 			}, 2000);
 		}
 	};
@@ -241,6 +266,8 @@
 			selectedFeedTab = 'url';
 			feedItem.url = 'https://twitter.com/that_igor_/status/1731356427292168443';
 		}, 0);
+
+		highlightSection(customersEl, { timeout: 3000 });
 	};
 
 	let chartRefreshTimestamp = new Date();
@@ -249,6 +276,9 @@
 		if (!feedItem.content && !feedItem.url) {
 			return;
 		}
+
+		customersEl.isHighlighted = false;
+		chatEl.isHighlighted = false;
 
 		feedItem.createdOn = new Date();
 
@@ -311,6 +341,8 @@
 					: 'https://momentum.page'
 				: ''
 		};
+
+		feedEl.isHighlighted = !!feedItem.url;
 	};
 
 	let offlineTimeout;
@@ -318,8 +350,13 @@
 	let pageTagline = '';
 </script>
 
+<div class="highlighted hidden" />
+
 <div class="grid grid-cols-12 items-stretch gap-4 p-2 text-white">
-	<div class="relative col-span-8 h-full overflow-hidden text-[#111] shadow shadow-white">
+	<div
+		class="relative col-span-8 h-full overflow-hidden text-[#111] shadow shadow-white"
+		bind:this={websiteEl}
+	>
 		<div
 			class="bg-root absolute z-10 inset-0 -z-50 w-full h-full bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]"
 		/>
@@ -448,7 +485,11 @@
 		</div>
 	</div>
 
-	<div class="col-span-4 h-full text-white ">
+	<div
+		class="col-span-4 h-full text-white "
+		bind:this={analyticsEl}
+		class:highlighted={analyticsEl?.isHighlighted}
+	>
 		<div class="border border-white h-[230px] {$totalViews !== -1 ? '' : 'opacity-50'}">
 			<div class="flex items-center text-xs p-1 px-2 bg-white/10 border-b border-white/20">
 				<FeatherIcon class="mr-1" size={12} color="white" name="pie-chart" />
@@ -469,25 +510,27 @@
 							</div>
 							<div class="mr-1 text-xs">Online Users</div>
 						</div>
-						<div class="border border-white/40 p-2 mt-2">
-							{#key chartRefreshTimestamp}
-								<div in:fade>
-									<LinkedChart
-										linked="chart"
-										uid="views"
-										data={firstChart}
-										fill="#fafafa"
-										grow={true}
-										width="135"
-										barMinWidth={1}
-										gap={2}
-										height={50}
-										transition={500}
-									/>
-								</div>
-							{/key}
-							<div class="text-xs opacity-100 mt-2">Page Views ({$totalViews})</div>
-						</div>
+						{#if $totalViews !== -1}
+							<div class="border border-white/40 p-2 mt-2">
+								{#key chartRefreshTimestamp}
+									<div in:fade>
+										<LinkedChart
+											linked="chart"
+											uid="views"
+											data={firstChart}
+											fill="#fafafa"
+											grow={true}
+											width="135"
+											barMinWidth={1}
+											gap={2}
+											height={50}
+											transition={500}
+										/>
+									</div>
+								{/key}
+								<div class="text-xs opacity-100 mt-2">Page Views ({$totalViews})</div>
+							</div>
+						{/if}
 					</div>
 				{/if}
 
@@ -505,6 +548,8 @@
 		class="col-span-5 border border-white h-[275px] transition {$customers.length
 			? 'opacity-100'
 			: 'opacity-50'}"
+		bind:this={customersEl}
+		class:highlighted={customersEl?.isHighlighted}
 	>
 		<div
 			class="text-xs p-1 px-2 bg-white/10 border-b border-white/20 flex items-center justify-between mb-2"
@@ -528,6 +573,8 @@
 						? 'border-2 border-white/80 m-2'
 						: 'border border-white/40'}"
 					on:click={() => {
+						customersEl.isHighlighted = false;
+
 						if (customer.email === 'elon@x.com') {
 							selectElon();
 						} else {
@@ -599,7 +646,11 @@
 		</div>
 	</div>
 
-	<div class="col-span-7 border border-white relative  {selectedCustomer ? '' : 'opacity-50'}">
+	<div
+		class="col-span-7 border border-white relative  {selectedCustomer ? '' : 'opacity-50'}"
+		bind:this={chatEl}
+		class:highlighted={chatEl?.isHighlighted}
+	>
 		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
 			<FeatherIcon class="mr-1" size={12} color="white" name="message-square" />
 
@@ -648,6 +699,12 @@
 
 						newMessage.content = '';
 						newMessage.guid = uuidv4();
+
+						chatEl.isHighlighted = false;
+
+						if (!$feed.length) {
+							highlightSection(feedEl);
+						}
 					}}>Send Email</button
 				>
 			</div>
@@ -658,6 +715,8 @@
 		class="col-span-8 border border-white  h-[150px] transition {$customers?.length
 			? 'opacity-100'
 			: 'opacity-50'}"
+		bind:this={feedEl}
+		class:highlighted={feedEl?.isHighlighted}
 	>
 		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
 			<FeatherIcon class="mr-1" size={12} color="white" name="rss" />
@@ -740,7 +799,11 @@
 		{/if}
 	</div>
 
-	<div class="col-span-4 text-xs border border-white h-[150px]">
+	<div
+		class="col-span-4 text-xs border border-white h-[150px]"
+		bind:this={moreEl}
+		class:highlighted={moreEl?.isHighlighted}
+	>
 		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
 			<FeatherIcon class="mr-1" size={12} color="white" name="compass" />
 
@@ -760,7 +823,7 @@
 					{#if $customers.length > 1}
 						{#if elon.messages?.length === 1}
 							<b>👏 You've got a new signup!</b>
-							<div class="mt-1">Click on Elon to see his analytics profile.</div>
+							<div class="mt-1">Click on Elon to see the analytics profile.</div>
 						{:else if !$customers.find((c) => c.email === 'satya@microsoft.com')}
 							<b>🤑 Social feed worked! </b>
 							<div class="mt-1">
@@ -865,5 +928,10 @@
 	:global(.source-logo svg) {
 		width: 10px !important;
 		height: 10px !important;
+	}
+
+	.highlighted {
+		outline: 3px #ffb100 solid;
+		/* @apply shadow-lg shadow-green-300; */
 	}
 </style>
