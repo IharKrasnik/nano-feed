@@ -90,6 +90,7 @@
 				</style><title /><g
 					><path
 						class="st0"
+						fill={themeStrokeColor}
 						d="M500,1000L500,1000C223.9,1000,0,776.1,0,500v0C0,223.9,223.9,0,500,0h0c276.1,0,500,223.9,500,500v0   C1000,776.1,776.1,1000,500,1000z"
 					/><path
 						fill={themeFillColor}

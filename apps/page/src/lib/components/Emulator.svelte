@@ -78,10 +78,17 @@
 		}
 	};
 
-	let selectedFeedTab = 'post';
+	let selectedFeedTab = $customers.length > 2 ? 'url' : 'post';
 
 	let feedItem = {
-		content: 'Check out my awesome website!',
+		guid: uuidv4(),
+		content:
+			$customers.length < 2
+				? 'Check out my awesome website!'
+				: $customers.length < 2
+				? `I've got ${totalViews} views. And a BIG signup!`
+				: '',
+		url: $customers.length > 2 ? 'https://twitter.com/that_igor_/status/1731356427292168443' : '',
 		isSyncToTwitter: true,
 		isSyncToLinkedin: false
 	};
@@ -121,7 +128,7 @@
 		}, 1000);
 	};
 
-	let elon = {
+	let elon = $customers.find((c) => c.email === 'elon@x.com') || {
 		deviceIcon: 'smartphone',
 		deviceName: 'ios',
 		email: 'elon@x.com',
@@ -144,17 +151,11 @@
 			},
 			{
 				date: new Date(),
-				type: 'click',
-				text: 'Clicked link /about'
-			},
-			{
-				date: new Date(),
 				type: 'form-submit',
 				text: 'Submitted email'
 			}
 		]
 	};
-
 	let signupElon = () => {
 		if ($customers.find((u) => u.email === 'elon@x.com')) {
 			return;
@@ -178,13 +179,15 @@
 					}
 				];
 
+				$customers = [...$customers];
+
 				feedItem.content = `I've got ${$totalViews} views to my page! And a BIG signup.`;
 				feedItem.isSyncToLinkedin = true;
 			}, 2000);
 		}
 	};
 
-	let satya = {
+	let satya = $customers.find((c) => c.email === 'satya@microsoft.com') || {
 		email: 'satya@microsoft.com',
 		deviceIcon: 'monitor',
 		deviceName: 'Windows',
@@ -233,10 +236,14 @@
 
 		$customers = [...$customers, satya];
 
-		feedItem.content = '';
-		selectedFeedTab = 'url';
-		feedItem.url = 'https://twitter.com/that_igor_/status/1731356427292168443';
+		setTimeout(() => {
+			feedItem.content = '';
+			selectedFeedTab = 'url';
+			feedItem.url = 'https://twitter.com/that_igor_/status/1731356427292168443';
+		}, 0);
 	};
+
+	let chartRefreshTimestamp = new Date();
 
 	let sendToFeed = async () => {
 		if (!feedItem.content && !feedItem.url) {
@@ -255,19 +262,20 @@
 
 		let nowM = moment();
 
+		let lastVisitorsCount = firstChart[weekAgoM.format(DATE_FORMAT)] || 0;
+		let newVisitorsCount = parseInt(
+			lastVisitorsCount === 1 ? Math.random() * 80 + 20 : lastVisitorsCount * (1.1 + Math.random())
+		);
+		$totalViews += newVisitorsCount;
+
 		if (weekAgoM < nowM) {
 			setTimeout(() => {
-				let lastVisitorsCount = firstChart[weekAgoM.format(DATE_FORMAT)] || 0;
-				let newVisitorsCount = parseInt(Math.random() * 70 + lastVisitorsCount * 0.7);
-
-				$totalViews += newVisitorsCount;
-
 				weekAgoM.add(1, 'day');
 
 				firstChart[weekAgoM.format(DATE_FORMAT)] = 1 + newVisitorsCount;
 				firstChart = { ...firstChart };
-				firstChart._refreshTimestamp = new Date();
-			});
+				chartRefreshTimestamp = new Date();
+			}, 1000);
 		}
 
 		if (feedItem.url) {
@@ -278,21 +286,31 @@
 			feedItem.url = data.url || feedItem.url;
 			feedItem.embedUrl = data.embedUrl;
 
-			feedItem.source = data.source;
-
 			feedItem.title = data.title;
 			feedItem.content = data.description;
 
 			if (data.image) {
 				feedItem.attachments = [{ type: 'image', url: data.image }];
 			}
-
-			feedItem = { content: '' };
 		} else {
 			feedItem.content = feedItem.content || 'Check out my awesome website';
 		}
 
 		$feed = [{ ...feedItem }, ...$feed];
+
+		feedItem = {
+			guid: uuidv4(),
+			content: '',
+			url: $feed.filter((f) => f.url).length
+				? !$feed.find((f) => f.url.includes('twitter.com'))
+					? 'https://twitter.com/that_igor_/status/1731356427292168443'
+					: !$feed.find((f) => f.url.includes('linkedin.com'))
+					? 'https://www.linkedin.com/feed/update/urn:li:activity:7042521257401102336/'
+					: !$feed.find((f) => f.url.includes('linkedin.com'))
+					? 'https://www.reddit.com/r/startups/comments/z3s8m4/9_tips_for_nontech_founders_to_build_the_right/'
+					: 'https://momentum.page'
+				: ''
+		};
 	};
 
 	let offlineTimeout;
@@ -328,7 +346,7 @@
 				}, 1000);
 			}}
 		>
-			<div class="absolute w-full left-0 top-0 bg-[rgba(255,255,255,.3)] backdrop-blur">
+			<div class="absolute w-full left-0 top-0 bg-[rgba(255,255,255,.3)] backdrop-blur z-10">
 				<div
 					class="relative border-b  border-black/20 px-4 flex items-center justify-between text-xxs"
 				>
@@ -340,11 +358,15 @@
 				</div>
 			</div>
 
-			<div class="h-[230px] {$feed?.length ? 'pt-[50px]' : ''} bg-[#fefefe] overflow-y-auto">
+			<div class="h-[230px] bg-[#fefefe]  overflow-y-auto">
 				{#if isJustJoined}
 					<ConfettiExplosion particleCount={300} force={0.3} />
 				{/if}
-				<div class="py-8 flex flex-col items-center justify-center h-full ">
+				<div
+					class="relative py-8 flex {$feed.filter((f) => f.url).length
+						? 'flex-col justify-start items-center'
+						: 'flex-col justify-center items-center'}  h-full "
+				>
 					<div
 						class="font-bold bg-gradient-to-br from-black to-black/50 bg-clip-text text-transparent mb-2"
 					>
@@ -389,8 +411,12 @@
 							</div>
 
 							<div class="columns-3 gap-2 ">
-								{#each $feed.filter((f) => f.url) as feedItem}
-									<div class="p-1 border border-black break-inside-avoid">
+								{#each $feed.filter((f) => f.url) as feedItem (feedItem.guid)}
+									<a
+										href={feedItem.url}
+										target="_blank"
+										class="block mb-2 p-1 border hover:outline-black/20 cursor-pointer hover:outline hover:outline-1 transition border-black break-inside-avoid"
+									>
 										<div class="text-xxs _line-clamp-4 " style="line-height: 1;">
 											{feedItem.content}
 										</div>
@@ -410,7 +436,7 @@
 												<SourceLogo theme="light" url={feedItem.url} />
 											</div>
 										</div>
-									</div>
+									</a>
 								{/each}
 							</div>
 						</div>
@@ -442,19 +468,21 @@
 							<div class="mr-1 text-xs">Online Users</div>
 						</div>
 						<div class="border border-white/40 p-2 mt-2">
-							{#key firstChart._refreshTimestamp}
-								<LinkedChart
-									linked="chart"
-									uid="views"
-									data={firstChart}
-									fill="#fafafa"
-									grow={true}
-									width="135"
-									barMinWidth={1}
-									gap={2}
-									height={50}
-									transition={500}
-								/>
+							{#key chartRefreshTimestamp}
+								<div in:fade>
+									<LinkedChart
+										linked="chart"
+										uid="views"
+										data={firstChart}
+										fill="#fafafa"
+										grow={true}
+										width="135"
+										barMinWidth={1}
+										gap={2}
+										height={50}
+										transition={500}
+									/>
+								</div>
 							{/key}
 							<div class="text-xs opacity-100 mt-2">Page Views ({$totalViews})</div>
 						</div>
@@ -614,6 +642,7 @@
 
 						newMessage.sentOn = new Date();
 						selectedCustomer.messages = [...selectedCustomer.messages, { ...newMessage }];
+						$customers = [...$customers];
 
 						newMessage.content = '';
 						newMessage.guid = uuidv4();
@@ -634,7 +663,7 @@
 			Feed
 		</div>
 
-		{#if customers.length > 1 || selectedCustomer?.messages.length > 1}
+		{#if ($customers.length === 1 && $customers[0].messages?.length > 1) || ($customers.length > 1 && (!$customers.find((c) => c.email === 'elon@x.com') || $customers.find((c) => c.email === 'elon@x.com').messages?.length > 1))}
 			<div class="m-2">
 				<div class="columns-2">
 					<div class="break-inside-avoid">
@@ -726,11 +755,16 @@
 						{#if elon.messages?.length === 1}
 							<b>👏 You've got a new signup!</b>
 							<div class="mt-1">Click on Elon to see his analytics profile.</div>
-						{:else}
+						{:else if !$customers.find((c) => c.email === 'satya@microsoft.com')}
 							<b>🤑 Social feed worked! </b>
 							<div class="mt-1">
 								You've got a signup that led to conversation after auto-welcome email. <br />
 								It's time to do it again. Now, publish your win to LinkedIn.
+							</div>
+						{:else}
+							<b>🕺 Embed content to your page</b>
+							<div class="mt-1">
+								You have lot's of content elsewhere. Embed your links to your page to gain trust.
 							</div>
 						{/if}
 					{:else}
