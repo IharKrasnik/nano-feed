@@ -33,7 +33,6 @@
 	};
 
 	let textareaPlaceholder = `{ "customField": "My Field" }`;
-	debugger;
 </script>
 
 <div

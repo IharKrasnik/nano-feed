@@ -18,6 +18,7 @@
 	import customers from 'lib/stores/emulator/customers';
 	import totalViews from 'lib/stores/emulator/totalViews';
 	import emailAddress from 'lib/stores/emulator/emailAddress';
+	import feed from 'lib/stores/emulator/feed';
 
 	let viewChartData = {};
 
@@ -37,7 +38,7 @@
 		iterateM.add(1, 'day');
 	});
 
-	let firstChart = { ...viewChartData };
+	let firstChart = { ...viewChartData, _refreshTimestamp: new Date() };
 
 	Object.keys(firstChart).forEach((key) => {
 		if (key !== weekAgoM.format(DATE_FORMAT)) {
@@ -59,63 +60,13 @@
 	let conversionRate = -1;
 
 	$: if ($totalViews) {
-		conversionRate = $customers.length ? parseInt(($customers.length / $totalViews) * 100) : 0;
+		conversionRate = $customers.length ? (($customers.length / $totalViews) * 100).toFixed(2) : 0;
 	}
-
-	[
-		{
-			email: 'elon@x.com',
-			country: 'US',
-			imageUrl:
-				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701607809457-image.png',
-			events: [
-				{
-					date: new Date(),
-					type: 'open',
-					text: 'Open /?utm=test'
-				},
-				{
-					date: new Date(),
-					type: 'click',
-					text: 'Clicked link /about'
-				},
-				{
-					date: new Date(),
-					type: 'form-submit',
-					text: 'Submitted email'
-				}
-			]
-		},
-		{
-			email: 'paul@yc.com',
-			country: 'US',
-			imageUrl:
-				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701610961480-image.png',
-			events: []
-		}
-	];
 
 	let autoMessage = {
 		content: 'Hey! Welcome to coolco. Reply to this email to jump on a call with me!',
 		isAuto: true
 	};
-
-	let messages = [];
-	[
-		{
-			sentOn: new Date(),
-			content: 'Hey! Welcome to coolco. Reply to this email to jump on a call with me!',
-			isAuto: true
-		},
-		{
-			sentOn: new Date(),
-			content: `Hi! Sure, here's my link. Awesome project BTW!`,
-			from: {
-				avatarUrl:
-					'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701607809457-image.png'
-			}
-		}
-	];
 
 	let getIconFromType = (type) => {
 		if (type === 'open') {
@@ -133,7 +84,11 @@
 
 	let feedItems = JSON.parse(localStorage[FEED_ITEMS_LS_KEY] || '[]');
 
-	let feedItem = { isSyncToTwitter: true };
+	let feedItem = {
+		content: 'Check out my awesome website!',
+		isSyncToTwitter: true,
+		isSyncToLinkedin: false
+	};
 
 	let EMAIL_ADDRESS_LS_KEY = 'EMAIL';
 
@@ -152,8 +107,8 @@
 			return;
 		}
 
-		let newCustomer = { email: $emailAddress, messages: [], isMe: true };
-		$customers = [newCustomer, ...$customers];
+		let newCustomer = { email: $emailAddress, messages: [], isMe: true, createdOn: new Date() };
+		$customers = [...$customers, newCustomer];
 		selectedCustomer = newCustomer;
 
 		setTimeout(() => {
@@ -170,20 +125,151 @@
 		}, 1000);
 	};
 
-	let isFirstPostSent = false;
+	let elon = {
+		deviceIcon: 'smartphone',
+		deviceName: 'ios',
+		email: 'elon@x.com',
+		referrerUrl: 'x.com',
+		country: 'US',
+		imageUrl:
+			'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701607809457-image.png',
+		messages: [
+			{
+				guid: uuidv4(),
+				content: 'Hey, Elon! Welcome to coolco. Reply to this email to jump on a call with me!',
+				isAuto: true
+			}
+		],
+		events: [
+			{
+				date: new Date(),
+				type: 'open',
+				text: 'Open /?utm=test'
+			},
+			{
+				date: new Date(),
+				type: 'click',
+				text: 'Clicked link /about'
+			},
+			{
+				date: new Date(),
+				type: 'form-submit',
+				text: 'Submitted email'
+			}
+		]
+	};
+
+	let signupElon = () => {
+		if ($customers.find((u) => u.email === 'elon@x.com')) {
+			return;
+		}
+
+		elon.createdOn = new Date();
+		$customers = [...$customers, elon];
+	};
+
+	let selectElon = () => {
+		selectedCustomer = elon;
+
+		if (elon.messages?.length === 1) {
+			setTimeout(() => {
+				elon.messages = selectedCustomer.messages = [
+					...elon.messages,
+					{
+						guid: uuidv4(),
+						content: `Yo! Sure, I'd be happy to meet. You have awesome project here, I'm keen to invest.`,
+						isFromCustomer: true
+					}
+				];
+
+				feedItem.content = `I've got ${$totalViews} views to my page! And a BIG signup.`;
+				feedItem.isSyncToLinkedin = true;
+			}, 2000);
+		}
+	};
+
+	let satya = {
+		email: 'satya@microsoft.com',
+		deviceIcon: 'monitor',
+		deviceName: 'Windows',
+		referrerUrl: 'linkedin.com',
+		country: 'US',
+		imageUrl:
+			'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701675584808-image.png',
+		events: [
+			{
+				date: new Date(),
+				type: 'open',
+				text: 'Open /?utm=test'
+			},
+			{
+				date: new Date(),
+				type: 'click',
+				text: 'Clicked link /about'
+			},
+			{
+				date: new Date(),
+				type: 'form-submit',
+				text: 'Submitted email'
+			}
+		],
+		messages: [
+			{
+				guid: uuidv4(),
+				content: 'Hey, Elon! Welcome to coolco. Reply to this email to jump on a call with me!',
+				isAuto: true
+			}
+		]
+	};
+
+	let signupSatya = () => {
+		if ($customers.find((u) => u.email === 'satya@microsoft.com')) {
+			return;
+		}
+
+		satya.createdOn = new Date();
+
+		satya.messages.push({
+			guid: uuidv4(),
+			isFromCustomer: true,
+			content: `Hi! Absolutely, I'm excited to meet. And you know, I have a taste for great people!`
+		});
+
+		$customers = [...$customers, satya];
+	};
 
 	let sendToFeed = async () => {
-		if (!isFirstPostSent) {
-			isFirstPostSent = true;
+		if (!feedItem.content && !feedItem.url) {
+			return;
+		}
 
+		feedItem.createdOn = new Date();
+		$feed = [feedItem, ...$feed];
+
+		if (feedItem.isSyncToTwitter) {
+			signupElon();
+		}
+
+		if (feedItem.isSyncToLinkedin) {
+			signupSatya();
+		}
+
+		let nowM = moment();
+
+		if (weekAgoM < nowM) {
 			setTimeout(() => {
-				let newVisitorsCount = parseInt(Math.random() * 70 + 5);
+				let lastVisitorsCount = firstChart[weekAgoM.format(DATE_FORMAT)] || 0;
+				let newVisitorsCount = parseInt(Math.random() * 70 + lastVisitorsCount * 0.7);
+
 				$totalViews += newVisitorsCount;
 
 				weekAgoM.add(1, 'day');
+
 				firstChart[weekAgoM.format(DATE_FORMAT)] = 1 + newVisitorsCount;
 				firstChart = { ...firstChart };
+				firstChart._refreshTimestamp = new Date();
 			});
+
 			return;
 		}
 
@@ -248,7 +334,15 @@
 			}}
 		>
 			<div class="absolute w-full left-0 top-0 bg-[rgba(255,255,255,.3)] backdrop-blur">
-				<div class="relative border-b  border-black/20 text-xs grayscale px-4">🔥 coolco</div>
+				<div
+					class="relative border-b  border-black/20 px-4 flex items-center justify-between text-xxs"
+				>
+					<div class="">🔥 coolco</div>
+					<div class="flex gap-2">
+						<div>About</div>
+						<div>Blog</div>
+					</div>
+				</div>
 			</div>
 
 			<div class="h-[230px] {feedItems?.length ? 'pt-[50px]' : ''} bg-[#fefefe] overflow-y-auto">
@@ -353,7 +447,7 @@
 							<div class="mr-1 text-xs">Online Users</div>
 						</div>
 						<div class="border border-white/40 p-2 mt-2">
-							{#key firstChart}
+							{#key firstChart._refreshTimestamp}
 								<LinkedChart
 									linked="chart"
 									uid="views"
@@ -399,12 +493,21 @@
 			</div>
 		</div>
 
-		<div class="max-w-[260px] overflow-y-auto">
-			{#each $customers as customer}
+		<div class="max-w-[260px] overflow-y-auto h-[230px]">
+			{#each $customers.sort((c1, c2) => {
+				return new Date(c2.createdOn) - new Date(c1.createdOn);
+			}) as customer}
 				<div
-					class="cursor-pointer hover:bg-white/20 transition p-2 border border-white/40 m-2"
+					class="cursor-pointer hover:bg-white/20 transition p-2  m-2 {selectedCustomer?.email ===
+					customer.email
+						? 'border-2 border-white/80 m-2'
+						: 'border border-white/40'}"
 					on:click={() => {
-						selectedCustomer = customer;
+						if (customer.email === 'elon@x.com') {
+							selectElon();
+						} else {
+							selectedCustomer = customer;
+						}
 					}}
 				>
 					<div class="flex text-sm items-center">
@@ -423,39 +526,48 @@
 						</div>
 					</div>
 
-					{#if customer.events?.length}
-						<div class="border-l ml-3 py-2 pl-4 border-white flex flex-col-reverse opacity-80">
-							{#each customer.events as event}
-								<div class="relative flex items-center mt-1 text-xs">
-									<div class="absolute  top-[1px] left-[-23px] bg-black z-10">
-										<FeatherIcon size={13} color="#ffffff" name={getIconFromType(event.type)} />
+					{#if customer.email === selectedCustomer?.email}
+						{#if customer.events?.length}
+							<div class="border-l ml-3 py-2 pl-4 border-white flex flex-col-reverse opacity-80">
+								{#each customer.events as event}
+									<div class="relative flex items-center mt-1 text-xs">
+										<div class="absolute  top-[1px] left-[-23px] bg-black rounded-full z-10">
+											<FeatherIcon size={13} color="#ffffff" name={getIconFromType(event.type)} />
+										</div>
+										<div>
+											{event.text}
+										</div>
 									</div>
-									<div>
-										{event.text}
-									</div>
-								</div>
-							{/each}
-						</div>
-						<div>
-							<div class="text-xs flex items-center ml-1 opacity-80">
-								<img
-									class="w-[13px] mr-2 ml-[2px]"
-									src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701610478428-image.png"
-								/>
+								{/each}
+							</div>
+							<div>
+								<div class="text-xs flex items-center ml-1 opacity-80">
+									{#if customer.referrerUrl === 'x.com'}
+										<img
+											class="w-[13px] mr-2 ml-[2px]"
+											src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701610478428-image.png"
+										/>
+									{:else if customer.referrerUrl === 'linkedin.com'}
+										<img
+											class="w-[13px] mr-2 ml-[2px]"
+											src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701675685696-image.png"
+										/>
+									{/if}
 
-								<div class="ml-1">From x.com</div>
-							</div>
-							<div class="p-1 flex items-center gap-1 mt-1">
-								<div class="flex items-center mr-2">
-									{countryCodeEmoji(customer.country)}
-									<div class="opacity-70 ml-1 text-xs">US</div>
+									<div class="ml-1">From {customer.referrerUrl}</div>
 								</div>
-								<div class="text-xs flex">
-									<FeatherIcon name="smartphone" size="15" color="#fff" />
-									<div class="opacity-70 ml-1">iOS</div>
+								<div class="p-1 flex items-center gap-1 mt-1">
+									<div class="flex items-center mr-2">
+										{countryCodeEmoji(customer.country)}
+										<div class="opacity-70 ml-1 text-xs">US</div>
+									</div>
+									<div class="text-xs flex">
+										<FeatherIcon name={customer.deviceIcon} size="15" color="#fff" />
+										<div class="opacity-70 ml-1">{customer.deviceName}</div>
+									</div>
 								</div>
 							</div>
-						</div>
+						{/if}
 					{/if}
 				</div>
 			{/each}
@@ -473,10 +585,13 @@
 
 		<div class="flex flex-col p-2">
 			{#each selectedCustomer?.messages || [] as message (message.guid)}
-				<div in:fly={{ y: 25 }} class="max-w-[70%] my-1 text-xs {message.from ? '' : 'self-end'}">
+				<div
+					in:fly={{ y: 25 }}
+					class="max-w-[70%] my-1 text-xs {message.isFromCustomer ? '' : 'self-end'}"
+				>
 					<div class="flex items-end">
-						{#if message.from}
-							<img class="w-[20px] h-[20px] rounded-full mr-2" src={message.from.avatarUrl} />
+						{#if message.isFromCustomer}
+							<img class="w-[20px] h-[20px] rounded-full mr-2" src={selectedCustomer.imageUrl} />
 						{/if}
 						<div class="bg-white/20 p-2">
 							{message.content}
@@ -498,6 +613,10 @@
 					on:click={() => {
 						if (!newMessage.content) {
 							return;
+						}
+
+						if (!newMessage.guid) {
+							newMessage.guid = uuidv4();
 						}
 
 						newMessage.sentOn = new Date();
@@ -563,8 +682,11 @@
 							<Button class="mr-2 emu" onClick={sendToFeed}>Publish</Button>
 
 							{#if selectedFeedTab === 'post'}
-								<div class="text-xs">
-									<input type="checkbox" bind:value={feedItem.isSyncToTwitter} /> Sync To x.com
+								<div class="text-xxs">
+									<input type="checkbox" bind:checked={feedItem.isSyncToTwitter} /> x.com
+									{#if $customers.length > 1}
+										<input type="checkbox" bind:checked={feedItem.isSyncToLinkedin} /> linkedin
+									{/if}
 								</div>
 							{/if}
 						</div>
@@ -580,8 +702,10 @@
 								class="p-2 bg-white rounded text-center text-black text-xxs flex flex-col items-center"
 								style="font-family: Cabin;"
 							>
-								<div class="my-1">✨</div>
-								{feedItem.content || 'Check out my awesome website!'}
+								<div class="my-1">🔥</div>
+								{feedItem.content || ''}
+
+								<div class="mt-2 opacity-70" style="font-size: 8px;">www.cool.co</div>
 							</div>
 						</div>
 					</div>
@@ -591,28 +715,39 @@
 	</div>
 
 	<div class="col-span-4 text-xs border border-white  h-[150px]">
-		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center mb-2">
+		<div class="p-1 px-2 bg-white/10 border-b border-white/20 text-xs flex items-center">
 			<FeatherIcon class="mr-1" size={12} color="white" name="compass" />
 
-			More
+			Tips
 		</div>
 
-		<div class="border-green-100 border p-1 m-1">
+		<div class=" h-full w-full p-2 bg-green-100/30">
 			{#if !$totalViews}
 				<b>Be your first visitor!</b>
 				<div class="mt-1">Click your website</div>
 			{:else if $customers?.length}
 				{#if $customers.length > 1 || selectedCustomer?.messages.length > 1}
-					{#if $customers.length > 1}{:else}
-						<b>Get real customers</b>
+					{#if $customers.length > 1}
+						{#if elon.messages?.length === 1}
+							<b>👏 You've got a new signup!</b>
+							<div class="mt-1">Click on Elon to see his analytics profile.</div>
+						{:else}
+							<b>🤑 Social feed worked! </b>
+							<div class="mt-1">
+								You've got a signup that led to conversation after auto-welcome email. <br />
+								It's time to do it again. Now, publish your win to LinkedIn.
+							</div>
+						{/if}
+					{:else}
+						<b>😅 Get real customers</b>
 						<div class="mt-1">Distribute your website to social networks</div>
 					{/if}
 				{:else}
-					<b>Send a email message</b>
+					<b>✉️ Send a email message</b>
 					<div class="mt-1">Send any message to chat. It will be sent via email.</div>
 				{/if}
 			{:else}
-				<b>Be your first customer!</b>
+				<b>😏 Be your first customer!</b>
 				<div class="mt-1">Submit any test email to your website</div>
 			{/if}
 			{#if false}
