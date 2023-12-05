@@ -354,12 +354,13 @@
 						</div>
 					{/if}
 
-					<div class="mb-8">
+					<div class="mb-8 sm:mb-12">
 						{#if section.title}
 							<h2
-								class="_title text-3xl {page.theme.isTitlesHuge || section.theme?.isHugeTitle
+								class="_title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
+								section.theme?.isHugeTitle
 									? 'sm:text-6xl font-medium'
-									: 'sm:text-4xl font-semibold'} mb-4 {page.theme.isTitlesLeft ||
+									: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||
 								section.theme?.isTitleLeft ||
 								section.renderType === 'article'
 									? 'sm:max-w-[712px]'

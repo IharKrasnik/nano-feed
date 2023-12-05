@@ -397,9 +397,9 @@
 
 <div class="highlighted hidden" />
 
-<div class="text-white font-medium text-center mb-2">Try Momentum Now</div>
-<div class="text-white text-xs text-center mb-2 opacity-80">
-	Use our emulator to see how Momentum works
+<div class="flex justify-between items-center mb-2">
+	<div class="text-white font-medium">Try Momentum IDE <b>Now ↓</b></div>
+	<div class="text-white text-xs opacity-80">Use this emulator to see how Momentum works</div>
 </div>
 
 <div class="grid grid-cols-12 items-stretch gap-4 text-white">
