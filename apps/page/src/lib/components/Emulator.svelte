@@ -402,7 +402,7 @@
 	Use our emulator to see how Momentum works
 </div>
 
-<div class="grid grid-cols-12 items-stretch gap-4 p-2 text-white">
+<div class="grid grid-cols-12 items-stretch gap-4 text-white">
 	<div
 		class="relative col-span-8 h-full overflow-hidden text-[#111] shadow shadow-white"
 		bind:this={websiteEl}

@@ -164,7 +164,7 @@
 										: 'sm:max-w-[912px]'
 									: ''}"
 								style={hero.title ? '' : 'opacity: 20%;'}
-								in:fly={{ y: 50, duration: 800 }}
+								in:fly={{ y: 25, duration: 1000 }}
 							>
 								{#if hero.title}
 									<div>{@html hero.title || ''}</div>
@@ -187,7 +187,7 @@
 									: page.renderType === 'article'
 									? 'max-w-[712px]'
 									: 'max-w-[600px]'}"
-								in:fly={{ y: 50, duration: 800 }}
+								in:fly={{ y: 25, duration: 1000 }}
 							>
 								{@html hero.subtitle}
 							</h2>
