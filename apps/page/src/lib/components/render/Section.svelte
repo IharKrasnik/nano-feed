@@ -302,6 +302,14 @@
 			{/if}
 		{/if}
 
+		{#if section.title && (section.items?.length || section.collectionType)}
+			<div
+				class="mx-auto h-px max-w-8xl opacity-[15%] w-full"
+				style="background:linear-gradient(to right, rgba(0,0,0,0), {page.theme
+					?.accentColor}, rgba(0,0,0,0))"
+			/>
+		{/if}
+
 		<div
 			class=" _section-container {section.isGlowing
 				? `_glowing ${section.theme?.isOverrideGlowingColor ? '_override-glowing-color' : ''}
@@ -328,6 +336,11 @@
 				: ''} {style || ''}"
 		>
 			{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
+				{#if section.title && (section.items?.length || section.collectionType)}
+					<div
+						class="absolute inset-x-0 top-20 mx-auto h-32 w-[650px] transform-gpu opacity-[15%] blur-[130px] bg-gradient-to-r _from-text-color _to-accent"
+					/>
+				{/if}
 				<div
 					class="_section_titles relative w-full {page.theme.isTitlesLeft ||
 					section.theme?.isTitleLeft ||

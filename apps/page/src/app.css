@@ -76,6 +76,22 @@
 	font-family: Archivo;
 }
 
+._from-accent {
+	--tw-gradient-from: var(--accent-color);
+	--tw-gradient-to: rgb(0, 0, 0, 0);
+	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+._from-text-color {
+	--tw-gradient-from: var(--text-color);
+	--tw-gradient-to: rgb(0, 0, 0, 0);
+	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+._to-accent {
+	--tw-gradient-to: var(--accent-color);
+}
+
 ._section-container {
 }
 
