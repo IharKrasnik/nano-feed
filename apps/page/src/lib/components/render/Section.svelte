@@ -372,7 +372,7 @@
 							<h3
 								class="mb-8 {page.theme.isTitlesHuge || section.theme?.isHugeTitle
 									? 'text-xl leading-8'
-									: 'text-lg font-medium'} whitespace-pre-wrap opacity-90 {section.renderType ===
+									: 'text-lg font-medium'} whitespace-pre-wrap opacity-70 {section.renderType ===
 								'article'
 									? 'sm:max-w-[712px]'
 									: page.theme.isTitlesLeft || section.theme?.isTitleLeft

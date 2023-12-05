@@ -61,7 +61,7 @@ export default (page) => {
 		// 	: hexToRGBA(lighten(page.theme?.accentColor, 0.9), 0.5)),
 
 		'section-description-text-color':
-			page.theme?.theme === 'dark' ? 'rgb(229 231 235)' : 'rgba(4, 4, 4, 1)',
+			page.theme?.theme === 'dark' ? 'rgba(255,255,255, .7)' : 'rgba(0,0,0, .8)',
 
 		'section-title-font-size': page.theme?.containerWidth ? '20px' : '24px',
 		'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',

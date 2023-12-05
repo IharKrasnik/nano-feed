@@ -178,7 +178,7 @@
 
 						{#if hero.subtitle}
 							<h2
-								class="_subtitle {hero.theme.isHugeTitle
+								class="_subtitle opacity-80 {hero.theme.isHugeTitle
 									? 'text-xl'
 									: 'text-xl'}  whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
 									? page.renderType === 'article'
@@ -193,7 +193,7 @@
 							</h2>
 						{/if}
 						{#if hero.keyFeaturesStr}
-							<div class="my-8" in:fade={{ delay: 300, duration: 600 }}>
+							<div class="my-8 opacity-80" in:fade={{ delay: 300, duration: 600 }}>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center  mb-2">
 										<div
