@@ -194,10 +194,7 @@
 						{/if}
 
 						{#if hero.keyFeaturesStr}
-							<div
-								class="my-8 opacity-80 hidden sm:visible"
-								in:fade={{ delay: 300, duration: 600 }}
-							>
+							<div class="my-8 opacity-80 hidden sm:block" in:fade={{ delay: 300, duration: 600 }}>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center  mb-2">
 										<div
@@ -228,10 +225,32 @@
 								{page}
 							/>
 						{/if}
+
+						{#if isMounted && hero.socialProof}
+							<div class="py-4 mt-16">
+								<div
+									class="_social-proof _dense _small {hero.socialProof.className ||
+										''} flex justify-center w-full  {hero.demoUrl ||
+									(hero.theme?.isLeft && !hero.theme?.isVertical)
+										? 'sm:block'
+										: ''}"
+								>
+									<div class="flex">
+										{#each _.shuffle(hero.socialProof.logos).filter((l) => l.url) as logo}
+											<img class="rounded-full" src={logo.url} />
+										{/each}
+									</div>
+								</div>
+								<div class="text-sm mt-4 opacity-80 max-w-[400px]">
+									{@html hero.socialProof.title || ''}
+								</div>
+							</div>
+						{/if}
+
 						{#if hero.keyFeaturesStr}
-							<div class="my-8 opacity-80 sm:hidden">
+							<div class="my-8 opacity-80 flex flex-col items-center sm:hidden">
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
-									<div class="flex items-center text-start mb-2">
+									<div class="flex items-center mb-2">
 										<div
 											class="mr-2 rounded-full p-1"
 											style="background-color: var(--accent-color);"
@@ -243,24 +262,6 @@
 										</div>
 									</div>
 								{/each}
-							</div>
-						{/if}
-						{#if isMounted && hero.socialProof}
-							<div
-								class="_social-proof _dense _small mt-16 py-4 {hero.socialProof.className ||
-									''} {hero.demoUrl || (hero.theme?.isLeft && !hero.theme?.isVertical)
-									? ''
-									: 'flex justify-center w-full'}"
-							>
-								<div class="flex">
-									{#each _.shuffle(hero.socialProof.logos).filter((l) => l.url) as logo}
-										<img class="rounded-full" src={logo.url} />
-									{/each}
-								</div>
-
-								<div class="text-sm mt-4 opacity-80 max-w-[400px]">
-									{@html hero.socialProof.title || ''}
-								</div>
 							</div>
 						{/if}
 					</div>
