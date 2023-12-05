@@ -250,6 +250,7 @@
 							class="relative  w-full mt-16 sm:mt-0 {hero.theme?.isVertical
 								? ''
 								: 'sm:ml-8 sm:max-w-[600px]'}"
+							in:fly={{ y: 25, delay: 300, duration: 600 }}
 							on:click={() => {
 								// if (hero.demoUrl.includes('/emulator-full')) {
 								// 	isDemoPopupShown = true;
