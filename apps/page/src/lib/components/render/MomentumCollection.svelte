@@ -44,7 +44,8 @@
 
 		if (section.collectionType === 'articles') {
 			let articles = await get(`pages/${page.parentPage?._id || page?._id}/subpages`, {
-				renderType: 'article'
+				renderType: 'article',
+				dirName: 'blog'
 			});
 
 			databaseSection.items = articles.results.map(
