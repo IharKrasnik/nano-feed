@@ -48,7 +48,6 @@ export default (page) => {
 		'text-font-size': '18px',
 		'text-line-height': 1.55,
 		'background-color': page.theme?.backgroundColor || '#ffffff',
-		// 'background-color': 'transparent',
 		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
 		'text-color': page.theme?.theme === 'dark' ? '#fbf5ec' : '#111111',
 		'accent-color': accentColor,
