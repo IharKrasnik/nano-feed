@@ -858,7 +858,7 @@
 											href={item.url && !item.interactiveRenderType ? item.url : null}
 											target={item.url?.startsWith('http') ? '_blank' : ''}
 											id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
-											class="_section-item block relative {item.bgImageUrl
+											class="_section-item group block relative {item.bgImageUrl
 												? '_bg-image'
 												: ''} rounded-lg sm:rounded-xl {item.className || ''} mb-2 {item.url &&
 											!item.interactiveRenderType
@@ -1100,14 +1100,18 @@
 													>
 														<RenderUrlWithBackground
 															isIframeFallback={false}
-															aspectRatio={item.imageAspectRatio}
-															urlImgClass="w-full h-auto {section.imageClass ||
-																''} object-cover mx-auto {section.columns === 1 ? '' : ''}  {section
-																.items.length === 1
+															aspectRatio={section.theme?.imageAspectRatio || item.imageAspectRatio}
+															urlImgClass="w-full object-cover h-auto {section.imageClass ||
+																''}  mx-auto {section.columns === 1 ? '' : ''}  {section.items
+																.length === 1
 																? ''
 																: ''} {isGif(item.imageUrl)
 																? 'w-full object-cover'
-																: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl'}"
+																: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl'}
+																 {section.theme?.isScrollImageOnHover
+																? 'transition-all ease-in-out duration-1000 object-top group-hover:object-bottom'
+																: ''}
+																"
 															imageUrl={item.imageUrl}
 															imageBackgroundUrl={item.imageBackgroundUrl}
 														/>

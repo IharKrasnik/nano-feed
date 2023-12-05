@@ -105,6 +105,7 @@
 						<input type="checkbox" bind:checked={sectionItem.theme.isTitleLeft} /> Align Left
 					</div>
 				{/if}
+
 				<div class="my-2">
 					<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Is Huge Title
 				</div>
@@ -114,20 +115,72 @@
 						<input type="checkbox" bind:checked={sectionItem.isIconLeft} /> Show Icon Near Title
 					</div>
 				{/if}
+
+				{#if section.id === sectionItem.id}
+					<div class="mb-2 font-semibold mt-4">Image aspect ratio</div>
+
+					<div class="flex items-center gap-2">
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								sectionItem.theme.imageAspectRatio = 'og';
+							}}
+							class:font-bold={sectionItem.theme?.imageAspectRatio === 'og'}
+						>
+							OG (120x63)
+						</div>
+
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								sectionItem.theme.imageAspectRatio = 'image';
+							}}
+							class:font-bold={sectionItem.theme?.imageAspectRatio === 'image'}
+						>
+							4x3
+						</div>
+
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								sectionItem.theme.imageAspectRatio = 'square';
+							}}
+							class:font-bold={sectionItem.theme?.imageAspectRatio === 'square'}
+						>
+							1x1
+						</div>
+
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								sectionItem.theme.imageAspectRatio = null;
+							}}
+							class:font-bold={!sectionItem.theme?.imageAspectRatio}
+						>
+							Auto
+						</div>
+					</div>
+
+					{#if sectionItem.theme?.imageAspectRatio}
+						<input
+							class="mt-2"
+							type="checkbox"
+							bind:checked={sectionItem.theme.isScrollImageOnHover}
+						/> Scroll image on hover
+					{/if}
+				{/if}
 			</div>
 
-			{#if !sectionItem.bgImageUrl}
+			{#if !sectionItem.bgImageUrl && sectionItem.id !== section.id}
 				<div class="_section">
-					{#if sectionItem.id !== section.id}
-						<div class="text-sm mb-2 mt-8 font-bold">Style</div>
-						<select bind:value={sectionItem.className}>
-							<option value="">Default</option>
+					<div class="text-sm mb-2 mt-8 font-bold">Style</div>
+					<select bind:value={sectionItem.className}>
+						<option value="">Default</option>
 
-							<option value="_highlighted">Highlighted</option>
-							<option value="_darker">Dark</option>
-							<option value="_transparent">Transparent</option>
-						</select>
-					{/if}
+						<option value="_highlighted">Highlighted</option>
+						<option value="_darker">Dark</option>
+						<option value="_transparent">Transparent</option>
+					</select>
 				</div>
 			{/if}
 
@@ -215,7 +268,7 @@
 			</div>
 		</div>
 
-		<div class="_section">
+		<div class="_section mb-2">
 			<div class="font-semibold mb-2">Background</div>
 
 			{#if sectionItem === section && !sectionItem.bgImageUrl}
@@ -256,8 +309,7 @@
 
 			{#if !sectionItem.bgImageUrl}
 				<div>
-					<div class="font-normal text-sm opacity-70 mb-2">Background pattern</div>
-					<div class="text-sm">Subtle background</div>
+					<div class="font-normal text-sm opacity-70 mb-2 mt-4">Background pattern</div>
 				</div>
 
 				{#each bgPatterns as bgPattern}

@@ -9,6 +9,7 @@
 	export let urlImgMaxWidth = 0;
 	export let isIframeFallback;
 	export let aspectRatio;
+	export let isHoverScroll = false;
 
 	export let urlClass = '';
 	export let urlImgClass = '';

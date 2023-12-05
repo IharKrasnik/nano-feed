@@ -28,7 +28,8 @@
 		items: [],
 		linkType: 'interactive',
 		totalItemsLength: 0,
-		isMasonryGrid: section.isMasonryGrid
+		isMasonryGrid: section.isMasonryGrid,
+		theme: section.theme
 	};
 
 	$: if (section.columns) {
