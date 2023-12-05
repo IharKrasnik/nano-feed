@@ -192,8 +192,12 @@
 								{@html hero.subtitle}
 							</h2>
 						{/if}
+
 						{#if hero.keyFeaturesStr}
-							<div class="my-8 opacity-80" in:fade={{ delay: 300, duration: 600 }}>
+							<div
+								class="my-8 opacity-80 hidden sm:visible"
+								in:fade={{ delay: 300, duration: 600 }}
+							>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center  mb-2">
 										<div
@@ -224,7 +228,23 @@
 								{page}
 							/>
 						{/if}
-
+						{#if hero.keyFeaturesStr}
+							<div class="my-8 opacity-80 sm:hidden">
+								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
+									<div class="flex items-center text-start mb-2">
+										<div
+											class="mr-2 rounded-full p-1"
+											style="background-color: var(--accent-color);"
+										>
+											<Emoji color={page.theme?.buttonColor} emoji="feather:check" width={15} />
+										</div>
+										<div>
+											{keyFeature}
+										</div>
+									</div>
+								{/each}
+							</div>
+						{/if}
 						{#if isMounted && hero.socialProof}
 							<div
 								class="_social-proof _dense _small mt-16 py-4 {hero.socialProof.className ||

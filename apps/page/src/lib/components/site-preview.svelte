@@ -486,7 +486,7 @@
 								in:fly={{ y: 350, duration: 250 }}
 								out:fly={{ duration: 150 }}
 								style="z-index: 100"
-								class="left-0 top-[61px] fixed w-screen h-screen bg-site bg-background p-4"
+								class="left-0 top-[61px] fixed w-screen h-screen overflow-y-auto bg-site bg-background p-4"
 							>
 								{#if page.activeHero}
 									<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
@@ -554,7 +554,7 @@
 													</div>
 													{focusEditEl() || ''}
 												{:else}
-													<div class="relative">
+													<div class="relative overflow-y-hidden">
 														{#if section.containerBgImageUrl}
 															<div class="absolute left-0 top-0 w-screen h-full">
 																<img

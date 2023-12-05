@@ -329,7 +329,7 @@
 						/>
 						<button
 							type="submit"
-							class="_input_button _wide text-center sm:absolute ring-2"
+							class="_input_button px-16 text-center justify-center sm:absolute ring-2"
 							style="--tw-ring-color: {(page.parentPage?.theme || page.theme).theme === 'dark'
 								? 'var(--accent-color-lighter)'
 								: 'var(--accent-color-darker)'};"

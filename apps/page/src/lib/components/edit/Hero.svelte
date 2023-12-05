@@ -311,7 +311,7 @@
 							<div class="flex flex-wrap gap-4 mt-4">
 								{#if hero.demoUrl}
 									<div class="flex shrink-0 font-normal items-center">
-										<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertocal
+										<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertical
 									</div>
 								{/if}
 								<div class="flex shrink-0 font-normal items-center">

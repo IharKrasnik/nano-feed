@@ -268,7 +268,7 @@
 
 {#if false}
 	<div
-		class="col-span-1 col-span-2 col-span-3 col-span-4 col-span-5 col-span-6 col-span-7 col-span-8 col-span-9 col-span-10 col-span-11 col-span-12"
+		class="col-span-1 col-span-2 col-span-3 col-span-4 col-span-5 col-span-6 col-span-7 col-span-8 col-span-9 col-span-10 col-span-11 col-span-12 sm:col-span-1 sm:col-span-2 sm:col-span-3 sm:col-span-4 sm:col-span-5 sm:col-span-6 sm:col-span-7 sm:col-span-8 sm:col-span-9 sm:col-span-10 sm:col-span-11 sm:col-span-12"
 	/>
 	<div
 		class="sm:col-span-1 sm:col-span-2 sm:col-span-3 sm:col-span-4 sm:col-span-5 sm:col-span-6 sm:col-span-7 sm:col-span-8 sm:col-span-9 sm:col-span-10 sm:col-span-11 sm:col-span-12"
@@ -848,8 +848,8 @@
 							{#each section.items || [] as item, i}
 								{#if item.isShown || _.isUndefined(item.isShown)}
 									<div
-										class=" break-inside-avoid  col-span-{item.colSpan ||
-											1} row-span-{item.rowSpan || 1} {section.renderType === 'carousel'
+										class=" break-inside-avoid sm:col-span-{item.colSpan ||
+											1} sm:row-span-{item.rowSpan || 1} {section.renderType === 'carousel'
 											? `min-w-[300px] sm:min-w-0 cursor-pointer`
 											: ''}"
 										class:pt-16={section.isFunkyGrid && i === 1}

@@ -517,13 +517,15 @@ a._item-title:hover {
 	border-width: var(--input-border-width);
 }
 
-._input_button {
+button._input_button[type='submit'] {
 	display: flex;
 	align-items: center;
 	z-index: 100;
 	height: 100%;
 	right: 0;
 	top: 0;
+
+	@apply px-8;
 }
 
 button,
@@ -540,10 +542,6 @@ button[type='submit'] {
 }
 
 button._islarge {
-}
-
-button._wide {
-	padding: 16px 32px;
 }
 
 .button.secondary {
