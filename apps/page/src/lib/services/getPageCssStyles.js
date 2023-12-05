@@ -63,7 +63,7 @@ export default (page) => {
 		'section-description-text-color':
 			page.theme?.theme === 'dark' ? 'rgba(255,255,255, .7)' : 'rgba(0,0,0, .8)',
 
-		'section-title-font-size': '24px',
+		'section-title-font-size': page.theme?.containerWidth <= 900 ? '20px' : '24px',
 		'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',
 
 		'input-background': page.theme?.inputBackground || 'transparent',
