@@ -34,6 +34,7 @@ export default (page) => {
 
 	let accentColor = page.theme?.accentColor || '#000';
 
+	//1
 	let styles = {
 		'container-width': page.theme?.containerWidth || '1280px',
 		'logo-font': page.theme?.logoFont || 'monospace',
