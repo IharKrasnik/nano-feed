@@ -273,9 +273,9 @@
 	<div
 		class="sm:col-span-1 sm:col-span-2 sm:col-span-3 sm:col-span-4 sm:col-span-5 sm:col-span-6 sm:col-span-7 sm:col-span-8 sm:col-span-9 sm:col-span-10 sm:col-span-11 sm:col-span-12"
 	/>
-	<div
-		class="line-clamp-4 hover:line-clamp-5 row-span-1 row-span-2 row-span-3 row-span-4 row-span-5 row-span-6 row-span-7 row-span-8"
-	/>
+	<div class="line-clamp-4 hover:line-clamp-5 row-span-1 row-span-2 row-span-3 row-span-4" />
+	<div class="sm:row-span-1 sm:row-span-2 sm:row-span-3 sm:row-span-4 " />
+
 	<div class="aspect-og aspect-image aspect-square" />
 {/if}
 
