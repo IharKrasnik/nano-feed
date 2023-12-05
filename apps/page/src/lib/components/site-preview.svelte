@@ -347,6 +347,9 @@
 								{page.activeHero?.theme?.bgGradient?.type === 'ray'
 								? '[mask-image:radial-gradient(50%_70%_at_top_center,white,transparent)]'
 								: ''}
+								{page.activeHero?.theme?.bgGradient?.type === 'radial'
+								? '[mask-image:radial-gradient(50%_80%_at_top_center,white,transparent)]'
+								: ''}
 								"
 							style="--pattern-color: {page.theme.accentColor};
 								--pattern-color-55: {page.theme.accentColor}55;

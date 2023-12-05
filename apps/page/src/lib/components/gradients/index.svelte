@@ -85,7 +85,7 @@
 			? types[gradientType].style({ from: page.theme.accentColor })
 			: ''}; z-index: 2;"
 	/>
-{:else if types[gradientType].url}
+{:else if types[gradientType]?.url}
 	<img
 		src="https://assets.website-files.com/64a2db27e840da3808f8f72a/64a2f21c5531b36cb386eaf0_Hero%20BG%20Compressed.png"
 		loading="lazy"

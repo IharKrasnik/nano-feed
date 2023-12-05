@@ -141,7 +141,7 @@
 			label: 'Bright'
 		},
 		{
-			key: 'senja',
+			key: 'radial',
 			label: 'Radial'
 		},
 		{

@@ -1104,17 +1104,19 @@
 											/>
 										</div>
 
-										<div
-											class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
-											in:fly={{ y: 50, duration: 150 }}
-										>
-											Start with a bold tagline
+										{#if !page._id}
+											<div
+												class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
+												in:fly={{ y: 50, duration: 150 }}
+											>
+												Start with a bold tagline
 
-											<div class="font-normal mt-2">
-												Make a big promise to your customer. Start with a verb. Spark curiosity and
-												hook their attention.
+												<div class="font-normal mt-2">
+													Make a big promise to your customer. Start with a verb. Spark curiosity
+													and hook their attention.
+												</div>
 											</div>
-										</div>
+										{/if}
 									{/if}
 								{:else}
 									<div class="flex justify-between items-center mb-4 ">

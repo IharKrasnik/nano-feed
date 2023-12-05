@@ -7,6 +7,7 @@
 	import TypeformIcon from 'lib/icons/typeform.svelte';
 	import SenjaIcon from 'lib/icons/senja.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
+	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
 
 	import { onMount } from 'svelte';
 
@@ -176,13 +177,14 @@
 					class="iframe-resize w-full h-full {imgClass}"
 					style="border:none; height: 1000px;"
 				/>
-			{:else if isIframeFallback && !isFilesOnly && url.startsWith('http')}
-				<iframe
-					src={url}
-					class="mmntm-iframe w-full h-full {imgClass}"
-					style="border:none; height: 600px;"
-					onload={`iFrameResize({}, '.mmntm-iframe')`}
-				/>
+			{:else if !isFilesOnly && url.startsWith('http')}
+				{#if isIframeFallback || isUrlEmbeddable(url)}
+					<iframe
+						src={url}
+						class="mmntm-iframe w-full h-full {imgClass}"
+						style="border:none; height: 600px;"
+						onload={`iFrameResize({}, '.mmntm-iframe')`}
+					/>{:else}{/if}
 			{/if}
 		</div>
 	{:else}

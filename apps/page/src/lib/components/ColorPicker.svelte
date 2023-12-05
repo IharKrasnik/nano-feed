@@ -272,6 +272,14 @@
 			page.theme.isOverride = true;
 		}
 	};
+
+	let resetPageStyles = () => {
+		page.theme = {
+			accentColor: '#000000',
+			backgroundColor: '#ffffff',
+			isOverride: false
+		};
+	};
 </script>
 
 {#key page._id}
@@ -412,6 +420,9 @@
 										<button on:click={() => setContainerWidth('1280px')}>XL (1280px)</button>
 									</div>
 								</div>
+							</div>
+							<div class="_section">
+								<button class="_orange" on:click={resetPageStyles}>Reset Styles</button>
 							</div>
 						</div>
 

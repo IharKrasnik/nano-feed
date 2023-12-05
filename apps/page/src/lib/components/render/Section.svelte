@@ -1089,7 +1089,6 @@
 														{/if}
 													</div>
 												</div>
-
 												{#if !section.carousel && item.imageUrl}
 													<div
 														class="{section.pricing
