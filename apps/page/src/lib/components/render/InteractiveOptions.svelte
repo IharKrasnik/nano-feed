@@ -294,7 +294,7 @@
 			{#if isHeader}
 				<button
 					class="shrink-0 ring-1"
-					style="--tw-ring-color: {(page.parentPage?.theme || page.theme).theme === 'dark'
+					style="--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
 						? 'var(--accent-color-lighter)'
 						: 'var(--accent-color-darker)'};"
 					type="submit">{sectionItem.callToActionText || 'Subscribe'}</button
@@ -323,14 +323,14 @@
 							bind:value={emailAddress}
 							class="_input _email-input w-full ring-2 ring-white/20"
 							style="background: var(--section-background-color) !important;
-							--tw-ring-color: {(page.parentPage?.theme || page.theme).theme === 'dark'
+							--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
 								? 'var(--accent-color-lighter)'
 								: 'var(--accent-color-darker)'};"
 						/>
 						<button
 							type="submit"
 							class="_input_button px-16 text-center justify-center sm:absolute ring-2"
-							style="--tw-ring-color: {(page.parentPage?.theme || page.theme).theme === 'dark'
+							style="--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
 								? 'var(--accent-color-lighter)'
 								: 'var(--accent-color-darker)'};"
 							>{sectionItem.callToActionText || 'Subscribe'}</button

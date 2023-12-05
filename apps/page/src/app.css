@@ -71,6 +71,10 @@
 	--blob-opacity: var(--glowing-opacity) !important;
 }
 
+._editor ._title {
+	@apply mb-2;
+}
+
 ._title {
 	font-weight: bold;
 	font-family: Archivo;

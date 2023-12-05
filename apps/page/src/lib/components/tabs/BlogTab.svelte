@@ -34,6 +34,7 @@
 			title: newArticleTitle,
 			isDraft: true,
 			renderType: 'article',
+			dirName: 'blog',
 			parentPage: { _id: page.parentPage?._id || page._id }
 		});
 

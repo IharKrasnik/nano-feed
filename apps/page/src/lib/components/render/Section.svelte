@@ -719,7 +719,8 @@
 						{#each section.items as item}
 							<div class="flex justify-between">
 								<div
-									class="_section-item relative items-center {section.renderType === 'article'
+									class="_section-item relative items-center {section.renderType === 'article' ||
+									section.collectionType === 'articles'
 										? '_article mb-8'
 										: 'mb-4'}
 							{section.renderType === 'changelog'

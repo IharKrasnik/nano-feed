@@ -21,8 +21,9 @@
 
 	let databaseSection = {
 		id: section.id,
+		// collectionType: section.collectionType,
 		isShowSource: section.isShowSource,
-		renderType: section.renderType,
+		renderType: section.collectionType === 'articles' ? 'article' : section.renderType,
 		isDatabase: true,
 		columns: section.columns,
 		items: [],
