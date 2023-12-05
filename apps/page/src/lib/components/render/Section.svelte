@@ -934,7 +934,7 @@
 											>
 												<div
 													class="flex w-full h-full flex-col justify-between {page?.theme
-														?.containerWidth
+														?.containerWidth === 900
 														? 'p-4'
 														: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
 													i % 2 === 1
