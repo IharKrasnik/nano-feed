@@ -717,7 +717,7 @@
 
 	let getPageUrl = () => {
 		if (page.domains?.length && page.domains.filter((d) => d.isConfigured).length) {
-			return _.last(page.domains.filter((d) => d.isConfigured)).url;
+			return `https://${_.last(page.domains.filter((d) => d.isConfigured)).url}`;
 		} else {
 			if (PAGE_URL.includes('localhost')) {
 				return `${PAGE_URL}${page.parentPage ? `/${page.slug}` : ''}?pageSlug=${
