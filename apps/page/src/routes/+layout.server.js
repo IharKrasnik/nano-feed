@@ -1,5 +1,6 @@
 import authServerGuard from 'lib/guards/auth.server';
-import { BRAND_URL } from 'lib/env';
+import { redirect } from '@sveltejs/kit';
+
 import { get } from 'lib/api';
 import getPageMetaTags from 'lib/helpers/getPageMetaTags';
 import setPageVars from '$lib/helpers/setPageVars';
@@ -19,6 +20,10 @@ export async function load({ url, params, session, cookies }) {
 			? url.searchParams.get('pageSlug')
 			: currentDomain;
 
+	if (currentDomain === 'mmntm.page' && !pageSlug) {
+		throw redirect(302, 'https://momentum.page');
+	}
+
 	const { subPageSlug, feedItemSlug } = params;
 
 	let extend = {
@@ -37,7 +42,6 @@ export async function load({ url, params, session, cookies }) {
 			]);
 
 			let feedItem;
-			console.log('page', page);
 			if (page.slug.includes('$data.slug')) {
 				feedItem = await get(`feed/bySlug`, {
 					projectSlug: page.streamSlug,
