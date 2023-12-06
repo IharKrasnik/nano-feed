@@ -725,7 +725,7 @@
 				}`;
 			}
 
-			return `${page.parentPage?.slug || page.slug}.${PAGE_URL}${
+			return `${page.parentPage?.slug || page.slug}.${PAGE_URL.replace('https://', '')}${
 				page.parentPage ? `/${page.slug}` : ''
 			}`;
 		}
@@ -1621,31 +1621,33 @@
 										class="relative _published-label flex justify-between items-center mt-4"
 										style="padding: 6px 10px;"
 									>
-										<a
-											href={getPageUrl()}
-											class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
-											style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
-											target="_blank"
-											rel="noreferrer"
-										>
-											<div
-												class="mr-2 z-20"
-												use:tooltip
-												title={page.isDirty ? 'Pending Changes' : 'Published'}
+										{#key page._id}
+											<a
+												href={getPageUrl()}
+												class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
+												style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
+												target="_blank"
+												rel="noreferrer"
 											>
-												{#if !page.isDirty}
-													✅
-												{:else}
-													🌝
-												{/if}
-											</div>
+												<div
+													class="mr-2 z-20"
+													use:tooltip
+													title={page.isDirty ? 'Pending Changes' : 'Published'}
+												>
+													{#if !page.isDirty}
+														✅
+													{:else}
+														🌝
+													{/if}
+												</div>
 
-											<div
-												class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
-											>
-												{getPageUrl()}
-											</div>
-										</a>
+												<div
+													class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
+												>
+													{getPageUrl()}
+												</div>
+											</a>
+										{/key}
 
 										{#if page.isDirty}
 											<div transition:fly={{ x: 50, duration: 150 }}>
