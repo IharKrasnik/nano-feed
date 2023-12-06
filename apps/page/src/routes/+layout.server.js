@@ -20,8 +20,12 @@ export async function load({ url, params, session, cookies }) {
 			? url.searchParams.get('pageSlug')
 			: currentDomain;
 
-	if (currentDomain === 'mmntm.page' && !pageSlug) {
-		throw redirect(302, 'https://momentum.page');
+	if (currentDomain.includes('mmntm.page')) {
+		if (currentDomain === 'mmntm.page') {
+			throw redirect(302, 'https://momentum.page');
+		} else {
+			pageSlug = currentDomain.split('.')[0];
+		}
 	}
 
 	const { subPageSlug, feedItemSlug } = params;
