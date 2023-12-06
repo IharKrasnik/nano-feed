@@ -19,6 +19,7 @@
 	import RenderServiceChat from '$lib/components/render/ServiceChat.svelte';
 	import RenderNewsletter from '$lib/components/render/Newsletter.svelte';
 	import RenderForm from '$lib/components/render/Form.svelte';
+	import RenderBackgroundPattern from '$lib/components/render/BackgroundPattern.svelte';
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
 	import ArticleAuthorLabel from '$lib/components/render/ArticleAuthorLabel.svelte';
@@ -293,7 +294,10 @@
 	<div
 		class="relative {section.bgImageUrl ? 'p-8 my-16' : ''} {section.renderType === 'callout'
 			? 'min-h-screen sm:min-h-min'
-			: ''}"
+			: ''} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
+		style={section.theme?.isOverrideColors
+			? `background-color: ${section.theme?.backgroundColor};`
+			: ''}
 	>
 		{#if section.bgImageUrl}
 			<img
@@ -310,6 +314,18 @@
 						: 'rgba(255,255,255,.85)'}; z-index: 1;"
 				/>
 			{/if}
+		{/if}
+
+		{#if section.theme?.bgPattern}
+			<RenderBackgroundPattern
+				theme={section.theme?.isOppositeColors
+					? page.theme.theme === 'dark'
+						? 'light'
+						: 'dark'
+					: page.theme.theme}
+				bgPattern={section.theme?.bgPattern}
+				accentColor={page.theme?.accentColor}
+			/>
 		{/if}
 
 		{#if section.title && (section.items?.length || section.collectionType)}
@@ -343,7 +359,7 @@
 				? `--glowing-color: ${section.theme.glowingColor};`
 				: ''} {section.theme?.glowingIntensity
 				? `--glowing-opacity: ${getGlowingOpacity()};`
-				: ''} {style || ''}"
+				: ''} {section.bottomImageUrl ? 'padding-bottom: 0 !important;' : ''} {style || ''} "
 		>
 			{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
 				{#if section.title && (section.items?.length || section.collectionType)}
@@ -434,7 +450,7 @@
 								page.theme?.isTitlesLeft ||
 								section.theme?.isTitleLeft
 									? 'justify-start'
-									: 'justify-center'} mb-8"
+									: 'justify-center mx-auto'} mb-8"
 								bind:sectionItem={section}
 								size="large"
 								bind:page
@@ -455,6 +471,12 @@
 							/>
 						</div>
 					{/if}
+				</div>
+			{/if}
+
+			{#if section.bottomImageUrl}
+				<div class="_container-width mx-auto">
+					<img class="mx-auto" src={section.bottomImageUrl} style="z-index: 0;" />
 				</div>
 			{/if}
 

@@ -1235,7 +1235,7 @@
 									{/if}
 
 									{#if page._id}
-										<div class="text-lg font-bold mr-2 py-4 my-4">🤩 Hero Section</div>
+										<div class="text-lg font-bold mr-2 py-4 my-4 mt-8">🤩 Hero Section</div>
 										{#each page.heros as hero}
 											<EditHero
 												class="my-4"
@@ -1298,7 +1298,7 @@
 
 									{#if page._id}
 										<div
-											class="bg-white rounded-xl sm:w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
+											class="bg-white rounded-xl sm:w-[426px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
 										>
 											<div class="flex items-center">
 												<div class="text-lg font-bold">🧱 Sections</div>
@@ -1360,30 +1360,30 @@
 											on:click={addNewSection}>🧱 Add Empty Section</button
 										>
 										<div class="text-sm mb-2">or use templates</div>
-										<div class="flex flex-wrap">
+										<div class="flex flex-wrap p-4 bg-[#fafafa] rounded">
 											<button
-												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'benefits' })}>🙌 Add Benefits</button
 											>
 
 											<button
-												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'testimonials' })}
 												>💚 Add Testimonials</button
 											>
 
 											<button
-												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
 											>
 
 											<button
-												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
 											>
 
 											<button
-												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'stepper' })}
 												>💡 Add 1-2-3 stepper</button
 											>
@@ -1473,45 +1473,48 @@
 									{/if} -->
 
 									{#if page._id && page.sections?.length}
-										<hr class="my-8 border-[#8B786D] opacity-30" />
-										<div class="font-bold text-lg mr-2 py-4 my-4">➡️ Call-To-Action</div>
+										<div class="font-bold text-lg mr-2 py-4 my-4 mt-12">➡️ Call-To-Action</div>
 
 										<EditCTA class="my-4" bind:page bind:focuses />
 									{/if}
 
-									{#if page._id && page.name && page.title}
+									<!-- {#if page._id && page.name && page.title}
 										<hr class="my-8 border-[#8B786D] opacity-30" />
-									{/if}
+									{/if} -->
 								</div>
 
-								<div class="flex items-center w-full justify-between mt-8">
-									{#if page.name}
-										{#if page.renderType === 'article'}
-											<Button class="_primary" onClick={publishPage}>Publish Article</Button>
-										{:else}
-											<Button class="_primary" onClick={publishPage}>Publish Page</Button>
-										{/if}
-									{/if}
-									<hr class="my-8 border-[#8B786D] opacity-30" />
-
-									{#if page._id && page.isDirty}
-										<div
-											class="cursor-pointer text-sm opacity-70"
-											on:click={async () => {
-												setPageAndDraft(
-													await get(`pages/${page._id}`, {
-														...(page.parentPage ? { parentPageSlug: page.parentPage?.slug } : {})
-													}),
-													{ force: true }
-												);
-											}}
-										>
-											Reset Page
+								<div class="font-bold text-lg mb-8 mt-16">🚀 Publish Page</div>
+								<div class="py-16 mb-32 _section _borderless bg-[#fafafa]">
+									<div class="flex items-center w-full justify-between">
+										<div>
+											{#if page.name}
+												{#if page.renderType === 'article'}
+													<Button class="_primary" onClick={publishPage}>Publish Article</Button>
+												{:else}
+													<Button class="_primary" onClick={publishPage}>Publish Page</Button>
+												{/if}
+											{/if}
 										</div>
-									{/if}
+										{#if page._id && page.isDirty}
+											<div
+												class="cursor-pointer text-sm text-orange-500"
+												on:click={async () => {
+													setPageAndDraft(
+														await get(`pages/${page._id}`, {
+															...(page.parentPage ? { parentPageSlug: page.parentPage?.slug } : {})
+														}),
+														{ force: true }
+													);
+												}}
+											>
+												Reset Page
+											</div>
+										{/if}
+									</div>
+									<div class="text-sm mt-2">The changes will appear on your page live URL</div>
 								</div>
 								{#if page?._id}
-									<hr class="my-16" />
+									<!-- <hr class="my-16" />
 									<div class="mb-32">
 										<div class="_section bg-[#e8ffef] mt-16" style="border: none;">
 											<div class="flex items-center justify-between w-full">
@@ -1530,7 +1533,7 @@
 												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
 											</a>
 										</div>
-									</div>
+									</div> -->
 								{/if}
 							{:else}
 								<BackTo to={'Editor'} onClick={() => (selectedTab = 'editor')} />

@@ -13,7 +13,8 @@
 	@apply transition;
 }
 
-._section._clickable:hover {
+._section._clickable:hover,
+._section.cursor-pointer:hover {
 	border: 1px #111 solid;
 }
 

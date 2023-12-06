@@ -380,7 +380,11 @@
 					}}
 				>
 					{#if sectionItem.isUrlButton}
-						<button class="w-full flex justify-center items-center {size ? `_is${size}` : ''}">
+						<button
+							class="w-full shadow hover:shadow-lg hover:shadow-white/50 shadow-white/50 flex justify-center items-center {size
+								? `_is${size}`
+								: ''}"
+						>
 							{#if sectionItem.urlIcon}
 								<Emoji
 									width={size === 'small' ? 15 : 22}

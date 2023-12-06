@@ -39,7 +39,7 @@
 	import SitePreview from '$lib/components/site-preview.svelte';
 	import SignupForm from '$lib/components/signup-form.svelte';
 
-	import Settings from '$lib/components/Settings.svelte';
+	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -73,7 +73,7 @@
 		isSettingsShown = true;
 	};
 
-	if (!page.ctaFooter) {
+	$: if (!page.ctaFooter) {
 		page.ctaFooter = {};
 	}
 </script>
@@ -85,6 +85,7 @@
 			: 'py-4'} flex items-center justify-between cursor-pointer {clazz}"
 		on:click={() => {
 			isCollapsed = !isCollapsed;
+			$sectionToEdit = page.ctaFooter;
 		}}
 	>
 		<div class="overflow-x-hidden font-bold">
@@ -98,11 +99,17 @@
 		<div class="flex w-full items-center justify-between mb-4 ">
 			<div class="flex items-center ">
 				<div class="font-bold mr-4">Call-to-action section</div>
+
 				<div
 					class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
-					on:click={showSettings}
 				>
-					⚙️
+					{#if page.ctaFooter}
+						<EditSectionSettings
+							bind:page
+							bind:section={page.ctaFooter}
+							bind:sectionItem={page.ctaFooter}
+						/>
+					{/if}
 				</div>
 			</div>
 
@@ -113,33 +120,6 @@
 				<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse CTA
 			</div>
 		</div>
-
-		{#if isSettingsShown}
-			<div
-				class="absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl"
-				in:fly={{ y: 50, duration: 150 }}
-				use:clickOutside
-				on:clickOutside={() => {
-					isSettingsShown = false;
-				}}
-			>
-				<div class="w-full">
-					<div class="">
-						<div class="_title flex justify-between w-full">
-							Settings
-
-							<div class="flex font-normal items-center">
-								Hide Section <input
-									bind:checked={page.ctaFooter.isHidden}
-									class="ml-2"
-									type="checkbox"
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
 
 		<div class="_section">
 			<div class="_title flex items-center justify-between">
@@ -161,7 +141,7 @@
 				class="min-h-[100px]"
 				contenteditable="true"
 				use:contenteditable
-				bind:innerHTML={page.ctaFooter.subtitle}
+				bind:innerHTML={page.ctaFooter.description}
 				data-placeholder="Guide them to action"
 			/>
 		</div>

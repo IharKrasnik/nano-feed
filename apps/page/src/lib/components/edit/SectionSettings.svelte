@@ -11,6 +11,7 @@
 	export let page;
 
 	export let isShown = false;
+	export let isWithButton = true;
 
 	let show = () => {
 		isShown = true;
@@ -48,16 +49,20 @@
 	];
 </script>
 
-<div
-	class="ml-2 w-[37px] h-[37px] shrink-0 bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
-	on:click={show}
->
-	⚙️
-</div>
-
-{#if isShown}
+{#if isWithButton}
 	<div
-		class="absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl"
+		class="ml-2 w-[37px] h-[37px] shrink-0 bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+		on:click={show}
+	>
+		⚙️
+	</div>
+{/if}
+
+{#if !isWithButton || isShown}
+	<div
+		class={isWithButton
+			? 'absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl'
+			: ''}
 		in:fly={{ y: 50, duration: 150 }}
 	>
 		<div class="w-full py-4">
@@ -274,6 +279,12 @@
 			{#if sectionItem === section && !sectionItem.bgImageUrl}
 				<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
 
+				<div class="mb-4">
+					<input bind:checked={sectionItem.theme.isOppositeColors} class="mr-2" type="checkbox" />
+
+					Use opposite colors
+				</div>
+
 				<div class="flex items-center">
 					{#if sectionItem.theme.isOverrideColors}
 						<input
@@ -296,13 +307,15 @@
 							class="mr-2"
 							type="checkbox"
 							on:change={() => {
-								if (!sectionItem.theme.backgroundColor) {
-									sectionItem.theme.backgroundColor = sectionItem.theme.backgroundColor;
+								if (sectionItem.theme.isOverrideColors) {
+									sectionItem.theme.backgroundColor = page.theme.backgroundColor;
+								} else {
+									sectionItem.theme.backgroundColor = null;
 								}
 							}}
 						/>
 
-						Override color
+						Override background color
 					</div>
 				</div>
 			{/if}
@@ -365,6 +378,12 @@
 					</div>
 				{/if}
 			{/if}
+		</div>
+
+		<div class="_section">
+			<div class="_title">Bottom image</div>
+
+			<FileInput isCanSearch class="w-full" theme="light" bind:url={sectionItem.bottomImageUrl} />
 		</div>
 
 		<!-- <div class="my-4">

@@ -203,12 +203,16 @@
 							</div>
 						{/if}
 						{#if hero.interactiveRenderType}
-							<RenderInteractiveOptions
-								class={hero.theme.isLeft || !hero.theme?.isVertical ? '' : 'max-w-[600px] mx-auto'}
-								size={hero.theme.isHugeTitle ? 'huge' : 'large'}
-								bind:page
-								bind:sectionItem={hero}
-							/>
+							<div in:fly={{ y: 25, delay: 500, duration: 900 }}>
+								<RenderInteractiveOptions
+									class={hero.theme.isLeft || !hero.theme?.isVertical
+										? ''
+										: 'max-w-[600px] mx-auto'}
+									size={hero.theme.isHugeTitle ? 'huge' : 'large'}
+									bind:page
+									bind:sectionItem={hero}
+								/>
+							</div>
 						{/if}
 
 						{#if page.renderType === 'article'}
@@ -263,7 +267,7 @@
 							class="relative  w-full mt-16 sm:mt-0 {hero.theme?.isVertical
 								? ''
 								: 'sm:ml-8 sm:max-w-[600px]'}"
-							in:fly={{ y: 25, delay: 300, duration: 600 }}
+							in:fly={{ y: 25, delay: 1000, duration: 900 }}
 							on:click={() => {
 								// if (hero.demoUrl.includes('/emulator-full')) {
 								// 	isDemoPopupShown = true;

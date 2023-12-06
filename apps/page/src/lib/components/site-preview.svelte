@@ -24,6 +24,7 @@
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import RenderCTA from '$lib/components/render/CallToAction.svelte';
+	import RenderBackgroundPattern from '$lib/components/render/BackgroundPattern.svelte';
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 
@@ -96,6 +97,8 @@
 	export let isNoVars = false;
 	let isMounted = false;
 	let isMountedDelayed = false;
+
+	let ctaEl;
 
 	onMount(() => {
 		isMounted = true;
@@ -291,7 +294,7 @@
 	class="hidden sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 sm:grid-cols-12 sm:grid-cols-5 sm:grid-cols-3 sm:w-[392px] sm:w-[500px] sm:columns-2 sm:columns-3 sm:columns-4 sm:min-h-screen
 	bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]
 	bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)]
-	pattern-dots pattern-wavy pattern-cross"
+	pattern-dots pattern-wavy pattern-cross pattern-boxes"
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
@@ -320,46 +323,12 @@
 				{/if}
 
 				{#if page?.activeHero?.theme?.bgPattern}
-					{#if page?.activeHero?.theme?.bgPattern === 'squares'}
-						<div
-							class="bg-root absolute z-10 inset-0 -z-50 h-screen w-screen bg-[linear-gradient(to_right,{page
-								?.theme?.theme === 'dark'
-								? '#ffffff'
-								: '#000000'}12_1px,transparent_1px),linear-gradient(to_bottom,{page?.theme
-								?.theme === 'dark'
-								? '#ffffff'
-								: '#000000'}12_1px,transparent_1px)] [background-size:80px_80px] {page.activeHero
-								?.theme?.bgGradient?.type === 'ray' ||
-							page.activeHero?.theme?.bgGradient?.type === 'cobalt'
-								? '[mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]'
-								: ''}"
-						/>
-						<!-- {:else if page?.activeHero?.theme?.bgPattern === 'dots'}
-						<div
-							class="absolute  z-10 h-screen w-screen bg-[radial-gradient(rgba(255,255,255,.1)_0.5px,transparent_1px)] [background-size:32px_32px]"
-						/> -->
-					{:else}
-						<div
-							class="bg-root absolute z-10 inset-0 -z-50 h-screen w-screen pattern-{page?.activeHero
-								?.theme?.bgPattern} {page.theme?.theme === 'dark'
-								? 'pattern-white pattern-bg-black pattern-opacity-10'
-								: 'pattern-black pattern-bg-white'} 
-								{page?.activeHero?.theme?.bgPattern === 'wavy' ? 'pattern-size-8' : 'pattern-size-4'} {page
-								.activeHero?.theme?.bgGradient?.type === 'cobalt'
-								? '[mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]'
-								: ''}
-								{page.activeHero?.theme?.bgGradient?.type === 'ray'
-								? '[mask-image:radial-gradient(50%_70%_at_top_center,white,transparent)]'
-								: ''}
-								{page.activeHero?.theme?.bgGradient?.type === 'radial'
-								? '[mask-image:radial-gradient(50%_80%_at_top_center,white,transparent)]'
-								: ''}
-								"
-							style="--pattern-color: {page.theme.accentColor};
-								--pattern-color-55: {page.theme.accentColor}55;
-								--pattern-color-77: {page.theme.accentColor}77;"
-						/>
-					{/if}
+					<RenderBackgroundPattern
+						theme={page.theme?.theme}
+						bgPattern={page.activeHero?.theme?.bgPattern}
+						bgGradient={page.activeHero?.theme?.bgGradient}
+						accentColor={page.theme?.accentColor}
+					/>
 				{/if}
 
 				{#if isMounted}
@@ -640,8 +609,10 @@
 						</div>
 					{/if}
 
-					{#if isMountedDelayed && !page.isSkipCTA && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
-						<RenderCTA {page} section={page.ctaFooter} />
+					{#if isMountedDelayed && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
+						<div class="__d overflow-hidden" bind:this={ctaEl}>
+							<RenderCTA {page} section={page.ctaFooter} />
+						</div>
 					{/if}
 
 					{#if !isNoBadge && !page.isNoBadge}
@@ -658,7 +629,8 @@
 {/if} -->
 <style>
 	:global(.bg-site) {
-		background-color: var(--background-color, white);
+		/* background-color: var(--background-color, white); */
+		background-color: transparent;
 	}
 
 	:global(.bg-section) {

@@ -394,11 +394,11 @@
 							/>
 						</div>
 
-						<hr class="my-8 opacity-80" />
+						<!-- <hr class="my-8 opacity-80" /> -->
 
-						<div class="mt-8">
+						<!-- <div class="mt-8 flex justify-end">
 							<button class="_secondary _small" on:click={deleteHero}>🗑 Delete Hero</button>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
