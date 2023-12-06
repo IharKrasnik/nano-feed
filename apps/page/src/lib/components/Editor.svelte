@@ -169,7 +169,6 @@
 		};
 	};
 
-
 	//
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
@@ -200,7 +199,7 @@
 		}
 
 		if (!page.parentPage && !page.heros?.length) {
-			addDefaultHero();
+			addDefaultHero(page);
 		}
 
 		page.activeHero = page.heros[0];
@@ -299,7 +298,7 @@
 			pageSlug = page.slug;
 
 			if (!page.heros) {
-				addDefaultHero();
+				addDefaultHero(page);
 			}
 
 			page.activeHero = page.heros && page.heros[0];
