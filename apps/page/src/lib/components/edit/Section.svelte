@@ -246,6 +246,30 @@
 					<option value="vertical">Vertical</option>
 					<option value="horizontal">Horizontal</option>
 				</select>
+
+				<div class="flex items-center mt-2 justify-between">
+					<div class="text-xs flex gap-2 items-center">
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								section.maxWidth = 0;
+							}}
+							class:font-bold={!section.maxWidth}
+						>
+							Stretch
+						</div>
+
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								section.maxWidth = 600;
+							}}
+							class:font-bold={section.maxWidth === 600}
+						>
+							Medium
+						</div>
+					</div>
+				</div>
 			{/if}
 		</div>
 

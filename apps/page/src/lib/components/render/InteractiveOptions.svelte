@@ -322,7 +322,7 @@
 							placeholder="myemail@gmail.com"
 							bind:value={emailAddress}
 							class="_input _email-input w-full ring-2 ring-white/20"
-							style="background: var(--section-background-color) !important;
+							style="
 							--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
 								? 'var(--accent-color-lighter)'
 								: 'var(--accent-color-darker)'};"
@@ -453,7 +453,11 @@
 	</div>
 
 	{#if !isHeader && sectionItem.ctaExplainer}
-		<div class="text-sm mt-4 {clazz?.includes('w-full') ? 'w-full text-center' : 'max-w-[400px]'}">
+		<div
+			class="text-sm mt-4 {clazz?.includes('w-full')
+				? 'w-full text-center'
+				: 'max-w-[400px]'} {clazz?.includes('mx-auto') ? 'mx-auto' : ''}"
+		>
 			{@html sectionItem.ctaExplainer || ''}
 		</div>
 	{/if}
@@ -467,10 +471,6 @@
 {/if}
 
 <style>
-	._input:focus {
-		outline-color: var(--accent-color);
-	}
-
 	button._ishuge {
 		font-size: 20px;
 		padding: 16px 32px;

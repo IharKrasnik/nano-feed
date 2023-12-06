@@ -49,6 +49,12 @@ export default (page) => {
 		'text-font-size': '18px',
 		'text-line-height': 1.55,
 		'background-color': page.theme?.backgroundColor || '#ffffff',
+		'background-color-opposite': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
+		'text-color-opposite': page.theme?.theme === 'dark' ? '#111111' : '#f6f5f4',
+		'background-color-alternative':
+			page.theme?.theme === 'dark'
+				? hexToRGBA(lighten(page.theme?.backgroundColor, 0.5), 0.1)
+				: hexToRGBA(darken(page.theme?.backgroundColor, 0.5), 0.1),
 		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
 		'text-color': page.theme?.theme === 'dark' ? '#fbf5ec' : '#111111',
 		'accent-color': accentColor,
@@ -63,15 +69,12 @@ export default (page) => {
 
 		'section-description-text-color':
 			page.theme?.theme === 'dark' ? 'rgba(255,255,255, .7)' : 'rgba(0,0,0, .8)',
-
+		'title-font-size': page.activeHero?.theme?.isHugeTitle ? '72px' : '48px',
 		'section-title-font-size': page.theme?.containerWidth <= 900 ? '20px' : '24px',
 		'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',
 
-		'input-background': page.theme?.inputBackground || 'transparent',
-		'input-color':
-			page.theme?.inputColor || page.theme?.textColor || page.theme?.theme === 'dark'
-				? '#f6f5f4'
-				: '#111111',
+		'input-background': page.theme?.inputBackground || 'var(--section-background-color)',
+		'input-color': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
 		'button-color': page.theme?.buttonColor || '#fff',
 		'input-container-border-width': page.theme?.isInputBorder ? '0px' : '1px 1px 1px 1px',
 		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px'

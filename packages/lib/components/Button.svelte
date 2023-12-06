@@ -37,7 +37,7 @@
 	};
 </script>
 
-<button class="relative {clazz} flex justify-center" {style} on:click={load}>
+<button class="relative overflow-hidden {clazz} flex justify-center" {style} on:click={load}>
 	{#if isLoading}
 		<div class="absolute top-0 h-full flex items-center z-10">
 			<Loader {theme} />
@@ -45,20 +45,18 @@
 	{/if}
 
 	{#if isJustDone}
-		<div
-			class="absolute left-[50%] top-[50%]"
-			style="transform: translateX(-50%) translateY(-50%);"
-			in:scale={{ duration: 150 }}
-		>
-			👌
+		<div class="absolute left-0 top-0 w-full h-full backdrop-blur flex items-center justify-center">
+			<div in:scale={{ duration: 150 }}>👌</div>
 		</div>
 	{:else if isJustFailed}
-		<div class="" in:scale={{ duration: 150 }}>❌</div>
-	{:else}
-		<div class:invisible={isLoading}>
-			<slot />
+		<div class="absolute left-0 top-0 w-full h-full backdrop-blur flex items-center justify-center">
+			<div class="" in:scale={{ duration: 150 }}>❌</div>
 		</div>
-	{/if}
+	{:else}{/if}
+
+	<div class:invisible={isLoading}>
+		<slot />
+	</div>
 </button>
 
 {#if isJustFailed && errMessage}

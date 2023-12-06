@@ -9,6 +9,7 @@
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
 	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
 	import { browser } from '$app/environment';
+	import { v4 as uuidv4 } from 'uuid';
 
 	import Avatar from 'lib/components/Avatar.svelte';
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
@@ -240,6 +241,15 @@
 			return '0.5';
 		}
 	};
+
+	if (section.items) {
+		section.items = section.items.map((i) => {
+			if (!i.id) {
+				i.id = uuidv4();
+			}
+			return i;
+		});
+	}
 </script>
 
 <!-- <div class="section-bg" /> -->
@@ -304,7 +314,7 @@
 
 		{#if section.title && (section.items?.length || section.collectionType)}
 			<div
-				class="mx-auto h-px max-w-8xl opacity-[15%] w-full"
+				class="mx-auto h-px max-w-[500px] opacity-[15%] w-full"
 				style="background:linear-gradient(to right, rgba(0,0,0,0), {page.theme
 					?.accentColor}, rgba(0,0,0,0))"
 			/>
@@ -493,7 +503,7 @@
 					{#if section.renderType === 'carousel'}
 						{#if !section.carouselType || section.carouselType === 'vertical'}
 							<div
-								class={!section.size || section.size === 'medium' ? 'max-w-[600px] mx-auto' : ''}
+								style={section.maxWidth ? `max-width: ${section.maxWidth}px; margin: 0 auto;` : ''}
 							>
 								<div class="flex w-full justify-between">
 									<div class="flex gap-8 mb-8 items-center justify-center w-full sm:justify-start">

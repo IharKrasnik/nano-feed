@@ -29,6 +29,7 @@
 	import EditPost from 'lib/components/post/EditPost.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 	import EditPageLinks from '$lib/components/edit/PageLinks.svelte';
+	import EditCTA from '$lib/components/edit/CallToAction.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import PostPreview from 'lib/components/post/PostPreview.svelte';
@@ -1234,7 +1235,7 @@
 									{/if}
 
 									{#if page._id}
-										<div class="font-bold mr-2 py-4 my-4">🤩 Hero Section</div>
+										<div class="text-lg font-bold mr-2 py-4 my-4">🤩 Hero Section</div>
 										{#each page.heros as hero}
 											<EditHero
 												class="my-4"
@@ -1300,7 +1301,7 @@
 											class="bg-white rounded-xl sm:w-[426px] flex top-[0px] w-full my-8 justify-between items-center"
 										>
 											<div class="flex items-center">
-												<div class="font-bold">🧱 Sections</div>
+												<div class="text-lg font-bold">🧱 Sections</div>
 
 												{#if page.sections?.length}
 													<div class="ml-4 number-tag">
@@ -1431,23 +1432,6 @@
 
 									<!-- {#if page._id && !page.parentPage}
 										<div class="_section my-8">
-											<div class="_title flex justify-between w-full">Page Nav Links</div>
-
-											<div class="font-normal text-sm opacity-70 mb-4">
-												Links displayed in header and footer
-											</div>
-
-											<button
-												class="_primary "
-												on:click={() => {
-													isPageLinksModalShown = true;
-												}}>Edit Links</button
-											>
-										</div>
-									{/if} -->
-
-									<!-- {#if page._id && !page.parentPage}
-										<div class="_section my-8">
 											<div class="_title flex justify-between w-full">
 												Social Links
 
@@ -1487,6 +1471,13 @@
 											</div>
 										</div>
 									{/if} -->
+
+									{#if page._id && page.sections?.length}
+										<hr class="my-8 border-[#8B786D] opacity-30" />
+										<div class="font-bold text-lg mr-2 py-4 my-4">➡️ Call-To-Action</div>
+
+										<EditCTA class="my-4" bind:page bind:focuses />
+									{/if}
 
 									{#if page._id && page.name && page.title}
 										<hr class="my-8 border-[#8B786D] opacity-30" />

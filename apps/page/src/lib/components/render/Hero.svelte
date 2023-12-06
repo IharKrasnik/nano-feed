@@ -25,14 +25,6 @@
 
 	let isDemoPopupShown = false;
 
-	let styles = '';
-
-	$: if (hero.theme?.isHugeTitle) {
-		styles = '--title-font-size: 72px;';
-	} else {
-		styles = '--title-font-size: 48px;';
-	}
-
 	let isMounted = false;
 
 	onMount(() => {
@@ -123,7 +115,7 @@
 			hero.theme?.bgPattern !== 'cursors'
 				? ''
 				: 'min-h-screen sm:h-screen'} {hero.theme?.bgPattern === 'canvas' ? 'max-w-max' : ''}"
-			style="{styles};"
+			style=""
 		>
 			<div
 				bind:this={$aboveTheFoldEl}
@@ -157,7 +149,7 @@
 							<h1
 								class="{page.theme?.isGradientTitle
 									? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
-									: ''} _title 
+									: ''} _hero-title 
 											{!hero.demoUrl || hero.theme?.isVertical
 									? page.renderType === 'article'
 										? 'sm:max-w-[712px]'
@@ -316,33 +308,6 @@
 		width: 30px;
 		height: 30px;
 		margin-right: -10px;
-	}
-
-	._title {
-		font-family: var(--title-font);
-
-		font-size: var(--title-font-size);
-
-		@apply font-bold;
-		line-height: var(--title-line-height, 1.2);
-		margin-bottom: 32px;
-		/* sm:text-[32px]; */
-	}
-
-	@media (max-width: 640px) {
-		._title {
-			font-size: 36px;
-		}
-	}
-
-	:global(._root ._title) {
-		font-family: var(--title-font) !important;
-	}
-
-	:global(._title b, ._title em) {
-		/* background-color: var(--accent-color); */
-		color: var(--accent-color);
-		opacity: 0.9;
 	}
 
 	:global(._highlight-old b, ._highlight-old em) {

@@ -12,6 +12,7 @@
 	import { darken, lighten } from 'lib/helpers/color';
 	import setPageVars from '$lib/helpers/setPageVars';
 	import addDefaultHero from '$lib/helpers/addDefaultHero';
+	import { v4 as uuidv4 } from 'uuid';
 
 	import striptags from 'striptags';
 
@@ -22,6 +23,7 @@
 	import RenderHero from '$lib/components/render/Hero.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
+	import RenderCTA from '$lib/components/render/CallToAction.svelte';
 	import Scrolling from '$lib/components/animations/Scrolling.svelte';
 	import FeatherIcon from '$lib/components/FeatherIcon.svelte';
 
@@ -93,9 +95,14 @@
 	export let noStickyHeader = false;
 	export let isNoVars = false;
 	let isMounted = false;
+	let isMountedDelayed = false;
 
 	onMount(() => {
 		isMounted = true;
+
+		setTimeout(() => {
+			isMountedDelayed = true;
+		}, 400);
 	});
 
 	let email;
@@ -235,6 +242,12 @@
 			window.document.body.style['overflow'] = null;
 		}
 	};
+
+	if (!page.ctaFooter) {
+		page.ctaFooter = {
+			id: uuidv4()
+		};
+	}
 </script>
 
 <svelte:head>
@@ -351,7 +364,7 @@
 
 				{#if isMounted}
 					<div
-						class="sticky bg-none z-20 w-full {clazz}"
+						class="sticky bg-site z-20 w-full {clazz}"
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
@@ -521,15 +534,15 @@
 							/> -->
 						{#if !isLoading}
 							{#if page.activeHero}
-								<div class="relative">
+								<div class="sticky bg-site">
 									<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
 								</div>
 							{/if}
 
-							<div class="relative _root bg-site overflow-hidden" style="background: none;">
+							<div class="sticky _root bg-site overflow-hidden" style="background: none;">
 								{#if !isAboveTheFold}
 									{#if page.sections?.length}
-										<div class="relative z-10 {page.streamSlug ? '' : ''}" style="z-index: 40;">
+										<div class="relative  z-10 {page.streamSlug ? '' : ''}" style="z-index: 40;">
 											{#each page.sections || [] as section, i}
 												{#if $sectionToEdit && $sectionToEdit.id === section.id}
 													<div bind:this={editEl}>
@@ -604,7 +617,7 @@
 				{#if !isAboveTheFold}
 					{#if page.streamSlug && (!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))}
 						<div>
-							<div class="sticky z-20 py-4 sm:py-16 bg-site">
+							<div class="sticky  bg-site z-20 py-4 sm:py-16">
 								{#if page.links}
 									<div class="flex justify-center w-full my-4">
 										{#if page.links.twitter}
@@ -627,38 +640,9 @@
 						</div>
 					{/if}
 
-					<!-- {#if !page.parentPage && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
-						<div
-							class="p-4 sm:p-8 w-full text-center bg-[#fafafa] {isAboveTheFold || isEmbed
-								? ''
-								: 'min-h-screen'} max-h-[100%] z-0 bottom-0 flex flex-col justify-center"
-							style="color: {page.theme?.theme === 'dark'
-								? '#fafafa'
-								: '#222'}; background-color: {page.theme?.theme === 'dark' ? '#222' : '#fafafa'}"
-						>
-							<div class="mx-auto max-w-[750px] flex flex-col items-center justify-center">
-								<div class="flex items-center text-lg my-4">
-									<Emoji class="mr-2" emoji={page.logo} />
-									<span>
-										{page.name}
-									</span>
-								</div>
-								<div class="_title text-3xl font-bold mb-8">
-									{@html page.title}
-								</div>
-							</div>
-
-							<div
-								class="_input_container flex items-center mx-auto 
-							{page.isCollectEmails
-									? `w-full ${isSubmitted ? '' : '_border '}` +
-									  (page.callToAction.length < 20 ? 'sm:w-[392px]' : 'sm:w-[500px]')
-									: ''}"
-							>
-							
-							</div>
-						</div>
-					{/if} -->
+					{#if isMountedDelayed && !page.isSkipCTA && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
+						<RenderCTA {page} section={page.ctaFooter} />
+					{/if}
 
 					{#if !isNoBadge && !page.isNoBadge}
 						<PageBadge theme={page.theme?.theme || 'light'} />
@@ -673,9 +657,9 @@
 	<Background />
 {/if} -->
 <style>
-	/* :global(.bg-site) {
+	:global(.bg-site) {
 		background-color: var(--background-color, white);
-	} */
+	}
 
 	:global(.bg-section) {
 		background-color: var(--section-background-color);
