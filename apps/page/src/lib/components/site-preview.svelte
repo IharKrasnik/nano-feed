@@ -11,6 +11,7 @@
 	import { onMount } from 'svelte';
 	import { darken, lighten } from 'lib/helpers/color';
 	import setPageVars from '$lib/helpers/setPageVars';
+	import addDefaultHero from '$lib/helpers/addDefaultHero';
 
 	import striptags from 'striptags';
 
@@ -209,17 +210,7 @@
 
 	if (browser && !page.activeHero) {
 		if (!page.heros) {
-			page.heros = [
-				{
-					title: page.title,
-					subtitle: page.subtitle,
-					callToActionText: page.callToActionText,
-					isUrlButton: true,
-					interactiveRenderType: page.isCollectEmails ? 'email' : 'link',
-					bgImageUrl: page.theme?.headerBackgroundImageUrl,
-					theme: {}
-				}
-			];
+			addDefaultHero(page);
 		}
 		page.activeHero = _.shuffle(page.heros)[0];
 	}

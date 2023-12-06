@@ -163,7 +163,7 @@
 					loop
 					autoplay
 				/>
-			{:else if url.includes('.jpg') || url.includes('.jpeg') || url.includes('png') || url.includes('webp') || url.includes('unsplash.com') || url.includes('giphy.com') || url.includes('image')}
+			{:else if url.includes('.jpg') || url.includes('.jpeg') || url.includes('.gif') || url.includes('png') || url.includes('webp') || url.includes('unsplash.com') || url.includes('giphy.com') || url.includes('image')}
 				{#key url}
 					{#if isLazy}
 						<img class="{imgClass} lazyload" data-src={url} />

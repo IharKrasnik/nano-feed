@@ -17,6 +17,7 @@
 	import { get, post, put } from 'lib/api';
 
 	import loginWithGoogle from 'lib/helpers/loginWithGoogle';
+	import addDefaultHero from '$lib/helpers/addDefaultHero';
 
 	import EditHero from '$lib/components/edit/Hero.svelte';
 	import EditSection from '$lib/components/edit/Section.svelte';
@@ -168,42 +169,6 @@
 		};
 	};
 
-	let addDefaultHero = () => {
-		page.heros = [
-			{
-				id: uuidv4(),
-				isHidden: false,
-				renderType: 'default',
-
-				title: page.title,
-				subtitle: page.subtitle,
-				demoUrl: page.demoUrl,
-
-				interactiveRenderType:
-					page.interactiveRenderType || page.isCollectEmails ? 'email' : 'button',
-
-				callToActionText: page.callToAction,
-				ctaExplainer: page.ctaExplainer || '',
-				isUrlButton: true,
-
-				url: page.url,
-				actionUrl: page.actionUrl,
-				isUrlButton: page.isUrlButton,
-
-				url2: page.url2,
-				isUrl2Button: page.isUrl2Button,
-
-				bgImageUrl: page.theme?.heroBgImage,
-
-				theme: {
-					isLeft: page.theme?.isHeroLeft,
-					isVertical: page.theme?.isHeroVertical,
-					isHuge: page.theme?.isHugeTitle
-				}
-			}
-		];
-		page.theme.isShowNameWithLogo = true;
-	};
 
 	//
 

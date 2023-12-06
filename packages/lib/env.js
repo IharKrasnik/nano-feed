@@ -20,10 +20,11 @@ export const PAGE_URL = dev ? 'http://localhost:5177' : 'https://mmntm.page';
 
 export const POST_URL = dev ? 'http://localhost:5179' : 'https://mmntm.blog';
 
-export const STREAM_URL = dev
-	? 'http://localhost:5175'
-	: // 'https://feed.mmntm.build'
-	  'https://feed.mmntm.build';
+// export const STREAM_URL = dev
+// 	? 'http://localhost:5175'
+// 	 : 'https://feed.mmntm.build';
+
+export const STREAM_URL = 'https://feed.mmntm.build';
 
 export let GOOGLE_LOGIN_URL = browser
 	? `${API_URL}/auth/google/url?redirect_to=${window.document.location.href}`
