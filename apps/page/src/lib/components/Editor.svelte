@@ -179,10 +179,12 @@
 				subtitle: page.subtitle,
 				demoUrl: page.demoUrl,
 
-				interactiveRenderType: page.interactiveRenderType,
+				interactiveRenderType:
+					page.interactiveRenderType || page.isCollectEmails ? 'email' : 'button',
 
 				callToActionText: page.callToAction,
 				ctaExplainer: page.ctaExplainer || '',
+				isUrlButton: true,
 
 				url: page.url,
 				actionUrl: page.actionUrl,
@@ -200,6 +202,7 @@
 				}
 			}
 		];
+		page.theme.isShowNameWithLogo = true;
 	};
 
 	//
@@ -231,7 +234,7 @@
 			page.heros = [];
 		}
 
-		if (!page.parentPage && !page.heros) {
+		if (!page.parentPage && !page.heros?.length) {
 			addDefaultHero();
 		}
 
@@ -1644,7 +1647,7 @@
 												<div
 													class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
 												>
-													{getPageUrl()}
+													{getPageUrl().replace('https://', '')}
 												</div>
 											</a>
 										{/key}
