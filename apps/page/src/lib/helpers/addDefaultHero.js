@@ -35,18 +35,18 @@ export default (page) => {
 	];
 
 	page.sections = page.sections.map((s) => {
-		s.items = s.items.map((i) => {
-			if (i.url) {
-				i.interactiveRenderType = 'link';
-				i.isUrlButton = true;
-			}
-			return i;
-		});
+		if (s.items) {
+			s.items = s.items.map((i) => {
+				if (i.url) {
+					i.interactiveRenderType = 'link';
+					i.isUrlButton = true;
+				}
+				return i;
+			});
+		}
 
 		return s;
 	});
-
-	debugger;
 
 	page.theme.isShowNameWithLogo = true;
 };
