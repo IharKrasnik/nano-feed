@@ -719,8 +719,10 @@
 	}
 
 	let getPageUrl = () => {
-		if (page.domains?.length && page.domains.filter((d) => d.isConfigured).length) {
-			return `https://${_.last(page.domains.filter((d) => d.isConfigured)).url}`;
+		if ((page.parentPage?.domains || page.domains || []).filter((d) => d.isConfigured).length) {
+			return `https://${
+				_.last((page.parentPage?.domains || page.domains || []).filter((d) => d.isConfigured)).url
+			}${page.parentPage ? `/${page.slug}` : ''}`;
 		} else {
 			if (PAGE_URL.includes('localhost')) {
 				return `${PAGE_URL}${page.parentPage ? `/${page.slug}` : ''}?pageSlug=${
@@ -1647,7 +1649,7 @@
 												<div
 													class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
 												>
-													{getPageUrl().replace('https://', '')}
+													{getPageUrl().replace('https://', '').replace('www.', '')}
 												</div>
 											</a>
 										{/key}
