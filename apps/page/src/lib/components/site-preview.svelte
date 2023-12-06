@@ -204,7 +204,7 @@
 		title: page.title,
 		subtitle: page.subtitle,
 		description: page.title,
-		ctaExplainer: page.ctaExplainer
+		ctaExplainer: page.ctaExplainer || ''
 	};
 
 	if (browser && !page.activeHero) {

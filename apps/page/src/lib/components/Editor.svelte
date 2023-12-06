@@ -27,6 +27,7 @@
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import EditPost from 'lib/components/post/EditPost.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
+	import EditPageLinks from '$lib/components/edit/PageLinks.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import PostPreview from 'lib/components/post/PostPreview.svelte';
@@ -181,7 +182,7 @@
 				interactiveRenderType: page.interactiveRenderType,
 
 				callToActionText: page.callToAction,
-				ctaExplainer: page.ctaExplainer,
+				ctaExplainer: page.ctaExplainer || '',
 
 				url: page.url,
 				actionUrl: page.actionUrl,
@@ -645,6 +646,7 @@
 	};
 
 	let isSettingsModalShown = false;
+	let isPageLinksModalShown = false;
 
 	let subscribe = async () => {
 		let { url } = await get('stripe/subscribe', { pageId: page._id });
@@ -712,6 +714,22 @@
 	if (page.renderType === 'article') {
 		page.interactiveRenderType = 'multiple_choice';
 	}
+
+	let getPageUrl = () => {
+		if (page.domains?.length && page.domains.filter((d) => d.isConfigured).length) {
+			return _.last(page.domains.filter((d) => d.isConfigured)).url;
+		} else {
+			if (PAGE_URL.includes('localhost')) {
+				return `${PAGE_URL}${page.parentPage ? `/${page.slug}` : ''}?pageSlug=${
+					page.parentPage?.slug || page.slug
+				}`;
+			}
+
+			return `${page.parentPage?.slug || page.slug}.${PAGE_URL}${
+				page.parentPage ? `/${page.slug}` : ''
+			}`;
+		}
+	};
 </script>
 
 {#if isSettingsModalShown}
@@ -768,6 +786,12 @@
 			> for any help with Page. Let's make your page converting and beautiful.
 		</div>
 	</Modal>
+{/if}
+
+{#if isPageLinksModalShown}
+	<Modal bind:isShown={isPageLinksModalShown}>
+		<div class="p-8"><EditPageLinks bind:page /></div></Modal
+	>
 {/if}
 
 {#if !$sveltePage.data.pageSlug}
@@ -942,43 +966,7 @@
 							</div>
 						{/if}
 
-						<!-- {#if isOrdering}
-						<div class="bg-white p-4 z-30 fixed h-screen overflow-y-scroll pb-32 w-[426px]">
-							<div
-								class="flex items-center cursor-pointer text-[#8B786D] mb-4"
-								on:click={() => (isOrdering = false)}
-							>
-								<BackArrowSvg />
-								Back
-							</div>
-							{#if page._id}
-								<div
-									use:dndzone={{ items: page.sections, flipDurationMs }}
-									on:consider={handleDndConsider}
-									on:finalize={handleDndFinalize}
-								>
-									{#each page.sections || [] as section (section.id)}
-										<div animate:flip={{ duration: flipDurationMs }}>
-											<EditSection
-												isShort
-												bind:section
-												onRemove={() => {
-													page.sections = page.sections.filter((s) => s !== section);
-												}}
-											/>
-										</div>
-									{/each}
-								</div>
-								<div class="text-center py-4 text-sm">Drag & Drop sections to reorder</div>
-							{/if}
-						</div>
-					{/if} -->
-
 						<div class="py-4">
-							<!-- <div class="my-4">
-								<ABToggle></ABToggle>
-								</div> -->
-
 							{#if page._id && onlineUsersCount !== -1}
 								<div
 									class="flex shrink-0 items-center justify-between mb-8 flex border {onlineUsersCount
@@ -1472,18 +1460,29 @@
 										</div>
 									{/if}
 
-									{#if page._id && !page.parentPage}
+									<!-- {#if page._id && !page.parentPage}
+										<div class="_section my-8">
+											<div class="_title flex justify-between w-full">Page Nav Links</div>
+
+											<div class="font-normal text-sm opacity-70 mb-4">
+												Links displayed in header and footer
+											</div>
+
+											<button
+												class="_primary "
+												on:click={() => {
+													isPageLinksModalShown = true;
+												}}>Edit Links</button
+											>
+										</div>
+									{/if} -->
+
+									<!-- {#if page._id && !page.parentPage}
 										<div class="_section my-8">
 											<div class="_title flex justify-between w-full">
 												Social Links
 
-												<!-- <div class="flex font-normal items-center">
-													Hide Hero <input
-														bind:checked={page.isHeroHidden}
-														class="ml-2"
-														type="checkbox"
-													/> -->
-												<!-- </div> -->
+											
 											</div>
 
 											<div class="font-normal text-sm opacity-70 mb-4">
@@ -1518,7 +1517,7 @@
 												>
 											</div>
 										</div>
-									{/if}
+									{/if} -->
 
 									{#if page._id && page.name && page.title}
 										<hr class="my-8 border-[#8B786D] opacity-30" />
@@ -1623,10 +1622,7 @@
 										style="padding: 6px 10px;"
 									>
 										<a
-											href={page.domains?.length &&
-											page.domains.filter((d) => d.isConfigured).length
-												? `//${page.domains.filter((d) => d.isConfigured)[0].url}`
-												: `${PAGE_URL}/${page.slug}`}
+											href={getPageUrl()}
 											class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
 											style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
 											target="_blank"
@@ -1647,11 +1643,7 @@
 											<div
 												class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
 											>
-												{#if page.domains?.length && page.domains.filter((d) => d.isConfigured).length}
-													{page.domains.filter((d) => d.isConfigured)[0].url}
-												{:else}
-													/{page.slug}
-												{/if}
+												{getPageUrl()}
 											</div>
 										</a>
 

@@ -454,7 +454,7 @@
 
 	{#if !isHeader && sectionItem.ctaExplainer}
 		<div class="text-sm mt-4 {clazz?.includes('w-full') ? 'w-full text-center' : 'max-w-[400px]'}">
-			{@html sectionItem.ctaExplainer}
+			{@html sectionItem.ctaExplainer || ''}
 		</div>
 	{/if}
 
