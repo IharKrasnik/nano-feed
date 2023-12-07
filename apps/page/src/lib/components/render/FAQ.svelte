@@ -45,7 +45,11 @@
 								});
 							}}
 						>
-							<FeatherIcon color="#fff" size="30" name={faq.isExpanded ? 'minus' : 'plus'} />
+							<FeatherIcon
+								theme={page.theme?.theme}
+								size="30"
+								name={faq.isExpanded ? 'minus' : 'plus'}
+							/>
 						</div>
 					</div>
 					<div class:hidden={!faq.isExpanded} class="mt-2 mb-8" in:fade={{ duration: 150 }}>
