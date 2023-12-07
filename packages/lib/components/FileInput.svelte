@@ -13,6 +13,7 @@
 	import currentUser from 'lib/stores/currentUser';
 
 	export let isCanSearch = false;
+	export let isSearching = false;
 	export let isWithIntegrations = false;
 	export let url;
 	export let theme = 'dark';
@@ -168,6 +169,7 @@
 			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
 		>
 			<ImageSearch
+				bind:isSearching
 				onSelected={(imgUrl) => {
 					url = imgUrl;
 					innerUrlValue = url;

@@ -70,7 +70,12 @@
 					/>
 				</div>
 			{/if}
-			<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} flex gap-4 py-4">
+
+			<div
+				class="{theme === 'light'
+					? 'bg-white'
+					: 'bg-black'} flex gap-4 py-4 bg-[#fafafa] border px-2"
+			>
 				<div
 					class="pb-2"
 					on:click={() => (selectedTab = 'emoji')}
@@ -154,7 +159,7 @@
 						? 'bg-white'
 						: 'bg-black'}"
 				>
-					<div class="text-lg font-bold mb-2">Monochrome SVG Icons</div>
+					<div class="font-bold mb-2">Monochrome SVG Icons</div>
 
 					<div class="my-2 w-full">
 						<input class="w-full" placeholder="Search icon" bind:value={iconSearchStr} />
@@ -179,7 +184,7 @@
 					class="_section min-w-[345px] min-h-[200px] {theme === 'light' ? 'bg-white' : 'bg-black'}"
 				>
 					{#each customIcons as category}
-						<div class="opacity-80 mb-4">{category.name}</div>
+						<div class="font-bold mb-4">{category.name}</div>
 
 						<div class="grid grid-cols-5 w-full h-full mb-8 gap-4">
 							{#each category.icons as icon}

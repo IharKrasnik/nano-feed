@@ -30,6 +30,7 @@
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 	import EditPageLinks from '$lib/components/edit/PageLinks.svelte';
 	import EditCTA from '$lib/components/edit/CallToAction.svelte';
+	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import PostPreview from 'lib/components/post/PostPreview.svelte';
@@ -311,9 +312,16 @@
 				[isNewPage ? '_new' : page.slug]: null
 			};
 
-			if (isNewPage && !page.parentPage) {
-				$allPages = [{ ...page }, ...($allPages || [])];
+			if (isNewPage) {
+				if (!page.parentPage) {
+					$allPages = [{ ...page }, ...($allPages || [])];
+				}
+
 				isJustCreated = true;
+
+				setTimeout(() => {
+					isJustCreated = false;
+				}, 5000);
 
 				if ($allPages.length === 1) {
 					// isTutorialShown = true;
@@ -645,7 +653,7 @@
 			variablesValues: page.variablesValues
 		};
 
-		pageSlug = page.slug;
+		// pageSlug = page.slug;
 	};
 
 	let createSubPage = () => {};
@@ -865,7 +873,7 @@
 					class="_editor fixed left-0 sm:left-auto w-screen min:w-auto sm:min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white"
 					style="min-width: 100vw;"
 				>
-					<div class="fixed top-0 w-full z-10 sm:w-[426px] mb-[70px] bg-white px-4">
+					<div class="fixed top-0 w-full z-10 sm:w-[430px] mb-[70px] bg-white px-4">
 						<div
 							class="flex items-center justify-between w-full py-4 pr-4"
 							class:justify-between={!$currentUser}
@@ -908,28 +916,40 @@
 
 							{#if $currentUser}
 								{#if $allPages}
-									<select
-										class="ml-8 w-[275px]"
-										bind:value={pageSlug}
-										on:change={(evt) => {
-											let slug = evt.target.value;
+									<div class="flex w-full justify-between">
+										<select
+											class="ml-8"
+											bind:value={pageSlug}
+											on:change={(evt) => {
+												let slug = evt.target.value;
 
-											if (slug === '_new') {
+												if (slug === '_new') {
+													page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+													pageSlug = page.slug;
+												} else {
+													setPageAndDraft({
+														..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
+													});
+													// refreshData();
+												}
+											}}
+										>
+											{#each $allPages as page}
+												<option value={page.slug}>{page.name}</option>
+											{/each}
+											<option value="_new">📄 New Page</option>
+										</select>
+
+										<button
+											class="ml-4 shrink-0 _secondary _small opacity-70 hover:opacity-100"
+											on:click={() => {
 												page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-												pageSlug = page.slug;
-											} else {
-												setPageAndDraft({
-													..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
-												});
-												// refreshData();
-											}
-										}}
-									>
-										{#each $allPages as page}
-											<option value={page.slug}>{page.name}</option>
-										{/each}
-										<option value="_new">⬜️ Create New Page</option>
-									</select>
+												pageSlug = '_new';
+											}}
+										>
+											New</button
+										>
+									</div>
 								{:else}
 									<Loader />
 								{/if}
@@ -942,10 +962,27 @@
 							<hr class="w-full" />
 						</div>
 					</div>
-
 					<div class="sm:w-[426px] px-4 mr-4 mt-[70px]" style="max-width: 100vw;">
+						{#if !page._id && page.parentPage}
+							<div class="flex items-center pt-4">
+								<BackTo
+									onClick={() => {
+										setPageAndDraft(
+											$allPages.find((p) => p.slug === page.parentPage.slug),
+											{ force: true }
+										);
+									}}
+									to="Home Page"
+								/>
+							</div>
+						{/if}
+
 						{#if !page._id}
-							<div class="pt-8">Launch your landing page in seconds 👇</div>
+							{#if page.parentPage}
+								<div class="pt-4 text-lg font-bold">{page.parentPage?.name || ''}</div>
+							{:else}
+								<div class="pt-4">Launch your landing page in seconds 👇</div>
+							{/if}
 						{:else if page.sections}
 							{addGuids(page.sections) && ''}
 						{/if}
@@ -989,7 +1026,7 @@
 						<div class="py-4">
 							{#if page._id && onlineUsersCount !== -1}
 								<div
-									class="flex shrink-0 items-center justify-between mb-8 flex border {onlineUsersCount
+									class="flex shrink-0 items-center justify-between mb-4 flex border {onlineUsersCount
 										? 'border-green-300'
 										: 'border-gray-300'} {onlineUsersCount
 										? 'bg-green-300/10'
@@ -1014,6 +1051,89 @@
 								</div>
 							{/if}
 
+							{#if page.name}
+								{#if page._id}
+									<div class="_section mb-8">
+										<div class="flex justify-between items-center ">
+											<select
+												class="w-full"
+												bind:value={page._id}
+												on:change={async (evt) => {
+													if (page.parentPage && evt.target.value === page.parentPage._id) {
+														setPageAndDraft($allPages.find((p) => p._id === page.parentPage._id));
+													} else {
+														setPageAndDraft(
+															await get(`pages/${evt.target.value}`, {
+																parentPageSlug: page.parentPage?.slug || page.slug
+															}),
+															{ force: true }
+														);
+													}
+													evt.preventDefault();
+												}}
+											>
+												<option value={page.parentPage?._id || page._id}>Home</option>
+												{#if $subPages?.length}
+													{#each $subPages as subpage (subpage._id)}
+														<option value={subpage._id}>/{subpage.slug}</option>
+													{/each}
+												{/if}
+											</select>
+
+											{#if !page.parentPage}
+												<Button
+													class="_secondary _small shrink-0 ml-4 opacity-70 transition hover:opacity-100"
+													onClick={addSubpage}>Add Subpage</Button
+												>
+											{/if}
+										</div>
+										{#if page._id}
+											<!-- <div class="flex justify-between items-center mb-4">
+												<div
+													class="w-full mr-2  _editor-title text-lg font-bold block cursor-pointer transition hover:px-4 rounded-lg hover:bg-[#f5f5f5]"
+													on:click={() => (isBrandNameEdit = true)}
+												>
+													{page.name}
+												</div>
+											</div> -->
+
+											<div class="w-full flex justify-between items-center mt-4">
+												<div class="flex items-center">
+													<div class="mr-4">
+														<EmojiPicker bind:icon={page.logo} />
+													</div>
+													<ColorPicker bind:page />
+
+													<div
+														class="text-2xl ml-4 cursor-pointer"
+														on:click={() => {
+															isSettingsModalShown = true;
+														}}
+													>
+														⚙️
+													</div>
+												</div>
+
+												<div class="flex">
+													<input
+														class="mr-2"
+														type="checkbox"
+														bind:checked={isShowHeatmap}
+														on:change={() => {
+															if (isShowHeatmap) {
+																refreshHeatmap();
+															} else {
+																$heatmap = null;
+															}
+														}}
+													/> Heatmap 🔥
+												</div>
+											</div>
+										{/if}
+									</div>
+								{/if}
+							{/if}
+
 							{#if $postDraft}
 								<BackTo to={'Editor'} onClick={() => ($postDraft = null)} />
 								<EditPost class="none" bind:blog={page.blog} bind:post={$postDraft} />
@@ -1021,7 +1141,11 @@
 								{#if !page._id || isBrandNameEdit}
 									<div class="_section">
 										<div class="flex justify-between">
-											<div class="_title">Page Name</div>
+											{#if page.parentPage}
+												<div class="_title">Subpage Name</div>
+											{:else}
+												<div class="_title">Page Name</div>
+											{/if}
 										</div>
 										<div class="w-full flex justify-between items-center">
 											{#if page.isInDir}
@@ -1037,7 +1161,7 @@
 											<input
 												class="w-full"
 												bind:value={page.name}
-												placeholder="Momentum"
+												placeholder={page.parentPage ? 'About' : 'Momentum'}
 												use:autofocus
 											/>
 										</div>
@@ -1097,7 +1221,7 @@
 										</div>
 									{/if}
 
-									{#if page.name && page.activeHero && !page.parentPage}
+									{#if !page._id && page.name && page.activeHero && !page.parentPage}
 										<div class="_section" in:fade>
 											<div class="_title">Tagline</div>
 
@@ -1110,185 +1234,39 @@
 												on:focus={() => (focuses.title = true)}
 												on:blur={() => (focuses.title = false)}
 											/>
-										</div>
 
-										{#if !page._id}
-											<div
-												class="p-4  mt-4 rounded-xl font-bold bg-[#fafafa] _section"
-												in:fly={{ y: 50, duration: 150 }}
-											>
-												<div class="flex items-center mb-4">
-													<div class="mr-2">
-														<FeatherIcon size="20" name="arrow-right-circle" color="#111" />
+											{#if (focuses.title || page.activeHero.title) && !page._id}
+												<div
+													class="p-4  mt-4 rounded-xl font-bold bg-[#fafafa] opacity-70 _section"
+													in:fly={{ y: 50, duration: 150 }}
+												>
+													<div class="flex items-center mb-4">
+														<div class="mr-2">
+															<FeatherIcon size="20" name="arrow-right-circle" color="#111" />
+														</div>
+
+														Start with a bold tagline
 													</div>
-
-													Start with a bold tagline
+													<div class="font-normal mt-2">
+														Make a big promise to your customer. Start with a verb. Spark curiosity
+														and hook their attention.
+													</div>
 												</div>
-												<div class="font-normal mt-2">
-													Make a big promise to your customer. Start with a verb. Spark curiosity
-													and hook their attention.
-												</div>
-											</div>
-										{/if}
+											{/if}
+										</div>
 									{/if}
 								{:else}
-									<div class="flex justify-between items-center mb-4 ">
+									<!-- <div class="flex justify-between items-center mb-4 ">
 										<div
-											class="w-full mr-2  _editor-title text-lg font-bold block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
+											class="w-full mr-2  _editor-title text-lg font-bold block cursor-pointer transition hover:px-4 rounded-lg hover:bg-[#f5f5f5]"
 											on:click={() => (isBrandNameEdit = true)}
 										>
 											{page.name}
 										</div>
-									</div>
-								{/if}
-
-								{#if page._id}
-									<div class="w-full flex justify-between items-center mb-4">
-										<div class="flex items-center">
-											<div class="mr-4">
-												<EmojiPicker bind:icon={page.logo} />
-											</div>
-											<ColorPicker bind:page />
-
-											<div
-												class="text-2xl ml-4 cursor-pointer"
-												on:click={() => {
-													isSettingsModalShown = true;
-												}}
-											>
-												⚙️
-											</div>
-										</div>
-
-										<div class="flex">
-											<input
-												class="mr-2"
-												type="checkbox"
-												bind:checked={isShowHeatmap}
-												on:change={() => {
-													if (isShowHeatmap) {
-														refreshHeatmap();
-													} else {
-														$heatmap = null;
-													}
-												}}
-											/> Heatmap 🔥
-										</div>
-									</div>
+									</div> -->
 								{/if}
 
 								<div>
-									{#if page.name}
-										{#if page._id}
-											<div class="_section  mb-4">
-												{#if !page?.parentPage}
-													<div class="flex justify-between items-center ">
-														<select
-															class="w-full"
-															bind:value={page._id}
-															on:change={async (evt) => {
-																setPageAndDraft(
-																	await get(`pages/${evt.target.value}`, {
-																		parentPageSlug: page.slug
-																	}),
-																	{ force: true }
-																);
-																evt.preventDefault();
-															}}
-														>
-															<option value={page._id}>Home</option>
-															{#if $subPages?.length}
-																{#each $subPages as subpage (subpage._id)}
-																	<option value={subpage._id}>/{subpage.slug}</option>
-																{/each}
-															{/if}
-														</select>
-
-														{#if !page.parentPage}
-															<Button
-																class="_secondary _small shrink-0 ml-4 opacity-50 transition hover:opacity-100"
-																onClick={addSubpage}>Add Subpage</Button
-															>
-														{/if}
-													</div>
-												{:else}
-													<button
-														class="_secondary _small w-full mb-2"
-														on:click={() => {
-															setPageAndDraft(
-																$allPages.find((p) => p.slug === page.parentPage.slug),
-																{ force: true }
-															);
-														}}>Back to the Home page</button
-													>
-												{/if}
-												<div
-													class="flex w-full shrink-0 justify-between items-center bg-gray-300/10  border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer "
-													on:click={() => (selectedTab = 'analytics')}
-												>
-													<div class="border-gray-300 text-sm font-semibold opacity-300">
-														Unique Views
-													</div>
-													<div class="ml-2 font-bold">
-														{page.totalUniqueViews || 0}
-													</div>
-												</div>
-
-												{#if conversions?.forms}
-													<div
-														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  {getConversionColor(
-															conversions.forms
-														)}"
-														on:click={() => (selectedTab = 'audience')}
-													>
-														<div class="border-gray-300 text-sm font-semibold opacity-300">
-															Forms Conversion Rate
-														</div>
-														<div class="ml-2 font-bold">
-															{conversions.forms}%
-														</div>
-													</div>
-													<div class="text-sm semibold text-right mt-2">Target: 10%</div>
-												{/if}
-												{#if conversions?.clicks && !conversions?.forms}
-													<div
-														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer {getConversionColor(
-															conversions.clicks
-														)}"
-														on:click={() => (selectedTab = 'analytics')}
-													>
-														<div class="text-sm font-semibold">Clicks Conversion Rate</div>
-														<div class="ml-2 font-bold">
-															{conversions.clicks}%
-														</div>
-													</div>
-													<div class="text-sm semibold text-right mt-2">Target: 30%</div>
-												{/if}
-
-												{#if !conversions?.clicks && !conversions?.forms}
-													<div
-														class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg"
-													>
-														<div class="">Conversion Rate</div>
-														<div class="ml-2 font-bold opacity-30">N/A%</div>
-													</div>
-												{/if}
-											</div>
-										{/if}
-									{/if}
-
-									{#if !page._id && page.parentPage}
-										<button
-											class="_secondary _small w-full mb-2 opacity-50 hover:opacity-100"
-											on:click={() => {
-												setPageAndDraft(
-													$allPages.find((p) => p.slug === page.parentPage.slug),
-													{ force: true }
-												);
-											}}>Back to the Home page</button
-										>
-									{/if}
-
 									{#if page._id}
 										{#each page.heros as hero}
 											<EditHero
@@ -1533,7 +1511,21 @@
 									{/if} -->
 
 									{#if page._id && page.sections?.length}
-										<div class="font-bold text-lg mr-2 py-4 my-4 mt-12">➡️ Call-To-Action</div>
+										<div class="relative flex items-center my-4  mt-12">
+											<div class="font-bold text-lg mr-2 py-4">➡️ Call-To-Action</div>
+
+											<div
+												class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+											>
+												{#if page.ctaFooter}
+													<EditSectionSettings
+														bind:page
+														bind:section={page.ctaFooter}
+														bind:sectionItem={page.ctaFooter}
+													/>
+												{/if}
+											</div>
+										</div>
 
 										<EditCTA class="my-4" bind:page bind:focuses />
 									{/if}
@@ -1561,6 +1553,7 @@
 													{/if}
 												{/if}
 											</div>
+
 											{#if page._id && page.isDirty}
 												<div
 													class="cursor-pointer text-sm text-orange-500"
@@ -1583,6 +1576,64 @@
 										</div>
 										<div class="text-sm mt-2">The changes will appear on your page live URL</div>
 									</div>
+
+									{#if page._id}
+										<hr class="my-16" />
+										<div class="_section mt-8">
+											<div class="font-bold mb-2">Page Peformance</div>
+											<div
+												class="flex w-full shrink-0 justify-between items-center bg-gray-300/10  border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer "
+												on:click={() => (selectedTab = 'analytics')}
+											>
+												<div class="border-gray-300 text-sm font-semibold opacity-300">
+													Unique Views
+												</div>
+												<div class="ml-2 font-bold">
+													{page.totalUniqueViews || 0}
+												</div>
+											</div>
+
+											{#if conversions?.forms}
+												<div
+													class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  {getConversionColor(
+														conversions.forms
+													)}"
+													on:click={() => (selectedTab = 'audience')}
+												>
+													<div class="border-gray-300 text-sm font-semibold opacity-300">
+														Forms Conversion Rate
+													</div>
+													<div class="ml-2 font-bold">
+														{conversions.forms}%
+													</div>
+												</div>
+												<div class="text-sm semibold text-right mt-2">Target: 10%</div>
+											{/if}
+											{#if conversions?.clicks && !conversions?.forms}
+												<div
+													class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer {getConversionColor(
+														conversions.clicks
+													)}"
+													on:click={() => (selectedTab = 'analytics')}
+												>
+													<div class="text-sm font-semibold">Clicks Conversion Rate</div>
+													<div class="ml-2 font-bold">
+														{conversions.clicks}%
+													</div>
+												</div>
+												<div class="text-sm semibold text-right mt-2">Target: 30%</div>
+											{/if}
+
+											{#if !conversions?.clicks && !conversions?.forms}
+												<div
+													class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg"
+												>
+													<div class="">Conversion Rate</div>
+													<div class="ml-2 font-bold opacity-30">N/A%</div>
+												</div>
+											{/if}
+										</div>
+									{/if}
 								{/if}
 								{#if page?._id}
 									<!-- <hr class="my-16" />
@@ -1644,9 +1695,9 @@
 					>
 						{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
-								<div class="mx-auto">
+								<div class="__d mx-auto">
 									{#if isJustCreated || isJustPaid}
-										<ConfettiExplosion particleCount={200} force={0.3} />
+										<ConfettiExplosion infinite particleCount={200} force={0.3} />
 									{/if}
 								</div>
 

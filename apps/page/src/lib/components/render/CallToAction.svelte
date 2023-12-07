@@ -19,7 +19,8 @@
 			...page.activeHero,
 			_isHero: false,
 			_isCtaFooter: true,
-			title: section.title || page.title,
+			title: section.title || page.activeHero.title,
+			description: section.description || '',
 			subtitle: '',
 			theme: {
 				...section.theme,

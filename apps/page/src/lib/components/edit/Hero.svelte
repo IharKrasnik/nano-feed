@@ -151,6 +151,7 @@
 	];
 
 	let isShowKeyFeatures = !!hero.keyFeaturesStr;
+	let isFileSearching = false;
 </script>
 
 {#if isSelectBackgroundModalShown}
@@ -187,7 +188,9 @@
 			in:fly={{ y: 50, duration: 150 }}
 			use:clickOutside
 			on:clickOutside={() => {
-				isSettingsShown = false;
+				if (!isFileSearching) {
+					isSettingsShown = false;
+				}
 			}}
 		>
 			<div class="w-full">
@@ -259,7 +262,13 @@
 						{#if !hero.theme.isOverrideColors}
 							<div class="mt-4 text-sm font-semibold mb-2">Hero background image or video</div>
 
-							<FileInput isCanSearch class="w-full" theme="light" bind:url={hero.bgImageUrl} />
+							<FileInput
+								bind:isSearching={isFileSearching}
+								isCanSearch
+								class="w-full"
+								theme="light"
+								bind:url={hero.bgImageUrl}
+							/>
 
 							{#if hero.bgImageUrl}
 								<div class="flex text-sm mt-4 font-normal items-center">

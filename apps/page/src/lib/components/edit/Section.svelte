@@ -202,7 +202,7 @@
 		Delete Section 🗑
 	</div>
 
-	<div class="my-4 _section p-2 bg-[#fafafa]">
+	<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
 		<div class="font-bold mb-2">Render this section as...</div>
 
 		<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>

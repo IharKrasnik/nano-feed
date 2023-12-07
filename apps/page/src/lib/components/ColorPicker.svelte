@@ -302,7 +302,7 @@
 				}}
 			>
 				<div class="p-8 _editor">
-					<h2 class="text-2xl mb-4 font-bold _title">Styles</h2>
+					<h2 class="text-lg mb-12 font-bold _title mt-4">Page Appearance</h2>
 
 					<div class="flex justify-between gap-4 mb-16">
 						<div>

@@ -507,7 +507,11 @@
 							<div class="sticky _root bg-site overflow-hidden" style="background: none;">
 								{#if !isAboveTheFold}
 									{#if page.sections?.length}
-										<div class="relative  z-10 {page.streamSlug ? '' : ''}" style="z-index: 40;">
+										<div
+											in:fade={{ delay: 900 }}
+											class="relative  z-10 {page.streamSlug ? '' : ''}"
+											style="z-index: 40;"
+										>
 											{#each page.sections || [] as section, i}
 												{#if $sectionToEdit && $sectionToEdit.id === section.id}
 													<div bind:this={editEl}>

@@ -1,6 +1,7 @@
 <script>
 	import { fly } from 'svelte/transition';
 
+	import clickOutside from 'lib/use/clickOutside';
 	import isUrl from 'lib/helpers/isUrl';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -47,6 +48,10 @@
 			label: 'None'
 		}
 	];
+
+	let isBgImageSearching = false;
+	let isContainerBgSearching = false;
+	let isBottomImageSearching = false;
 </script>
 
 {#if isWithButton}
@@ -63,6 +68,13 @@
 		class={isWithButton
 			? 'absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl'
 			: ''}
+		use:clickOutside
+		on:clickOutside={() => {
+			debugger;
+			if (!isBgImageSearching && !isContainerBgSearching && !isBottomImageSearching) {
+				isShown = false;
+			}
+		}}
 		in:fly={{ y: 50, duration: 150 }}
 	>
 		<div class="w-full py-4">
@@ -341,7 +353,13 @@
 					Section background image or video
 				</div>
 
-				<FileInput isCanSearch class="w-full" theme="light" bind:url={sectionItem.bgImageUrl} />
+				<FileInput
+					isCanSearch
+					bind:isSearching={isBgImageSearching}
+					class="w-full"
+					theme="light"
+					bind:url={sectionItem.bgImageUrl}
+				/>
 
 				{#if sectionItem.bgImageUrl}
 					<div class="flex text-sm mt-4 font-normal items-center">
@@ -362,6 +380,7 @@
 
 					<FileInput
 						isCanSearch
+						bind:isSearching={isContainerBgSearching}
 						class="w-full"
 						theme="light"
 						bind:url={sectionItem.containerBgImageUrl}
@@ -385,25 +404,13 @@
 		<div class="_section">
 			<div class="_title">Bottom image</div>
 
-			<FileInput isCanSearch class="w-full" theme="light" bind:url={sectionItem.bottomImageUrl} />
-		</div>
-
-		<!-- <div class="my-4">
-			<div class="text-sm mb-2">Background Image</div>
-
 			<FileInput
-				class="w-full"
+				bind:isSearching={isBottomImageSearching}
 				isCanSearch
-				{theme}
-				on:change={() => {
-					if (sectionItem.bgImageUrl) {
-						sectionItem.className = '_darker';
-					}
-				}}
-				bind:url={sectionItem.bgImageUrl}
+				class="w-full"
+				theme="light"
+				bind:url={sectionItem.bottomImageUrl}
 			/>
-		</div> -->
-
-		<button class="_button _primary _small mt-8 mb-2 w-full" on:click={close}>Save & Close</button>
+		</div>
 	</div>
 {/if}

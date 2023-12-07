@@ -7,7 +7,7 @@
 	import Loader from 'lib/components/Loader.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 
-	let isSearching = false;
+	export let isSearching = false;
 	let isLoading = false;
 
 	export let onSelected = (url) => {};

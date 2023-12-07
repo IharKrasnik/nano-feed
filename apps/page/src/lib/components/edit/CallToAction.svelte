@@ -96,18 +96,6 @@
 		<div class="flex w-full items-center justify-between mb-4 ">
 			<div class="flex items-center ">
 				<div class="font-bold mr-4">Call-to-action section</div>
-
-				<div
-					class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
-				>
-					{#if page.ctaFooter}
-						<EditSectionSettings
-							bind:page
-							bind:section={page.ctaFooter}
-							bind:sectionItem={page.ctaFooter}
-						/>
-					{/if}
-				</div>
 			</div>
 
 			<div
