@@ -43,7 +43,7 @@
 	export let themeStyles = {};
 	export let isSkipHeader = false;
 	export let isEdit = false;
-	export let isCloneable = true;
+	export let isCloneable = false;
 	export let isFooter;
 
 	export let isShowAuthor;
