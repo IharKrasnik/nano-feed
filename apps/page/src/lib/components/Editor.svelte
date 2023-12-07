@@ -146,30 +146,38 @@
 	};
 
 	let refreshPageConversionStats = async () => {
-		if (!page.parentPage?._id && !page._id) {
-			return;
-		}
+		try {
+			if (!page.parentPage?._id && !page._id) {
+				return;
+			}
 
-		let endpointName = isDev
-			? `pages/${page._id}/conversions`
-			: `pages/${page._id}/conversions-optimised`;
+			let endpointName = isDev
+				? `pages/${page._id}/conversions`
+				: `pages/${page._id}/conversions-optimised`;
 
-		let stats = await get(endpointName, {
-			...(page.parentPage ? { parentPageId: page.parentPage._id } : {})
-		});
+			let stats = await get(
+				endpointName,
+				{
+					...(page.parentPage ? { parentPageId: page.parentPage._id } : {})
+				},
+				{
+					isNoNotifications: true
+				}
+			);
 
-		page.totalUniqueViews = stats.totalVisitorsCount;
-		page.totalUniqueClicksCount = stats.uniqueClicksCount;
-		page.totalSignupsCount = stats.totalSubmissionsCount;
+			page.totalUniqueViews = stats.totalVisitorsCount;
+			page.totalUniqueClicksCount = stats.uniqueClicksCount;
+			page.totalSignupsCount = stats.totalSubmissionsCount;
 
-		conversions = {
-			clicks: page.totalUniqueViews
-				? ((page.totalUniqueClicksCount / page.totalUniqueViews) * 100).toFixed(2)
-				: 0,
-			forms: page.totalUniqueViews
-				? ((page.totalSignupsCount / page.totalUniqueViews) * 100).toFixed(2)
-				: 0
-		};
+			conversions = {
+				clicks: page.totalUniqueViews
+					? ((page.totalUniqueClicksCount / page.totalUniqueViews) * 100).toFixed(2)
+					: 0,
+				forms: page.totalUniqueViews
+					? ((page.totalSignupsCount / page.totalUniqueViews) * 100).toFixed(2)
+					: 0
+			};
+		} catch (err) {}
 	};
 
 	//
@@ -723,7 +731,22 @@
 		}}
 	>
 		<div class="p-4 sm:p-8">
-			<Settings bind:page />
+			<Settings
+				bind:page
+				onDeleted={() => {
+					$allPages = $allPages.filter((p) => p._id !== page._id);
+					isSettingsModalShown = false;
+
+					showSuccessMessage(`Page ${page.name} was deleted`);
+
+					setPageAndDraft(
+						{ ...($allPages[0] || defaultPage) },
+						{
+							force: true
+						}
+					);
+				}}
+			/>
 		</div>
 	</Modal>
 {/if}

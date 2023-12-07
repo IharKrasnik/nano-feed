@@ -134,7 +134,7 @@
 				{/if}
 
 				{#if section.id === sectionItem.id}
-					<div class="mb-2 font-semibold mt-4">Image aspect ratio</div>
+					<div class="mb-2 font-semibold mt-4">Section images aspect ratio</div>
 
 					<div class="flex items-center gap-2">
 						<div

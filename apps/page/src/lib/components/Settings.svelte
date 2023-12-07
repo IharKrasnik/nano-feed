@@ -9,6 +9,7 @@
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 
 	export let page;
+	export let onDeleted;
 
 	let subscribe = async () => {
 		let { url } = await get('stripe/subscribe', { pageId: page._id });
@@ -17,7 +18,7 @@
 
 	let deletePage = async () => {
 		await del(`pages/${page._id}`);
-		page = {};
+		onDeleted();
 	};
 
 	let isDeleteIntent = false;
@@ -122,7 +123,7 @@
 
 		{#if isDeleteIntent}
 			<Button class="_primary _small _red" onClick={deletePage}>
-				>😱 I am sure, delete {page.name} forever</Button
+				😱 I am sure, delete {page.name} forever</Button
 			>
 		{:else}
 			<Button class="_primary _small _red" onClick={() => (isDeleteIntent = true)}
