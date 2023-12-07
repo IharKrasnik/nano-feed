@@ -34,19 +34,21 @@ export default (page) => {
 		}
 	];
 
-	page.sections = page.sections.map((s) => {
-		if (s.items) {
-			s.items = s.items.map((i) => {
-				if (i.url) {
-					i.interactiveRenderType = 'link';
-					i.isUrlButton = true;
-				}
-				return i;
-			});
-		}
+	if (page.sections) {
+		page.sections = page.sections.map((s) => {
+			if (s.items) {
+				s.items = s.items.map((i) => {
+					if (i.url) {
+						i.interactiveRenderType = 'link';
+						i.isUrlButton = true;
+					}
+					return i;
+				});
+			}
 
-		return s;
-	});
+			return s;
+		});
+	}
 
 	if (page.theme) {
 		page.theme.isShowNameWithLogo = true;
