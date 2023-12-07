@@ -19,8 +19,7 @@
 	/>
 {:else}
 	<div
-		class="bg-root absolute z-10 inset-0 -z-50 h-full w-full pattern-{bgPattern} opacity-10 {theme ===
-		'dark'
+		class="bg-root absolute z-10 inset-0 -z-50 h-full w-full pattern-{bgPattern} {theme === 'dark'
 			? 'pattern-white pattern-bg-black pattern-opacity-10'
 			: 'pattern-black pattern-bg-white'} 
 								{bgPattern === 'wavy' ? 'pattern-size-8' : 'pattern-size-4'} {bgGradient?.type === 'cobalt'

@@ -170,6 +170,207 @@
 	</Modal>
 {/if}
 
+<div class="relative">
+	<div class="w-full flex items-center my-4 mt-8 py-4 ">
+		<div class="text-lg font-bold mr-4 _editor-title">🤩 Hero Section</div>
+		<div
+			class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+			on:click={showSettings}
+		>
+			⚙️
+		</div>
+	</div>
+
+	{#if isSettingsShown}
+		<div
+			class="absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl shadow-lg shadow-black/30"
+			in:fly={{ y: 50, duration: 150 }}
+			use:clickOutside
+			on:clickOutside={() => {
+				isSettingsShown = false;
+			}}
+		>
+			<div class="w-full">
+				<div class="">
+					<div class="_title flex justify-between w-full pb-4 text-lg">
+						Hero Settings
+
+						<!-- <div class="flex font-normal items-center">
+								Hide Hero <input bind:checked={hero.isHidden} class="ml-2" type="checkbox" />
+							</div> -->
+					</div>
+
+					<!-- <a
+							href="https://www.producthunt.com/posts/momentum-page?utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-momentum&#0045;page"
+							target="_blank"
+							><img
+								src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=392337&theme=light&period=monthly&topic_id=164"
+								alt="Momentum&#0032;Page - Launch&#0032;your&#0032;website&#0032;in&#0032;seconds&#0044;&#0032;get&#0032;users&#0032;in&#0032;minutes | Product Hunt"
+								style="width: 250px; height: 54px;"
+								width="250"
+								height="54"
+							/></a
+						> -->
+
+					<div class="_section">
+						<div class="font-semibold mb-2">Background</div>
+
+						{#if !hero.bgImageUrl}
+							<div class="mt-4 text-sm font-semibold mb-2">Background color</div>
+
+							<div class="mb-4">
+								<input bind:checked={hero.theme.isOppositeColors} class="mr-2" type="checkbox" />
+
+								Use opposite colors
+							</div>
+
+							<div class="flex items-center">
+								{#if hero.theme.isOverrideColors}
+									<input
+										type="color"
+										id="head"
+										name="head"
+										class="mr-4"
+										bind:value={hero.theme.backgroundColor}
+									/>
+								{:else}
+									<div
+										class="w-[30px] h-[30px] rounded-full border mr-4"
+										style="background-color: {page.theme.backgroundColor};"
+									/>
+								{/if}
+								<div>
+									<input
+										bind:checked={hero.theme.isOverrideColors}
+										class="mr-2"
+										type="checkbox"
+										on:change={() => {
+											if (!hero.theme.backgroundColor) {
+												hero.theme.backgroundColor = page.theme.backgroundColor;
+											}
+										}}
+									/>
+
+									Override background color
+								</div>
+							</div>
+						{/if}
+
+						{#if !hero.theme.isOverrideColors}
+							<div class="mt-4 text-sm font-semibold mb-2">Hero background image or video</div>
+
+							<FileInput isCanSearch class="w-full" theme="light" bind:url={hero.bgImageUrl} />
+
+							{#if hero.bgImageUrl}
+								<div class="flex text-sm mt-4 font-normal items-center">
+									<input
+										bind:checked={hero.theme.isNotBgImageDimmed}
+										class="mr-2"
+										type="checkbox"
+									/>
+
+									Do not dim background image
+								</div>
+							{/if}
+						{/if}
+					</div>
+
+					{#if hero.theme}
+						<div class="flex flex-wrap gap-4 mt-4">
+							{#if hero.demoUrl}
+								<div class="flex shrink-0 font-normal items-center">
+									<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertical
+								</div>
+							{/if}
+							<div class="flex shrink-0 font-normal items-center">
+								<input bind:checked={hero.theme.isHugeTitle} class="mr-2" type="checkbox" /> Is Huge
+							</div>
+							<div class="flex shrink-0 font-normal items-center">
+								<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
+							</div>
+						</div>
+					{/if}
+
+					<div class="mt-4 mb-2">
+						<div class="_section">
+							<div class="font-semibold">Background patterns</div>
+							<div class="text-sm mb-4 opacity-80">Nice subtle backgrounds to catch attention</div>
+
+							{#each bgPatterns as bgPattern}
+								<button
+									class="_secondary _small mr-2 mb-2"
+									on:click={() => (hero.theme.bgPattern = bgPattern.key)}
+									>{bgPattern.key === hero.theme.bgPattern ? '✅' : ''} {bgPattern.label}</button
+								>
+							{/each}
+
+							{#if hero.theme.bgPattern === 'canvas'}
+								<div class="mb-2">Your JavaScript Code</div>
+
+								<textarea
+									placeholder="let canvas = window.backgroundCanvas;"
+									bind:value={hero.theme.canvasAnimationCode}
+									class="w-full"
+									lines="6"
+								/>
+
+								<div>Access canvas via <b>window.backgroundCanvas</b></div>
+
+								<div class="text-sm opacity-70">
+									<b>Hint</b>: copy open animations from CodePen, like
+									<a target="_blank" href="https://codepen.io/towc/pen/OgWeXw">this</a>
+									and <a target="_blank" href="https://codepen.io/devamar/pen/ExYWPWB">this</a>
+								</div>
+							{/if}
+						</div>
+						<div class="_section">
+							<div class="font-semibold">Background gradients</div>
+							<div class="text-sm mb-4 opacity-80">
+								Nice gradients to add extra dimensions and shadow
+							</div>
+
+							{#each bgGradients as bgGradient}
+								<button
+									class="_secondary _small mr-2 mb-2"
+									on:click={() => {
+										if (!bgGradient.key) {
+											hero.theme.bgGradient = null;
+										} else {
+											hero.theme.bgGradient = { type: bgGradient.key };
+										}
+									}}
+									>{(!bgGradient.key && !hero.theme.bgGradient?.type) ||
+									bgGradient.key === hero.theme.bgGradient?.type
+										? '✅'
+										: ''}
+									{bgGradient.label}</button
+								>
+							{/each}
+						</div>
+					</div>
+
+					<div class="_section">
+						<div class="font-semibold">Embed Component (HTML)</div>
+						<div class="text-sm  mb-2">The Custom component to show above the title</div>
+
+						<textarea
+							class="w-full"
+							placeholder="<div>Hello World</div>"
+							bind:value={hero.embedAboveHtml}
+						/>
+					</div>
+
+					<!-- <hr class="my-8 opacity-80" /> -->
+
+					<!-- <div class="mt-8 flex justify-end">
+							<button class="_secondary _small" on:click={deleteHero}>🗑 Delete Hero</button>
+						</div> -->
+				</div>
+			</div>
+		</div>
+	{/if}
+</div>
+
 {#if isCollapsed}
 	<div
 		class="{isCollapsed
@@ -201,12 +402,6 @@
 		<div class="flex w-full items-center justify-between mb-4 ">
 			<div class="flex items-center ">
 				<div class="font-bold mr-4">Hero Section</div>
-				<div
-					class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
-					on:click={showSettings}
-				>
-					⚙️
-				</div>
 			</div>
 
 			<div
@@ -216,193 +411,6 @@
 				<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse Hero
 			</div>
 		</div>
-
-		{#if isSettingsShown}
-			<div
-				class="absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl"
-				in:fly={{ y: 50, duration: 150 }}
-				use:clickOutside
-				on:clickOutside={() => {
-					isSettingsShown = false;
-				}}
-			>
-				<div class="w-full">
-					<div class="">
-						<div class="_title flex justify-between w-full">
-							Hero Settings
-
-							<!-- <div class="flex font-normal items-center">
-								Hide Hero <input bind:checked={hero.isHidden} class="ml-2" type="checkbox" />
-							</div> -->
-						</div>
-
-						<!-- <a
-							href="https://www.producthunt.com/posts/momentum-page?utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-momentum&#0045;page"
-							target="_blank"
-							><img
-								src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=392337&theme=light&period=monthly&topic_id=164"
-								alt="Momentum&#0032;Page - Launch&#0032;your&#0032;website&#0032;in&#0032;seconds&#0044;&#0032;get&#0032;users&#0032;in&#0032;minutes | Product Hunt"
-								style="width: 250px; height: 54px;"
-								width="250"
-								height="54"
-							/></a
-						> -->
-
-						<div class="_section">
-							<div class="font-semibold mb-2">Background</div>
-
-							{#if !hero.bgImageUrl}
-								<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
-
-								<div class="flex items-center">
-									{#if hero.theme.isOverrideColors}
-										<input
-											type="color"
-											id="head"
-											name="head"
-											class="mr-4"
-											bind:value={hero.theme.backgroundColor}
-										/>
-									{:else}
-										<div
-											class="w-[30px] h-[30px] rounded-full border mr-4"
-											style="background-color: {page.theme.backgroundColor};"
-										/>
-									{/if}
-									<div>
-										<input
-											bind:checked={hero.theme.isOverrideColors}
-											class="mr-2"
-											type="checkbox"
-											on:change={() => {
-												if (!hero.theme.backgroundColor) {
-													hero.theme.backgroundColor = page.theme.backgroundColor;
-												}
-											}}
-										/>
-
-										Override color
-									</div>
-								</div>
-							{/if}
-
-							{#if !hero.theme.isOverrideColors}
-								<div class="font-normal mt-4 text-sm opacity-70 mb-2">
-									Hero background image or video
-								</div>
-
-								<FileInput isCanSearch class="w-full" theme="light" bind:url={hero.bgImageUrl} />
-
-								{#if hero.bgImageUrl}
-									<div class="flex text-sm mt-4 font-normal items-center">
-										<input
-											bind:checked={hero.theme.isNotBgImageDimmed}
-											class="mr-2"
-											type="checkbox"
-										/>
-
-										Do not dim background image
-									</div>
-								{/if}
-							{/if}
-						</div>
-
-						{#if hero.theme}
-							<div class="flex flex-wrap gap-4 mt-4">
-								{#if hero.demoUrl}
-									<div class="flex shrink-0 font-normal items-center">
-										<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertical
-									</div>
-								{/if}
-								<div class="flex shrink-0 font-normal items-center">
-									<input bind:checked={hero.theme.isHugeTitle} class="mr-2" type="checkbox" /> Is Huge
-								</div>
-								<div class="flex shrink-0 font-normal items-center">
-									<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
-								</div>
-							</div>
-						{/if}
-
-						<div class="mt-4 mb-2">
-							<div class="_section">
-								<div class="font-semibold">Background patterns</div>
-								<div class="text-sm mb-4 opacity-80">
-									Nice subtle backgrounds to catch attention
-								</div>
-
-								{#each bgPatterns as bgPattern}
-									<button
-										class="_secondary _small mr-2 mb-2"
-										on:click={() => (hero.theme.bgPattern = bgPattern.key)}
-										>{bgPattern.key === hero.theme.bgPattern ? '✅' : ''} {bgPattern.label}</button
-									>
-								{/each}
-
-								{#if hero.theme.bgPattern === 'canvas'}
-									<div class="mb-2">Your JavaScript Code</div>
-
-									<textarea
-										placeholder="let canvas = window.backgroundCanvas;"
-										bind:value={hero.theme.canvasAnimationCode}
-										class="w-full"
-										lines="6"
-									/>
-
-									<div>Access canvas via <b>window.backgroundCanvas</b></div>
-
-									<div class="text-sm opacity-70">
-										<b>Hint</b>: copy open animations from CodePen, like
-										<a target="_blank" href="https://codepen.io/towc/pen/OgWeXw">this</a>
-										and <a target="_blank" href="https://codepen.io/devamar/pen/ExYWPWB">this</a>
-									</div>
-								{/if}
-							</div>
-							<div class="_section">
-								<div class="font-semibold">Background gradients</div>
-								<div class="text-sm mb-4 opacity-80">
-									Nice gradients to add extra dimensions and shadow
-								</div>
-
-								{#each bgGradients as bgGradient}
-									<button
-										class="_secondary _small mr-2 mb-2"
-										on:click={() => {
-											if (!bgGradient.key) {
-												hero.theme.bgGradient = null;
-											} else {
-												hero.theme.bgGradient = { type: bgGradient.key };
-											}
-										}}
-										>{(!bgGradient.key && !hero.theme.bgGradient?.type) ||
-										bgGradient.key === hero.theme.bgGradient?.type
-											? '✅'
-											: ''}
-										{bgGradient.label}</button
-									>
-								{/each}
-							</div>
-						</div>
-
-						<div class="_section">
-							<div class="font-semibold">Embed Component (HTML)</div>
-							<div class="text-sm  mb-2">The Custom component to show above the title</div>
-
-							<textarea
-								class="w-full"
-								placeholder="<div>Hello World</div>"
-								bind:value={hero.embedAboveHtml}
-							/>
-						</div>
-
-						<!-- <hr class="my-8 opacity-80" /> -->
-
-						<!-- <div class="mt-8 flex justify-end">
-							<button class="_secondary _small" on:click={deleteHero}>🗑 Delete Hero</button>
-						</div> -->
-					</div>
-				</div>
-			</div>
-		{/if}
 
 		<div class="_section">
 			<div class="_title flex items-center justify-between">

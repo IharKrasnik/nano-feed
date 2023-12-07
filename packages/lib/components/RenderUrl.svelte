@@ -103,7 +103,7 @@
 				{#if !isFilesOnly}
 					<iframe
 						loading="lazy"
-						class="w-full mt-2 lazyload {imgClass}"
+						class="w-full lazyload {imgClass}"
 						style="aspect-ratio: 536/300;"
 						data-src="https://www.youtube.com/embed/{new URL(url).searchParams.get('v') ||
 							url.replace('https://youtu.be', '')}?rel=0{isAutoplay
@@ -136,7 +136,7 @@
 				{#if !isFilesOnly}
 					<iframe
 						data-src="https://player.vimeo.com/video/{new URL(url).pathname.replace('/', '')}"
-						class="w-full mt-2 aspect-video lazyload {imgClass}"
+						class="w-full aspect-video lazyload {imgClass}"
 						frameborder="0"
 						allow="autoplay; fullscreen; picture-in-picture"
 						allowfullscreen

@@ -28,6 +28,10 @@
 	export let section;
 	export let page;
 
+	if (!item.theme) {
+		item.theme = {};
+	}
+
 	export let onRemove = () => {
 		section.items = section.items.filter((i) => i !== item);
 	};
@@ -226,9 +230,9 @@
 						<div
 							class="cursor-pointer"
 							on:click={() => {
-								item.imageAspectRatio = 'og';
+								item.theme.imageAspectRatio = 'og';
 							}}
-							class:font-bold={item.imageAspectRatio === 'og'}
+							class:font-bold={item.theme.imageAspectRatio === 'og'}
 						>
 							OG (120x63)
 						</div>
@@ -236,9 +240,9 @@
 						<div
 							class="cursor-pointer"
 							on:click={() => {
-								item.imageAspectRatio = 'image';
+								item.theme.imageAspectRatio = 'image';
 							}}
-							class:font-bold={item.imageAspectRatio === 'image'}
+							class:font-bold={item.theme.imageAspectRatio === 'image'}
 						>
 							4x3
 						</div>
@@ -246,9 +250,9 @@
 						<div
 							class="cursor-pointer"
 							on:click={() => {
-								item.imageAspectRatio = 'square';
+								item.theme.imageAspectRatio = 'square';
 							}}
-							class:font-bold={item.imageAspectRatio === 'square'}
+							class:font-bold={item.theme.imageAspectRatio === 'square'}
 						>
 							1x1
 						</div>
@@ -256,9 +260,9 @@
 						<div
 							class="cursor-pointer"
 							on:click={() => {
-								item.imageAspectRatio = null;
+								item.theme.imageAspectRatio = null;
 							}}
-							class:font-bold={!item.imageAspectRatio}
+							class:font-bold={!item.theme.imageAspectRatio}
 						>
 							Auto
 						</div>

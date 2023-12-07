@@ -322,15 +322,6 @@
 					{/if}
 				{/if}
 
-				{#if page?.activeHero?.theme?.bgPattern}
-					<RenderBackgroundPattern
-						theme={page.theme?.theme}
-						bgPattern={page.activeHero?.theme?.bgPattern}
-						bgGradient={page.activeHero?.theme?.bgGradient}
-						accentColor={page.theme?.accentColor}
-					/>
-				{/if}
-
 				{#if isMounted}
 					<div
 						class="sticky bg-site z-20 w-full {clazz}"

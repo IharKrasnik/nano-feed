@@ -86,10 +86,10 @@
 					{:else if sectionItem.imageUrl}
 						<select bind:value={sectionItem.colSpan}>
 							<option value="">Default</option>
-							<option value="12">12 x 12</option>
 							<option value="4">4 x 8</option>
 							<option value="6">6 x 6</option>
 							<option value="8">8 x 4</option>
+							<!-- <option value="12">12 x 12</option> -->
 						</select>
 					{/if}
 				</div>
@@ -130,7 +130,7 @@
 							on:click={() => {
 								sectionItem.theme.imageAspectRatio = 'og';
 							}}
-							class:font-bold={sectionItem.theme?.imageAspectRatio === 'og'}
+							class:font-semibold={sectionItem.theme?.imageAspectRatio === 'og'}
 						>
 							OG (120x63)
 						</div>
@@ -140,7 +140,7 @@
 							on:click={() => {
 								sectionItem.theme.imageAspectRatio = 'image';
 							}}
-							class:font-bold={sectionItem.theme?.imageAspectRatio === 'image'}
+							class:font-semibold={sectionItem.theme?.imageAspectRatio === 'image'}
 						>
 							4x3
 						</div>
@@ -150,7 +150,7 @@
 							on:click={() => {
 								sectionItem.theme.imageAspectRatio = 'square';
 							}}
-							class:font-bold={sectionItem.theme?.imageAspectRatio === 'square'}
+							class:font-semibold={sectionItem.theme?.imageAspectRatio === 'square'}
 						>
 							1x1
 						</div>
@@ -160,7 +160,7 @@
 							on:click={() => {
 								sectionItem.theme.imageAspectRatio = null;
 							}}
-							class:font-bold={!sectionItem.theme?.imageAspectRatio}
+							class:font-semibold={!sectionItem.theme?.imageAspectRatio}
 						>
 							Auto
 						</div>
@@ -168,10 +168,12 @@
 
 					{#if sectionItem.theme?.imageAspectRatio}
 						<input
-							class="mt-2"
+							class="mt-4"
 							type="checkbox"
 							bind:checked={sectionItem.theme.isScrollImageOnHover}
-						/> Scroll image on hover
+						/>
+						Scroll image on hover
+						<div class="text-xs mt-2">Useful for long screenshots of website or portfolio</div>
 					{/if}
 				{/if}
 			</div>

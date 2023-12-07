@@ -301,7 +301,7 @@
 					isColorPickerShown = false;
 				}}
 			>
-				<div class="p-8">
+				<div class="p-8 _editor">
 					<h2 class="text-2xl mb-4 font-bold _title">Styles</h2>
 
 					<div class="flex justify-between gap-4 mb-16">
@@ -360,17 +360,13 @@
 								</div>
 							</div>
 
-							<div class="flex gap-4 items-center col-span-2 my-2">
+							<div class="flex gap-4 items-center col-span-2 my-4">
 								<div>
 									<input type="checkbox" bind:checked={page.theme.isShowNameWithLogo} />
 									Show brand name with logo
 								</div>
-								<div>
-									<input type="checkbox" bind:checked={page.theme.isGradientTitle} />
 
-									Are Titles Gradient
-								</div>
-								<input type="checkbox" bind:checked={page.theme.isInputBorder} /> Transparent Input
+								<!-- <input type="checkbox" bind:checked={page.theme.isInputBorder} /> Transparent Input -->
 								<!-- <div>
 									<input type="checkbox" bind:checked={page.theme.isTitlesLeft} />
 									Are Titles Left
@@ -391,38 +387,79 @@
 											<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
 										{/each}
 									</select>
+
+									<div class="mt-4">
+										<input type="checkbox" bind:checked={page.theme.isGradientTitle} />
+
+										Are Titles Gradient
+									</div>
 								</div>
 
 								<div class="_section">
-									<div class="font-semibold">Buttons Radius</div>
-									<button class="border rounded-[2px] mr-2" on:click={() => setButtonRadius('2px')}
-										>No <div class="text-xs">2px</div></button
+									<div class="font-semibold mb-4">Buttons Radius</div>
+									<button
+										class="border rounded-[2px] mr-2 px-6"
+										on:click={() => setButtonRadius('2px')}
+										>{#if page.theme.buttonRadius === '2px'}✅{/if} No
+										<div class="text-xs">2px</div></button
 									>
-									<button class="border rounded-[8px] mr-2" on:click={() => setButtonRadius('8px')}
-										>SM <div class="text-xs">8px</div></button
+									<button
+										class="border rounded-[8px] mr-2 px-6"
+										on:click={() => setButtonRadius('8px')}
+										>{#if page.theme.buttonRadius === '8px'}✅{/if} SM
+										<div class="text-xs">8px</div></button
 									><button
-										class="border rounded-[16px] mr-2"
+										class="border rounded-[16px] mr-2 px-6"
 										on:click={() => setButtonRadius('16px')}
-										>MD
+										>{#if page.theme.buttonRadius === '16px'}✅{/if} MD
 										<div class="text-xs">16px</div></button
 									><button
-										class="border rounded-[24px] mr-2"
+										class="border rounded-[24px] mr-2 px-6"
 										on:click={() => setButtonRadius('24px')}
-										>LG
+										>{#if !page.theme.buttonRadius || page.theme.buttonRadius === '24px'}✅{/if} LG
 										<div class="text-xs">24px</div></button
 									>
+								</div>
 
-									<div class="mt-4">
-										<div class="text-sm font-bold">Container Size:</div>
-										<button on:click={() => setContainerWidth('900px')}>SM (900px)</button><button
-											on:click={() => setContainerWidth('1080px')}>MD (1080px)</button
-										><button on:click={() => setContainerWidth('1200px')}>LG (1200px)</button>
-										<button on:click={() => setContainerWidth('1280px')}>XL (1280px)</button>
+								<div class="_section">
+									<div>
+										<div class="font-bold mb-4">Container Size</div>
+										<div class="flex gap-4">
+											<button
+												class="border rounded-[8px]"
+												on:click={() => setContainerWidth('900px')}
+												>{#if page.theme.containerWidth === '900px'}✅{/if} SM
+												<div class="text-xs">900px</div></button
+											><button
+												class="border rounded-[8px]"
+												on:click={() => setContainerWidth('1080px')}
+												>{#if page.theme.containerWidth === '1080px'}✅{/if}MD
+												<div class="text-xs">1080px</div></button
+											><button
+												class="border rounded-[8px]"
+												on:click={() => setContainerWidth('1200px')}
+												>{#if !page.theme.containerWidth || page.theme.containerWidth === '1200px'}✅{/if}
+												LG
+												<div class="text-xs">1200px</div></button
+											>
+											<button
+												class="border rounded-[8px]"
+												on:click={() => setContainerWidth('1280px')}
+												>{#if page.theme.containerWidth === '1280px'}✅{/if} XL
+												<div class="text-xs">1280px</div></button
+											>
+										</div>
 									</div>
 								</div>
 							</div>
-							<div class="_section">
-								<button class="_orange" on:click={resetPageStyles}>Reset Styles</button>
+							<div class="_section flex justify-between mt-12">
+								<button
+									class="_primary _small"
+									on:click={() => {
+										isColorPickerShown = false;
+									}}>Save and close</button
+								>
+								<button class="_orange _small" on:click={resetPageStyles}>Reset Styles</button>
 							</div>
 						</div>
 

@@ -195,11 +195,60 @@
 	</div>
 {:else}
 	<div
-		class="absolute right-0 top-0 p-4 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
+		class="absolute right-4 top-0 p-4 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
 		title="Remove Item"
 		on:click={onRemove}
 	>
-		🗑
+		Delete Section 🗑
+	</div>
+
+	<div class="my-4 _section p-2 bg-[#fafafa]">
+		<div class="font-bold mb-2">Render this section as...</div>
+
+		<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
+			<option value="grid">Default Grid Section</option>
+			<option value="pricing">Pricing</option>
+			<option value="testimonials">Testimonials</option>
+			<option value="carousel">Carousel Menu</option>
+			<option value="stepper">1-2-3 Stepper</option>
+			<option value="callout">Call-To-Action</option>
+			<option value="changelog">Changelog</option>
+			<option value="faq">FAQ</option>
+			<option value="article">Article</option>
+			<option value="form">Form</option>
+			<option value="embedCode">HTML Code Embed</option>
+		</select>
+
+		{#if section.renderType === 'carousel'}
+			<select class="w-full my-4" bind:value={section.carouselType}>
+				<option value="vertical">Vertical</option>
+				<option value="horizontal">Horizontal</option>
+			</select>
+
+			<div class="flex items-center mt-2 justify-between">
+				<div class="text-xs flex gap-2 items-center">
+					<div
+						class="cursor-pointer"
+						on:click={() => {
+							section.maxWidth = 0;
+						}}
+						class:font-bold={!section.maxWidth}
+					>
+						Stretch
+					</div>
+
+					<div
+						class="cursor-pointer"
+						on:click={() => {
+							section.maxWidth = 600;
+						}}
+						class:font-bold={section.maxWidth === 600}
+					>
+						Medium
+					</div>
+				</div>
+			</div>
+		{/if}
 	</div>
 
 	<div class="_section rounded-xl" style="padding:0;">
@@ -224,55 +273,6 @@
 	</div>
 
 	{#if true}
-		<div class="my-8">
-			<div class="text-sm font-bold mb-2 mt-4">Render this section as...</div>
-
-			<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
-				<option value="grid">Default Grid Section</option>
-				<option value="pricing">Pricing</option>
-				<option value="testimonials">Testimonials</option>
-				<option value="carousel">Carousel Menu</option>
-				<option value="stepper">1-2-3 Stepper</option>
-				<option value="callout">Call-To-Action</option>
-				<option value="changelog">Changelog</option>
-				<option value="faq">FAQ</option>
-				<option value="article">Article</option>
-				<option value="form">Form</option>
-				<option value="embedCode">HTML Code Embed</option>
-			</select>
-
-			{#if section.renderType === 'carousel'}
-				<select class="w-full my-4" bind:value={section.carouselType}>
-					<option value="vertical">Vertical</option>
-					<option value="horizontal">Horizontal</option>
-				</select>
-
-				<div class="flex items-center mt-2 justify-between">
-					<div class="text-xs flex gap-2 items-center">
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								section.maxWidth = 0;
-							}}
-							class:font-bold={!section.maxWidth}
-						>
-							Stretch
-						</div>
-
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								section.maxWidth = 600;
-							}}
-							class:font-bold={section.maxWidth === 600}
-						>
-							Medium
-						</div>
-					</div>
-				</div>
-			{/if}
-		</div>
-
 		{#if section.renderType !== 'pricing' && section.renderType !== 'embedCode'}
 			<div class="_section">
 				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
@@ -385,24 +385,27 @@
 	{/if}
 
 	{#if section.renderType === 'embedCode'}
-		<div class="text-sm mb-2">Custom HTML Code</div>
+		<div class="_section">
+			<div class="font-bold mb-4">Custom Code</div>
+			<div class="text-sm mb-2">Custom HTML Code</div>
 
-		<textarea
-			placeholder="<div>Hello World</div>"
-			class="w-full"
-			rows="8"
-			bind:value={section.customCodeHTML}
-		/>
-
-		<div>
-			<div class="text-sm mb-2">3rd-party script URL</div>
-
-			<input
-				type="url"
+			<textarea
+				placeholder="<div>Hello World</div>"
 				class="w-full"
-				placeholder="https://ship-assets.fra1.cdn.digitaloceanspaces.com/console/17-10-2023-cd6a3dfb.js"
-				bind:value={section.thirdPartyScriptUrl}
+				rows="8"
+				bind:value={section.customCodeHTML}
 			/>
+
+			<div class="mt-4">
+				<div class="text-sm mb-2">3rd-party script URL</div>
+
+				<input
+					type="url"
+					class="w-full"
+					placeholder="https://ship-assets.fra1.cdn.digitaloceanspaces.com/console/17-10-2023-cd6a3dfb.js"
+					bind:value={section.thirdPartyScriptUrl}
+				/>
+			</div>
 		</div>
 	{:else if section.renderType === 'faq'}
 		<EditFAQ bind:section />
@@ -411,14 +414,14 @@
 	{:else}
 		{#if section.renderType === 'pricing'}
 			<div class="_section rounded-xl p-4">
-				<div class="flex items-center">
+				<div class="flex items-center font-bold">
 					Benefits icon <EmojiPicker
 						class="ml-4"
 						defaultIcon="✅"
 						bind:icon={section.benefitsEmoji}
 					/>
 				</div>
-				<div>This icon is used to show benefits</div>
+				<div class="mt-2">This icon is used to show benefits</div>
 			</div>
 		{/if}
 		<div

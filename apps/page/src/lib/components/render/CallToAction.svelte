@@ -11,10 +11,8 @@
 {#if section}
 	<RenderSection
 		class={`${
-			section.theme?.style === 'sticky'
-				? 'sticky min-h-screen'
-				: 'relative sm:py-32  overflow-hidden'
-		} _bg-cta z-0 p-4 sm:p-8 w-full text-center max-h-[100%] z-0 bottom-0 flex flex-col justify-center`}
+			section.theme?.isFullScreen ? 'min-h-screen' : 'relative sm:py-32  overflow-hidden'
+		}  _bg-cta z-0 p-4 sm:p-8 w-full text-center max-h-[100%] z-0 bottom-0 flex flex-col justify-center min-h-screen sm:min-h-0`}
 		page={{ ...page, theme: { ...page.theme, isTitlesLeft: false } }}
 		section={{
 			...section,
@@ -71,10 +69,12 @@
 		style="background:linear-gradient(to right, rgba(0,0,0,0), {page.theme
 			?.accentColor}, rgba(0,0,0,0))"
 	/>
-	<div class="_container-width mx-auto flex items-center text-lg my-4">
-		<Emoji class="mr-2" emoji={page.logo} />
-		<span>
-			{page.name}
-		</span>
+	<div class="_container-width mx-auto text-lg my-4">
+		<div class="flex items-center text-sm px-4">
+			<Emoji class="mr-2" emoji={page.logo} />
+			<span>
+				{page.name}
+			</span>
+		</div>
 	</div>
 {/if}

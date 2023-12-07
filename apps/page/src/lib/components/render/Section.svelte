@@ -19,7 +19,9 @@
 	import RenderServiceChat from '$lib/components/render/ServiceChat.svelte';
 	import RenderNewsletter from '$lib/components/render/Newsletter.svelte';
 	import RenderForm from '$lib/components/render/Form.svelte';
+	import RenderStepper from '$lib/components/render/Stepper.svelte';
 	import RenderBackgroundPattern from '$lib/components/render/BackgroundPattern.svelte';
+
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
 	import ArticleAuthorLabel from '$lib/components/render/ArticleAuthorLabel.svelte';
@@ -497,27 +499,7 @@
 				<!-- {:else if section.type === 'newsletter'}
 			<RenderNewsletter bind:page bind:section bind:themeStyles /> -->
 			{:else if section.renderType === 'stepper'}
-				<div class="relative">
-					<div class="absolute ml-[50%] h-full w-[2px] _border-theme" />
-					{#each section.items as step, i}
-						<div class="flex sm:w-[50%] p-8 {i % 2 ? 'sm:ml-[50%]' : 'justify-end text-right'}">
-							<div>
-								<ContentEditableIf
-									class="text-xl mb-4 font-bold"
-									bind:innerHTML={step.title}
-									condition={isEdit}
-								/>
-								{#if step.description}
-									<ContentEditableIf
-										class="mt-4"
-										bind:innerHTML={step.description}
-										condition={isEdit}
-									/>
-								{/if}
-							</div>
-						</div>
-					{/each}
-				</div>
+				<RenderStepper bind:isEdit bind:page bind:section />
 			{:else if section.renderType === 'form'}
 				<RenderForm bind:section bind:page bind:isEdit />
 			{:else if section.items?.length}
@@ -618,7 +600,7 @@
 
 											<div in:fade>
 												<RenderUrlWithBackground
-													aspectRatio={selectCarouselItem.imageAspectRatio}
+													aspectRatio={selectCarouselItem.theme?.imageAspectRatio}
 													urlImgClass="object-cover {section.description ? 'rounded-b-lg' : ''}"
 													imageUrl={selectedCarouselItem.imageUrl}
 													imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
@@ -751,10 +733,10 @@
 						{#each section.items as item}
 							<div class="flex justify-between">
 								<div
-									class="_section-item relative items-center {section.renderType === 'article' ||
-									section.collectionType === 'articles'
+									class="_section-item w-full relative items-center {section.renderType ===
+										'article' || section.collectionType === 'articles'
 										? '_article mb-8'
-										: 'mb-4'}
+										: 'mb-4 sm:mb-8'}
 							{section.renderType === 'changelog'
 										? '_transparent _no-padding sm:w-[600px] mx-auto'
 										: 'grid sm:grid-cols-12 '}		
@@ -778,7 +760,7 @@
 											? 'col-span-12'
 											: `sm:col-span-${item.colSpan || (item.imageUrl ? 6 : 12)}`}
 									
-									{item.isReversed ? 'order-last' : ''}
+									{item.theme?.isReversedImage ? 'order-last' : ''}
 									{(!item.colSpan || item.colSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
 									>
 										<div>
@@ -810,9 +792,12 @@
 												{#if section.renderType === 'changelog'}
 													<RenderUrlWithBackground
 														isIframeFallback={false}
-														aspectRatio={item.imageAspectRatio}
+														aspectRatio={section.theme?.imageAspectRatio ||
+															item.theme?.imageAspectRatio}
 														class="my-4"
-														urlImgClass="object-cover rounded-r-lg"
+														urlImgClass="object-cover {item.theme?.isReversedImage
+															? 'rounded-l-lg'
+															: 'rounded-r-lg'}"
 														imageUrl={item.imageUrl}
 														imageBackgroundUrl={item.imageBackgroundUrl}
 													/>
@@ -852,14 +837,17 @@
 													: 12 - (item.title || item.description ? item.colSpan || 6 : 0) || 12
 											}`} 
 									
-									{item.isReversed || section.renderType === 'changelog' ? 'order-first' : ''}"
+									{item.theme?.isReversedImage || section.renderType === 'changelog' ? 'order-first' : ''}"
 										>
 											<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
 
 											<RenderUrlWithBackground
 												isIframeFallback={false}
-												aspectRatio={item.imageAspectRatio}
-												urlImgClass="object-cover rounded-r-lg"
+												aspectRatio={section.theme?.imageAspectRatio ||
+													item.theme?.imageAspectRatio}
+												urlImgClass="object-cover {item.theme?.isReversedImage
+													? 'rounded-l-lg'
+													: 'rounded-r-lg'}"
 												imageUrl={item.imageUrl}
 												imageBackgroundUrl={item.imageBackgroundUrl}
 											/>
@@ -1132,7 +1120,8 @@
 													>
 														<RenderUrlWithBackground
 															isIframeFallback={false}
-															aspectRatio={section.theme?.imageAspectRatio || item.imageAspectRatio}
+															aspectRatio={section.theme?.imageAspectRatio ||
+																item.theme?.imageAspectRatio}
 															urlImgClass="w-full object-cover h-auto {section.imageClass ||
 																''}  mx-auto {section.columns === 1 ? '' : ''}  {section.items
 																.length === 1
@@ -1149,11 +1138,11 @@
 														/>
 														<!-- <RenderUrl
 															urlClass={`${section.imageClass || ''} ${getAspectClass(
-																item.imageAspectRatio
+																item.theme?.imageAspectRatio
 															)}`}
 															isIframeFallback={false}
 															urlImgClass="w-full {section.imageClass || ''} {getAspectClass(
-																item.imageAspectRatio
+																item.theme?.imageAspectRatio
 															)} object-cover mx-auto {section.columns === 1 ? '' : ''}  {section
 																.items.length === 1
 																? ''

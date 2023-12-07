@@ -50,8 +50,6 @@
 	import currentUser from 'lib/stores/currentUser';
 	import allPages from '$lib/stores/allPages';
 	import pageDraft from '$lib/stores/pageDraft';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
-	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
@@ -85,7 +83,6 @@
 			: 'py-4'} flex items-center justify-between cursor-pointer {clazz}"
 		on:click={() => {
 			isCollapsed = !isCollapsed;
-			$sectionToEdit = page.ctaFooter;
 		}}
 	>
 		<div class="overflow-x-hidden font-bold">

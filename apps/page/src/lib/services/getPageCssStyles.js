@@ -36,7 +36,7 @@ export default (page) => {
 
 	//1
 	let styles = {
-		'container-width': page.theme?.containerWidth || '1280px',
+		'container-width': page.theme?.containerWidth || '1200px',
 		'logo-font': page.theme?.logoFont || 'monospace',
 		'title-font': page.theme?.titleFont || fontPairs[0].title || 'Inter',
 		'subtitle-font':

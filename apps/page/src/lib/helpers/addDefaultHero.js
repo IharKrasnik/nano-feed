@@ -48,5 +48,7 @@ export default (page) => {
 		return s;
 	});
 
-	page.theme.isShowNameWithLogo = true;
+	if (page.theme) {
+		page.theme.isShowNameWithLogo = true;
+	}
 };

@@ -16,11 +16,11 @@
 
 	let getAspectClass = (ratio) => {
 		if (ratio === 'og') {
-			return 'aspect-og';
+			return 'aspect-og w-full';
 		} else if (ratio === 'image') {
-			return 'aspect-image';
+			return 'aspect-image w-full';
 		} else if (ratio === 'square') {
-			return 'aspect-square';
+			return 'aspect-square w-full';
 		}
 		return '';
 	};
@@ -41,6 +41,8 @@
 					? 'sm:rounded-b-xl rounded-xl'
 					: urlImgClass.includes('rounded-r')
 					? 'sm:rounded-r-xl sm:rounded-tl-none sm:rounded-bl-none rounded-b-xl'
+					: urlImgClass.includes('rounded-l')
+					? 'sm:rounded-l-xl sm:rounded-tr-none sm:rounded-br-none rounded-b-xl'
 					: 'rounded-xl'}"
 				src={imageBackgroundUrl}
 			/>{/if}

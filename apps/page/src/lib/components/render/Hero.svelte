@@ -16,6 +16,7 @@
 	import hexToRgba from 'lib/helpers/hexToRgba';
 	import Emulator from '$lib/components/Emulator.svelte';
 	import Popup from '$lib/components/Popup.svelte';
+	import RenderBackgroundPattern from '$lib/components/render/BackgroundPattern.svelte';
 
 	export let page;
 
@@ -41,6 +42,14 @@
 	}
 
 	let demoEl;
+
+	let getHeroGradientColor = () => {
+		if (hero.theme?.isOppositeColors) {
+			return page.theme?.theme === 'dark' ? 'from-black to-black/50 ' : 'from-white to-white/50 ';
+		} else {
+			return page.theme?.theme === 'dark' ? 'from-white to-white/50 ' : 'from-black to-black/50 ';
+		}
+	};
 </script>
 
 <!-- 
@@ -64,13 +73,29 @@
 
 {#if hero.title || hero.subtitle || hero.demoUrl}
 	<div
-		class="relative {hero.theme?.isOverrideColors ? '_override-colors' : ''}"
+		class="relative {hero.theme?.isOverrideColors ? '_override-colors' : ''} {hero.theme
+			?.isOppositeColors
+			? '_bg-opposite'
+			: ''}"
 		style="z-index: 30; {hero.theme.isOverrideColors
 			? `--section-bg-color: ${
 					hero.theme.backgroundColor
-			  }; --section-bg-color-opacity-50: ${hexToRgba(hero.theme.backgroundColor, 0.5)}`
-			: ''}"
+			  }; --section-bg-color-opacity-50: ${hexToRgba(hero.theme.backgroundColor, 0.5)};`
+			: ''} {hero.theme?.isOverrideColors ? `background: ${hero.theme?.backgroundColor};` : ''}"
 	>
+		{#if hero.theme?.bgPattern}
+			<RenderBackgroundPattern
+				theme={hero.theme?.isOppositeColors
+					? page.theme?.theme === 'dark'
+						? 'light'
+						: 'dark'
+					: page.theme?.theme}
+				bgPattern={hero.theme?.bgPattern}
+				bgGradient={hero.theme?.bgGradient}
+				accentColor={page.theme?.accentColor}
+			/>
+		{/if}
+
 		{#if hero.theme?.bgPattern === 'cursors'}
 			<ComaDragons />
 		{/if}
@@ -148,7 +173,8 @@
 
 							<h1
 								class="{page.theme?.isGradientTitle
-									? 'bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent'
+									? `bg-gradient-to-br ${getHeroGradientColor()}
+											 bg-clip-text text-transparent`
 									: ''} _hero-title 
 											{!hero.demoUrl || hero.theme?.isVertical
 									? page.renderType === 'article'

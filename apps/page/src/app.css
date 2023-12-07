@@ -370,6 +370,10 @@ button._red {
 	background: #db3b3b;
 }
 
+button._orange {
+	background: #ffda96;
+}
+
 button._secondary {
 	border: 1px #8b786d solid;
 	@apply rounded-lg;
@@ -495,7 +499,7 @@ a._item-title:hover {
 	position: relative;
 	border-radius: var(--button-radius);
 	max-width: 470px;
-	min-width: 350px;
+	min-width: 340px;
 }
 
 @media (min-width: 640px) {
@@ -549,7 +553,7 @@ button._input_button[type='submit'] {
 	right: 0;
 	top: 0;
 
-	@apply px-8;
+	@apply px-8 py-3;
 }
 
 button,
@@ -596,6 +600,10 @@ button._islarge {
 
 ._container-width {
 	max-width: var(--container-width);
+}
+
+._editor-title {
+	color: #3d2400;
 }
 
 .heatmap {

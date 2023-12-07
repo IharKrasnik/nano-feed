@@ -859,50 +859,14 @@
 
 					<div class="sm:w-[426px] px-4 mr-4 mt-[70px]" style="max-width: 100vw;">
 						{#if !page._id}
-							<div class="pt-8 px-4">Launch your landing page in seconds 👇</div>
+							<div class="pt-8">Launch your landing page in seconds 👇</div>
 						{:else if page.sections}
 							{addGuids(page.sections) && ''}
 						{/if}
 
 						{#if $sectionToEdit}
 							<div
-								class="bg-white p-4 pl-0 z-40 fixed pb-32 h-screen overflow-y-scroll sm:w-[426px]"
-							>
-								<div
-									class="flex items-center cursor-pointer text-[#8B786D] mb-4"
-									on:click={() => {
-										page.sections = page.sections.map((s) => {
-											if (s.id === $sectionToEdit.id) {
-												return { ...$sectionToEdit };
-											} else {
-												return s;
-											}
-										});
-
-										$sectionToEdit = null;
-									}}
-								>
-									<BackArrowSvg />
-									Back
-								</div>
-
-								<div in:fly={{ y: 50, duration: 150 }}>
-									<EditSection
-										isShort={false}
-										bind:page
-										bind:section={$sectionToEdit}
-										onRemove={() => {
-											page.sections = page.sections.filter((s) => s.id !== $sectionToEdit.id);
-											$sectionToEdit = null;
-										}}
-									/>
-								</div>
-							</div>
-						{/if}
-
-						{#if $sectionToEdit}
-							<div
-								class="bg-white p-4 pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll sm:w-[426px]"
+								class="bg-white p-4 pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll sm:w-[402px]"
 							>
 								<div
 									class="flex items-center cursor-pointer text-[#8B786D] mb-4"
@@ -1064,11 +1028,16 @@
 
 										{#if !page._id}
 											<div
-												class="p-4 bg-green-600 mt-4 rounded-xl text-white font-bold"
+												class="p-4  mt-4 rounded-xl font-bold bg-[#fafafa] _section"
 												in:fly={{ y: 50, duration: 150 }}
 											>
-												Start with a bold tagline
+												<div class="flex items-center mb-4">
+													<div class="mr-2">
+														<FeatherIcon size="20" name="arrow-right-circle" color="#111" />
+													</div>
 
+													Start with a bold tagline
+												</div>
 												<div class="font-normal mt-2">
 													Make a big promise to your customer. Start with a verb. Spark curiosity
 													and hook their attention.
@@ -1079,7 +1048,7 @@
 								{:else}
 									<div class="flex justify-between items-center mb-4 ">
 										<div
-											class="w-full mr-2 text-lg font-bold block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
+											class="w-full mr-2  _editor-title text-lg font-bold block cursor-pointer transition hover:px-4 hover:py-2 rounded-lg hover:bg-[#f5f5f5]"
 											on:click={() => (isBrandNameEdit = true)}
 										>
 											{page.name}
@@ -1235,7 +1204,6 @@
 									{/if}
 
 									{#if page._id}
-										<div class="text-lg font-bold mr-2 py-4 my-4 mt-8">🤩 Hero Section</div>
 										{#each page.heros as hero}
 											<EditHero
 												class="my-4"
@@ -1301,7 +1269,7 @@
 											class="bg-white rounded-xl sm:w-[426px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
 										>
 											<div class="flex items-center">
-												<div class="text-lg font-bold">🧱 Sections</div>
+												<div class="text-lg font-bold  _editor-title">🧱 Sections</div>
 
 												{#if page.sections?.length}
 													<div class="ml-4 number-tag">
@@ -1360,30 +1328,30 @@
 											on:click={addNewSection}>🧱 Add Empty Section</button
 										>
 										<div class="text-sm mb-2">or use templates</div>
-										<div class="flex flex-wrap p-4 bg-[#fafafa] rounded">
+										<div class="flex flex-wrap gap-4 p-4 bg-[#fafafa] _section rounded">
 											<button
-												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'benefits' })}>🙌 Add Benefits</button
 											>
 
 											<button
-												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'testimonials' })}
 												>💚 Add Testimonials</button
 											>
 
 											<button
-												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'pricing' })}>💰Add Pricing</button
 											>
 
 											<button
-												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted  p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'faq' })}>🙋‍♀️ Add FAQ</button
 											>
 
 											<button
-												class="_primary _small _inverted mb-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												class="_primary _small _inverted  p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'stepper' })}
 												>💡 Add 1-2-3 stepper</button
 											>
@@ -1483,36 +1451,47 @@
 									{/if} -->
 								</div>
 
-								<div class="font-bold text-lg mb-8 mt-16">🚀 Publish Page</div>
-								<div class="py-16 mb-32 _section _borderless bg-[#fafafa]">
-									<div class="flex items-center w-full justify-between">
-										<div>
-											{#if page.name}
-												{#if page.renderType === 'article'}
-													<Button class="_primary" onClick={publishPage}>Publish Article</Button>
-												{:else}
-													<Button class="_primary" onClick={publishPage}>Publish Page</Button>
+								{#if page.name}
+									{#if page._id}
+										<div class="font-bold text-lg mb-8 mt-16  _editor-title">🚀 Publish Page</div>
+									{/if}
+									<div
+										class="py-16 mb-32 _section _borderless bg-[#fafafa] shadow shadow-black/30"
+										class:mt-16={!page._id}
+									>
+										<div class="flex items-center w-full justify-between">
+											<div>
+												{#if page.name}
+													{#if page.renderType === 'article'}
+														<Button class="_primary" onClick={publishPage}>Publish Article</Button>
+													{:else}
+														<Button class="_primary" onClick={publishPage}>Publish Page</Button>
+													{/if}
 												{/if}
+											</div>
+											{#if page._id && page.isDirty}
+												<div
+													class="cursor-pointer text-sm text-orange-500"
+													on:click={async () => {
+														setPageAndDraft(
+															await get(`pages/${page._id}`, {
+																...(page.parentPage
+																	? { parentPageSlug: page.parentPage?.slug }
+																	: {})
+															}),
+															{ force: true }
+														);
+
+														showSuccessMessage('Page changes were reset');
+													}}
+												>
+													Reset Page
+												</div>
 											{/if}
 										</div>
-										{#if page._id && page.isDirty}
-											<div
-												class="cursor-pointer text-sm text-orange-500"
-												on:click={async () => {
-													setPageAndDraft(
-														await get(`pages/${page._id}`, {
-															...(page.parentPage ? { parentPageSlug: page.parentPage?.slug } : {})
-														}),
-														{ force: true }
-													);
-												}}
-											>
-												Reset Page
-											</div>
-										{/if}
+										<div class="text-sm mt-2">The changes will appear on your page live URL</div>
 									</div>
-									<div class="text-sm mt-2">The changes will appear on your page live URL</div>
-								</div>
+								{/if}
 								{#if page?._id}
 									<!-- <hr class="my-16" />
 									<div class="mb-32">
