@@ -51,6 +51,6 @@ export default (page) => {
 	}
 
 	if (page.theme) {
-		page.theme.isShowNameWithLogo = true;
+		page.theme.isHidePageName = false;
 	}
 };

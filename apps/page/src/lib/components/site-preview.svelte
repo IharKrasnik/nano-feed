@@ -362,7 +362,7 @@
 												emoji={page.parentPage?.logo || page.logo}
 											/>
 
-											{#if page.theme?.isShowNameWithLogo}
+											{#if !page.theme?.isHidePageName}
 												<span
 													class="font-medium text-base {page.theme?.heroBgImage
 														? 'light-colors'
