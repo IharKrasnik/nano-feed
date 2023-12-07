@@ -10,6 +10,7 @@
 	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
 	import { browser } from '$app/environment';
 	import { v4 as uuidv4 } from 'uuid';
+	import { showSuccessMessage } from 'lib/services/toast';
 
 	import Avatar from 'lib/components/Avatar.svelte';
 	import RenderTestimonials from '$lib/components/render/Testimonials.svelte';
@@ -42,6 +43,7 @@
 	export let themeStyles = {};
 	export let isSkipHeader = false;
 	export let isEdit = false;
+	export let isCloneable = true;
 	export let isFooter;
 
 	export let isShowAuthor;
@@ -301,6 +303,26 @@
 			? `background-color: ${section.theme?.backgroundColor};`
 			: ''}
 	>
+		{#if isCloneable}
+			<div
+				class="absolute z-20 right-4 top-4 _bg-opposite p-2 rounded opacity-50 hover:opacity-100 cursor-pointer"
+				on:click={() => {
+					navigator.clipboard.writeText(JSON.stringify(section));
+
+					showSuccessMessage('Copied Section');
+				}}
+			>
+				<div class="flex items-center text-sm ">
+					<FeatherIcon
+						class="mr-2"
+						name="copy"
+						size="20"
+						theme={page?.theme?.theme === 'dark' ? 'light' : 'dark'}
+					/> Copy {section._isCtaFooter ? 'Call-To-Action' : 'Section'}
+				</div>
+			</div>
+		{/if}
+
 		{#if section.bgImageUrl}
 			<img
 				src={section.bgImageUrl}

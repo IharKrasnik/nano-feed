@@ -80,6 +80,7 @@
 	import postDraft from 'lib/stores/postDraft';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
+	import ctaFooterEl from '$lib/stores/ctaFooterEl';
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 	import heatmap from '$lib/stores/heatmap';
@@ -700,6 +701,9 @@
 			}`;
 		}
 	};
+
+	let isPasteSectionModalOpen = false;
+	let newSectionCode = '';
 </script>
 
 {#if isSettingsModalShown}
@@ -712,6 +716,88 @@
 	>
 		<div class="p-4 sm:p-8">
 			<Settings bind:page />
+		</div>
+	</Modal>
+{/if}
+
+{#if isPasteSectionModalOpen}
+	<Modal
+		bind:isShown={isPasteSectionModalOpen}
+		maxWidth={600}
+		onClosed={() => {
+			isSettingsModalShown = false;
+		}}
+	>
+		<div class="_editor p-4 sm:p-8">
+			<textarea
+				rows="8"
+				class="w-full"
+				placeholder="JSON section code"
+				bind:value={newSectionCode}
+			/>
+
+			<button
+				class="_primary _small mt-4"
+				on:click={() => {
+					try {
+						let newSection = JSON.parse(newSectionCode);
+						newSection.id = uuidv4();
+						if (newSection.items) {
+							_.each(newSection.items, (i) => {
+								i.id = uuidv4();
+							});
+						}
+
+						if (newSection._isHero) {
+							if (confirm('You pasted hero section. Do you want to replace your current hero?')) {
+								page.heros = [newSection];
+								page.activeHero = newSection;
+								page.activeHero.isCollapsed = false;
+
+								setTimeout(() => {
+									if ($aboveTheFoldEl) {
+										$aboveTheFoldEl.scrollIntoView({
+											behavior: 'smooth',
+											block: 'center',
+											inline: 'nearest'
+										});
+									}
+								}, 300);
+							} else {
+								return;
+							}
+						} else if (newSection._isCtaFooter) {
+							if (
+								confirm(
+									'You pasted call-to-action section. Do you want to replace your current CTA?'
+								)
+							) {
+								page.ctaFooter = newSection;
+
+								setTimeout(() => {
+									if ($ctaFooterEl) {
+										$ctaFooterEl.scrollIntoView({
+											behavior: 'smooth',
+											block: 'center',
+											inline: 'nearest'
+										});
+									}
+								}, 700);
+							} else {
+								return;
+							}
+						} else {
+							page.sections = [...page.sections, newSection];
+							$sectionToEdit = newSection;
+						}
+					} catch (err) {
+						showErrorMessage('Invalid JSON');
+					}
+
+					newSectionCode = '';
+					isPasteSectionModalOpen = false;
+				}}>Save</button
+			>
 		</div>
 	</Modal>
 {/if}
@@ -1355,6 +1441,12 @@
 												on:click={() => addNewSection({ type: 'stepper' })}
 												>💡 Add 1-2-3 stepper</button
 											>
+											<button
+												class="_primary _small _inverted  p-4 flex justify-center cursor-pointer text-[#8B786D]"
+												on:click={() => {
+													isPasteSectionModalOpen = true;
+												}}>⌨️ Paste section</button
+											>
 											<!-- 
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
@@ -1714,6 +1806,7 @@
 													noStickyHeader={true}
 													isNoBadge={true}
 													isEdit
+													isCloneable
 													bind:page
 												/>
 											{:else if selectedTab === 'database'}

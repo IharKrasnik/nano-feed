@@ -32,7 +32,7 @@
 
 	import Emoji from 'lib/components/Emoji.svelte';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
-	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
+	import ctaFooterEl from '$lib/stores/ctaFooterEl';
 
 	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
 
@@ -49,6 +49,7 @@
 	export { clazz as class };
 
 	export let isEdit = false;
+	export let isCloneable = false;
 
 	export let page = {
 		name: 'momentum',
@@ -97,8 +98,6 @@
 	export let isNoVars = false;
 	let isMounted = false;
 	let isMountedDelayed = false;
-
-	let ctaEl;
 
 	onMount(() => {
 		isMounted = true;
@@ -495,7 +494,13 @@
 						{#if !isLoading}
 							{#if page.activeHero}
 								<div class="sticky bg-site">
-									<RenderHero bind:hero={page.activeHero} bind:page bind:isEmbed bind:isEdit />
+									<RenderHero
+										bind:hero={page.activeHero}
+										bind:page
+										bind:isEmbed
+										bind:isEdit
+										bind:isCloneable
+									/>
 								</div>
 							{/if}
 
@@ -550,6 +555,7 @@
 																bind:section
 																bind:themeStyles={styles}
 																bind:isEdit
+																bind:isCloneable
 																style={false && page.theme?.isZebra && i % 2 === 0
 																	? page.theme?.theme === 'dark'
 																		? `background-color: ${lighten(
@@ -601,7 +607,7 @@
 					{/if}
 
 					{#if isMountedDelayed && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
-						<div class="__d overflow-hidden" bind:this={ctaEl}>
+						<div class="overflow-hidden" bind:this={$ctaFooterEl}>
 							<RenderCTA {page} section={page.ctaFooter} />
 						</div>
 					{/if}

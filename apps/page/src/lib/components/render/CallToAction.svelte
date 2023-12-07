@@ -17,6 +17,8 @@
 		section={{
 			...section,
 			...page.activeHero,
+			_isHero: false,
+			_isCtaFooter: true,
 			title: section.title || page.title,
 			subtitle: '',
 			theme: {

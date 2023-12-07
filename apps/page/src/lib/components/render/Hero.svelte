@@ -17,12 +17,15 @@
 	import Emulator from '$lib/components/Emulator.svelte';
 	import Popup from '$lib/components/Popup.svelte';
 	import RenderBackgroundPattern from '$lib/components/render/BackgroundPattern.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	export let page;
 
 	export let hero;
 	export let isEmbed;
 	export let isEdit;
+	export let isCloneable;
 
 	let isDemoPopupShown = false;
 
@@ -83,6 +86,26 @@
 			  }; --section-bg-color-opacity-50: ${hexToRgba(hero.theme.backgroundColor, 0.5)};`
 			: ''} {hero.theme?.isOverrideColors ? `background: ${hero.theme?.backgroundColor};` : ''}"
 	>
+		{#if isCloneable}
+			<div
+				class="absolute z-20 right-4 top-12 _bg-opposite p-2 rounded opacity-50 hover:opacity-100 cursor-pointer"
+				on:click={() => {
+					navigator.clipboard.writeText(JSON.stringify({ ...hero, _isHero: true }));
+
+					showSuccessMessage('Copied Hero');
+				}}
+			>
+				<div class="flex items-center text-sm ">
+					<FeatherIcon
+						class="mr-2"
+						name="copy"
+						size="20"
+						theme={page?.theme?.theme === 'dark' ? 'light' : 'dark'}
+					/> Copy Hero
+				</div>
+			</div>
+		{/if}
+
 		{#if hero.theme?.bgPattern}
 			<RenderBackgroundPattern
 				theme={hero.theme?.isOppositeColors
