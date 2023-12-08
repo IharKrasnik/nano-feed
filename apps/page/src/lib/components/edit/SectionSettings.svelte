@@ -329,7 +329,7 @@
 							}}
 						/>
 
-						Override background color
+						Use different background color
 					</div>
 				</div>
 			{/if}

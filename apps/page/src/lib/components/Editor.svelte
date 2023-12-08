@@ -941,7 +941,7 @@
 								{#if $allPages}
 									<div class="flex w-full justify-between">
 										<select
-											class="ml-8"
+											class="ml-8 w-full"
 											bind:value={pageSlug}
 											on:change={(evt) => {
 												let slug = evt.target.value;
@@ -1083,7 +1083,12 @@
 												bind:value={page._id}
 												on:change={async (evt) => {
 													if (page.parentPage && evt.target.value === page.parentPage._id) {
-														setPageAndDraft($allPages.find((p) => p._id === page.parentPage._id));
+														setPageAndDraft(
+															{ ...$allPages.find((p) => p._id === page.parentPage._id) },
+															{
+																force: true
+															}
+														);
 													} else {
 														setPageAndDraft(
 															await get(`pages/${evt.target.value}`, {

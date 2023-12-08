@@ -86,7 +86,7 @@
 		}}
 	>
 		<div class="overflow-x-hidden font-bold">
-			{@html striptags(page.ctaFooter?.title || page.title)}
+			{@html striptags(page.ctaFooter?.title || page.activeHero?.title)}
 		</div>
 	</div>
 {/if}
