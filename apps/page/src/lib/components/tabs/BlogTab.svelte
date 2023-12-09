@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 	import _ from 'lodash';
 	import moment from 'moment-timezone';
 	import { slide, fly, scale, fade } from 'svelte/transition';
@@ -150,4 +150,4 @@
 			</div>
 		{/each}
 	{/if}
-</div>
+</div> -->

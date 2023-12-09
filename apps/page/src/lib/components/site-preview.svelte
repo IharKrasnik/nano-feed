@@ -49,7 +49,7 @@
 	export { clazz as class };
 
 	export let isEdit = false;
-	export let isCloneable = true;
+	export let isCloneable = false;
 
 	export let page = {
 		name: 'momentum',

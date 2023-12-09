@@ -423,7 +423,11 @@
 
 		<div class="_section">
 			<div class="_title flex items-center justify-between">
-				<div>Tagline</div>
+				{#if page.renderType === 'artile'}
+					<div>Article Title</div>
+				{:else}
+					<div>Tagline</div>
+				{/if}
 			</div>
 
 			<div
@@ -451,8 +455,11 @@
 			{/if}
 		</div>
 		<div class="_section">
-			<div class="_title">Subtitle</div>
-
+			{#if page.renderType === 'artile'}
+				<div class="_title">Short description</div>
+			{:else}
+				<div class="_title">Subtitle</div>
+			{/if}
 			<div
 				class="min-h-[100px]"
 				contenteditable="true"
@@ -483,33 +490,39 @@
 			</div>
 		</div>
 
-		<div class="_section">
-			<div class="flex items-center justify-between">
-				<div class="font-bold text-sm">Key Features</div>
+		{#if page.renderType !== 'artile'}
+			<div class="_section">
+				<div class="flex items-center justify-between">
+					<div class="font-bold text-sm">Key Features</div>
 
-				{#if !hero.keyFeaturesStr && !isShowKeyFeatures}
-					<div
-						class="cursor-pointer"
-						on:click={() => {
-							isShowKeyFeatures = true;
-						}}
-					>
-						Add
+					{#if !hero.keyFeaturesStr && !isShowKeyFeatures}
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								isShowKeyFeatures = true;
+							}}
+						>
+							Add
+						</div>
+					{/if}
+				</div>
+				{#if isShowKeyFeatures}
+					<div class="mt-4">
+						<textarea class="w-full" bind:value={hero.keyFeaturesStr} />
+						<div class="text-sm opacity-70">Separate features with a new line</div>
 					</div>
 				{/if}
 			</div>
-			{#if isShowKeyFeatures}
-				<div class="mt-4">
-					<textarea class="w-full" bind:value={hero.keyFeaturesStr} />
-					<div class="text-sm opacity-70">Separate features with a new line</div>
-				</div>
-			{/if}
-		</div>
+		{/if}
 
 		<div class="_section">
 			<div class="flex justify-between  mb-2">
 				<div class="_title">
-					Product Demo
+					{#if page.renderType === 'artile'}
+						Key image
+					{:else}
+						Product Demo
+					{/if}
 
 					<div class="font-normal text-sm opacity-70">
 						Screenshot, live GIF or a <a
@@ -600,59 +613,63 @@
 				<EditInteractiveOptions bind:section={hero} bind:sectionItem={hero} isWithButton={false} />
 			</div>
 
-			<div class="_section">
-				<div class="_title flex justify-between w-full">Social Proof</div>
+			{#if page.renderType !== 'artile'}
+				<div class="_section">
+					<div class="_title flex justify-between w-full">Social Proof</div>
 
-				{#if hero.socialProof}
-					<div class="text-sm mb-2">Title</div>
-					<input
-						class="mb-4 w-full"
-						bind:value={hero.socialProof.title}
-						placeholder="Join 100+ creators"
-					/>
+					{#if hero.socialProof}
+						<div class="text-sm mb-2">Title</div>
+						<input
+							class="mb-4 w-full"
+							bind:value={hero.socialProof.title}
+							placeholder="Join 100+ creators"
+						/>
 
-					<div class="text-sm mb-2">Avatars (or logos)</div>
-					{#each hero.socialProof?.logos || [] as logo}
-						<div class="flex gap-4 justify-between text-sm mb-2">
-							<FileInput class="w-full" theme="light" bind:url={logo.url} />
+						<div class="text-sm mb-2">Avatars (or logos)</div>
+						{#each hero.socialProof?.logos || [] as logo}
+							<div class="flex gap-4 justify-between text-sm mb-2">
+								<FileInput class="w-full" theme="light" bind:url={logo.url} />
 
-							<button
-								on:click={() => {
-									hero.socialProof.logos = hero.socialProof.logos.filter((l) => l.url !== logo.url);
-								}}>🗑</button
-							>
-						</div>
-					{/each}
-				{/if}
-				<div class="mt-4 w-full">
-					<button
-						class="_secondary _small w-full text-center"
-						on:click={() => {
-							let defaultLogos = [
-								{
-									url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537402054-image.png'
-								},
-								{
-									url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537317691-image.png'
-								},
-								{
-									url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537348214-image.png'
-								},
-								{
-									url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537378909-image.png'
-								}
-							];
+								<button
+									on:click={() => {
+										hero.socialProof.logos = hero.socialProof.logos.filter(
+											(l) => l.url !== logo.url
+										);
+									}}>🗑</button
+								>
+							</div>
+						{/each}
+					{/if}
+					<div class="mt-4 w-full">
+						<button
+							class="_secondary _small w-full text-center"
+							on:click={() => {
+								let defaultLogos = [
+									{
+										url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537402054-image.png'
+									},
+									{
+										url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537317691-image.png'
+									},
+									{
+										url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537348214-image.png'
+									},
+									{
+										url: 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1701537378909-image.png'
+									}
+								];
 
-							hero.socialProof = hero.socialProof || {
-								title: 'Join 100+ creators',
-								logos: defaultLogos
-							};
+								hero.socialProof = hero.socialProof || {
+									title: 'Join 100+ creators',
+									logos: defaultLogos
+								};
 
-							hero.socialProof.logos.push(_.sample(defaultLogos));
-						}}>😎 Add Avatar</button
-					>
+								hero.socialProof.logos.push(_.sample(defaultLogos));
+							}}>😎 Add Avatar</button
+						>
+					</div>
 				</div>
-			</div>
+			{/if}
 		{/if}
 	</div>
 {/if}

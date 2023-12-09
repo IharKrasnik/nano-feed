@@ -64,6 +64,7 @@
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
 	import Settings from '$lib/components/Settings.svelte';
 	import EditDatabase from '$lib/components/edit/Database.svelte';
+	import EditBlog from '$lib/components/edit/Blog.svelte';
 	import EditCustomers from '$lib/components/edit/Customers.svelte';
 	import EditSubmissions from '$lib/components/edit/Submissions.svelte';
 	import EditMessaging from '$lib/components/edit/Messaging.svelte';
@@ -985,6 +986,21 @@
 					</div>
 
 					<div
+						in:fade={{ delay: 375 }}
+						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
+						class:_selected={selectedTab === 'messaging'}
+						on:click={() => {
+							selectedTab = 'messaging';
+							selectedTrigger = null;
+							selectedChatRoom = null;
+						}}
+					>
+						<FeatherIcon class="mr-2" size="20" name="message-square" color="#f6f5f4" />
+						Engage
+					</div>
+
+					<!-- 
+					<div
 						in:fade={{ delay: 300 }}
 						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
 						class:_selected={selectedTab === 'audience'}
@@ -997,19 +1013,6 @@
 						Submissions
 					</div>
 
-					<div
-						in:fade={{ delay: 375 }}
-						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
-						class:_selected={selectedTab === 'messaging'}
-						on:click={() => {
-							selectedTab = 'messaging';
-							selectedTrigger = null;
-							selectedChatRoom = null;
-						}}
-					>
-						<FeatherIcon class="mr-2" size="20" name="message-square" color="#f6f5f4" />
-						Messaging
-					</div>
 
 					<div
 						in:fade={{ delay: 450 }}
@@ -1021,7 +1024,7 @@
 					>
 						<FeatherIcon class="mr-2" size="20" name="mail" color="#f6f5f4" />
 						Newsletter
-					</div>
+					</div> -->
 				{/if}
 				<!-- {
 					action: () => {
@@ -1126,43 +1129,44 @@
 					</button>
 				{/if}
 			</div>
-			{#if page.isDirty}
-				<div class="relative flex items-center" transition:fly={{ x: 50, duration: 150 }}>
-					{#if page._id && onlineUsersCount !== -1}
-						<div
-							class="flex mr-8 shrink-0 items-center justify-between flex border {onlineUsersCount
-								? 'border-green-300'
-								: 'border-gray-300'} {onlineUsersCount
-								? 'bg-green-300/10'
-								: 'bg-gray-300/10'} transition px-2 py-1 rounded"
-						>
-							<div class="flex justify-between items-center w-full">
-								<div class="flex items-center">
-									<div
-										class="{onlineUsersCount
-											? 'bg-green-400'
-											: 'bg-gray-600 opacity-30'} w-[10px] h-[10px] rounded-full mr-2"
-									/>
-									{onlineUsersCount} users online
-								</div>
+
+			<div class="relative flex items-center" transition:fly={{ x: 50, duration: 150 }}>
+				{#if page._id && onlineUsersCount !== -1}
+					<div
+						class="flex mr-8 shrink-0 items-center justify-between flex border {onlineUsersCount
+							? 'border-green-300'
+							: 'border-gray-300'} {onlineUsersCount
+							? 'bg-green-300/10'
+							: 'bg-gray-300/10'} transition px-2 py-1 rounded-lg"
+					>
+						<div class="flex justify-between items-center w-full">
+							<div class="flex items-center">
 								<div
-									class="ml-2 opacity-30 hover:opacity-100 transition cursor-pointer _bare"
-									on:click={getOnlineCount}
-								>
-									<FeatherIcon name="refresh-cw" theme="light" size="15" />
-								</div>
+									class="{onlineUsersCount
+										? 'bg-green-400'
+										: 'bg-gray-600 opacity-30'} w-[8px] h-[8px] rounded-full mr-2"
+								/>
+								{onlineUsersCount} users online
+							</div>
+							<div
+								class="ml-2 opacity-80 hover:opacity-100 transition cursor-pointer _bare"
+								on:click={getOnlineCount}
+							>
+								<FeatherIcon name="refresh-cw" color="#4bde80" size="15" />
 							</div>
 						</div>
-					{/if}
-
-					<div
-						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded"
-						on:click={() => {
-							isSettingsModalShown = true;
-						}}
-					>
-						<FeatherIcon size="15" name="settings" />
 					</div>
+				{/if}
+
+				<div
+					class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded"
+					on:click={() => {
+						isSettingsModalShown = true;
+					}}
+				>
+					<FeatherIcon size="15" name="settings" />
+				</div>
+				<div class:opacity-70={!page?._id || !page?.isDirty}>
 					<Button
 						class="bg-yellow-500 right-0 _primary flex justify-center w-full"
 						onClick={publishPage}
@@ -1176,7 +1180,7 @@
 						Publish
 					</Button>
 				</div>
-			{/if}
+			</div>
 		</div>
 
 		<!-- {#if isSignupFormShown}
@@ -1862,6 +1866,8 @@
 								<div>
 									{#if selectedTab === 'database'}
 										<EditDatabase bind:page bind:selectedStreamSlug />
+									{:else if selectedTab === 'blog'}
+										<EditBlog bind:setPageAndDraft bind:page />
 									{:else if selectedTab === 'analytics'}
 										<EditCustomers bind:page bind:selectedCustomer />
 									{:else if selectedTab === 'messaging'}
