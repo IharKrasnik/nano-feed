@@ -173,7 +173,7 @@
 
 <div class="relative">
 	<div class="w-full flex items-center my-4 mt-8 py-4 ">
-		<div class="text-lg font-bold mr-4 _editor-title">🤩 Hero Section</div>
+		<div class="text-lg font-bold mr-4 _editor-title">Hero Section</div>
 		<div
 			class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
 			on:click={showSettings}

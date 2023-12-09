@@ -182,6 +182,13 @@
 
 	//
 
+	let refreshPage = async () => {
+		if (page._id) {
+			let updatedPage = await get(`pages/${page._id}`);
+			page = { ...updatedPage, ..._.pick(page, editableFields), activeHero: page.activeHero };
+		}
+	};
+
 	let setPageAndDraft = (p, { force = false } = {}) => {
 		page = { ..._.cloneDeep(p) };
 
@@ -217,6 +224,7 @@
 
 		refreshPageConversionStats();
 		refreshSubPages({ page });
+		refreshPage({ page });
 		refreshChildStreams({ page });
 	};
 
@@ -586,19 +594,30 @@
 		page.sections = [...(page.sections || []), newSection];
 	};
 
+	let editableFields = [
+		'heros',
+		'sections',
+		'ctaFooter',
+		'theme',
+		'renderType',
+		'layoutType',
+		'interactiveAnswers',
+		'isInDir',
+		'isUseDatabase',
+		'dirName'
+	];
+
 	$: if (page) {
 		if (
 			!$pageDraft[page._id] ||
-			!_.isEqual(
-				_.omit(page, ['welcomeEmail', 'totalSignupsCount']),
-				_.omit($pageDraft[page._id], ['welcomeEmail', 'totalSignupsCount'])
-			)
+			!_.isEqual(_.pick(page, editableFields), _.pick($pageDraft[page._id], editableFields))
 		) {
 			if (page.isDirty === false) {
 				delete page.isDirty;
 			} else {
 				page.isDirty = true;
 			}
+
 			if (!$pageDraft[page._id]) {
 				$pageDraft = {
 					..._.cloneDeep($pageDraft),
@@ -921,7 +940,7 @@
 
 				{#if page._id}
 					<div
-						in:fade={{ duration: 600 }}
+						in:fade={{ delay: 0 }}
 						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
 						on:click={() => {}}
 					>
@@ -929,6 +948,7 @@
 						Insert
 					</div>
 					<div
+						in:fade={{ delay: 75 }}
 						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
 						class:_selected={selectedTab === 'analytics'}
 						on:click={() => {
@@ -941,6 +961,7 @@
 					</div>
 
 					<div
+						in:fade={{ delay: 150 }}
 						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
 						class:_selected={selectedTab === 'blog'}
 						on:click={() => {
@@ -952,6 +973,7 @@
 					</div>
 
 					<div
+						in:fade={{ delay: 225 }}
 						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
 						class:_selected={selectedTab === 'database'}
 						on:click={() => {
@@ -963,6 +985,7 @@
 					</div>
 
 					<div
+						in:fade={{ delay: 300 }}
 						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
 						class:_selected={selectedTab === 'audience'}
 						on:click={() => {
@@ -975,6 +998,7 @@
 					</div>
 
 					<div
+						in:fade={{ delay: 375 }}
 						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
 						class:_selected={selectedTab === 'messaging'}
 						on:click={() => {
@@ -988,6 +1012,7 @@
 					</div>
 
 					<div
+						in:fade={{ delay: 450 }}
 						class="relative flex items-center p-1 cursor-pointer p-2 opacity-70 hover:opacity-100"
 						class:_selected={selectedTab === 'newsletter'}
 						on:click={() => {
@@ -1086,6 +1111,7 @@
 								on:click={() => {
 									page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 									pageSlug = '_new';
+									selectedTab = 'editor';
 								}}
 							>
 								New</button
@@ -1102,6 +1128,33 @@
 			</div>
 			{#if page.isDirty}
 				<div class="relative flex items-center" transition:fly={{ x: 50, duration: 150 }}>
+					{#if page._id && onlineUsersCount !== -1}
+						<div
+							class="flex mr-8 shrink-0 items-center justify-between flex border {onlineUsersCount
+								? 'border-green-300'
+								: 'border-gray-300'} {onlineUsersCount
+								? 'bg-green-300/10'
+								: 'bg-gray-300/10'} transition px-2 py-1 rounded"
+						>
+							<div class="flex justify-between items-center w-full">
+								<div class="flex items-center">
+									<div
+										class="{onlineUsersCount
+											? 'bg-green-400'
+											: 'bg-gray-600 opacity-30'} w-[10px] h-[10px] rounded-full mr-2"
+									/>
+									{onlineUsersCount} users online
+								</div>
+								<div
+									class="ml-2 opacity-30 hover:opacity-100 transition cursor-pointer _bare"
+									on:click={getOnlineCount}
+								>
+									<FeatherIcon name="refresh-cw" theme="light" size="15" />
+								</div>
+							</div>
+						</div>
+					{/if}
+
 					<div
 						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded"
 						on:click={() => {
@@ -1203,33 +1256,6 @@
 						{/if}
 
 						<div class="py-4">
-							{#if page._id && onlineUsersCount !== -1}
-								<div
-									class="flex shrink-0 items-center justify-between mb-4 flex border {onlineUsersCount
-										? 'border-green-300'
-										: 'border-gray-300'} {onlineUsersCount
-										? 'bg-green-300/10'
-										: 'bg-gray-300/10'} transition px-4 py-2 rounded-lg"
-								>
-									<div class="flex justify-between items-center w-full">
-										<div class="flex items-center">
-											<div
-												class="{onlineUsersCount
-													? 'bg-green-400'
-													: 'bg-gray-600 opacity-30'} w-[10px] h-[10px] rounded-full mr-2"
-											/>
-											{onlineUsersCount} users online
-										</div>
-										<div
-											class="ml-2 opacity-30 hover:opacity-100 transition cursor-pointer _bare"
-											on:click={getOnlineCount}
-										>
-											<FeatherIcon name="refresh-cw" theme="light" size="15" />
-										</div>
-									</div>
-								</div>
-							{/if}
-
 							{#if selectedTab === 'editor' && page.name}
 								{#if page._id}
 									<div class="_section mb-8">
@@ -1508,7 +1534,7 @@
 											class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
 										>
 											<div class="flex items-center">
-												<div class="text-lg font-bold  _editor-title">🧱 Sections</div>
+												<div class="text-lg font-bold  _editor-title">Sections</div>
 
 												{#if page.sections?.length}
 													<div class="ml-4 number-tag">
@@ -1687,7 +1713,7 @@
 
 									{#if page._id && page.sections?.length}
 										<div class="relative flex items-center my-4  mt-12">
-											<div class="font-bold text-lg mr-2 py-4">➡️ Call-To-Action</div>
+											<div class="font-bold text-lg mr-2 py-4">Call-To-Action</div>
 
 											<div
 												class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
@@ -1712,7 +1738,7 @@
 
 								{#if page.name}
 									{#if page._id}
-										<div class="font-bold text-lg mb-8 mt-16  _editor-title">🚀 Publish Page</div>
+										<div class="font-bold text-lg mb-8 mt-16  _editor-title">Publish Page</div>
 									{/if}
 									<div
 										class="py-16 mb-32 _section _borderless bg-[#fafafa] shadow shadow-black/30"
@@ -1863,13 +1889,16 @@
 
 				{#if page.name || page.title}
 					<div
-						class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 p-8 bg-[#e5e5e5] overflow-hidden"
+						class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {selectedTab ===
+						'editor'
+							? 'p-8'
+							: 'p-0'} bg-[#e5e5e5] overflow-hidden"
 						style="height: calc(100vh - 60px);"
 						in:fade={{ delay: 150 }}
 					>
 						<!-- {#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
-								<div class="__d mx-auto">
+								<div class="mx-auto">
 									{#if isJustCreated || isJustPaid}
 										<ConfettiExplosion infinite particleCount={200} force={0.3} />
 									{/if}

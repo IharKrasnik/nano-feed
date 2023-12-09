@@ -237,6 +237,7 @@
 	<RenderSection
 		class="sm:p-0 sm:pt-0 _horizontal-padding-none"
 		isSkipHeader
+		{isEdit}
 		isShowAuthor={section.collectionType === 'articles'}
 		bind:themeStyles
 		bind:page

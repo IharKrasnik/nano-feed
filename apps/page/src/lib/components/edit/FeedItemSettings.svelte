@@ -54,7 +54,7 @@
 				<DateTimeInput bind:date={feedItem.publishedOn} />
 			</div>
 
-			<div class="text-sm font-bold mb-2">Custom Data (JSON format)</div>
+			<div class="text-sm font-bold mb-2 mt-4">Custom Data (JSON format)</div>
 
 			<textarea
 				class="w-full"

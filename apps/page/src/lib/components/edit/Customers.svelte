@@ -58,30 +58,42 @@
 				selectedCustomer = customer;
 			}}
 		>
-			<div class=" flex justify-between items-center">
-				{#if customer.name}
-					<div class="flex items-center">
-						{customer.name}
-						<div class="ml-2 opacity-50">({customer.email})</div>
-					</div>
+			<div class="flex items-center">
+				{#if customer.avatarUrl}
+					<img
+						src={customer.avatarUrl || defaultAvatarUrl}
+						class="w-[30px] h-[30px] rounded-full border"
+					/>
 				{:else}
-					{customer.email || 'anonymous'}
+					<div class="w-[30px] h-[30px] rounded-full border flex items-center justify-center">
+						{(customer.name || customer.email || '')[0] || ''}
+					</div>
 				{/if}
+				<div class="flex justify-between w-full items-center ml-2">
+					{#if customer.name}
+						<div class="flex items-center">
+							{customer.name}
+							<div class="ml-2 opacity-50">({customer.email})</div>
+						</div>
+					{:else}
+						{customer.email || 'anonymous'}
+					{/if}
 
-				<div class="flex gap-2 items-center">
-					{#if customer?.visitor?.payload?.deviceType}
-						{#if customer.visitor.payload.deviceType === 'desktop'}
-							<FeatherIcon theme="light" size="15" name="monitor" />
-						{:else}
-							<FeatherIcon theme="light" size="15" name="smartphone" />
+					<div class="flex gap-2 items-center">
+						{#if customer?.visitor?.payload?.deviceType}
+							{#if customer.visitor.payload.deviceType === 'desktop'}
+								<FeatherIcon theme="light" size="15" name="monitor" />
+							{:else}
+								<FeatherIcon theme="light" size="15" name="smartphone" />
+							{/if}
 						{/if}
-					{/if}
-					{#if customer?.visitor?.geoData?.country}
-						{countryCodeEmoji(customer?.visitor?.geoData?.country)}
-					{/if}
+						{#if customer?.visitor?.geoData?.country}
+							{countryCodeEmoji(customer?.visitor?.geoData?.country)}
+						{/if}
+					</div>
 				</div>
 			</div>
-			<div class="text-sm mt-2">
+			<div class="text-sm mt-2 opacity-50">
 				{moment(customer.createdOn).format('MMM DD HH:mm')}
 			</div>
 		</div>

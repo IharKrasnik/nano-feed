@@ -19,8 +19,8 @@
 		id: streamSlug,
 		streamSlug,
 		isShowSource: false,
-		renderType: 'feed',
-		columns: 3,
+		renderType: streamSlug.includes('-changelog') ? 'changelog' : 'feed',
+		columns: streamSlug.includes('-changelog') ? 1 : 3,
 		items: [],
 		linkType: 'interactive',
 		totalItemsLength: 0,
@@ -33,6 +33,7 @@
 		<div class="p-16 bg-background" style="{cssVarStyles}; color: var(--text-color);">
 			<RenderMomentumCollection
 				isUseCache
+				isEdit
 				bind:cacheId={streamSlug}
 				bind:page
 				section={getSection()}

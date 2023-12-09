@@ -20,6 +20,7 @@
 	import contenteditable from 'lib/use/contenteditable';
 	import feedCache, { getFeed } from '$lib/stores/feedCache';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
+	import isUrl from 'lib/helpers/isUrl';
 
 	let clazz = 'p-4';
 	export { clazz as class };
@@ -27,7 +28,8 @@
 	export let onUpdated = () => {};
 
 	export let feedItem;
-	export let isSocialFeed = false;
+	export let isContentFeed = false;
+	export let isChangelog = false;
 
 	let originalFeedItem = _.cloneDeep(feedItem);
 
@@ -63,10 +65,10 @@
 		isCollapsed = true;
 	};
 
-	let fetchMetaTags = async () => {
-		if (feedItem.url) {
+	let fetchMetaTags = async ({ url = feedItem.url } = {}) => {
+		if (url) {
 			const data = await get('utils/fetch-meta-tags', {
-				url: feedItem.url
+				url
 			});
 
 			feedItem.title = feedItem.title || data.title;
@@ -105,7 +107,7 @@
 				<FeatherIcon size="15" name="mouse-pointer" />
 			</div>
 		</div>
-		{#if isSocialFeed}
+		{#if isContentFeed}
 			<div class="mt-4 flex justify-between items-center">
 				<div class=" opacity-50">
 					{moment(feedItem.publishedOn || feedItem.createdOn).format('DD, MMM')}
@@ -125,11 +127,13 @@
 	>
 		<div class="relative flex justify-between items-center mb-4">
 			<div class="flex items-center w-full">
-				<EmojiPicker bind:icon={feedItem.iconUrl} />
-				{#if feedItem.url}
-					<Button class="ml-2 rounded-full bg-[#f6f5f4]" onClick={fetchMetaTags}>🪄</Button>
+				{#if !isContentFeed || feedItem.url}
+					<EmojiPicker bind:icon={feedItem.iconUrl} />
+					{#if !isChangelog && feedItem.url}
+						<Button class="ml-2 rounded-full bg-[#f6f5f4]" onClick={fetchMetaTags}>🪄</Button>
+					{/if}
+					<EditFeedItemSettings bind:feedItem />
 				{/if}
-				<EditFeedItemSettings bind:feedItem />
 			</div>
 
 			<div
@@ -147,51 +151,63 @@
 			</div>
 		</div>
 
-		<div class="flex justify-between w-full relative mb-4">
-			<input
-				class="w-full"
-				placeholder="Item URL"
-				autofocus
-				type="url"
-				bind:value={feedItem.url}
-				theme="light"
-			/>
-			<div />
-		</div>
-
-		<div class="flex w-full items-center mb-4">
-			<div
-				contenteditable
-				bind:innerHTML={feedItem.title}
-				data-placeholder="Title"
-				use:contenteditable
-			/>
-		</div>
-
-		<div
-			data-placeholder="Content"
-			class="w-full mb-4 textarea"
-			contenteditable
-			use:contenteditable
-			bind:innerHTML={feedItem.content}
-		/>
-
-		{#if feedItem.attachments?.length}
-			<div class="relative flex justify-between items-center">
-				<FileInput
+		{#if !isChangelog}
+			<div class="flex justify-between w-full relative mb-4">
+				<input
 					class="w-full"
-					placeholder="Insert image/video url or paste from clipboard"
-					isCanSearch
-					bind:url={feedItem.attachments[0].url}
+					placeholder="Item URL"
+					autofocus
+					type="url"
+					bind:value={feedItem.url}
 					theme="light"
+					on:paste={(e) => {
+						let url = e.clipboardData.getData('text/plain');
+
+						if (isUrl(url)) {
+							fetchMetaTags({ url });
+						}
+					}}
 				/>
+				<div />
 			</div>
 		{/if}
 
-		<div class="mt-2 flex items-center">
-			<div class="text-sm mr-4 opacity-80">Tags</div>
-			<input class="w-full" placeholder="Tags" bind:value={feedItem.tagsStr} theme="light" />
-		</div>
+		{#if !isContentFeed || feedItem.url}
+			<div class="flex w-full items-center mb-4">
+				<div
+					contenteditable
+					bind:innerHTML={feedItem.title}
+					data-placeholder="Title"
+					use:contenteditable
+					autofocus={isChangelog}
+				/>
+			</div>
+
+			<div
+				data-placeholder="Content"
+				class="w-full mb-4 textarea"
+				contenteditable
+				use:contenteditable
+				bind:innerHTML={feedItem.content}
+			/>
+
+			{#if feedItem.attachments?.length}
+				<div class="relative flex justify-between items-center">
+					<FileInput
+						class="w-full"
+						placeholder="Media url (or paste from clipboard)"
+						isCanSearch
+						bind:url={feedItem.attachments[0].url}
+						theme="light"
+					/>
+				</div>
+			{/if}
+
+			<div class="mt-2 flex items-center">
+				<div class="text-sm mr-4 opacity-80">Tags</div>
+				<input class="w-full" placeholder="Tags" bind:value={feedItem.tagsStr} theme="light" />
+			</div>
+		{/if}
 
 		<hr class="my-4" />
 		<div class="flex justify-between items-center">

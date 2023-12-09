@@ -18,6 +18,10 @@
 
 	let activeStream = null;
 
+	// {
+	// 	slug: `${(page.parentPage || page).name}-feed`
+	// };
+
 	let lastStreamSlug = 'LAST_DATABASE_STREAM_SLUG';
 
 	let isLoading = false;
@@ -35,6 +39,8 @@
 		localStorage[lastStreamSlug] = selectedStreamSlug;
 
 		isLoading = false;
+
+		selectStream($childStreams[0]);
 	};
 
 	if (page.parentPage?.streamSlug || page.streamSlug) {
@@ -48,6 +54,36 @@
 		isStreamEdit = false;
 		selectedStreamSlug = activeStream?.slug;
 		localStorage[lastStreamSlug] = selectedStreamSlug;
+	};
+
+	let selectFeedStream = async () => {
+		if (!page.feedStreamSlug) {
+			const { streamSlug, project } = await put(`pages/${page._id}/embed-stream`, {
+				title: 'Feed',
+				isFeedStream: true
+			});
+
+			$childStreams = [...$childStreams, project];
+			page.feedStreamSlug = streamSlug;
+			selectStream(project);
+		} else {
+			selectStream($childStreams.find((s) => s.slug === page.feedStreamSlug));
+		}
+	};
+
+	let selectChangelogStream = async () => {
+		if (!page.changelogStreamSlug) {
+			const { streamSlug, project } = await put(`pages/${page._id}/embed-stream`, {
+				title: 'Changelog',
+				isChangelogStream: true
+			});
+
+			$childStreams = [...$childStreams, project];
+			page.changelogStreamSlug = streamSlug;
+			selectStream(project);
+		} else {
+			selectStream($childStreams.find((s) => s.slug === page.changelogStreamSlug));
+		}
 	};
 
 	let newDatabaseName = '';
@@ -92,7 +128,11 @@
 			return fi;
 		});
 
-		$feedCache[activeStream.slug] = { feed: [...feed] };
+		$feedCache[activeStream.slug] = {
+			...$feedCache[activeStream.slug],
+			feed: [...feed],
+			totalCount: ($feedCache[activeStream.slug].totalCount || 0) + 1
+		};
 
 		if (isShowSuccessMessage) {
 			showSuccessMessage('Record created');
@@ -230,15 +270,63 @@
 			);
 		}
 	};
+
+	let addNew = () => {};
 </script>
 
-{#if !isLoading && !$childStreams?.length}
-	<div class="my-8">
-		<input placeholder="Tools" bind:value={newDatabaseName} />
-		<Button class="mt-2 _primary" onClick={createDatabase}>Create new database</Button>
+<div class="flex w-full justify-between items-center  mb-4">
+	<div class="text-sm font-bold opacity-80">Databases</div>
+	{#if selectedStreamSlug !== '_new'}
+		<button
+			class="_secondary _small opacity-70 hover:opacity-100"
+			on:click={() => {
+				selectedStreamSlug = '_new';
+			}}>Create New</button
+		>
+	{/if}
+</div>
+<div class="_section">
+	<div class="flex items-center justify-between w-full">
+		<select
+			class="flex-grow mr-4"
+			bind:value={selectedStreamSlug}
+			on:change={() => {
+				if (selectedStreamSlug === '_new') {
+					return;
+				}
+
+				if (selectedStreamSlug.includes('-changelog')) {
+					selectChangelogStream();
+				} else if (selectedStreamSlug.includes('-feed')) {
+					selectFeedStream();
+				} else {
+					selectStream($childStreams.find((s) => s.slug === selectedStreamSlug));
+				}
+			}}
+		>
+			{#each $childStreams.filter((s) => s.slug !== (page?.parentPage?.streamSlug || page.streamSlug) && s.slug !== (page?.parentPage?.feedStreamSlug || page.feedStreamSlug) && s.slug !== (page?.parentPage?.changelogStreamSlug || page.changelogStreamSlug)) as childStream}
+				<option value={childStream.slug} class="cursor-pointer py-2">
+					{childStream.title}
+				</option>
+			{/each}
+			<option value="{(page.parentPage || page).name.toLowerCase().replace(' ', '-')}-feed"
+				>Content Feed</option
+			>
+			<option value="{(page.parentPage || page).name?.toLowerCase().replace(' ', '-')}-changelog"
+				>Changelog</option
+			>
+			<option value="_new">New Database</option>
+		</select>
+	</div>
+</div>
+
+{#if selectedStreamSlug === '_new'}
+	<div class="w-full my-4 _section">
+		<input class="w-full" placeholder="Tools" bind:value={newDatabaseName} />
+		<Button class="mt-4 _primary _small" onClick={createDatabase}>Create new database</Button>
 	</div>
 {:else}
-	<div class="_section w-full">
+	<!-- <div class="_section w-full">
 		<div class="w-full">
 			<div class="text-sm font-bold mb-2">Database</div>
 
@@ -279,10 +367,17 @@
 				</div>
 			{/if}
 		</div>
+	</div> -->
 
-		<div class="flex justify-between mt-4">
+	{#if activeStream && $feedCache[activeStream.slug]}
+		<div class="flex justify-between items-center mt-8 mb-2">
+			<div class="text-sm font-bold opacity-80">
+				Database Items ({$feedCache[activeStream.slug].totalCount ||
+					$feedCache[activeStream.slug]?.feed?.length ||
+					0})
+			</div>
 			<button
-				class="_secondary _small w-full"
+				class="_secondary _small shrink-0"
 				on:click={() => {
 					$feedCache[activeStream.slug] = {
 						...$feedCache[activeStream.slug],
@@ -298,25 +393,24 @@
 							...$feedCache[activeStream.slug].feed
 						]
 					};
-				}}>Add New Item</button
+				}}>Add Item</button
 			>
+		</div>
+
+		<!-- <div class="flex justify-between mt-4">
 			<button class="ml-4 _secondary _small shrink-0">
 				<label class="cursor-pointer block" for="csvfile">
 					From CSV
 					<input id="csvfile" type="file" on:change={parseCSV} hidden />
 				</label>
 			</button>
-		</div>
-	</div>
+		</div> -->
 
-	{#if activeStream && $feedCache[activeStream.slug]}
-		<div class="text-sm font-bold mb-2 mt-4">
-			Database Items ({$feedCache[activeStream.slug].totalCount || 0})
-		</div>
-
-		<div class="my-2 w-full">
-			<input type="text" class="w-full" placeholder="Search item..." bind:value={searchStr} />
-		</div>
+		{#if $feedCache[activeStream.slug]?.feed?.length > 1}
+			<div class="my-2 w-full">
+				<input type="text" class="w-full" placeholder="Search item..." bind:value={searchStr} />
+			</div>
+		{/if}
 
 		{#if $feedCache[activeStream.slug].feed.filter((f) => !f._id).length > 1}
 			<div class="flex my-8">
@@ -351,7 +445,8 @@
 			}) as feedItem (feedItem._id + feedItem.id)}
 				<EditFeedItem
 					bind:feedItem
-					isSocialFeed={activeStream.slug.includes('-feed')}
+					isContentFeed={activeStream.slug.includes('-feed')}
+					isChangelog={activeStream.slug.includes('-changelog')}
 					onUpdated={(updatedFeedItem) => {
 						$feedCache[activeStream.slug] = {
 							...$feedCache[activeStream.slug],
