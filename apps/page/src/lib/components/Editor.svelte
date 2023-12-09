@@ -883,21 +883,261 @@
 
 {#if !$sveltePage.data.pageSlug}
 	{#if !$currentUser || $allPages}
-		<div class="fixed w-full" />
+		<div class="fixed z-10 w-full h-[60px] flex items-center justify-between px-6 border-b ">
+			<div
+				class="relative z-10 flex gap-1 items-center font-semibold _header-menu"
+				style="color: #333; font-size: 12px;"
+			>
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 35 35"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+					class="relative logo cursor-pointer"
+					on:click={() => {
+						selectedTab = 'editor';
+					}}
+				>
+					<path
+						fill-rule="evenodd"
+						clip-rule="evenodd"
+						d="M1.16977 4.12405C0 6.10202 0 8.77201 0 14.112V20.888C0 26.228 0 28.898 1.16977 30.8759C1.89 32.0938 2.9062 33.11 4.12405 33.8302C6.10202 35 8.77201 35 14.112 35H20.888C26.228 35 28.898 35 30.8759 33.8302C32.0938 33.11 33.11 32.0938 33.8302 30.8759C35 28.898 35 26.228 35 20.888V14.112C35 8.77201 35 6.10202 33.8302 4.12405C33.11 2.9062 32.0938 1.89 30.8759 1.16977C28.898 0 26.228 0 20.888 0H14.112C8.77201 0 6.10202 0 4.12405 1.16977C2.9062 1.89 1.89 2.9062 1.16977 4.12405Z"
+						fill="#0C120C"
+					/>
+					<path
+						d="M12.5 14.4696C12.5 13.8984 11.9054 13.4696 11.2273 13.4696C10.9016 13.4696 10.5758 13.5673 10.3276 13.7626L5.87307 17.2626C5.62429 17.4852 5.5 17.7415 5.5 17.9696C5.5 18.1977 5.62429 18.5102 5.87287 18.704L10.3274 22.204C10.575 22.4009 10.9011 22.4696 11.2273 22.4696C11.9054 22.4696 12.5 22.0405 12.5 21.4696C12.5 21.2137 12.3757 20.9577 12.1271 20.7624L8.57244 17.9696L12.1273 15.1765C12.3767 15.0071 12.5 14.754 12.5 14.4696Z"
+						fill="white"
+					/>
+					<path
+						d="M29.5 15.9696C29.5 15.7137 29.3757 15.4577 29.1271 15.2624L24.6726 11.7624C24.425 11.5946 24.0989 11.4696 23.7727 11.4696C23.0946 11.4696 22.5 11.8987 22.5 12.4696C22.5 12.7255 22.6243 12.9815 22.8729 13.1768L26.4278 15.9699L22.8729 18.763C22.6233 18.9852 22.5 19.2415 22.5 19.4696C22.5 20.0408 23.0946 20.4696 23.7727 20.4696C24.0984 20.4696 24.4242 20.3719 24.6724 20.1766L29.1269 16.6766C29.3767 16.5102 29.5 16.254 29.5 15.9696Z"
+						fill="white"
+					/>
+					<path
+						d="M21.2544 6.76439C21.2251 6.30505 20.8063 5.34737 19.7245 5.41647C19.0943 5.45672 18.5394 5.90278 18.3988 6.5503L13.9188 27.1133C13.8894 27.248 13.8798 27.3825 13.8882 27.5136C13.8787 27.9813 14.3424 28.9338 15.4243 28.8647C16.0517 28.8246 16.6028 28.375 16.7435 27.7295L21.2235 7.16647C21.2533 7.03014 21.2628 6.89556 21.2544 6.76439Z"
+						fill="white"
+					/>
+				</svg>
+
+				{#if page._id}
+					<div
+						in:fade={{ duration: 600 }}
+						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
+						on:click={() => {}}
+					>
+						<FeatherIcon color="#f6f5f4" class="mr-2" size="20" name="plus" />
+						Insert
+					</div>
+					<div
+						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
+						class:_selected={selectedTab === 'analytics'}
+						on:click={() => {
+							selectedTab = 'analytics';
+							selectedCustomer = null;
+						}}
+					>
+						<FeatherIcon color="#f6f5f4" class="mr-2" size="20" name="activity" />
+						Analytics
+					</div>
+
+					<div
+						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
+						class:_selected={selectedTab === 'blog'}
+						on:click={() => {
+							selectedTab = 'blog';
+						}}
+					>
+						<FeatherIcon class="mr-2" size="20" name="database" color="#f6f5f4" />
+						Blog
+					</div>
+
+					<div
+						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
+						class:_selected={selectedTab === 'database'}
+						on:click={() => {
+							selectedTab = 'database';
+						}}
+					>
+						<FeatherIcon class="mr-2" size="20" name="database" color="#f6f5f4" />
+						CMS
+					</div>
+
+					<div
+						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
+						class:_selected={selectedTab === 'audience'}
+						on:click={() => {
+							selectedTab = 'audience';
+							selectedSubmission = null;
+						}}
+					>
+						<FeatherIcon color="#f6f5f4" class="mr-2" size="20" name="check-square" />
+						Submissions
+					</div>
+
+					<div
+						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
+						class:_selected={selectedTab === 'messaging'}
+						on:click={() => {
+							selectedTab = 'messaging';
+							selectedTrigger = null;
+							selectedChatRoom = null;
+						}}
+					>
+						<FeatherIcon class="mr-2" size="20" name="message-square" color="#f6f5f4" />
+						Messaging
+					</div>
+
+					<div
+						class="relative flex items-center p-1 cursor-pointer p-2 opacity-70 hover:opacity-100"
+						class:_selected={selectedTab === 'newsletter'}
+						on:click={() => {
+							selectedTab = 'newsletter';
+						}}
+					>
+						<FeatherIcon class="mr-2" size="20" name="mail" color="#f6f5f4" />
+						Newsletter
+					</div>
+				{/if}
+				<!-- {
+					action: () => {
+						selectedTab = 'editor';
+					},
+					title: 'Editor',
+					featherIcon: 'file-text'
+				},
+				{
+					action: () => {
+						selectedTab = 'analytics';
+						selectedCustomer = null;
+					},
+					title: `Customers`,
+					featherIcon: 'activity'
+				},
+				{
+					action: () => {
+						selectedTab = 'audience';
+						selectedSubmission = null;
+					},
+					title: `Submissions`,
+					featherIcon: 'check-square'
+				},
+				{
+					action: () => {
+						selectedTab = 'messaging';
+						selectedTrigger = null;
+						selectedChatRoom = null;
+					},
+					title: 'Messaging',
+					featherIcon: 'message-square'
+				},
+				{
+					action: () => {
+						selectedTab = 'database';
+					},
+					title: 'Databases',
+					featherIcon: 'database'
+				},
+				{
+					action: () => {
+						selectedTab = 'blog';
+					},
+					title: 'Blog',
+					featherIcon: 'book-open'
+				},
+				{
+					action: () => {
+						selectedTab = 'newsletter';
+					},
+					title: 'Newsletter',
+					featherIcon: 'mail'
+				} -->
+			</div>
+
+			<div class="absolute w-full flex items-center justify-center">
+				{#if $currentUser}
+					{#if $allPages}
+						<div class="flex items-center">
+							<select
+								class="ml-8 w-full"
+								bind:value={pageSlug}
+								on:change={(evt) => {
+									let slug = evt.target.value;
+
+									if (slug === '_new') {
+										page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+										pageSlug = page.slug;
+									} else {
+										setPageAndDraft({
+											..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
+										});
+										// refreshData();
+									}
+								}}
+							>
+								{#each $allPages as page}
+									<option value={page.slug}>{page.name}</option>
+								{/each}
+								<option value="_new">📄 New Page</option>
+							</select>
+
+							<button
+								class="ml-4 shrink-0 _secondary _small opacity-70 hover:opacity-100"
+								style="padding: 4px 12px;"
+								on:click={() => {
+									page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+									pageSlug = '_new';
+								}}
+							>
+								New</button
+							>
+						</div>
+					{:else}
+						<Loader />
+					{/if}
+				{:else}
+					<button class="_primary" on:click={loginWithGoogle} style="padding: 4px 12px;">
+						Log In
+					</button>
+				{/if}
+			</div>
+			{#if page.isDirty}
+				<div class="relative flex items-center" transition:fly={{ x: 50, duration: 150 }}>
+					<div
+						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded"
+						on:click={() => {
+							isSettingsModalShown = true;
+						}}
+					>
+						<FeatherIcon size="15" name="settings" />
+					</div>
+					<Button
+						class="bg-yellow-500 right-0 _primary flex justify-center w-full"
+						onClick={publishPage}
+						style="margin-left: 78px;
+										padding: 4px 12px;
+										right: 3px;
+										width: auto;
+										margin: -4px -10px -4px 0px;
+										"
+					>
+						Publish
+					</Button>
+				</div>
+			{/if}
+		</div>
 
 		<!-- {#if isSignupFormShown}
 		<SignupForm />
 	{/if} -->
 
-		<div class="xl:max-w-[1600px] mx-auto relative ">
-			<div class="flex relative ml-4">
+		<div class="relative pt-[60px]">
+			<div class="flex relative">
 				<!-- EDITOR-->
 				<div
-					class="_editor fixed left-0 sm:left-auto w-screen min:w-auto sm:min-w-[426px] pt-0 h-screen overflow-y-scroll bg-white"
-					style="min-width: 100vw;"
+					class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] pt-0 h-screen overflow-y-scroll bg-white"
 				>
-					<div class="fixed top-0 w-full z-10 sm:w-[430px] mb-[70px] bg-white px-4">
-						<div
+					<div class="fixed top-[60px] top-0 w-full z-10 sm:w-[430px] mb-[70px] bg-white px-4">
+						<!-- <div
 							class="flex items-center justify-between w-full py-4 pr-4"
 							class:justify-between={!$currentUser}
 						>
@@ -906,100 +1146,16 @@
 									class="font-bold flex items-center"
 									style="font-family: Archivo; font-size: 20px;"
 								>
-									<svg
-										width="35"
-										height="35"
-										viewBox="0 0 35 35"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-											d="M1.16977 4.12405C0 6.10202 0 8.77201 0 14.112V20.888C0 26.228 0 28.898 1.16977 30.8759C1.89 32.0938 2.9062 33.11 4.12405 33.8302C6.10202 35 8.77201 35 14.112 35H20.888C26.228 35 28.898 35 30.8759 33.8302C32.0938 33.11 33.11 32.0938 33.8302 30.8759C35 28.898 35 26.228 35 20.888V14.112C35 8.77201 35 6.10202 33.8302 4.12405C33.11 2.9062 32.0938 1.89 30.8759 1.16977C28.898 0 26.228 0 20.888 0H14.112C8.77201 0 6.10202 0 4.12405 1.16977C2.9062 1.89 1.89 2.9062 1.16977 4.12405Z"
-											fill="#0C120C"
-										/>
-										<path
-											d="M12.5 14.4696C12.5 13.8984 11.9054 13.4696 11.2273 13.4696C10.9016 13.4696 10.5758 13.5673 10.3276 13.7626L5.87307 17.2626C5.62429 17.4852 5.5 17.7415 5.5 17.9696C5.5 18.1977 5.62429 18.5102 5.87287 18.704L10.3274 22.204C10.575 22.4009 10.9011 22.4696 11.2273 22.4696C11.9054 22.4696 12.5 22.0405 12.5 21.4696C12.5 21.2137 12.3757 20.9577 12.1271 20.7624L8.57244 17.9696L12.1273 15.1765C12.3767 15.0071 12.5 14.754 12.5 14.4696Z"
-											fill="white"
-										/>
-										<path
-											d="M29.5 15.9696C29.5 15.7137 29.3757 15.4577 29.1271 15.2624L24.6726 11.7624C24.425 11.5946 24.0989 11.4696 23.7727 11.4696C23.0946 11.4696 22.5 11.8987 22.5 12.4696C22.5 12.7255 22.6243 12.9815 22.8729 13.1768L26.4278 15.9699L22.8729 18.763C22.6233 18.9852 22.5 19.2415 22.5 19.4696C22.5 20.0408 23.0946 20.4696 23.7727 20.4696C24.0984 20.4696 24.4242 20.3719 24.6724 20.1766L29.1269 16.6766C29.3767 16.5102 29.5 16.254 29.5 15.9696Z"
-											fill="white"
-										/>
-										<path
-											d="M21.2544 6.76439C21.2251 6.30505 20.8063 5.34737 19.7245 5.41647C19.0943 5.45672 18.5394 5.90278 18.3988 6.5503L13.9188 27.1133C13.8894 27.248 13.8798 27.3825 13.8882 27.5136C13.8787 27.9813 14.3424 28.9338 15.4243 28.8647C16.0517 28.8246 16.6028 28.375 16.7435 27.7295L21.2235 7.16647C21.2533 7.03014 21.2628 6.89556 21.2544 6.76439Z"
-											fill="white"
-										/>
-									</svg>
-
 									<div class="ml-2">IDE</div>
 								</h2>
 							</a>
-
-							{#if $currentUser}
-								{#if $allPages}
-									<div class="flex w-full justify-between">
-										<select
-											class="ml-8 w-full"
-											bind:value={pageSlug}
-											on:change={(evt) => {
-												let slug = evt.target.value;
-
-												if (slug === '_new') {
-													page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-													pageSlug = page.slug;
-												} else {
-													setPageAndDraft({
-														..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
-													});
-													// refreshData();
-												}
-											}}
-										>
-											{#each $allPages as page}
-												<option value={page.slug}>{page.name}</option>
-											{/each}
-											<option value="_new">📄 New Page</option>
-										</select>
-
-										<button
-											class="ml-4 shrink-0 _secondary _small opacity-70 hover:opacity-100"
-											on:click={() => {
-												page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-												pageSlug = '_new';
-											}}
-										>
-											New</button
-										>
-									</div>
-								{:else}
-									<Loader />
-								{/if}
-							{:else}
-								<button class="_primary" on:click={loginWithGoogle}> Log In </button>
-							{/if}
-						</div>
-
+						</div> -->
+						<!-- 
 						<div>
 							<hr class="w-full" />
-						</div>
+						</div> -->
 					</div>
-					<div class="sm:w-[426px] px-4 mr-4 mt-[70px]" style="max-width: 100vw;">
-						{#if !page._id && page.parentPage}
-							<div class="flex items-center pt-4">
-								<BackTo
-									onClick={() => {
-										setPageAndDraft(
-											$allPages.find((p) => p.slug === page.parentPage.slug),
-											{ force: true }
-										);
-									}}
-									to="Home Page"
-								/>
-							</div>
-						{/if}
-
+					<div class="sm:w-[400px] px-4 mr-4" style="max-width: 100vw;">
 						{#if !page._id}
 							{#if page.parentPage}
 								<div class="pt-4 text-lg font-bold">{page.parentPage?.name || ''}</div>
@@ -1074,7 +1230,7 @@
 								</div>
 							{/if}
 
-							{#if page.name}
+							{#if selectedTab === 'editor' && page.name}
 								{#if page._id}
 									<div class="_section mb-8">
 										<div class="flex justify-between items-center ">
@@ -1131,15 +1287,6 @@
 														<EmojiPicker bind:icon={page.logo} />
 													</div>
 													<ColorPicker bind:page />
-
-													<div
-														class="text-2xl ml-4 cursor-pointer"
-														on:click={() => {
-															isSettingsModalShown = true;
-														}}
-													>
-														⚙️
-													</div>
 												</div>
 
 												<div class="flex">
@@ -1358,7 +1505,7 @@
 
 									{#if page._id}
 										<div
-											class="bg-white rounded-xl sm:w-[426px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
+											class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
 										>
 											<div class="flex items-center">
 												<div class="text-lg font-bold  _editor-title">🧱 Sections</div>
@@ -1686,8 +1833,6 @@
 									</div> -->
 								{/if}
 							{:else}
-								<BackTo to={'Editor'} onClick={() => (selectedTab = 'editor')} />
-
 								<div>
 									{#if selectedTab === 'database'}
 										<EditDatabase bind:page bind:selectedStreamSlug />
@@ -1718,10 +1863,11 @@
 
 				{#if page.name || page.title}
 					<div
-						class="relative w-screen sm:w-full ml-[100%] sm:ml-[426px] _preview h-full p-4 mx-4 2xl:pl-[75px]"
+						class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 p-8 bg-[#e5e5e5] overflow-hidden"
+						style="height: calc(100vh - 60px);"
 						in:fade={{ delay: 150 }}
 					>
-						{#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
+						<!-- {#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
 							<div class="sticky top-[20px] w-full z-50 h-[0px]">
 								<div class="__d mx-auto">
 									{#if isJustCreated || isJustPaid}
@@ -1782,7 +1928,7 @@
 									</div>
 								</div>
 							</div>
-						{/if}
+						{/if} -->
 
 						<!-- {#if page}
 						<div class="w-full flex justify-center">
@@ -1793,6 +1939,64 @@
 
 						{#if page}
 							{#key page._id}
+								<!-- <div class="flex cursor-pointer">
+									<div
+										class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100 flex items-center"
+										use:tooltip
+										title="Free plan includes 300 subscribers"
+									>
+										<FeatherIcon class="mr-2" color="#fff" name="clipboard" size="15" />
+										{page.totalSignupsCount || 0}/300
+									</div>
+
+									<button
+										class="px-4 mr-4 text-white bg-green-700 rounded"
+										style="padding-top: 0px; padding-bottom: 0px;"
+										on:click={subscribe}
+										use:tooltip
+										title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
+									>
+										🚀 Upgrade
+									</button>
+								</div> -->
+
+								{#if page}
+									<div class="" in:fade>
+										{#if $postDraft}
+											<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
+										{:else if selectedTab === 'editor'}
+											<SitePreview
+												class="p-4"
+												isNoVars
+												isEmbed
+												noStickyHeader={true}
+												isNoBadge={true}
+												isEdit
+												isCloneable
+												bind:page
+											/>
+										{:else if selectedTab === 'database'}
+											<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
+										{:else if selectedTab === 'analytics'}
+											<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+										{:else if selectedTab === 'messaging'}
+											<MessagingTab
+												bind:page
+												bind:trigger={selectedTrigger}
+												bind:chatRoom={selectedChatRoom}
+											/>
+										{:else if selectedTab === 'audience'}
+											<AudienceTab bind:page bind:selectedSubmission />
+										{:else if selectedTab === 'database'}
+											<DatabaseTab bind:page />
+										{:else if selectedTab === 'blog'}
+											<BlogTab bind:page bind:setPageAndDraft />
+										{:else if selectedTab === 'newsletter'}
+											<NewsletterTab bind:page />
+										{/if}
+									</div>
+								{/if}
+								<!-- 
 								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
 									<BrowserFrame
 										class="max-h-screen overflow-y-scroll"
@@ -1853,63 +2057,9 @@
 										]}
 										frameBgColor="#494949"
 									>
-										<div class="flex cursor-pointer" slot="header">
-											<div
-												class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100 flex items-center"
-												use:tooltip
-												title="Free plan includes 300 subscribers"
-											>
-												<FeatherIcon class="mr-2" color="#fff" name="clipboard" size="15" />
-												{page.totalSignupsCount || 0}/300
-											</div>
-
-											<button
-												class="px-4 mr-4 text-white bg-green-700"
-												style="padding-top: 0px; padding-bottom: 0px;"
-												on:click={subscribe}
-												use:tooltip
-												title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
-											>
-												🚀 Upgrade
-											</button>
-										</div>
-
-										{#if page}
-											{#if $postDraft}
-												<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
-											{:else if selectedTab === 'editor'}
-												<SitePreview
-													class="p-4"
-													isNoVars
-													isEmbed
-													noStickyHeader={true}
-													isNoBadge={true}
-													isEdit
-													isCloneable
-													bind:page
-												/>
-											{:else if selectedTab === 'database'}
-												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
-											{:else if selectedTab === 'analytics'}
-												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
-											{:else if selectedTab === 'messaging'}
-												<MessagingTab
-													bind:page
-													bind:trigger={selectedTrigger}
-													bind:chatRoom={selectedChatRoom}
-												/>
-											{:else if selectedTab === 'audience'}
-												<AudienceTab bind:page bind:selectedSubmission />
-											{:else if selectedTab === 'database'}
-												<DatabaseTab bind:page />
-											{:else if selectedTab === 'blog'}
-												<BlogTab bind:page bind:setPageAndDraft />
-											{:else if selectedTab === 'newsletter'}
-												<NewsletterTab bind:page />
-											{/if}
-										{/if}
+										
 									</BrowserFrame>
-								</div>
+								</div> -->
 							{/key}
 						{/if}
 
@@ -1921,7 +2071,7 @@
 					</div>
 				{:else}
 					<div
-						class="w-full h-screen sm:ml-[426px] self-stretch flex-col flex items-center justify-center"
+						class="w-full h-screen sm:ml-[400px] self-stretch flex-col flex items-center justify-center"
 						in:slide
 					>
 						<svg
@@ -1980,5 +2130,21 @@
 		background-color: #f5f5f5;
 		padding: 3px 10px;
 		color: #828282;
+	}
+
+	:global(._header-menu svg:not(.logo)) {
+		padding: 4px;
+		background-color: var(--editor-accent-color);
+		@apply rounded;
+	}
+
+	._selected {
+		opacity: 100 !important;
+		background: #f6f5f4;
+		@apply rounded;
+	}
+
+	:global(._selected svg) {
+		background-color: #111111 !important;
 	}
 </style>

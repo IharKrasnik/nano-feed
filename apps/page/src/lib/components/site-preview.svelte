@@ -49,7 +49,7 @@
 	export { clazz as class };
 
 	export let isEdit = false;
-	export let isCloneable = false;
+	export let isCloneable = true;
 
 	export let page = {
 		name: 'momentum',
@@ -329,7 +329,7 @@
 					>
 						<div
 							class="{isEdit
-								? 'absolute mb-[-60px]'
+								? 'absolute left-0 top-0 mb-[-60px]'
 								: 'fixed top-0 left-0'} _header backdrop-blur-lg _border-b-theme"
 						>
 							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
@@ -492,93 +492,100 @@
 								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
 							/> -->
 						{#if !isLoading}
-							{#if page.activeHero}
-								<div class="sticky bg-site">
-									<RenderHero
-										bind:hero={page.activeHero}
-										bind:page
-										bind:isEmbed
-										bind:isEdit
-										bind:isCloneable
-									/>
-								</div>
-							{/if}
+							<div style={isEdit ? 'height: calc(100vh - 120px); overflow-y: auto;' : ''}>
+								{#if page.activeHero}
+									<div class="sticky bg-site">
+										<RenderHero
+											bind:hero={page.activeHero}
+											bind:page
+											bind:isEmbed
+											bind:isEdit
+											bind:isCloneable
+										/>
+									</div>
+								{/if}
 
-							<div class="sticky _root bg-site overflow-hidden" style="background: none;">
-								{#if !isAboveTheFold}
-									{#if page.sections?.length}
-										<div
-											in:fade={{ delay: 900 }}
-											class="relative  z-10 {page.streamSlug ? '' : ''}"
-											style="z-index: 40;"
-										>
-											{#each page.sections || [] as section, i}
-												{#if $sectionToEdit && $sectionToEdit.id === section.id}
-													<div bind:this={editEl}>
-														<div class="p-2 my-4 bg-green-200 text-center">🚧🚧🚧🚧🚧</div>
-														<div>
-															<RenderSection
-																bind:page
-																bind:themeStyles={styles}
-																bind:section={$sectionToEdit}
-																bind:isEdit
-															/>
-														</div>
-														<div class="p-2 my-4 bg-green-200 text-center text-white">
-															🚧🚧🚧🚧🚧
-														</div>
-													</div>
-													{focusEditEl() || ''}
-												{:else}
-													<div class="relative overflow-y-hidden">
-														{#if section.containerBgImageUrl}
-															<div class="absolute left-0 top-0 w-screen h-full">
-																<img
-																	class="w-full h-full object-cover"
-																	src={section.containerBgImageUrl}
+								<div
+									class="sticky _root bg-site overflow-hidden {isEdit
+										? 'max-h-full overflow-y-auto'
+										: ''}"
+									style="background: none;"
+								>
+									{#if !isAboveTheFold}
+										{#if page.sections?.length}
+											<div
+												in:fade={{ delay: 900 }}
+												class="relative  z-10 {page.streamSlug ? '' : ''}"
+												style="z-index: 40;"
+											>
+												{#each page.sections || [] as section, i}
+													{#if $sectionToEdit && $sectionToEdit.id === section.id}
+														<div bind:this={editEl}>
+															<div class="p-2 my-4 bg-green-200 text-center">🚧🚧🚧🚧🚧</div>
+															<div>
+																<RenderSection
+																	bind:page
+																	bind:themeStyles={styles}
+																	bind:section={$sectionToEdit}
+																	bind:isEdit
 																/>
 															</div>
-
-															{#if !section.theme.isNotContainerBgImageDimmed}
-																<div
-																	class="absolute top-0 left-0 w-screen h-full z-1"
-																	style="background-color: {page.theme?.theme === 'dark'
-																		? 'rgba(0,0,0,0.7)'
-																		: 'rgba(255,255,255,.7)'}; z-index: 1;"
-																/>
-															{/if}
-														{/if}
-
-														<div
-															class="bg-site _container-width mx-auto {section.containerBgImageUrl
-																? 'py-8'
-																: ''}"
-														>
-															<RenderSection
-																bind:page
-																bind:section
-																bind:themeStyles={styles}
-																bind:isEdit
-																bind:isCloneable
-																style={false && page.theme?.isZebra && i % 2 === 0
-																	? page.theme?.theme === 'dark'
-																		? `background-color: ${lighten(
-																				styles['background-color'],
-																				0.01
-																		  )};`
-																		: `background-color: ${darken(
-																				styles['background-color'],
-																				0.08
-																		  )};`
-																	: ''}
-															/>
+															<div class="p-2 my-4 bg-green-200 text-center text-white">
+																🚧🚧🚧🚧🚧
+															</div>
 														</div>
-													</div>
-												{/if}
-											{/each}
-										</div>
+														{focusEditEl() || ''}
+													{:else}
+														<div class="relative overflow-y-hidden">
+															{#if section.containerBgImageUrl}
+																<div class="absolute left-0 top-0 w-screen h-full">
+																	<img
+																		class="w-full h-full object-cover"
+																		src={section.containerBgImageUrl}
+																	/>
+																</div>
+
+																{#if !section.theme.isNotContainerBgImageDimmed}
+																	<div
+																		class="absolute top-0 left-0 w-screen h-full z-1"
+																		style="background-color: {page.theme?.theme === 'dark'
+																			? 'rgba(0,0,0,0.7)'
+																			: 'rgba(255,255,255,.7)'}; z-index: 1;"
+																	/>
+																{/if}
+															{/if}
+
+															<div
+																class="bg-site _container-width mx-auto {section.containerBgImageUrl
+																	? 'py-8'
+																	: ''}"
+															>
+																<RenderSection
+																	bind:page
+																	bind:section
+																	bind:themeStyles={styles}
+																	bind:isEdit
+																	bind:isCloneable
+																	style={false && page.theme?.isZebra && i % 2 === 0
+																		? page.theme?.theme === 'dark'
+																			? `background-color: ${lighten(
+																					styles['background-color'],
+																					0.01
+																			  )};`
+																			: `background-color: ${darken(
+																					styles['background-color'],
+																					0.08
+																			  )};`
+																		: ''}
+																/>
+															</div>
+														</div>
+													{/if}
+												{/each}
+											</div>
+										{/if}
 									{/if}
-								{/if}
+								</div>
 							</div>
 						{/if}
 					</div>

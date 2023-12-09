@@ -177,7 +177,9 @@
 			</div>
 		</div>
 	{:else}
-		<div class="" in:fly={{ y: 50, duration: 150 }} style="height: calc(100vh - 60px);">Hello</div>
+		<div class="" in:fly={{ y: 50, duration: 150 }} style="height: calc(100vh - 60px);">
+			Messaging
+		</div>
 	{/if}
 </div>
 

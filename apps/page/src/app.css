@@ -295,6 +295,7 @@ input[type='checkbox'] {
 
 body {
 	font-family: Inter;
+	--editor-accent-color: #8b786d;
 }
 
 input:not(._input):not([type='color']) {
@@ -357,7 +358,7 @@ button._small {
 }
 
 button._primary {
-	background-color: #8b786d;
+	background-color: var(--editor-accent-color);
 	border-radius: 8px;
 	color: white;
 }

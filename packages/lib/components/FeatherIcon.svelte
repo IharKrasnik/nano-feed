@@ -14,7 +14,7 @@
 		if (theme === 'dark') {
 			color = '#f6f5f4';
 		} else {
-			color = '#111111';
+			color = '#333333';
 		}
 	}
 </script>
