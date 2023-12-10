@@ -116,7 +116,7 @@
 			{/if}
 
 			{#if isWithUrl && section.type !== 'form'}
-				<EditInteractiveOptions bind:section bind:sectionItem={item} />
+				<EditInteractiveOptions class=" mt-4" bind:section bind:sectionItem={item} />
 			{/if}
 
 			{#if (isWithSettings && section.renderType !== 'form' && section.renderType !== 'carousel') || item.isActionSuccessSection}
@@ -152,7 +152,12 @@
 	/>
 
 	{#if section.renderType === 'form' && item?.id !== section?.id}
-		<EditInteractiveOptions bind:section bind:sectionItem={item} isWithButton={false} />
+		<EditInteractiveOptions
+			class=" mt-4"
+			bind:section
+			bind:sectionItem={item}
+			isWithButton={false}
+		/>
 	{/if}
 
 	{#if section.renderType === 'pricing' && item.pricing}

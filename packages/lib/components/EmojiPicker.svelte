@@ -49,7 +49,7 @@
 	}}
 >
 	<div
-		class="border rounded-full aspect-square shrink-0 w-[30px] h-[30px] flex items-center justify-center"
+		class="border-2 border-[#ccccd0] rounded-full aspect-square shrink-0 w-[30px] h-[30px] flex items-center justify-center"
 		on:click={() => (isEmojiPickerShown = true)}
 	>
 		<Emoji bind:emoji={icon} />

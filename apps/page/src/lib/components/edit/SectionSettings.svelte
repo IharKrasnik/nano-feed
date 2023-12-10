@@ -56,10 +56,10 @@
 
 {#if isWithButton}
 	<div
-		class="ml-2 w-[37px] h-[37px] shrink-0 bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+		class="ml-2 w-[37px] h-[37px] shrink-0 bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100"
 		on:click={show}
 	>
-		⚙️
+		<FeatherIcon size="15" name="settings" color="#333" />
 	</div>
 {/if}
 

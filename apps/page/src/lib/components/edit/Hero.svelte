@@ -175,10 +175,10 @@
 	<div class="w-full flex items-center my-4 mt-8 py-4 ">
 		<div class="text-lg font-bold mr-4 _editor-title">Hero Section</div>
 		<div
-			class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+			class="w-[37px] h-[37px] bg-[#fafafa] rounded-full flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100"
 			on:click={showSettings}
 		>
-			⚙️
+			<FeatherIcon size="15" name="settings" color="#333" />
 		</div>
 	</div>
 
@@ -612,7 +612,12 @@
 			<div class="_section">
 				<div class="_title flex justify-between w-full">Call To Action</div>
 
-				<EditInteractiveOptions bind:section={hero} bind:sectionItem={hero} isWithButton={false} />
+				<EditInteractiveOptions
+					class=" mt-4"
+					bind:section={hero}
+					bind:sectionItem={hero}
+					isWithButton={false}
+				/>
 			</div>
 
 			{#if page.renderType !== 'article'}

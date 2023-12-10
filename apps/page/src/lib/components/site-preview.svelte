@@ -492,7 +492,7 @@
 								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
 							/> -->
 						{#if !isLoading}
-							<div style={isEdit ? 'height: calc(100vh - 120px); overflow-y: auto;' : ''}>
+							<div>
 								{#if page.activeHero}
 									<div class="sticky bg-site">
 										<RenderHero
@@ -586,46 +586,42 @@
 										{/if}
 									{/if}
 								</div>
+
+								{#if isMountedDelayed && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
+									<div class="overflow-hidden" bind:this={$ctaFooterEl}>
+										<RenderCTA {page} section={page.ctaFooter} />
+									</div>
+								{/if}
 							</div>
 						{/if}
 					</div>
 				{/if}
 
-				{#if !isAboveTheFold}
-					{#if page.streamSlug && (!page.sections || !page.sections.find((s) => s.type === 'momentum_feed'))}
-						<div>
-							<div class="sticky  bg-site z-20 py-4 sm:py-16">
-								{#if page.links}
-									<div class="flex justify-center w-full my-4">
-										{#if page.links.twitter}
-											<div class="w-[35px] h-[35px] mr-2">
-												<a href={page.links.twitter} class="scale-110" target="_blank">
-													<TwitterIcon />
-												</a>
-											</div>
-										{/if}
-										{#if page.links.linkedin}
-											<div class="w-[35px] h-[35px] mr-2">
-												<a href={page.links.linkedin} target="_blank">
-													<LinkedInIcon />
-												</a>
-											</div>
-										{/if}
+				{#if page.links}
+					<div>
+						<div class="sticky  bg-site z-20 py-4 sm:py-16">
+							<div class="flex justify-center w-full my-4">
+								{#if page.links.twitter}
+									<div class="w-[35px] h-[35px] mr-2">
+										<a href={page.links.twitter} class="scale-110" target="_blank">
+											<TwitterIcon />
+										</a>
+									</div>
+								{/if}
+								{#if page.links.linkedin}
+									<div class="w-[35px] h-[35px] mr-2">
+										<a href={page.links.linkedin} target="_blank">
+											<LinkedInIcon />
+										</a>
 									</div>
 								{/if}
 							</div>
 						</div>
-					{/if}
+					</div>
+				{/if}
 
-					{#if isMountedDelayed && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
-						<div class="overflow-hidden" bind:this={$ctaFooterEl}>
-							<RenderCTA {page} section={page.ctaFooter} />
-						</div>
-					{/if}
-
-					{#if !isNoBadge && !page.isNoBadge}
-						<PageBadge theme={page.theme?.theme || 'light'} />
-					{/if}
+				{#if !isNoBadge && !page.isNoBadge}
+					<PageBadge theme={page.theme?.theme || 'light'} />
 				{/if}
 			</div>
 		</div>

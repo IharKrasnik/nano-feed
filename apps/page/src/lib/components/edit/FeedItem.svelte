@@ -11,7 +11,6 @@
 	import SourceLogo from 'lib/components/SourceLogo.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import Button from 'lib/components/Button.svelte';
-	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 	import EditFeedItemSettings from '$lib/components/edit/FeedItemSettings.svelte';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';

@@ -9,7 +9,6 @@
 	import autofocus from 'lib/use/autofocus';
 	import { goto } from '$app/navigation';
 	import { page as sveltePage } from '$app/stores';
-	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 
 	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
 
@@ -36,13 +35,6 @@
 	import MomentumHub from 'lib/components/MomentumHub.svelte';
 	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
 
-	import SitePreview from '$lib/components/site-preview.svelte';
-	import SignupForm from '$lib/components/signup-form.svelte';
-
-	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
-
-	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
-
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
 	import contenteditable from 'lib/use/contenteditable';
@@ -51,25 +43,13 @@
 	import allPages from '$lib/stores/allPages';
 	import pageDraft from '$lib/stores/pageDraft';
 
-	import { flip } from 'svelte/animate';
-	import { dndzone } from 'svelte-dnd-action';
-
 	let clazz = '';
 	export { clazz as class };
-	export let isShowTips = true;
 
 	export let page;
 
-	export let focuses;
-
 	export let isCollapsedDefault = true;
 	let isCollapsed = isCollapsedDefault;
-
-	let isSettingsShown = false;
-
-	let showSettings = () => {
-		isSettingsShown = true;
-	};
 
 	$: if (!page.ctaFooter) {
 		page.ctaFooter = {};

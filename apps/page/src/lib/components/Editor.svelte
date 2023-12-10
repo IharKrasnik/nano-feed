@@ -1362,7 +1362,7 @@
 								{/if}
 							{/if}
 
-							{#if page._id}
+							{#if selectedTab === 'editor' && page._id}
 								<!-- <div class="flex justify-between items-center mb-4">
 												<div
 													class="w-full mr-2  _editor-title text-lg font-bold block cursor-pointer transition hover:px-4 rounded-lg hover:bg-[#f5f5f5]"
@@ -1574,11 +1574,14 @@
 												>Add another interactive answer</button
 											>
 										{/if} -->
-										<EditInteractiveOptions
-											section={page}
-											sectionItem={page}
-											isWithButton={false}
-										/>
+										<div class="_section">
+											<EditInteractiveOptions
+												class=" mt-4"
+												section={page}
+												sectionItem={page}
+												isWithButton={false}
+											/>
+										</div>
 									{/if}
 									<!-- 
 									{#if page?._id}
@@ -1793,7 +1796,7 @@
 											</div>
 										</div>
 
-										<EditCTA class="my-4" bind:page bind:focuses />
+										<EditCTA class="my-4" bind:page />
 									{/if}
 
 									<!-- {#if page._id && page.name && page.title}
@@ -2000,7 +2003,7 @@
 								</div> -->
 
 								{#if page}
-									<div class="" in:fade>
+									<div class="" style="height: calc(100vh - 120px); overflow-y: auto;" in:fade>
 										{#if $postDraft}
 											<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
 										{:else if selectedTab === 'editor'}

@@ -58,13 +58,13 @@
 {#if isShown}
 	<div
 		class="{isWithButton
-			? 'absolute top-0  mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl'
+			? 'absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl'
 			: ''} {clazz}"
 		in:fly={{ y: 50, duration: 150 }}
 		use:clickOutside
 		on:clickOutside={() => (isWithButton ? close() : null)}
 	>
-		<div class="font-normal text-sm opacity-70 mt-4 mb-2">How users can interact?</div>
+		<div class="font-normal text-sm opacity-70 mb-2">How users can interact?</div>
 
 		<select
 			class="w-full"
@@ -201,7 +201,7 @@
 			</div>
 		{/if}
 
-		{#if sectionItem.interactiveRenderType && sectionItem.interactiveRenderType !== 'email'}
+		{#if false && sectionItem.interactiveRenderType && sectionItem.interactiveRenderType !== 'email'}
 			<div>
 				<div class="font-normal text-sm opacity-70 mt-4 mb-2 font-bold">Save to variable</div>
 				<input
