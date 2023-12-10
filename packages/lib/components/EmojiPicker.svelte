@@ -55,7 +55,11 @@
 		<Emoji bind:emoji={icon} />
 	</div>
 	{#if isEmojiPickerShown}
-		<div class="absolute top-0 mt-16" style="z-index: 100;" in:fly={{ y: 50, duration: 150 }}>
+		<div
+			class="absolute top-0 mt-16 shadow-lg shadow-black/30 rounded-lg overflow-hidden"
+			style="z-index: 100;"
+			in:fly={{ y: 50, duration: 150 }}
+		>
 			{#if !isNoCustom}
 				<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede]">
 					<h3 class="font-bold mb-2">Custom Logo</h3>
@@ -158,6 +162,7 @@
 					class="w-full _section min-w-[345px] min-h-[200px] {theme === 'light'
 						? 'bg-white'
 						: 'bg-black'}"
+					style="border-radius: 0;"
 				>
 					<div class="font-bold mb-2">Monochrome SVG Icons</div>
 
@@ -182,6 +187,7 @@
 			{:else if selectedTab === 'more'}
 				<div
 					class="_section min-w-[345px] min-h-[200px] {theme === 'light' ? 'bg-white' : 'bg-black'}"
+					style="border-radius: 0;"
 				>
 					{#each customIcons as category}
 						<div class="font-bold mb-4">{category.name}</div>

@@ -423,7 +423,7 @@
 
 		<div class="_section">
 			<div class="_title flex items-center justify-between">
-				{#if page.renderType === 'artile'}
+				{#if page.renderType === 'article'}
 					<div>Article Title</div>
 				{:else}
 					<div>Tagline</div>
@@ -455,7 +455,7 @@
 			{/if}
 		</div>
 		<div class="_section">
-			{#if page.renderType === 'artile'}
+			{#if page.renderType === 'article'}
 				<div class="_title">Short description</div>
 			{:else}
 				<div class="_title">Subtitle</div>
@@ -485,12 +485,14 @@
 					</div>
 				</div>
 			{/if}
-			<div class="text-sm opacity-90 my-4">
-				Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word or two.
-			</div>
+			{#if page.renderType === 'article'}{:else}
+				<div class="text-sm opacity-90 my-4">
+					Use <b>bold</b> and <i>italic</i> text in Tagline and Subtitle to emphasize a word or two.
+				</div>
+			{/if}
 		</div>
 
-		{#if page.renderType !== 'artile'}
+		{#if page.renderType !== 'article'}
 			<div class="_section">
 				<div class="flex items-center justify-between">
 					<div class="font-bold text-sm">Key Features</div>
@@ -518,7 +520,7 @@
 		<div class="_section">
 			<div class="flex justify-between  mb-2">
 				<div class="_title">
-					{#if page.renderType === 'artile'}
+					{#if page.renderType === 'article'}
 						Key image
 					{:else}
 						Product Demo
@@ -613,7 +615,7 @@
 				<EditInteractiveOptions bind:section={hero} bind:sectionItem={hero} isWithButton={false} />
 			</div>
 
-			{#if page.renderType !== 'artile'}
+			{#if page.renderType !== 'article'}
 				<div class="_section">
 					<div class="_title flex justify-between w-full">Social Proof</div>
 

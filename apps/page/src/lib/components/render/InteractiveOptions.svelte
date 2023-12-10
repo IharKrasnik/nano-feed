@@ -392,10 +392,10 @@
 									emoji={sectionItem.urlIcon}
 								/>
 							{/if}
-							{sectionItem.callToActionText || 'Learn More'}
+							{sectionItem.callToActionText || 'Learn More →'}
 						</button>
 					{:else}
-						{sectionItem.callToActionText || 'Learn More'}
+						{sectionItem.callToActionText || 'Learn More →'}
 					{/if}
 				</a>
 
@@ -445,10 +445,10 @@
 										emoji={sectionItem.url2Icon}
 									/>
 								{/if}
-								{sectionItem.callToActionText2 || 'Learn More'}
+								{sectionItem.callToActionText2 || 'Learn More →'}
 							</button>
 						{:else}
-							{sectionItem.callToActionText2 || 'Learn More'}
+							{sectionItem.callToActionText2 || 'Learn More →'}
 						{/if}
 					</a>
 				{/if}

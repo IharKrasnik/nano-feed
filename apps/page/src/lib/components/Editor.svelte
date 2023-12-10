@@ -1302,7 +1302,68 @@
 											{/if}
 										</div>
 										{#if page._id}
-											<!-- <div class="flex justify-between items-center mb-4">
+											<div class="_section mt-4">
+												<div class="font-bold mb-2 opacity-80">Page Peformance</div>
+												<div
+													class="flex w-full shrink-0 justify-between items-center bg-gray-300/10  border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer "
+													on:click={() => (selectedTab = 'analytics')}
+												>
+													<div class="border-gray-300 text-sm font-semibold opacity-300">
+														Unique Views
+													</div>
+													<div class="ml-2 font-bold">
+														{page.totalUniqueViews || 0}
+													</div>
+												</div>
+
+												{#if conversions?.forms}
+													<div
+														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  {getConversionColor(
+															conversions.forms
+														)}"
+														on:click={() => (selectedTab = 'audience')}
+													>
+														<div class="border-gray-300 text-sm font-semibold opacity-300">
+															Forms Conversion Rate
+														</div>
+														<div class="ml-2 font-bold">
+															{conversions.forms}%
+														</div>
+													</div>
+													<div class="text-sm semibold text-right mt-2">Target: 10%</div>
+												{/if}
+
+												{#if conversions?.clicks && !conversions?.forms}
+													<div
+														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer {getConversionColor(
+															conversions.clicks
+														)}"
+														on:click={() => (selectedTab = 'analytics')}
+													>
+														<div class="text-sm font-semibold">Clicks Conversion Rate</div>
+														<div class="ml-2 font-bold">
+															{conversions.clicks}%
+														</div>
+													</div>
+													<div class="text-sm semibold text-right mt-2">Target: 30%</div>
+												{/if}
+
+												{#if !conversions?.clicks && !conversions?.forms}
+													<div
+														class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg"
+													>
+														<div class="">Conversion Rate</div>
+														<div class="ml-2 font-bold opacity-30">N/A%</div>
+													</div>
+												{/if}
+											</div>
+										{/if}
+									</div>
+								{/if}
+							{/if}
+
+							{#if page._id}
+								<!-- <div class="flex justify-between items-center mb-4">
 												<div
 													class="w-full mr-2  _editor-title text-lg font-bold block cursor-pointer transition hover:px-4 rounded-lg hover:bg-[#f5f5f5]"
 													on:click={() => (isBrandNameEdit = true)}
@@ -1310,33 +1371,33 @@
 													{page.name}
 												</div>
 											</div> -->
+								<div class="flex items-center">
+									<div class="w-full flex justify-between items-center mt-8">
+										<div class="flex items-center">
+											<div class="mr-4">
+												<EmojiPicker bind:icon={page.logo} />
+											</div>
+											<ColorPicker bind:page />
+										</div>
 
-											<div class="w-full flex justify-between items-center mt-4">
-												<div class="flex items-center">
-													<div class="mr-4">
-														<EmojiPicker bind:icon={page.logo} />
-													</div>
-													<ColorPicker bind:page />
-												</div>
-
-												<div class="flex">
-													<input
-														class="mr-2"
-														type="checkbox"
-														bind:checked={isShowHeatmap}
-														on:change={() => {
-															if (isShowHeatmap) {
-																refreshHeatmap();
-															} else {
-																$heatmap = null;
-															}
-														}}
-													/> Heatmap 🔥
-												</div>
+										{#if page.totalUniqueViews > 1}
+											<div class="flex">
+												<input
+													class="mr-2"
+													type="checkbox"
+													bind:checked={isShowHeatmap}
+													on:change={() => {
+														if (isShowHeatmap) {
+															refreshHeatmap();
+														} else {
+															$heatmap = null;
+														}
+													}}
+												/> Heatmap 🔥
 											</div>
 										{/if}
 									</div>
-								{/if}
+								</div>
 							{/if}
 
 							{#if $postDraft}
@@ -1781,65 +1842,8 @@
 										</div>
 										<div class="text-sm mt-2">The changes will appear on your page live URL</div>
 									</div>
-
-									{#if page._id}
-										<hr class="my-16" />
-										<div class="_section mt-8">
-											<div class="font-bold mb-2">Page Peformance</div>
-											<div
-												class="flex w-full shrink-0 justify-between items-center bg-gray-300/10  border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer "
-												on:click={() => (selectedTab = 'analytics')}
-											>
-												<div class="border-gray-300 text-sm font-semibold opacity-300">
-													Unique Views
-												</div>
-												<div class="ml-2 font-bold">
-													{page.totalUniqueViews || 0}
-												</div>
-											</div>
-
-											{#if conversions?.forms}
-												<div
-													class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  {getConversionColor(
-														conversions.forms
-													)}"
-													on:click={() => (selectedTab = 'audience')}
-												>
-													<div class="border-gray-300 text-sm font-semibold opacity-300">
-														Forms Conversion Rate
-													</div>
-													<div class="ml-2 font-bold">
-														{conversions.forms}%
-													</div>
-												</div>
-												<div class="text-sm semibold text-right mt-2">Target: 10%</div>
-											{/if}
-											{#if conversions?.clicks && !conversions?.forms}
-												<div
-													class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer {getConversionColor(
-														conversions.clicks
-													)}"
-													on:click={() => (selectedTab = 'analytics')}
-												>
-													<div class="text-sm font-semibold">Clicks Conversion Rate</div>
-													<div class="ml-2 font-bold">
-														{conversions.clicks}%
-													</div>
-												</div>
-												<div class="text-sm semibold text-right mt-2">Target: 30%</div>
-											{/if}
-
-											{#if !conversions?.clicks && !conversions?.forms}
-												<div
-													class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg"
-												>
-													<div class="">Conversion Rate</div>
-													<div class="ml-2 font-bold opacity-30">N/A%</div>
-												</div>
-											{/if}
-										</div>
-									{/if}
 								{/if}
+								<hr class="my-8" />
 								{#if page?._id}
 									<!-- <hr class="my-16" />
 									<div class="mb-32">
