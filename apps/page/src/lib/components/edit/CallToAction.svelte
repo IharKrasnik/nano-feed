@@ -40,7 +40,6 @@
 	import contenteditable from 'lib/use/contenteditable';
 
 	import currentUser from 'lib/stores/currentUser';
-	import allPages from '$lib/stores/allPages';
 	import pageDraft from '$lib/stores/pageDraft';
 
 	let clazz = '';

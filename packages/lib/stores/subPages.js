@@ -4,9 +4,10 @@ import { get } from 'lib/api';
 const subPagesStore = writable([]);
 
 export const refreshSubPages = async ({ page }) => {
-	let { results } = await get(`pages/${page.parentPage?._id || page._id}/subpages`, {});
-
-	subPagesStore.set(results);
+	if (page?._id) {
+		let { results } = await get(`pages/${page.parentPage?._id || page._id}/subpages`, {});
+		subPagesStore.set(results);
+	}
 };
 
 export default subPagesStore;

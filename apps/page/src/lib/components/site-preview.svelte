@@ -297,8 +297,7 @@
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
-
-{#key page._id}
+{#key page.slug}
 	{#if page.theme?.layoutType === 'portfolio' || page.parentPage?.theme?.layoutType === 'portfolio'}
 		<PortfolioPage bind:page />
 	{:else}

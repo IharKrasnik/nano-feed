@@ -12,7 +12,6 @@
 	import isUrl from 'lib/helpers/isUrl';
 
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
-	import allPages from '$lib/stores/allPages';
 	import Dock from 'lib/components/Dock.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import sectionToEdit from '$lib/stores/sectionToEdit';

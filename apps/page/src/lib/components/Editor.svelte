@@ -56,6 +56,7 @@
 	import NewsletterTab from '$lib/components/tabs/NewsletterTab.svelte';
 	import DatabaseTab from '$lib/components/tabs/DatabaseTab.svelte';
 	import BlogTab from '$lib/components/tabs/BlogTab.svelte';
+	import GrowthTab from '$lib/components/tabs/GrowthTab.svelte';
 
 	import SignupForm from '$lib/components/signup-form.svelte';
 
@@ -65,6 +66,7 @@
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
 	import Settings from '$lib/components/Settings.svelte';
 	import EditDatabase from '$lib/components/edit/Database.svelte';
+	import EditGrowth from '$lib/components/edit/Growth.svelte';
 	import EditBlog from '$lib/components/edit/Blog.svelte';
 	import EditCustomers from '$lib/components/edit/Customers.svelte';
 	import EditSubmissions from '$lib/components/edit/Submissions.svelte';
@@ -120,6 +122,7 @@
 
 	let defaultPage = {
 		_id: undefined,
+		slug: '_new',
 		name: '',
 		heros: [
 			{
@@ -130,7 +133,6 @@
 				theme: {}
 			}
 		],
-		slug: '_new',
 		welcomeEmail: null
 	};
 
@@ -150,7 +152,7 @@
 
 	let refreshPageConversionStats = async () => {
 		try {
-			if (!page.parentPage?._id && !page._id) {
+			if (!page._id) {
 				return;
 			}
 
@@ -204,12 +206,12 @@
 		} else {
 			$pageDraft = {
 				..._.cloneDeep($pageDraft),
-				[page.slug]: { ..._.cloneDeep(page) },
-				[page._id]: { ..._.cloneDeep(page) }
+				[page.slug || '_new']: { ..._.cloneDeep(page) },
+				[page._id || '_new']: { ..._.cloneDeep(page) }
 			};
 		}
 
-		pageSlug = page.slug;
+		pageSlug = page.parentPage?.slug || page.slug;
 
 		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug, lastPageId: page._id };
 
@@ -229,6 +231,8 @@
 		refreshSubPages({ page });
 		refreshPage({ page });
 		refreshChildStreams({ page });
+
+		console.log('setpage', page);
 	};
 
 	let addNewHero = () => {
@@ -521,6 +525,7 @@
 	let addSubpage = () => {
 		let heros = [
 			{
+				id: uuidv4(),
 				title: '',
 				subtitle: ''
 			}
@@ -529,20 +534,21 @@
 		page = {
 			_id: null,
 			slug: '_new',
+			name: '',
+			parentPage: { ..._.cloneDeep(page) },
 			heros,
 			activeHero: heros[0],
-			name: '',
 			title: '',
 			subtitle: '',
 			ctaExplainer: '',
-			parentPage: { ...page },
 			variablesValues: page.variablesValues
 		};
 
-		// pageSlug = page.slug;
+		// page = { ...$allPages[0], parentPage: page, _id: null, slug: '_new' };
+
+		setPageAndDraft(page, { force: true });
 	};
 
-	let createSubPage = () => {};
 	let selectedStreamSlug;
 
 	let selectedCustomer;
@@ -600,6 +606,13 @@
 	let newSectionCode = '';
 
 	let isInsertPopupShown = false;
+
+	let selectedGrowthTab = 'dashboard';
+
+	$: if (page.slug) {
+		debugger;
+		console.log('watch page.slug', page.slug);
+	}
 </script>
 
 {#if isSettingsModalShown}
@@ -819,6 +832,17 @@
 					<div
 						in:fade={{ delay: 75 }}
 						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
+						class:_selected={selectedTab === 'growth'}
+						on:click={() => {
+							selectedTab = 'growth';
+						}}
+					>
+						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="bar-chart" />
+						Growth
+					</div>
+					<div
+						in:fade={{ delay: 75 }}
+						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
 						class:_selected={selectedTab === 'analytics'}
 						on:click={() => {
 							selectedTab = 'analytics';
@@ -1025,7 +1049,7 @@
 								class="ml-2 opacity-80 hover:opacity-100 transition cursor-pointer _bare"
 								on:click={getOnlineCount}
 							>
-								<FeatherIcon name="refresh-cw" color="#4bde80" size="15" />
+								<FeatherIcon name="refresh-cw" class="opacity-50" color="#333" size="15" />
 							</div>
 						</div>
 					</div>
@@ -1274,10 +1298,17 @@
 							{/if}
 
 							{#if $postDraft}
-								<BackTo to={'Editor'} onClick={() => ($postDraft = null)} />
 								<EditPost class="none" bind:blog={page.blog} bind:post={$postDraft} />
 							{:else if selectedTab === 'editor'}
 								{#if !page._id || isBrandNameEdit}
+									{#if page.parentPage}
+										<BackTo
+											to={'Home Page'}
+											onClick={() => {
+												setPageAndDraft($allPages.find((p) => p._id === page.parentPage._id));
+											}}
+										/>
+									{/if}
 									<div class="_section">
 										<div class="flex justify-between">
 											{#if page.parentPage}
@@ -1413,8 +1444,10 @@
 												bind:hero
 												bind:page
 												bind:focuses
-												isShowTips={page.hero?.length < 2}
-												isCollapsedDefault={!!page.title}
+												isShowTips={page.heros?.length < 2}
+												isCollapsedDefault={!!(page.activeHero
+													? page.activeHero.title
+													: page.title)}
 											/>
 										{/each}
 
@@ -1746,6 +1779,8 @@
 								<div>
 									{#if selectedTab === 'database'}
 										<EditDatabase bind:page bind:selectedStreamSlug />
+									{:else if selectedTab === 'growth'}
+										<EditGrowth bind:page bind:selectedGrowthTab />
 									{:else if selectedTab === 'blog'}
 										<EditBlog bind:setPageAndDraft bind:page />
 									{:else if selectedTab === 'analytics'}
@@ -1773,7 +1808,7 @@
 
 				<!-- PREVIEW -->
 
-				{#if page.name || page.title}
+				{#if page.name || page.title || page.parentPage}
 					<div
 						class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {selectedTab ===
 						'editor'
@@ -1782,76 +1817,6 @@
 						style="height: calc(100vh - 60px);"
 						in:fade={{ delay: 150 }}
 					>
-						<!-- {#if page._id && !$sectionToEdit && selectedTab === 'editor' && !$postDraft}
-							<div class="sticky top-[20px] w-full z-50 h-[0px]">
-								<div class="mx-auto">
-									{#if isJustCreated || isJustPaid}
-										<ConfettiExplosion infinite particleCount={200} force={0.3} />
-									{/if}
-								</div>
-
-								<div class="max-w-[400px] mx-auto">
-									<div
-										class="relative _published-label flex justify-between items-center mt-4"
-										style="padding: 6px 10px;"
-									>
-										{#key page._id}
-											<a
-												href={getPageUrl()}
-												class="flex justify-center {page.isDirty ? 'max-w-[240px] ml-4' : 'w-full'}"
-												style="color: #5375F0; overflow: hidden; text-overflow: ellipsis;"
-												target="_blank"
-												rel="noreferrer"
-											>
-												<div
-													class="mr-2 z-20"
-													use:tooltip
-													title={page.isDirty ? 'Pending Changes' : 'Published'}
-												>
-													{#if !page.isDirty}
-														✅
-													{:else}
-														🌝
-													{/if}
-												</div>
-
-												<div
-													class="line-clamp-1 whitespace-nowrap overflow-hidden mx-2 text-ellipsis"
-												>
-													{getPageUrl().replace('https://', '').replace('www.', '')}
-												</div>
-											</a>
-										{/key}
-
-										{#if page.isDirty}
-											<div transition:fly={{ x: 50, duration: 150 }}>
-												<Button
-													class="bg-yellow-500 right-0 _primary flex justify-center w-full"
-													onClick={publishPage}
-													style="margin-left: 78px;
-										border-radius: 30px;
-										padding: 4px 45px;
-										right: 3px;
-										width: auto;
-										margin: -4px -10px -4px 0px;
-										"
-												>
-													Publish
-												</Button>
-											</div>
-										{/if}
-									</div>
-								</div>
-							</div>
-						{/if} -->
-
-						<!-- {#if page}
-						<div class="w-full flex justify-center">
-							<a href="{PAGE_URL}/explore">Explore</a>
-						</div>
-					{/if} -->
-						<!-- frameBgColor={page._id ? (page.isDirty ? '#fb923c' : '#494949') : '#494949'} -->
-
 						{#if page}
 							{#key page._id}
 								<!-- <div class="flex cursor-pointer">
@@ -1877,9 +1842,7 @@
 
 								{#if page}
 									<div class="" style="height: calc(100vh - 120px); overflow-y: auto;" in:fade>
-										{#if $postDraft}
-											<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
-										{:else if selectedTab === 'editor'}
+										{#if selectedTab === 'editor'}
 											{#if $sectionToPreview}
 												<SitePreview
 													class="p-4"
@@ -1920,79 +1883,15 @@
 											/>
 										{:else if selectedTab === 'audience'}
 											<AudienceTab bind:page bind:selectedSubmission />
-										{:else if selectedTab === 'database'}
-											<DatabaseTab bind:page />
 										{:else if selectedTab === 'blog'}
 											<BlogTab bind:page bind:setPageAndDraft />
+										{:else if selectedTab === 'growth'}
+											<GrowthTab bind:page bind:selectedGrowthTab />
 										{:else if selectedTab === 'newsletter'}
 											<NewsletterTab bind:page />
 										{/if}
 									</div>
 								{/if}
-								<!-- 
-								<div class="sticky top-[20px] pb-16" in:fly={{ y: 50, duration: 300 }}>
-									<BrowserFrame
-										class="max-h-screen overflow-y-scroll"
-										links={[
-											{
-												action: () => {
-													selectedTab = 'editor';
-												},
-												title: 'Editor',
-												featherIcon: 'file-text'
-											},
-											{
-												action: () => {
-													selectedTab = 'analytics';
-													selectedCustomer = null;
-												},
-												title: `Customers`,
-												featherIcon: 'activity'
-											},
-											{
-												action: () => {
-													selectedTab = 'audience';
-													selectedSubmission = null;
-												},
-												title: `Submissions`,
-												featherIcon: 'check-square'
-											},
-											{
-												action: () => {
-													selectedTab = 'messaging';
-													selectedTrigger = null;
-													selectedChatRoom = null;
-												},
-												title: 'Messaging',
-												featherIcon: 'message-square'
-											},
-											{
-												action: () => {
-													selectedTab = 'database';
-												},
-												title: 'Databases',
-												featherIcon: 'database'
-											},
-											{
-												action: () => {
-													selectedTab = 'blog';
-												},
-												title: 'Blog',
-												featherIcon: 'book-open'
-											},
-											{
-												action: () => {
-													selectedTab = 'newsletter';
-												},
-												title: 'Newsletter',
-												featherIcon: 'mail'
-											}
-										]}
-										frameBgColor="#494949"
-									>
-										
-									</BrowserFrame>
-								</div> -->
 							{/key}
 						{/if}
 
