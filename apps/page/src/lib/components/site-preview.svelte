@@ -514,7 +514,7 @@
 									{#if !isAboveTheFold}
 										{#if page.sections?.length}
 											<div
-												in:fade={{ delay: 900 }}
+												in:fade={{ delay: page.activeHero?.title ? 900 : 0 }}
 												class="relative  z-10 {page.streamSlug ? '' : ''}"
 												style="z-index: 40;"
 											>

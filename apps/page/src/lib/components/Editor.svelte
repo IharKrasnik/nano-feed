@@ -31,6 +31,7 @@
 	import EditPageLinks from '$lib/components/edit/PageLinks.svelte';
 	import EditCTA from '$lib/components/edit/CallToAction.svelte';
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
+	import Insert from '$lib/components/edit/Insert.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import PostPreview from 'lib/components/post/PostPreview.svelte';
@@ -81,6 +82,7 @@
 	import pageDraft from '$lib/stores/pageDraft';
 	import postDraft from 'lib/stores/postDraft';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
+	import sectionToPreview from '$lib/stores/sectionToPreview';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
 	import ctaFooterEl from '$lib/stores/ctaFooterEl';
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
@@ -418,155 +420,11 @@
 		};
 
 		if (type === 'benefits') {
-			newSection.emoji = '🙌';
-			newSection.title = 'Tell the audience how <b>they</b> will benefit';
-			newSection.description =
-				'Show your features below, talk to the audience. Start features titles with verb.';
-
-			newSection.columns = 1;
-
-			newSection.items = [
-				{
-					emoji: '🖼',
-					title: 'Attach Images',
-					description:
-						'Paste image from clipboard, insert a link to input or upload from your computer.',
-					imageUrl:
-						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
-				},
-				{
-					emoji: '📼',
-					title: 'Use Videos',
-					description: 'Simply insert a link to YouTube, Loom or Vimeo.',
-					imageUrl:
-						'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D'
-				},
-				{
-					emoji: '💥',
-					title: 'Use GIFs',
-					description:
-						'Use animated GIFs to catch their attention (use search icon near file input)',
-					imageUrl:
-						'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
-				},
-				{
-					emoji: '⚒️',
-					title: 'Customize The Grid',
-					description: 'Select the number of columns you want to show in your section (1—4)',
-					imageUrl:
-						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243758302-image.png'
-				}
-			];
-		} else if (type === 'pricing') {
-			newSection.columns = 2;
-
-			newSection.renderType = 'pricing';
-
-			newSection.title = 'Pricing';
-			newSection.description = 'Simple plans that fit your needs';
-
-			newSection.items = [
-				{
-					title: 'Free',
-					description: 'Start from free (capped at 1000 emails)',
-					pricing: {
-						amount: 0,
-						per: 'month',
-						benefits: [
-							{
-								name: 'collect emails',
-								name: 'broadcast emails'
-							}
-						]
-					}
-				},
-				{
-					title: 'Growth',
-					description: 'For growing businesses (capped at 10k emails)',
-					pricing: {
-						amount: 4.2,
-						per: 'month',
-						benefits: [
-							{
-								name: 'everything in free'
-							},
-							{
-								name: 'custom domain'
-							},
-							{
-								name: 'priority support'
-							}
-						]
-					}
-				}
-			];
-		} else if (type === 'faq') {
-			newSection.title = 'Frequently Asked Questions';
-			newSection.description = 'Answers summarized';
-			newSection.renderType = 'faq';
-
-			// delete newSection.items;
-
-			newSection.items = [
-				{
-					title: 'Do you offer a refund?',
-					description: 'Yes, all subscriptions refunded no-questions-asked the first 2 weeks.'
-				},
-				{
-					title: 'How the process look like?',
-					description: 'You submit the form, prepay and get the result in 48 hours.'
-				}
-			];
-		} else if (type === 'testimonials') {
-			newSection.renderType = 'testimonials';
-			newSection.title = `Don't just trust our words...`;
-			newSection.description = `Here's what people say about ${page.name}!`;
-
-			newSection.items = [
-				{
-					title: 'Igor Krasnik, Momentum',
-					description: `${page.name} is awesome!`,
-					imageUrl:
-						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156297060-image.png'
-				},
-				{
-					title: 'Elon Musk, X',
-					description: `${page.name} is the future, to the moon 🚀`,
-					imageUrl:
-						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156478852-image.png'
-				}
-			];
 		} else if (type === 'interactive-question') {
 			newSection.title = 'A radically transparent question to you..';
 			newSection.description = 'How likely would you switch to our product?';
 			newSection.interactiveRenderType = 'single_choice';
 			newSection.interactiveAnswers = [{ emoji: '💯' }, { emoji: '🤔' }, { emoji: '👎' }];
-		} else if (type === 'carousel') {
-			newSection.title = 'Nice images!';
-			newSection.columns = 4;
-			newSection.items = [
-				{
-					title: 'Image',
-					description: '',
-					colSpan: 2,
-					imageUrl:
-						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
-				},
-				{
-					title: 'GIF',
-					description: '',
-					imageUrl:
-						'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D'
-				},
-				{
-					title: 'Video',
-					description: '',
-					imageUrl:
-						'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
-				}
-			];
-
-			newSection.carousel = { is: true };
 		} else if (type === 'form') {
 			newSection.renderType = 'form';
 
@@ -740,6 +598,8 @@
 
 	let isPasteSectionModalOpen = false;
 	let newSectionCode = '';
+
+	let isInsertPopupShown = false;
 </script>
 
 {#if isSettingsModalShown}
@@ -904,6 +764,9 @@
 {#if !$sveltePage.data.pageSlug}
 	{#if !$currentUser || $allPages}
 		<div class="fixed z-10 w-full h-[60px] flex items-center justify-between px-6 border-b ">
+			{#if isInsertPopupShown}
+				<Insert bind:isInsertPopupShown bind:page />
+			{/if}
 			<div
 				class="relative z-10 flex gap-1 items-center font-semibold _header-menu"
 				style="color: #333; font-size: 12px;"
@@ -942,10 +805,15 @@
 				{#if page._id}
 					<div
 						in:fade={{ delay: 0 }}
-						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
-						on:click={() => {}}
+						class:_selected={isInsertPopupShown}
+						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  {isInsertPopupShown
+							? ''
+							: 'opacity-70 hover:opacity-100'}"
+						on:click={() => {
+							isInsertPopupShown = true;
+						}}
 					>
-						<FeatherIcon color="#f6f5f4" class="mr-2" size="20" name="plus" />
+						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="plus" />
 						Insert
 					</div>
 					<div
@@ -957,7 +825,7 @@
 							selectedCustomer = null;
 						}}
 					>
-						<FeatherIcon color="#f6f5f4" class="mr-2" size="20" name="activity" />
+						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="activity" />
 						Analytics
 					</div>
 
@@ -969,7 +837,7 @@
 							selectedTab = 'blog';
 						}}
 					>
-						<FeatherIcon class="mr-2" size="20" name="database" color="#f6f5f4" />
+						<FeatherIcon class="mr-2 _header-icon" size="20" name="database" color="#f6f5f4" />
 						Blog
 					</div>
 
@@ -981,7 +849,7 @@
 							selectedTab = 'database';
 						}}
 					>
-						<FeatherIcon class="mr-2" size="20" name="database" color="#f6f5f4" />
+						<FeatherIcon class="mr-2 _header-icon" size="20" name="database" color="#f6f5f4" />
 						CMS
 					</div>
 
@@ -995,7 +863,12 @@
 							selectedChatRoom = null;
 						}}
 					>
-						<FeatherIcon class="mr-2" size="20" name="message-square" color="#f6f5f4" />
+						<FeatherIcon
+							class="mr-2 _header-icon"
+							size="20"
+							name="message-square"
+							color="#f6f5f4"
+						/>
 						Engage
 					</div>
 
@@ -2007,16 +1880,34 @@
 										{#if $postDraft}
 											<PostPreview bind:post={$postDraft} bind:blog={page.blog} isNoHeader />
 										{:else if selectedTab === 'editor'}
-											<SitePreview
-												class="p-4"
-												isNoVars
-												isEmbed
-												noStickyHeader={true}
-												isNoBadge={true}
-												isEdit
-												isCloneable
-												bind:page
-											/>
+											{#if $sectionToPreview}
+												<SitePreview
+													class="p-4"
+													isNoVars
+													isEmbed
+													noStickyHeader={true}
+													isNoBadge={true}
+													isEdit
+													isCloneable
+													page={{
+														name: page.name,
+														logo: page.logo,
+														theme: page.theme,
+														sections: [$sectionToPreview]
+													}}
+												/>
+											{:else}
+												<SitePreview
+													class="p-4"
+													isNoVars
+													isEmbed
+													noStickyHeader={true}
+													isNoBadge={true}
+													isEdit
+													isCloneable
+													bind:page
+												/>
+											{/if}
 										{:else if selectedTab === 'database'}
 											<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 										{:else if selectedTab === 'analytics'}
@@ -2174,7 +2065,7 @@
 		color: #828282;
 	}
 
-	:global(._header-menu svg:not(.logo)) {
+	:global(svg._header-icon:not(.logo)) {
 		padding: 4px;
 		background-color: var(--editor-accent-color);
 		@apply rounded;
@@ -2186,7 +2077,7 @@
 		@apply rounded;
 	}
 
-	:global(._selected svg) {
+	:global(._selected svg._header-icon) {
 		background-color: #111111 !important;
 	}
 </style>

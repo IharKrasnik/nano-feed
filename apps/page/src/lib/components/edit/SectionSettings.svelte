@@ -66,7 +66,7 @@
 {#if !isWithButton || isShown}
 	<div
 		class={isWithButton
-			? 'absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] rounded-xl'
+			? 'absolute top-0 mt-8 p-4 z-40 bg-white w-full border border-[#e0dede] shadow-lg shadow-black/30 rounded-xl'
 			: ''}
 		use:clickOutside
 		on:clickOutside={() => {
