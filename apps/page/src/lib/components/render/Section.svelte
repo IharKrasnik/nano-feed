@@ -1084,7 +1084,7 @@
 																</div>
 															</div>
 															<div class="mb-8 opacity-70">
-																{item.description}
+																{@html item.description}
 															</div>
 
 															{#if item.pricing.benefitsStr}

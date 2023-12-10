@@ -112,6 +112,7 @@
 			name: 'Pricing',
 			section: {
 				columns: 2,
+				icon: 'feather:check',
 
 				renderType: 'pricing',
 
@@ -125,12 +126,7 @@
 						pricing: {
 							amount: 0,
 							per: 'month',
-							benefits: [
-								{
-									name: 'collect emails',
-									name: 'broadcast emails'
-								}
-							]
+							benefitsStr: 'collect emails\nbroadcast email'
 						}
 					},
 					{
@@ -139,17 +135,7 @@
 						pricing: {
 							amount: 4.2,
 							per: 'month',
-							benefits: [
-								{
-									name: 'everything in free'
-								},
-								{
-									name: 'custom domain'
-								},
-								{
-									name: 'priority support'
-								}
-							]
+							benefitsStr: 'everything in free \n custom domain \n priority support'
 						}
 					}
 				]
