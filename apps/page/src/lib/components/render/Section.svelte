@@ -1096,7 +1096,7 @@
 																	{#each item.pricing.benefitsStr.split('\n') as benefit}
 																		<div class="my-2 flex items-center">
 																			<Emoji
-																				color={'#fff'}
+																				theme={page.theme?.theme || 'light'}
 																				emoji={section.benefitsEmoji || '✅'}
 																				class="mr-2 opacity-70"
 																			/>

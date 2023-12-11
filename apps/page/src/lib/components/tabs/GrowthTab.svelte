@@ -143,9 +143,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="mt-4">
-			<button class="_primary shadow-lg shadow-green-300/30 _green">Upgrade </button>
-		</div>
 
 		{#if pricingPage}
 			<RenderSection
@@ -164,11 +161,27 @@
 								goto(url);
 							};
 
-							plan.callToActionText = 'Upgrade';
+							let subscriptionPlan = page.subscription?.plan;
+							debugger;
+							if (subscriptionPlan) {
+								if (subscriptionPlan === 'launch' && plan.title === 'Launch') {
+									plan.interactiveRenderType = null;
+								} else if (subscriptionPlan === 'startup') {
+									if (plan.title === 'Launch') {
+										plan.callToActionText = 'Downgrade';
+									} else if (plan.title === 'Startup') {
+										plan.interactiveRenderType = null;
+									}
+								} else {
+									plan.callToActionText = 'Upgrade';
+								}
+							} else {
+								plan.callToActionText = 'Upgrade';
+							}
 
 							return plan;
 						}),
-					title: '',
+					title: 'Upgrade',
 					description: ''
 				}}
 			/>
