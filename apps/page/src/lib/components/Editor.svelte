@@ -1564,11 +1564,13 @@
 									{#if page?._id}
 										<button
 											class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
-											on:click={addNewSection}>🧱 Add Empty Section</button
+											on:click={() => {
+												isInsertPopupShown = true;
+											}}>Add Section</button
 										>
-										<div class="text-sm mb-2">or use templates</div>
-										<div class="flex flex-wrap gap-4 p-4 bg-[#fafafa] _section rounded">
-											<button
+										<!-- <div class="text-sm mb-2">or use templates</div> -->
+										<!-- <div class="flex flex-wrap gap-4 p-4 bg-[#fafafa] _section rounded"> -->
+										<!-- <button
 												class="_primary _small _inverted p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'benefits' })}>🙌 Add Benefits</button
 											>
@@ -1599,15 +1601,15 @@
 												on:click={() => {
 													isPasteSectionModalOpen = true;
 												}}>⌨️ Paste section</button
-											>
-											<!-- 
+											> -->
+										<!-- 
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'carousel' })}
 												>🎠 Add Carousel with Menu</button
 											> -->
 
-											<!-- <button
+										<!-- <button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'interactive-question' })}
 												>🤩 Ask Interactive Question</button
@@ -1626,7 +1628,7 @@
 												🔤 Form
 											</button> -->
 
-											<!--
+										<!--
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'newsletter' })}
@@ -1634,13 +1636,13 @@
 												✉️ Newsletter</button
 											> -->
 
-											<!-- <button
+										<!-- <button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'community_chat' })}
 											>
 												💫 Community Chat</button
 											> -->
-										</div>
+										<!-- </div> -->
 									{/if}
 
 									<!-- {#if page._id && !page.parentPage}

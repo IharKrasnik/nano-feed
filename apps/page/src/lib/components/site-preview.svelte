@@ -586,7 +586,7 @@
 									{/if}
 								</div>
 
-								{#if isMountedDelayed && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
+								{#if isMountedDelayed && page.activeHero?.title && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
 									<div class="overflow-hidden" bind:this={$ctaFooterEl}>
 										<RenderCTA {page} section={page.ctaFooter} />
 									</div>
