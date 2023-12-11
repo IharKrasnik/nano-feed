@@ -373,6 +373,12 @@
 							text: sectionItem.callToActionText
 						});
 
+						if (sectionItem.onUrlClick) {
+							sectionItem.onUrlClick();
+							evt.preventDefault();
+							return;
+						}
+
 						if (isUrlEmbeddable(sectionItem.url)) {
 							evt.preventDefault();
 							popupEmbedUrl = sectionItem.url;

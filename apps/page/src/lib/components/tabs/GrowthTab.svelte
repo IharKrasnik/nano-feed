@@ -1,6 +1,9 @@
 <script>
+	import { get } from 'lib/api';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import getPageCssStyles from '$lib/services/getPageCssStyles';
+	import RenderSection from '$lib/components/render/Section.svelte';
+	import { goto } from '$app/navigation';
 
 	export let page;
 	export let selectedGrowthTab = 'dashboard';
@@ -16,30 +19,13 @@
 
 	let goalPercentage = 0;
 
-	let paidFeatures = [
-		{
-			name: 'Custom Domains'
-		},
-		{
-			name: 'Make my analytics private'
-		},
-		{
-			name: 'Remove Momentum Badge'
-		},
-		{
-			name: 'Add custom code to heads'
-		},
-		{
-			name: 'Online users count'
-		},
-		{
-			name: 'Heatmap'
-		}
+	let pricingPage = null;
 
-		// {
-		//   name: 'Interactive Answers'
-		// }
-	];
+	let getPricingPage = async () => {
+		pricingPage = await get(`pricing`);
+	};
+
+	getPricingPage();
 </script>
 
 <div class="max-w-[900px] m-8 p-8 mx-auto bg-background" style={cssVarStyles}>
@@ -160,5 +146,32 @@
 		<div class="mt-4">
 			<button class="_primary shadow-lg shadow-green-300/30 _green">Upgrade </button>
 		</div>
+
+		{#if pricingPage}
+			<RenderSection
+				page={{ ...pricingPage, theme: page.theme }}
+				section={{
+					...pricingPage.sections[0],
+					columns: pricingPage.sections[0].items.length - 1,
+					items: pricingPage.sections[0].items
+						.filter((i) => i.pricing.amount > 0)
+						.map((plan) => {
+							plan.onUrlClick = async () => {
+								let { url } = await get('stripe/subscribe', {
+									pageId: page._id,
+									plan: plan.title.toLowerCase()
+								});
+								goto(url);
+							};
+
+							plan.callToActionText = 'Upgrade';
+
+							return plan;
+						}),
+					title: '',
+					description: ''
+				}}
+			/>
+		{/if}
 	{/if}
 </div>

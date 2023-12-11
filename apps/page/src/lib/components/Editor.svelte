@@ -608,11 +608,6 @@
 	let isInsertPopupShown = false;
 
 	let selectedGrowthTab = 'dashboard';
-
-	$: if (page.slug) {
-		debugger;
-		console.log('watch page.slug', page.slug);
-	}
 </script>
 
 {#if isSettingsModalShown}
@@ -989,8 +984,9 @@
 									let slug = evt.target.value;
 
 									if (slug === '_new') {
-										page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-										pageSlug = page.slug;
+										setPageAndDraft({ ...defaultPage });
+										// page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+										// pageSlug = page.slug;
 									} else {
 										setPageAndDraft({
 											..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
@@ -1810,138 +1806,119 @@
 
 				<!-- PREVIEW -->
 
-				{#if page.name || page.title || page.parentPage}
-					<div
-						class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {selectedTab ===
-						'editor'
-							? 'p-8'
-							: 'p-0'} bg-[#e5e5e5] overflow-hidden"
-						style="height: calc(100vh - 60px);"
-						in:fade={{ delay: 150 }}
-					>
-						{#if page}
-							{#key page._id}
-								<!-- <div class="flex cursor-pointer">
-									<div
-										class="px-4 mr-4 text-white rounded-xl opacity-90 bg-zinc-900 z-100 flex items-center"
-										use:tooltip
-										title="Free plan includes 300 subscribers"
-									>
-										<FeatherIcon class="mr-2" color="#fff" name="clipboard" size="15" />
-										{page.totalSignupsCount || 0}/300
-									</div>
-
-									<button
-										class="px-4 mr-4 text-white bg-green-700 rounded"
-										style="padding-top: 0px; padding-bottom: 0px;"
-										on:click={subscribe}
-										use:tooltip
-										title="Upgrade to increase number of subscribers and emails, hide Momentum badge and analytics."
-									>
-										🚀 Upgrade
-									</button>
-								</div> -->
-
-								{#if page}
-									<div class="" style="height: calc(100vh - 120px); overflow-y: auto;" in:fade>
-										{#if selectedTab === 'editor'}
-											{#if $sectionToPreview}
-												<SitePreview
-													class="p-4"
-													isNoVars
-													isEmbed
-													noStickyHeader={true}
-													isNoBadge={true}
-													isEdit
-													isCloneable
-													page={{
-														name: page.name,
-														logo: page.logo,
-														theme: page.theme,
-														sections: [$sectionToPreview]
-													}}
-												/>
-											{:else}
-												<SitePreview
-													class="p-4"
-													isNoVars
-													isEmbed
-													noStickyHeader={true}
-													isNoBadge={true}
-													isEdit
-													isCloneable
-													bind:page
-												/>
-											{/if}
-										{:else if selectedTab === 'database'}
-											<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
-										{:else if selectedTab === 'analytics'}
-											<AnalyticsTab bind:page bind:customer={selectedCustomer} />
-										{:else if selectedTab === 'messaging'}
-											<MessagingTab
-												bind:page
-												bind:trigger={selectedTrigger}
-												bind:chatRoom={selectedChatRoom}
-											/>
-										{:else if selectedTab === 'audience'}
-											<AudienceTab bind:page bind:selectedSubmission />
-										{:else if selectedTab === 'blog'}
-											<BlogTab bind:page bind:setPageAndDraft />
-										{:else if selectedTab === 'growth'}
-											<GrowthTab bind:page bind:selectedGrowthTab />
-										{:else if selectedTab === 'newsletter'}
-											<NewsletterTab bind:page />
-										{/if}
-									</div>
-								{/if}
-							{/key}
-						{/if}
-
-						{#if page._id && !$sectionToEdit}
-							<div class="hidden sm:block">
-								<MomentumWidget bind:page />
-							</div>
-						{/if}
-					</div>
-				{:else}
-					<div
-						class="w-full h-screen sm:ml-[400px] self-stretch flex-col flex items-center justify-center"
-						in:slide
-					>
-						<svg
-							width="190"
-							height="114"
-							viewBox="0 0 190 114"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
+				<div
+					class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {selectedTab ===
+					'editor'
+						? 'p-8'
+						: 'p-0'} bg-[#e5e5e5] overflow-hidden"
+					class:hidden={page.slug === '_slug'}
+					style="height: calc(100vh - 60px);"
+					in:fade={{ delay: 150 }}
+				>
+					{#if !page.name}
+						<div
+							class="absolute left-0 top-0 w-full h-full self-stretch flex-col flex items-center justify-center"
+							in:slide
 						>
-							<rect width="190" height="114" rx="7" fill="#F5F5F5" />
-							<path
-								d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
-								stroke="#828282"
-								stroke-width="3"
-								stroke-linecap="round"
-							/>
-							<path
-								d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
-								stroke="#828282"
-								stroke-width="3"
-								stroke-linecap="round"
-							/>
-							<line
-								x1="89.5"
-								y1="84.5"
-								x2="100.5"
-								y2="84.5"
-								stroke="#828282"
-								stroke-width="3"
-								stroke-linecap="round"
-							/>
-						</svg>
+							<svg
+								width="190"
+								height="114"
+								viewBox="0 0 190 114"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<rect width="190" height="114" rx="7" fill="#F5F5F5" />
+								<path
+									d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
+									stroke="#828282"
+									stroke-width="3"
+									stroke-linecap="round"
+								/>
+								<path
+									d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
+									stroke="#828282"
+									stroke-width="3"
+									stroke-linecap="round"
+								/>
+								<line
+									x1="89.5"
+									y1="84.5"
+									x2="100.5"
+									y2="84.5"
+									stroke="#828282"
+									stroke-width="3"
+									stroke-linecap="round"
+								/>
+							</svg>
 
-						<div class="text-[#828282] mt-4">Your design will appear here</div>
-					</div>
-				{/if}
+							<div class="text-[#828282] mt-4">Your design will appear here</div>
+						</div>
+					{/if}
+
+					{#if page}
+						{#key page._id}
+							{#if page}
+								<div class="" style="height: calc(100vh - 120px); overflow-y: auto;" in:fade>
+									{#if selectedTab === 'editor'}
+										{#if $sectionToPreview}
+											<SitePreview
+												class="p-4"
+												isNoVars
+												isEmbed
+												noStickyHeader={true}
+												isNoBadge={true}
+												isEdit
+												isCloneable
+												page={{
+													name: page.name,
+													logo: page.logo,
+													theme: page.theme,
+													sections: [$sectionToPreview]
+												}}
+											/>
+										{:else}
+											<SitePreview
+												class="p-4"
+												isNoVars
+												isEmbed
+												noStickyHeader={true}
+												isNoBadge={true}
+												isEdit
+												isCloneable
+												bind:page
+											/>
+										{/if}
+									{:else if selectedTab === 'database'}
+										<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
+									{:else if selectedTab === 'analytics'}
+										<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+									{:else if selectedTab === 'messaging'}
+										<MessagingTab
+											bind:page
+											bind:trigger={selectedTrigger}
+											bind:chatRoom={selectedChatRoom}
+										/>
+									{:else if selectedTab === 'audience'}
+										<AudienceTab bind:page bind:selectedSubmission />
+									{:else if selectedTab === 'blog'}
+										<BlogTab bind:page bind:setPageAndDraft />
+									{:else if selectedTab === 'growth'}
+										<GrowthTab bind:page bind:selectedGrowthTab />
+									{:else if selectedTab === 'newsletter'}
+										<NewsletterTab bind:page />
+									{/if}
+								</div>
+							{/if}
+						{/key}
+					{/if}
+
+					{#if page._id && !$sectionToEdit}
+						<div class="hidden sm:block">
+							<MomentumWidget bind:page />
+						</div>
+					{/if}
+				</div>
+
 				<!-- END PREVIEW -->
 			</div>
 		</div>
