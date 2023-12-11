@@ -4,7 +4,13 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 </script>
 
-<div class="_section cursor-pointer">
+<div
+	class="_section cursor-pointer"
+	on:click={() => {
+		selectedGrowthTab = 'dashboard';
+	}}
+	class:_selected={selectedGrowthTab === 'dashboard'}
+>
 	<div class="flex">
 		<div
 			class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full bg-green-300 shadow-md shadow-green-300/50 mr-4"
@@ -26,7 +32,13 @@
 	</div>
 </div>
 
-<div class="_section cursor-pointer">
+<div
+	class="_section cursor-pointer"
+	class:_selected={selectedGrowthTab === 'create'}
+	on:click={() => {
+		selectedGrowthTab = 'create';
+	}}
+>
 	<div class="flex">
 		<div
 			class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full bg-yellow-300 shadow-md  shadow-yellow-300/50 mr-4"
@@ -47,7 +59,13 @@
 	</div>
 </div>
 
-<div class="_section cursor-pointer">
+<div
+	class="_section cursor-pointer"
+	class:_selected={selectedGrowthTab === 'boost'}
+	on:click={() => {
+		selectedGrowthTab = 'boost';
+	}}
+>
 	<div class="flex">
 		<div
 			class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full bg-purple-300 shadow-md shadow-purple-300/50 mr-4"

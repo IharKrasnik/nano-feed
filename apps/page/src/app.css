@@ -18,6 +18,10 @@
 	border: 1px #111 solid;
 }
 
+._section._selected {
+	border: 1px #111 solid;
+}
+
 ._section._highlighted,
 ._section-item._highlighted {
 	border: 1px var(--accent-color) solid !important;
