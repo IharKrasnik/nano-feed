@@ -156,32 +156,50 @@
 				return;
 			}
 
-			let endpointName = isDev
-				? `pages/${page._id}/conversions`
-				: `pages/${page._id}/conversions-optimised`;
+			let [parentPageStats, pageStats] = await Promise.all([
+				page.parentPage
+					? (async function () {
+							let parentPageStats = await get(
+								isDev
+									? `pages/${page.parentPage._id}/conversions`
+									: `pages/${page.parentPage._id}/conversions-optimised`,
+								{},
+								{
+									isNoNotifications: true
+								}
+							);
 
-			let stats = await get(
-				endpointName,
-				{
-					...(page.parentPage ? { parentPageId: page.parentPage._id } : {})
-				},
-				{
-					isNoNotifications: true
-				}
-			);
+							page.parentPage.totalUniqueViews = page.parentPage.totalUniqueViews =
+								parentPageStats.totalVisitorsCount;
+							page.parentPage.totalUniqueClicksCount = parentPageStats.uniqueClicksCount;
+							page.parentPage.totalSignupsCount = parentPageStats.totalSubmissionsCount;
+					  })()
+					: null,
+				(async function () {
+					let stats = await get(
+						isDev ? `pages/${page._id}/conversions` : `pages/${page._id}/conversions-optimised`,
+						{
+							...(page.parentPage ? { parentPageId: page.parentPage._id } : {})
+						},
+						{
+							isNoNotifications: true
+						}
+					);
 
-			page.totalUniqueViews = stats.totalVisitorsCount;
-			page.totalUniqueClicksCount = stats.uniqueClicksCount;
-			page.totalSignupsCount = stats.totalSubmissionsCount;
+					page.totalUniqueViews = page.parentPage.totalUniqueViews = stats.totalVisitorsCount;
+					page.totalUniqueClicksCount = stats.uniqueClicksCount;
+					page.totalSignupsCount = stats.totalSubmissionsCount;
 
-			conversions = {
-				clicks: page.totalUniqueViews
-					? ((page.totalUniqueClicksCount / page.totalUniqueViews) * 100).toFixed(2)
-					: 0,
-				forms: page.totalUniqueViews
-					? ((page.totalSignupsCount / page.totalUniqueViews) * 100).toFixed(2)
-					: 0
-			};
+					conversions = {
+						clicks: page.totalUniqueViews
+							? ((page.totalUniqueClicksCount / page.totalUniqueViews) * 100).toFixed(2)
+							: 0,
+						forms: page.totalUniqueViews
+							? ((page.totalSignupsCount / page.totalUniqueViews) * 100).toFixed(2)
+							: 0
+					};
+				})()
+			]);
 		} catch (err) {}
 	};
 
@@ -978,7 +996,7 @@
 					{#if $allPages}
 						<div class="flex items-center">
 							<select
-								class="ml-8 w-full"
+								class="ml-8 w-full max-w-[200px]"
 								bind:value={pageSlug}
 								on:change={(evt) => {
 									let slug = evt.target.value;
@@ -1802,7 +1820,7 @@
 						? 'p-8'
 						: 'p-0'} bg-[#e5e5e5] overflow-hidden"
 					class:hidden={page.slug === '_slug'}
-					style="height: calc(100vh - 60px);"
+					style={selectedTab === 'editor' ? 'height: calc(100vh - 60px);' : ''}
 					in:fade={{ delay: 150 }}
 				>
 					{#if !page.name}
@@ -1848,7 +1866,13 @@
 					{#if page}
 						{#key page._id}
 							{#if page}
-								<div class="" style="height: calc(100vh - 120px); overflow-y: auto;" in:fade>
+								<div
+									class=""
+									style={selectedTab === 'editor'
+										? 'height: calc(100vh - 120px); overflow-y: auto;}'
+										: ''}
+									in:fade
+								>
 									{#if selectedTab === 'editor'}
 										{#if $sectionToPreview}
 											<SitePreview
