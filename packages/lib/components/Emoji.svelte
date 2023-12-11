@@ -5,7 +5,18 @@
 	export let emoji;
 	export let width = 25;
 	export let height = width;
-	export let color = '#111';
+
+	export let color = '#333';
+
+	export let theme;
+
+	if (theme) {
+		if (theme === 'dark') {
+			color = '#f6f5f4';
+		} else {
+			color = '#333333';
+		}
+	}
 
 	let stylesStr = `--emoji-width: ${width}px; --emoji-height: ${height}px;`;
 </script>
