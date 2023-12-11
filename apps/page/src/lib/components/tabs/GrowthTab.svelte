@@ -155,14 +155,14 @@
 						.map((plan) => {
 							plan.onUrlClick = async () => {
 								let { url } = await get('stripe/subscribe', {
-									pageId: page._id,
+									pageId: page.parentPage?._id || page._id,
 									plan: plan.title.toLowerCase()
 								});
 								goto(url);
 							};
 
 							let subscriptionPlan = page.subscription?.plan;
-							debugger;
+
 							if (subscriptionPlan) {
 								if (subscriptionPlan === 'launch' && plan.title === 'Launch') {
 									plan.interactiveRenderType = null;
