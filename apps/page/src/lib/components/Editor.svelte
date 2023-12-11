@@ -876,7 +876,7 @@
 							selectedTab = 'blog';
 						}}
 					>
-						<FeatherIcon class="mr-2 _header-icon" size="20" name="database" color="#f6f5f4" />
+						<FeatherIcon class="mr-2 _header-icon" size="20" name="edit-3" color="#f6f5f4" />
 						Blog
 					</div>
 
@@ -889,7 +889,7 @@
 						}}
 					>
 						<FeatherIcon class="mr-2 _header-icon" size="20" name="database" color="#f6f5f4" />
-						CMS
+						Data
 					</div>
 
 					<div
