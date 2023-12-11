@@ -789,7 +789,9 @@
 
 {#if !$sveltePage.data.pageSlug}
 	{#if !$currentUser || $allPages}
-		<div class="fixed z-10 w-full h-[60px] flex items-center justify-between px-6 border-b ">
+		<div
+			class="fixed z-10 w-full h-[60px] bg-white flex items-center justify-between px-6 border-b "
+		>
 			{#if isInsertPopupShown}
 				<Insert bind:isInsertPopupShown bind:page />
 			{/if}

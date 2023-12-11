@@ -80,7 +80,7 @@
 			>
 		</div>
 		<div>
-			<div class="font-bold mb-2">Boost</div>
+			<div class="font-bold mb-2">Boost Your Product</div>
 			<div>Hire an expert to help you grow your product</div>
 		</div>
 	</div>
