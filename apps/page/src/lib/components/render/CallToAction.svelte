@@ -26,7 +26,16 @@
 				...section.theme,
 				isTitleLeft: false
 			},
-			isShown: true
+			isShown: true,
+			interactiveRenderType:
+				page.activeHero?.interactiveRenderType || (page.renderType === 'article' ? 'email' : ''),
+
+			callToActionText:
+				page.renderType === 'article' && !page.activeHero.interactiveRenderType ? 'Subscribe' : '',
+			ctaExplainer:
+				page.renderType === 'article' && !page.activeHero.interactiveRenderType
+					? 'Get blog updates to your email'
+					: ''
 		}}
 	/>
 	<!-- {#if section.theme?.style === 'sticky'}

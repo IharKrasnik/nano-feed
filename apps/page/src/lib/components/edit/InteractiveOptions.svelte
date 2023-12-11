@@ -13,6 +13,7 @@
 	export let section;
 
 	export let isWithButton = true;
+	export let options = [];
 
 	export let placeholder = 'Insert URL';
 	export let isShown = !isWithButton;
@@ -85,7 +86,11 @@
 				}
 			}}
 		>
-			{#if sectionItem.isActionSuccessSection}
+			{#if options?.length}
+				{#each options as option}
+					<option value={option.value}>{option.text}</option>
+				{/each}
+			{:else if sectionItem.isActionSuccessSection}
 				<option value="">No interaction</option>
 				<option value="link">Click 1 Link</option>
 				<option value="links">Click Few Links</option>
@@ -107,11 +112,6 @@
 				<option value="wave_analytics">See Public Web Analytics</option>
 			{/if}
 		</select>
-
-		{#if !sectionItem.interactiveRenderType}
-			<div class="text-sm mb-2 mt-4">Item URL</div>
-			<input class="w-full" type="url" bind:value={sectionItem.url} />
-		{/if}
 
 		{#if section?.renderType === 'form' && ['text', 'textarea', 'email'].includes(sectionItem.interactiveRenderType)}
 			<div class="my-2">
@@ -188,15 +188,15 @@
 							<button on:click={() => removeAnswerFromItem(sectionItem, answer)}>🗑</button>
 						</div>
 					{/each}
-					{#if sectionItem.interactiveAnswers.length === 3}
-						<div class="text-sm">You can add up to 3 answers</div>
-					{:else}
-						<button class="_small _secondary w-full" on:click={() => addAnswer(sectionItem)}
-							>Add another interactive answer</button
-						>
-					{/if}
 				{:else if sectionItem.interactiveRenderType === 'short_answer'}
 					<div class="text-sm mt-4">User will see Input</div>
+				{/if}
+				{#if sectionItem.interactiveAnswers?.length === 3}
+					<div class="text-sm">You can add up to 3 answers</div>
+				{:else}
+					<button class="_small _secondary w-full mt-4" on:click={() => addAnswer(sectionItem)}
+						>Add interactive answer</button
+					>
 				{/if}
 			</div>
 		{/if}

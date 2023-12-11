@@ -195,7 +195,7 @@
 	</div>
 {:else}
 	<div
-		class="absolute right-4 top-0 p-4 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
+		class="absolute right-4 top-4 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
 		title="Remove Item"
 		on:click={onRemove}
 	>
@@ -273,7 +273,7 @@
 	</div>
 
 	{#if true}
-		{#if section.renderType !== 'pricing' && section.renderType !== 'embedCode'}
+		{#if !section.renderType || section.renderType === 'grid'}
 			<div class="_section">
 				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
 
@@ -521,7 +521,7 @@
 			{/each}
 
 			<a class="w-full p-4 flex justify-center cursor-pointer text-[#8B786D]" on:click={addNewItem}
-				>Add Item</a
+				>Add {section.renderType === 'article' ? 'Subparagraph' : 'Item'}</a
 			>
 
 			<!-- <div class="flex items-center mt-2 text-[14px]">

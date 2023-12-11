@@ -1118,7 +1118,7 @@
 
 						{#if $sectionToEdit}
 							<div
-								class="bg-white p-4 pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll sm:w-[402px]"
+								class="bg-white p-4 pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll sm:w-[386px]"
 							>
 								<div
 									class="flex items-center cursor-pointer text-[#8B786D] mb-4"
@@ -1433,6 +1433,23 @@
 								{/if}
 
 								<div>
+									{#if page._id && page.renderType === 'article'}
+										<div class="mt-4">
+											<div class="_section">
+												<EditInteractiveOptions
+													class=""
+													options={[
+														{ value: '', text: 'No interaction' },
+														{ value: 'multiple_choice', text: 'Reactions — multiple choice' }
+													]}
+													section={page}
+													sectionItem={page}
+													isWithButton={false}
+												/>
+											</div>
+										</div>
+									{/if}
+
 									{#if page._id}
 										{#each page.heros as hero}
 											<EditHero
@@ -1452,39 +1469,6 @@
 										{/if}
 									{/if}
 
-									{#if page._id && page.renderType === 'article'}
-										<!-- <div class="font-bold mr-2 py-4 my-4">🕹 Audience Interacton</div>
-
-										{#each page.interactiveAnswers as answer}
-											<div class="flex justify-between">
-												<EmojiPicker
-													isNoCustom
-													class="w-full p-2 bg-[#fafafa] my-2 text-center"
-													bind:icon={answer.emoji}
-												/>
-
-												<button on:click={() => removeAnswerFromItem(sectionItem, answer)}>🗑</button
-												>
-											</div>
-										{/each}
-										{#if page.interactiveAnswers.length === 3}
-											<div class="text-sm">You can add up to 3 answers</div>
-										{:else}
-											<button
-												class="_small _secondary w-full"
-												on:click={() => addAnswer(sectionItem)}
-												>Add another interactive answer</button
-											>
-										{/if} -->
-										<div class="_section">
-											<EditInteractiveOptions
-												class=" mt-4"
-												section={page}
-												sectionItem={page}
-												isWithButton={false}
-											/>
-										</div>
-									{/if}
 									<!-- 
 									{#if page?._id}
 										<div class="opacity-70 hover:opacity-100 my-4">
@@ -1504,7 +1488,9 @@
 											class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
 										>
 											<div class="flex items-center">
-												<div class="text-lg font-bold  _editor-title">Sections</div>
+												<div class="text-lg font-bold  _editor-title">
+													{page.renderType === 'article' ? 'Paragraphs' : 'Sections'}
+												</div>
 
 												{#if page.sections?.length}
 													<div class="ml-4 number-tag">
@@ -1561,8 +1547,12 @@
 										<button
 											class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
 											on:click={() => {
-												isInsertPopupShown = true;
-											}}>Add Section</button
+												if (page.renderType === 'article') {
+													addNewSection();
+												} else {
+													isInsertPopupShown = true;
+												}
+											}}>Add {page.renderType === 'article' ? 'Paragraph' : 'Section'}</button
 										>
 										<!-- <div class="text-sm mb-2">or use templates</div> -->
 										<!-- <div class="flex flex-wrap gap-4 p-4 bg-[#fafafa] _section rounded"> -->
