@@ -177,6 +177,8 @@
 								{#if section.streamSettings?.limit}
 									limit {section.streamSettings?.limit}{/if})
 							{/if}
+						{:else if section.collectionType === 'articles'}
+							📑 Articles
 						{/if}
 					{:else if section.renderType === 'carousel'}
 						🎠 Media Carousel
@@ -278,14 +280,15 @@
 				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
 
 				<div class="w-full flex flex-col gap-4 mb-4 mt-2">
-					{#if pageStreams?.length}
-						<select class="w-full" bind:value={section.collectionType}>
-							<option value="">No</option>
-							<option value="articles">Blog Articles</option>
+					<select class="w-full" bind:value={section.collectionType}>
+						<option value="">No</option>
+						<option value="articles">Blog Articles</option>
+						{#if pageStreams?.length}
 							<option value="feed">Database</option>
 							<option value="global_feed">Global Database</option>
-						</select>
-
+						{/if}
+					</select>
+					{#if pageStreams?.length}
 						{#if section.collectionType === 'feed' || section.collectionType === 'global_feed'}
 							{#if section.collectionType === 'feed'}
 								<select bind:value={section.streamSlug}>
@@ -360,14 +363,14 @@
 										});
 									}}>💫 refresh</Button
 								>
-							{:else}
+							{:else if section.collectionType !== 'articles'}
 								<input placeholder="databaseName" class="w-full" bind:value={newStreamSlug} />
 								<Button class="shrink-0 _small _secondary" onClick={createStream}
 									>Create Database</Button
 								>
 							{/if}
 						{/if}
-					{:else}
+					{:else if section.collectionType !== 'articles'}
 						<input placeholder="databaseName" class="w-full" bind:value={section.streamSlug} />
 						<Button class="shrink-0 _small _secondary" onClick={createStream}
 							>Create Database</Button

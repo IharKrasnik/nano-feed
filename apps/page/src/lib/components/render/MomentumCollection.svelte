@@ -49,11 +49,11 @@
 			});
 
 			databaseSection.items = articles.results.map(
-				({ title, subtitle, demoUrl, url, slug, tagsStr }) => {
+				({ heros, title, subtitle, demoUrl, url, slug, tagsStr }) => {
 					return {
-						title,
-						description: subtitle,
-						imageUrl: demoUrl,
+						title: heros[0]?.title || '',
+						description: heros[0]?.subtitle || '',
+						imageUrl: heros[0]?.demoUrl || null,
 						url: `/blog/post/${slug}`,
 						tagsStr
 					};

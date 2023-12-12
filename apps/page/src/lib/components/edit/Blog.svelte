@@ -98,14 +98,23 @@
 					theme: { isTitleLeft: true }
 				}
 			],
-
+			sections: [
+				{
+					id: uuidv4(),
+					collectionType: 'articles',
+					title: 'Latest articles',
+					subtitle: '',
+					theme: {},
+					columns: 1,
+					items: []
+				}
+			],
 			renderType: 'blog',
 			parentPage: page.parentPage || page
 		});
 
 		$subPages = [...$subPages, blogPage];
 	};
-	debugger;
 
 	getBlogPosts();
 </script>

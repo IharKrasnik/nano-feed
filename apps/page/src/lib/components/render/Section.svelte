@@ -303,7 +303,7 @@
 			? `background-color: ${section.theme?.backgroundColor};`
 			: ''}
 	>
-		{#if isCloneable}
+		<!-- {#if isCloneable}
 			<div
 				class="absolute z-20 right-4 top-4 _bg-opposite p-2 rounded opacity-50 hover:opacity-100 cursor-pointer"
 				on:click={() => {
@@ -321,7 +321,7 @@
 					/> Copy {section._isCtaFooter ? 'Call-To-Action' : 'Section'}
 				</div>
 			</div>
-		{/if}
+		{/if} -->
 
 		{#if section.bgImageUrl}
 			<img
