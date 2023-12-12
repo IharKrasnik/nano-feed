@@ -1875,6 +1875,13 @@
 										: ''}
 									in:fade
 								>
+									<div class="absolute text-xs top-1 left-8 flex justify-center w-full opacity-70 ">
+										<div class="p-1 px-2">
+											<a target="_blank" href={getPageUrl()}
+												>{getPageUrl().replace('https://', '').replace('www.', '')}</a
+											>
+										</div>
+									</div>
 									{#if selectedTab === 'editor'}
 										{#if $sectionToPreview}
 											<SitePreview
