@@ -602,7 +602,7 @@
 		page.interactiveRenderType = 'multiple_choice';
 	}
 
-	let getPageUrl = () => {
+	let getPageUrl = ({ page }) => {
 		if ((page.parentPage?.domains || page.domains || []).filter((d) => d.isConfigured).length) {
 			return `https://${
 				_.last((page.parentPage?.domains || page.domains || []).filter((d) => d.isConfigured)).url
@@ -1025,8 +1025,7 @@
 								class="ml-4 shrink-0 _secondary _small opacity-70 hover:opacity-100"
 								style="padding: 4px 12px;"
 								on:click={() => {
-									page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-									pageSlug = '_new';
+									setPageAndDraft({ ...defaultPage });
 									selectedTab = 'editor';
 								}}
 							>
@@ -1875,14 +1874,19 @@
 										: ''}
 									in:fade
 								>
-									<div class="absolute text-xs top-1 left-8 flex justify-center w-full opacity-70 ">
-										<div class="p-1 px-2">
-											<a target="_blank" href={getPageUrl()}
-												>{getPageUrl().replace('https://', '').replace('www.', '')}</a
-											>
-										</div>
-									</div>
 									{#if selectedTab === 'editor'}
+										<div
+											class="absolute text-xs top-1 left-8 flex justify-center w-full opacity-70 "
+										>
+											{#if page._id}
+												<div class="p-1 px-2">
+													<a target="_blank" href={getPageUrl({ page })}
+														>{getPageUrl({ page }).replace('https://', '').replace('www.', '')}</a
+													>
+												</div>
+											{/if}
+										</div>
+
 										{#if $sectionToPreview}
 											<SitePreview
 												class="p-4"
