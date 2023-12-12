@@ -233,7 +233,7 @@
 {/if}
 
 {#if sectionItem}
-	<div class="{clazz} flex flex-wrap ">
+	<div class="{clazz} flex flex-wrap __d">
 		{#if sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice'}
 			{#each sectionItem.interactiveAnswers as answer}
 				<div

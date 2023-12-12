@@ -251,9 +251,7 @@
 						{#if hero.interactiveRenderType}
 							<div in:fly={{ y: 25, delay: 500, duration: 900 }}>
 								<RenderInteractiveOptions
-									class={hero.theme.isLeft || !hero.theme?.isVertical
-										? ''
-										: 'max-w-[600px] mx-auto'}
+									class={hero.theme.isLeft ? '' : 'max-w-[600px] mx-auto justify-center'}
 									size={hero.theme.isHugeTitle ? 'huge' : 'large'}
 									bind:page
 									bind:sectionItem={hero}
