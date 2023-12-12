@@ -31,11 +31,13 @@
 				page.activeHero?.interactiveRenderType || (page.renderType === 'article' ? 'email' : ''),
 
 			callToActionText:
-				page.renderType === 'article' && !page.activeHero.interactiveRenderType ? 'Subscribe' : '',
+				page.renderType === 'article' && !page.activeHero.interactiveRenderType
+					? 'Subscribe'
+					: page.activeHero?.callToActionText || '',
 			ctaExplainer:
 				page.renderType === 'article' && !page.activeHero.interactiveRenderType
 					? 'Get blog updates to your email'
-					: ''
+					: page.activeHero?.ctaExplainer || ''
 		}}
 	/>
 	<!-- {#if section.theme?.style === 'sticky'}

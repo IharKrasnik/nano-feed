@@ -220,16 +220,7 @@
 		{/if}
 
 		{#if ['email', 'link', 'links'].includes(sectionItem.interactiveRenderType) && section?.renderType !== 'form'}
-			<div class="flex w-full justify-between items-center  mb-2 mt-4">
-				<div class="font-normal text-sm opacity-70">Button text →</div>
-			</div>
-			<input
-				class="mb-4 w-full"
-				bind:value={sectionItem.callToActionText}
-				placeholder="Join Waitlist"
-			/>
-
-			<div class="flex items-center font-normal text-sm mb-2 w-full">
+			<div class="flex items-center font-normal text-sm mb-2 mt-4 w-full">
 				<div class="shrink-0  opacity-70">Explainer:</div>
 
 				<div
@@ -240,14 +231,16 @@
 				/>
 			</div>
 
-			<div class="font-normal opacity-70 text-sm mb-2 mt-2">Once submitted...</div>
+			{#if sectionItem.interactiveRenderType === 'email'}
+				<div class="font-normal opacity-70 text-sm mb-2 mt-2">Once submitted...</div>
 
-			<div class="w-full mb-2">
-				<select bind:value={sectionItem.actionType} class="w-full">
-					<option value="success">Show thank you message</option>
-					<option value="url">Redirect to URL</option>
-				</select>
-			</div>
+				<div class="w-full mb-2">
+					<select bind:value={sectionItem.actionType} class="w-full">
+						<option value="success">Show thank you message</option>
+						<option value="url">Redirect to URL</option>
+					</select>
+				</div>
+			{/if}
 
 			{#if sectionItem.actionType === 'url'}
 				<div class="font-normal text-sm opacity-70 mt-4 mb-2">URL to open once email submitted</div>

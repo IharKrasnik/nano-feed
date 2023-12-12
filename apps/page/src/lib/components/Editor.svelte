@@ -1292,22 +1292,20 @@
 											<ColorPicker bind:page />
 										</div>
 
-										{#if page.totalUniqueViews > 1}
-											<div class="flex">
-												<input
-													class="mr-2"
-													type="checkbox"
-													bind:checked={isShowHeatmap}
-													on:change={() => {
-														if (isShowHeatmap) {
-															refreshHeatmap();
-														} else {
-															$heatmap = null;
-														}
-													}}
-												/> Heatmap 🔥
-											</div>
-										{/if}
+										<div class="flex">
+											<input
+												class="mr-2"
+												type="checkbox"
+												bind:checked={isShowHeatmap}
+												on:change={() => {
+													if (isShowHeatmap) {
+														refreshHeatmap();
+													} else {
+														$heatmap = null;
+													}
+												}}
+											/> Heatmap 🔥
+										</div>
 									</div>
 								</div>
 							{/if}
