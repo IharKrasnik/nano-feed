@@ -20,6 +20,8 @@
 
 	let articles = [];
 
+	let titleEl;
+
 	let newArticleTitle = '';
 
 	let newArticleTitlePlaceholder = _.shuffle([
@@ -160,11 +162,21 @@
 			<input
 				class="mb-4 w-full"
 				type="text"
+				bind:this={titleEl}
 				placeholder={newArticleTitlePlaceholder}
 				bind:value={newArticleTitle}
 			/>
 
-			<Button class="mb-2 _primary _small\" onClick={createNewArticle}>Create article</Button>
+			<Button
+				class="mb-2 _primary _small"
+				onClick={() => {
+					if (newArticleTitle) {
+						createNewArticle();
+					} else {
+						titleEl.focus();
+					}
+				}}>Create article</Button
+			>
 			<div class="text-sm mt-2">Share your knowledge and grow!</div>
 		</div>
 
