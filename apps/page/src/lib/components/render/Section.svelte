@@ -352,7 +352,7 @@
 			/>
 		{/if}
 
-		{#if section.title && (section.items?.length || section.collectionType)}
+		{#if section.title && (section.items?.length || section.streamSlug)}
 			<div
 				class="mx-auto h-px max-w-[500px] opacity-[15%] w-full"
 				style="background:linear-gradient(to right, rgba(0,0,0,0), {page.theme
@@ -386,7 +386,7 @@
 				: ''} {section.bottomImageUrl ? 'padding-bottom: 0 !important;' : ''} {style || ''} "
 		>
 			{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
-				{#if section.renderType !== 'article' && section.title && (section.items?.length || section.collectionType)}
+				{#if section.renderType !== 'article' && section.title && (section.items?.length || section.streamSlug)}
 					<div
 						class="absolute inset-x-0 top-20 mx-auto h-32 w-full sm:w-[650px] transform-gpu opacity-[15%] blur-[130px] bg-gradient-to-r _from-text-color _to-accent"
 					/>
@@ -512,7 +512,7 @@
 				<RenderFAQ bind:section bind:page bind:isEdit />
 			{:else if section.renderType === 'testimonials'}
 				<RenderTestimonials bind:page bind:section />
-			{:else if section.collectionType}
+			{:else if section.streamSlug}
 				<RenderMomentumCollection bind:section bind:page bind:themeStyles bind:isEdit />
 			{:else if section.type === 'momentum_feed'}
 				<RenderMomentumFeed bind:page bind:themeStyles />
@@ -756,7 +756,7 @@
 							<div class="flex justify-between">
 								<div
 									class="_section-item w-full relative items-center {section.renderType ===
-										'article' || section.collectionType === 'articles'
+										'article' || section.streamSlug?.includes('-blog')
 										? '_article mb-8'
 										: 'mb-4 sm:mb-8'}
 							{section.renderType === 'changelog'

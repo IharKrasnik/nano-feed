@@ -10,11 +10,14 @@
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 
 	import { v4 as uuidv4 } from 'uuid';
 
 	export let page;
 	export let setPageAndDraft;
+
+	let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
 
 	let isBlogPostsLoading = true;
 
@@ -46,7 +49,7 @@
 			isDraft: true,
 			renderType: 'article',
 			dirName: 'blog',
-			parentPage: { _id: page.parentPage?._id || page._id },
+			parentPage: parentPage._id,
 			theme: {}
 		});
 
@@ -56,7 +59,7 @@
 	let getBlogPosts = async () => {
 		isBlogPostsLoading = true;
 
-		let data = await get(`pages/${page.parentPage?._id || page?._id}/subpages`, {
+		let data = await get(`pages/${parentPage._id}/subpages`, {
 			renderType: 'article'
 		});
 
@@ -64,28 +67,19 @@
 		isBlogPostsLoading = false;
 	};
 
-	let deleteArticle = async (article) => {
-		if (
-			confirm(`The article ${article.title || article.name} will be deleted forever. Continue?`)
-		) {
-			await del(`pages/${article._id}`);
-		}
-
-		articles = articles.filter((a) => a._id !== article._id);
-
-		delete $pageDraft[article._id];
-		delete $pageDraft[article.slug];
-
-		$pageDraft = {
-			...$pageDraft
-		};
-
-		if (page._id === article._id) {
-			setPageAndDraft({ ...$allPages[0] });
-		}
-	};
-
 	let enableBlog = async () => {
+		if (!parentPage.streams?.blog) {
+			const { stream } = await put(`pages/${parentPage._id}/embed-stream`, {
+				title: 'Blog',
+				isBlogStream: true
+			});
+
+			$childStreams = [...$childStreams, stream];
+
+			parentPage.streams = parentPage.streams || {};
+			parentPage.streams.blog = stream;
+		}
+
 		let blogPage = await post('pages', {
 			theme: {},
 			name: 'Blog',
@@ -103,7 +97,7 @@
 			sections: [
 				{
 					id: uuidv4(),
-					collectionType: 'articles',
+					streamSlug: parentPage.streams.blog.slug,
 					title: 'Latest articles',
 					subtitle: '',
 					theme: {},
@@ -112,7 +106,7 @@
 				}
 			],
 			renderType: 'blog',
-			parentPage: page.parentPage || page
+			parentPage: parentPage
 		});
 
 		$subPages = [...$subPages, blogPage];
@@ -205,14 +199,14 @@
 									{article.heros[0]?.subtitle || ''}
 								</div>
 
-								{#if $pageDraft[article._id]?.isDirty}
+								<!-- {#if $pageDraft[article._id]?.isDirty}
 									<div class="flex items-center font-semibold text-sm">
 										Edited
 										<div class="w-[10px] h-full flex items-center ml-2">
 											<div class=" w-[10px] h-[10px] bg-orange-300 rounded-full" />
 										</div>
 									</div>
-								{/if}
+								{/if} -->
 							</div>
 						</div>
 						<div class="opacity-80 text-sm mt-2">

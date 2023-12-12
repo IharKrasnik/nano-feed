@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import { get, post, put, del } from 'lib/api';
 	import { fade } from 'svelte/transition';
 	import FileInput from 'lib/components/FileInput.svelte';
@@ -9,12 +10,16 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import csv from 'csvtojson';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
+	import allPages from '$lib/stores/allPages';
 
 	let posts = [];
 
+	export let selectedTab;
 	export let page;
 	export let selectedStreamSlug;
 	export let selectedCustomer;
+
+	let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
 
 	let activeStream = null;
 
@@ -27,25 +32,32 @@
 	let isLoading = false;
 
 	let loadChildStreams = async () => {
+		if (!parentPage.streams) {
+			return ($childStreams = []);
+		}
+
 		isLoading = true;
 
 		$childStreams = await refreshChildStreams({ page });
 
-		activeStream = localStorage[lastStreamSlug]
-			? $childStreams.find((s) => s.slug === localStorage[lastStreamSlug]) || $childStreams[0]
-			: $childStreams[0];
+		activeStream =
+			selectedStreamSlug || localStorage[lastStreamSlug]
+				? $childStreams.find((s) =>
+						selectedStreamSlug
+							? s.slug === selectedStreamSlug
+							: s.slug === localStorage[lastStreamSlug]
+				  ) || $childStreams[0]
+				: $childStreams[0];
 
 		selectedStreamSlug = activeStream?.slug;
 		localStorage[lastStreamSlug] = selectedStreamSlug;
 
 		isLoading = false;
 
-		selectStream($childStreams[0]);
+		selectStream(activeStream);
 	};
 
-	if (page.parentPage?.streamSlug || page.streamSlug) {
-		loadChildStreams();
-	}
+	loadChildStreams();
 
 	let isStreamEdit = false;
 
@@ -56,33 +68,35 @@
 		localStorage[lastStreamSlug] = selectedStreamSlug;
 	};
 
-	let selectFeedStream = async () => {
-		if (!page.feedStreamSlug) {
-			const { streamSlug, project } = await put(`pages/${page._id}/embed-stream`, {
-				title: 'Feed',
-				isFeedStream: true
-			});
+	let selectBuiltInStream = async ({
+		isFeedStream = false,
+		isChangelogStream = false,
+		isBlogStream = false
+	} = {}) => {
+		let key = 'blog';
 
-			$childStreams = [...$childStreams, project];
-			page.feedStreamSlug = streamSlug;
-			selectStream(project);
-		} else {
-			selectStream($childStreams.find((s) => s.slug === page.feedStreamSlug));
+		if (isFeedStream) {
+			key = 'feed';
+		} else if (isChangelogStream) {
+			key = 'changelog';
 		}
-	};
 
-	let selectChangelogStream = async () => {
-		if (!page.changelogStreamSlug) {
-			const { streamSlug, project } = await put(`pages/${page._id}/embed-stream`, {
-				title: 'Changelog',
-				isChangelogStream: true
+		if (!parentPage.streams || !parentPage.streams[key]) {
+			const { stream } = await put(`pages/${page._id}/embed-stream`, {
+				title: _.capitalize(key),
+				isFeedStream,
+				isChangelogStream,
+				isBlogStream
 			});
 
-			$childStreams = [...$childStreams, project];
-			page.changelogStreamSlug = streamSlug;
-			selectStream(project);
+			$childStreams = [...($childStreams || []), stream];
+
+			parentPage.streams = parentPage.streams || {};
+			parentPage.streams[key] = stream;
+
+			selectStream(stream);
 		} else {
-			selectStream($childStreams.find((s) => s.slug === page.changelogStreamSlug));
+			selectStream($childStreams.find((s) => s._id === parentPage.streams[key]._id));
 		}
 	};
 
@@ -95,12 +109,9 @@
 
 	let createDatabase = async () => {
 		if (newDatabaseName) {
-			const { streamSlug, project: newStream } = await put(
-				`pages/${page.parentPage?._id || page._id}/embed-stream`,
-				{
-					title: newDatabaseName
-				}
-			);
+			const { streamSlug, project: newStream } = await put(`pages/${parentPage._id}/embed-stream`, {
+				title: newDatabaseName
+			});
 
 			$childStreams = [newStream, ...$childStreams];
 			activeStream = newStream;
@@ -172,11 +183,11 @@
 								tagsStr: item.type || item.tags
 							};
 						}),
-						...$feedCache[activeStream.slug].feed
+						...($feedCache[activeStream.slug]?.feed || [])
 					]
 				};
 
-				resolve($feedCache[activeStream.slug].feed);
+				resolve($feedCache[activeStream.slug]?.feed || []);
 			};
 		});
 
@@ -184,7 +195,7 @@
 	};
 
 	let saveAll = async () => {
-		let newItems = $feedCache[activeStream.slug].feed.filter((f) => !f._id);
+		let newItems = $feedCache[activeStream.slug]?.feed?.filter((f) => !f._id) || [];
 
 		let failedCount = 0;
 
@@ -195,7 +206,7 @@
 
 		$feedCache[activeStream.slug].feed = [
 			...createdFeedItems,
-			...$feedCache[activeStream.slug].feed.filter((fi) => fi._id)
+			...($feedCache[activeStream.slug]?.feed?.filter((fi) => fi._id) || [])
 		];
 
 		showSuccessMessage(`Created ${createdFeedItems.length} items. Nice!`);
@@ -204,7 +215,7 @@
 	let searchStr = '';
 
 	let fetchAllMetaTags = async () => {
-		let newItemsWithUrl = $feedCache[activeStream.slug].feed.filter((f) => !f._id && f.url);
+		let newItemsWithUrl = $feedCache[activeStream.slug]?.feed?.filter((f) => !f._id && f.url);
 
 		if (
 			true ||
@@ -272,16 +283,37 @@
 	};
 
 	let addNew = () => {};
+
+	if (!parentPage.streams) {
+		selectBuiltInStream({ isChangelogStream: true });
+	}
+
+	let addItem = ({ title = '', content = '', url = '' } = {}) => {
+		$feedCache[activeStream.slug] = {
+			...$feedCache[activeStream.slug],
+			feed: [
+				{
+					id: uuidv4(),
+					title,
+					content,
+					url: '',
+					attachments: [{ url: '' }],
+					projects: [{ slug: activeStream.slug }]
+				},
+				...($feedCache[activeStream.slug]?.feed || [])
+			]
+		};
+	};
 </script>
 
 <div class="flex w-full justify-between items-center  mb-4">
 	<div class="text-sm font-bold opacity-80">Databases</div>
 	{#if selectedStreamSlug !== '_new'}
 		<button
-			class="_secondary _small opacity-70 hover:opacity-100"
+			class="_secondary _small opacity-50 hover:opacity-100"
 			on:click={() => {
 				selectedStreamSlug = '_new';
-			}}>Create New</button
+			}}>Create New Database</button
 		>
 	{/if}
 </div>
@@ -296,25 +328,36 @@
 				}
 
 				if (selectedStreamSlug.includes('-changelog')) {
-					selectChangelogStream();
+					selectBuiltInStream({ isChangelogStream: true });
 				} else if (selectedStreamSlug.includes('-feed')) {
-					selectFeedStream();
+					selectBuiltInStream({ isFeedStream: true });
+				} else if (selectedStreamSlug.includes('-blog')) {
+					selectBuiltInStream({ isBlogStream: true });
 				} else {
 					selectStream($childStreams.find((s) => s.slug === selectedStreamSlug));
 				}
 			}}
 		>
-			{#each $childStreams.filter((s) => s.slug !== (page?.parentPage?.streamSlug || page.streamSlug) && s.slug !== (page?.parentPage?.feedStreamSlug || page.feedStreamSlug) && s.slug !== (page?.parentPage?.changelogStreamSlug || page.changelogStreamSlug)) as childStream}
+			{#each $childStreams as childStream}
 				<option value={childStream.slug} class="cursor-pointer py-2">
 					{childStream.title}
 				</option>
 			{/each}
-			<option value="{(page.parentPage || page).name.toLowerCase().replace(' ', '-')}-feed"
-				>Content Feed</option
-			>
-			<option value="{(page.parentPage || page).name?.toLowerCase().replace(' ', '-')}-changelog"
-				>Changelog</option
-			>
+
+			{#if !parentPage.streams?.feed}
+				<option value="{parentPage.name.toLowerCase().replace(' ', '-')}-feed">Content Feed</option>
+			{/if}
+
+			{#if !parentPage.streams?.changelog}
+				<option value="{parentPage.name?.toLowerCase().replace(' ', '-')}-changelog"
+					>Changelog</option
+				>
+			{/if}
+
+			{#if !parentPage.streams?.blog}
+				<option value="{parentPage.name.toLowerCase().replace(' ', '-')}-blog">Blog</option>
+			{/if}
+
 			<option value="_new">New Database</option>
 		</select>
 	</div>
@@ -369,6 +412,18 @@
 		</div>
 	</div> -->
 
+	{#if activeStream?.slug?.includes('-blog')}
+		<div class="_section bg-[#fafafa]">
+			<div class="font-bold mb-2">Auto-Sync</div>
+			Blog database is automatically synchronised with your articles.<br />
+			<button
+				class="_secondary _small mt-4"
+				on:click={() => {
+					selectedTab = 'blog';
+				}}>Edit Blog →</button
+			>
+		</div>
+	{/if}
 	{#if activeStream && $feedCache[activeStream.slug]}
 		<div class="flex justify-between items-center mt-8 mb-2">
 			<div class="text-sm font-bold opacity-80">
@@ -376,25 +431,7 @@
 					$feedCache[activeStream.slug]?.feed?.length ||
 					0})
 			</div>
-			<button
-				class="_secondary _small shrink-0"
-				on:click={() => {
-					$feedCache[activeStream.slug] = {
-						...$feedCache[activeStream.slug],
-						feed: [
-							{
-								id: uuidv4(),
-								title: '',
-								content: '',
-								url: '',
-								attachments: [{ url: '' }],
-								projects: [{ slug: activeStream.slug }]
-							},
-							...$feedCache[activeStream.slug].feed
-						]
-					};
-				}}>Add Item</button
-			>
+			<button class="_secondary _small shrink-0" on:click={addItem}>Add Item</button>
 		</div>
 
 		<!-- <div class="flex justify-between mt-4">
@@ -412,7 +449,7 @@
 			</div>
 		{/if}
 
-		{#if $feedCache[activeStream.slug].feed.filter((f) => !f._id).length > 1}
+		{#if $feedCache[activeStream.slug]?.feed?.filter((f) => !f._id).length > 1}
 			<div class="flex my-8">
 				<Button class="_primary _small" onClick={saveAll}>
 					💾 Save {$feedCache[activeStream.slug].feed.filter((f) => !f._id).length} items 💾</Button
@@ -424,7 +461,7 @@
 		{/if}
 
 		<div>
-			{#each $feedCache[activeStream.slug].feed.filter((feedItem) => {
+			{#each $feedCache[activeStream.slug]?.feed?.filter((feedItem) => {
 				if (!searchStr) {
 					return true;
 				}
@@ -450,7 +487,7 @@
 					onUpdated={(updatedFeedItem) => {
 						$feedCache[activeStream.slug] = {
 							...$feedCache[activeStream.slug],
-							feed: $feedCache[activeStream.slug].feed.map((item) => {
+							feed: $feedCache[activeStream.slug]?.feed?.map((item) => {
 								if (item._id === feedItem._id) {
 									return updatedFeedItem;
 								} else {
@@ -462,7 +499,7 @@
 					onRemoved={() => {
 						$feedCache[activeStream.slug] = {
 							...$feedCache[activeStream.slug],
-							feed: $feedCache[activeStream.slug].feed.filter((f) =>
+							feed: $feedCache[activeStream.slug]?.feed?.filter((f) =>
 								feedItem._id ? f._id !== feedItem._id : f.id !== feedItem.id
 							)
 						};

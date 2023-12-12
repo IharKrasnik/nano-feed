@@ -16,7 +16,6 @@ export default (page) => {
 
 			callToActionText: page.callToAction,
 			ctaExplainer: page.ctaExplainer || '',
-			isUrlButton: true,
 
 			url: page.url,
 			actionUrl: page.actionUrl,
@@ -40,7 +39,6 @@ export default (page) => {
 				s.items = s.items.map((i) => {
 					if (i.url) {
 						i.interactiveRenderType = 'link';
-						i.isUrlButton = true;
 					}
 					return i;
 				});

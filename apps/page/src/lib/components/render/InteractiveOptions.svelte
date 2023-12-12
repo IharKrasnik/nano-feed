@@ -385,7 +385,9 @@
 						}
 					}}
 				>
-					{#if sectionItem.isUrlButton}
+					{#if sectionItem.isUrlLink}
+						{sectionItem.callToActionText || 'Learn More →'}
+					{:else}
 						<button
 							class="w-full shadow hover:shadow-lg hover:shadow-white/50 shadow-white/50 flex justify-center items-center {size
 								? `_is${size}`
@@ -400,8 +402,6 @@
 							{/if}
 							{sectionItem.callToActionText || 'Learn More →'}
 						</button>
-					{:else}
-						{sectionItem.callToActionText || 'Learn More →'}
 					{/if}
 				</a>
 
@@ -442,7 +442,7 @@
 						{#if sectionItem.isUrl2Button}
 							<button
 								class="w-full flex items-center justify-center {size ? `_is${size}` : ''}"
-								class:_alternative={sectionItem.isUrlButton}
+								class:_alternative={!sectionItem.isUrlLink}
 							>
 								{#if sectionItem.url2Icon}
 									<Emoji

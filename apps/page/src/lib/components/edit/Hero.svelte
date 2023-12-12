@@ -389,6 +389,7 @@
 			page.activeHero = hero;
 
 			isCollapsed = !isCollapsed;
+			$aboveTheFoldEl.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 		}}
 	>
 		<div class="overflow-x-hidden">

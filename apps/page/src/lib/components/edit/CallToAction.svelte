@@ -51,7 +51,10 @@
 	let isCollapsed = isCollapsedDefault;
 
 	$: if (!page.ctaFooter) {
-		page.ctaFooter = {};
+		page.ctaFooter = {
+			title: '',
+			subtitle: ''
+		};
 	}
 </script>
 

@@ -326,125 +326,127 @@
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						<div
-							class="{isEdit
-								? 'absolute left-0 top-0 mb-[-60px]'
-								: 'fixed top-0 left-0'} _header backdrop-blur-lg _border-b-theme"
-						>
-							<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
-								<div class="flex flex-grow py-4 sm:py-0">
-									<a
-										class="flex items-center shrink-0 _logo"
-										href="/"
-										data-sveltekit-preload-data="hover"
-										on:click={() => {
-											trackClick({
-												pageId: page?._id,
-												sectionId: `${page.parentPage?._id || page._id}_header`,
-												linkId: 'home',
-												url: '/',
-												text: page.parentPage?.name || page.name
-											});
-										}}
-										class:heatmap={$heatmap}
-										data-heatmap-clicks-count={$heatmap
-											? getHeatmapClicksCount({
+						{#if page.name || page.parentPage?._id}
+							<div
+								class="{isEdit
+									? 'absolute left-0 top-0 mb-[-60px]'
+									: 'fixed top-0 left-0'} _header backdrop-blur-lg _border-b-theme"
+							>
+								<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
+									<div class="flex flex-grow py-4 sm:py-0">
+										<a
+											class="flex items-center shrink-0 _logo"
+											href="/"
+											data-sveltekit-preload-data="hover"
+											on:click={() => {
+												trackClick({
+													pageId: page?._id,
 													sectionId: `${page.parentPage?._id || page._id}_header`,
-													linkId: `home`
-											  })
-											: ''}
-									>
-										{#if page?.parentPage?.logo || page?.logo}
-											<Emoji
-												width="25"
-												class="mr-2 rounded"
-												emoji={page.parentPage?.logo || page.logo}
-											/>
+													linkId: 'home',
+													url: '/',
+													text: page.parentPage?.name || page.name
+												});
+											}}
+											class:heatmap={$heatmap}
+											data-heatmap-clicks-count={$heatmap
+												? getHeatmapClicksCount({
+														sectionId: `${page.parentPage?._id || page._id}_header`,
+														linkId: `home`
+												  })
+												: ''}
+										>
+											{#if page?.parentPage?.logo || page?.logo}
+												<Emoji
+													width="25"
+													class="mr-2 rounded"
+													emoji={page.parentPage?.logo || page.logo}
+												/>
 
-											{#if !page.theme?.isHidePageName}
+												{#if !page.theme?.isHidePageName}
+													<span
+														class="font-medium text-base {page.theme?.heroBgImage
+															? 'light-colors'
+															: ''}"
+													>
+														{page.parentPage?.name || page.name}
+													</span>
+												{/if}
+											{:else}
 												<span
-													class="font-medium text-base {page.theme?.heroBgImage
-														? 'light-colors'
-														: ''}"
+													class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
+													style="font-family: var(--logo-font)"
 												>
 													{page.parentPage?.name || page.name}
 												</span>
 											{/if}
-										{:else}
-											<span
-												class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
-												style="font-family: var(--logo-font)"
-											>
-												{page.parentPage?.name || page.name}
-											</span>
-										{/if}
-									</a>
+										</a>
 
-									<div
-										class="hidden ml-8 sm:flex items-center justify-center text-sm py-1 gap-4 w-full"
-										style="z-index: 50"
-									>
-										{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}
-											<a
-												href="/{subPage.slug}"
-												data-sveltekit-preload-data="hover"
-												on:click={() => {
-													trackClick({
-														pageId: page?._id,
-														sectionId: `${page.parentPage?._id || page._id}_header`,
-														linkId: subPage._id,
-														url: `/${subPage.slug}`,
-														text: subPage.name
-													});
-												}}
-												class:heatmap={$heatmap}
-												data-heatmap-clicks-count={$heatmap
-													? getHeatmapClicksCount({
+										<div
+											class="hidden ml-8 sm:flex items-center justify-center text-sm py-1 gap-4 w-full"
+											style="z-index: 50"
+										>
+											{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}
+												<a
+													href="/{subPage.slug}"
+													data-sveltekit-preload-data="hover"
+													on:click={() => {
+														trackClick({
+															pageId: page?._id,
 															sectionId: `${page.parentPage?._id || page._id}_header`,
-															linkId: subPage._id
-													  })
-													: ''}>{subPage.name}</a
-											>
-										{/each}
+															linkId: subPage._id,
+															url: `/${subPage.slug}`,
+															text: subPage.name
+														});
+													}}
+													class:heatmap={$heatmap}
+													data-heatmap-clicks-count={$heatmap
+														? getHeatmapClicksCount({
+																sectionId: `${page.parentPage?._id || page._id}_header`,
+																linkId: subPage._id
+														  })
+														: ''}>{subPage.name}</a
+												>
+											{/each}
 
-										{#if !page._id && page.parentPage && !page.isUseDatabase && !page.isInDir}
-											<span>{page.name}</span>
-										{/if}
+											{#if !page._id && page.parentPage && !page.isUseDatabase && !page.isInDir}
+												<span>{page.name}</span>
+											{/if}
+										</div>
 									</div>
-								</div>
 
-								<div>
-									<div class="sm:hidden" on:click={toggleMenu}>
-										<FeatherIcon theme={page.theme?.theme} name="menu" />
-									</div>
-									<div
-										class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold"
-									>
-										{#if !page.parentPage}
-											{#if page.activeHero}
+									<div>
+										<div class="sm:hidden" on:click={toggleMenu}>
+											<FeatherIcon theme={page.theme?.theme} name="menu" />
+										</div>
+										<div
+											class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold"
+										>
+											{#if !page.parentPage}
+												{#if page.activeHero}
+													<RenderInteractiveOptions
+														trackId={`${page._id}_header`}
+														bind:sectionItem={page.activeHero}
+														bind:page
+														isHeader
+													/>
+												{/if}
+											{:else if page.parentPage.heros?.length}
 												<RenderInteractiveOptions
-													trackId={`${page._id}_header`}
-													bind:sectionItem={page.activeHero}
-													bind:page
+													trackId={`${page.parentPage._id}_header`}
+													size="small"
+													sectionItem={page.parentPage.heros[0]}
+													{page}
 													isHeader
 												/>
 											{/if}
-										{:else if page.parentPage.heros?.length}
-											<RenderInteractiveOptions
-												trackId={`${page.parentPage._id}_header`}
-												size="small"
-												sectionItem={page.parentPage.heros[0]}
-												{page}
-												isHeader
-											/>
-										{/if}
-										<!-- {#each page.subPages || page.parentPage?.subPages || [] as subPage}
+											<!-- {#each page.subPages || page.parentPage?.subPages || [] as subPage}
 											<a href="/{subPage.slug}">{subPage.name}</a>
 										{/each} -->
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						{/if}
 
 						{#if isMenuOpen}
 							<div
@@ -493,7 +495,11 @@
 						{#if !isLoading}
 							<div>
 								{#if page.activeHero}
-									<div class="sticky bg-site">
+									<div
+										class="sticky bg-site"
+										class:opacity-30={!!$sectionToEdit}
+										class:grayscale={!!$sectionToEdit}
+									>
 										<RenderHero
 											bind:hero={page.activeHero}
 											bind:page
@@ -519,8 +525,14 @@
 											>
 												{#each page.sections || [] as section, i}
 													{#if $sectionToEdit && $sectionToEdit.id === section.id}
-														<div bind:this={editEl}>
-															<div class="p-2 my-4 bg-green-200 text-center">🚧🚧🚧🚧🚧</div>
+														<div bind:this={editEl} style="scroll-margin-top: 60px;">
+															<div
+																class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center"
+															>
+																<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
+																	name="arrow-down"
+																/>
+															</div>
 															<div>
 																<RenderSection
 																	bind:page
@@ -529,13 +541,21 @@
 																	bind:isEdit
 																/>
 															</div>
-															<div class="p-2 my-4 bg-green-200 text-center text-white">
-																🚧🚧🚧🚧🚧
+															<div
+																class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center"
+															>
+																<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
+																	name="arrow-up"
+																/>
 															</div>
 														</div>
 														{focusEditEl() || ''}
 													{:else}
-														<div class="relative overflow-y-hidden">
+														<div
+															class="relative overflow-y-hidden"
+															class:opacity-30={!!$sectionToEdit}
+															class:grayscale={!!$sectionToEdit}
+														>
 															{#if section.containerBgImageUrl}
 																<div class="absolute left-0 top-0 w-screen h-full">
 																	<img
@@ -587,7 +607,12 @@
 								</div>
 
 								{#if isMountedDelayed && (page.activeHero?.title || page.ctaFooter?.title) && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && !$sveltePage.url.pathname.includes('/blog')}
-									<div class="overflow-hidden" bind:this={$ctaFooterEl}>
+									<div
+										class="overflow-hidden"
+										bind:this={$ctaFooterEl}
+										class:opacity-30={!!$sectionToEdit}
+										class:grayscale={!!$sectionToEdit}
+									>
 										<RenderCTA {page} section={page.ctaFooter} />
 									</div>
 								{/if}

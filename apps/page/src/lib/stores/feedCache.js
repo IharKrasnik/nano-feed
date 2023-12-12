@@ -71,7 +71,7 @@ export const fetchFeed = async ({
 		query.tag = tag;
 	}
 
-	const { results: feed, count } = await get('feed', query);
+	let { results: feed, count } = await get('feed', query);
 
 	feedStore.update((st) => {
 		st[cacheId] = { updatedOn: new Date(), feed, tags: getTags(feed), totalCount: count };

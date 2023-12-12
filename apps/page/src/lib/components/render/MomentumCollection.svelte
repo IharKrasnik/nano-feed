@@ -7,6 +7,8 @@
 	import trackClick from 'lib/services/trackClick';
 	import { get } from 'lib/api';
 	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
+	import getPageUrl from '$lib/helpers/getPageUrl';
+	import subPages from 'lib/stores/subPages';
 
 	export let page;
 	export let section;
@@ -21,9 +23,9 @@
 
 	let databaseSection = {
 		id: section.id,
-		// collectionType: section.collectionType,
 		isShowSource: section.isShowSource,
-		renderType: section.collectionType === 'articles' ? 'article' : section.renderType,
+		renderType: section.streamSlug.includes('-blog') ? 'article' : section.renderType,
+
 		isDatabase: true,
 		columns: section.columns,
 		items: [],
@@ -42,34 +44,15 @@
 	let loadFeed = async ({ categorySlug = null } = {}) => {
 		isLoading = true;
 
-		if (section.collectionType === 'articles') {
-			let articles = await get(`pages/${page.parentPage?._id || page?._id}/subpages`, {
-				renderType: 'article',
-				dirName: 'blog'
+		if (categorySlug || section?.streamSlug) {
+			await getFeed({
+				cacheId,
+				streamSlug: categorySlug || section?.streamSlug,
+				forceRefresh: isUseCache ? false : true,
+				isWithUrlOnly: true,
+				streamSettings: section.streamSettings,
+				perPage: 100
 			});
-
-			databaseSection.items = articles.results.map(
-				({ heros, title, subtitle, demoUrl, url, slug, tagsStr }) => {
-					return {
-						title: heros[0]?.title || '',
-						description: heros[0]?.subtitle || '',
-						imageUrl: heros[0]?.demoUrl || null,
-						url: `/blog/post/${slug}`,
-						tagsStr
-					};
-				}
-			);
-		} else {
-			if (categorySlug || section?.streamSlug) {
-				await getFeed({
-					cacheId,
-					streamSlug: categorySlug || section?.streamSlug,
-					forceRefresh: isUseCache ? false : true,
-					isWithUrlOnly: true,
-					streamSettings: section.streamSettings,
-					perPage: 100
-				});
-			}
 		}
 		isLoading = false;
 	};
@@ -109,6 +92,8 @@
 	};
 
 	$: if ($feedCache[cacheId] || filterTag) {
+		debugger;
+
 		databaseSection.items = $feedCache[cacheId].feed
 			.filter((item) => {
 				if (!filterTag) {
@@ -128,7 +113,8 @@
 					attachments,
 					logoUrl,
 					url,
-					tagsStr
+					tagsStr,
+					meta
 				}) => {
 					return {
 						id: _id,
@@ -140,7 +126,7 @@
 						description: content,
 						imageUrl: attachments && attachments[0] && attachments[0].url,
 						emoji: logoUrl,
-						url,
+						url: url || (meta?.pageSlug ? `/blog/posts/${meta.pageSlug}` : ''),
 						tagsStr
 					};
 				}
@@ -153,7 +139,7 @@
 
 	let loadChildStreams = async () => {
 		let { results } = await get('projects', {
-			hubStreamSlug: page.streamSlug
+			hubStreamSlug: page.streams?.hub?.slug || page.streamSlug
 		});
 
 		childStreams = results;
@@ -238,7 +224,7 @@
 		class="sm:p-0 sm:pt-0 _horizontal-padding-none"
 		isSkipHeader
 		{isEdit}
-		isShowAuthor={section.collectionType === 'articles'}
+		isShowAuthor={section.streamSlug.includes('-blog')}
 		bind:themeStyles
 		bind:page
 		bind:section={databaseSection}

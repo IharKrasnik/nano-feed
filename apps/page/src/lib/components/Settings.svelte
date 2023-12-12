@@ -24,9 +24,9 @@
 	let isDeleteIntent = false;
 </script>
 
-<div>
-	<h2 class="text-2xl font-bold mb-2">Settings</h2>
-	<div class="mb-4">Customize your page 🤌</div>
+<div class="_editor">
+	<h2 class="text-2xl font-bold mb-2">Page Settings</h2>
+	<div class="mb-4">Customize your page</div>
 	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<!-- 	

@@ -46,6 +46,7 @@ export async function load({ url, params, session, cookies }) {
 			]);
 
 			let feedItem;
+
 			if (page.slug.includes('$data.slug')) {
 				feedItem = await get(`feed/bySlug`, {
 					projectSlug: page.streamSlug,

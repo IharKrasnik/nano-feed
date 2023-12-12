@@ -15,8 +15,10 @@
 	export let isWithButton = true;
 	export let options = [];
 
-	export let placeholder = 'Insert URL';
+	export let placeholder = 'https://myurl.com';
 	export let isShown = !isWithButton;
+
+	import { default as usePlaceholder } from 'lib/use/placeholder';
 
 	let show = () => {
 		isShown = true;
@@ -129,12 +131,12 @@
 
 			<div class="flex items-center w-full justify-between mt-4 mb-2">
 				<div class="text-sm opacity-70">
-					{sectionItem.isUrlButton ? 'Button' : 'Link'} text
+					{sectionItem.isUrlLink ? 'Link' : 'Button'} text
 				</div>
 
 				<div>
-					<input type="checkbox" bind:checked={sectionItem.isUrlButton} />
-					is button
+					<input type="checkbox" bind:checked={sectionItem.isUrlLink} />
+					show as link
 				</div>
 			</div>
 
@@ -158,7 +160,7 @@
 					</div>
 					<div>
 						<input type="checkbox" bind:checked={sectionItem.isUrl2Button} />
-						is button
+						is link
 					</div>
 				</div>
 
@@ -191,12 +193,14 @@
 				{:else if sectionItem.interactiveRenderType === 'short_answer'}
 					<div class="text-sm mt-4">User will see Input</div>
 				{/if}
-				{#if sectionItem.interactiveAnswers?.length === 3}
-					<div class="text-sm">You can add up to 3 answers</div>
-				{:else}
-					<button class="_small _secondary w-full mt-4" on:click={() => addAnswer(sectionItem)}
-						>Add interactive answer</button
-					>
+				{#if sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice'}
+					{#if sectionItem.interactiveAnswers?.length === 3}
+						<div class="text-sm">You can add up to 3 answers</div>
+					{:else}
+						<button class="_small _secondary w-full mt-4" on:click={() => addAnswer(sectionItem)}
+							>Add interactive answer</button
+						>
+					{/if}
 				{/if}
 			</div>
 		{/if}
@@ -226,7 +230,7 @@
 				<div
 					contenteditable=""
 					class="ml-4 w-full"
-					placeholder="No credit card required"
+					use:usePlaceholder={'No credit card required'}
 					bind:innerHTML={sectionItem.ctaExplainer}
 				/>
 			</div>
@@ -245,7 +249,11 @@
 			{#if sectionItem.actionType === 'url'}
 				<div class="font-normal text-sm opacity-70 mt-4 mb-2">URL to open once email submitted</div>
 
-				<input class="w-full mb-4" bind:value={sectionItem.actionUrl} placeholder="Action Url" />
+				<input
+					class="w-full mb-4"
+					bind:value={sectionItem.actionUrl}
+					placeholder="https://myurl.com"
+				/>
 			{/if}
 		{/if}
 

@@ -44,12 +44,13 @@
 	setTab('url');
 
 	let submitLink = async () => {
-		if (!page.feedStreamSlug) {
-			const { streamSlug } = await put(`pages/${page._id}/embed-stream`, {
+		if (!page.streams?.feed) {
+			const { stream } = await put(`pages/${page._id}/embed-stream`, {
 				title: 'Feed'
 			});
 
-			page.feedStreamSlug = streamSlug;
+			page.streams = page.streams || {};
+			page.streams.feed = streams;
 		}
 
 		await post('feed/from-url', {

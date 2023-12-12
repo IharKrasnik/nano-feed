@@ -20,6 +20,8 @@
 	import feedCache, { getFeed } from '$lib/stores/feedCache';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 	import isUrl from 'lib/helpers/isUrl';
+	import getPageUrl from '$lib/helpers/getPageUrl';
+	import subPages from 'lib/stores/subPages';
 
 	let clazz = 'p-4';
 	export { clazz as class };
@@ -152,21 +154,29 @@
 
 		{#if !isChangelog}
 			<div class="flex justify-between w-full relative mb-4">
-				<input
-					class="w-full"
-					placeholder="Item URL"
-					autofocus
-					type="url"
-					bind:value={feedItem.url}
-					theme="light"
-					on:paste={(e) => {
-						let url = e.clipboardData.getData('text/plain');
+				{#if feedItem.meta?.pageId}
+					<input
+						disabled
+						class="w-full"
+						value={getPageUrl({ page: $subPages.find((p) => p._id === feedItem.meta.pageId) })}
+					/>
+				{:else}
+					<input
+						class="w-full"
+						placeholder="Item URL"
+						autofocus
+						type="url"
+						bind:value={feedItem.url}
+						theme="light"
+						on:paste={(e) => {
+							let url = e.clipboardData.getData('text/plain');
 
-						if (isUrl(url)) {
-							fetchMetaTags({ url });
-						}
-					}}
-				/>
+							if (isUrl(url)) {
+								fetchMetaTags({ url });
+							}
+						}}
+					/>
+				{/if}
 				<div />
 			</div>
 		{/if}
