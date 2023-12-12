@@ -571,6 +571,7 @@
 	let selectedSubmission;
 	let selectedTrigger;
 	let selectedChatRoom;
+	let selectedNewsletter;
 
 	let onlineUsersCount = -1;
 
@@ -1792,7 +1793,12 @@
 										{:else if selectedTab === 'analytics'}
 											<EditCustomers bind:page bind:selectedCustomer />
 										{:else if selectedTab === 'messaging'}
-											<EditMessaging bind:page bind:selectedTrigger bind:selectedChatRoom />
+											<EditMessaging
+												bind:page
+												bind:selectedTrigger
+												bind:selectedNewsletter
+												bind:selectedChatRoom
+											/>
 										{:else if selectedTab === 'audience'}
 											<EditSubmissions bind:page bind:selectedSubmission />
 										{:else if selectedTab === 'newsletter'}
@@ -1923,6 +1929,7 @@
 									{:else if selectedTab === 'messaging'}
 										<MessagingTab
 											bind:page
+											bind:selectedNewsletter
 											bind:trigger={selectedTrigger}
 											bind:chatRoom={selectedChatRoom}
 										/>

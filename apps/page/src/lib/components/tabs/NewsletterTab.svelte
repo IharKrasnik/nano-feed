@@ -19,7 +19,7 @@
 
 	export let page;
 
-	let broadcastEmail = { callToAction: {} };
+	let broadcastEmail = { subject: '', html: '', callToAction: {}, imageUrl: '' };
 	let isNewInProgress;
 
 	let isBroadcastTestSent = false;
@@ -27,7 +27,7 @@
 	let broadcastEmails = null;
 
 	let refreshBroadcastEmails = async () => {
-		broadcastEmails = await get(`pages/${page._id}/broadcast-emails`, {});
+		broadcastEmails = await get(`pages/${page._id}/broadcast-emails-new`, {});
 	};
 
 	refreshBroadcastEmails();
@@ -135,7 +135,9 @@
 				</div>
 
 				<div class="mt-4 mb-2">Image (optional)</div>
-				<div class="text-sm mt-2 mb-4">Add friendly photo or product demo to the end of email.</div>
+				<div class="text-sm mt-2 mb-4">
+					Add a friendly photo or product demo to the end of email.
+				</div>
 				<FileInput class="w-full" bind:url={broadcastEmail.imageUrl} />
 			{/if}
 
