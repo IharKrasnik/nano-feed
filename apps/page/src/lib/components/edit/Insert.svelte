@@ -11,6 +11,12 @@
 
 	export let sections = [
 		{
+			name: 'Empty',
+			section: {
+				title: 'Hello World 👋'
+			}
+		},
+		{
 			name: 'Features',
 			section: {
 				emoji: '🙌',
@@ -126,7 +132,7 @@
 						pricing: {
 							amount: 0,
 							per: 'month',
-							benefitsStr: 'collect emails\nbroadcast email'
+							benefitsStr: 'collect emails\nbroadcast emails'
 						}
 					},
 					{
