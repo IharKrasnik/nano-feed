@@ -82,7 +82,7 @@
 		}
 
 		if (!parentPage.streams || !parentPage.streams[key]) {
-			const { stream } = await put(`pages/${page._id}/embed-stream`, {
+			const { stream } = await put(`pages/${parentPage._id}/embed-stream`, {
 				title: _.capitalize(key),
 				isFeedStream,
 				isChangelogStream,

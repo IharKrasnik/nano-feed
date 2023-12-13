@@ -137,8 +137,9 @@
 					<b>{@html striptags(section.title || '')}</b>
 				</div>
 			{/if}
-			{@html striptags(section.description || '')}
-
+			<div class="overflow-hidden _line-clamp-4">
+				{@html striptags(section.description || '')}
+			</div>
 			{#if section.renderType === 'testimonials'}
 				<div>
 					{striptags((section.testimonials || []).map((f) => f.name).join(', '))}

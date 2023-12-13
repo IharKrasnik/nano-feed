@@ -263,7 +263,9 @@
 
 						{#if page.renderType === 'article'}
 							<RenderArticleHeader
-								class={hero.theme.isLeft ? 'justify-start' : 'justify-center'}
+								class={hero.theme.isLeft && !hero?.theme.isVertical
+									? 'justify-start'
+									: 'justify-center'}
 								{page}
 							/>
 						{/if}
@@ -332,8 +334,8 @@
 									urlClass="relative w-full flex justify-end"
 									urlImgMaxWidth={hero.imgMaxWidth || 0}
 									urlImgClass="{hero.imgMaxWidth
-										? `rounded-lg`
-										: 'w-full rounded-xl'}  shadow-md object-cover"
+										? `rounded-lg mx-auto`
+										: 'w-full rounded-xl'} shadow-md object-cover"
 								/>
 							{/if}
 						</div>

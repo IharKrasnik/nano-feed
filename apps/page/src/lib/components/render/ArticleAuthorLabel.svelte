@@ -11,7 +11,7 @@
 	export let isWithAuthor = true;
 </script>
 
-<div class="flex items-center {clazz}">
+<div class={clazz.includes('flex') ? clazz : 'flex items-center'}>
 	{#if isWithAuthor}
 		<Avatar user={page.creator} size="20px" class="mr-2" />
 		<b class="mx-1">{page.creator?.fullName}</b>

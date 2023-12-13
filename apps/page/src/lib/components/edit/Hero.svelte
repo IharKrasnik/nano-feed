@@ -26,6 +26,7 @@
 	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
+	import DateTimeInput from 'lib/components/DateTimeInput.svelte';
 
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
@@ -152,6 +153,8 @@
 
 	let isShowKeyFeatures = !!hero.keyFeaturesStr;
 	let isFileSearching = false;
+
+	page.publishedOn = page.publishedOn || page.lastPublishedOn;
 </script>
 
 {#if isSelectBackgroundModalShown}
@@ -523,19 +526,22 @@
 				<div class="_title">
 					{#if page.renderType === 'article'}
 						Key image
+						<div class="font-normal text-sm opacity-70">
+							The main article image
+							<br />
+						</div>
 					{:else}
 						Product Demo
+						<div class="font-normal text-sm opacity-70">
+							Screenshot, live GIF or a <a
+								href="//loom.com"
+								class="underline"
+								target="_blank"
+								use:tooltip
+								title="We recommend using Loom or YouTube">video demo</a
+							> <br />
+						</div>
 					{/if}
-
-					<div class="font-normal text-sm opacity-70">
-						Screenshot, live GIF or a <a
-							href="//loom.com"
-							class="underline"
-							target="_blank"
-							use:tooltip
-							title="We recommend using Loom or YouTube">video demo</a
-						> <br />
-					</div>
 				</div>
 
 				<div class="_title flex items-center">
@@ -678,6 +684,14 @@
 					</div>
 				</div>
 			{/if}
+		{/if}
+
+		{#if page.renderType === 'article'}
+			<div class="_section mb-4">
+				<div class="text-sm font-bold mb-2">Published Date</div>
+
+				<DateTimeInput class="w-full" bind:date={page.publishedOn} />
+			</div>
 		{/if}
 	</div>
 {/if}

@@ -426,7 +426,7 @@
 									: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||
 								section.theme?.isTitleLeft ||
 								section.renderType === 'article'
-									? 'sm:max-w-[712px]'
+									? 'sm:max-w-[712px] sm:mx-auto'
 									: 'sm:max-w-[768px] sm:mx-auto'}"
 							>
 								<ContentEditableIf class="mb-2" bind:innerHTML={section.title} condition={isEdit} />
@@ -827,7 +827,7 @@
 
 												{#if isShowAuthor}
 													<div>
-														<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
+														<ArticleAuthorLabel isWithAuthor={false} class={`my-2 `} bind:page />
 													</div>
 												{/if}
 

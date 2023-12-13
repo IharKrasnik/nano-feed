@@ -382,7 +382,7 @@
 										</a>
 
 										<div
-											class="hidden ml-8 sm:flex items-center justify-center text-sm py-1 gap-4 w-full"
+											class="hidden ml-8 sm:flex items-center justify-end text-sm py-1 gap-4 w-full mr-8"
 											style="z-index: 50"
 										>
 											{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}

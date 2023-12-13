@@ -318,6 +318,8 @@
 					.replace(' ', '-')
 					.toLowerCase()}`;
 			}
+		} else {
+			page.isDraft = false;
 		}
 
 		if (!isNewPage && page.creator && !$currentUser) {
@@ -612,7 +614,7 @@
 {#if isSettingsModalShown}
 	<Modal
 		isShown
-		maxWidth={1200}
+		maxWidth={800}
 		onClosed={() => {
 			isSettingsModalShown = false;
 		}}
@@ -1721,7 +1723,7 @@
 											<div class="font-bold text-lg mb-8 mt-16  _editor-title">Publish Page</div>
 										{/if}
 										<div
-											class="py-16 mb-32 _section _borderless bg-[#fafafa] shadow shadow-black/30"
+											class="py-16 mb-32 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
 											class:mt-16={!page._id}
 										>
 											<div class="flex items-center w-full justify-between">
