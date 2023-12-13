@@ -504,7 +504,7 @@ a._item-title:hover {
 	position: relative;
 	border-radius: var(--button-radius);
 	max-width: 470px;
-	min-width: 340px;
+	@apply sm:min-w-[340px];
 }
 
 @media (min-width: 640px) {
