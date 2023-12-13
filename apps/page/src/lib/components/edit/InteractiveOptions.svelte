@@ -176,6 +176,9 @@
 				<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
 				<input class="w-full" bind:value={sectionItem.url2} {placeholder} type="url" />
 			{/if}
+		{:else if sectionItem.id !== section.id}
+			<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
+			<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
 		{:else}
 			<div>
 				{#if sectionItem.interactiveAnswers?.length && (!sectionItem.interactiveRenderType || sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice')}

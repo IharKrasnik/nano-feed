@@ -891,7 +891,7 @@
 							{#each section.items || [] as item, i}
 								{#if item.isShown || _.isUndefined(item.isShown)}
 									<div
-										class=" break-inside-avoid sm:col-span-{item.colSpan ||
+										class=" break-inside-avoid mb-2 sm:col-span-{item.colSpan ||
 											1} sm:row-span-{item.rowSpan || 1} {section.renderType === 'carousel'
 											? `min-w-[300px] sm:min-w-0 cursor-pointer`
 											: ''}"
@@ -901,11 +901,9 @@
 											href={item.url && !item.interactiveRenderType ? item.url : null}
 											target={item.url?.startsWith('http') ? '_blank' : ''}
 											id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
-											class="_section-item {!item.title && !item.description
-												? '_transparent'
-												: ''} group block relative {item.bgImageUrl
+											class="_section-item group block relative {item.bgImageUrl
 												? '_bg-image'
-												: ''} rounded-lg sm:rounded-xl {item.className || ''} mb-2 {item.url &&
+												: ''} rounded-lg sm:rounded-xl {item.className || ''} {item.url &&
 											!item.interactiveRenderType
 												? '_interactive'
 												: ''} h-full overflow-hidden"
