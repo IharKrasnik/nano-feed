@@ -556,7 +556,7 @@
 				<FileInput class="w-full" bind:url={hero.demoUrl} theme="light" isCanSearch />
 			</div>
 
-			{#if hero.demoUrl}
+			{#if hero.demoUrl && hero.theme?.isVertical}
 				<div class="flex items-center mt-2 justify-between">
 					<div class="text-xs flex gap-2 items-center">
 						<div

@@ -263,7 +263,7 @@
 
 						{#if page.renderType === 'article'}
 							<RenderArticleHeader
-								class={hero.theme.isLeft && !hero?.theme.isVertical
+								class={(hero.theme.isLeft || hero.demoUrl) && !hero?.theme.isVertical
 									? 'justify-start'
 									: 'justify-center'}
 								{page}
