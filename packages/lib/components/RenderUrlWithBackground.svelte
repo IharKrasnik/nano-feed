@@ -38,11 +38,15 @@
 		{#if imageBackgroundUrl}
 			<img
 				class="absolute left-0 top-0 w-full h-full {urlImgClass.includes('rounded-b')
-					? 'sm:rounded-b-xl rounded-xl'
+					? 'sm:rounded-b-xl sm:rounded-tr-none sm:rounded-tl-none rounded-b-xl'
 					: urlImgClass.includes('rounded-r')
 					? 'sm:rounded-r-xl sm:rounded-tl-none sm:rounded-bl-none rounded-b-xl'
-					: urlImgClass.includes('rounded-l')
+					: urlImgClass.includes('rounded-l') && !urlImgClass.includes('rounded-lg')
 					? 'sm:rounded-l-xl sm:rounded-tr-none sm:rounded-br-none rounded-b-xl'
+					: urlImgClass.includes('rounded-b')
+					? 'sm:rounded-b-xl'
+					: urlImgClass.includes('rounded-t')
+					? 'sm:rounded-t-xl'
 					: 'rounded-xl'}"
 				src={imageBackgroundUrl}
 			/>{/if}
