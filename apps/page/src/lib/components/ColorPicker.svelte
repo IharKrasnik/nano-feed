@@ -67,19 +67,16 @@
 			darken(page?.theme?.accentColor || '#fff', 0.99)
 		],
 		accent: [
-			'#a7d7c5',
-			'#a7c5d7',
-			'#a7b0d7',
-			'#a7c7d7',
-			'#d7a7d4',
-			'#b2a7d7',
-			'#d7a7a7',
-			'#a7d7c3',
-			'#acd7a7',
-			'#c8d7a7',
-			'#d7d2a7',
-			'#d7bca7',
-			'#d7aea7'
+			'#00EE2C',
+			'#00F0C8',
+			'#00B8FF',
+			'#0055FF',
+			'#713CFF',
+			'#C305D1',
+			'#FEFD00',
+			'#FFDC5C',
+			'#FFA200',
+			'#E60004'
 		],
 		dark: [],
 		light: []
@@ -297,6 +294,7 @@
 		{#if isColorPickerShown}
 			<Modal
 				isShown
+				maxWidth={1200}
 				onClosed={() => {
 					isColorPickerShown = false;
 				}}
@@ -346,10 +344,10 @@
 										on:input={changeAccentColor}
 									/>
 								</div>
-								<div class="flex flex-wrap gap-2">
+								<div class="flex flex-wrap">
 									{#each colors.accent as color}
 										<div
-											class="w-[30px] h-[30px] border border-black/50 rounded-full"
+											class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
 											on:click={() => {
 												page.theme.accentColor = color;
 												changeAccentColor();

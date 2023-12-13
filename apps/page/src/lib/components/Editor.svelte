@@ -612,7 +612,7 @@
 {#if isSettingsModalShown}
 	<Modal
 		isShown
-		maxWidth={800}
+		maxWidth={1200}
 		onClosed={() => {
 			isSettingsModalShown = false;
 		}}
