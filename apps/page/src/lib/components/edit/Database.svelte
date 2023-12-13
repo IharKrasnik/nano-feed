@@ -109,13 +109,13 @@
 
 	let createDatabase = async () => {
 		if (newDatabaseName) {
-			const { streamSlug, project: newStream } = await put(`pages/${parentPage._id}/embed-stream`, {
+			const { stream: newStream } = await put(`pages/${parentPage._id}/embed-stream`, {
 				title: newDatabaseName
 			});
 
 			$childStreams = [newStream, ...$childStreams];
 			activeStream = newStream;
-			selectedStreamSlug = streamSlug;
+			selectStream(activeStream);
 			newDatabaseName = '';
 		}
 	};

@@ -49,7 +49,7 @@
 			isDraft: true,
 			renderType: 'article',
 			dirName: 'blog',
-			parentPage: parentPage,
+			parentPage: parentPage._id,
 			theme: {}
 		});
 

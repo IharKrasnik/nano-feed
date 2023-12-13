@@ -92,8 +92,6 @@
 	};
 
 	$: if ($feedCache[cacheId] || filterTag) {
-		debugger;
-
 		databaseSection.items = $feedCache[cacheId].feed
 			.filter((item) => {
 				if (!filterTag) {

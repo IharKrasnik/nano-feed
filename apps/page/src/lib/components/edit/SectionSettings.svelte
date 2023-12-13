@@ -70,7 +70,6 @@
 			: ''}
 		use:clickOutside
 		on:clickOutside={() => {
-			debugger;
 			if (!isBgImageSearching && !isContainerBgSearching && !isBottomImageSearching) {
 				isShown = false;
 			}
