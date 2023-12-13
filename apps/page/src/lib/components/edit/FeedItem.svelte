@@ -31,6 +31,7 @@
 	export let feedItem;
 	export let isContentFeed = false;
 	export let isChangelog = false;
+	export let setPageAndDraft;
 
 	let originalFeedItem = _.cloneDeep(feedItem);
 
@@ -130,8 +131,11 @@
 			<div class="flex items-center w-full">
 				{#if !isContentFeed || feedItem.url}
 					<EmojiPicker bind:icon={feedItem.iconUrl} />
-					{#if !isChangelog && feedItem.url}
-						<Button class="ml-2 rounded-full bg-[#f6f5f4]" onClick={fetchMetaTags}>🪄</Button>
+					{#if !isChangelog && feedItem.url && !feedItem.meta?.pageId}
+						<Button
+							class="ml-2 w-[35px] h-[35px] bg-[#f1f1f1] rounded-full flex items-center justify-center cursor-pointer"
+							onClick={fetchMetaTags}>🪄</Button
+						>
 					{/if}
 					<EditFeedItemSettings bind:feedItem />
 				{/if}
@@ -155,11 +159,14 @@
 		{#if !isChangelog}
 			<div class="flex justify-between w-full relative mb-4">
 				{#if feedItem.meta?.pageId}
-					<input
-						disabled
-						class="w-full"
-						value={getPageUrl({ page: $subPages.find((p) => p._id === feedItem.meta.pageId) })}
-					/>
+					<button
+						class="_secondary _small w-full"
+						on:click={() => {
+							let selectedPage = $subPages.find((sp) => sp._id === feedItem.meta.pageId);
+							setPageAndDraft(selectedPage, { force: true });
+						}}
+						>Edit Page →
+					</button>
 				{:else}
 					<input
 						class="w-full"

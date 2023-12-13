@@ -1698,7 +1698,7 @@
 												<div class="font-bold text-lg mr-2 py-4">Call-To-Action</div>
 
 												<div
-													class="w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+													class="w-[35px] h-[35px] bg-[#f1f1f1] rounded-xl flex items-center justify-center cursor-pointer"
 												>
 													{#if page.ctaFooter}
 														<EditSectionSettings
@@ -1785,9 +1785,14 @@
 									</div> -->
 									{/if}
 								{:else}
-									<div>
+									<div class="mb-[70px]">
 										{#if selectedTab === 'database'}
-											<EditDatabase bind:page bind:selectedStreamSlug bind:selectedTab />
+											<EditDatabase
+												bind:page
+												bind:selectedStreamSlug
+												bind:selectedTab
+												bind:setPageAndDraft
+											/>
 										{:else if selectedTab === 'growth'}
 											<EditGrowth bind:page bind:selectedGrowthTab />
 										{:else if selectedTab === 'blog'}

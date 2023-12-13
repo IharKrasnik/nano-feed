@@ -14,6 +14,7 @@
 
 	let posts = [];
 
+	export let setPageAndDraft;
 	export let selectedTab;
 	export let page;
 	export let selectedStreamSlug;
@@ -482,6 +483,7 @@
 			}) as feedItem (feedItem._id + feedItem.id)}
 				<EditFeedItem
 					bind:feedItem
+					bind:setPageAndDraft
 					isContentFeed={activeStream.slug.includes('-feed')}
 					isChangelog={activeStream.slug.includes('-changelog')}
 					onUpdated={(updatedFeedItem) => {

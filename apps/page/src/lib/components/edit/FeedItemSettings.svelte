@@ -36,7 +36,7 @@
 </script>
 
 <div
-	class="ml-2 w-[37px] h-[37px] bg-[#fafafa] rounded-xl flex items-center justify-center cursor-pointer"
+	class="ml-2 w-[35px] h-[35px] bg-[#f1f1f1] rounded-full flex items-center justify-center cursor-pointer"
 	on:click={show}
 >
 	⚙️
