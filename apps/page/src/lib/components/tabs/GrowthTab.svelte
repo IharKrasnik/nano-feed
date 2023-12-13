@@ -3,6 +3,8 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 
+	import allPages from '$lib/stores/allPages';
+
 	import getPageCssStyles from '$lib/services/getPageCssStyles';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import { goto } from '$app/navigation';
@@ -14,10 +16,13 @@
 	let cssVarStyles;
 	let styles;
 
+	let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
+
 	$: if (page) {
 		let res = getPageCssStyles(page);
 		cssVarStyles = res.cssVarStyles;
 		styles = res.styles;
+		parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
 	}
 
 	let goalPercentage = 0;
@@ -31,7 +36,7 @@
 	let pricingStats = null;
 
 	let getPricingStats = async () => {
-		pricingStats = await get(`pricing/${page._id}`);
+		pricingStats = await get(`pricing/${parentPage._id}`);
 	};
 
 	getPricingPage();
@@ -39,14 +44,14 @@
 	let currentGoal = '';
 	let goalCurrentValue = '';
 
-	$: if (page.totalUniqueViews < 100) {
+	$: if (parentPage.totalUniqueViews < 100) {
 		currentGoal = 'Get 100 views';
-		goalPercentage = (page.totalUniqueViews / 100) * 100;
-		goalCurrentValue = `${page.totalUniqueViews} views`;
-	} else if (page.totalSignupsCount < 10) {
+		goalPercentage = (parentPage.totalUniqueViews / 100) * 100;
+		goalCurrentValue = `${parentPage.totalUniqueViews} views`;
+	} else if (parentPage.totalSignupsCount < 10) {
 		currentGoal = 'Get 10 signups';
-		goalPercentage = (page.totalSignupsCount / 10) * 100;
-		goalCurrentValue = `${page.totalSignupsCount} signups`;
+		goalPercentage = (parentPage.totalSignupsCount / 10) * 100;
+		goalCurrentValue = `${parentPage.totalSignupsCount} signups`;
 	}
 </script>
 
@@ -62,7 +67,7 @@
 				</div>
 				<div
 					class="relative overflow-hidden p-2 rounded-lg border"
-					style={page.theme?.theme === 'dark'
+					style={parentPage.theme?.theme === 'dark'
 						? 'background-color: rgba(255,255,255,.1);'
 						: 'background-color: rgba(0,0,0,.1);'}
 				>
@@ -70,7 +75,7 @@
 						class="absolute left-0 top-0 h-full"
 						style="{!goalPercentage || goalPercentage < 2
 							? 'width: 2%;'
-							: `width: ${goalPercentage}%;`} {page.theme?.theme === 'dark'
+							: `width: ${goalPercentage}%;`} {parentPage.theme?.theme === 'dark'
 							? 'background-color: rgba(255,255,255,.3);'
 							: 'background-color: rgba(0,0,0,.3);'}"
 					/>
@@ -85,15 +90,17 @@
 
 				<div class="grid grid-cols-4 gap-2 mt-4">
 					<div class="_section">
-						<div class="text-2xl font-bold opacity-80">{page.totalUniqueViews || 0}</div>
+						<div class="text-2xl font-bold opacity-80">{parentPage.totalUniqueViews || 0}</div>
 						<div class="">Unique Views</div>
 					</div>
 					<div class="_section">
-						<div class="text-2xl font-bold opacity-80">{page.totalUniqueClicksCount || 0}</div>
+						<div class="text-2xl font-bold opacity-80">
+							{parentPage.totalUniqueClicksCount || 0}
+						</div>
 						<div class="">Clicks</div>
 					</div>
 					<div class="_section">
-						<div class="text-2xl font-bold opacity-80">{page.totalSignupsCount || 0}</div>
+						<div class="text-2xl font-bold opacity-80">{parentPage.totalSignupsCount || 0}</div>
 						<div class="">Signups</div>
 					</div>
 					<div class="_section opacity-50">
@@ -146,7 +153,7 @@
 										<div>Subpages</div>
 										<div>
 											{pricingStats.subPages}/{pricingPage.limits.subPages[
-												page.subscription?.plan || 'free'
+												parentPage.subscription?.plan || 'free'
 											]}
 										</div>
 									</div>
@@ -154,7 +161,7 @@
 										<div>Blog Articles</div>
 										<div>
 											{pricingStats.articles}/{pricingPage.limits.articles[
-												page.subscription?.plan || 'free'
+												parentPage.subscription?.plan || 'free'
 											]}
 										</div>
 									</div>
@@ -162,7 +169,7 @@
 										<div>CMS Pages</div>
 										<div>
 											{pricingStats.cmsPages}/{pricingPage.limits.cmsPages[
-												page.subscription?.plan || 'free'
+												parentPage.subscription?.plan || 'free'
 											]}
 										</div>
 									</div>
@@ -176,7 +183,7 @@
 									<div class="w-full flex justify-between">
 										<div>Emails Sent</div>
 										{pricingStats.totalEmailsMonthly}/{pricingPage.limits.totalEmailsMonthly[
-											page.subscription?.plan || 'free'
+											parentPage.subscription?.plan || 'free'
 										]}
 									</div>
 									<hr class="opacity-50" />
@@ -203,14 +210,14 @@
 										<div>Database Items</div>
 										<div>
 											{pricingStats.databaseItems}/{pricingPage.limits.databaseItems[
-												page.subscription?.plan || 'free'
+												parentPage.subscription?.plan || 'free'
 											]}
 										</div>
 									</div>
 									<div class="w-full flex justify-between">
 										<div>Feed Items</div>
 										{pricingStats.feedItems}/{pricingPage.limits.feedItems[
-											page.subscription?.plan || 'free'
+											parentPage.subscription?.plan || 'free'
 										]}
 									</div>
 									<div class="w-full flex justify-between">
@@ -223,7 +230,7 @@
 					</div>
 				</div>
 				<RenderSection
-					page={{ ...pricingPage, theme: page.theme }}
+					page={{ ...pricingPage, theme: parentPage.theme }}
 					section={{
 						...pricingPage.sections[0],
 						columns: pricingPage.sections[0].items.length - 1,
@@ -238,7 +245,7 @@
 									goto(url);
 								};
 
-								let subscriptionPlan = page.subscription?.plan;
+								let subscriptionPlan = parentPage.subscription?.plan;
 
 								if (subscriptionPlan) {
 									if (subscriptionPlan === 'launch' && plan.title === 'Launch') {
