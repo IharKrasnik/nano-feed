@@ -1786,12 +1786,7 @@
 									</div>
 
 									{#if page.name}
-										<div
-											class="font-bold text-lg mb-4 mt-16  _editor-title"
-											class:mt-16={!page._id}
-										>
-											Publish Page
-										</div>
+										<div class="font-bold text-lg mb-4 mt-16  _editor-title">Publish Page</div>
 
 										{#if (!page._id && page.parentPage) || page.isDraft}
 											<div
