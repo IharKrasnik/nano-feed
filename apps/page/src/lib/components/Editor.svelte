@@ -822,38 +822,42 @@
 					/>
 				</svg>
 
-				{#if page._id}
-					{#if selectedTab === 'editor'}
-						<div
-							in:fade={{ delay: 0 }}
-							class:_selected={isInsertPopupShown}
-							class="relative ml-4 flex items-center p-1 cursor-pointer p-2  {isInsertPopupShown
-								? ''
-								: 'opacity-70 hover:opacity-100'}"
-							on:click={() => {
-								if (isInsertPopupShown) {
-									isInsertPopupShown = false;
-								} else {
-									isInsertPopupShown = true;
-									selectedTab = 'editor';
-								}
-							}}
-						>
-							<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="plus" />
-							Insert
-						</div>
-					{:else}
-						<div
-							in:fly={{ delay: 75 }}
-							class="relative ml-4 flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
-							on:click={() => {
+				{#if selectedTab === 'editor' && page._id}
+					<div
+						in:fade={{ delay: 0 }}
+						class:_selected={isInsertPopupShown}
+						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  {isInsertPopupShown
+							? ''
+							: 'opacity-70 hover:opacity-100'}"
+						on:click={() => {
+							if (isInsertPopupShown) {
+								isInsertPopupShown = false;
+							} else {
+								isInsertPopupShown = true;
 								selectedTab = 'editor';
-							}}
-						>
-							<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="arrow-left" />
-							Editor
-						</div>
-					{/if}
+							}
+						}}
+					>
+						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="plus" />
+						Insert
+					</div>
+				{:else if page._id || (!page._id && $allPages.length > 0)}
+					<div
+						in:fly={{ delay: 75 }}
+						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
+						on:click={() => {
+							if (!page._id) {
+								setPageAndDraft({ ...$allPages[0] });
+							}
+							selectedTab = 'editor';
+						}}
+					>
+						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="arrow-left" />
+						Editor
+					</div>
+				{/if}
+
+				{#if page._id}
 					<div
 						in:fade={{ delay: 75 }}
 						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
@@ -1224,6 +1228,29 @@
 							<div class="py-4">
 								{#if selectedTab === 'editor' && page.name}
 									{#if page._id}
+										<select
+											class="w-full mb-2 bg-[#f1f1f1]"
+											bind:value={pageSlug}
+											on:change={(evt) => {
+												let slug = evt.target.value;
+
+												if (slug === '_new') {
+													setPageAndDraft({ ...defaultPage });
+													// page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+													// pageSlug = page.slug;
+												} else {
+													setPageAndDraft({
+														..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
+													});
+													// refreshData();
+												}
+											}}
+										>
+											<option value="_new">📄 Create Page</option>
+											{#each $allPages as page}
+												<option value={page.slug}>{page.name}</option>
+											{/each}
+										</select>
 										<div class="_section mb-8">
 											<div class="flex justify-between items-center ">
 												<select
@@ -1265,8 +1292,8 @@
 												<div class="_section mt-4">
 													<div class="font-bold mb-2 opacity-80">Page Peformance</div>
 													<div
-														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10  border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer "
-														on:click={() => (selectedTab = 'analytics')}
+														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer hover:bg-[#f1f1f1]"
+														on:click={() => (selectedTab = 'growth')}
 													>
 														<div class="border-gray-300 text-sm font-semibold opacity-300">
 															Unique Views
@@ -1278,10 +1305,10 @@
 
 													{#if conversions?.forms}
 														<div
-															class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  {getConversionColor(
+															class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  hover:bg-[#f1f1f1]  {getConversionColor(
 																conversions.forms
 															)}"
-															on:click={() => (selectedTab = 'audience')}
+															on:click={() => (selectedTab = 'analytics')}
 														>
 															<div class="border-gray-300 text-sm font-semibold opacity-300">
 																Forms Conversion Rate
@@ -1295,7 +1322,7 @@
 
 													{#if conversions?.clicks && !conversions?.forms}
 														<div
-															class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer {getConversionColor(
+															class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer hover:bg-[#f1f1f1] {getConversionColor(
 																conversions.clicks
 															)}"
 															on:click={() => (selectedTab = 'analytics')}
@@ -1310,7 +1337,8 @@
 
 													{#if !conversions?.clicks && !conversions?.forms}
 														<div
-															class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg"
+															on:click={() => (selectedTab = 'analytics')}
+															class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-[#f1f1f1]"
 														>
 															<div class="">Conversion Rate</div>
 															<div class="ml-2 font-bold opacity-30">N/A%</div>
@@ -1362,14 +1390,14 @@
 									<EditPost class="none" bind:blog={page.blog} bind:post={$postDraft} />
 								{:else if selectedTab === 'editor'}
 									{#if !page._id || isBrandNameEdit}
-										{#if page.parentPage}
+										<!-- {#if page.parentPage}
 											<BackTo
 												to={'Home Page'}
 												onClick={() => {
 													setPageAndDraft($allPages.find((p) => p._id === page.parentPage._id));
 												}}
 											/>
-										{/if}
+										{/if} -->
 										<div class="_section">
 											<div class="flex justify-between">
 												{#if page.parentPage}
