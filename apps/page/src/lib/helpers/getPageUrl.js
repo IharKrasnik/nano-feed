@@ -13,7 +13,7 @@ export default ({ page }) => {
 			}`;
 		}
 
-		return `${page.parentPage?.slug || page.slug}.${PAGE_URL.replace('https://', '')}${
+		return `https://${page.parentPage?.slug || page.slug}.${PAGE_URL.replace('https://', '')}${
 			page.parentPage ? `/${page.slug}` : ''
 		}`;
 	}

@@ -339,7 +339,7 @@
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
 
 			page.isDirty = false;
-			pageSlug = page.slug;
+			pageSlug = page.parentPage?.slug || page.slug;
 
 			if (!page.heros) {
 				addDefaultHero(page);
@@ -356,6 +356,8 @@
 			if (isNewPage) {
 				if (!page.parentPage) {
 					$allPages = [{ ...page }, ...($allPages || [])];
+				} else {
+					$subPages = [{ ...page }, ...($subPages || [])];
 				}
 
 				isJustCreated = true;
@@ -1053,14 +1055,16 @@
 					</div>
 				{/if}
 
-				<div
-					class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded"
-					on:click={() => {
-						isSettingsModalShown = true;
-					}}
-				>
-					<FeatherIcon size="15" name="settings" />
-				</div>
+				{#if page._id}
+					<div
+						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded"
+						on:click={() => {
+							isSettingsModalShown = true;
+						}}
+					>
+						<FeatherIcon size="15" name="settings" />
+					</div>
+				{/if}
 				<div class:opacity-70={!page?._id || !page?.isDirty}>
 					<Button
 						class="bg-yellow-500 right-0 _primary flex justify-center w-full"
