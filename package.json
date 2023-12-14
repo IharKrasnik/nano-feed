@@ -21,7 +21,8 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "dom-to-image": "^2.6.0"
+    "dom-to-image": "^2.6.0",
+    "svelte-confetti": "1.2"
   },
   "packageManager": "npm@8.5.5"
 }

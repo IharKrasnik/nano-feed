@@ -4,7 +4,9 @@
 	import moment from 'moment-timezone';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
+
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
+
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
@@ -83,7 +85,6 @@
 	import allPages from '$lib/stores/allPages';
 	import isPageSet from '$lib/stores/isPageSet';
 	import pageDraft from '$lib/stores/pageDraft';
-	import postDraft from 'lib/stores/postDraft';
 	import sectionToEdit from '$lib/stores/sectionToEdit';
 	import sectionToPreview from '$lib/stores/sectionToPreview';
 	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
@@ -1228,29 +1229,38 @@
 							<div class="py-4">
 								{#if selectedTab === 'editor' && page.name}
 									{#if page._id}
-										<select
-											class="w-full mb-2 bg-[#f1f1f1]"
-											bind:value={pageSlug}
-											on:change={(evt) => {
-												let slug = evt.target.value;
+										<div class="flex items-center mb-4">
+											<div class="mr-2 flex items-center">
+												<div class="mr-2">
+													<EmojiPicker bind:icon={page.logo} />
+												</div>
+											</div>
 
-												if (slug === '_new') {
-													setPageAndDraft({ ...defaultPage });
-													// page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-													// pageSlug = page.slug;
-												} else {
-													setPageAndDraft({
-														..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
-													});
-													// refreshData();
-												}
-											}}
-										>
-											<option value="_new">📄 Create Page</option>
-											{#each $allPages as page}
-												<option value={page.slug}>{page.name}</option>
-											{/each}
-										</select>
+											<select
+												class="w-full bg-[#f1f1f1]"
+												bind:value={pageSlug}
+												on:change={(evt) => {
+													let slug = evt.target.value;
+
+													if (slug === '_new') {
+														setPageAndDraft({ ...defaultPage });
+														// page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+														// pageSlug = page.slug;
+													} else {
+														setPageAndDraft({
+															..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
+														});
+														// refreshData();
+													}
+												}}
+											>
+												<option value="_new">📄 Create Website</option>
+												{#each $allPages as page}
+													<option value={page.slug}>{page.name}</option>
+												{/each}
+											</select>
+										</div>
+
 										<div class="_section mb-8">
 											<div class="flex justify-between items-center ">
 												<select
@@ -1282,15 +1292,26 @@
 														{/each}
 													{/if}
 												</select>
+												<div class="flex items-center shrink-0 ml-4">
+													<ColorPicker bind:page />
+													<div
+														class="text-2xl ml-2 cursor-pointer bg-[#f3f3f3] p-2 rounded-full"
+														on:click={() => {
+															isSettingsModalShown = true;
+														}}
+													>
+														<FeatherIcon size="15" name="settings" />
+													</div>
+												</div>
 
-												<Button
+												<!-- <Button
 													class="_secondary _small shrink-0 ml-4 opacity-70 transition hover:opacity-100"
 													onClick={addSubpage}>Add Subpage</Button
-												>
+												> -->
 											</div>
 											{#if page._id}
-												<div class="_section mt-4">
-													<div class="font-bold mb-2 opacity-80">Page Peformance</div>
+												<div class="_section mt-4" style="margin-bottom: 0;">
+													<div class="font-bold mb-2 opacity-80">Page performance</div>
 													<div
 														class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer hover:bg-[#f1f1f1]"
 														on:click={() => (selectedTab = 'growth')}
@@ -1350,54 +1371,8 @@
 									{/if}
 								{/if}
 
-								{#if selectedTab === 'editor' && page._id}
-									<!-- <div class="flex justify-between items-center mb-4">
-												<div
-													class="w-full mr-2  _editor-title text-lg font-bold block cursor-pointer transition hover:px-4 rounded-lg hover:bg-[#f5f5f5]"
-													on:click={() => (isBrandNameEdit = true)}
-												>
-													{page.name}
-												</div>
-											</div> -->
-									<div class="flex items-center">
-										<div class="w-full flex justify-between items-center mt-8">
-											<div class="flex items-center">
-												<div class="mr-4">
-													<EmojiPicker bind:icon={page.logo} />
-												</div>
-												<ColorPicker bind:page />
-											</div>
-
-											<div class="flex">
-												<input
-													class="mr-2"
-													type="checkbox"
-													bind:checked={isShowHeatmap}
-													on:change={() => {
-														if (isShowHeatmap) {
-															refreshHeatmap();
-														} else {
-															$heatmap = null;
-														}
-													}}
-												/> Heatmap 🔥
-											</div>
-										</div>
-									</div>
-								{/if}
-
-								{#if $postDraft}
-									<EditPost class="none" bind:blog={page.blog} bind:post={$postDraft} />
-								{:else if selectedTab === 'editor'}
+								{#if selectedTab === 'editor'}
 									{#if !page._id || isBrandNameEdit}
-										<!-- {#if page.parentPage}
-											<BackTo
-												to={'Home Page'}
-												onClick={() => {
-													setPageAndDraft($allPages.find((p) => p._id === page.parentPage._id));
-												}}
-											/>
-										{/if} -->
 										<div class="_section">
 											<div class="flex justify-between">
 												{#if page.parentPage}
@@ -1818,7 +1793,7 @@
 											Publish Page
 										</div>
 
-										{#if !page._id || page.isDraft}
+										{#if (!page._id && page.parentPage) || page.isDraft}
 											<div
 												class="py-16 mb-8 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
 											>
@@ -1836,7 +1811,7 @@
 											</div>
 										{/if}
 
-										{#if page._id}
+										{#if page._id || !page.parentPage}
 											<div
 												class="py-16 mb-32 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
 											>
@@ -1864,7 +1839,7 @@
 
 													{#if page._id && page.isDirty}
 														<div
-															class="cursor-pointer text-sm text-orange-500"
+															class="cursor-pointer text-sm text-orange-500 mt-4"
 															on:click={async () => {
 																setPageAndDraft(
 																	await get(`pages/${page._id}`, {
@@ -2008,6 +1983,12 @@
 					{#if page}
 						{#key page._id}
 							{#if page}
+								{#if isJustCreated}
+									<div class="absolute left-[50%]">
+										<ConfettiExplosion stageHeight={1500} particleCount={300} force={0.3} />
+									</div>
+								{/if}
+
 								<div
 									class=""
 									style={selectedTab === 'editor'
@@ -2018,18 +1999,32 @@
 									{#if selectedTab === 'editor'}
 										{#if page?._id}
 											<div
-												class="absolute text-xs top-1 left-8 flex justify-center w-full opacity-70 "
+												class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
 											>
-												<div class="p-1 px-2">
+												<div class="opacity-70 ">
 													<a
 														target="_blank"
-														class="flex items-center bg-green-400 px-2 rounded-full"
+														class="flex py-0 mt-1 px-2 items-center bg-green-400/20 hover:bg-green-400 transition rounded-full"
 														href={getPageUrl({ page })}
 													>
 														<FeatherIcon size={10} name="globe" class="mr-2" />
 
 														{getPageUrl({ page }).replace('https://', '').replace('www.', '')}</a
 													>
+												</div>
+												<div class="flex justify-center">
+													<input
+														class="mr-2"
+														type="checkbox"
+														bind:checked={isShowHeatmap}
+														on:change={() => {
+															if (isShowHeatmap) {
+																refreshHeatmap();
+															} else {
+																$heatmap = null;
+															}
+														}}
+													/> Show Heatmap
 												</div>
 											</div>
 										{/if}
