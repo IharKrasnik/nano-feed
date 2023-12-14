@@ -116,7 +116,7 @@
 </script>
 
 <div>
-	<div class="font-bold opacity-80 mb-2">Blog</div>
+	<div class="font-bold opacity-80 mb-2 text-lg">Blog</div>
 
 	{#if !$subPages.find((s) => s.slug === 'blog')}
 		<div class="_section">
@@ -124,7 +124,7 @@
 			<div class="mt-2 text-sm opacity-80">Will create /blog subpage</div>
 		</div>
 
-		<div class="mt-4 _section bg-[#fafafa]">
+		<div class="mt-4 _section _info">
 			<div class="font-semibold">Blogs are still cool! Cooler than ever</div>
 			<div class="mt-2">
 				Publish articles to: <br />

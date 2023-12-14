@@ -272,7 +272,7 @@ See you!
 			</div>
 		{/each}
 	{:else if !selectedNewsletter}
-		<div class="_section bg-[#f1f1f1]">
+		<div class="_section _info">
 			<div class="font-bold mb-2">No newsletters yet</div>
 			<div>
 				Send regular newsletters to engage your users and promote your best content or products
@@ -520,7 +520,7 @@ See you!
 			</div>
 		{/each}
 	{:else}
-		<div class="_section bg-[#f1f1f1]">
+		<div class="_section _info">
 			<div class="font-bold mb-2">No messages yet</div>
 
 			{#if triggers.filter((t) => t.isEnabled).length}

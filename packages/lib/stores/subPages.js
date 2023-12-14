@@ -8,6 +8,8 @@ export const refreshSubPages = async ({ page }) => {
 		subPagesStore.set([]);
 		let { results } = await get(`pages/${page.parentPage?._id || page._id}/subpages`, {});
 		subPagesStore.set(results);
+	} else {
+		subPagesStore.set([]);
 	}
 };
 

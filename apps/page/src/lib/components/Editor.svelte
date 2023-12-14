@@ -284,7 +284,7 @@
 
 	let isBrandNameEdit = false;
 
-	const publishPage = async () => {
+	const publishPage = async ({ isDraft = false } = {}) => {
 		// if (!$currentUser) {
 		// 	$pageDraft = { ..._.cloneDeep($pageDraft), _new: page };
 		// 	isSignupFormShown = true;
@@ -318,9 +318,9 @@
 					.replace(' ', '-')
 					.toLowerCase()}`;
 			}
-		} else {
-			page.isDraft = false;
 		}
+
+		page.isDraft = isDraft;
 
 		if (!isNewPage && page.creator && !$currentUser) {
 			return showErrorMessage('Please log in to update the page.');
@@ -555,7 +555,11 @@
 			_id: null,
 			slug: '_new',
 			name: '',
-			parentPage: { ..._.cloneDeep(page) },
+			parentPage: {
+				..._.cloneDeep(
+					page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page
+				)
+			},
 			heros,
 			activeHero: heros[0],
 			title: '',
@@ -564,8 +568,9 @@
 			variablesValues: page.variablesValues
 		};
 
-		// page = { ...$allPages[0], parentPage: page, _id: null, slug: '_new' };
+		selectedTab = 'editor';
 
+		// page = { ...$allPages[0], parentPage: page, _id: null, slug: '_new' };
 		setPageAndDraft(page, { force: true });
 	};
 
@@ -791,6 +796,7 @@
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
 					class="relative logo cursor-pointer"
+					class:_selected={selectedTab === 'editor'}
 					on:click={() => {
 						selectedTab = 'editor';
 					}}
@@ -799,7 +805,8 @@
 						fill-rule="evenodd"
 						clip-rule="evenodd"
 						d="M1.16977 4.12405C0 6.10202 0 8.77201 0 14.112V20.888C0 26.228 0 28.898 1.16977 30.8759C1.89 32.0938 2.9062 33.11 4.12405 33.8302C6.10202 35 8.77201 35 14.112 35H20.888C26.228 35 28.898 35 30.8759 33.8302C32.0938 33.11 33.11 32.0938 33.8302 30.8759C35 28.898 35 26.228 35 20.888V14.112C35 8.77201 35 6.10202 33.8302 4.12405C33.11 2.9062 32.0938 1.89 30.8759 1.16977C28.898 0 26.228 0 20.888 0H14.112C8.77201 0 6.10202 0 4.12405 1.16977C2.9062 1.89 1.89 2.9062 1.16977 4.12405Z"
-						fill="#0C120C"
+						class="fill"
+						fill="currentColor"
 					/>
 					<path
 						d="M12.5 14.4696C12.5 13.8984 11.9054 13.4696 11.2273 13.4696C10.9016 13.4696 10.5758 13.5673 10.3276 13.7626L5.87307 17.2626C5.62429 17.4852 5.5 17.7415 5.5 17.9696C5.5 18.1977 5.62429 18.5102 5.87287 18.704L10.3274 22.204C10.575 22.4009 10.9011 22.4696 11.2273 22.4696C11.9054 22.4696 12.5 22.0405 12.5 21.4696C12.5 21.2137 12.3757 20.9577 12.1271 20.7624L8.57244 17.9696L12.1273 15.1765C12.3767 15.0071 12.5 14.754 12.5 14.4696Z"
@@ -816,19 +823,37 @@
 				</svg>
 
 				{#if page._id}
-					<div
-						in:fade={{ delay: 0 }}
-						class:_selected={isInsertPopupShown}
-						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  {isInsertPopupShown
-							? ''
-							: 'opacity-70 hover:opacity-100'}"
-						on:click={() => {
-							isInsertPopupShown = true;
-						}}
-					>
-						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="plus" />
-						Insert
-					</div>
+					{#if selectedTab === 'editor'}
+						<div
+							in:fade={{ delay: 0 }}
+							class:_selected={isInsertPopupShown}
+							class="relative ml-4 flex items-center p-1 cursor-pointer p-2  {isInsertPopupShown
+								? ''
+								: 'opacity-70 hover:opacity-100'}"
+							on:click={() => {
+								if (isInsertPopupShown) {
+									isInsertPopupShown = false;
+								} else {
+									isInsertPopupShown = true;
+									selectedTab = 'editor';
+								}
+							}}
+						>
+							<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="plus" />
+							Insert
+						</div>
+					{:else}
+						<div
+							in:fly={{ delay: 75 }}
+							class="relative ml-4 flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
+							on:click={() => {
+								selectedTab = 'editor';
+							}}
+						>
+							<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="arrow-left" />
+							Editor
+						</div>
+					{/if}
 					<div
 						in:fade={{ delay: 75 }}
 						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
@@ -978,12 +1003,12 @@
 				} -->
 			</div>
 
-			<div class="absolute w-full flex items-center justify-center">
+			<div class="2xl:absolute w-full flex items-center justify-center">
 				{#if $currentUser}
 					{#if $allPages}
 						<div class="flex items-center">
-							<select
-								class="ml-8 w-full max-w-[200px]"
+							<!-- <select
+								class="w-full max-w-[200px] bg-[#f1f1f1]"
 								bind:value={pageSlug}
 								on:change={(evt) => {
 									let slug = evt.target.value;
@@ -1000,22 +1025,59 @@
 									}
 								}}
 							>
+								<option value="_new">📄 Create Page</option>
 								{#each $allPages as page}
 									<option value={page.slug}>{page.name}</option>
 								{/each}
-								<option value="_new">📄 New Page</option>
-							</select>
+							</select> -->
 
-							<button
-								class="ml-4 shrink-0 _secondary _small opacity-70 hover:opacity-100"
-								style="padding: 4px 12px;"
-								on:click={() => {
-									setPageAndDraft({ ...defaultPage });
-									selectedTab = 'editor';
-								}}
-							>
-								New</button
-							>
+							{#if selectedTab === 'editor' && page._id}
+								<select
+									in:fade={{}}
+									class="ml-2 w-full bg-[#f1f1f1]"
+									bind:value={page._id}
+									on:change={async (evt) => {
+										if (evt.target.value === '') {
+											evt.preventDefault();
+											return addSubpage();
+										}
+
+										if (page.parentPage && evt.target.value === page.parentPage._id) {
+											setPageAndDraft(
+												{ ...$allPages.find((p) => p._id === page.parentPage._id) },
+												{
+													force: true
+												}
+											);
+										} else {
+											setPageAndDraft(
+												await get(`pages/${evt.target.value}`, {
+													parentPageSlug: page.parentPage?.slug || page.slug
+												}),
+												{ force: true }
+											);
+										}
+										evt.preventDefault();
+									}}
+								>
+									<option value={page.parentPage?._id || page._id}>Home</option>
+									{#if $subPages?.length}
+										{#each $subPages as subpage (subpage._id)}
+											<option value={subpage._id}>/{subpage.slug}</option>
+										{/each}
+									{/if}
+								</select>
+
+								<button
+									class="ml-4 shrink-0 _secondary _small opacity-50 hover:opacity-100"
+									style="padding: 4px 12px;"
+									on:click={() => {
+										addSubpage();
+									}}
+								>
+									Add Subpage</button
+								>
+							{/if}
 						</div>
 					{:else}
 						<Loader />
@@ -1027,7 +1089,7 @@
 				{/if}
 			</div>
 
-			<div class="relative flex items-center" transition:fly={{ x: 50, duration: 150 }}>
+			<div class="relative flex items-center shrink-0" transition:fly={{ x: 50, duration: 150 }}>
 				{#if page._id && onlineUsersCount !== -1}
 					<div
 						class="flex mr-8 shrink-0 items-center justify-between flex border {onlineUsersCount
@@ -1194,12 +1256,10 @@
 													{/if}
 												</select>
 
-												{#if !page.parentPage}
-													<Button
-														class="_secondary _small shrink-0 ml-4 opacity-70 transition hover:opacity-100"
-														onClick={addSubpage}>Add Subpage</Button
-													>
-												{/if}
+												<Button
+													class="_secondary _small shrink-0 ml-4 opacity-70 transition hover:opacity-100"
+													onClick={addSubpage}>Add Subpage</Button
+												>
 											</div>
 											{#if page._id}
 												<div class="_section mt-4">
@@ -1345,12 +1405,12 @@
 															{#if !page.isInDir}
 																<div class="mr-2">
 																	<input type="checkbox" bind:checked={page.isUseDatabase} /> Attach
-																	to Database
+																	Database
 																</div>
 															{/if}
 															{#if !page.isUseDatabase}
 																<div>
-																	<input type="checkbox" bind:checked={page.isInDir} /> Sub-directory
+																	<input type="checkbox" bind:checked={page.isInDir} /> In sub-directory
 																</div>
 															{/if}
 														</div>
@@ -1723,47 +1783,82 @@
 									</div>
 
 									{#if page.name}
-										{#if page._id}
-											<div class="font-bold text-lg mb-8 mt-16  _editor-title">Publish Page</div>
-										{/if}
 										<div
-											class="py-16 mb-32 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
+											class="font-bold text-lg mb-4 mt-16  _editor-title"
 											class:mt-16={!page._id}
 										>
-											<div class="flex items-center w-full justify-between">
-												<div>
-													{#if page.name}
-														{#if page.renderType === 'article'}
-															<Button class="_primary" onClick={publishPage}>Publish Article</Button
+											Publish Page
+										</div>
+
+										{#if !page._id || page.isDraft}
+											<div
+												class="py-16 mb-8 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
+											>
+												<div class="flex items-center w-full justify-between">
+													<div class=" w-full">
+														<div>
+															<Button
+																class="_primary mr-2"
+																onClick={() => publishPage({ isDraft: true })}>Save As Draft</Button
 															>
-														{:else}
-															<Button class="_primary" onClick={publishPage}>Publish Page</Button>
+															<div class="text-sm mt-2">Save page but don't publish yet</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										{/if}
+
+										{#if page._id}
+											<div
+												class="py-16 mb-32 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
+											>
+												<div>
+													<div>
+														{#if page._id || !page.parentPage}
+															<div>
+																{#if page.name}
+																	{#if page.renderType === 'article'}
+																		<Button class="_primary" onClick={publishPage}>
+																			Publish Article</Button
+																		>
+																	{:else}
+																		<Button class="_primary" onClick={publishPage}
+																			>Publish Page</Button
+																		>
+																	{/if}
+																{/if}
+																<div class="text-sm mt-2">
+																	The changes will appear on your page live URL
+																</div>
+															</div>
 														{/if}
+													</div>
+
+													{#if page._id && page.isDirty}
+														<div
+															class="cursor-pointer text-sm text-orange-500"
+															on:click={async () => {
+																setPageAndDraft(
+																	await get(`pages/${page._id}`, {
+																		...(page.parentPage
+																			? { parentPageSlug: page.parentPage?.slug }
+																			: {})
+																	}),
+																	{ force: true }
+																);
+
+																showSuccessMessage('Page changes were reset');
+															}}
+														>
+															Reset changes
+														</div>
 													{/if}
 												</div>
+												{#if !page._id || page.isDraft}{:else}
 
-												{#if page._id && page.isDirty}
-													<div
-														class="cursor-pointer text-sm text-orange-500"
-														on:click={async () => {
-															setPageAndDraft(
-																await get(`pages/${page._id}`, {
-																	...(page.parentPage
-																		? { parentPageSlug: page.parentPage?.slug }
-																		: {})
-																}),
-																{ force: true }
-															);
-
-															showSuccessMessage('Page changes were reset');
-														}}
-													>
-														Reset Page
-													</div>
 												{/if}
 											</div>
-											<div class="text-sm mt-2">The changes will appear on your page live URL</div>
-										</div>
+										{/if}
 									{/if}
 									<hr class="my-8" />
 									{#if page?._id}
@@ -1898,8 +1993,14 @@
 												class="absolute text-xs top-1 left-8 flex justify-center w-full opacity-70 "
 											>
 												<div class="p-1 px-2">
-													<a target="_blank" href={getPageUrl({ page })}
-														>{getPageUrl({ page }).replace('https://', '').replace('www.', '')}</a
+													<a
+														target="_blank"
+														class="flex items-center bg-green-400 px-2 rounded-full"
+														href={getPageUrl({ page })}
+													>
+														<FeatherIcon size={10} name="globe" class="mr-2" />
+
+														{getPageUrl({ page }).replace('https://', '').replace('www.', '')}</a
 													>
 												</div>
 											</div>
@@ -1993,6 +2094,18 @@
 		padding: 4px;
 		background-color: var(--editor-accent-color);
 		@apply rounded;
+	}
+
+	:global(.logo._selected .fill) {
+		fill: #333333;
+	}
+
+	:global(.logo .fill) {
+		fill: #8b786d;
+	}
+
+	:global(.logo:hover .fill) {
+		fill: #333333;
 	}
 
 	._selected {

@@ -397,13 +397,17 @@
 	>
 		<div class="overflow-x-hidden">
 			{#if isCollapsed}
-				<div class="text font-bold">
-					{@html striptags(hero.title || '')}
-				</div>
-				{#if hero.subtitle}
-					<div class="mt-1 truncate">
-						{@html striptags(hero.subtitle || '')}
+				{#if hero.title || hero.subtitle}
+					<div class="text font-bold">
+						{@html striptags(hero.title || '')}
 					</div>
+					{#if hero.subtitle}
+						<div class="mt-1 truncate">
+							{@html striptags(hero.subtitle || '')}
+						</div>
+					{/if}
+				{:else}
+					<div class="opacity-80">empty</div>
 				{/if}
 			{/if}
 		</div>

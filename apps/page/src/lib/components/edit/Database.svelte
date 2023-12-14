@@ -308,7 +308,7 @@
 </script>
 
 <div class="flex w-full justify-between items-center  mb-4">
-	<div class="text-sm font-bold opacity-80">Databases</div>
+	<div class="text-lg font-bold opacity-80">Databases</div>
 	{#if selectedStreamSlug !== '_new'}
 		<button
 			class="_secondary _small opacity-50 hover:opacity-100"

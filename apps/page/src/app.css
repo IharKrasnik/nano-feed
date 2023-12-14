@@ -4,9 +4,7 @@
 
 ._section {
 	border: 1px #e0dede solid;
-	border-radius: 8px;
-	padding: 16px;
-	margin-bottom: 8px;
+	@apply rounded-lg p-4 mb-4;
 }
 
 ._section._clickable {
@@ -25,6 +23,10 @@
 ._section._highlighted,
 ._section-item._highlighted {
 	border: 1px var(--accent-color) solid !important;
+}
+
+._section._info {
+	@apply text-sm bg-[#f1f1f1];
 }
 
 ._glowing {

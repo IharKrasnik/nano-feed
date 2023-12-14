@@ -1,5 +1,6 @@
 <script>
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly } from 'svelte/transition';
 
@@ -148,7 +149,11 @@
 			/>
 
 			<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
-			<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
+
+			<div class="relative flex items-center">
+				<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
+				<FeatherIcon class="absolute right-4" size={15} color="#555555" name="globe" />
+			</div>
 
 			{#if sectionItem.interactiveRenderType === 'links'}
 				<hr class="my-8 opacity-70" />
