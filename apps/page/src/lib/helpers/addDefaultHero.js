@@ -21,7 +21,7 @@ export default (page) => {
 			actionUrl: page.actionUrl,
 
 			url2: page.url2,
-			isUrl2Button: page.isUrl2Button,
+			isUrl2Link: page.isUrl2Link,
 
 			bgImageUrl: page.theme?.heroBgImage,
 

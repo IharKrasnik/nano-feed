@@ -4,6 +4,7 @@
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { get, post, put } from 'lib/api';
 
+	import allPages from '$lib/stores/allPages';
 	import Loader from 'lib/components/Loader.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import currentUser from 'lib/stores/currentUser';
@@ -20,6 +21,8 @@
 
 	let cssVarStyles;
 	let styles;
+
+	let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
 
 	$: if (page) {
 		let res = getPageCssStyles(page);
@@ -43,7 +46,7 @@
 
 	let loadMessages = async () => {
 		let messagesResults = await get('customerMessages', {
-			pageId: page._id,
+			pageId: parentPage._id,
 			chatRoomId: chatRoom._id
 		});
 
@@ -60,7 +63,7 @@
 
 		newMessage = { messageHTML: '', attachments: [] };
 
-		let createdMessage = await post(`customerMessages?pageId=${page.parent?._id || page._id}`, {
+		let createdMessage = await post(`customerMessages?pageId=${parentPage._id}`, {
 			...toCreate,
 			chatRoom: { _id: chatRoom._id }
 		});
@@ -96,8 +99,7 @@
 						<div class="border p-8 w-full max-w-[800px] mx-auto mt-8">
 							<div>
 								<span class="font-semibold">
-									{$currentUser.fullName.split(' ')[0] || ''} from {page.parentPage?.name ||
-										page.name}
+									{$currentUser.fullName.split(' ')[0] || ''} from {parentPage.name}
 								</span>
 								<span class="opacity-80">(info@mmntm.build)</span>
 							</div>
@@ -182,7 +184,7 @@
 			<div class="border p-8 w-full max-w-[800px] mx-auto mt-8">
 				<div>
 					<span class="font-semibold">
-						{$currentUser.fullName.split(' ')[0] || ''} from {page.parentPage?.name || page.name}
+						{$currentUser.fullName.split(' ')[0] || ''} from {parentPage.name}
 					</span>
 					<span class="opacity-80">(info@mmntm.build)</span>
 				</div>

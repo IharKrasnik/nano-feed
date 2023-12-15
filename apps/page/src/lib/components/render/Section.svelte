@@ -913,7 +913,7 @@
 												}
 
 												if (item.feedItemId) {
-													post(`feed/${item.feedItemId}/view`);
+													post(`feed/${item.feedItemId}/view?pageId=${page._id}`);
 
 													trackClick({
 														pageId: page?._id,

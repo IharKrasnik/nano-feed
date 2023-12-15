@@ -590,14 +590,14 @@ button._islarge {
 	color: white;
 }
 
-._alternative {
+button._alternative {
 	background: none;
 	outline: 1px var(--accent-color) solid;
 	color: var(--text-color);
 	@apply transition;
 }
 
-._alternative:hover {
+button._alternative:hover {
 	background: rgba(255, 255, 255, 0.3);
 }
 

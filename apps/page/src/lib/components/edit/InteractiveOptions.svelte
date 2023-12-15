@@ -161,7 +161,7 @@
 
 				<div class="w-full flex items-center mt-4 mb-2 justify-between">
 					<div class="text-sm opacity-70 ">
-						{sectionItem.isUrl2Button ? 'Button 2' : 'Link 2'} text
+						{sectionItem.isUrl2Link ? 'Link 2' : 'Button 2'} text
 					</div>
 					<div>
 						<input type="checkbox" bind:checked={sectionItem.isUrl2Button} />

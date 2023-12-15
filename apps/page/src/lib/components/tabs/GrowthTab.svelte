@@ -1,14 +1,18 @@
 <script>
-	import { get } from 'lib/api';
+	import moment from 'moment';
+	import _ from 'lodash';
+	import { get, post } from 'lib/api';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 
 	import allPages from '$lib/stores/allPages';
+	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	import getPageCssStyles from '$lib/services/getPageCssStyles';
 	import RenderSection from '$lib/components/render/Section.svelte';
 	import { goto } from '$app/navigation';
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
+	import MomentumWidget from 'lib/components/MomentumWidget.svelte';
 
 	export let page;
 	export let selectedGrowthTab = 'dashboard';
@@ -28,9 +32,11 @@
 	let goalPercentage = 0;
 
 	let pricingPage = null;
+	let defaultPricingPage = null;
 
 	let getPricingPage = async () => {
 		pricingPage = await get(`pricing`);
+		defaultPricingPage = _.cloneDeep(pricingPage);
 	};
 
 	let pricingStats = null;
@@ -53,6 +59,15 @@
 		goalPercentage = (parentPage.totalSignupsCount / 10) * 100;
 		goalCurrentValue = `${parentPage.totalSignupsCount} signups`;
 	}
+
+	let newMoment = {};
+
+	let _pricingRefreshTimestamp = new Date();
+
+	let updatePricingButtons = () => {
+		pricingPage = _.cloneDeep(defaultPricingPage);
+		_pricingRefreshTimestamp = new Date();
+	};
 </script>
 
 <div class="p-8 bg-background" style={cssVarStyles}>
@@ -150,7 +165,7 @@
 							<div class="_section w-full">
 								<div class="flex flex-col w-full gap-2">
 									<div class="w-full flex justify-between">
-										<div>Subpages</div>
+										<div>Custom subpages</div>
 										<div>
 											{pricingStats.subPages}/{pricingPage.limits.subPages[
 												parentPage.subscription?.plan || 'free'
@@ -229,49 +244,108 @@
 						</div>
 					</div>
 				</div>
-				<RenderSection
-					page={{ ...pricingPage, theme: parentPage.theme }}
-					section={{
-						...pricingPage.sections[0],
-						columns: pricingPage.sections[0].items.length - 1,
-						items: pricingPage.sections[0].items
-							.filter((i) => i.pricing.amount > 0)
-							.map((plan) => {
-								plan.onUrlClick = async () => {
-									let { url } = await get('stripe/subscribe', {
-										pageId: page.parentPage?._id || page._id,
-										plan: plan.title.toLowerCase()
-									});
-									goto(url);
-								};
 
-								let subscriptionPlan = parentPage.subscription?.plan;
+				{#key _pricingRefreshTimestamp}
+					<RenderSection
+						page={{ ...pricingPage, theme: parentPage.theme }}
+						section={{
+							...pricingPage.sections[0],
+							columns: pricingPage.sections[0].items.length - 1,
+							items: pricingPage.sections[0].items
+								.filter((i) => i.pricing.amount > 0)
+								.map((plan) => {
+									plan.onUrlClick = async () => {
+										let planName = plan.title.toLowerCase();
 
-								if (subscriptionPlan) {
-									if (subscriptionPlan === 'launch' && plan.title === 'Launch') {
-										plan.interactiveRenderType = null;
-									} else if (subscriptionPlan === 'startup') {
-										if (plan.title === 'Launch') {
-											plan.callToActionText = 'Downgrade';
-										} else if (plan.title === 'Startup') {
-											plan.interactiveRenderType = null;
+										let { url, isUpgraded, subscription } = await get('stripe/subscribe', {
+											pageId: page.parentPage?._id || page._id,
+											plan: planName
+										});
+
+										if (isUpgraded) {
+											parentPage.subscription = {
+												id: subscription.id,
+												plan: planName,
+												activatedOn: new Date()
+											};
+
+											showSuccessMessage(
+												`You've upgraded ${parentPage.name} to ${plan.title} plan. Thank you!`
+											);
+
+											updatePricingButtons();
+										} else if (url) {
+											goto(url);
+										}
+									};
+
+									if (parentPage.subscription && !parentPage.subscription.isStopped) {
+										let subscriptionPlan = parentPage.subscription.plan;
+
+										if (subscriptionPlan === plan.title.toLowerCase()) {
+											if (!parentPage.subscription.cancelledOn) {
+												plan.interactiveRenderType = 'link';
+												plan.isUrlAlternative = true;
+												plan.callToActionText = 'Cancel';
+												plan.title += ' (Current Plan)';
+												plan.url = '';
+
+												plan.onUrlClick = async () => {
+													await post(`stripe/cancel?pageId=${parentPage._id}`);
+													parentPage.subscription.cancelledOn = new Date();
+													showSuccessMessage(`Plan ${parentPage.subscription.plan} was cancelled.`);
+													updatePricingButtons();
+												};
+											} else {
+												let planName = plan.title;
+												plan.interactiveRenderType = 'link';
+												plan.title += ' (Current Plan)';
+												plan.callToActionText = 'Reactivate';
+												plan.url = '';
+												plan.ctaExplainer = `Cancelled on ${moment(
+													parentPage.subscription.cancelledOn
+												).format('MMM DD')}`;
+
+												plan.onUrlClick = async () => {
+													await post(`stripe/reactivate?pageId=${parentPage._id}`);
+													parentPage.subscription.cancelledOn = null;
+													plan.callToActionText = '';
+
+													showSuccessMessage(`Plan ${planName} was reactivated. Thank you!`);
+													updatePricingButtons();
+												};
+											}
+										} else if (subscriptionPlan === 'startup') {
+											if (plan.title === 'Launch') {
+												plan.callToActionText = 'Downgrade';
+												plan.isUrlAlternative = true;
+											}
+										} else {
+											plan.callToActionText = 'Upgrade';
 										}
 									} else {
 										plan.callToActionText = 'Upgrade';
 									}
-								} else {
-									plan.callToActionText = 'Upgrade';
-								}
 
-								return plan;
-							}),
-						title: 'Upgrade',
-						description: ''
-					}}
-				/>
+									return plan;
+								}),
+							title: 'Upgrade',
+							description: ''
+						}}
+					/>
+				{/key}
 			{:else}
 				<div class="flex justify-center my-8"><Loader /></div>
 			{/if}
+		{:else if selectedGrowthTab === 'create'}
+			<MomentumWidget
+				title="Publish Content & Grow"
+				description="Share useful content about your product and journey. Create daily. Build trust and grow your metrics."
+				placeholderContent={'test'}
+				isCollapsed={false}
+				bind:newMoment
+				onSent={() => {}}
+			/>
 		{/if}
 	</div>
 </div>

@@ -113,6 +113,7 @@
 					<!-- <script defer src="http://localhost:5173/wave.js"></script> -->
 				{/if}
 			{:else}
+				<script defer src="https://wave.mmntm.build/wave.js"></script>
 				<Editor />
 			{/if}
 		{/if}

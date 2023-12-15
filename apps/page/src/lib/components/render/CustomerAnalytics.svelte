@@ -48,7 +48,7 @@
 
 	<div class=" max-w-[600px] mx-auto">
 		{#each events as event}
-			<div class="py-4">
+			<div class="py-4 mb-4">
 				<div class="flex items-start">
 					<div class="rounded-full border p-2">
 						<FeatherIcon

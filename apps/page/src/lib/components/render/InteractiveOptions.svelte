@@ -8,6 +8,7 @@
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import heatmap, { getHeatmapClicksCount } from '$lib/stores/heatmap';
 
+	import Loader from 'lib/components/Loader.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
 	import Popup from '$lib/components/Popup.svelte';
@@ -30,6 +31,9 @@
 	export let itemClass = 'p-4 mx-4';
 	export let urlClass = '';
 	export let url2Class = '';
+
+	let isUrlLoading = false;
+	let isUrl2Loading = false;
 
 	import refreshConditionsTimestamp from '$lib/stores/refreshConditionsTimestamp';
 
@@ -358,7 +362,7 @@
 						  })
 						: ''}
 					href={sectionItem.url}
-					on:click={(evt) => {
+					on:click={async (evt) => {
 						trackQuestionClick({
 							url: sectionItem.url,
 							callToActionText: sectionItem.callToActionText
@@ -374,8 +378,14 @@
 						});
 
 						if (sectionItem.onUrlClick) {
-							sectionItem.onUrlClick();
 							evt.preventDefault();
+
+							isUrlLoading = true;
+							try {
+								await sectionItem.onUrlClick();
+							} finally {
+								isUrlLoading = false;
+							}
 							return;
 						}
 
@@ -389,10 +399,18 @@
 						{sectionItem.callToActionText || 'Learn More →'}
 					{:else}
 						<button
-							class="w-full shadow hover:shadow-lg hover:shadow-white/50 shadow-white/50 flex justify-center items-center {size
+							class="relative overflow-hidden w-full shadow hover:shadow-lg hover:shadow-white/50 shadow-white/50 flex justify-center items-center {size
 								? `_is${size}`
 								: ''}"
+							class:_alternative={sectionItem.isUrlAlternative}
 						>
+							{#if isUrlLoading}
+								<div
+									class="absolute w-full h-full flex justify-center items-center backdrop-blur-lg rounded-full"
+								>
+									<Loader theme={page.theme?.theme || 'light'} />
+								</div>
+							{/if}
 							{#if sectionItem.urlIcon}
 								<Emoji
 									width={size === 'small' ? 15 : 22}
@@ -439,10 +457,12 @@
 							}
 						}}
 					>
-						{#if sectionItem.isUrl2Button}
+						{#if sectionItem.isUrl2Link}
+							{sectionItem.callToActionText2 || 'Learn More →'}
+						{:else}
 							<button
 								class="w-full flex items-center justify-center {size ? `_is${size}` : ''}"
-								class:_alternative={!sectionItem.isUrlLink}
+								class:_alternative={!sectionItem.isUrlLink || sectionItem.isUrl2Alternative}
 							>
 								{#if sectionItem.url2Icon}
 									<Emoji
@@ -453,8 +473,6 @@
 								{/if}
 								{sectionItem.callToActionText2 || 'Learn More →'}
 							</button>
-						{:else}
-							{sectionItem.callToActionText2 || 'Learn More →'}
 						{/if}
 					</a>
 				{/if}
