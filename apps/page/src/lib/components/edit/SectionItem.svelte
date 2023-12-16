@@ -114,7 +114,11 @@
 	<div class="relative flex justify-between items-center mb-4">
 		<div class="flex items-center w-full">
 			{#if (section.renderType !== 'form' && section.renderType !== 'carousel') || item.isActionSuccessSection}
-				<EmojiPicker bind:icon={item.emoji} />
+				<EmojiPicker
+					bind:icon={item.emoji}
+					bind:color={item.iconColor}
+					bind:bgColor={item.emojiBgColor}
+				/>
 			{/if}
 
 			{#if isWithUrl && section.renderType !== 'form' && (section.renderType !== 'callout' || section.id === item.id)}

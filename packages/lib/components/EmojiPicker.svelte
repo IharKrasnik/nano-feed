@@ -14,9 +14,14 @@
 	export { clazz as class };
 
 	export let icon;
+	export let bgColor = null;
+	export let color = null;
 	export let isNoCustom = false;
 	export let defaultIcon;
 	export let onUpdated = () => {};
+
+	let isUseBgColor = !!bgColor;
+	let isUseColor = !color;
 
 	if (!icon && defaultIcon) {
 		icon = defaultIcon;
@@ -179,9 +184,26 @@
 									isEmojiPickerShown = false;
 								}}
 							>
-								<FeatherIcon size="20" name={featherIconName} />
+								<FeatherIcon size="20" name={featherIconName} {color} />
 							</div>
 						{/each}
+					</div>
+					<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede] ">
+						<input
+							type="checkbox"
+							bind:checked={isUseColor}
+							on:change={(evt) => {
+								if (!isUseColor) {
+									color = null;
+								}
+							}}
+						/>
+						Use different color
+						{#if isUseColor}
+							<div class="mt-2">
+								<input type="color" bind:value={color} />
+							</div>
+						{/if}
 					</div>
 				</div>
 			{:else if selectedTab === 'more'}
@@ -210,6 +232,25 @@
 				</div>
 			{/if}
 
+			{#if icon}
+				<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede] ">
+					<input
+						type="checkbox"
+						bind:checked={isUseBgColor}
+						on:change={(evt) => {
+							if (!isUseBgColor) {
+								bgColor = null;
+							}
+						}}
+					/>
+					Add background color
+					{#if isUseBgColor}
+						<div class="mt-2">
+							<input type="color" bind:value={bgColor} />
+						</div>
+					{/if}
+				</div>
+			{/if}
 			{#if icon}
 				<div
 					class="{theme === 'light'

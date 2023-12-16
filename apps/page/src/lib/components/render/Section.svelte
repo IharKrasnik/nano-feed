@@ -1079,10 +1079,13 @@
 																			class="{emojiStyle[section.columns]} _section-img mr-2 mb-4"
 																		>
 																			<Emoji
+																				bind:emoji={item.emoji}
+																				bind:color={item.iconColor}
+																				bind:bgColor={item.emojiBgColor}
+																				width={30}
 																				theme={page.parentPage?.theme?.theme ||
 																					page?.theme?.theme ||
 																					'light'}
-																				bind:emoji={item.emoji}
 																			/>
 																		</div>
 																	{/if}
@@ -1099,13 +1102,18 @@
 																		>
 																			{#if item.emoji && item.theme?.isIconLeft}
 																				<div
-																					class="{emojiStyle[section.columns]} _section-img mr-2"
+																					class="{emojiStyle[
+																						section.columns
+																					]} flex _section-img mr-2"
 																				>
 																					<Emoji
+																						bind:emoji={item.emoji}
+																						bind:color={item.iconColor}
+																						bind:bgColor={item.emojiBgColor}
+																						width={25}
 																						theme={page.parentPage?.theme?.theme ||
 																							page?.theme?.theme ||
 																							'light'}
-																						bind:emoji={item.emoji}
 																					/>
 																				</div>
 																			{/if}
@@ -1142,11 +1150,13 @@
 																			{#if item.emoji && item.theme.isIconLeft}
 																				<Emoji
 																					width={16}
+																					bind:emoji={item.emoji}
+																					bind:color={item.iconColor}
+																					bind:bgColor={item.emojiBgColor}
 																					class="sm:inline mb-1 sm:mb-0"
 																					theme={page.parentPage?.theme?.theme ||
 																						page?.theme?.theme ||
 																						'light'}
-																					bind:emoji={item.emoji}
 																				/>{/if}<ContentEditableIf
 																				class="_inline_title sm:inline mb-1 sm:mb-0 font-medium"
 																				style="color: {page.theme?.theme === 'dark'
