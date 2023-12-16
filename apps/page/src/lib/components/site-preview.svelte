@@ -50,6 +50,7 @@
 
 	export let isEdit = false;
 	export let isCloneable = false;
+	export let onInsert;
 
 	export let page = {
 		name: 'momentum',
@@ -527,7 +528,7 @@
 													{#if $sectionToEdit && $sectionToEdit.id === section.id}
 														<div bind:this={editEl} style="scroll-margin-top: 60px;">
 															<div
-																class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center"
+																class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
 															>
 																<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
 																	name="arrow-down"
@@ -539,10 +540,11 @@
 																	bind:themeStyles={styles}
 																	bind:section={$sectionToEdit}
 																	bind:isEdit
+																	{onInsert}
 																/>
 															</div>
 															<div
-																class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center"
+																class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
 															>
 																<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
 																	name="arrow-up"
@@ -585,6 +587,7 @@
 																	bind:themeStyles={styles}
 																	bind:isEdit
 																	bind:isCloneable
+																	{onInsert}
 																	style={false && page.theme?.isZebra && i % 2 === 0
 																		? page.theme?.theme === 'dark'
 																			? `background-color: ${lighten(

@@ -319,8 +319,6 @@
 		})
 	};
 
-	debugger;
-
 	let pageSlug = '_new';
 	let selectedTab = 'editor';
 
@@ -763,6 +761,7 @@
 	let selectedTrigger;
 	let selectedChatRoom;
 	let selectedNewsletter;
+	let selectedTemplatePage;
 
 	let onlineUsersCount = -1;
 
@@ -967,7 +966,7 @@
 			class="fixed z-10 w-full h-[60px] bg-white flex items-center justify-between px-6 border-b "
 		>
 			{#if isInsertPopupShown}
-				<Insert bind:isInsertPopupShown bind:page />
+				<Insert bind:isInsertPopupShown bind:selectedTemplatePage bind:page />
 			{/if}
 			<div
 				class="relative z-10 flex gap-1 items-center font-semibold _header-menu"
@@ -2234,7 +2233,7 @@
 											/>
 										{/if}
 									{:else if isInsertPopupShown}
-										<InsertTab bind:page />
+										<InsertTab bind:isInsertPopupShown bind:page bind:selectedTemplatePage />
 									{:else if selectedTab === 'database'}
 										<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 									{:else if selectedTab === 'analytics'}

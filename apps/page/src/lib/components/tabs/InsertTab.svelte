@@ -3,6 +3,7 @@
 	import moment from 'moment-timezone';
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { get, post, put } from 'lib/api';
+	import { v4 as uuidv4 } from 'uuid';
 
 	import allPages from '$lib/stores/allPages';
 	import SitePreview from '$lib/components/site-preview.svelte';
@@ -10,10 +11,19 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import currentUser from 'lib/stores/currentUser';
 	import getPageCssStyles from '$lib/services/getPageCssStyles';
-	import { pages as templatePages, feed as templateFeed } from '$lib/stores/pageTemplates';
+	import sectionToEdit from '$lib/stores/sectionToEdit';
+
+	import {
+		pages as templatePages,
+		feed as templateFeed,
+		selectTemplatePage
+	} from '$lib/stores/pageTemplates';
+
 	import getDomain from 'lib/helpers/getDomain';
 
 	export let page;
+	export let selectedTemplatePage;
+	export let isInsertPopupShown;
 
 	let newMessage = {
 		messageHTML: ''
@@ -30,29 +40,8 @@
 		styles = res.styles;
 	}
 
-	let selectedTemplatePage;
-
 	let selectDefaultTemplate = async () => {
-		let feedItem = $templateFeed.results[0];
-
-		let domain = getDomain($templateFeed.results[0].url);
-		let subPageSlug = feedItem.url.replace(domain + '/', '').replace('https://', '');
-
-		selectedTemplatePage = await get(
-			`pages/${encodeURIComponent(subPageSlug || domain.replace('.mmntm.page', ''))}`,
-			{
-				...(subPageSlug ? { parentPageSlug: domain } : {})
-			}
-		);
-
-		selectedTemplatePage.subPages = [];
-
-		let parentPage = page.parentPage || page;
-
-		selectedTemplatePage.theme.backgroundColor = parentPage.theme?.backgroundColor;
-		selectedTemplatePage.theme.accentColor = parentPage.theme?.accentColor;
-		selectedTemplatePage.theme.theme = parentPage.theme?.theme;
-		selectedTemplatePage.theme.buttonColor = parentPage.theme.buttonColor;
+		selectedTemplatePage = await selectTemplatePage($templateFeed.results[0], { page });
 	};
 
 	let loadTemplateFeed = async () => {
@@ -77,16 +66,28 @@
 <div class="px-8 py-16 bg-background overflow-y-auto" style={cssVarStyles} />
 
 {#if selectedTemplatePage}
-	<SitePreview
-		class="p-4"
-		isNoVars
-		isEmbed
-		noStickyHeader={true}
-		isNoBadge={true}
-		isEdit
-		isCloneable
-		page={selectedTemplatePage}
-	/>
+	{#key selectedTemplatePage._id}
+		<SitePreview
+			class="p-4"
+			isNoVars
+			isEmbed
+			noStickyHeader={true}
+			isNoBadge={true}
+			isEdit
+			isCloneable
+			page={selectedTemplatePage}
+			onInsert={(section) => {
+				let newSection = _.cloneDeep(section);
+				newSection.id = uuidv4();
+				page.sections = [...page.sections, newSection];
+
+				$sectionToEdit = newSection;
+
+				selectedTemplatePage = null;
+				isInsertPopupShown = false;
+			}}
+		/>
+	{/key}
 {/if}
 
 <style>
