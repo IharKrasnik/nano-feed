@@ -512,6 +512,10 @@ a._item-title:hover {
 	color: var(--section-description-text-color-opposite);
 }
 
+._color-accent {
+	color: var(--accent-color);
+}
+
 ._input_container {
 	position: relative;
 	border-radius: var(--button-radius);

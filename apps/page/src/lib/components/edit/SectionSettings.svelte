@@ -112,7 +112,7 @@
 					{/if}
 				{/if}
 
-				{#if sectionItem !== section && sectionItem.imageUrl}
+				{#if (sectionItem !== section || sectionItem.renderType === 'callout') && sectionItem.imageUrl}
 					<div class="my-2">
 						<input type="checkbox" bind:checked={sectionItem.theme.isReversedImage} /> Reverse Image
 						Position
@@ -211,6 +211,17 @@
 						<option value="_transparent">Transparent</option>
 						<option value="_highlighted">Highlighted</option>
 						<option value="_darker">Dark</option>
+					</select>
+				</div>
+			{/if}
+
+			{#if sectionItem.renderType === 'callout'}
+				<div class="_section mt-4">
+					<div class="text-sm mb-2 font-bold">Style</div>
+					<select bind:value={sectionItem.className}>
+						<option value="">Default</option>
+
+						<option value="_transparent">Transparent</option>
 					</select>
 				</div>
 			{/if}

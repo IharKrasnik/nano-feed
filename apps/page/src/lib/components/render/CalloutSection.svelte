@@ -37,6 +37,15 @@
 					<!-- {#if section.emoji !== '✨'}
         <Emoji bind:emoji={section.emoji} />
         {/if} -->
+					{#if section.subtitle}
+						<div class="text-xl mb-4">
+							<ContentEditableIf
+								class="_color-accent opacity-80"
+								bind:innerHTML={section.subtitle}
+								condition={isEdit}
+							/>
+						</div>
+					{/if}
 
 					{#if section.title}
 						<div class="text-4xl font-bold mb-4">
