@@ -679,7 +679,20 @@ button._alternative:hover {
 ._hero-title em,
 ._title b,
 ._title em {
-	/* background-color: var(--accent-color); */
 	color: var(--accent-color);
 	opacity: 0.9;
+}
+
+._title._alternative-accent b {
+	position: relative;
+	color: var(--button-color);
+	@apply p-2;
+}
+
+._title._alternative-accent b::before {
+	@apply absolute top-0 left-0 w-full h-full rounded opacity-80;
+	z-index: -1;
+	content: '';
+	background: var(--accent-color);
+	transform: rotate(-1deg);
 }
