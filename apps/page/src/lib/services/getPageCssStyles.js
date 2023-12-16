@@ -69,6 +69,8 @@ export default (page) => {
 
 		'section-description-text-color':
 			page.theme?.theme === 'dark' ? 'rgba(255,255,255, .7)' : 'rgba(0,0,0, .8)',
+		'section-description-text-color-opposite':
+			page.theme?.theme === 'dark' ? 'rgba(0,0,0, .8)' : 'rgba(255,255,255, .7)',
 		'title-font-size': page.activeHero?.theme?.isHugeTitle ? '72px' : '48px',
 		'section-title-font-size': page.theme?.containerWidth <= 900 ? '20px' : '24px',
 		'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',

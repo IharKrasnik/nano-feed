@@ -188,10 +188,13 @@
 
 ._section-item:not(.bg_image):not(._article),
 ._section-item:not(.bg_image):not(._article) > .flex {
-	background: var(--section-background-color);
 	text-align: left;
 	border: 1px rgba(255, 255, 255, 0.1) solid;
 	@apply rounded-xl;
+}
+
+._section-item:not(.bg_image):not(._article):not(._bg-opposite) {
+	background: var(--section-background-color);
 }
 
 ._section-container._bg-image,

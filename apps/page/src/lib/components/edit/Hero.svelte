@@ -239,12 +239,7 @@
 										class="mr-4"
 										bind:value={hero.theme.backgroundColor}
 									/>
-								{:else}
-									<div
-										class="w-[30px] h-[30px] rounded-full border mr-4"
-										style="background-color: {page.theme.backgroundColor};"
-									/>
-								{/if}
+								{:else}{/if}
 								<div>
 									<input
 										bind:checked={hero.theme.isOverrideColors}

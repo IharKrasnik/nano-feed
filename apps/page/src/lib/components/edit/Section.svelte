@@ -43,13 +43,16 @@
 	let addNewItem = () => {
 		section.items = section.items || [];
 
-		let newItem = {
-			id: uuidv4(),
-			isShown: true,
-			title: '',
-			description: '',
-			imageUrl: ''
-		};
+		let newItem = section.items.length
+			? _.cloneDeep(_.last(section.items))
+			: {
+					isShown: true,
+					title: '',
+					description: '',
+					imageUrl: ''
+			  };
+
+		newItem.id = uuidv4();
 
 		if (section.renderType === 'pricing') {
 			newItem.pricing = { amount: 1.99, per: 'month' };
@@ -330,7 +333,7 @@
 					<div class="p-4 pb-0 flex justify-between items-center">
 						<div class="_title" style="margin: 0;">Columns</div>
 						<div>
-							<input type="checkbox" bind:checked={section.isShowSource} /> show url source
+							<!-- <input type="checkbox" bind:checked={section.isShowSource} /> show url source -->
 							{#if section.isMasonryGrid}
 								<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> funky
 							{/if}
@@ -395,7 +398,7 @@
 								on:click={() => (section.columns = 12)}
 							>
 								12
-								{#if section.columns === 12}columns (grid){/if}
+								{#if section.columns === 12}columns{/if}
 							</div>
 						</div>
 					</div>

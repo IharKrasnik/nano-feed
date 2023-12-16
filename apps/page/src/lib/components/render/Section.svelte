@@ -407,7 +407,10 @@
 								? `sm:absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
 								: ''} {page.theme?.isTitlesHuge ? 'text-[70px]' : ''}"
 						>
-							<Emoji color={'white'} bind:emoji={section.emoji} />
+							<Emoji
+								theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+								bind:emoji={section.emoji}
+							/>
 						</div>
 					{/if}
 
@@ -761,9 +764,12 @@
 										: 'mb-4 sm:mb-8'}
 							{section.renderType === 'changelog'
 										? '_transparent _no-padding sm:w-[600px] mx-auto'
-										: 'grid sm:grid-cols-12 '}		
-									
-									"
+										: 'grid sm:grid-cols-12 '} {item.className || ''} {item.theme?.isOppositeColors
+										? '_bg-opposite'
+										: ''}"
+									style={item.theme?.isOverrideColors
+										? `background-color: ${item.theme?.backgroundColor};`
+										: ''}
 								>
 									{#if section.renderType === 'changelog'}
 										<div
@@ -780,10 +786,10 @@
 									<div
 										class="{section.renderType === 'changelog'
 											? 'col-span-12'
-											: `sm:col-span-${item.colSpan || (item.imageUrl ? 6 : 12)}`}
+											: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
 									
 									{item.theme?.isReversedImage ? 'order-last' : ''}
-									{(!item.colSpan || item.colSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
+									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
 									>
 										<div>
 											<div
@@ -795,9 +801,9 @@
 													col-span-1"
 											>
 												<!-- {#if item.emoji !== '✨'}
-									<Emoji bind:emoji={item.emoji} />
-									{/if} -->
-												{#if item.url}
+												<Emoji bind:emoji={item.emoji} />
+												{/if} -->
+												{#if item.url && !item.interactiveRenderType}
 													<a
 														class="_item-title block mb-2"
 														href={item.url || ''}
@@ -836,27 +842,28 @@
 													bind:innerHTML={item.description}
 													condition={isEdit}
 												/>
+
+												{#if item.interactiveRenderType}
+													<div class="mt-4">
+														<RenderInteractiveOptions
+															bind:sectionItem={item}
+															parentSectionId={section.id}
+															bind:page
+															itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+														/>
+													</div>
+												{/if}
 											</div>
 										</div>
-
-										{#if item.interactiveAnswers?.length}
-											<div class={page?.theme?.containerWidth ? 'p-4' : 'px-8 pb-4'}>
-												<RenderInteractiveOptions
-													bind:sectionItem={item}
-													parentSectionId={section.id}
-													bind:page
-													itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-												/>
-											</div>
-										{/if}
 									</div>
+
 									{#if section.renderType !== 'changelog'}
 										<div
 											class="
 									{`sm:col-span-${
-												!item.colSpan
+												!item.innerColSpan
 													? 6
-													: 12 - (item.title || item.description ? item.colSpan || 6 : 0) || 12
+													: 12 - (item.title || item.description ? item.innerColSpan || 6 : 0) || 12
 											}`} 
 									
 									{item.theme?.isReversedImage || section.renderType === 'changelog' ? 'order-first' : ''}"
@@ -903,7 +910,7 @@
 											id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
 											class="_section-item group block relative {item.bgImageUrl
 												? '_bg-image'
-												: ''} rounded-lg sm:rounded-xl {item.className || ''} {item.url &&
+												: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.url &&
 											!item.interactiveRenderType
 												? '_interactive'
 												: ''} h-full overflow-hidden"
@@ -951,7 +958,7 @@
 														.theme.bgPattern} {page.theme?.theme === 'dark'
 														? 'pattern-white pattern-bg-black'
 														: 'pattern-black pattern-bg-white'} [mask-image:radial-gradient(52%_85%_at_top_center,white,transparent)]"
-													style="opacity: {item.theme.bgPattern === 'boxes' ? '.03' : '.15'};"
+													style="opacity: 0.1;"
 												/>
 											{/if}
 
@@ -972,7 +979,7 @@
 											{/if}
 
 											<div
-												class="flex flex-col justify-between {section.columns > 1
+												class="flex flex-col relative z-10 justify-between {section.columns > 1
 													? 'h-full'
 													: ''} grid-cols-1 {section.columns > 1
 													? 'block'
@@ -981,18 +988,27 @@
 												section.items.length > 1
 													? 2
 													: ''} w-full {section.columns > 1
-													? `bg-section ${section.carousel ? 'shadow-md' : ''} rounded-2xl`
+													? `${section.carousel ? 'shadow-md' : ''} rounded-2xl`
 													: ''}  {section.columns > 1
 													? 'items-stretch'
-													: 'items-center'} content-start"
-												style={section.columns === 1 && section.items.length === 1 && !item.imageUrl
+													: 'items-center'} content-start {item.theme?.isOppositeColors
+													? '_bg-opposite'
+													: ''}"
+												style="{section.columns === 1 &&
+												section.items.length === 1 &&
+												!item.imageUrl
 													? 'margin-bottom: -64px;'
-													: ''}
+													: ''} {item.theme?.isOverrideColors
+													? `background-color: ${item.theme?.backgroundColor || 'none'};`
+													: ''}"
 											>
 												{#if item.title || item.description}
 													<div
-														class="flex w-full h-full flex-col justify-between {page?.theme
-															?.containerWidth === 900
+														class="flex w-full h-full flex-col justify-between {item.className?.includes(
+															'_transparent'
+														)
+															? 'sm:pr-8'
+															: page?.theme?.containerWidth === 900
 															? 'p-4'
 															: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
 														i % 2 === 1
@@ -1004,40 +1020,48 @@
 													>
 														<div class="max-w-[600px]">
 															{#if item.title || item.emoji}
-																{#if item.emoji && !item.isIconLeft}
+																{#if item.emoji && !item.theme?.isIconLeft}
 																	<div class="{emojiStyle[section.columns]} _section-img mr-2 mb-4">
 																		<Emoji
-																			color={(page.parentPage?.theme || page.theme)?.theme ===
-																			'dark'
-																				? '#ffffff'
-																				: '#111111'}
+																			theme={page.parentPage?.theme?.theme ||
+																				page?.theme?.theme ||
+																				'light'}
 																			bind:emoji={item.emoji}
 																		/>
 																	</div>
 																{/if}
 
-																<div
-																	class="flex {item.description
-																		? page?.theme?.containerWidth
-																			? 'mb-2'
-																			: 'mb-4'
-																		: ''} {section.columns < 3
-																		? 'flex-col items-start'
-																		: 'items-center'}"
-																>
-																	{#if item.emoji && item.isIconLeft}
-																		<div class="{emojiStyle[section.columns]} _section-img mr-2">
-																			<Emoji bind:emoji={item.emoji} />
-																		</div>
-																	{/if}
-																	<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
-																		<ContentEditableIf
-																			class=""
-																			bind:innerHTML={item.title}
-																			condition={isEdit}
-																		/>
-																	</h2>
-																</div>
+																{#if !item.theme?.isInlineTitle}
+																	<div
+																		class="flex {item.description
+																			? page?.theme?.containerWidth
+																				? 'mb-2'
+																				: 'mb-4'
+																			: ''} {section.columns < 3
+																			? 'flex-col items-start'
+																			: 'items-center'}"
+																	>
+																		{#if item.emoji && item.theme?.isIconLeft}
+																			<div class="{emojiStyle[section.columns]} _section-img mr-2">
+																				<Emoji
+																					theme={page.parentPage?.theme?.theme ||
+																						page?.theme?.theme ||
+																						'light'}
+																					bind:emoji={item.emoji}
+																				/>
+																			</div>
+																		{/if}
+																		<h2
+																			class="{headerTextStyle(item)[section.columns]} _item-title"
+																		>
+																			<ContentEditableIf
+																				class=""
+																				bind:innerHTML={item.title}
+																				condition={isEdit}
+																			/>
+																		</h2>
+																	</div>
+																{/if}
 															{/if}
 
 															{#if isShowAuthor}
@@ -1052,10 +1076,27 @@
 																		section.columns
 																	]} _item-description whitespace-pre-wrap "
 																>
-																	<ContentEditableIf
-																		class={section.isDatabase
+																	{#if item.title && item.theme.isInlineTitle}
+																		{#if item.emoji && item.theme.isIconLeft}
+																			<Emoji
+																				width={16}
+																				class="sm:inline mb-1 sm:mb-0"
+																				theme={page.parentPage?.theme?.theme ||
+																					page?.theme?.theme ||
+																					'light'}
+																				bind:emoji={item.emoji}
+																			/>{/if}<ContentEditableIf
+																			class="_inline_title sm:inline mb-1 sm:mb-0"
+																			style="color: {page.theme?.theme === 'dark'
+																				? '#ffffff'
+																				: '#111111'};"
+																			bind:innerHTML={item.title}
+																			condition={isEdit}
+																		/><span class="hidden sm:inline">&nbsp;</span
+																		>{/if}<ContentEditableIf
+																		class="sm:inline inline {section.isDatabase
 																			? '_line-clamp-4 hover:line-clamp-5'
-																			: ''}
+																			: ''}"
 																		bind:innerHTML={item.description}
 																		condition={isEdit}
 																	/>
@@ -1313,5 +1354,9 @@
 
 	._item-description {
 		color: var(--section-description-text-color);
+	}
+
+	._bg-opposite ._item-description {
+		color: var(--section-description-text-color-opposite);
 	}
 </style>

@@ -399,9 +399,10 @@
 						{sectionItem.callToActionText || 'Learn More →'}
 					{:else}
 						<button
-							class="relative overflow-hidden w-full shadow hover:shadow-lg hover:shadow-white/50 shadow-white/50 flex justify-center items-center {size
+							class="relative overflow-hidden w-full shadow hover:shadow-md hover:shadow-white/50 shadow-white/50 flex justify-center items-center {size
 								? `_is${size}`
 								: ''}"
+							style="--tw-shadow-color: var(--accent-color) !important;"
 							class:_alternative={sectionItem.isUrlAlternative}
 						>
 							{#if isUrlLoading}

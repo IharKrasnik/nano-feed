@@ -2,6 +2,7 @@
 	import clickOutside from 'lib/use/clickOutside';
 	let clazz;
 	export { clazz as class };
+	export let style = '';
 	export let innerHTML = '';
 	export let condition = false;
 
@@ -10,6 +11,7 @@
 
 {#if isShowEditable}
 	<div
+		{style}
 		class="_preview {clazz}"
 		contenteditable=""
 		bind:innerHTML
@@ -21,6 +23,7 @@
 {:else if innerHTML}
 	<div
 		class={clazz}
+		{style}
 		on:click={() => {
 			if (condition) {
 				isShowEditable = true;

@@ -95,11 +95,10 @@
 							bind:value={sectionItem.rowSpan}
 						/>
 					{:else if sectionItem.imageUrl}
-						<select bind:value={sectionItem.colSpan}>
-							<option value="">Default</option>
-							<option value="4">4 x 8</option>
-							<option value="6">6 x 6</option>
+						<select bind:value={sectionItem.innerColSpan}>
+							<option value="">Default (6x6)</option>
 							<option value="8">8 x 4</option>
+							<option value="4">4 x 8</option>
 							<!-- <option value="12">12 x 12</option> -->
 						</select>
 					{/if}
@@ -122,13 +121,20 @@
 					</div>
 				{/if}
 
-				<div class="my-2">
-					<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Is Huge Title
+				<div class="flex">
+					<div class="my-2">
+						<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Is Huge Title
+					</div>
+
+					<div class="my-2">
+						<input class="" type="checkbox" bind:checked={sectionItem.theme.isInlineTitle} /> Is Inline
+						Title
+					</div>
 				</div>
 
 				{#if sectionItem.emoji}
 					<div class="my-2">
-						<input type="checkbox" bind:checked={sectionItem.isIconLeft} /> Show Icon Near Title
+						<input type="checkbox" bind:checked={sectionItem.theme.isIconLeft} /> Show Icon Near Title
 					</div>
 				{/if}
 
@@ -190,14 +196,14 @@
 			</div>
 
 			{#if !sectionItem.bgImageUrl && sectionItem.id !== section.id}
-				<div class="_section">
-					<div class="text-sm mb-2 mt-8 font-bold">Style</div>
+				<div class="_section mt-4">
+					<div class="text-sm mb-2 font-bold">Style</div>
 					<select bind:value={sectionItem.className}>
 						<option value="">Default</option>
 
+						<option value="_transparent">Transparent</option>
 						<option value="_highlighted">Highlighted</option>
 						<option value="_darker">Dark</option>
-						<option value="_transparent">Transparent</option>
 					</select>
 				</div>
 			{/if}
@@ -289,7 +295,7 @@
 		<div class="_section mb-2">
 			<div class="font-semibold mb-2">Background</div>
 
-			{#if sectionItem === section && !sectionItem.bgImageUrl}
+			{#if !sectionItem.bgImageUrl}
 				<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
 
 				<div class="mb-4">
@@ -307,12 +313,7 @@
 							class="mr-4"
 							bind:value={sectionItem.theme.backgroundColor}
 						/>
-					{:else}
-						<div
-							class="w-[30px] h-[30px] border rounded-full mr-4"
-							style="background-color: {page.theme.backgroundColor};"
-						/>
-					{/if}
+					{:else}{/if}
 
 					<div>
 						<input
