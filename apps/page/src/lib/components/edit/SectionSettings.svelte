@@ -77,36 +77,40 @@
 		in:fly={{ y: 50, duration: 150 }}
 	>
 		<div class="w-full py-4">
-			{#if !sectionItem.items && section.renderType !== 'carousel'}
-				<div class="text-sm mb-2">Grid</div>
-				<div class="flex items-center mb-4">
-					{#if section.columns > 1}
-						<input
-							type="number"
-							class="max-w-[60px] mr-2"
-							placeholder="1"
-							bind:value={sectionItem.colSpan}
-						/>
-						x
-						<input
-							type="number"
-							class="max-w-[60px] ml-2"
-							placeholder="1"
-							bind:value={sectionItem.rowSpan}
-						/>
-					{:else if sectionItem.imageUrl}
-						<select bind:value={sectionItem.innerColSpan}>
-							<option value="">Default (6x6)</option>
-							<option value="8">8 x 4</option>
-							<option value="4">4 x 8</option>
-							<!-- <option value="12">12 x 12</option> -->
-						</select>
-					{/if}
-				</div>
-			{/if}
-
 			<div class="_section">
 				<div class="mb-2 font-bold">Alignment & Size</div>
+
+				{#if sectionItem.renderType === 'callout' || sectionItem.id !== section.id}
+					{#if (section.columns > 1 && sectionItem.renderType !== 'callout') || (sectionItem.imageUrl && section)}
+						<div class="_section">
+							<div class="font-bold mb-2">Grid</div>
+							<div class="flex items-center mb-4">
+								{#if section.columns > 1 && sectionItem.renderType !== 'callout'}
+									<input
+										type="number"
+										class="max-w-[60px] mr-2"
+										placeholder="1"
+										bind:value={sectionItem.colSpan}
+									/>
+									x
+									<input
+										type="number"
+										class="max-w-[60px] ml-2"
+										placeholder="1"
+										bind:value={sectionItem.rowSpan}
+									/>
+								{:else if sectionItem.imageUrl && section}
+									<select bind:value={sectionItem.innerColSpan}>
+										<option value="">Default (6x6)</option>
+										<option value="8">8 x 4</option>
+										<option value="4">4 x 8</option>
+										<!-- <option value="12">12 x 12</option> -->
+									</select>
+								{/if}
+							</div>
+						</div>
+					{/if}
+				{/if}
 
 				{#if sectionItem !== section && sectionItem.imageUrl}
 					<div class="my-2">
@@ -115,30 +119,33 @@
 					</div>
 				{/if}
 
-				{#if sectionItem === section}
+				{#if sectionItem.id === section.id && section.renderType !== 'callout'}
 					<div class="my-2">
 						<input type="checkbox" bind:checked={sectionItem.theme.isTitleLeft} /> Align Left
 					</div>
 				{/if}
 
-				<div class="flex">
-					<div class="my-2">
-						<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Is Huge Title
+				{#if sectionItem.id !== section.id}
+					<div class="flex">
+						<div class="my-2">
+							<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Is Huge
+							Title
+						</div>
+
+						<div class="ml-2 my-2">
+							<input class="" type="checkbox" bind:checked={sectionItem.theme.isInlineTitle} /> Is Inline
+							Title
+						</div>
 					</div>
 
-					<div class="my-2">
-						<input class="" type="checkbox" bind:checked={sectionItem.theme.isInlineTitle} /> Is Inline
-						Title
-					</div>
-				</div>
-
-				{#if sectionItem.emoji}
-					<div class="my-2">
-						<input type="checkbox" bind:checked={sectionItem.theme.isIconLeft} /> Show Icon Near Title
-					</div>
+					{#if sectionItem.emoji}
+						<div class="my-2">
+							<input type="checkbox" bind:checked={sectionItem.theme.isIconLeft} /> Show Icon Near Title
+						</div>
+					{/if}
 				{/if}
 
-				{#if section.id === sectionItem.id}
+				{#if section.id === sectionItem.id && section.renderType !== 'callout'}
 					<div class="mb-2 font-semibold mt-4">Section images aspect ratio</div>
 
 					<div class="flex items-center gap-2">
@@ -334,22 +341,24 @@
 				</div>
 			{/if}
 
-			{#if !sectionItem.bgImageUrl}
-				<div>
-					<div class="font-normal text-sm opacity-70 mb-2 mt-4">Background pattern</div>
-				</div>
+			{#if false}
+				{#if !sectionItem.bgImageUrl}
+					<div>
+						<div class="font-normal text-sm opacity-70 mb-2 mt-4">Background pattern</div>
+					</div>
 
-				{#each bgPatterns as bgPattern}
-					<button
-						class="_secondary _small mr-2 mb-2"
-						on:click={() => (sectionItem.theme.bgPattern = bgPattern.key)}
-						>{bgPattern.key === sectionItem.theme.bgPattern ? '✅' : ''} {bgPattern.label}</button
-					>
-				{/each}
+					{#each bgPatterns as bgPattern}
+						<button
+							class="_secondary _small mr-2 mb-2"
+							on:click={() => (sectionItem.theme.bgPattern = bgPattern.key)}
+							>{bgPattern.key === sectionItem.theme.bgPattern ? '✅' : ''} {bgPattern.label}</button
+						>
+					{/each}
+				{/if}
 			{/if}
 
 			{#if !sectionItem.theme.isOverrideColors}
-				<div class="font-normal mt-4 text-sm opacity-70 mb-2">
+				<div class="font-normal mt-8 text-sm opacity-70 mb-2">
 					Section background image or video
 				</div>
 
@@ -401,16 +410,18 @@
 			{/if}
 		</div>
 
-		<div class="_section">
-			<div class="_title">Bottom image</div>
+		{#if section._isCtaFooter}
+			<div class="_section">
+				<div class="_title">Bottom image</div>
 
-			<FileInput
-				bind:isSearching={isBottomImageSearching}
-				isCanSearch
-				class="w-full"
-				theme="light"
-				bind:url={sectionItem.bottomImageUrl}
-			/>
-		</div>
+				<FileInput
+					bind:isSearching={isBottomImageSearching}
+					isCanSearch
+					class="w-full"
+					theme="light"
+					bind:url={sectionItem.bottomImageUrl}
+				/>
+			</div>
+		{/if}
 	</div>
 {/if}

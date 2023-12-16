@@ -22,6 +22,7 @@
 	import RenderForm from '$lib/components/render/Form.svelte';
 	import RenderStepper from '$lib/components/render/Stepper.svelte';
 	import RenderBackgroundPattern from '$lib/components/render/BackgroundPattern.svelte';
+	import RenderCalloutSection from '$lib/components/render/CalloutSection.svelte';
 
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
@@ -298,10 +299,7 @@
 	<div
 		class="relative {section.bgImageUrl ? 'p-8 my-16' : ''} {section.renderType === 'callout'
 			? 'min-h-screen sm:min-h-min'
-			: ''} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
-		style={section.theme?.isOverrideColors
-			? `background-color: ${section.theme?.backgroundColor};`
-			: ''}
+			: ''}"
 	>
 		<!-- {#if isCloneable}
 			<div
@@ -385,186 +383,272 @@
 				? `--glowing-opacity: ${getGlowingOpacity()};`
 				: ''} {section.bottomImageUrl ? 'padding-bottom: 0 !important;' : ''} {style || ''} "
 		>
-			{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
-				{#if section.renderType !== 'article' && section.title && (section.items?.length || section.streamSlug)}
+			{#if section.renderType === 'callout'}
+				<RenderCalloutSection bind:page bind:section bind:isEdit />
+			{:else}
+				{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
+					{#if section.renderType !== 'article' && section.title && (section.items?.length || section.streamSlug)}
+						<div
+							class="absolute inset-x-0 top-20 mx-auto h-32 w-full sm:w-[650px] transform-gpu opacity-[15%] blur-[130px] bg-gradient-to-r _from-text-color _to-accent"
+						/>
+					{/if}
 					<div
-						class="absolute inset-x-0 top-20 mx-auto h-32 w-full sm:w-[650px] transform-gpu opacity-[15%] blur-[130px] bg-gradient-to-r _from-text-color _to-accent"
-					/>
-				{/if}
-				<div
-					class="_section_titles relative w-full {page.theme.isTitlesLeft ||
-					section.theme?.isTitleLeft ||
-					section.renderType === 'article' ||
-					section.renderType === 'changelog'
-						? 'sm:text-left'
-						: 'text-center'}
+						class="_section_titles relative w-full {page.theme.isTitlesLeft ||
+						section.theme?.isTitleLeft ||
+						section.renderType === 'article' ||
+						section.renderType === 'changelog'
+							? 'sm:text-left'
+							: 'text-center'}
 						
 						"
-				>
-					{#if section.emoji}
-						<div
-							class="{emojiStyle[1]} {page.theme?.isTitlesLeft || section.theme?.isTitleLeft
-								? `sm:absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
-								: ''} {page.theme?.isTitlesHuge ? 'text-[70px]' : ''}"
-						>
-							<Emoji
-								theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-								bind:emoji={section.emoji}
-							/>
-						</div>
-					{/if}
-
-					{#if section.subtitle}
-						<div class="text-sm mb-4 opacity-50" style="font-weight: 500;">
-							<ContentEditableIf class="" bind:innerHTML={section.subtitle} condition={isEdit} />
-						</div>
-					{/if}
-
-					<div class="mb-8 sm:mb-12">
-						{#if section.title}
-							<h2
-								class="_title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
-								section.theme?.isHugeTitle
-									? 'sm:text-6xl font-medium'
-									: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||
-								section.theme?.isTitleLeft ||
-								section.renderType === 'article'
-									? 'sm:max-w-[712px] sm:mx-auto'
-									: 'sm:max-w-[768px] sm:mx-auto'}"
+					>
+						{#if section.emoji}
+							<div
+								class="{emojiStyle[1]} {page.theme?.isTitlesLeft || section.theme?.isTitleLeft
+									? `sm:absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
+									: ''} {page.theme?.isTitlesHuge ? 'text-[70px]' : ''}"
 							>
-								<ContentEditableIf class="mb-2" bind:innerHTML={section.title} condition={isEdit} />
-							</h2>
+								<Emoji
+									theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+									bind:emoji={section.emoji}
+								/>
+							</div>
 						{/if}
-						{#if section.description}
-							<h3
-								class="mb-8 {page.theme.isTitlesHuge || section.theme?.isHugeTitle
-									? 'text-xl leading-8'
-									: 'text-lg font-medium'} whitespace-pre-wrap opacity-70 {section.renderType ===
-								'article'
-									? 'sm:max-w-[712px]'
-									: page.theme.isTitlesLeft || section.theme?.isTitleLeft
-									? 'sm:max-w-[712px]'
-									: 'sm:max-w-[592px] sm:mx-auto'}"
-							>
-								{#if isEdit && page.renderType === 'article'}
-									<ContentEditable
-										class="content bg-site color-site text-lg"
-										placeholder="Start typing..."
-										bind:value={section.description}
-										isWithMenu={true}
-									/>
-								{:else}
+
+						{#if section.subtitle}
+							<div class="text-sm mb-4 opacity-50" style="font-weight: 500;">
+								<ContentEditableIf class="" bind:innerHTML={section.subtitle} condition={isEdit} />
+							</div>
+						{/if}
+
+						<div class="mb-8 sm:mb-12">
+							{#if section.title}
+								<h2
+									class="_title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
+									section.theme?.isHugeTitle
+										? 'sm:text-6xl font-medium'
+										: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||
+									section.theme?.isTitleLeft ||
+									section.renderType === 'article'
+										? 'sm:max-w-[712px] sm:mx-auto'
+										: 'sm:max-w-[768px] sm:mx-auto'}"
+								>
 									<ContentEditableIf
-										class=""
-										bind:innerHTML={section.description}
+										class="mb-2"
+										bind:innerHTML={section.title}
 										condition={isEdit}
 									/>
-								{/if}
-							</h3>
-						{/if}
-					</div>
+								</h2>
+							{/if}
+							{#if section.description}
+								<h3
+									class="mb-8 {page.theme.isTitlesHuge || section.theme?.isHugeTitle
+										? 'text-xl leading-8'
+										: 'text-lg font-medium'} whitespace-pre-wrap opacity-70 {section.renderType ===
+									'article'
+										? 'sm:max-w-[712px]'
+										: page.theme.isTitlesLeft || section.theme?.isTitleLeft
+										? 'sm:max-w-[712px]'
+										: 'sm:max-w-[592px] sm:mx-auto'}"
+								>
+									{#if isEdit && page.renderType === 'article'}
+										<ContentEditable
+											class="content bg-site color-site text-lg"
+											placeholder="Start typing..."
+											bind:value={section.description}
+											isWithMenu={true}
+										/>
+									{:else}
+										<ContentEditableIf
+											class=""
+											bind:innerHTML={section.description}
+											condition={isEdit}
+										/>
+									{/if}
+								</h3>
+							{/if}
+						</div>
 
-					{#if section.interactiveRenderType}
-						<div
-							class="{section.renderType === 'changelog' ||
-							page.theme?.isTitlesLeft ||
-							section.theme?.isTitleLeft
-								? 'mb-32'
-								: 'sm:max-w-[600px] sm:mx-auto'} mt-8"
-						>
-							<RenderInteractiveOptions
+						{#if section.interactiveRenderType}
+							<div
 								class="{section.renderType === 'changelog' ||
 								page.theme?.isTitlesLeft ||
 								section.theme?.isTitleLeft
-									? 'justify-start'
-									: 'justify-center mx-auto'} mb-8"
-								bind:sectionItem={section}
-								size="large"
-								bind:page
-							/>
-						</div>
-					{/if}
-
-					{#if section.imageUrl}
-						<div class="my-8">
-							<RenderUrlWithBackground
-								class=""
-								urlImgMaxWidth={section.imgMaxWidth}
-								urlImgClass="{section.theme?.isTitleLeft ? '' : 'mx-auto'} {isGif(section.imageUrl)
-									? 'w-full object-cover'
-									: ''}"
-								imageUrl={section.imageUrl}
-								imageBackgroundUrl={section.imageBackgroundUrl}
-							/>
-						</div>
-					{/if}
-				</div>
-			{/if}
-
-			{#if section.bottomImageUrl}
-				<div class="_container-width mx-auto">
-					<img class="mx-auto" src={section.bottomImageUrl} style="z-index: 0;" />
-				</div>
-			{/if}
-
-			{#if section.renderType === 'embedCode'}
-				{#if browser && section.customCodeHTML}
-					{@html section.customCodeHTML}
-				{/if}
-			{:else if section.renderType === 'faq'}
-				<RenderFAQ bind:section bind:page bind:isEdit />
-			{:else if section.renderType === 'testimonials'}
-				<RenderTestimonials bind:page bind:section />
-			{:else if section.streamSlug}
-				<RenderMomentumCollection bind:section bind:page bind:themeStyles bind:isEdit />
-			{:else if section.type === 'momentum_feed'}
-				<RenderMomentumFeed bind:page bind:themeStyles />
-			{:else if section.type === 'service_chat'}
-				<RenderServiceChat bind:page bind:section bind:themeStyles />
-				<!-- {:else if section.type === 'newsletter'}
-			<RenderNewsletter bind:page bind:section bind:themeStyles /> -->
-			{:else if section.renderType === 'stepper'}
-				<RenderStepper bind:isEdit bind:page bind:section />
-			{:else if section.renderType === 'form'}
-				<RenderForm bind:section bind:page bind:isEdit />
-			{:else if section.items?.length}
-				<div class="w-full">
-					{#if section.renderType === 'carousel'}
-						{#if !section.carouselType || section.carouselType === 'vertical'}
-							<div
-								style={section.maxWidth ? `max-width: ${section.maxWidth}px; margin: 0 auto;` : ''}
+									? 'mb-32'
+									: 'sm:max-w-[600px] sm:mx-auto'} mt-8"
 							>
-								<div class="flex w-full justify-between">
-									<div class="flex gap-8 mb-8 items-center justify-center w-full sm:justify-start">
-										{#each section.items as item (item.id)}
-											{#if item.isShown || _.isUndefined(item.isShown)}
-												<div
-													class:opacity-40={!item.isSelected}
-													class="cursor-pointer transition  {item.isSelected && item.description
-														? 'text-2xl font-semibold'
-														: 'text-lg font-medium'}"
-													class:heatmap={$heatmap}
-													data-heatmap-clicks-count={$heatmap
-														? getHeatmapClicksCount({
-																sectionId: section.id,
-																sectionItemId: item.id,
-																linkId: item.id
-														  })
-														: ''}
-													on:click={() => selectCarouselItem(item)}
-												>
-													<ContentEditableIf
-														class=""
-														bind:innerHTML={item.title}
-														condition={isEdit}
+								<RenderInteractiveOptions
+									class="{section.renderType === 'changelog' ||
+									page.theme?.isTitlesLeft ||
+									section.theme?.isTitleLeft
+										? 'justify-start'
+										: 'justify-center mx-auto'} mb-8"
+									bind:sectionItem={section}
+									size="large"
+									bind:page
+								/>
+							</div>
+						{/if}
+
+						{#if section.imageUrl}
+							<div class="my-8">
+								<RenderUrlWithBackground
+									class=""
+									urlImgMaxWidth={section.imgMaxWidth}
+									urlImgClass="{section.theme?.isTitleLeft ? '' : 'mx-auto'} {isGif(
+										section.imageUrl
+									)
+										? 'w-full object-cover'
+										: ''}"
+									imageUrl={section.imageUrl}
+									imageBackgroundUrl={section.imageBackgroundUrl}
+								/>
+							</div>
+						{/if}
+					</div>
+				{/if}
+
+				{#if section.bottomImageUrl}
+					<div class="_container-width mx-auto">
+						<img class="mx-auto" src={section.bottomImageUrl} style="z-index: 0;" />
+					</div>
+				{/if}
+
+				{#if section.renderType === 'embedCode'}
+					{#if browser && section.customCodeHTML}
+						{@html section.customCodeHTML}
+					{/if}
+				{:else if section.renderType === 'faq'}
+					<RenderFAQ bind:section bind:page bind:isEdit />
+				{:else if section.renderType === 'testimonials'}
+					<RenderTestimonials bind:page bind:section />
+				{:else if section.streamSlug}
+					<RenderMomentumCollection bind:section bind:page bind:themeStyles bind:isEdit />
+				{:else if section.type === 'momentum_feed'}
+					<RenderMomentumFeed bind:page bind:themeStyles />
+				{:else if section.type === 'service_chat'}
+					<RenderServiceChat bind:page bind:section bind:themeStyles />
+					<!-- {:else if section.type === 'newsletter'}
+				<RenderNewsletter bind:page bind:section bind:themeStyles /> -->
+				{:else if section.renderType === 'stepper'}
+					<RenderStepper bind:isEdit bind:page bind:section />
+				{:else if section.renderType === 'form'}
+					<RenderForm bind:section bind:page bind:isEdit />
+				{:else if section.items?.length}
+					<div class="w-full">
+						{#if section.renderType === 'carousel'}
+							{#if !section.carouselType || section.carouselType === 'vertical'}
+								<div
+									style={section.maxWidth
+										? `max-width: ${section.maxWidth}px; margin: 0 auto;`
+										: ''}
+								>
+									<div class="flex w-full justify-between">
+										<div
+											class="flex gap-8 mb-8 items-center justify-center w-full sm:justify-start"
+										>
+											{#each section.items as item (item.id)}
+												{#if item.isShown || _.isUndefined(item.isShown)}
+													<div
+														class:opacity-40={!item.isSelected}
+														class="cursor-pointer transition  {item.isSelected && item.description
+															? 'text-2xl font-semibold'
+															: 'text-lg font-medium'}"
+														class:heatmap={$heatmap}
+														data-heatmap-clicks-count={$heatmap
+															? getHeatmapClicksCount({
+																	sectionId: section.id,
+																	sectionItemId: item.id,
+																	linkId: item.id
+															  })
+															: ''}
+														on:click={() => selectCarouselItem(item)}
+													>
+														<ContentEditableIf
+															class=""
+															bind:innerHTML={item.title}
+															condition={isEdit}
+														/>
+													</div>
+												{/if}
+											{/each}
+										</div>
+										<div class="hidden sm:flex gap-4">
+											<div
+												class="opacity-40 hover:opacity-100 transition cursor-pointer"
+												class:heatmap={$heatmap}
+												data-heatmap-clicks-count={$heatmap
+													? getHeatmapClicksCount({
+															sectionId: section.id,
+															linkId: 'arrow_prev'
+													  })
+													: ''}
+												on:click={() => {
+													selectPreviousItem();
+												}}
+											>
+												<FeatherIcon
+													color={(page.parentPage?.theme || page.theme)?.theme === 'dark'
+														? '#ffffff'
+														: '#111111'}
+													name="arrow-left"
+												/>
+											</div>
+
+											<div
+												class="opacity-40 hover:opacity-100 transition cursor-pointer"
+												class:heatmap={$heatmap}
+												data-heatmap-clicks-count={$heatmap
+													? getHeatmapClicksCount({
+															sectionId: section.id,
+															linkId: 'arrow_next'
+													  })
+													: ''}
+												on:click={() => {
+													selectNextItem();
+												}}
+											>
+												<FeatherIcon
+													class="cursor-pointer"
+													color={(page.parentPage?.theme || page.theme)?.theme === 'dark'
+														? '#ffffff'
+														: '#111111'}
+													name="arrow-right"
+												/>
+											</div>
+										</div>
+									</div>
+
+									{#if selectedCarouselItem}
+										{#key carouselKey}
+											<div class="_section-item">
+												<div class="p-4">
+													{@html selectedCarouselItem.description}
+												</div>
+
+												<div>
+													<RenderInteractiveOptions
+														bind:sectionItem={selectedCarouselItem}
+														class="p-4"
+														{page}
 													/>
 												</div>
-											{/if}
-										{/each}
-									</div>
-									<div class="hidden sm:flex gap-4">
+
+												<div in:fade>
+													<RenderUrlWithBackground
+														aspectRatio={selectCarouselItem.theme?.imageAspectRatio}
+														urlImgClass="object-cover {section.description ? 'rounded-b-lg' : ''}"
+														imageUrl={selectedCarouselItem.imageUrl}
+														imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
+													/>
+												</div>
+											</div>
+										{/key}
+									{/if}
+
+									<div class="flex w-full justify-center sm:hidden py-4">
 										<div
-											class="opacity-40 hover:opacity-100 transition cursor-pointer"
+											class="opacity-40 hover:opacity-100 transition cursor-pointer mr-4"
 											class:heatmap={$heatmap}
 											data-heatmap-clicks-count={$heatmap
 												? getHeatmapClicksCount({
@@ -577,9 +661,7 @@
 											}}
 										>
 											<FeatherIcon
-												color={(page.parentPage?.theme || page.theme)?.theme === 'dark'
-													? '#ffffff'
-													: '#111111'}
+												color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
 												name="arrow-left"
 											/>
 										</div>
@@ -599,624 +681,563 @@
 										>
 											<FeatherIcon
 												class="cursor-pointer"
-												color={(page.parentPage?.theme || page.theme)?.theme === 'dark'
-													? '#ffffff'
-													: '#111111'}
+												color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
 												name="arrow-right"
 											/>
 										</div>
 									</div>
 								</div>
+							{:else if section.carouselType === 'horizontal'}
+								<div>
+									<div class="_section-item w-full grid grid-cols-3 gap-4 mb-4 items-center">
+										<div class="col-span-1">
+											{#each section.items as item}
+												{#if item.isShown}
+													<div
+														class="cursor-pointer p-2 sm:p-6 transition {item.isSelected
+															? ''
+															: 'opacity-40 hover:opacity-100'}"
+														on:click={selectCarouselItem(item)}
+														class:heatmap={$heatmap}
+														data-heatmap-clicks-count={$heatmap
+															? getHeatmapClicksCount({
+																	sectionId: section.id,
+																	sectionItemId: item.id,
+																	linkId: item.id
+															  })
+															: ''}
+													>
+														<ContentEditableIf
+															class="_item-title mb-2"
+															bind:innerHTML={item.title}
+															condition={isEdit}
+														/>
+														<ContentEditableIf
+															class="_item-description whitespace-pre-wrap"
+															bind:innerHTML={item.description}
+															condition={isEdit}
+														/>
+													</div>
+												{/if}
+											{/each}
+											<div class="flex gap-4 p-2 sm:p-6">
+												<div
+													class="opacity-40 hover:opacity-100 transition cursor-pointer"
+													on:click={() => {
+														selectPreviousItem();
+													}}
+												>
+													<FeatherIcon
+														color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
+														on:click={() => {
+															selectPreviousItem();
+														}}
+														name="arrow-up"
+													/>
+												</div>
 
-								{#if selectedCarouselItem}
-									{#key carouselKey}
-										<div class="_section-item">
-											<div class="p-4">
-												{@html selectedCarouselItem.description}
-											</div>
-
-											<div>
-												<RenderInteractiveOptions
-													bind:sectionItem={selectedCarouselItem}
-													class="p-4"
-													{page}
-												/>
-											</div>
-
-											<div in:fade>
-												<RenderUrlWithBackground
-													aspectRatio={selectCarouselItem.theme?.imageAspectRatio}
-													urlImgClass="object-cover {section.description ? 'rounded-b-lg' : ''}"
-													imageUrl={selectedCarouselItem.imageUrl}
-													imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
-												/>
+												<div
+													class="opacity-40 hover:opacity-100 transition cursor-pointer"
+													on:click={() => {
+														selectNextItem();
+													}}
+												>
+													<FeatherIcon
+														color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
+														name="arrow-down"
+													/>
+												</div>
 											</div>
 										</div>
-									{/key}
-								{/if}
 
-								<div class="flex w-full justify-center sm:hidden py-4">
-									<div
-										class="opacity-40 hover:opacity-100 transition cursor-pointer mr-4"
-										class:heatmap={$heatmap}
-										data-heatmap-clicks-count={$heatmap
-											? getHeatmapClicksCount({
-													sectionId: section.id,
-													linkId: 'arrow_prev'
-											  })
-											: ''}
-										on:click={() => {
-											selectPreviousItem();
-										}}
-									>
-										<FeatherIcon
-											color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
-											name="arrow-left"
-										/>
-									</div>
-
-									<div
-										class="opacity-40 hover:opacity-100 transition cursor-pointer"
-										class:heatmap={$heatmap}
-										data-heatmap-clicks-count={$heatmap
-											? getHeatmapClicksCount({
-													sectionId: section.id,
-													linkId: 'arrow_next'
-											  })
-											: ''}
-										on:click={() => {
-											selectNextItem();
-										}}
-									>
-										<FeatherIcon
-											class="cursor-pointer"
-											color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
-											name="arrow-right"
-										/>
+										{#if selectedCarouselItem}
+											<div class="col-span-2 p-8" in:fade>
+												{#key carouselKey}
+													<RenderUrlWithBackground
+														aspectRatio={selectedCarouselItem.aspectRatio}
+														urlImgClass="asobject-cover"
+														imageUrl={selectedCarouselItem.imageUrl}
+														imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
+													/>
+												{/key}
+											</div>
+										{/if}
 									</div>
 								</div>
-							</div>
-						{:else if section.carouselType === 'horizontal'}
-							<div>
-								<div class="_section-item w-full grid grid-cols-3 gap-4 mb-4 items-center">
-									<div class="col-span-1">
-										{#each section.items as item}
-											{#if item.isShown}
+							{/if}
+						{:else if section.columns === 1}
+							{#each section.items as item}
+								<div class="flex justify-between">
+									<div
+										class="_section-item w-full relative items-center {section.renderType ===
+											'article' || section.streamSlug?.includes('-blog')
+											? '_article mb-8'
+											: 'mb-4 sm:mb-8'}
+							{section.renderType === 'changelog'
+											? '_transparent _no-padding sm:w-[600px] mx-auto'
+											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.theme
+											?.isOppositeColors
+											? '_bg-opposite'
+											: ''}"
+										style={item.theme?.isOverrideColors
+											? `background-color: ${item.theme?.backgroundColor};`
+											: ''}
+									>
+										{#if section.renderType === 'changelog'}
+											<div
+												class="sm:absolute sm:top-0 sm:left-0 sm:transform _translate-x-full-reverse overflow-auto"
+											>
+												<div class="sm:sticky sm:top-28 sm:mr-32 text-sm min-w-[200px] mb-2">
+													<time>
+														{moment(item.publishedOn).format('MMM DD YYYY')}
+													</time>
+												</div>
+											</div>
+										{/if}
+
+										<div
+											class="{section.renderType === 'changelog'
+												? 'col-span-12'
+												: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
+									
+									{item.theme?.isReversedImage ? 'order-last' : ''}
+									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
+										>
+											<div>
 												<div
-													class="cursor-pointer p-2 sm:p-6 transition {item.isSelected
-														? ''
-														: 'opacity-40 hover:opacity-100'}"
-													on:click={selectCarouselItem(item)}
-													class:heatmap={$heatmap}
-													data-heatmap-clicks-count={$heatmap
-														? getHeatmapClicksCount({
-																sectionId: section.id,
-																sectionItemId: item.id,
-																linkId: item.id
-														  })
-														: ''}
+													class="{section.renderType === 'article'
+														? 'sm:px-8'
+														: ' _borderless p-4 sm:p-8'}
+													{section.renderType === 'changelog' ? '_transparent _no-padding' : ''}
+													
+													col-span-1"
 												>
-													<ContentEditableIf
-														class="_item-title mb-2"
-														bind:innerHTML={item.title}
-														condition={isEdit}
-													/>
+													<!-- {#if item.emoji !== '✨'}
+												<Emoji bind:emoji={item.emoji} />
+												{/if} -->
+													{#if item.url && !item.interactiveRenderType}
+														<a
+															class="_item-title block mb-2"
+															href={item.url || ''}
+															target={item.url?.startsWith('http') ? '_blank' : ''}
+														>
+															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+														</a>
+													{:else}
+														<div class="_item-title mb-2">
+															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+														</div>
+													{/if}
+
+													{#if section.renderType === 'changelog'}
+														<RenderUrlWithBackground
+															isIframeFallback={false}
+															aspectRatio={section.theme?.imageAspectRatio ||
+																item.theme?.imageAspectRatio}
+															class="my-4"
+															urlImgClass="object-cover {item.theme?.isReversedImage
+																? 'rounded-l-lg'
+																: 'rounded-r-lg'}"
+															imageUrl={item.imageUrl}
+															imageBackgroundUrl={item.imageBackgroundUrl}
+														/>
+													{/if}
+
+													{#if isShowAuthor}
+														<div>
+															<ArticleAuthorLabel isWithAuthor={false} class={`my-2 `} bind:page />
+														</div>
+													{/if}
+
 													<ContentEditableIf
 														class="_item-description whitespace-pre-wrap"
 														bind:innerHTML={item.description}
 														condition={isEdit}
 													/>
+
+													{#if item.interactiveRenderType}
+														<div class="mt-4">
+															<RenderInteractiveOptions
+																bind:sectionItem={item}
+																parentSectionId={section.id}
+																bind:page
+																itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+															/>
+														</div>
+													{/if}
 												</div>
-											{/if}
-										{/each}
-										<div class="flex gap-4 p-2 sm:p-6">
+											</div>
+										</div>
+
+										{#if section.renderType !== 'changelog'}
 											<div
-												class="opacity-40 hover:opacity-100 transition cursor-pointer"
-												on:click={() => {
-													selectPreviousItem();
-												}}
-											>
-												<FeatherIcon
-													color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
-													on:click={() => {
-														selectPreviousItem();
-													}}
-													name="arrow-up"
-												/>
-											</div>
-
-											<div
-												class="opacity-40 hover:opacity-100 transition cursor-pointer"
-												on:click={() => {
-													selectNextItem();
-												}}
-											>
-												<FeatherIcon
-													color={page.theme?.theme === 'dark' ? '#ffffff' : '#111111'}
-													name="arrow-down"
-												/>
-											</div>
-										</div>
-									</div>
-
-									{#if selectedCarouselItem}
-										<div class="col-span-2 p-8" in:fade>
-											{#key carouselKey}
-												<RenderUrlWithBackground
-													aspectRatio={selectedCarouselItem.aspectRatio}
-													urlImgClass="asobject-cover"
-													imageUrl={selectedCarouselItem.imageUrl}
-													imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
-												/>
-											{/key}
-										</div>
-									{/if}
-								</div>
-							</div>
-						{/if}
-					{:else if section.columns === 1}
-						{#each section.items as item}
-							<div class="flex justify-between">
-								<div
-									class="_section-item w-full relative items-center {section.renderType ===
-										'article' || section.streamSlug?.includes('-blog')
-										? '_article mb-8'
-										: 'mb-4 sm:mb-8'}
-							{section.renderType === 'changelog'
-										? '_transparent _no-padding sm:w-[600px] mx-auto'
-										: 'grid sm:grid-cols-12 '} {item.className || ''} {item.theme?.isOppositeColors
-										? '_bg-opposite'
-										: ''}"
-									style={item.theme?.isOverrideColors
-										? `background-color: ${item.theme?.backgroundColor};`
-										: ''}
-								>
-									{#if section.renderType === 'changelog'}
-										<div
-											class="sm:absolute sm:top-0 sm:left-0 sm:transform _translate-x-full-reverse overflow-auto"
-										>
-											<div class="sm:sticky sm:top-28 sm:mr-32 text-sm min-w-[200px] mb-2">
-												<time>
-													{moment(item.publishedOn).format('MMM DD YYYY')}
-												</time>
-											</div>
-										</div>
-									{/if}
-
-									<div
-										class="{section.renderType === 'changelog'
-											? 'col-span-12'
-											: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
-									
-									{item.theme?.isReversedImage ? 'order-last' : ''}
-									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
-									>
-										<div>
-											<div
-												class="{section.renderType === 'article'
-													? 'sm:px-8'
-													: ' _borderless p-4 sm:p-8'}
-													{section.renderType === 'changelog' ? '_transparent _no-padding' : ''}
-													
-													col-span-1"
-											>
-												<!-- {#if item.emoji !== '✨'}
-												<Emoji bind:emoji={item.emoji} />
-												{/if} -->
-												{#if item.url && !item.interactiveRenderType}
-													<a
-														class="_item-title block mb-2"
-														href={item.url || ''}
-														target={item.url?.startsWith('http') ? '_blank' : ''}
-													>
-														<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
-													</a>
-												{:else}
-													<div class="_item-title mb-2">
-														<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
-													</div>
-												{/if}
-
-												{#if section.renderType === 'changelog'}
-													<RenderUrlWithBackground
-														isIframeFallback={false}
-														aspectRatio={section.theme?.imageAspectRatio ||
-															item.theme?.imageAspectRatio}
-														class="my-4"
-														urlImgClass="object-cover {item.theme?.isReversedImage
-															? 'rounded-l-lg'
-															: 'rounded-r-lg'}"
-														imageUrl={item.imageUrl}
-														imageBackgroundUrl={item.imageBackgroundUrl}
-													/>
-												{/if}
-
-												{#if isShowAuthor}
-													<div>
-														<ArticleAuthorLabel isWithAuthor={false} class={`my-2 `} bind:page />
-													</div>
-												{/if}
-
-												<ContentEditableIf
-													class="_item-description whitespace-pre-wrap"
-													bind:innerHTML={item.description}
-													condition={isEdit}
-												/>
-
-												{#if item.interactiveRenderType}
-													<div class="mt-4">
-														<RenderInteractiveOptions
-															bind:sectionItem={item}
-															parentSectionId={section.id}
-															bind:page
-															itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-														/>
-													</div>
-												{/if}
-											</div>
-										</div>
-									</div>
-
-									{#if section.renderType !== 'changelog'}
-										<div
-											class="
+												class="
 									{`sm:col-span-${
-												!item.innerColSpan
-													? 6
-													: 12 - (item.title || item.description ? item.innerColSpan || 6 : 0) || 12
-											}`} 
+													!item.innerColSpan
+														? 6
+														: 12 - (item.title || item.description ? item.innerColSpan || 6 : 0) ||
+														  12
+												}`} 
 									
 									{item.theme?.isReversedImage || section.renderType === 'changelog' ? 'order-first' : ''}"
-										>
-											<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
+											>
+												<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
 
-											<RenderUrlWithBackground
-												isIframeFallback={false}
-												aspectRatio={section.theme?.imageAspectRatio ||
-													item.theme?.imageAspectRatio}
-												urlImgClass="object-cover {item.theme?.isReversedImage
-													? 'rounded-l-lg'
-													: 'rounded-r-lg'}"
-												imageUrl={item.imageUrl}
-												imageBackgroundUrl={item.imageBackgroundUrl}
-											/>
-										</div>
-									{/if}
+												<RenderUrlWithBackground
+													isIframeFallback={false}
+													aspectRatio={section.theme?.imageAspectRatio ||
+														item.theme?.imageAspectRatio}
+													urlImgClass="object-cover {item.theme?.isReversedImage
+														? 'rounded-l-lg'
+														: 'rounded-r-lg'}"
+													imageUrl={item.imageUrl}
+													imageBackgroundUrl={item.imageBackgroundUrl}
+												/>
+											</div>
+										{/if}
+									</div>
 								</div>
-							</div>
-						{/each}
-					{:else}
-						<div
-							class="gap-4 sm:gap-4 {section.columns > 1
-								? 'items-stretch-or-not'
-								: ''} {section.carousel
-								? 'flex overflow-x-auto sm:grid'
-								: ''} {section.isMasonryGrid
-								? `sm:columns-${section.columns}`
-								: `grid sm:grid-cols-${section.columns}`}"
-						>
-							{#each section.items || [] as item, i}
-								{#if item.isShown || _.isUndefined(item.isShown)}
-									<div
-										class=" break-inside-avoid mb-2 sm:col-span-{item.colSpan ||
-											1} sm:row-span-{item.rowSpan || 1} {section.renderType === 'carousel'
-											? `min-w-[300px] sm:min-w-0 cursor-pointer`
-											: ''}"
-										class:pt-16={section.isFunkyGrid && i === 1}
-									>
-										<a
-											href={item.url && !item.interactiveRenderType ? item.url : null}
-											target={item.url?.startsWith('http') ? '_blank' : ''}
-											id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
-											class="_section-item group block relative {item.bgImageUrl
-												? '_bg-image'
-												: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.url &&
-											!item.interactiveRenderType
-												? '_interactive'
-												: ''} h-full overflow-hidden"
-											on:click={() => {
-												if (section.carousel) {
-													selectCarouselItem(item);
-												}
-
-												if (item.feedItemId) {
-													post(`feed/${item.feedItemId}/view?pageId=${page._id}`);
-
-													trackClick({
-														pageId: page?._id,
-														sectionId: section.id,
-														sectionItemId: item.feedItemId,
-														isFeedItem: true,
-														linkId: item.feedItemId,
-														url: item.url,
-														text: item.title || item.description
-													});
-												} else {
-													trackClick({
-														pageId: page?._id,
-														sectionId: section.id,
-														sectionItemId: item.id,
-														linkId: item.id,
-														url: item.url,
-														text: item.title || item.description
-													});
-												}
-											}}
-											class:heatmap={$heatmap && section.linkType === 'interactive'}
-											data-heatmap-clicks-count={$heatmap && section.linkType === 'interactive'
-												? getHeatmapClicksCount({
-														sectionId: section.id,
-														sectionItemId: item.id,
-														linkId: item.id
-												  })
-												: ''}
-											style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
+							{/each}
+						{:else}
+							<div
+								class="gap-4 sm:gap-4 {section.columns > 1
+									? 'items-stretch-or-not'
+									: ''} {section.carousel
+									? 'flex overflow-x-auto sm:grid'
+									: ''} {section.isMasonryGrid
+									? `sm:columns-${section.columns}`
+									: `grid sm:grid-cols-${section.columns}`}"
+							>
+								{#each section.items || [] as item, i}
+									{#if item.isShown || _.isUndefined(item.isShown)}
+										<div
+											class=" break-inside-avoid mb-2 sm:col-span-{item.colSpan ||
+												1} sm:row-span-{item.rowSpan || 1} {section.renderType === 'carousel'
+												? `min-w-[300px] sm:min-w-0 cursor-pointer`
+												: ''}"
+											class:pt-16={section.isFunkyGrid && i === 1}
 										>
-											{#if item.theme?.bgPattern}
-												<div
-													class="absolute top-0 left-0 w-full h-full pattern-size-4 rounded-xl pattern-{item
-														.theme.bgPattern} {page.theme?.theme === 'dark'
-														? 'pattern-white pattern-bg-black'
-														: 'pattern-black pattern-bg-white'} [mask-image:radial-gradient(52%_85%_at_top_center,white,transparent)]"
-													style="opacity: 0.1;"
-												/>
-											{/if}
+											<a
+												href={item.url && !item.interactiveRenderType ? item.url : null}
+												target={item.url?.startsWith('http') ? '_blank' : ''}
+												id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
+												class="_section-item group block relative {item.bgImageUrl
+													? '_bg-image'
+													: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.url &&
+												!item.interactiveRenderType
+													? '_interactive'
+													: ''} h-full overflow-hidden"
+												on:click={() => {
+													if (section.carousel) {
+														selectCarouselItem(item);
+													}
 
-											{#if item.bgImageUrl}
-												<img
-													src={item.bgImageUrl}
-													class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
-													style="z-index: 0;"
-												/>
-												{#if !item.theme?.isNotBgImageDimmed}
+													if (item.feedItemId) {
+														post(`feed/${item.feedItemId}/view?pageId=${page._id}`);
+
+														trackClick({
+															pageId: page?._id,
+															sectionId: section.id,
+															sectionItemId: item.feedItemId,
+															isFeedItem: true,
+															linkId: item.feedItemId,
+															url: item.url,
+															text: item.title || item.description
+														});
+													} else {
+														trackClick({
+															pageId: page?._id,
+															sectionId: section.id,
+															sectionItemId: item.id,
+															linkId: item.id,
+															url: item.url,
+															text: item.title || item.description
+														});
+													}
+												}}
+												class:heatmap={$heatmap && section.linkType === 'interactive'}
+												data-heatmap-clicks-count={$heatmap && section.linkType === 'interactive'
+													? getHeatmapClicksCount({
+															sectionId: section.id,
+															sectionItemId: item.id,
+															linkId: item.id
+													  })
+													: ''}
+												style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
+											>
+												{#if item.theme?.bgPattern}
 													<div
-														class="absolute top-0 left-0 w-full h-full rounded-xl"
-														style="background-color: {page.theme?.theme === 'dark'
-															? 'rgba(0,0,0,0.85)'
-															: 'rgba(255,255,255,.85)'}; z-index: 1;"
+														class="absolute top-0 left-0 w-full h-full pattern-size-4 rounded-xl pattern-{item
+															.theme.bgPattern} {page.theme?.theme === 'dark'
+															? 'pattern-white pattern-bg-black'
+															: 'pattern-black pattern-bg-white'} [mask-image:radial-gradient(52%_85%_at_top_center,white,transparent)]"
+														style="opacity: 0.1;"
 													/>
 												{/if}
-											{/if}
 
-											<div
-												class="flex flex-col relative z-10 justify-between {section.columns > 1
-													? 'h-full'
-													: ''} grid-cols-1 {section.columns > 1
-													? 'block'
-													: 'grid'} sm:grid-cols-{section.columns === 1 &&
-												item.imageUrl &&
-												section.items.length > 1
-													? 2
-													: ''} w-full {section.columns > 1
-													? `${section.carousel ? 'shadow-md' : ''} rounded-2xl`
-													: ''}  {section.columns > 1
-													? 'items-stretch'
-													: 'items-center'} content-start {item.theme?.isOppositeColors
-													? '_bg-opposite'
-													: ''}"
-												style="{section.columns === 1 &&
-												section.items.length === 1 &&
-												!item.imageUrl
-													? 'margin-bottom: -64px;'
-													: ''} {item.theme?.isOverrideColors
-													? `background-color: ${item.theme?.backgroundColor || 'none'};`
-													: ''}"
-											>
-												{#if item.title || item.description}
-													<div
-														class="flex w-full h-full flex-col justify-between {item.className?.includes(
-															'_transparent'
-														)
-															? 'sm:pr-8'
-															: page?.theme?.containerWidth === 900
-															? 'p-4'
-															: 'p-8'} text-left self-center order-none-off {section.columns == 1 &&
-														i % 2 === 1
-															? 'sm:order-last-off'
-															: ''} {section.columns === 1 &&
-															(!item.imageUrl || section.items.length === 1) &&
-															'mx-auto'}"
-														class:order-last-off={i % 2 === 0}
-													>
-														<div class="max-w-[600px]">
-															{#if item.title || item.emoji}
-																{#if item.emoji && !item.theme?.isIconLeft}
-																	<div class="{emojiStyle[section.columns]} _section-img mr-2 mb-4">
-																		<Emoji
-																			theme={page.parentPage?.theme?.theme ||
-																				page?.theme?.theme ||
-																				'light'}
-																			bind:emoji={item.emoji}
-																		/>
-																	</div>
-																{/if}
+												{#if item.bgImageUrl}
+													<img
+														src={item.bgImageUrl}
+														class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
+														style="z-index: 0;"
+													/>
+													{#if !item.theme?.isNotBgImageDimmed}
+														<div
+															class="absolute top-0 left-0 w-full h-full rounded-xl"
+															style="background-color: {page.theme?.theme === 'dark'
+																? 'rgba(0,0,0,0.85)'
+																: 'rgba(255,255,255,.85)'}; z-index: 1;"
+														/>
+													{/if}
+												{/if}
 
-																{#if !item.theme?.isInlineTitle}
-																	<div
-																		class="flex {item.description
-																			? page?.theme?.containerWidth
-																				? 'mb-2'
-																				: 'mb-4'
-																			: ''} {section.columns < 3
-																			? 'flex-col items-start'
-																			: 'items-center'}"
-																	>
-																		{#if item.emoji && item.theme?.isIconLeft}
-																			<div class="{emojiStyle[section.columns]} _section-img mr-2">
-																				<Emoji
-																					theme={page.parentPage?.theme?.theme ||
-																						page?.theme?.theme ||
-																						'light'}
-																					bind:emoji={item.emoji}
-																				/>
-																			</div>
-																		{/if}
-																		<h2
-																			class="{headerTextStyle(item)[section.columns]} _item-title"
+												<div
+													class="flex flex-col relative z-10 justify-between {section.columns > 1
+														? 'h-full'
+														: ''} grid-cols-1 {section.columns > 1
+														? 'block'
+														: 'grid'} sm:grid-cols-{section.columns === 1 &&
+													item.imageUrl &&
+													section.items.length > 1
+														? 2
+														: ''} w-full {section.columns > 1
+														? `${section.carousel ? 'shadow-md' : ''} rounded-2xl`
+														: ''}  {section.columns > 1
+														? 'items-stretch'
+														: 'items-center'} content-start {item.theme?.isOppositeColors
+														? '_bg-opposite'
+														: ''}"
+													style="{section.columns === 1 &&
+													section.items.length === 1 &&
+													!item.imageUrl
+														? 'margin-bottom: -64px;'
+														: ''} {item.theme?.isOverrideColors
+														? `background-color: ${item.theme?.backgroundColor || 'none'};`
+														: ''}"
+												>
+													{#if item.title || item.description}
+														<div
+															class="flex w-full h-full flex-col justify-between {item.className?.includes(
+																'_transparent'
+															)
+																? 'sm:pr-8'
+																: page?.theme?.containerWidth === 900
+																? 'p-4'
+																: 'p-8'} text-left self-center order-none-off {section.columns ==
+																1 && i % 2 === 1
+																? 'sm:order-last-off'
+																: ''} {section.columns === 1 &&
+																(!item.imageUrl || section.items.length === 1) &&
+																'mx-auto'}"
+															class:order-last-off={i % 2 === 0}
+														>
+															<div class="max-w-[600px]">
+																{#if item.title || item.emoji}
+																	{#if item.emoji && !item.theme?.isIconLeft}
+																		<div
+																			class="{emojiStyle[section.columns]} _section-img mr-2 mb-4"
 																		>
-																			<ContentEditableIf
-																				class=""
-																				bind:innerHTML={item.title}
-																				condition={isEdit}
-																			/>
-																		</h2>
-																	</div>
-																{/if}
-															{/if}
-
-															{#if isShowAuthor}
-																<div>
-																	<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
-																</div>
-															{/if}
-
-															{#if item.description && !item.pricing}
-																<h3
-																	class="{descriptionStyle[
-																		section.columns
-																	]} _item-description whitespace-pre-wrap "
-																>
-																	{#if item.title && item.theme.isInlineTitle}
-																		{#if item.emoji && item.theme.isIconLeft}
 																			<Emoji
-																				width={16}
-																				class="sm:inline mb-1 sm:mb-0"
 																				theme={page.parentPage?.theme?.theme ||
 																					page?.theme?.theme ||
 																					'light'}
 																				bind:emoji={item.emoji}
-																			/>{/if}<ContentEditableIf
-																			class="_inline_title sm:inline mb-1 sm:mb-0"
-																			style="color: {page.theme?.theme === 'dark'
-																				? '#ffffff'
-																				: '#111111'};"
-																			bind:innerHTML={item.title}
-																			condition={isEdit}
-																		/><span class="hidden sm:inline">&nbsp;</span
-																		>{/if}<ContentEditableIf
-																		class="sm:inline inline {section.isDatabase
-																			? '_line-clamp-4 hover:line-clamp-5'
-																			: ''}"
-																		bind:innerHTML={item.description}
-																		condition={isEdit}
-																	/>
-																</h3>
-															{/if}
-
-															{#if item.tagsStr}
-																<div class="my-4 flex flex-wrap gap-2">
-																	{#each item.tagsStr.split(',') as tag}
-																		<div
-																			class="px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-zinc-900 bg-black"
-																			style={page.parentPage?.theme?.theme ||
-																			page.theme?.theme === 'dark'
-																				? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
-																				: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
-																		>
-																			{tag}
-																		</div>
-																	{/each}
-																</div>
-															{/if}
-
-															{#if item.pricing}
-																<div class="flex items-end mt-4 mb-4">
-																	<div class="text-5xl font-bold mr-2">
-																		{item.pricing.amount
-																			? toDollars(item.pricing.amount * 100)
-																			: 'Free'}
-																	</div>
-																	{#if item.pricing.amount}
-																		<div class="text-lg">
-																			/{item.pricing.per}
+																			/>
 																		</div>
 																	{/if}
-																</div>
-																<div class="mb-8 opacity-70">
-																	{@html item.description}
-																</div>
 
-																{#if item.pricing.benefitsStr}
-																	<div class="mb-4">
-																		{#each item.pricing.benefitsStr.split('\n') as benefit}
-																			<div class="my-2 flex items-center">
+																	{#if !item.theme?.isInlineTitle}
+																		<div
+																			class="flex {item.description
+																				? page?.theme?.containerWidth
+																					? 'mb-2'
+																					: 'mb-4'
+																				: ''} {section.columns < 3
+																				? 'flex-col items-start'
+																				: 'items-center'}"
+																		>
+																			{#if item.emoji && item.theme?.isIconLeft}
+																				<div
+																					class="{emojiStyle[section.columns]} _section-img mr-2"
+																				>
+																					<Emoji
+																						theme={page.parentPage?.theme?.theme ||
+																							page?.theme?.theme ||
+																							'light'}
+																						bind:emoji={item.emoji}
+																					/>
+																				</div>
+																			{/if}
+																			<h2
+																				class="{headerTextStyle(item)[section.columns]} _item-title"
+																			>
+																				<ContentEditableIf
+																					class=""
+																					bind:innerHTML={item.title}
+																					condition={isEdit}
+																				/>
+																			</h2>
+																		</div>
+																	{/if}
+																{/if}
+
+																{#if isShowAuthor}
+																	<div>
+																		<ArticleAuthorLabel
+																			isWithAuthor={false}
+																			class="my-2"
+																			bind:page
+																		/>
+																	</div>
+																{/if}
+
+																{#if item.description && !item.pricing}
+																	<h3
+																		class="{descriptionStyle[
+																			section.columns
+																		]} _item-description whitespace-pre-wrap "
+																	>
+																		{#if item.title && item.theme.isInlineTitle}
+																			{#if item.emoji && item.theme.isIconLeft}
 																				<Emoji
+																					width={16}
+																					class="sm:inline mb-1 sm:mb-0"
 																					theme={page.parentPage?.theme?.theme ||
 																						page?.theme?.theme ||
 																						'light'}
-																					emoji={section.benefitsEmoji || '✅'}
-																					class="mr-2 opacity-70"
-																				/>
-																				{benefit}
-																			</div>
-																		{/each}
-																	</div>
-																{:else if item.pricing.benefits}
-																	<div class="mb-4">
-																		{#each item.pricing.benefits as benefit}
-																			<div class="my-2">
-																				<span class="inline-block mr-1">✅</span>
-																				{benefit.name}
+																					bind:emoji={item.emoji}
+																				/>{/if}<ContentEditableIf
+																				class="_inline_title sm:inline mb-1 sm:mb-0"
+																				style="color: {page.theme?.theme === 'dark'
+																					? '#ffffff'
+																					: '#111111'};"
+																				bind:innerHTML={item.title}
+																				condition={isEdit}
+																			/><span class="hidden sm:inline">&nbsp;</span
+																			>{/if}<ContentEditableIf
+																			class="sm:inline inline {section.isDatabase
+																				? '_line-clamp-4 hover:line-clamp-5'
+																				: ''}"
+																			bind:innerHTML={item.description}
+																			condition={isEdit}
+																		/>
+																	</h3>
+																{/if}
+
+																{#if item.tagsStr}
+																	<div class="my-4 flex flex-wrap gap-2">
+																		{#each item.tagsStr.split(',') as tag}
+																			<div
+																				class="px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-zinc-900 bg-black"
+																				style={page.parentPage?.theme?.theme ||
+																				page.theme?.theme === 'dark'
+																					? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
+																					: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
+																			>
+																				{tag}
 																			</div>
 																		{/each}
 																	</div>
 																{/if}
-															{/if}
 
-															{#if item.interactiveRenderType}
-																<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
-																	<RenderInteractiveOptions
-																		class={`${
-																			section.columns === 1 &&
-																			(section.interactiveRenderType === 'single_choice' ||
-																				section.interactiveRenderType === 'multiple_choice')
-																				? 'justify-center'
-																				: 'justify-start'
-																		} ${item.pricing ? 'w-full' : ''}`}
-																		size={item.pricing ? 'large' : 'normal'}
-																		bind:sectionItem={item}
-																		parentSectionId={section.id}
-																		bind:page
-																		itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-																	/>
-																</div>
-															{/if}
+																{#if item.pricing}
+																	<div class="flex items-end mt-4 mb-4">
+																		<div class="text-5xl font-bold mr-2">
+																			{item.pricing.amount
+																				? toDollars(item.pricing.amount * 100)
+																				: 'Free'}
+																		</div>
+																		{#if item.pricing.amount}
+																			<div class="text-lg">
+																				/{item.pricing.per}
+																			</div>
+																		{/if}
+																	</div>
+																	<div class="mb-8 opacity-70">
+																		{@html item.description}
+																	</div>
+
+																	{#if item.pricing.benefitsStr}
+																		<div class="mb-4">
+																			{#each item.pricing.benefitsStr.split('\n') as benefit}
+																				<div class="my-2 flex items-center">
+																					<Emoji
+																						theme={page.parentPage?.theme?.theme ||
+																							page?.theme?.theme ||
+																							'light'}
+																						emoji={section.benefitsEmoji || '✅'}
+																						class="mr-2 opacity-70"
+																					/>
+																					{benefit}
+																				</div>
+																			{/each}
+																		</div>
+																	{:else if item.pricing.benefits}
+																		<div class="mb-4">
+																			{#each item.pricing.benefits as benefit}
+																				<div class="my-2">
+																					<span class="inline-block mr-1">✅</span>
+																					{benefit.name}
+																				</div>
+																			{/each}
+																		</div>
+																	{/if}
+																{/if}
+
+																{#if item.interactiveRenderType}
+																	<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
+																		<RenderInteractiveOptions
+																			class={`${
+																				section.columns === 1 &&
+																				(section.interactiveRenderType === 'single_choice' ||
+																					section.interactiveRenderType === 'multiple_choice')
+																					? 'justify-center'
+																					: 'justify-start'
+																			} ${item.pricing ? 'w-full' : ''}`}
+																			size={item.pricing ? 'large' : 'normal'}
+																			bind:sectionItem={item}
+																			parentSectionId={section.id}
+																			bind:page
+																			itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																		/>
+																	</div>
+																{/if}
+															</div>
 														</div>
-													</div>
-												{/if}
-												{#if !section.carousel && item.imageUrl}
-													<div
-														class="{section.pricing ? 'order-none-off' : 'order-none-off'} {item
-															.theme?.isReversedImage
-															? 'order-first'
-															: ''}
-															{section.columns === 1 && i % 2 === 0 ? 'sm:order-last-off' : ''} {section.isShowSource
-															? 'px-4'
-															: ''}"
-													>
-														<RenderUrlWithBackground
-															isIframeFallback={false}
-															aspectRatio={section.theme?.imageAspectRatio ||
-																item.theme?.imageAspectRatio}
-															urlImgClass="w-full object-cover h-auto {section.imageClass ||
-																''}  mx-auto {section.columns === 1 ? '' : ''}  {section.items
-																.length === 1
-																? ''
-																: ''} {isGif(item.imageUrl)
-																? 'w-full object-cover'
-																: ''} {section.isShowSource || (!item.title && !item.description)
-																? 'rounded-lg'
-																: item.theme?.isReversedImage
-																? 'rounded-t-lg'
-																: 'rounded-b-lg'}
-																 {section.theme?.isScrollImageOnHover
-																? 'transition-all ease-in-out duration-1000 object-top group-hover:object-bottom'
+													{/if}
+													{#if !section.carousel && item.imageUrl}
+														<div
+															class="{section.pricing ? 'order-none-off' : 'order-none-off'} {item
+																.theme?.isReversedImage
+																? 'order-first'
 																: ''}
+															{section.columns === 1 && i % 2 === 0 ? 'sm:order-last-off' : ''} {section.isShowSource
+																? 'px-4'
+																: ''}"
+														>
+															<RenderUrlWithBackground
+																isIframeFallback={false}
+																aspectRatio={section.theme?.imageAspectRatio ||
+																	item.theme?.imageAspectRatio}
+																urlImgClass="w-full object-cover h-auto {section.imageClass ||
+																	''}  mx-auto {section.columns === 1 ? '' : ''}  {section.items
+																	.length === 1
+																	? ''
+																	: ''} {isGif(item.imageUrl)
+																	? 'w-full object-cover'
+																	: ''} {section.isShowSource || (!item.title && !item.description)
+																	? 'rounded-lg'
+																	: item.theme?.isReversedImage
+																	? 'rounded-t-lg'
+																	: 'rounded-b-lg'}
+																 {section.theme?.isScrollImageOnHover
+																	? 'transition-all ease-in-out duration-1000 object-top group-hover:object-bottom'
+																	: ''}
 																"
-															imageUrl={item.imageUrl}
-															imageBackgroundUrl={item.imageBackgroundUrl}
-														/>
-														<!-- <RenderUrl
+																imageUrl={item.imageUrl}
+																imageBackgroundUrl={item.imageBackgroundUrl}
+															/>
+															<!-- <RenderUrl
 															urlClass={`${section.imageClass || ''} ${getAspectClass(
 																item.theme?.imageAspectRatio
 															)}`}
@@ -1231,33 +1252,34 @@
 																: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl '}"
 															url={item.imageUrl}
 														/> -->
-													</div>
-												{/if}
+														</div>
+													{/if}
 
-												{#if section.isShowSource}
-													<div class="px-4 pb-4 {item.imageUrl ? 'pt-4' : ''}">
-														<hr class="mb-4 opacity-30" />
+													{#if section.isShowSource}
+														<div class="px-4 pb-4 {item.imageUrl ? 'pt-4' : ''}">
+															<hr class="mb-4 opacity-30" />
 
-														<div class="flex justify-between items-center text-sm opacity-80">
-															{moment(item.publishedOn || item.createdOn).format('MMM DD, YYYY')}
+															<div class="flex justify-between items-center text-sm opacity-80">
+																{moment(item.publishedOn || item.createdOn).format('MMM DD, YYYY')}
 
-															<div>
-																<SourceLogo
-																	theme={page?.theme?.theme || 'light'}
-																	bind:url={item.url}
-																/>
+																<div>
+																	<SourceLogo
+																		theme={page?.theme?.theme || 'light'}
+																		bind:url={item.url}
+																	/>
+																</div>
 															</div>
 														</div>
-													</div>
-												{/if}
-											</div>
-										</a>
-									</div>
-								{/if}
-							{/each}
-						</div>
-					{/if}
-				</div>
+													{/if}
+												</div>
+											</a>
+										</div>
+									{/if}
+								{/each}
+							</div>
+						{/if}
+					</div>
+				{/if}
 			{/if}
 		</div>
 	</div>

@@ -505,6 +505,13 @@ a._item-title:hover {
 	font-size: 16px;
 }
 
+._color-item-description {
+	color: var(--section-description-text-color);
+}
+._color-item-description-opposite {
+	color: var(--section-description-text-color-opposite);
+}
+
 ._input_container {
 	position: relative;
 	border-radius: var(--button-radius);

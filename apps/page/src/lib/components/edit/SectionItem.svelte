@@ -115,11 +115,11 @@
 				<EmojiPicker bind:icon={item.emoji} />
 			{/if}
 
-			{#if isWithUrl && section.type !== 'form'}
+			{#if isWithUrl && section.renderType !== 'form' && (section.renderType !== 'callout' || section.id === item.id)}
 				<EditInteractiveOptions class=" mt-4" bind:section bind:sectionItem={item} />
 			{/if}
 
-			{#if (isWithSettings && section.renderType !== 'form' && section.renderType !== 'carousel') || item.isActionSuccessSection}
+			{#if (isWithSettings && section.renderType !== 'form' && section.renderType !== 'carousel' && section.renderType !== 'callout') || section.id === item.id || item.isActionSuccessSection}
 				<EditSectionSettings bind:page bind:section bind:sectionItem={item} />
 			{/if}
 
@@ -196,20 +196,22 @@
 			</div>
 		{/if}
 	{:else if section.renderType !== 'form' || item.isActionSuccessSection}
-		<div class="relative flex justify-between items-center">
-			<FileInput
-				class="w-full"
-				placeholder="Media URL (or clipboard)"
-				isCanSearch
-				bind:url={item.imageUrl}
-				isWithIntegrations
-				theme="light"
-			/>
-		</div>
+		{#if section.renderType !== 'callout'}
+			<div class="relative flex justify-between items-center">
+				<FileInput
+					class="w-full"
+					placeholder="Media URL (or clipboard)"
+					isCanSearch
+					bind:url={item.imageUrl}
+					isWithIntegrations
+					theme="light"
+				/>
+			</div>
+		{/if}
 		{#if item.imageUrl}
 			<div class="flex items-center mt-2 justify-between">
 				<div class="text-xs flex gap-2 items-center">
-					{#if item.id === section.id}
+					{#if item.id === section.id && section.renderType !== 'callout'}
 						<div class="text-xs mt-2 flex gap-2 items-center">
 							<div
 								class="cursor-pointer"
