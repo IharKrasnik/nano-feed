@@ -442,7 +442,7 @@
 										: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||
 									section.theme?.isTitleLeft ||
 									section.renderType === 'article'
-										? 'sm:max-w-[712px] sm:mx-auto'
+										? 'sm:max-w-[712px]'
 										: 'sm:max-w-[768px] sm:mx-auto'}"
 								>
 									<ContentEditableIf
@@ -1148,7 +1148,7 @@
 																						'light'}
 																					bind:emoji={item.emoji}
 																				/>{/if}<ContentEditableIf
-																				class="_inline_title sm:inline mb-1 sm:mb-0"
+																				class="_inline_title sm:inline mb-1 sm:mb-0 font-medium"
 																				style="color: {page.theme?.theme === 'dark'
 																					? '#ffffff'
 																					: '#111111'};"
