@@ -676,7 +676,9 @@ button._alternative:hover {
 }
 
 ._hero-title b,
-._hero-title em {
+._hero-title em,
+._title b,
+._title em {
 	/* background-color: var(--accent-color); */
 	color: var(--accent-color);
 	opacity: 0.9;
