@@ -296,7 +296,7 @@
 					class="mr-2 my-2"
 					type="checkbox"
 					bind:checked={sectionItem.theme.isTransparent}
-					disabled={sectionItem.theme.isOverrideColors || sectionItem.theme.isOppositeColors}
+					disabled={sectionItem.theme?.isOverrideColors || sectionItem.theme?.isOppositeColors}
 				/>
 				Transparent background
 

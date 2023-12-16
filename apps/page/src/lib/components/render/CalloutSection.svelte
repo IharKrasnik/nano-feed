@@ -11,7 +11,7 @@
 	let getEmojiTheme = () => {
 		let pageTheme = page.parentPage?.theme?.theme || page.theme?.theme || 'light';
 
-		if (section.theme.isOppositeColors) {
+		if (section.theme?.isOppositeColors) {
 			return pageTheme === 'light' ? 'dark' : 'light';
 		}
 

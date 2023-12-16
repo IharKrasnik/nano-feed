@@ -260,7 +260,7 @@
 	let getEmojiTheme = ({ item = null } = {}) => {
 		let pageTheme = page.parentPage?.theme?.theme || page.theme?.theme || 'light';
 
-		if (section.theme.isOppositeColors || item?.theme?.isOppositeColors) {
+		if (section.theme?.isOppositeColors || item?.theme?.isOppositeColors) {
 			return pageTheme === 'light' ? 'dark' : 'light';
 		}
 
@@ -309,11 +309,13 @@
 	<div
 		class="relative {section.bgImageUrl ? 'p-8 my-16' : ''} {section.renderType === 'callout'
 			? 'min-h-screen sm:min-h-min'
+			: ''} {isCloneable
+			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
 			: ''}"
 	>
-		<!-- {#if isCloneable}
+		{#if isCloneable}
 			<div
-				class="absolute z-20 right-4 top-4 _bg-opposite p-2 rounded opacity-50 hover:opacity-100 cursor-pointer"
+				class="hidden group-hover:block absolute z-20 right-8 top-8 bg-accent p-2 rounded opacity-50 hover:opacity-100 cursor-pointer"
 				on:click={() => {
 					navigator.clipboard.writeText(JSON.stringify(section));
 
@@ -323,13 +325,15 @@
 				<div class="flex items-center text-sm ">
 					<FeatherIcon
 						class="mr-2"
-						name="copy"
+						name={page ? 'plus' : 'copy'}
 						size="20"
 						theme={page?.theme?.theme === 'dark' ? 'light' : 'dark'}
-					/> Copy {section._isCtaFooter ? 'Call-To-Action' : 'Section'}
+					/>
+					{page ? `Insert` : `Copy`}
+					{section._isCtaFooter ? 'Call-To-Action' : 'Section'}
 				</div>
 			</div>
-		{/if} -->
+		{/if}
 
 		{#if section.bgImageUrl}
 			<img
@@ -1146,7 +1150,7 @@
 																			section.columns
 																		]} _item-description whitespace-pre-wrap "
 																	>
-																		{#if item.title && item.theme.isInlineTitle}
+																		{#if item.title && item.theme?.isInlineTitle}
 																			{#if item.emoji && item.theme.isIconLeft}
 																				<Emoji
 																					width={16}
