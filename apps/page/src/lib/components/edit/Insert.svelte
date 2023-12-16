@@ -13,7 +13,8 @@
 		{
 			name: 'Empty',
 			section: {
-				title: 'Hello World 👋'
+				title: 'Hello World 👋',
+				columns: 1
 			}
 		},
 		{

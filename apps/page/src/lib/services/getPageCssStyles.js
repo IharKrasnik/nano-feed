@@ -49,7 +49,7 @@ export default (page) => {
 		'text-font-size': '18px',
 		'text-line-height': 1.55,
 		'background-color': page.theme?.backgroundColor || '#ffffff',
-		'background-color-opposite': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
+		'background-color-opposite': page.theme?.theme === 'dark' ? '#f6f5f4' : '#222222',
 		'text-color-opposite': page.theme?.theme === 'dark' ? '#111111' : '#f6f5f4',
 		'background-color-alternative':
 			page.theme?.theme === 'dark'

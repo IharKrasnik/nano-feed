@@ -28,6 +28,8 @@
 	export let section;
 	export let page;
 
+	let isAddingTags = false;
+
 	if (!item.theme) {
 		item.theme = {};
 	}
@@ -139,7 +141,7 @@
 		{/if}
 	</div>
 
-	<div class="flex w-full items-center mb-4">
+	<div class="flex w-full items-center mb-4 font-medium">
 		<div contenteditable bind:innerHTML={item.title} data-placeholder="Title" use:contenteditable />
 	</div>
 
@@ -150,6 +152,32 @@
 		bind:innerHTML={item.description}
 		data-placeholder="Description"
 	/>
+
+	{#if item.id !== section.id && section.renderType !== 'callout'}
+		<div class="mb-4">
+			{#if isAddingTags || item.tagsStr}
+				<div class="flex items-center mt-2">
+					<span class="text-xs font-medium mr-2 shrink-0">Tags</span>
+					<input
+						class="w-full"
+						autofocus
+						placeholder="Fast, Intuitive, Affordable"
+						bind:value={item.tagsStr}
+					/>
+				</div>
+			{:else}
+				<div
+					class="text-xs opacity-70 hover:opacity-100 text-underline cursor-pointer"
+					on:click={() => {
+						isAddingTags = true;
+						item.tagsStr = 'Fast, Intuitive, Affordable';
+					}}
+				>
+					<FeatherIcon class="inline" name="tag" theme={'light'} size={'10'} /> Add tags
+				</div>
+			{/if}
+		</div>
+	{/if}
 
 	{#if section.renderType === 'form' && item?.id !== section?.id}
 		<EditInteractiveOptions

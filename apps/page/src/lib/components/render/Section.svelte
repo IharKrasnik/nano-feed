@@ -256,6 +256,16 @@
 			return i;
 		});
 	}
+
+	let getEmojiTheme = ({ item = null } = {}) => {
+		let pageTheme = page.parentPage?.theme?.theme || page.theme?.theme || 'light';
+
+		if (section.theme.isOppositeColors || item?.theme?.isOppositeColors) {
+			return pageTheme === 'light' ? 'dark' : 'light';
+		}
+
+		return pageTheme;
+	};
 </script>
 
 <!-- <div class="section-bg" /> -->
@@ -818,14 +828,14 @@
 												{/if} -->
 													{#if item.url && !item.interactiveRenderType}
 														<a
-															class="_item-title block mb-2"
+															class="_item-title block mb-4"
 															href={item.url || ''}
 															target={item.url?.startsWith('http') ? '_blank' : ''}
 														>
 															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
 														</a>
 													{:else}
-														<div class="_item-title mb-2">
+														<div class="_item-title mb-4">
 															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
 														</div>
 													{/if}
@@ -855,6 +865,35 @@
 														bind:innerHTML={item.description}
 														condition={isEdit}
 													/>
+
+													{#if item.tagsStr}
+														<div class="my-4 mt-6 flex flex-wrap gap-2">
+															{#each item.tagsStr.split(',') as tag}
+																<div
+																	class="px-3 py-1 text-sm opacity-80 rounded-full inline ring {page
+																		.parentPage?.theme?.theme || page.theme?.theme === 'dark'
+																		? 'ring-zinc-900'
+																		: 'ring-zinc-100'} bg-black"
+																	style={page.parentPage?.theme?.theme ||
+																	page.theme?.theme === 'dark'
+																		? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
+																		: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
+																>
+																	{#if !section.streamSlug}
+																		{#key item.theme}
+																			<Emoji
+																				class="inline"
+																				theme={getEmojiTheme({ item })}
+																				width={14}
+																				emoji={item.emoji || 'feather:check'}
+																			/>
+																		{/key}
+																	{/if}
+																	{tag}
+																</div>
+															{/each}
+														</div>
+													{/if}
 
 													{#if item.interactiveRenderType}
 														<div class="mt-4">
@@ -1127,15 +1166,29 @@
 																{/if}
 
 																{#if item.tagsStr}
-																	<div class="my-4 flex flex-wrap gap-2">
+																	<div class="my-4 mt-6 flex flex-wrap gap-2">
 																		{#each item.tagsStr.split(',') as tag}
 																			<div
-																				class="px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-zinc-900 bg-black"
+																				class="px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-1 {getEmojiTheme(
+																					{ item }
+																				) === 'dark'
+																					? 'ring-zinc-700'
+																					: 'ring-zinc-200'} bg-black"
 																				style={page.parentPage?.theme?.theme ||
 																				page.theme?.theme === 'dark'
 																					? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
 																					: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
 																			>
+																				{#if !section.streamSlug}
+																					{#key item.theme}
+																						<Emoji
+																							class="inline"
+																							theme={getEmojiTheme({ item })}
+																							width={14}
+																							emoji={item.emoji || 'feather:check'}
+																						/>
+																					{/key}
+																				{/if}
 																				{tag}
 																			</div>
 																		{/each}
