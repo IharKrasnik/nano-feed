@@ -362,7 +362,9 @@
 			class=" _section-container {section.isGlowing
 				? `_glowing ${section.theme?.isOverrideGlowingColor ? '_override-glowing-color' : ''}
 	${section.theme?.glowingIntensity ? `_intensity` : ''}`
-				: ''} {section.className} {section.type} {section.renderType} 
+				: ''} {section.className}  {section.theme?.isTransparent
+				? '_transparent'
+				: ''} {section.type} {section.renderType} 
 				{section.bgImageUrl ? '_bg-image' : ''}
 				
 				{clazz
@@ -775,10 +777,9 @@
 											: 'mb-4 sm:mb-8'}
 							{section.renderType === 'changelog'
 											? '_transparent _no-padding sm:w-[600px] mx-auto'
-											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.theme
-											?.isOppositeColors
-											? '_bg-opposite'
-											: ''}"
+											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.theme?.isTransparent
+											? '_transparent'
+											: ''} {item.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 										style={item.theme?.isOverrideColors
 											? `background-color: ${item.theme?.backgroundColor};`
 											: ''}
@@ -923,8 +924,10 @@
 												id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
 												class="_section-item group block relative {item.bgImageUrl
 													? '_bg-image'
-													: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.url &&
-												!item.interactiveRenderType
+													: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.theme
+													?.isTransparent
+													? '_transparent'
+													: ''} {item.url && !item.interactiveRenderType
 													? '_interactive'
 													: ''} h-full overflow-hidden"
 												on:click={() => {
@@ -1017,9 +1020,8 @@
 												>
 													{#if item.title || item.description}
 														<div
-															class="flex w-full h-full flex-col justify-between {item.className?.includes(
-																'_transparent'
-															)
+															class="flex w-full h-full flex-col justify-between {item.theme
+																?.isTransparent
 																? 'sm:pr-8'
 																: page?.theme?.containerWidth === 900
 																? 'p-4'

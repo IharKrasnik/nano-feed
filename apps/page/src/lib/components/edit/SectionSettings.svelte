@@ -202,30 +202,6 @@
 				{/if}
 			</div>
 
-			{#if !sectionItem.bgImageUrl && sectionItem.id !== section.id}
-				<div class="_section mt-4">
-					<div class="text-sm mb-2 font-bold">Style</div>
-					<select bind:value={sectionItem.className}>
-						<option value="">Default</option>
-
-						<option value="_transparent">Transparent</option>
-						<option value="_highlighted">Highlighted</option>
-						<option value="_darker">Dark</option>
-					</select>
-				</div>
-			{/if}
-
-			{#if sectionItem.renderType === 'callout'}
-				<div class="_section mt-4">
-					<div class="text-sm mb-2 font-bold">Style</div>
-					<select bind:value={sectionItem.className}>
-						<option value="">Default</option>
-
-						<option value="_transparent">Transparent</option>
-					</select>
-				</div>
-			{/if}
-
 			<div class="my-4">
 				{#if section === sectionItem}
 					<div class="_section my-4">
@@ -316,11 +292,13 @@
 			{#if !sectionItem.bgImageUrl}
 				<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
 
-				<div class="mb-4">
-					<input bind:checked={sectionItem.theme.isOppositeColors} class="mr-2" type="checkbox" />
-
-					Use opposite colors
-				</div>
+				<input
+					class="mr-2 my-2"
+					type="checkbox"
+					bind:checked={sectionItem.theme.isTransparent}
+					disabled={sectionItem.theme.isOverrideColors || sectionItem.theme.isOppositeColors}
+				/>
+				Transparent background
 
 				<div class="flex items-center">
 					{#if sectionItem.theme.isOverrideColors}
@@ -328,7 +306,7 @@
 							type="color"
 							id="head"
 							name="head"
-							class="mr-4"
+							class="mr-4 my-2"
 							bind:value={sectionItem.theme.backgroundColor}
 						/>
 					{:else}{/if}
@@ -336,7 +314,8 @@
 					<div>
 						<input
 							bind:checked={sectionItem.theme.isOverrideColors}
-							class="mr-2"
+							disabled={sectionItem.theme.isTransparent}
+							class="mr-2 my-2"
 							type="checkbox"
 							on:change={() => {
 								if (sectionItem.theme.isOverrideColors) {
@@ -351,6 +330,17 @@
 					</div>
 				</div>
 			{/if}
+
+			<div class="mb-4">
+				<input
+					disabled={sectionItem.theme.isTransparent}
+					bind:checked={sectionItem.theme.isOppositeColors}
+					class="mr-2"
+					type="checkbox"
+				/>
+
+				Use opposite colors
+			</div>
 
 			{#if false}
 				{#if !sectionItem.bgImageUrl}

@@ -22,7 +22,9 @@
 <div class="flex justify-between">
 	<div
 		class="_section-item overflow-hidden w-full relative items-center mb-4 sm:mb-8 grid sm:grid-cols-12 {section.className ||
-			''} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
+			''} {section.theme?.isTransparent ? '_transparent' : ''} {section.theme?.isOppositeColors
+			? '_bg-opposite'
+			: ''}"
 		style={section.theme?.isOverrideColors
 			? `background-color: ${section.theme?.backgroundColor};`
 			: ''}
