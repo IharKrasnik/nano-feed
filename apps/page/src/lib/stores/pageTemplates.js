@@ -36,7 +36,7 @@ export let selectTemplatePage = async (feedItem, { page }) => {
 				parentPage.theme?.accentColor || templatePage.theme.accentColor;
 			templatePage.theme.theme = parentPage.theme?.theme || templatePage.theme.theme;
 			templatePage.theme.buttonColor =
-				parentPage.theme.buttonColor || templatePage.theme.buttonColor;
+				parentPage.theme?.buttonColor || templatePage.theme.buttonColor;
 		}
 
 		templatePage.url = feedItem.url;
