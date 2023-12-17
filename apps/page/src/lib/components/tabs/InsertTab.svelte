@@ -62,7 +62,7 @@
 
 		let createdPage = await post('pages', newPage);
 
-		goto(`https://ide.momentum.page?claimPageId=${createdPage._id}`);
+		goto(`https://ide.momentum.page?claim?pageId=${createdPage._id}`);
 	};
 </script>
 
