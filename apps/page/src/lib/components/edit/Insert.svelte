@@ -9,16 +9,17 @@
 	import CrossSvg from 'lib/icons/cross.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import BackTo from '$lib/components/BackTo.svelte';
+	import { page as sveltePage } from '$app/stores';
+	import isInsertPopupShown from '$lib/stores/isInsertPopupShown';
+	import selectedTemplatePage from '$lib/stores/selectedTemplatePage';
 
 	export let isAbsolute = true;
 	export let page;
-	export let isInsertPopupShown;
-	export let selectedTemplatePage;
 
 	let newPageName = '';
 
 	let selectDefaultTemplate = async () => {
-		selectedTemplatePage = await selectTemplatePage($templateFeed.results[0], { page });
+		$selectedTemplatePage = await selectTemplatePage($templateFeed.results[0], { page });
 	};
 
 	let loadTemplateFeed = async () => {
@@ -40,20 +41,30 @@
 	}
 </script>
 
-{#if isInsertPopupShown}
+{#if $isInsertPopupShown}
 	<div
 		class="_insert left-0 top-[60px] w-[400px] bg-white h-screen overflow-y-auto p-4 pb-32"
 		class:absolute={isAbsolute}
 	>
-		<div class="mb-8">
-			<BackTo
-				to="Editor"
-				onClick={() => {
-					isInsertPopupShown = false;
-					selectedTemplatePage = null;
-				}}
-			/>
-		</div>
+		{#if !$sveltePage.url.href.includes('/page-templates')}
+			<div class="mb-8">
+				<BackTo
+					to="Editor"
+					onClick={() => {
+						$isInsertPopupShown = false;
+						$selectedTemplatePage = null;
+					}}
+				/>
+			</div>
+		{:else}
+			<div class=" mb-16">
+				<div class="_section">
+					<a href="https://ide.momentum.page">
+						<button class="_primary _small">Start page from scratch</button>
+					</a>
+				</div>
+			</div>
+		{/if}
 
 		{#if page?._id}
 			<div class="flex items-center font-semibold opacity-80 ">
@@ -78,8 +89,8 @@
 
 					$sectionToEdit = newSection;
 
-					selectedTemplatePage = null;
-					isInsertPopupShown = false;
+					$selectedTemplatePage = null;
+					$isInsertPopupShown = false;
 				}}
 			>
 				Add Empty Section
@@ -94,22 +105,6 @@
 			{/if}
 		{/if}
 
-		<!-- {#if !page._id}
-			<div class="mb-16">
-				<div class="_section">
-					<input
-						class="w-full"
-						bind:value={page.name}
-						placeholder="Product Name"
-						on:focus={() => {
-							isInsertPopupShown = false;
-						}}
-					/>
-					<div class="text-sm mt-2 opacity-70">You can insert any section later</div>
-				</div>
-			</div>
-		{/if} -->
-
 		<div class="flex justify-between {page?._id ? 'mt-16' : ''}">
 			<div class="flex items-center font-semibold opacity-80">
 				<div
@@ -117,18 +112,23 @@
 				>
 					<FeatherIcon name="gift" color="#f6f5f4" />
 				</div>
-				Templates
+				Use Templates
 			</div>
 		</div>
 
 		{#if $templateFeed.results?.length}
 			<div class="grid grid-cols-1 mt-8">
 				{#each $templateFeed.results as templateFeedItem}
-					<div
+					<a
 						class="_section cursor-pointer"
-						class:_selected={selectedTemplatePage?.url === templateFeedItem.url}
-						on:click={async () => {
-							selectedTemplatePage = await selectTemplatePage(templateFeedItem, { page });
+						href="/page-templates/{templateFeedItem.slug}"
+						class:_selected={$selectedTemplatePage?.url === templateFeedItem.url}
+						on:click={async (evt) => {
+							$selectedTemplatePage = await selectTemplatePage(templateFeedItem, { page });
+
+							if (!$sveltePage.url.href.includes('/page-templates')) {
+								evt.preventDefault();
+							}
 						}}
 					>
 						<div class="font-medium mb-2">{templateFeedItem.title}</div>
@@ -143,7 +143,7 @@
 								src={templateFeedItem.attachments[0].url}
 							/>
 						</div>
-					</div>
+					</a>
 				{/each}
 			</div>
 		{/if}

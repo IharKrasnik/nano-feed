@@ -93,6 +93,8 @@
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 	import heatmap from '$lib/stores/heatmap';
+	import isInsertPopupShown from '$lib/stores/isInsertPopupShown';
+	import selectedTemplatePage from '$lib/stores/selectedTemplatePage';
 
 	//
 	onMount(async () => {
@@ -118,8 +120,6 @@
 	let isLoading = false;
 	let isSignupFormShown = false;
 	let isJustPaid;
-
-	let isInsertPopupShown = false;
 
 	if ($sveltePage.url.searchParams.get('thank-you')) {
 		isJustPaid = true;
@@ -154,184 +154,6 @@
 		prevSlug = page.slug;
 		$aboveTheFoldEl.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 	}
-
-	// page = {
-	// 	...page,
-	// 	sections: [
-	// 		{
-	// 			title: 'Hello World 👋',
-	// 			columns: 1,
-	// 			editorMeta: {
-	// 				name: 'Empty'
-	// 			}
-	// 		},
-	// 		{
-	// 			emoji: '🙌',
-	// 			title: 'Tell the audience how <b>they</b> will benefit',
-	// 			description:
-	// 				'Show your features below, talk to the audience. Start features titles with verb.',
-
-	// 			theme: {
-	// 				imageAspectRatio: 'image'
-	// 			},
-
-	// 			columns: 1,
-
-	// 			items: [
-	// 				{
-	// 					emoji: '🖼',
-	// 					title: 'Attach Images',
-	// 					description:
-	// 						'Paste image from clipboard, insert a link to input or upload from your computer.',
-	// 					imageUrl:
-	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
-	// 				},
-	// 				{
-	// 					emoji: '📼',
-	// 					title: 'Use Videos',
-	// 					description: 'Simply insert a link to YouTube, Loom or Vimeo.',
-	// 					imageUrl:
-	// 						'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D',
-	// 					theme: {
-	// 						isReversedImage: true
-	// 					}
-	// 				},
-	// 				{
-	// 					emoji: '💥',
-	// 					title: 'Use GIFs',
-	// 					description:
-	// 						'Use animated GIFs to catch their attention (use search icon near file input)',
-	// 					imageUrl:
-	// 						'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
-	// 				},
-	// 				{
-	// 					emoji: '⚒️',
-	// 					title: 'Customize The Grid',
-	// 					description: 'Select the number of columns you want to show in your section (1—4)',
-	// 					imageUrl:
-	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243758302-image.png',
-	// 					theme: {
-	// 						isReversedImage: true
-	// 					}
-	// 				}
-	// 			],
-	// 			editorMeta: {
-	// 				name: 'Features'
-	// 			}
-	// 		},
-	// 		{
-	// 			title: 'Frequently Asked Questions',
-	// 			description: 'Answers summarized',
-	// 			renderType: 'testimonials',
-	// 			renderType: 'testimonials',
-	// 			title: `Don't just trust our words...`,
-	// 			description: `Here's what people say about ${page.name}!`,
-
-	// 			items: [
-	// 				{
-	// 					title: 'Igor Krasnik, Momentum',
-	// 					description: `${page.name} is awesome!`,
-	// 					imageUrl:
-	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156297060-image.png'
-	// 				},
-	// 				{
-	// 					title: 'Elon Musk, X',
-	// 					description: `${page.name} is the future, to the moon 🚀`,
-	// 					imageUrl:
-	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156478852-image.png'
-	// 				}
-	// 			],
-
-	// 			editorMeta: {
-	// 				name: 'Testimonials'
-	// 			}
-	// 		},
-	// 		{
-	// 			title: 'Frequently Asked Questions',
-	// 			description: 'Answers summarized',
-	// 			renderType: 'faq',
-	// 			items: [
-	// 				{
-	// 					title: 'Do you offer a refund?',
-	// 					description: 'Yes, all subscriptions refunded no-questions-asked the first 2 weeks.'
-	// 				},
-	// 				{
-	// 					title: 'How the process look like?',
-	// 					description: 'You submit the form, prepay and get the result in 48 hours.'
-	// 				}
-	// 			],
-	// 			editorMeta: {
-	// 				name: 'FAQ'
-	// 			}
-	// 		},
-	// 		{
-	// 			columns: 2,
-	// 			icon: 'feather:check',
-
-	// 			renderType: 'pricing',
-
-	// 			title: 'Pricing',
-	// 			description: 'Simple plans that fit your needs',
-
-	// 			items: [
-	// 				{
-	// 					title: 'Free',
-	// 					description: 'Start from free (capped at 1000 emails)',
-	// 					pricing: {
-	// 						amount: 0,
-	// 						per: 'month',
-	// 						benefitsStr: 'collect emails\nbroadcast emails'
-	// 					}
-	// 				},
-	// 				{
-	// 					title: 'Growth',
-	// 					description: 'For growing businesses (capped at 10k emails)',
-	// 					pricing: {
-	// 						amount: 4.2,
-	// 						per: 'month',
-	// 						benefitsStr: 'everything in free \n custom domain \n priority support'
-	// 					}
-	// 				}
-	// 			],
-	// 			editorMeta: {
-	// 				name: 'Pricing'
-	// 			}
-	// 		},
-	// 		{
-	// 			renderType: 'carousel',
-
-	// 			title: 'Nice images!',
-	// 			columns: 1,
-	// 			items: [
-	// 				{
-	// 					title: 'Image',
-	// 					description: '',
-	// 					colSpan: 2,
-	// 					imageUrl:
-	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
-	// 				},
-	// 				{
-	// 					title: 'GIF',
-	// 					description: '',
-	// 					imageUrl:
-	// 						'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D'
-	// 				},
-	// 				{
-	// 					title: 'Video',
-	// 					description: '',
-	// 					imageUrl:
-	// 						'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
-	// 				}
-	// 			],
-	// 			editorMeta: {
-	// 				name: 'Carousel'
-	// 			}
-	// 		}
-	// 	].map((s) => {
-	// 		s.id = uuidv4();
-	// 		return s;
-	// 	})
-	// };
 
 	let pageSlug = '_new';
 	let selectedTab = 'editor';
@@ -465,7 +287,6 @@
 	}
 
 	$: if (!$isPageSet && $allPages?.length && !page?._id) {
-		console.log('$allPages', $allPages);
 		setPageAndDraft({ ..._.cloneDeep($allPages[0]) });
 
 		// refreshData();
@@ -777,7 +598,6 @@
 	let selectedTrigger;
 	let selectedChatRoom;
 	let selectedNewsletter;
-	let selectedTemplatePage;
 
 	let onlineUsersCount = -1;
 
@@ -979,8 +799,8 @@
 		<div
 			class="fixed z-10 w-full h-[60px] bg-white flex items-center justify-between px-6 border-b "
 		>
-			{#if isInsertPopupShown}
-				<Insert bind:isInsertPopupShown bind:selectedTemplatePage bind:page />
+			{#if $isInsertPopupShown}
+				<Insert bind:page />
 			{/if}
 			<div
 				class="relative z-10 flex gap-1 items-center font-semibold _header-menu"
@@ -1026,16 +846,18 @@
 				{#if selectedTab === 'editor' || !page._id}
 					<div
 						in:fade={{ delay: 0 }}
-						class:_selected={isInsertPopupShown}
-						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  {isInsertPopupShown
+						class:_selected={$isInsertPopupShown}
+						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  {$isInsertPopupShown
 							? ''
 							: 'opacity-70 hover:opacity-100'}"
 						on:click={() => {
-							if (isInsertPopupShown) {
-								isInsertPopupShown = false;
-							} else {
-								isInsertPopupShown = true;
-								selectedTab = 'editor';
+							if (!$sveltePage.url.href.includes('/page-templates')) {
+								if ($isInsertPopupShown) {
+									$isInsertPopupShown = false;
+								} else {
+									$isInsertPopupShown = true;
+									selectedTab = 'editor';
+								}
 							}
 						}}
 					>
@@ -1310,7 +1132,7 @@
 										? 'bg-green-400'
 										: 'bg-gray-600 opacity-30'} w-[8px] h-[8px] rounded-full mr-2"
 								/>
-								{onlineUsersCount} users online
+								{onlineUsersCount || 0} users online
 							</div>
 							<div
 								class="ml-2 opacity-80 hover:opacity-100 transition cursor-pointer _bare"
@@ -1837,7 +1659,7 @@
 													if (page.renderType === 'article') {
 														addNewSection();
 													} else {
-														isInsertPopupShown = true;
+														$isInsertPopupShown = true;
 													}
 												}}>Add {page.renderType === 'article' ? 'Paragraph' : 'Section'}</button
 											>
@@ -2134,7 +1956,7 @@
 					style={selectedTab === 'editor' ? 'height: calc(100vh - 60px);' : ''}
 					in:fade={{ delay: 150 }}
 				>
-					{#if !isInsertPopupShown && !page.name}
+					{#if !$isInsertPopupShown && !page.name}
 						<div
 							class="absolute z-10  left-0 top-0 w-full h-full self-stretch flex-col flex items-center justify-center"
 							in:slide
@@ -2191,7 +2013,7 @@
 										: ''}
 									in:fade
 								>
-									{#if selectedTab === 'editor' && (!isInsertPopupShown || !selectedTemplatePage)}
+									{#if selectedTab === 'editor' && (!$isInsertPopupShown || !$selectedTemplatePage)}
 										{#if page?._id}
 											<div
 												class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
@@ -2248,8 +2070,8 @@
 												bind:page
 											/>
 										{/if}
-									{:else if isInsertPopupShown}
-										<InsertTab bind:isInsertPopupShown bind:page bind:selectedTemplatePage />
+									{:else if $isInsertPopupShown}
+										<InsertTab bind:page />
 									{:else if selectedTab === 'database'}
 										<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 									{:else if selectedTab === 'analytics'}

@@ -7,7 +7,7 @@
 	export let onClick = () => {};
 </script>
 
-<div class="{clazz} flex items-center cursor-pointer text-[#8B786D] mb-4" on:click={onClick}>
+<a href="/" class="{clazz} flex items-center cursor-pointer text-[#8B786D] mb-4" on:click={onClick}>
 	<BackArrowSvg />
 	Back to {to}
-</div>
+</a>

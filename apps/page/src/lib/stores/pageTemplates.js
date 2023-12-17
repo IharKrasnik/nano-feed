@@ -2,6 +2,8 @@ import { writable } from 'svelte/store';
 import { get } from 'lib/api';
 import { get as getStoreValue } from 'svelte/store';
 import getDomain from 'lib/helpers/getDomain';
+import isInsertPopupShown from '$lib/stores/isInsertPopupShown';
+import selectedTemplatePage from '$lib/stores/selectedTemplatePage';
 
 const pagesStore = writable([]);
 const feedStore = writable([]);
@@ -9,7 +11,14 @@ const feedStore = writable([]);
 export { feedStore as feed };
 export { pagesStore as pages };
 
-export let selectTemplatePage = async (feedItem, { page }) => {
+export let selectTemplatePage = async (feedItem, { page } = {}) => {
+	if (!feedItem._id) {
+		feedItem = await get('feed/bySlug', {
+			projectSlug: 'momentum-page-templates',
+			slug: feedItem.slug
+		});
+	}
+
 	let foundPage = getStoreValue(pagesStore).find((p) => p.url === feedItem.url);
 
 	if (foundPage) {
@@ -44,6 +53,9 @@ export let selectTemplatePage = async (feedItem, { page }) => {
 		pagesStore.update((p) => {
 			return [...p, templatePage];
 		});
+
+		selectedTemplatePage.update(() => templatePage);
+		isInsertPopupShown.update(() => true);
 
 		return templatePage;
 	}

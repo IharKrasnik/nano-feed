@@ -49,7 +49,7 @@
 	export { clazz as class };
 
 	export let isEdit = false;
-	export let isCloneable = false;
+	export let isSectionsCloneable = false;
 	export let onInsert;
 
 	export let page = {
@@ -305,7 +305,7 @@
 	{:else}
 		<div class="" bind:this={previewEl}>
 			<div class="relative color-site min-h-screen" style="{cssVarStyles};">
-				<!-- {#if page.isCloneable}
+				<!-- {#if page.isSectionsCloneable}
 					<div class="fixed w-[400px] h-screen p-4 bg-accent top-0" style="z-index: 100">
 						Clone this page
 					</div>
@@ -334,11 +334,11 @@
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						{#if !page.isCloneable}
+						{#if !page.isSectionsCloneable}
 							{#if page.name || page.parentPage?._id}
 								<div
 									class="fixed w-full _header backdrop-blur-lg _border-b-theme"
-									style={isEdit ? 'width: calc(100% - 480px);' : ''}
+									style={isEdit ? 'width: calc(100% - 498px);' : ''}
 								>
 									<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
 										<div class="flex flex-grow py-4 sm:py-0">
@@ -497,7 +497,7 @@
 											bind:page
 											bind:isEmbed
 											bind:isEdit
-											bind:isCloneable
+											bind:isSectionsCloneable
 										/>
 									</div>
 								{/if}
@@ -577,7 +577,7 @@
 																	bind:section
 																	bind:themeStyles={styles}
 																	bind:isEdit
-																	bind:isCloneable
+																	bind:isSectionsCloneable
 																	{onInsert}
 																	style={false && page.theme?.isZebra && i % 2 === 0
 																		? page.theme?.theme === 'dark'
