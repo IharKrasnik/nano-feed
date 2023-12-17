@@ -27,12 +27,17 @@ export let selectTemplatePage = async (feedItem, { page }) => {
 
 		templatePage.subPages = [];
 
-		let parentPage = page.parentPage || page;
+		let parentPage = page?.parentPage || page;
 
-		templatePage.theme.backgroundColor = parentPage.theme?.backgroundColor;
-		templatePage.theme.accentColor = parentPage.theme?.accentColor;
-		templatePage.theme.theme = parentPage.theme?.theme;
-		templatePage.theme.buttonColor = parentPage.theme.buttonColor;
+		if (parentPage) {
+			templatePage.theme.backgroundColor =
+				parentPage.theme?.backgroundColor || templatePage.theme.backgroundColor;
+			templatePage.theme.accentColor =
+				parentPage.theme?.accentColor || templatePage.theme.accentColor;
+			templatePage.theme.theme = parentPage.theme?.theme || templatePage.theme.theme;
+			templatePage.theme.buttonColor =
+				parentPage.theme.buttonColor || templatePage.theme.buttonColor;
+		}
 
 		templatePage.url = feedItem.url;
 

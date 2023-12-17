@@ -32,63 +32,41 @@
 	let cssVarStyles;
 	let styles;
 
-	let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
+	// let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
 
 	$: if (page) {
 		let res = getPageCssStyles(page);
 		cssVarStyles = res.cssVarStyles;
 		styles = res.styles;
 	}
-
-	let selectDefaultTemplate = async () => {
-		selectedTemplatePage = await selectTemplatePage($templateFeed.results[0], { page });
-	};
-
-	let loadTemplateFeed = async () => {
-		let feedResults = await get('feed', {
-			projectSlug: 'momentum-page-templates'
-		});
-
-		$templateFeed = feedResults;
-
-		if (feedResults.results.length) {
-			selectDefaultTemplate();
-		}
-	};
-
-	if (!$templateFeed.results?.length) {
-		loadTemplateFeed();
-	} else {
-		selectDefaultTemplate();
-	}
 </script>
 
-<div class="px-8 py-16 bg-background overflow-y-auto" style={cssVarStyles} />
+<div class="bg-background overflow-y-auto" style={cssVarStyles}>
+	{#if selectedTemplatePage}
+		{#key selectedTemplatePage._id}
+			<SitePreview
+				class="p-4"
+				isNoVars
+				isEmbed
+				noStickyHeader={true}
+				isNoBadge={true}
+				isEdit
+				isCloneable
+				page={selectedTemplatePage}
+				onInsert={(section) => {
+					let newSection = _.cloneDeep(section);
+					newSection.id = uuidv4();
+					page.sections = [...page.sections, newSection];
 
-{#if selectedTemplatePage}
-	{#key selectedTemplatePage._id}
-		<SitePreview
-			class="p-4"
-			isNoVars
-			isEmbed
-			noStickyHeader={true}
-			isNoBadge={true}
-			isEdit
-			isCloneable
-			page={selectedTemplatePage}
-			onInsert={(section) => {
-				let newSection = _.cloneDeep(section);
-				newSection.id = uuidv4();
-				page.sections = [...page.sections, newSection];
+					$sectionToEdit = newSection;
 
-				$sectionToEdit = newSection;
-
-				selectedTemplatePage = null;
-				isInsertPopupShown = false;
-			}}
-		/>
-	{/key}
-{/if}
+					selectedTemplatePage = null;
+					isInsertPopupShown = false;
+				}}
+			/>
+		{/key}
+	{/if}
+</div>
 
 <style>
 </style>

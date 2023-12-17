@@ -298,12 +298,19 @@
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
+
 {#key page.slug}
 	{#if page.theme?.layoutType === 'portfolio' || page.parentPage?.theme?.layoutType === 'portfolio'}
 		<PortfolioPage bind:page />
 	{:else}
 		<div class="" bind:this={previewEl}>
 			<div class="relative color-site min-h-screen" style="{cssVarStyles};">
+				<!-- {#if page.isCloneable}
+					<div class="fixed w-[400px] h-screen p-4 bg-accent top-0" style="z-index: 100">
+						Clone this page
+					</div>
+				{/if} -->
+
 				{#if page.interactiveAnswers}
 					{#if scrollY > 100}
 						<div
@@ -323,178 +330,162 @@
 
 				{#if isMounted}
 					<div
-						class="sticky bg-site z-20 w-full {clazz}"
+						class=" relative bg-site z-20 w-full {clazz}"
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						{#if page.name || page.parentPage?._id}
-							<div
-								class="{isEdit
-									? 'absolute left-0 top-0 mb-[-60px]'
-									: 'fixed top-0 left-0'} _header backdrop-blur-lg _border-b-theme"
-							>
-								<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
-									<div class="flex flex-grow py-4 sm:py-0">
-										<a
-											class="flex items-center shrink-0 _logo"
-											href="/"
-											data-sveltekit-preload-data="hover"
-											on:click={() => {
-												trackClick({
-													pageId: page?._id,
-													sectionId: `${page.parentPage?._id || page._id}_header`,
-													linkId: 'home',
-													url: '/',
-													text: page.parentPage?.name || page.name
-												});
-											}}
-											class:heatmap={$heatmap}
-											data-heatmap-clicks-count={$heatmap
-												? getHeatmapClicksCount({
+						{#if !page.isCloneable}
+							{#if page.name || page.parentPage?._id}
+								<div
+									class="fixed w-full _header backdrop-blur-lg _border-b-theme"
+									style={isEdit ? 'width: calc(100% - 480px);' : ''}
+								>
+									<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
+										<div class="flex flex-grow py-4 sm:py-0">
+											<a
+												class="flex items-center shrink-0 _logo"
+												href="/"
+												data-sveltekit-preload-data="hover"
+												on:click={() => {
+													trackClick({
+														pageId: page?._id,
 														sectionId: `${page.parentPage?._id || page._id}_header`,
-														linkId: `home`
-												  })
-												: ''}
-										>
-											{#if page?.parentPage?.logo || page?.logo}
-												<Emoji
-													width="25"
-													class="mr-2 rounded"
-													emoji={page.parentPage?.logo || page.logo}
-												/>
+														linkId: 'home',
+														url: '/',
+														text: page.parentPage?.name || page.name
+													});
+												}}
+												class:heatmap={$heatmap}
+												data-heatmap-clicks-count={$heatmap
+													? getHeatmapClicksCount({
+															sectionId: `${page.parentPage?._id || page._id}_header`,
+															linkId: `home`
+													  })
+													: ''}
+											>
+												{#if page?.parentPage?.logo || page?.logo}
+													<Emoji
+														width="25"
+														class="mr-2 rounded"
+														emoji={page.parentPage?.logo || page.logo}
+													/>
 
-												{#if !page.theme?.isHidePageName}
+													{#if !page.theme?.isHidePageName}
+														<span
+															class="font-medium text-base {page.theme?.heroBgImage
+																? 'light-colors'
+																: ''}"
+														>
+															{page.parentPage?.name || page.name}
+														</span>
+													{/if}
+												{:else}
 													<span
-														class="font-medium text-base {page.theme?.heroBgImage
-															? 'light-colors'
-															: ''}"
+														class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
+														style="font-family: var(--logo-font)"
 													>
 														{page.parentPage?.name || page.name}
 													</span>
 												{/if}
-											{:else}
-												<span
-													class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
-													style="font-family: var(--logo-font)"
-												>
-													{page.parentPage?.name || page.name}
-												</span>
-											{/if}
-										</a>
+											</a>
 
-										<div
-											class="hidden ml-8 sm:flex items-center justify-end text-sm py-1 gap-4 w-full mr-8"
-											style="z-index: 50"
-										>
-											{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}
-												<a
-													href="/{subPage.slug}"
-													data-sveltekit-preload-data="hover"
-													on:click={() => {
-														trackClick({
-															pageId: page?._id,
-															sectionId: `${page.parentPage?._id || page._id}_header`,
-															linkId: subPage._id,
-															url: `/${subPage.slug}`,
-															text: subPage.name
-														});
-													}}
-													class:heatmap={$heatmap}
-													data-heatmap-clicks-count={$heatmap
-														? getHeatmapClicksCount({
+											<div
+												class="hidden ml-8 sm:flex items-center justify-end text-sm py-1 gap-4 w-full mr-8"
+												style="z-index: 50"
+											>
+												{#each (page.subPages || page.parentPage?.subPages || []).filter((s) => !s.slug.includes('/') && s.renderType !== 'article') as subPage}
+													<a
+														href="/{subPage.slug}"
+														data-sveltekit-preload-data="hover"
+														on:click={() => {
+															trackClick({
+																pageId: page?._id,
 																sectionId: `${page.parentPage?._id || page._id}_header`,
-																linkId: subPage._id
-														  })
-														: ''}>{subPage.name}</a
-												>
-											{/each}
+																linkId: subPage._id,
+																url: `/${subPage.slug}`,
+																text: subPage.name
+															});
+														}}
+														class:heatmap={$heatmap}
+														data-heatmap-clicks-count={$heatmap
+															? getHeatmapClicksCount({
+																	sectionId: `${page.parentPage?._id || page._id}_header`,
+																	linkId: subPage._id
+															  })
+															: ''}>{subPage.name}</a
+													>
+												{/each}
 
-											{#if !page._id && page.parentPage && !page.isUseDatabase && !page.isInDir}
-												<span>{page.name}</span>
-											{/if}
+												{#if !page._id && page.parentPage && !page.isUseDatabase && !page.isInDir}
+													<span>{page.name}</span>
+												{/if}
+											</div>
 										</div>
-									</div>
 
-									<div>
-										<div class="sm:hidden" on:click={toggleMenu}>
-											<FeatherIcon theme={page.theme?.theme} name="menu" />
-										</div>
-										<div
-											class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold"
-										>
-											{#if !page.parentPage}
-												{#if page.activeHero}
+										<div>
+											<div class="sm:hidden" on:click={toggleMenu}>
+												<FeatherIcon theme={page.theme?.theme} name="menu" />
+											</div>
+											<div
+												class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold"
+											>
+												{#if !page.parentPage}
+													{#if page.activeHero}
+														<RenderInteractiveOptions
+															trackId={`${page._id}_header`}
+															bind:sectionItem={page.activeHero}
+															bind:page
+															isHeader
+														/>
+													{/if}
+												{:else if page.parentPage.heros?.length}
 													<RenderInteractiveOptions
-														trackId={`${page._id}_header`}
-														bind:sectionItem={page.activeHero}
-														bind:page
+														trackId={`${page.parentPage._id}_header`}
+														size="small"
+														sectionItem={page.parentPage.heros[0]}
+														{page}
 														isHeader
 													/>
 												{/if}
-											{:else if page.parentPage.heros?.length}
-												<RenderInteractiveOptions
-													trackId={`${page.parentPage._id}_header`}
-													size="small"
-													sectionItem={page.parentPage.heros[0]}
-													{page}
-													isHeader
-												/>
-											{/if}
-											<!-- {#each page.subPages || page.parentPage?.subPages || [] as subPage}
+												<!-- {#each page.subPages || page.parentPage?.subPages || [] as subPage}
 											<a href="/{subPage.slug}">{subPage.name}</a>
 										{/each} -->
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						{/if}
+							{/if}
 
-						{#if isMenuOpen}
-							<div
-								in:fly={{ y: 350, duration: 250 }}
-								out:fly={{ duration: 150 }}
-								style="z-index: 100"
-								class="left-0 top-[61px] fixed w-screen h-screen overflow-y-auto bg-site bg-background p-4"
-							>
-								{#if page.activeHero}
-									<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
-								{:else if page.parentPage && page.parentPage.heros?.length}
-									<RenderInteractiveOptions
-										size="small"
-										sectionItem={page.parentPage.heros[0]}
-										{page}
-									/>
-								{/if}
+							{#if isMenuOpen}
+								<div
+									in:fly={{ y: 350, duration: 250 }}
+									out:fly={{ duration: 150 }}
+									style="z-index: 100"
+									class="left-0 top-[61px] fixed w-screen h-screen overflow-y-auto bg-site bg-background p-4"
+								>
+									{#if page.activeHero}
+										<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
+									{:else if page.parentPage && page.parentPage.heros?.length}
+										<RenderInteractiveOptions
+											size="small"
+											sectionItem={page.parentPage.heros[0]}
+											{page}
+										/>
+									{/if}
 
-								<div class="flex flex-col mt-8">
-									{#each (page.subPages || page.parentPage?.subPages || []).filter((sp) => !sp.slug.includes('/')) as subPage}
-										<a class="block  py-4 border-b border-white/20" href="/{subPage.slug}"
-											>{subPage.name}</a
-										>
-									{/each}
+									<div class="flex flex-col mt-8">
+										{#each (page.subPages || page.parentPage?.subPages || []).filter((sp) => !sp.slug.includes('/')) as subPage}
+											<a class="block  py-4 border-b border-white/20" href="/{subPage.slug}"
+												>{subPage.name}</a
+											>
+										{/each}
+									</div>
 								</div>
-							</div>
+							{/if}
 						{/if}
-						<!-- <img
-						class="absolute top-0 left-0 z-0 w-full h-screen"
-						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1698794318980-image.png"
-					/>
-					 -->
 
-						<!-- <Gradients gradientType={'ship'} /> -->
-
-						<!-- <div
-								class="absolute top-0 left-0 z-0 w-full h-screen "
-								style="background-image: linear-gradient(to top, #030303, rgba(0, 0, 0, 0)),
-							linear-gradient(104deg, rgba(225, 174, 255, 0.3), rgba(0, 108, 104, 0.3) 42%, #030303);"
-							/> -->
-
-						<!-- <div
-								class="absolute top-0 left-0 z-0 w-full h-screen opacity-20 rounded-full"
-								style="background-image: conic-gradient(from 180deg at 50% 50%,#2a8af6 0deg,#a853ba 180deg,#e92a67 1turn); filter: blur(75px); will-change: filter;"
-							/> -->
 						{#if !isLoading}
-							<div>
+							<div class="overflow-y-hidden">
 								{#if page.activeHero}
 									<div
 										class="sticky bg-site"

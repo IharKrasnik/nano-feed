@@ -3971,7 +3971,7 @@
 		align-items: center;
 		display: flex;
 		position: absolute;
-		width: 100vw;
+		width: 100%;
 	}
 
 	.hero_content {

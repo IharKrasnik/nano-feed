@@ -86,14 +86,6 @@
 
 	let isDatabaseModalShown = false;
 
-	let pageStreams;
-
-	let getPageStreams = async () => {
-		pageStreams = await get(`pages/${page.parentPage?._id || page._id}/streams`);
-	};
-
-	getPageStreams();
-
 	let newStreamTitle;
 
 	let createStream = async () => {

@@ -34,7 +34,7 @@ export async function load({ url, params, session, cookies }) {
 		pageSlug
 	};
 
-	if (pageSlug) {
+	if (pageSlug && pageSlug !== 'templates') {
 		let page;
 
 		if (feedItemSlug) {

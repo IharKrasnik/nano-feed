@@ -929,7 +929,7 @@ See you!
 											on:click={() => {
 												$aboveTheFoldEl.scrollIntoView({
 													behavior: 'smooth',
-													block: 'center',
+													block: 'start',
 													inline: 'nearest'
 												});
 

@@ -40,4 +40,8 @@ if (browser) {
 	});
 }
 
+allPagesStore.subscribe((newP) => {
+	console.log('NEWP', newP?.length);
+});
+
 export default allPagesStore;

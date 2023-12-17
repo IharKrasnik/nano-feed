@@ -119,6 +119,8 @@
 	let isSignupFormShown = false;
 	let isJustPaid;
 
+	let isInsertPopupShown = false;
+
 	if ($sveltePage.url.searchParams.get('thank-you')) {
 		isJustPaid = true;
 	}
@@ -136,188 +138,200 @@
 				theme: {}
 			}
 		],
+		theme: {
+			// titleFont: 'Inter',
+			// textFont: 'Inter',
+			// accentColor: '#0055FF'
+		},
+		sections: [],
 		welcomeEmail: null
 	};
 
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 
-	page = {
-		...page,
-		sections: [
-			{
-				title: 'Hello World 👋',
-				columns: 1,
-				editorMeta: {
-					name: 'Empty'
-				}
-			},
-			{
-				emoji: '🙌',
-				title: 'Tell the audience how <b>they</b> will benefit',
-				description:
-					'Show your features below, talk to the audience. Start features titles with verb.',
+	let prevSlug;
+	$: if (page.slug && $aboveTheFoldEl && prevSlug !== page.slug) {
+		prevSlug = page.slug;
+		$aboveTheFoldEl.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+	}
 
-				theme: {
-					imageAspectRatio: 'image'
-				},
+	// page = {
+	// 	...page,
+	// 	sections: [
+	// 		{
+	// 			title: 'Hello World 👋',
+	// 			columns: 1,
+	// 			editorMeta: {
+	// 				name: 'Empty'
+	// 			}
+	// 		},
+	// 		{
+	// 			emoji: '🙌',
+	// 			title: 'Tell the audience how <b>they</b> will benefit',
+	// 			description:
+	// 				'Show your features below, talk to the audience. Start features titles with verb.',
 
-				columns: 1,
+	// 			theme: {
+	// 				imageAspectRatio: 'image'
+	// 			},
 
-				items: [
-					{
-						emoji: '🖼',
-						title: 'Attach Images',
-						description:
-							'Paste image from clipboard, insert a link to input or upload from your computer.',
-						imageUrl:
-							'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
-					},
-					{
-						emoji: '📼',
-						title: 'Use Videos',
-						description: 'Simply insert a link to YouTube, Loom or Vimeo.',
-						imageUrl:
-							'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D',
-						theme: {
-							isReversedImage: true
-						}
-					},
-					{
-						emoji: '💥',
-						title: 'Use GIFs',
-						description:
-							'Use animated GIFs to catch their attention (use search icon near file input)',
-						imageUrl:
-							'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
-					},
-					{
-						emoji: '⚒️',
-						title: 'Customize The Grid',
-						description: 'Select the number of columns you want to show in your section (1—4)',
-						imageUrl:
-							'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243758302-image.png',
-						theme: {
-							isReversedImage: true
-						}
-					}
-				],
-				editorMeta: {
-					name: 'Features'
-				}
-			},
-			{
-				title: 'Frequently Asked Questions',
-				description: 'Answers summarized',
-				renderType: 'testimonials',
-				renderType: 'testimonials',
-				title: `Don't just trust our words...`,
-				description: `Here's what people say about ${page.name}!`,
+	// 			columns: 1,
 
-				items: [
-					{
-						title: 'Igor Krasnik, Momentum',
-						description: `${page.name} is awesome!`,
-						imageUrl:
-							'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156297060-image.png'
-					},
-					{
-						title: 'Elon Musk, X',
-						description: `${page.name} is the future, to the moon 🚀`,
-						imageUrl:
-							'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156478852-image.png'
-					}
-				],
+	// 			items: [
+	// 				{
+	// 					emoji: '🖼',
+	// 					title: 'Attach Images',
+	// 					description:
+	// 						'Paste image from clipboard, insert a link to input or upload from your computer.',
+	// 					imageUrl:
+	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
+	// 				},
+	// 				{
+	// 					emoji: '📼',
+	// 					title: 'Use Videos',
+	// 					description: 'Simply insert a link to YouTube, Loom or Vimeo.',
+	// 					imageUrl:
+	// 						'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D',
+	// 					theme: {
+	// 						isReversedImage: true
+	// 					}
+	// 				},
+	// 				{
+	// 					emoji: '💥',
+	// 					title: 'Use GIFs',
+	// 					description:
+	// 						'Use animated GIFs to catch their attention (use search icon near file input)',
+	// 					imageUrl:
+	// 						'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
+	// 				},
+	// 				{
+	// 					emoji: '⚒️',
+	// 					title: 'Customize The Grid',
+	// 					description: 'Select the number of columns you want to show in your section (1—4)',
+	// 					imageUrl:
+	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243758302-image.png',
+	// 					theme: {
+	// 						isReversedImage: true
+	// 					}
+	// 				}
+	// 			],
+	// 			editorMeta: {
+	// 				name: 'Features'
+	// 			}
+	// 		},
+	// 		{
+	// 			title: 'Frequently Asked Questions',
+	// 			description: 'Answers summarized',
+	// 			renderType: 'testimonials',
+	// 			renderType: 'testimonials',
+	// 			title: `Don't just trust our words...`,
+	// 			description: `Here's what people say about ${page.name}!`,
 
-				editorMeta: {
-					name: 'Testimonials'
-				}
-			},
-			{
-				title: 'Frequently Asked Questions',
-				description: 'Answers summarized',
-				renderType: 'faq',
-				items: [
-					{
-						title: 'Do you offer a refund?',
-						description: 'Yes, all subscriptions refunded no-questions-asked the first 2 weeks.'
-					},
-					{
-						title: 'How the process look like?',
-						description: 'You submit the form, prepay and get the result in 48 hours.'
-					}
-				],
-				editorMeta: {
-					name: 'FAQ'
-				}
-			},
-			{
-				columns: 2,
-				icon: 'feather:check',
+	// 			items: [
+	// 				{
+	// 					title: 'Igor Krasnik, Momentum',
+	// 					description: `${page.name} is awesome!`,
+	// 					imageUrl:
+	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156297060-image.png'
+	// 				},
+	// 				{
+	// 					title: 'Elon Musk, X',
+	// 					description: `${page.name} is the future, to the moon 🚀`,
+	// 					imageUrl:
+	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684156478852-image.png'
+	// 				}
+	// 			],
 
-				renderType: 'pricing',
+	// 			editorMeta: {
+	// 				name: 'Testimonials'
+	// 			}
+	// 		},
+	// 		{
+	// 			title: 'Frequently Asked Questions',
+	// 			description: 'Answers summarized',
+	// 			renderType: 'faq',
+	// 			items: [
+	// 				{
+	// 					title: 'Do you offer a refund?',
+	// 					description: 'Yes, all subscriptions refunded no-questions-asked the first 2 weeks.'
+	// 				},
+	// 				{
+	// 					title: 'How the process look like?',
+	// 					description: 'You submit the form, prepay and get the result in 48 hours.'
+	// 				}
+	// 			],
+	// 			editorMeta: {
+	// 				name: 'FAQ'
+	// 			}
+	// 		},
+	// 		{
+	// 			columns: 2,
+	// 			icon: 'feather:check',
 
-				title: 'Pricing',
-				description: 'Simple plans that fit your needs',
+	// 			renderType: 'pricing',
 
-				items: [
-					{
-						title: 'Free',
-						description: 'Start from free (capped at 1000 emails)',
-						pricing: {
-							amount: 0,
-							per: 'month',
-							benefitsStr: 'collect emails\nbroadcast emails'
-						}
-					},
-					{
-						title: 'Growth',
-						description: 'For growing businesses (capped at 10k emails)',
-						pricing: {
-							amount: 4.2,
-							per: 'month',
-							benefitsStr: 'everything in free \n custom domain \n priority support'
-						}
-					}
-				],
-				editorMeta: {
-					name: 'Pricing'
-				}
-			},
-			{
-				renderType: 'carousel',
+	// 			title: 'Pricing',
+	// 			description: 'Simple plans that fit your needs',
 
-				title: 'Nice images!',
-				columns: 1,
-				items: [
-					{
-						title: 'Image',
-						description: '',
-						colSpan: 2,
-						imageUrl:
-							'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
-					},
-					{
-						title: 'GIF',
-						description: '',
-						imageUrl:
-							'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D'
-					},
-					{
-						title: 'Video',
-						description: '',
-						imageUrl:
-							'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
-					}
-				],
-				editorMeta: {
-					name: 'Carousel'
-				}
-			}
-		].map((s) => {
-			s.id = uuidv4();
-			return s;
-		})
-	};
+	// 			items: [
+	// 				{
+	// 					title: 'Free',
+	// 					description: 'Start from free (capped at 1000 emails)',
+	// 					pricing: {
+	// 						amount: 0,
+	// 						per: 'month',
+	// 						benefitsStr: 'collect emails\nbroadcast emails'
+	// 					}
+	// 				},
+	// 				{
+	// 					title: 'Growth',
+	// 					description: 'For growing businesses (capped at 10k emails)',
+	// 					pricing: {
+	// 						amount: 4.2,
+	// 						per: 'month',
+	// 						benefitsStr: 'everything in free \n custom domain \n priority support'
+	// 					}
+	// 				}
+	// 			],
+	// 			editorMeta: {
+	// 				name: 'Pricing'
+	// 			}
+	// 		},
+	// 		{
+	// 			renderType: 'carousel',
+
+	// 			title: 'Nice images!',
+	// 			columns: 1,
+	// 			items: [
+	// 				{
+	// 					title: 'Image',
+	// 					description: '',
+	// 					colSpan: 2,
+	// 					imageUrl:
+	// 						'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1684243151802-image.png'
+	// 				},
+	// 				{
+	// 					title: 'GIF',
+	// 					description: '',
+	// 					imageUrl:
+	// 						'https://www.youtube.com/watch?v=2zE7uWxA95s&pp=ygUac3RhcnR1cCBpcyBhIG1lZGlhIGNvbXBhbnk%3D'
+	// 				},
+	// 				{
+	// 					title: 'Video',
+	// 					description: '',
+	// 					imageUrl:
+	// 						'https://media3.giphy.com/media/MuOGhW5GtDazUSJcL3/giphy.gif?cid=54dcf3bfdsjg51xsczxm9lgxtmf2bprs055i37ma5kxfk0s1&ep=v1_gifs_search&rid=giphy.gif&ct=g'
+	// 				}
+	// 			],
+	// 			editorMeta: {
+	// 				name: 'Carousel'
+	// 			}
+	// 		}
+	// 	].map((s) => {
+	// 		s.id = uuidv4();
+	// 		return s;
+	// 	})
+	// };
 
 	let pageSlug = '_new';
 	let selectedTab = 'editor';
@@ -394,6 +408,7 @@
 	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
+		console.log('setPageAndDraft');
 		page = { ..._.cloneDeep(p) };
 
 		if (
@@ -450,6 +465,7 @@
 	}
 
 	$: if (!$isPageSet && $allPages?.length && !page?._id) {
+		console.log('$allPages', $allPages);
 		setPageAndDraft({ ..._.cloneDeep($allPages[0]) });
 
 		// refreshData();
@@ -766,7 +782,7 @@
 	let onlineUsersCount = -1;
 
 	let getOnlineCount = async () => {
-		if (page) {
+		if (page?._id) {
 			onlineUsersCount = await get(`waveActions/page.mmntm.build/online-users`, {
 				subProjectId: page?.parentPage?._id || page?._id
 			});
@@ -793,8 +809,6 @@
 
 	let isPasteSectionModalOpen = false;
 	let newSectionCode = '';
-
-	let isInsertPopupShown = false;
 
 	let selectedGrowthTab = 'dashboard';
 </script>
@@ -866,7 +880,7 @@
 									if ($aboveTheFoldEl) {
 										$aboveTheFoldEl.scrollIntoView({
 											behavior: 'smooth',
-											block: 'center',
+											block: 'start',
 											inline: 'nearest'
 										});
 									}
@@ -1005,7 +1019,11 @@
 					/>
 				</svg>
 
-				{#if selectedTab === 'editor' && page._id}
+				{#if !page._id}
+					<div class="ml-2">Momentum IDE</div>
+				{/if}
+
+				{#if selectedTab === 'editor' || !page._id}
 					<div
 						in:fade={{ delay: 0 }}
 						class:_selected={isInsertPopupShown}
@@ -1313,21 +1331,21 @@
 					>
 						<FeatherIcon size="15" name="settings" />
 					</div>
-				{/if}
-				<div class:opacity-70={!page?._id || !page?.isDirty}>
-					<Button
-						class="bg-yellow-500 right-0 _primary flex justify-center w-full"
-						onClick={publishPage}
-						style="margin-left: 78px;
+					<div class:opacity-70={!page?._id || !page?.isDirty}>
+						<Button
+							class="bg-yellow-500 right-0 _primary flex justify-center w-full"
+							onClick={publishPage}
+							style="margin-left: 78px;
 										padding: 4px 12px;
 										right: 3px;
 										width: auto;
 										margin: -4px -10px -4px 0px;
 										"
-					>
-						Publish
-					</Button>
-				</div>
+						>
+							Publish
+						</Button>
+					</div>
+				{/if}
 			</div>
 		</div>
 
@@ -2116,7 +2134,7 @@
 					style={selectedTab === 'editor' ? 'height: calc(100vh - 60px);' : ''}
 					in:fade={{ delay: 150 }}
 				>
-					{#if !page.name}
+					{#if !isInsertPopupShown && !page.name}
 						<div
 							class="absolute z-10  left-0 top-0 w-full h-full self-stretch flex-col flex items-center justify-center"
 							in:slide
@@ -2173,7 +2191,7 @@
 										: ''}
 									in:fade
 								>
-									{#if selectedTab === 'editor' && !isInsertPopupShown}
+									{#if selectedTab === 'editor' && (!isInsertPopupShown || !selectedTemplatePage)}
 										{#if page?._id}
 											<div
 												class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
@@ -2208,7 +2226,6 @@
 
 										{#if $sectionToPreview}
 											<SitePreview
-												class="p-4"
 												isNoVars
 												isEmbed
 												noStickyHeader={true}
@@ -2223,7 +2240,6 @@
 											/>
 										{:else}
 											<SitePreview
-												class="p-4"
 												isNoVars
 												isEmbed
 												noStickyHeader={true}
