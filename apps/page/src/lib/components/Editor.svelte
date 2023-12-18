@@ -794,7 +794,7 @@
 	>
 {/if}
 
-{#if !$sveltePage.data.pageSlug || $sveltePage.url.href.includes('/page-templates')}
+{#if !$sveltePage.data.pageSlug || $sveltePage.url.href.includes('/page-templates') || $sveltePage.url.href.includes('/ide')}
 	{#if !$currentUser || $allPages}
 		<div
 			class="fixed z-10 w-full h-[60px] bg-white flex items-center justify-between px-6 border-b "

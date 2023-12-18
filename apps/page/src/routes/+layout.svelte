@@ -106,7 +106,7 @@
 {#if !$isUserLoading}
 	<div class="relative" style="	">
 		{#if !$sveltePage.url.href.includes('/emulator')}
-			{#if !$sveltePage.url.href.includes('/page-templates') && $sveltePage.data.pageSlug}
+			{#if !$sveltePage.url.href.includes('/page-templates') && !$sveltePage.url.href.includes('/ide') && $sveltePage.data.pageSlug}
 				<Page />
 				{#if browser}
 					<script defer src="https://wave.mmntm.build/wave.js"></script>
