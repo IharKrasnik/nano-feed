@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+._section {
+	border: 1px #e0dede solid;
+	border-radius: 8px;
+	padding: 16px;
+	margin-bottom: 8px;
+}
+
+._title {
+	font-weight: bold;
+	margin-bottom: 12px;
+	font-family: Archivo;
+}
+
+.number-tag {
+	background-color: #0c120b;
+	color: white;
+	position: relative;
+	top: -1px;
+	left: 2px;
+	padding: 1px 6px 1px 6px;
+	border-radius: 9px;
+	font-size: 13px;
+	opacity: 0.9;
+}
+
+input[type='checkbox'] {
+	accent-color: #8b796c;
+}
+
+._modal-content {
+	background: white;
+}
+
+.modal-content ._cross {
+	/* color: #222; */
+	stroke: #000 !important;
+}
+
+._modal-backdrop {
+	/* display: none; */
+	background: rgba(255, 255, 255, 0.8);
+}
+
+body {
+	font-family: Inter;
+}
+
+input:not([type='color']) {
+	background: #f6f5f5;
+	padding: 8px 12px;
+	font-size: 14px;
+	border-radius: 8px;
+}
+
+input._dark {
+	background: none;
+	border: 1px rgba(255, 255, 255, 0.3) solid;
+}
+
+textarea._dark {
+	background: none !important;
+	color: white;
+	border: 1px rgba(255, 255, 255, 0.5) solid;
+}
+
+select {
+	background: #f6f5f5;
+	padding: 8px 12px;
+	font-size: 14px;
+	border-radius: 8px;
+}
+
+textarea {
+	background: #f6f5f5;
+	padding: 8px 12px;
+	font-size: 14px;
+	border-radius: 8px;
+}
+
+button {
+	cursor: pointer;
+	border-radius: 8px;
+	padding: 10px 18px;
+}
+
+button._inverted {
+	border: #8b796c solid !important;
+	color: black !important;
+	background: none !important;
+}
+
+button._small {
+	border-radius: 8px;
+	padding: 5px 9px;
+}
+
+button._primary {
+	background-color: #8b786d;
+	color: white;
+}
+
+button._green {
+	background: green;
+}
+
+button._secondary {
+	border: 1px #8b786d solid;
+}
+
+button._hub {
+	border: 1px #748b6c solid;
+	background: none;
+}
+
+button._promo {
+	background: #748b6c;
+	color: white;
+	border: none;
+}
+
+.bg-green-600,
+.bg-green-700 {
+	background: #6c8a6f;
+}
+
+.bg-orange-400 {
+	background: #736c8b;
+}
+
+button.tab,
+a.button.tab {
+	border: none;
+	border-radius: 0;
+	border-bottom: 1px rgba(255, 255, 255, 0.3) solid;
+}
+
+button.tab.selected,
+a.button.tab.selected {
+	border: none;
+	border-bottom: 1px rgba(255, 255, 255, 0.9) solid;
+	/* background-color: rgba(255, 255, 255, 0.3); */
+}
+
+/* [contenteditable][data-placeholder]::before {
+	content: attr(data-placeholder);
+	position: block;
+	color: gray;
+} */
+
+[contenteditable] {
+	background: #f5f5f5;
+	width: 100%;
+	padding: 8px;
+	border-radius: 8px;
+	font-size: 14px;
+}
+
+[contenteditable][data-placeholder]:empty:before {
+	content: attr(data-placeholder);
+	position: block;
+	color: gray;
+}
+
+@font-face {
+	font-family: 'Chillax';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/Chillax-Bold.otf');
+}
+
+@font-face {
+	font-family: 'Gilroy';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/gilroy/Radomir%20Tinkov%20-%20Gilroy-Regular.otf');
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: 'Gilroy';
+	src: url('https://ship-app-assets.fra1.cdn.digitaloceanspaces.com/folders/gilroy/Radomir%20Tinkov%20-%20Gilroy-Bold.otf');
+
+	font-weight: bold;
+}
