@@ -5,6 +5,8 @@ import { get } from 'lib/api';
 import getPageMetaTags from 'lib/helpers/getPageMetaTags';
 import setPageVars from 'lib-render/helpers/setPageVars';
 
+//1
+
 let getDomain = (href) => {
 	let res = /:\/\/([^\/]+)/.exec(href);
 	return (res && res[1]) || href;
