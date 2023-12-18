@@ -2,6 +2,7 @@
 	import _ from 'lodash';
 	import { dndzone } from 'svelte-dnd-action';
 	import { v4 as uuidv4 } from 'uuid';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	export let page;
 	export let isShown = true;
@@ -73,7 +74,8 @@
 				on:finalize={handleDndFinalize}
 			>
 				{#each page.links || [] as link (link.id)}
-					<div class="flex gap-4 justify-between items-center text-sm mb-4">
+					<div class="flex justify-between items-center text-sm ">
+						<FeatherIcon name="list" />
 						<div class="overflow-hidden w-full flex">
 							<div>
 								<input

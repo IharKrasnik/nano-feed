@@ -54,7 +54,8 @@
 			</div>
 		</div>
 
-		<div class="w-full grid grid-cols-{grouppedLinks.length}">
+		<div class="w-full grid grid-cols-4">
+			<div />
 			{#each grouppedLinks as link}
 				<div>
 					<div class="font-semibold mb-4 ">{link.groupName}</div>

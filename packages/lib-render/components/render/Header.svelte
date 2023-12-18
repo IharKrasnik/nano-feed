@@ -1,5 +1,6 @@
 <script>
 	import trackClick from 'lib/services/trackClick';
+	import { fly } from 'svelte/transition';
 	import heatmap, { getHeatmapClicksCount } from 'lib-render/stores/heatmap';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -203,7 +204,7 @@
 		in:fly={{ y: 350, duration: 250 }}
 		out:fly={{ duration: 150 }}
 		style="z-index: 150;"
-		class="left-0 top-[61px] fixed w-screen h-screen overflow-y-auto bg-site bg-background p-4"
+		class="left-0 top-[66px] fixed w-screen h-screen overflow-y-auto bg-background p-4"
 	>
 		{#if page.activeHero}
 			<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
