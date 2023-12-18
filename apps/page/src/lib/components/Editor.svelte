@@ -1957,7 +1957,7 @@
 				>
 					{#if !$isInsertPopupShown && !page.name}
 						<div
-							class="absolute z-10  left-0 top-0 w-full h-full self-stretch flex-col flex items-center justify-center"
+							class="absolute z-10 bg-white left-0 top-0 w-full h-full self-stretch flex-col flex items-center justify-center"
 							in:slide
 							style="z-index: 100"
 						>
@@ -2070,7 +2070,7 @@
 											/>
 										{/if}
 									{:else if $isInsertPopupShown}
-										<InsertTab bind:page />
+										<InsertTab bind:page bind:setPageAndDraft />
 									{:else if selectedTab === 'database'}
 										<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 									{:else if selectedTab === 'analytics'}

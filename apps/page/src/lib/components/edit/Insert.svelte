@@ -59,9 +59,11 @@
 		{:else}
 			<div class=" mb-16">
 				<div class="_section">
-					<a href="/ide">
-						<button class="_primary _small">Start page from scratch</button>
-					</a>
+					<div>
+						<button class="_primary _small" on:click={() => ($isInsertPopupShown = false)}
+							>Start page from scratch</button
+						>
+					</div>
 				</div>
 			</div>
 		{/if}

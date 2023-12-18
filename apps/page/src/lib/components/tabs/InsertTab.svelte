@@ -27,6 +27,7 @@
 	import getDomain from 'lib/helpers/getDomain';
 
 	export let page;
+	export let setPageAndDraft;
 
 	let newMessage = {
 		messageHTML: ''
@@ -62,9 +63,9 @@
 			});
 		});
 
-		let createdPage = await post('pages', newPage);
+		setPageAndDraft(newPage);
 
-		goto(`https://ide.momentum.page/claim?pageId=${createdPage._id}`);
+		$isInsertPopupShown = false;
 	};
 </script>
 
