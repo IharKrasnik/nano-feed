@@ -10,7 +10,7 @@
 	href="https://momentum.page"
 	target="_blank"
 	class=" block flex {isFixed
-		? 'fixed bottom-[15px] left-[15px]'
+		? 'fixed sm:bottom-[15px] sm:left-[15px] bottom-[15px] left-[50%] _translate-x-negative'
 		: 'max-w-[250px] mx-auto'} z-1000 p-1 px-2 text-xs font-medium {theme === 'dark'
 		? 'bg-[#fafafa] text-black'
 		: 'bg-[#000] text-white'} opacity-50 hover:opacity-100 transition rounded items-center"
@@ -48,4 +48,9 @@
 </a>
 
 <style>
+	@media (max-width: 640px) {
+		._translate-x-negative {
+			transform: translateX(-50%);
+		}
+	}
 </style>
