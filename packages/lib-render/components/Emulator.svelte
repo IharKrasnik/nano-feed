@@ -539,7 +539,7 @@
 				</div>
 			{:else}
 				<div
-					class="h-[230px] flex flex-col justify-center items-center text-white bg-black/80 overflow-y-auto"
+					class="h-[275px] flex flex-col justify-center items-center text-white bg-black/80 overflow-y-auto"
 				>
 					<div class="mb-2 text-sm font-medium">What's your 1-line pitch?</div>
 					<input
