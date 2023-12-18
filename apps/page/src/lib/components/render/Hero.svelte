@@ -238,7 +238,7 @@
 							<div class="my-8 opacity-80 hidden sm:block" in:fade={{ delay: 300, duration: 600 }}>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center  mb-2">
-										<div class="mr-2 rounded-full p-1 _bg-opposite">
+										<div class="mr-2 rounded-full p-1 _bg-opposite flex">
 											<Emoji color={page.theme?.buttonColor} emoji="feather:check" width={15} />
 										</div>
 										<div>

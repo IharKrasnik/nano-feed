@@ -397,14 +397,14 @@
 
 <div class="highlighted hidden" />
 
-<div class="flex justify-between items-center mb-2">
+<div class="flex flex-col sm:flex-row justify-between items-center mb-2">
 	<div class="text-white font-medium">Try Momentum Demo</div>
 	<div class="text-white text-xs opacity-80">Use this emulator to see how Momentum works</div>
 </div>
 
 <div class="grid grid-cols-12 items-stretch gap-4 text-white">
 	<div
-		class="relative col-span-8 h-full overflow-hidden text-[#111] shadow shadow-white"
+		class="relative col-span-12 sm:col-span-8 h-full overflow-hidden text-[#111] shadow shadow-white"
 		bind:this={websiteEl}
 	>
 		<div
@@ -539,7 +539,7 @@
 				</div>
 			{:else}
 				<div
-					class="h-[230px] flex flex-col justify-center items-center h-full text-white bg-black/80 overflow-y-auto"
+					class="h-[230px] flex flex-col justify-center items-center text-white bg-black/80 overflow-y-auto"
 				>
 					<div class="mb-2 text-sm font-medium">What's your 1-line pitch?</div>
 					<input
@@ -561,7 +561,7 @@
 	</div>
 
 	<div
-		class="col-span-4 h-full text-white "
+		class="col-span-6 sm:col-span-4 h-full text-white "
 		bind:this={analyticsEl}
 		class:highlighted={analyticsEl?.isHighlighted}
 	>
@@ -624,7 +624,7 @@
 	</div>
 
 	<div
-		class="col-span-5 border border-white/80 rounded-sm h-[275px] transition {$customers.length
+		class="col-span-6 sm:col-span-5 border border-white/80 rounded-sm h-[230px] sm:h-[275px] transition {$customers.length
 			? 'opacity-100'
 			: 'opacity-50'}"
 		bind:this={customersEl}
@@ -726,7 +726,7 @@
 	</div>
 
 	<div
-		class="col-span-7 border border-white/80 rounded-sm relative  {selectedCustomer
+		class="col-span-12 sm:col-span-7 border border-white/80 rounded-sm relative  {selectedCustomer
 			? ''
 			: 'opacity-50'}"
 		bind:this={chatEl}
@@ -779,7 +779,7 @@
 	</div>
 
 	<div
-		class="col-span-8 border border-white/80 rounded-sm h-[150px] transition {$customers?.length
+		class="col-span-12 sm:col-span-8 border border-white/80 rounded-sm h-[150px] transition {$customers?.length
 			? 'opacity-100'
 			: 'opacity-50'}"
 		bind:this={feedEl}
@@ -867,7 +867,7 @@
 	</div>
 
 	<div
-		class="col-span-4  text-xs border border-white/80 rounded-sm h-[150px]"
+		class="col-span-12 sm:col-span-4  text-xs border border-white/80 rounded-sm h-[150px]"
 		bind:this={moreEl}
 		class:highlighted={moreEl?.isHighlighted}
 	>
