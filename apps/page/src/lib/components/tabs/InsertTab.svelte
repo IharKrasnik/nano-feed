@@ -93,7 +93,7 @@
 				isNoBadge={true}
 				isEdit
 				isCloneable
-				isSectionsCloneable={page._id}
+				isSectionsCloneable={!!page._id}
 				page={$selectedTemplatePage}
 				onInsert={(section) => {
 					let newSection = _.cloneDeep(section);

@@ -580,7 +580,7 @@
 																	bind:section
 																	bind:themeStyles={styles}
 																	bind:isEdit
-																	bind:isSectionsCloneable
+																	bind:isCloneable={isSectionsCloneable}
 																	{onInsert}
 																	style={false && page.theme?.isZebra && i % 2 === 0
 																		? page.theme?.theme === 'dark'

@@ -46,27 +46,15 @@
 		class="_insert left-0 top-[60px] w-[400px] bg-white h-screen overflow-y-auto p-4 pb-32"
 		class:absolute={isAbsolute}
 	>
-		{#if !$sveltePage.url.href.includes('/page-templates')}
-			<div class="mb-8">
-				<BackTo
-					to="Editor"
-					onClick={() => {
-						$isInsertPopupShown = false;
-						$selectedTemplatePage = null;
-					}}
-				/>
-			</div>
-		{:else}
-			<div class=" mb-16">
-				<div class="_section">
-					<div>
-						<button class="_primary _small" on:click={() => ($isInsertPopupShown = false)}
-							>Start page from scratch</button
-						>
-					</div>
-				</div>
-			</div>
-		{/if}
+		<div class="mb-8">
+			<BackTo
+				to="Editor"
+				onClick={() => {
+					$isInsertPopupShown = false;
+					$selectedTemplatePage = null;
+				}}
+			/>
+		</div>
 
 		{#if page?._id}
 			<div class="flex items-center font-semibold opacity-80 ">
