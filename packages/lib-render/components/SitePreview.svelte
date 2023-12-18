@@ -35,7 +35,7 @@
 
 	import feedLastUpdatedOn from 'lib-render/stores/feedLastUpdatedOn';
 
-	import TwitterIcon from 'lib/icons/Twitter.svelte';
+	import TwitterIcon from 'lib/icons/twitter.svelte';
 	import PageBadge from 'lib-render/components/PageBadge.svelte';
 	import LinkedInIcon from 'lib/icons/linkedin.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
