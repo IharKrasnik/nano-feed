@@ -566,7 +566,9 @@
 		class:highlighted={analyticsEl?.isHighlighted}
 	>
 		<div
-			class="border border-white/80 rounded-sm h-[230px] {$totalViews !== -1 ? '' : 'opacity-50'}"
+			class="border border-white/80 rounded-sm  h-[275px]  sm:h-[230px]{$totalViews !== -1
+				? ''
+				: 'opacity-50'}"
 		>
 			<div class="flex items-center text-xs p-1 px-2 bg-white/10 border-b border-white/20">
 				<FeatherIcon class="mr-1" size={12} color="white" name="pie-chart" />
@@ -624,7 +626,7 @@
 	</div>
 
 	<div
-		class="col-span-6 sm:col-span-5 border border-white/80 rounded-sm h-[230px] sm:h-[275px] transition {$customers.length
+		class="col-span-6 sm:col-span-5 border border-white/80 rounded-sm sm:h-[275px] transition {$customers.length
 			? 'opacity-100'
 			: 'opacity-50'}"
 		bind:this={customersEl}
