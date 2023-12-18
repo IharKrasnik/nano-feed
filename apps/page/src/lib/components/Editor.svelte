@@ -230,7 +230,6 @@
 	};
 
 	let setPageAndDraft = (p, { force = false } = {}) => {
-		console.log('setPageAndDraft');
 		page = { ..._.cloneDeep(p) };
 
 		if (

@@ -44,8 +44,6 @@ export default ({ page, feedItem, isNoVars = false }) => {
 		  ]
 		: [];
 
-	console.log('feedItemVariables', feedItemVariables);
-
 	[
 		...systemVariables,
 		...userVariables,
