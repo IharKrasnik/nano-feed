@@ -151,6 +151,7 @@
 
 	$: if (page) {
 		let res = getPageCssStyles(page);
+		debugger;
 		cssVarStyles = res.cssVarStyles;
 		styles = res.styles;
 	}
@@ -528,7 +529,11 @@
 																	name="arrow-down"
 																/>
 															</div>
-															<div>
+															<div
+																class="bg-site _container-width mx-auto {section.containerBgImageUrl
+																	? 'py-8'
+																	: ''}"
+															>
 																<RenderSection
 																	bind:page
 																	bind:themeStyles={styles}
