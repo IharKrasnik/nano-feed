@@ -82,9 +82,10 @@
 
 	<div
 		class="mx-auto h-px max-w-8xl opacity-[15%] w-full"
-		style="background:linear-gradient(to right, rgba(0,0,0,0), {parentPage.theme
+		style="background:linear-gradient(to right, rgba(0,0,0,0), {page.theme
 			?.accentColor}, rgba(0,0,0,0))"
 	/>
+
 	<div class="_container-width mx-auto text-lg my-4">
 		<div class="flex items-center text-sm px-4">
 			<Emoji class="mr-2" emoji={parentPage.logo} />
