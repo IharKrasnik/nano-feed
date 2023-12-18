@@ -1,4 +1,7 @@
 <script>
+	import 'lib-render/app.css';
+	import '../app.css';
+
 	import Page from 'lib-render/components/Page.svelte';
 	import Editor from '$lib/components/Editor.svelte';
 	import { get } from 'lib/api';
@@ -6,7 +9,7 @@
 	import currentPage from 'lib-render/stores/currentPage';
 	import { browser } from '$app/environment';
 	import Emoji from 'lib/components/Emoji.svelte';
-	import '../app.css';
+
 	import { page as sveltePage } from '$app/stores';
 	import { onMount } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';

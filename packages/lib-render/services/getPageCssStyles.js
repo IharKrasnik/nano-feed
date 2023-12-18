@@ -51,10 +51,18 @@ export default (page) => {
 		'background-color': page.theme?.backgroundColor || '#ffffff',
 		'background-color-opposite': page.theme?.theme === 'dark' ? '#f6f5f4' : '#222222',
 		'text-color-opposite': page.theme?.theme === 'dark' ? '#111111' : '#f6f5f4',
+		// 'background-color-alternative':
+		// 	page.theme?.theme === 'dark'
+		// 		? hexToRGBA(lighten(page.theme?.backgroundColor, 0.5), 0.1)
+		// 		: hexToRGBA(darken(page.theme?.backgroundColor, 0.5), 0.1),
 		'background-color-alternative':
 			page.theme?.theme === 'dark'
-				? hexToRGBA(lighten(page.theme?.backgroundColor, 0.5), 0.1)
-				: hexToRGBA(darken(page.theme?.backgroundColor, 0.5), 0.1),
+				? lighten(page.theme?.backgroundColor, 0.005)
+				: darken(page.theme?.backgroundColor, 0.1),
+		'background-color-alternative-stronger':
+			page.theme?.theme === 'dark'
+				? lighten(page.theme?.backgroundColor, 0.1)
+				: darken(page.theme?.backgroundColor, 0.15),
 		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
 		'text-color': page.theme?.theme === 'dark' ? '#fbf5ec' : '#111111',
 		'accent-color': accentColor,

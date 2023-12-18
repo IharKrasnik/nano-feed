@@ -169,7 +169,7 @@
 
 	let refreshPageConversionStats = async () => {
 		try {
-			if (!page._id) {
+			if (!page._id || !$currentUser) {
 				return;
 			}
 
@@ -262,10 +262,13 @@
 
 		page.activeHero = page.heros[0];
 
-		refreshPageConversionStats();
-		refreshSubPages({ page });
+		if ($currentUser) {
+			refreshPageConversionStats();
+			refreshSubPages({ page });
+			refreshChildStreams({ page });
+		}
+
 		refreshPage({ page });
-		refreshChildStreams({ page });
 	};
 
 	let addNewHero = () => {
@@ -503,7 +506,8 @@
 		'interactiveAnswers',
 		'isInDir',
 		'isUseDatabase',
-		'dirName'
+		'dirName',
+		'links'
 	];
 
 	$: if (page) {
@@ -789,7 +793,7 @@
 
 {#if isPageLinksModalShown}
 	<Modal bind:isShown={isPageLinksModalShown}>
-		<div class="p-8"><EditPageLinks bind:page /></div></Modal
+		<div class="p-8"><EditPageLinks bind:isShown={isPageLinksModalShown} bind:page /></div></Modal
 	>
 {/if}
 
@@ -1252,8 +1256,18 @@
 									{#if page._id}
 										<div class="flex items-center mb-4">
 											<div class="mr-2 flex items-center">
-												<div class="mr-2">
+												<div>
 													<EmojiPicker bind:icon={page.logo} />
+												</div>
+											</div>
+
+											<div class="mr-2 flex items-center">
+												<div class="mr-2">
+													<button
+														on:click={() => (isPageLinksModalShown = true)}
+														class="bg-[#f1f1f1] rounded-full border-black/40 border w-[31px] h-[31px] flex items-center justify-center"
+														>🔗</button
+													>
 												</div>
 											</div>
 

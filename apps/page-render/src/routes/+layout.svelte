@@ -1,4 +1,5 @@
 <script>
+	import 'lib-render/app.css';
 	import '../app.css';
 	import Page from 'lib-render/components/Page.svelte';
 	import { get } from 'lib/api';
