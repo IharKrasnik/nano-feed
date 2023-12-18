@@ -127,12 +127,14 @@
 								{templateFeedItem.content}
 							</div>
 						{/if}
-						<div class="aspect-og w-full bg-[#f1f1f1]">
-							<img
-								class="aspect-og object-cover w-full rounded"
-								src={templateFeedItem.attachments[0].url}
-							/>
-						</div>
+						{#if templateFeedItem.attachments?.length}
+							<div class="aspect-og w-full bg-[#f1f1f1]">
+								<img
+									class="aspect-og object-cover w-full rounded"
+									src={templateFeedItem.attachments[0].url}
+								/>
+							</div>
+						{/if}
 					</a>
 				{/each}
 			</div>
