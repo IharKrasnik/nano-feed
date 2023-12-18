@@ -317,7 +317,7 @@
 	>
 		{#if isCloneable}
 			<div
-				class="hidden group-hover:block absolute z-20 right-8 top-8 bg-accent p-2 rounded opacity-50 hover:opacity-100 cursor-pointer"
+				class="hidden group-hover:block absolute z-20 right-8 top-8 bg-accent p-2 rounded  cursor-pointer"
 				on:click={() => {
 					if (!page) {
 						navigator.clipboard.writeText(JSON.stringify(section));
