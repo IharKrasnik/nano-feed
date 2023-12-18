@@ -12,6 +12,7 @@
 	import { page as sveltePage } from '$app/stores';
 	import isInsertPopupShown from 'lib-render/stores/isInsertPopupShown';
 	import selectedTemplatePage from 'lib-render/stores/selectedTemplatePage';
+	import striptags from 'striptags';
 
 	export let isAbsolute = true;
 	export let page;
@@ -121,10 +122,10 @@
 							}
 						}}
 					>
-						<div class="font-medium mb-2">{templateFeedItem.title}</div>
+						<div class="font-medium mb-2">{@html striptags(templateFeedItem.title)}</div>
 						{#if templateFeedItem.content}
 							<div>
-								{templateFeedItem.content}
+								{@html striptags(templateFeedItem.content)}
 							</div>
 						{/if}
 						{#if templateFeedItem.attachments?.length}

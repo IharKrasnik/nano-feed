@@ -25,12 +25,15 @@ export let selectTemplatePage = async (feedItem, { page } = {}) => {
 		return foundPage;
 	} else {
 		let domain = getDomain(feedItem.url);
-		let subPageSlug = feedItem.url.replace(domain + '/', '').replace('https://', '');
+		let subPageSlug = feedItem.url
+			.replace(domain + '/', '')
+			.replace('https://', '')
+			.replace('.mmntm.page', '');
 
 		let templatePage = await get(
 			`pages/${encodeURIComponent(subPageSlug || domain.replace('.mmntm.page', ''))}`,
 			{
-				...(subPageSlug ? { parentPageSlug: domain } : {})
+				...(subPageSlug ? { parentPageSlug: domain.replace('.mmntm.page', '') } : {})
 			}
 		);
 
@@ -39,13 +42,13 @@ export let selectTemplatePage = async (feedItem, { page } = {}) => {
 		let parentPage = page?.parentPage || page;
 
 		if (parentPage) {
-			templatePage.theme.backgroundColor =
-				parentPage.theme?.backgroundColor || templatePage.theme.backgroundColor;
-			templatePage.theme.accentColor =
-				parentPage.theme?.accentColor || templatePage.theme.accentColor;
-			templatePage.theme.theme = parentPage.theme?.theme || templatePage.theme.theme;
-			templatePage.theme.buttonColor =
-				parentPage.theme?.buttonColor || templatePage.theme.buttonColor;
+			// templatePage.theme.backgroundColor =
+			// 	parentPage.theme?.backgroundColor || templatePage.theme.backgroundColor;
+			// templatePage.theme.accentColor =
+			// 	parentPage.theme?.accentColor || templatePage.theme.accentColor;
+			// templatePage.theme.theme = parentPage.theme?.theme || templatePage.theme.theme;
+			// templatePage.theme.buttonColor =
+			// 	parentPage.theme?.buttonColor || templatePage.theme.buttonColor;
 		}
 
 		templatePage.url = feedItem.url;
