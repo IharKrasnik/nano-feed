@@ -183,29 +183,33 @@
 		}, 0);
 	};
 
-	page.variables = [
-		{
-			name: 'timeOfDay',
-			calculateFn: () => {
-				var currentHour = moment().format('HH');
+	if (browser) {
+		page.variables = [
+			{
+				name: 'timeOfDay',
+				calculateFn: () => {
+					var currentHour = moment().format('HH');
 
-				if (currentHour >= 3 && currentHour < 12) {
-					return 'morning';
-				} else if (currentHour >= 12 && currentHour < 17) {
-					return 'afternoon';
-				} else if (currentHour >= 17 && currentHour < 22) {
-					return 'evening';
-				} else if (currentHour >= 22 || currentHour < 3) {
-					return 'night';
+					if (currentHour >= 3 && currentHour < 12) {
+						return 'morning';
+					} else if (currentHour >= 12 && currentHour < 17) {
+						return 'afternoon';
+					} else if (currentHour >= 17 && currentHour < 22) {
+						return 'evening';
+					} else if (currentHour >= 22 || currentHour < 3) {
+						return 'night';
+					}
 				}
 			}
-		}
-	];
+		];
+	}
 
-	if (localStorage.visitsCount) {
-		localStorage.visitsCount = parseInt(localStorage.visitsCount) + 1;
-	} else {
-		localStorage.visitsCount = 1;
+	if (browser) {
+		if (localStorage.visitsCount) {
+			localStorage.visitsCount = parseInt(localStorage.visitsCount) + 1;
+		} else {
+			localStorage.visitsCount = 1;
+		}
 	}
 
 	let isSubmitted;
@@ -230,7 +234,7 @@
 
 	let isMenuOpen = false;
 
-	$: if ($sveltePage.url) {
+	$: if (browser && $sveltePage.url) {
 		isMenuOpen = false;
 		window.document.body.style['overflow'] = null;
 	}
