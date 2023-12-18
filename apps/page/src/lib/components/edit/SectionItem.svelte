@@ -228,7 +228,7 @@
 			</div>
 		{/if}
 	{:else if section.renderType !== 'form' || item.isActionSuccessSection}
-		{#if section.renderType !== 'callout'}
+		{#if item.id === section.id || section.renderType !== 'callout'}
 			<div class="relative flex justify-between items-center">
 				<FileInput
 					class="w-full"

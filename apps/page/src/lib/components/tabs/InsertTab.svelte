@@ -50,6 +50,7 @@
 		newPage.slug = null;
 		newPage.isUseDatabase = false;
 		newPage.dirName = null;
+		newPage.parentPage = page.parentPage;
 
 		[
 			newPage.heros,
@@ -92,7 +93,7 @@
 				isNoBadge={true}
 				isEdit
 				isCloneable
-				isSectionsCloneable={!$sveltePage.url.href.includes('/page-templates')}
+				isSectionsCloneable={page._id}
 				page={$selectedTemplatePage}
 				onInsert={(section) => {
 					let newSection = _.cloneDeep(section);
