@@ -3,6 +3,7 @@
 	export let section;
 	export let isEmbed;
 	import RenderSection from 'lib-render/components/render/Section.svelte';
+	import RenderFooter from 'lib-render/components/render/Footer.svelte';
 
 	import Emoji from 'lib/components/Emoji.svelte';
 	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
@@ -86,12 +87,5 @@
 			?.accentColor}, rgba(0,0,0,0))"
 	/>
 
-	<div class="_container-width mx-auto text-lg my-4">
-		<div class="flex items-center text-sm px-4">
-			<Emoji class="mr-2" emoji={parentPage.logo} />
-			<span>
-				{parentPage.name}
-			</span>
-		</div>
-	</div>
+	<RenderFooter bind:page />
 {/if}

@@ -239,33 +239,6 @@
 			id: uuidv4()
 		};
 	}
-
-	let groupLinks = () => {
-		let grouped = { groupName: null };
-
-		(page.links || [])
-			.filter((link) => link.groupName)
-			.forEach((link) => {
-				if (!grouped[link.groupName]) {
-					grouped[link.groupName] = { links: [] };
-				}
-				grouped[link.groupName || null].links.push(link);
-			});
-
-		let groupArr = [];
-
-		groupArr[0] = {
-			groupName: null,
-			links: grouped[null].links
-		};
-
-		Object.keys(grouped, (key) => {
-			if (key) {
-				groupArr.push({ groupName: key, links: grouped[key].links });
-			}
-		});
-		return groupArr;
-	};
 </script>
 
 <svelte:head>
@@ -487,29 +460,6 @@
 								{/if}
 							</div>
 						{/if}
-					</div>
-				{/if}
-
-				{#if page.links}
-					<div>
-						<div class="sticky  bg-site z-20 py-4 sm:py-16">
-							<div class="flex justify-center w-full my-4">
-								{#if page.links.twitter}
-									<div class="w-[35px] h-[35px] mr-2">
-										<a href={page.links.twitter} class="scale-110" target="_blank">
-											<TwitterIcon />
-										</a>
-									</div>
-								{/if}
-								{#if page.links.linkedin}
-									<div class="w-[35px] h-[35px] mr-2">
-										<a href={page.links.linkedin} target="_blank">
-											<LinkedInIcon />
-										</a>
-									</div>
-								{/if}
-							</div>
-						</div>
 					</div>
 				{/if}
 
