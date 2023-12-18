@@ -16,6 +16,8 @@
 	import 'lazysizes';
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 
+	//1
+
 	let prevSlug;
 
 	$currentPage = $sveltePage.data.page;
