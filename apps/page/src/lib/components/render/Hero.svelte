@@ -296,7 +296,7 @@
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center mb-2">
 										<div
-											class="mr-2 rounded-full p-1"
+											class="mr-2 rounded-full p-1 flex"
 											style="background-color: var(--accent-color);"
 										>
 											<Emoji color={page.theme?.buttonColor} emoji="feather:check" width={15} />
