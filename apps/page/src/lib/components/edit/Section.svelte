@@ -16,10 +16,10 @@
 	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
-	import RenderSection from '$lib/components/render/Section.svelte';
+	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
-	import { getFeed } from '$lib/stores/feedCache';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import { getFeed } from 'lib-render/stores/feedCache';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 
 	import striptags from 'striptags';

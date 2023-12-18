@@ -7,7 +7,7 @@
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
 	import Modal from 'lib/components/Modal.svelte';
-	import Page from '$lib/components/Page.svelte';
+	import Page from 'lib-render/components/Page.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import currentUser from 'lib/stores/currentUser';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';

@@ -5,11 +5,11 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 
-	import allPages from '$lib/stores/allPages';
+	import allPages from 'lib-render/stores/allPages';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
-	import getPageCssStyles from '$lib/services/getPageCssStyles';
-	import RenderSection from '$lib/components/render/Section.svelte';
+	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
+	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import { goto } from '$app/navigation';
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
 	import MomentumWidget from 'lib/components/MomentumWidget.svelte';

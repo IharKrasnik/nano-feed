@@ -9,10 +9,10 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
-	import RenderSection from '$lib/components/render/Section.svelte';
+	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import clickOutside from 'lib/use/clickOutside';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import contenteditable from 'lib/use/contenteditable';
 	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
 

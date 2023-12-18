@@ -6,9 +6,9 @@
 
 	import Loader from 'lib/components/Loader.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
-	import CustomerAnalytics from '$lib/components/render/CustomerAnalytics.svelte';
+	import CustomerAnalytics from 'lib-render/components/render//CustomerAnalytics.svelte';
 	import currentUser from 'lib/stores/currentUser';
-	import getPageCssStyles from '$lib/services/getPageCssStyles';
+	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
 
 	export let page;
 	export let customer;

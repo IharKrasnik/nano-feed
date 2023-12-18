@@ -2,7 +2,7 @@
 	import Page from '$lib/components/Page.svelte';
 	import { get } from 'lib/api';
 	import { page } from '$app/stores';
-	import currentPage from '$lib/stores/currentPage';
+	import currentPage from 'lib-render/stores/currentPage';
 	import { browser } from '$app/environment';
 	import Emoji from 'lib/components/Emoji.svelte';
 

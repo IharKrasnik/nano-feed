@@ -3,9 +3,9 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { get } from 'lib/api';
-	import currentPage from '$lib/stores/currentPage';
+	import currentPage from 'lib-render/stores/currentPage';
 
-	import SitePreview from '$lib/components/site-preview.svelte';
+	import SitePreview from 'lib-render/components/SitePreview.svelte';
 
 	export let isNoBadge;
 

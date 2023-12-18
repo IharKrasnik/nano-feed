@@ -2,16 +2,16 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { get } from 'lib/api';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
-	import { feed as templateFeed, selectTemplatePage } from '$lib/stores/pageTemplates';
-	import sectionToPreview from '$lib/stores/sectionToPreview';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import { feed as templateFeed, selectTemplatePage } from 'lib-render/stores/pageTemplates';
+	import sectionToPreview from 'lib-render/stores/sectionToPreview';
 	import { fly } from 'svelte/transition';
 	import CrossSvg from 'lib/icons/cross.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import BackTo from '$lib/components/BackTo.svelte';
 	import { page as sveltePage } from '$app/stores';
-	import isInsertPopupShown from '$lib/stores/isInsertPopupShown';
-	import selectedTemplatePage from '$lib/stores/selectedTemplatePage';
+	import isInsertPopupShown from 'lib-render/stores/isInsertPopupShown';
+	import selectedTemplatePage from 'lib-render/stores/selectedTemplatePage';
 
 	export let isAbsolute = true;
 	export let page;

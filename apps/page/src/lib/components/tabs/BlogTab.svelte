@@ -3,8 +3,8 @@
 	import moment from 'moment-timezone';
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { get, post, put, del } from 'lib/api';
-	import pageDraft from '$lib/stores/pageDraft';
-	import allPages from '$lib/stores/allPages';
+	import pageDraft from 'lib-render/stores/pageDraft';
+	import allPages from 'lib-render/stores/allPages';
 	import currentUser from 'lib/stores/currentUser';
 
 	import Button from 'lib/components/Button.svelte';

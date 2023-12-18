@@ -1,9 +1,9 @@
 <script>
-	import Page from '$lib/components/Page.svelte';
+	import Page from 'lib-render/components/Page.svelte';
 	import Editor from '$lib/components/Editor.svelte';
 	import { get } from 'lib/api';
 	import { API_URL } from 'lib/env';
-	import currentPage from '$lib/stores/currentPage';
+	import currentPage from 'lib-render/stores/currentPage';
 	import { browser } from '$app/environment';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import '../app.css';
@@ -14,7 +14,7 @@
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import Dock from 'lib/components/Dock.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 
 	import 'lazysizes';
 	// import a plugin 1

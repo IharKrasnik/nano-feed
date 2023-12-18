@@ -1,5 +1,5 @@
 <script>
-	import Emulator from '$lib/components/Emulator.svelte';
+	import Emulator from 'lib-render/components/Emulator.svelte';
 </script>
 
 <div class=" pt-8  bg-[#111]  scale-150  origin-top">

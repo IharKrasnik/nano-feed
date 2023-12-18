@@ -15,7 +15,7 @@
 	import isUrl from 'lib/helpers/isUrl';
 	import clickOutside from 'lib/use/clickOutside';
 	import currentUser from 'lib/stores/currentUser';
-	import feedLastUpdatedOn from '$lib/stores/feedLastUpdatedOn';
+	import feedLastUpdatedOn from 'lib-render/stores/feedLastUpdatedOn';
 
 	import { showSuccessMessage } from 'lib/services/toast';
 

@@ -4,11 +4,11 @@
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { get, post, put } from 'lib/api';
 
-	import allPages from '$lib/stores/allPages';
+	import allPages from 'lib-render/stores/allPages';
 	import Loader from 'lib/components/Loader.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import currentUser from 'lib/stores/currentUser';
-	import getPageCssStyles from '$lib/services/getPageCssStyles';
+	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
 
 	export let page;
 	export let trigger;

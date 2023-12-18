@@ -19,8 +19,8 @@
 	import { get, post, put } from 'lib/api';
 
 	import loginWithGoogle from 'lib/helpers/loginWithGoogle';
-	import addDefaultHero from '$lib/helpers/addDefaultHero';
-	import getPageUrl from '$lib/helpers/getPageUrl';
+	import addDefaultHero from 'lib-render/helpers/addDefaultHero';
+	import getPageUrl from 'lib-render/helpers/getPageUrl';
 
 	import EditHero from '$lib/components/edit/Hero.svelte';
 	import EditSection from '$lib/components/edit/Section.svelte';
@@ -51,7 +51,7 @@
 
 	import contenteditable from 'lib/use/contenteditable';
 
-	import SitePreview from '$lib/components/site-preview.svelte';
+	import SitePreview from 'lib-render/components/SitePreview.svelte';
 
 	import AnalyticsTab from '$lib/components/tabs/AnalyticsTab.svelte';
 	import MessagingTab from '$lib/components/tabs/MessagingTab.svelte';
@@ -83,18 +83,18 @@
 	import clickOutside from 'lib/use/clickOutside';
 
 	import currentUser from 'lib/stores/currentUser';
-	import allPages from '$lib/stores/allPages';
-	import isPageSet from '$lib/stores/isPageSet';
-	import pageDraft from '$lib/stores/pageDraft';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
-	import sectionToPreview from '$lib/stores/sectionToPreview';
-	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
-	import ctaFooterEl from '$lib/stores/ctaFooterEl';
+	import allPages from 'lib-render/stores/allPages';
+	import isPageSet from 'lib-render/stores/isPageSet';
+	import pageDraft from 'lib-render/stores/pageDraft';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import sectionToPreview from 'lib-render/stores/sectionToPreview';
+	import aboveTheFoldEl from 'lib-render/stores/aboveTheFoldEl';
+	import ctaFooterEl from 'lib-render/stores/ctaFooterEl';
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
-	import heatmap from '$lib/stores/heatmap';
-	import isInsertPopupShown from '$lib/stores/isInsertPopupShown';
-	import selectedTemplatePage from '$lib/stores/selectedTemplatePage';
+	import heatmap from 'lib-render/stores/heatmap';
+	import isInsertPopupShown from 'lib-render/stores/isInsertPopupShown';
+	import selectedTemplatePage from 'lib-render/stores/selectedTemplatePage';
 
 	//
 	onMount(async () => {

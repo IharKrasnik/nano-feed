@@ -1,7 +1,7 @@
 <script>
-	import RenderSection from '$lib/components/render/Section.svelte';
-	import RenderMomentumCollection from '$lib/components/render/MomentumCollection.svelte';
-	import getPageCssStyles from '$lib/services/getPageCssStyles';
+	import RenderSection from 'lib-render/components/render//Section.svelte';
+	import RenderMomentumCollection from 'lib-render/components/render//MomentumCollection.svelte';
+	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
 
 	export let page;
 	export let streamSlug;

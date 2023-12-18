@@ -1,6 +1,6 @@
 <script>
 	import { page as sveltePage } from '$app/stores';
-	import allPages from '$lib/stores/allPages';
+	import allPages from 'lib-render/stores/allPages';
 	import { get } from 'lib/api';
 	import { goto } from '$app/navigation';
 

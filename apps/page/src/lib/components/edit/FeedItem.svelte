@@ -12,15 +12,15 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import EditFeedItemSettings from '$lib/components/edit/FeedItemSettings.svelte';
-	import RenderSection from '$lib/components/render/Section.svelte';
+	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import clickOutside from 'lib/use/clickOutside';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import contenteditable from 'lib/use/contenteditable';
-	import feedCache, { getFeed } from '$lib/stores/feedCache';
+	import feedCache, { getFeed } from 'lib-render/stores/feedCache';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 	import isUrl from 'lib/helpers/isUrl';
-	import getPageUrl from '$lib/helpers/getPageUrl';
+	import getPageUrl from 'lib-render/helpers/getPageUrl';
 	import subPages from 'lib/stores/subPages';
 
 	let clazz = 'p-4';

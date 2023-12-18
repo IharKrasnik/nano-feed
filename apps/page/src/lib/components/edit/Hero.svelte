@@ -22,7 +22,7 @@
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditPricing from '$lib/components/edit/Pricing.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
-	import RenderSection from '$lib/components/render/Section.svelte';
+	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
@@ -37,7 +37,7 @@
 	import MomentumHub from 'lib/components/MomentumHub.svelte';
 	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
 
-	import SitePreview from '$lib/components/site-preview.svelte';
+	import SitePreview from 'lib-render/components/SitePreview.svelte';
 	import SignupForm from '$lib/components/signup-form.svelte';
 
 	import Settings from '$lib/components/Settings.svelte';
@@ -49,10 +49,10 @@
 	import contenteditable from 'lib/use/contenteditable';
 
 	import currentUser from 'lib/stores/currentUser';
-	import allPages from '$lib/stores/allPages';
-	import pageDraft from '$lib/stores/pageDraft';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
-	import aboveTheFoldEl from '$lib/stores/aboveTheFoldEl';
+	import allPages from 'lib-render/stores/allPages';
+	import pageDraft from 'lib-render/stores/pageDraft';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import aboveTheFoldEl from 'lib-render/stores/aboveTheFoldEl';
 
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';

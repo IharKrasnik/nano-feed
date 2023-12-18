@@ -21,7 +21,7 @@
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditPricing from '$lib/components/edit/Pricing.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
-	import RenderSection from '$lib/components/render/Section.svelte';
+	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
@@ -40,7 +40,7 @@
 	import contenteditable from 'lib/use/contenteditable';
 
 	import currentUser from 'lib/stores/currentUser';
-	import pageDraft from '$lib/stores/pageDraft';
+	import pageDraft from 'lib-render/stores/pageDraft';
 
 	let clazz = '';
 	export { clazz as class };

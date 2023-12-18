@@ -7,22 +7,22 @@
 	import { page as sveltePage } from '$app/stores';
 	import { goto } from '$app/navigation';
 
-	import allPages from '$lib/stores/allPages';
-	import SitePreview from '$lib/components/site-preview.svelte';
+	import allPages from 'lib-render/stores/allPages';
+	import SitePreview from 'lib-render/components/SitePreview.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import currentUser from 'lib/stores/currentUser';
-	import getPageCssStyles from '$lib/services/getPageCssStyles';
-	import sectionToEdit from '$lib/stores/sectionToEdit';
-	import isInsertPopupShown from '$lib/stores/isInsertPopupShown';
-	import selectedTemplatePage from '$lib/stores/selectedTemplatePage';
+	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import isInsertPopupShown from 'lib-render/stores/isInsertPopupShown';
+	import selectedTemplatePage from 'lib-render/stores/selectedTemplatePage';
 
 	import {
 		pages as templatePages,
 		feed as templateFeed,
 		selectTemplatePage
-	} from '$lib/stores/pageTemplates';
+	} from 'lib-render/stores/pageTemplates';
 
 	import getDomain from 'lib/helpers/getDomain';
 

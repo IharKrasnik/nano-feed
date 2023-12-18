@@ -1,5 +1,5 @@
 <script>
-	import isInsertPopupShown from '$lib/stores/isInsertPopupShown';
+	import isInsertPopupShown from 'lib-render/stores/isInsertPopupShown';
 
 	$isInsertPopupShown = true;
 </script>

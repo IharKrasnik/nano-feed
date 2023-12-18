@@ -5,7 +5,7 @@
 	import { lighten, darken, getLuminance } from 'lib/helpers/color';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Modal from 'lib/components/Modal.svelte';
-	import SitePreview from '$lib/components/site-preview.svelte';
+	import SitePreview from 'lib-render/components/SitePreview.svelte';
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import isDarkColor from 'is-dark-color';

@@ -5,12 +5,12 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
-	import feedCache, { getFeed } from '$lib/stores/feedCache';
+	import feedCache, { getFeed } from 'lib-render/stores/feedCache';
 	import EditFeedItem from '$lib/components/edit/FeedItem.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import csv from 'csvtojson';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
-	import allPages from '$lib/stores/allPages';
+	import allPages from 'lib-render/stores/allPages';
 
 	let posts = [];
 

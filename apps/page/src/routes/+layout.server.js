@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 
 import { get } from 'lib/api';
 import getPageMetaTags from 'lib/helpers/getPageMetaTags';
-import setPageVars from '$lib/helpers/setPageVars';
+import setPageVars from 'lib-render/helpers/setPageVars';
 
 let getDomain = (href) => {
 	let res = /:\/\/([^\/]+)/.exec(href);
