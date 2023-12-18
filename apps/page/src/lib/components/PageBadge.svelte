@@ -7,7 +7,7 @@
 </script>
 
 <a
-	href="https://ide.momentum.page"
+	href="https://momentum.page"
 	target="_blank"
 	class=" block flex {isFixed
 		? 'fixed bottom-[15px] left-[15px]'

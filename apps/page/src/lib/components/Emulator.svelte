@@ -908,7 +908,7 @@
 							{:else if $feed.filter((f) => f.url).length}
 								<b class="block">🚀 Get Started</b>
 								There's much more to Momentum: blogs, databases, interactive elements.
-								<a href="https://ide.momentum.page" target="_blank"
+								<a href="/ide" target="_blank"
 									><button class="mt-2 launch-button">Launch my page </button></a
 								>
 							{:else}

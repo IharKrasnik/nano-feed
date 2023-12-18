@@ -59,7 +59,7 @@
 		{:else}
 			<div class=" mb-16">
 				<div class="_section">
-					<a href="https://ide.momentum.page">
+					<a href="/ide">
 						<button class="_primary _small">Start page from scratch</button>
 					</a>
 				</div>

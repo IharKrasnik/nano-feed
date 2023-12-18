@@ -1,6 +1,6 @@
 import { goto } from '$app/navigation';
-import { GOOGLE_LOGIN_URL } from 'lib/env';
+import { getGoogleLoginUrl } from 'lib/env';
 
 export default () => {
-	goto(GOOGLE_LOGIN_URL + `&fingerprint=${window.WAVE_FINGERPRINT}`);
+	goto(getGoogleLoginUrl() + `&fingerprint=${window.WAVE_FINGERPRINT}`);
 };
