@@ -346,6 +346,8 @@
 				bind:newMoment
 				onSent={() => {}}
 			/>
-		{/if}
+		{:else if selectedGrowthTab === 'boost'}{/if}
 	</div>
 </div>
+
+{#if selectedGrowthTab === 'boost'}{/if}

@@ -32,7 +32,7 @@
 	</div>
 </div>
 
-<div
+<!-- <div
 	class="_section cursor-pointer"
 	class:_selected={selectedGrowthTab === 'create'}
 	on:click={() => {
@@ -82,6 +82,54 @@
 		<div>
 			<div class="font-bold mb-2">Boost Your Product</div>
 			<div>Hire an expert to help you grow your product</div>
+		</div>
+	</div>
+</div> -->
+
+<div class="">
+	<div class="_section bg-[#e9f0ff] my-8" style="border: none;">
+		<div class="flex items-center justify-between w-full">
+			<div class="">
+				<div class="font-bold">Design your product with Momentum team</div>
+
+				<div class="mt-2 opacity-80">Get free marketing assets to promote your Momentum page</div>
+
+				<img
+					class="py-4 max-h-[200px] object-cover w-full"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1702977465936-image.png"
+				/>
+			</div>
+		</div>
+		<hr />
+		<div class="flex items-center justify-between  mt-4">
+			<a
+				href="https://studio.saltnbold.com/new/marketing-assets-promo"
+				class="w-full"
+				class:hidden={!page._id}
+				target="_blank"
+			>
+				<button class="_small _secondary _promo" style="background-color: #1d60ff;"
+					>Design my marketing assets →</button
+				>
+			</a>
+			<div class="flex items-center">
+				<img
+					class="max-w-[30px] rounded-full"
+					src="https://assets-global.website-files.com/64831da00244efd7c8280a6c/65253ec34de1359dea9725b8_Ellipse%2019.png"
+				/>
+				<img
+					class="max-w-[30px] ml-[-8px] rounded-full"
+					src="https://assets-global.website-files.com/64831da00244efd7c8280a6c/65253eb2822bf3f73eba7826_Ellipse%2014.png"
+				/>
+				<img
+					class="max-w-[30px] ml-[-8px] rounded-full"
+					src="https://pbs.twimg.com/profile_images/1699084265974030336/7AFDmfHM_400x400.jpg"
+				/>
+				<img
+					class="max-w-[30px] ml-[-8px] rounded-full"
+					src="https://pbs.twimg.com/profile_images/1679050978933329920/1T4q1SuX_400x400.jpg"
+				/>
+			</div>
 		</div>
 	</div>
 </div>
