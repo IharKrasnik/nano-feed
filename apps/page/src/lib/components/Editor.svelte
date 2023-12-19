@@ -1273,7 +1273,7 @@ See you!
 														target="_blank"
 													>
 														<button
-															class="_small _secondary _promo"
+															class="_small _secondary _promo ring-1 ring-blue-800"
 															style="background-color: #1d60ff;"
 															>Design my marketing assets →</button
 														>
