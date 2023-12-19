@@ -792,7 +792,12 @@
 {/if}
 
 {#if isPageLinksModalShown}
-	<Modal bind:isShown={isPageLinksModalShown}>
+	<Modal
+		bind:isShown={isPageLinksModalShown}
+		onClosed={() => {
+			isPageLinksModalShown = false;
+		}}
+	>
 		<div class="p-8"><EditPageLinks bind:isShown={isPageLinksModalShown} bind:page /></div></Modal
 	>
 {/if}

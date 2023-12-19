@@ -42,7 +42,7 @@
 
 <div class="_container-width mx-auto text-sm my-16">
 	<div class="flex w-full justify-between items-start">
-		<div class="px-4 text-sm  shrink-0 ">
+		<div class="px-2 text-sm  shrink-0 ">
 			<div class="flex items-center sm:min-w-[500px]">
 				<Emoji class="mr-2" width="20" emoji={parentPage.logo} />
 				<span class=" font-medium">
@@ -54,8 +54,7 @@
 			</div>
 		</div>
 
-		<div class="w-full grid grid-cols-4">
-			<div />
+		<div class="w-full grid grid-cols-{grouppedLinks?.length < 4 ? '3' : '4'} justify-end">
 			{#each grouppedLinks as link}
 				<div>
 					<div class="font-semibold mb-4 ">{link.groupName}</div>

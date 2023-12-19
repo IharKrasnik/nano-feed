@@ -359,11 +359,6 @@
 							</div>
 
 							<div class="flex gap-4 items-center col-span-2 my-4">
-								<div>
-									<input type="checkbox" bind:checked={page.theme.isHidePageName} />
-									Hide brand name with logo
-								</div>
-
 								<!-- <input type="checkbox" bind:checked={page.theme.isInputBorder} /> Transparent Input -->
 								<!-- <div>
 									<input type="checkbox" bind:checked={page.theme.isTitlesLeft} />

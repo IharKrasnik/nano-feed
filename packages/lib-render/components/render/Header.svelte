@@ -10,6 +10,7 @@
 
 	export let page;
 	export let isEdit;
+	export let isEmbed;
 
 	let isMenuOpen = false;
 
@@ -55,7 +56,7 @@
 </script>
 
 <div
-	class="fixed w-full _header backdrop-blur-lg _border-b-theme"
+	class="{isEmbed ? '' : 'fixed'} w-full _header backdrop-blur-lg _border-b-theme"
 	style="{isEdit ? 'width: calc(100% - 498px);' : ''} z-index: 100;"
 >
 	<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
@@ -100,7 +101,11 @@
 			</a>
 
 			<div
-				class="hidden ml-8 sm:flex items-center justify-end text-sm py-1 gap-4 w-full mr-8"
+				class="hidden ml-8 sm:flex items-center {page.theme?.headerAlign === 'left'
+					? 'justify-start'
+					: page.theme?.headerAlign === 'center'
+					? 'justify-center'
+					: 'justify-end'} text-sm py-1 gap-4 w-full mr-8"
 				style="z-index: 50"
 			>
 				{#each (page.links || []).filter((l) => !l.groupName && l.isShowInHeader) as link}
