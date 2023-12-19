@@ -97,13 +97,18 @@
 		{/if}
 
 		<div class="flex justify-between {page?._id ? 'mt-16' : ''}">
-			<div class="flex items-center font-semibold opacity-80">
-				<div
-					class="bg-green-600 p-2 rounded-full shadow-md shadow-green-600/30 flex items-center justify-center w-[40px] h-[40px] mr-3"
-				>
-					<FeatherIcon name="gift" color="#f6f5f4" />
+			<div>
+				<div class="flex items-center  opacity-80">
+					<div
+						class="bg-green-600 p-2 rounded-full shadow-md shadow-green-600/30 flex items-center justify-center w-[40px] h-[40px] mr-3"
+					>
+						<FeatherIcon name="gift" color="#f6f5f4" />
+					</div>
+					<div>
+						<div class="font-semibold">Use Templates</div>
+						<div>Copy any section or clone the whole page</div>
+					</div>
 				</div>
-				Use Templates
 			</div>
 		</div>
 

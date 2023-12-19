@@ -1209,7 +1209,7 @@
 						</div> -->
 					</div>
 					<div class="sm:w-[400px] mr-4" style="max-width: 100vw;">
-						<div class="px-4">
+						<div class={$sectionToEdit ? 'p-0' : 'p-4'}>
 							{#if !page._id}
 								{#if page.parentPage}
 									<div class="pt-4 text-lg font-bold">{page.parentPage?.name || ''}</div>
@@ -1222,36 +1222,38 @@
 
 							{#if $sectionToEdit && selectedTab === 'editor'}
 								<div
-									class="bg-white p-4 pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll sm:w-[386px]"
+									class="bg-white pl-0 z-40 fixed pb-[1000px] h-screen overflow-y-scroll sm:w-[400px]"
 								>
-									<div
-										class="flex items-center cursor-pointer text-[#8B786D] mb-4"
-										on:click={() => {
-											page.sections = page.sections.map((s) => {
-												if (s.id === $sectionToEdit.id) {
-													return { ...$sectionToEdit };
-												} else {
-													return s;
-												}
-											});
+									<div class="p-4 ">
+										<div
+											class="flex items-center cursor-pointer text-[#8B786D] mb-4"
+											on:click={() => {
+												page.sections = page.sections.map((s) => {
+													if (s.id === $sectionToEdit.id) {
+														return { ...$sectionToEdit };
+													} else {
+														return s;
+													}
+												});
 
-											$sectionToEdit = null;
-										}}
-									>
-										<BackArrowSvg />
-										Back
-									</div>
-
-									<div in:fly={{ y: 50, duration: 150 }}>
-										<EditSection
-											isShort={false}
-											bind:section={$sectionToEdit}
-											bind:page
-											onRemove={() => {
-												page.sections = page.sections.filter((s) => s.id !== $sectionToEdit.id);
 												$sectionToEdit = null;
 											}}
-										/>
+										>
+											<BackArrowSvg />
+											Back
+										</div>
+
+										<div in:fly={{ y: 50, duration: 150 }}>
+											<EditSection
+												isShort={false}
+												bind:section={$sectionToEdit}
+												bind:page
+												onRemove={() => {
+													page.sections = page.sections.filter((s) => s.id !== $sectionToEdit.id);
+													$sectionToEdit = null;
+												}}
+											/>
+										</div>
 									</div>
 								</div>
 							{/if}
