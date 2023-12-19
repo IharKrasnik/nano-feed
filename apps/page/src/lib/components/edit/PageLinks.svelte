@@ -75,19 +75,17 @@
 
 		{#if page}
 			<div class="flex justify-between">
-				<div>
-					{#key _refreshTimestamp}
-						<PageContainer class="p-8 mb-4" {page}>
-							<div>
-								<RenderHeader bind:page isEmbed />
+				{#key _refreshTimestamp}
+					<PageContainer class="p-8 mb-4 w-full" {page}>
+						<div class="w-full">
+							<RenderHeader bind:page isEmbed />
 
-								<div class="mt-8">
-									<RenderFooter bind:page />
-								</div>
+							<div class="mt-8 w-full">
+								<RenderFooter bind:page />
 							</div>
-						</PageContainer>
-					{/key}
-				</div>
+						</div>
+					</PageContainer>
+				{/key}
 			</div>
 		{/if}
 		<div class="_section flex items-center gap-4">
