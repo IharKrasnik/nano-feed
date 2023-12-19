@@ -326,10 +326,6 @@
 						<div class="_title" style="margin: 0;">Columns</div>
 						<div>
 							<!-- <input type="checkbox" bind:checked={section.isShowSource} /> show url source -->
-							{#if section.isMasonryGrid}
-								<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> funky
-							{/if}
-							<input class="ml-2" type="checkbox" bind:checked={section.isMasonryGrid} /> masonry
 						</div>
 
 						<!-- <div class="opacity-70 hover:opacity-100 transition text-right w-full text-sm">

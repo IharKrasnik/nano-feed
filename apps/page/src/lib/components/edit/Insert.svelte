@@ -111,7 +111,7 @@
 			<div class="grid grid-cols-1 mt-8">
 				{#each $templateFeed.results as templateFeedItem}
 					<a
-						class="_section cursor-pointer"
+						class="_section cursor-pointer _arrow-bottom"
 						href="/page-templates/{templateFeedItem.slug}"
 						class:_selected={$selectedTemplatePage?.url === templateFeedItem.url}
 						on:click={async (evt) => {

@@ -16,6 +16,27 @@
 	border: 1px #111 solid;
 }
 
+._section.cursor-pointer {
+	position: relative;
+}
+
+._section.cursor-pointer::after {
+	position: absolute;
+	content: '→';
+	bottom: 50%;
+	transform: translateY(50%);
+	@apply border right-4 bg-white w-[35px] h-[35px] flex items-center justify-center rounded-full shadow-lg opacity-50 transition;
+}
+
+._section.cursor-pointer._arrow-bottom::after {
+	transform: none;
+	@apply bottom-4;
+}
+
+._section.cursor-pointer:hover::after {
+	@apply opacity-100;
+}
+
 ._section._selected {
 	border: 1px #111 solid;
 }

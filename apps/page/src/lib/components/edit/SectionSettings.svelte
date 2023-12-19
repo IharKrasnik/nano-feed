@@ -83,22 +83,36 @@
 				{#if sectionItem.renderType === 'callout' || sectionItem.id !== section.id}
 					{#if (section.columns > 1 && sectionItem.renderType !== 'callout') || (sectionItem.imageUrl && section)}
 						<div class="_section">
-							<div class="font-bold mb-2">Grid</div>
-							<div class="flex items-center mb-4">
+							<div class="font-bold mb-2">Item size</div>
+
+							<div class=" mb-4">
 								{#if section.columns > 1 && sectionItem.renderType !== 'callout'}
-									<input
-										type="number"
-										class="max-w-[60px] mr-2"
-										placeholder="1"
-										bind:value={sectionItem.colSpan}
-									/>
-									x
-									<input
-										type="number"
-										class="max-w-[60px] ml-2"
-										placeholder="1"
-										bind:value={sectionItem.rowSpan}
-									/>
+									{#if section.isMasonryGrid}
+										<div class="_section _info">
+											Masonry grid doesn't support custom column sizes
+										</div>
+									{:else}
+										<div>
+											<input
+												type="number"
+												class="max-w-[60px] mr-2"
+												placeholder="1"
+												bind:value={sectionItem.colSpan}
+											/>
+											columns
+											<div class="text-sm mt-2">
+												{(((sectionItem.colSpan || 1) / section.columns) * 100).toFixed(2)}% width
+											</div>
+										</div>
+										<div class="mt-2">
+											<input
+												type="number"
+												class="max-w-[60px] mr-2 mt-2"
+												placeholder="1"
+												bind:value={sectionItem.rowSpan}
+											/> rows
+										</div>
+									{/if}
 								{:else if sectionItem.imageUrl && section}
 									<select bind:value={sectionItem.innerColSpan}>
 										<option value="">Default (6x6)</option>
@@ -108,6 +122,10 @@
 									</select>
 								{/if}
 							</div>
+							{#if section.isMasonryGrid}
+								<input class="ml-r" type="checkbox" bind:checked={section.isFunkyGrid} /> funky
+							{/if}
+							<input class="mr-2" type="checkbox" bind:checked={section.isMasonryGrid} /> masonry
 						</div>
 					{/if}
 				{/if}
