@@ -95,8 +95,8 @@
 				<div class="mt-2 opacity-80">Get free marketing assets to promote your Momentum page</div>
 
 				<img
-					class="py-4 max-h-[200px] object-cover w-full"
-					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1702977465936-image.png"
+					class="py-4 w-full object-cover w-full"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1702982490140-image.png"
 				/>
 			</div>
 		</div>

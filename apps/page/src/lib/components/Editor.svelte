@@ -1621,8 +1621,8 @@
 														</div>
 
 														<img
-															class="py-4 max-h-[200px] object-cover w-full"
-															src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1702977465936-image.png"
+															class="py-4 w-full object-cover w-full"
+															src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1702982490140-image.png"
 														/>
 													</div>
 												</div>
@@ -1951,28 +1951,6 @@
 										{/if}
 									{/if}
 									<hr class="my-8" />
-									{#if page?._id}
-										<!-- <hr class="my-16" />
-									<div class="mb-32">
-										<div class="_section bg-[#e8ffef] mt-16" style="border: none;">
-											<div class="flex items-center justify-between w-full">
-												<div class="">
-													<div class="font-bold">Design your product with Momentum team</div>
-
-													<div class="text-sm">Working with us is as easy as using Momentum</div>
-												</div>
-											</div>
-											<a
-												href="https://studio.saltnbold.com/new"
-												class="w-full"
-												class:hidden={!page._id}
-												target="_blank"
-											>
-												<button class="_small _secondary _promo mt-4">Design My Product 🧂</button>
-											</a>
-										</div>
-									</div> -->
-									{/if}
 								{:else}
 									<div class="mb-[70px]">
 										{#if selectedTab === 'database'}
