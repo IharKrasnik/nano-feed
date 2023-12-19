@@ -256,7 +256,7 @@
 
 		<div class="w-[40px] h-[40px] shrink-0">
 			<a
-				href="https://twitter.com/mmntm_build"
+				href="https://twitter.com/momentum_page"
 				target="_blank"
 				use:tooltip
 				title="Support & Suggestions — we in Twitter daily"
