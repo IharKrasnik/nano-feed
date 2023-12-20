@@ -16,9 +16,17 @@
 	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
 	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
 	import PageContainer from 'lib-render/components/PageContainer.svelte';
+	import knowledgeBaseProjects from 'lib-render/stores/knowledgeBaseProjects';
 
 	export let page;
 	export let selectedGrowthTab = 'dashboard';
+
+	let selectedKBProject;
+
+	let selectKbProject = (project) => {
+		selectedKBProject = project;
+		return '';
+	};
 
 	let cssVarStyles;
 	let styles;
@@ -350,22 +358,56 @@
 			/>
 		{:else if selectedGrowthTab === 'knowledge-base'}
 			<div class="_title text-3xl mb-4">Knowledge Base</div>
-			<RenderMomentumCollection
-				page={{
-					...page,
-					theme: {
-						...page.theme,
-						containerWidth: '1200px'
-					}
-				}}
-				section={{
-					id: 'design',
-					streamSlug: 'design',
-					columns: 3,
-					isMasonryGrid: true,
-					isShowSource: true
-				}}
-			/>{/if}
+			{selectKbProject($knowledgeBaseProjects[0]) && ''}
+
+			{#if $knowledgeBaseProjects}
+				<div class="flex gap-2">
+					{#each $knowledgeBaseProjects as knowledgeBaseProject (knowledgeBaseProject._id)}
+						<div
+							class="cursor-pointer px-3 py-1 text-sm opacity-80 rounded-full inline ring {page
+								.parentPage?.theme?.theme || page.theme?.theme === 'dark'
+								? 'ring-zinc-900'
+								: 'ring-zinc-100'} bg-black"
+							style={page.parentPage?.theme?.theme || page.theme?.theme === 'dark'
+								? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
+								: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
+							on:click={() => selectKbProject(knowledgeBaseProject)}
+							class:_selected={selectedKBProject?._id === knowledgeBaseProject._id}
+						>
+							{knowledgeBaseProject.title}
+						</div>
+					{/each}
+				</div>
+
+				{#if selectedKBProject}
+					<div class="mt-8 mb-4">
+						<div class="text-xl font-bold">{selectedKBProject.title}</div>
+						<div class="text-lg _color-item-description">
+							{selectedKBProject.description}
+						</div>
+					</div>
+
+					{#key selectedKBProject?.slug}
+						<RenderMomentumCollection
+							page={{
+								...page,
+								theme: {
+									...page.theme,
+									containerWidth: '1200px'
+								}
+							}}
+							section={{
+								id: selectedKBProject.slug,
+								streamSlug: selectedKBProject.slug,
+								columns: 3,
+								isMasonryGrid: true,
+								isShowSource: true
+							}}
+						/>
+					{/key}
+				{/if}
+			{/if}
+		{/if}
 	</div>
 </PageContainer>
 {#if selectedGrowthTab === 'boost'}{/if}

@@ -63,12 +63,12 @@
 	};
 
 	let replaceVars = () => {
-		section.title = section.templates.title.replace(
+		section.title = section.templates?.title?.replace(
 			'$db.totalCount',
 			$feedCache[cacheId]?.totalCount || ''
 		);
 
-		section.description = section.templates.description.replace(
+		section.description = section.templates?.description?.replace(
 			'$db.totalCount',
 			$feedCache[cacheId]?.totalCount || ''
 		);
