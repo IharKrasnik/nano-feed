@@ -1201,7 +1201,7 @@
 			<div class="flex relative">
 				<!-- EDITOR-->
 				<div
-					class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] pt-0 h-screen overflow-y-scroll bg-white"
+					class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] overflow-x-hidden pt-0 h-screen overflow-y-scroll bg-white"
 				>
 					<div class="fixed top-[60px] top-0 w-full z-10 sm:w-[430px] mb-[70px] bg-white px-4">
 						<!-- <div
@@ -1222,12 +1222,8 @@
 							<hr class="w-full" />
 						</div> -->
 					</div>
-					<div class="sm:w-[400px] mr-4" style="max-width: 100vw;">
-						<div
-							class="{$sectionToEdit ? 'p-0' : 'p-4'} {selectedTab === 'growth'
-								? 'border-green-300 border-r'
-								: ''}"
-						>
+					<div class="w-full mr-4" style="max-width: 100vw;">
+						<div class="px-6 py-4 {selectedTab === 'growth' ? 'border-green-300 border-r' : ''}">
 							{#if !page._id}
 								{#if page.parentPage}
 									<div class="pt-4 text-lg font-bold">{page.parentPage?.name || ''}</div>

@@ -13,6 +13,7 @@
 	import { goto } from '$app/navigation';
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
 	import MomentumWidget from 'lib/components/MomentumWidget.svelte';
+	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
 
 	export let page;
 	export let selectedGrowthTab = 'dashboard';
@@ -351,3 +352,4 @@
 </div>
 
 {#if selectedGrowthTab === 'boost'}{/if}
+<!-- <RenderServiceChat bind:page /> -->

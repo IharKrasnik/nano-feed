@@ -4,9 +4,8 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
-	export let section;
 	export let page;
-	export let themeStyles;
+	export let roomId;
 
 	let messages = [];
 
@@ -17,7 +16,8 @@
 
 	let getMessages = async () => {
 		let { results } = await get(`customerMessages`, {
-			pageId: page.parentPage?._id || page._id
+			pageId: page.parentPage?._id || page._id,
+			roomId
 		});
 
 		messages = results;
@@ -31,7 +31,8 @@
 
 		let createdMessage = await post(`customerMessages`, {
 			...toCreate,
-			page: { _id: page.parentPage?._id || page._id }
+			page: { _id: page.parentPage?._id || page._id },
+			roomId
 		});
 
 		messages = [...messages.filter((m) => m._id), createdMessage];

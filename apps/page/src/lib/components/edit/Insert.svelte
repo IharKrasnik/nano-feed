@@ -44,7 +44,7 @@
 
 {#if $isInsertPopupShown}
 	<div
-		class="_insert left-0 top-[60px] w-[400px] bg-white h-screen overflow-y-auto p-4 pb-32"
+		class="_insert left-0 top-[60px] w-[400px] bg-white h-screen overflow-y-auto px-6 py-4 pb-32"
 		class:absolute={isAbsolute}
 	>
 		<div class="mb-8">
