@@ -14,6 +14,8 @@
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
 	import MomentumWidget from 'lib/components/MomentumWidget.svelte';
 	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
+	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
+	import PageContainer from 'lib-render/components/PageContainer.svelte';
 
 	export let page;
 	export let selectedGrowthTab = 'dashboard';
@@ -71,36 +73,35 @@
 	};
 </script>
 
-<div class="p-8 bg-background" style={cssVarStyles}>
-	<div class="max-w-[900px] mx-auto">
-		<div class="mb-8">
-			<div class="text-lg font-bold mb-2 opacity-90">Current Goal</div>
-			<div class="_section">
-				<div class="flex justify-between items-center mb-2">
-					<div class="flex items-center font-bold text-lg w-full">Get 100 views</div>
-					<!-- <FeatherIcon class="mr-2" theme={page.theme?.theme || 'light'} name="target" size="20" /> -->
-					<div class="text-sm shrink-0 text-right"><b>Next:</b> get 10 signups</div>
-				</div>
-				<div
-					class="relative overflow-hidden p-2 rounded-lg border"
-					style={parentPage.theme?.theme === 'dark'
-						? 'background-color: rgba(255,255,255,.1);'
-						: 'background-color: rgba(0,0,0,.1);'}
-				>
+<PageContainer class="min-h-screen p-8" bind:page>
+	<div class="mx-auto">
+		{#if selectedGrowthTab === 'dashboard'}
+			<div class="mb-8">
+				<div class="text-lg font-bold mb-2 opacity-90">Current Goal</div>
+				<div class="_section">
+					<div class="flex justify-between items-center mb-2">
+						<div class="flex items-center font-bold text-lg w-full">Get 100 views</div>
+						<!-- <FeatherIcon class="mr-2" theme={page.theme?.theme || 'light'} name="target" size="20" /> -->
+						<div class="text-sm shrink-0 text-right"><b>Next:</b> get 10 signups</div>
+					</div>
 					<div
-						class="absolute left-0 top-0 h-full"
-						style="{!goalPercentage || goalPercentage < 2
-							? 'width: 2%;'
-							: `width: ${goalPercentage}%;`} {parentPage.theme?.theme === 'dark'
-							? 'background-color: rgba(255,255,255,.3);'
-							: 'background-color: rgba(0,0,0,.3);'}"
-					/>
-					{goalCurrentValue}
+						class="relative overflow-hidden p-2 rounded-lg border"
+						style={parentPage.theme?.theme === 'dark'
+							? 'background-color: rgba(255,255,255,.1);'
+							: 'background-color: rgba(0,0,0,.1);'}
+					>
+						<div
+							class="absolute left-0 top-0 h-full"
+							style="{!goalPercentage || goalPercentage < 2
+								? 'width: 2%;'
+								: `width: ${goalPercentage}%;`} {parentPage.theme?.theme === 'dark'
+								? 'background-color: rgba(255,255,255,.3);'
+								: 'background-color: rgba(0,0,0,.3);'}"
+						/>
+						{goalCurrentValue}
+					</div>
 				</div>
 			</div>
-		</div>
-
-		{#if selectedGrowthTab === 'dashboard'}
 			<div>
 				<div class="text-lg font-bold mb-2 opacity-90">Growth Dashboard</div>
 
@@ -347,9 +348,26 @@
 				bind:newMoment
 				onSent={() => {}}
 			/>
-		{:else if selectedGrowthTab === 'boost'}{/if}
+		{:else if selectedGrowthTab === 'knowledge-base'}
+			<div class="_title text-3xl mb-4">Knowledge Base</div>
+			<RenderMomentumCollection
+				page={{
+					...page,
+					theme: {
+						...page.theme,
+						containerWidth: '1200px'
+					}
+				}}
+				section={{
+					id: 'design',
+					streamSlug: 'design',
+					columns: 3,
+					isMasonryGrid: true,
+					isShowSource: true
+				}}
+			/>{/if}
 	</div>
-</div>
-
+</PageContainer>
 {#if selectedGrowthTab === 'boost'}{/if}
-<!-- <RenderServiceChat bind:page /> -->
+
+{#if selectedGrowthTab === 'knowledge-base'}{/if}

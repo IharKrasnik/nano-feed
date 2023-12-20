@@ -8,6 +8,7 @@
 
 	let addDomain = async () => {
 		let domains = await post(`pages/${page._id}/domains`, {
+			_isIde: true,
 			url: newDomainUrl
 		});
 

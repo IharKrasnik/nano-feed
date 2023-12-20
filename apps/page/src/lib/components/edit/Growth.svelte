@@ -43,8 +43,29 @@
 			</div>
 
 			<div>
-				<div class="font-bold mb-2">Growth dashboard</div>
-				<div>Monitor your progress & upgrade</div>
+				<div class="font-bold mb-1">Growth Dashboard</div>
+				<div class="opacity-80">Monitor your website progress, limits and billing plans</div>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="_section cursor-pointer"
+		on:click={() => {
+			selectedGrowthTab = 'knowledge-base';
+		}}
+		class:_selected={selectedGrowthTab === 'knowledge-base'}
+	>
+		<div class="flex">
+			<div
+				class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full bg-yellow-300 shadow-md  shadow-yellow-300/50 mr-4"
+			>
+				<FeatherIcon name="book-open" class="opacity-80" color="#333333" size="18" />
+			</div>
+
+			<div>
+				<div class="font-bold mb-1">Knowledge Base</div>
+				<div class="opacity-80">Learn how to validate, build and grow startups</div>
 			</div>
 		</div>
 	</div>
@@ -103,7 +124,7 @@
 	</div>
 </div> -->
 
-	<div class="_section bg-[white] my-8 group">
+	<div class="_section bg-[white] my-8 mt-16 group">
 		<div class="flex items-center justify-between w-full">
 			<div class="">
 				<div class="font-bold">Need $165k in tech discounts? 😏</div>
@@ -176,7 +197,7 @@
 					target="_blank"
 				>
 					<button class="_small _secondary _promo" style="background-color: #1d60ff;"
-						>Design my marketing assets →</button
+						>Design marketing assets →</button
 					>
 				</a>
 				<div class="flex items-center">
@@ -186,15 +207,15 @@
 					/>
 
 					<img
-						class="max-w-[30px] ml-[-8px] rounded-full"
+						class="max-w-[30px] ml-[-9px] rounded-full"
 						src="https://assets-global.website-files.com/64831da00244efd7c8280a6c/65253eb2822bf3f73eba7826_Ellipse%2014.png"
 					/>
 					<img
-						class="max-w-[30px] ml-[-8px] rounded-full"
+						class="max-w-[30px] ml-[-9px] rounded-full"
 						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703070831964-image.png"
 					/>
 					<img
-						class="max-w-[30px] ml-[-8px] rounded-full"
+						class="max-w-[30px] ml-[-9px] rounded-full"
 						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703070802490-image.png"
 					/>
 				</div>
