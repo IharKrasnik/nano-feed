@@ -891,7 +891,7 @@
 				{#if page._id}
 					<div
 						in:fade={{ delay: 75 }}
-						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
+						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100 transition _growth"
 						class:_selected={selectedTab === 'growth'}
 						on:click={() => {
 							selectedTab = 'growth';
@@ -1223,7 +1223,11 @@
 						</div> -->
 					</div>
 					<div class="sm:w-[400px] mr-4" style="max-width: 100vw;">
-						<div class={$sectionToEdit ? 'p-0' : 'p-4'}>
+						<div
+							class="{$sectionToEdit ? 'p-0' : 'p-4'} {selectedTab === 'growth'
+								? 'border-green-300 border-r'
+								: ''}"
+						>
 							{#if !page._id}
 								{#if page.parentPage}
 									<div class="pt-4 text-lg font-bold">{page.parentPage?.name || ''}</div>
@@ -1572,7 +1576,41 @@
 										</div>
 									</div> -->
 									{/if}
-
+									{#if page?._id}
+										<div
+											class="_section cursor-pointer"
+											on:click={() => {
+												selectedTab = 'growth';
+											}}
+										>
+											<div class="flex">
+												<div
+													class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full  shadow-md bg-green-300 shadow-md shadow-green-300/50 mr-4"
+												>
+													<svg
+														width="20"
+														height="20"
+														viewBox="0 0 15 15"
+														fill="none"
+														xmlns="http://www.w3.org/2000/svg"
+														><path
+															d="M11.1464 6.85355C11.3417 7.04882 11.6583 7.04882 11.8536 6.85355C12.0488 6.65829 12.0488 6.34171 11.8536 6.14645L7.85355 2.14645C7.65829 1.95118 7.34171 1.95118 7.14645 2.14645L3.14645 6.14645C2.95118 6.34171 2.95118 6.65829 3.14645 6.85355C3.34171 7.04882 3.65829 7.04882 3.85355 6.85355L7.5 3.20711L11.1464 6.85355ZM11.1464 12.8536C11.3417 13.0488 11.6583 13.0488 11.8536 12.8536C12.0488 12.6583 12.0488 12.3417 11.8536 12.1464L7.85355 8.14645C7.65829 7.95118 7.34171 7.95118 7.14645 8.14645L3.14645 12.1464C2.95118 12.3417 2.95118 12.6583 3.14645 12.8536C3.34171 13.0488 3.65829 13.0488 3.85355 12.8536L7.5 9.20711L11.1464 12.8536Z"
+															fill="currentColor"
+															fill-rule="evenodd"
+															clip-rule="evenodd"
+														/></svg
+													>
+												</div>
+												<div>
+													<div class="font-bold mb-2">Boost Your Product</div>
+													<div>
+														Get free marketing assets, $165k in discounts, record a podcast and
+														more.
+													</div>
+												</div>
+											</div>
+										</div>
+									{/if}
 									<div>
 										{#if page._id && page.renderType === 'article'}
 											<div class="mt-4">
@@ -1625,58 +1663,6 @@
 									{/if} -->
 
 										<!-- <EditTestimonials bind:page /> -->
-
-										{#if page?._id}
-											<div class="_section bg-[#e9f0ff] my-8" style="border: none;">
-												<div class="flex items-center justify-between w-full">
-													<div class="">
-														<div class="font-bold">Design your product with Momentum team</div>
-
-														<div class="mt-2 opacity-80">
-															Get free marketing assets to promote your Momentum page
-														</div>
-
-														<img
-															class="py-4 w-full object-cover w-full"
-															src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1702982490140-image.png"
-														/>
-													</div>
-												</div>
-												<hr />
-												<div class="flex items-center justify-between  mt-4">
-													<a
-														href="https://studio.saltnbold.com/new/marketing-assets-promo"
-														class="w-full"
-														class:hidden={!page._id}
-														target="_blank"
-													>
-														<button
-															class="_small _secondary _promo"
-															style="background-color: #1d60ff;"
-															>Design my marketing assets →</button
-														>
-													</a>
-													<div class="flex items-center">
-														<img
-															class="max-w-[30px] rounded-full"
-															src="https://assets-global.website-files.com/64831da00244efd7c8280a6c/65253ec34de1359dea9725b8_Ellipse%2019.png"
-														/>
-														<img
-															class="max-w-[30px] ml-[-8px] rounded-full"
-															src="https://assets-global.website-files.com/64831da00244efd7c8280a6c/65253eb2822bf3f73eba7826_Ellipse%2014.png"
-														/>
-														<img
-															class="max-w-[30px] ml-[-8px] rounded-full"
-															src="https://pbs.twimg.com/profile_images/1699084265974030336/7AFDmfHM_400x400.jpg"
-														/>
-														<img
-															class="max-w-[30px] ml-[-8px] rounded-full"
-															src="https://pbs.twimg.com/profile_images/1679050978933329920/1T4q1SuX_400x400.jpg"
-														/>
-													</div>
-												</div>
-											</div>
-										{/if}
 
 										{#if page._id}
 											<div
@@ -2200,6 +2186,10 @@
 
 	:global(.logo._selected .fill) {
 		fill: #333333;
+	}
+
+	._growth._selected {
+		background: linear-gradient(45deg, #c6ffa3, rgb(156 254 184));
 	}
 
 	:global(.logo .fill) {
