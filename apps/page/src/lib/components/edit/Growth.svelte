@@ -258,7 +258,7 @@
 
 		<div class="flex text-xl my-4 justify-between">
 			<div class="flex items-end opacity-90">
-				<div class="font-semibold">$5,000</div>
+				<div class="font-semibold">$6,000</div>
 				<div class="ml-2 text-sm">total price</div>
 			</div>
 
