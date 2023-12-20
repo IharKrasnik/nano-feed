@@ -89,6 +89,7 @@
 </div> -->
 
 <div class="">
+	<div class="mb-2 mt-16 font-bold _editor-title text-lg">Design</div>
 	<div class="_section bg-[#e9f0ff] my-8">
 		<div class="flex items-center justify-between w-full">
 			<div class="">
@@ -111,7 +112,7 @@
 				target="_blank"
 			>
 				<button class="_small _secondary _promo" style="background-color: #1d60ff;"
-					>Design my marketing assets →</button
+					>Design my marketing assets uil</button
 				>
 			</a>
 			<div class="flex items-center">
@@ -119,17 +120,18 @@
 					class="max-w-[30px] rounded-full"
 					src="https://assets-global.website-files.com/64831da00244efd7c8280a6c/65253ec34de1359dea9725b8_Ellipse%2019.png"
 				/>
+
 				<img
 					class="max-w-[30px] ml-[-8px] rounded-full"
 					src="https://assets-global.website-files.com/64831da00244efd7c8280a6c/65253eb2822bf3f73eba7826_Ellipse%2014.png"
 				/>
 				<img
 					class="max-w-[30px] ml-[-8px] rounded-full"
-					src="https://pbs.twimg.com/profile_images/1699084265974030336/7AFDmfHM_400x400.jpg"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703070831964-image.png"
 				/>
 				<img
 					class="max-w-[30px] ml-[-8px] rounded-full"
-					src="https://pbs.twimg.com/profile_images/1679050978933329920/1T4q1SuX_400x400.jpg"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703070802490-image.png"
 				/>
 			</div>
 		</div>
@@ -174,6 +176,8 @@
 			<div class="inline-block line-through ml-2 mt-1 opacity-70">$1,179.99</div>
 		</div>
 	</div>
+
+	<div class="mb-2 mt-16 font-bold _editor-title text-lg">Startup Discounts</div>
 
 	<div class="_section bg-[white] my-8 group" style="border-color: rgb(142 216 151 / 60%);">
 		<div class="flex items-center justify-between w-full">
@@ -223,6 +227,83 @@
 		</div>
 	</div>
 
+	<div class="mb-2 mt-16 font-bold _editor-title text-lg">Build</div>
+
+	<div class="_section my-8 group bg-[#ffe9fa]" style="border-color: rgb(216 142 210 / 60%);">
+		<div class="flex items-center justify-between w-full">
+			<div class="">
+				<div class="font-bold">Ready to build?</div>
+				<div class="mt-2">
+					Hire our team — we've built the <a
+						class="underline"
+						href="https://paralect.com/companies"
+						target="_blank">dozens</a
+					> of MVPs before.
+				</div>
+				<div class="my-2">
+					• Web applications <br />• Full-stack JavaScript <br /> • AI and API integrations <br />•
+					No-code automation
+				</div>
+
+				<div class="mt-2 opacity-80" />
+
+				<div class="py-4 w-full object-image">
+					<img
+						class="w-full w-full rounded"
+						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703069591390-image.png"
+					/>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex text-xl my-4 justify-between">
+			<div class="flex items-end opacity-90">
+				<div class="font-semibold">$5,000</div>
+				<div class="ml-2 text-sm">total price</div>
+			</div>
+
+			<div class="flex items-end opacity-90">
+				<div class="ml-6 font-semibold">2 weeks</div>
+				<div class="ml-2 text-sm">build time</div>
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="flex items-center justify-between  mt-4">
+			<div
+				on:click={() => {
+					goto('https://build.paralect.com/');
+				}}
+				class="w-full"
+				class:hidden={!page._id}
+				target="_blank"
+			>
+				<button
+					class="_small _secondary"
+					style="background-color: rgb(198 29 255); color: #f6f5f4; border-color: #7900a2;"
+					>Build my MVP →</button
+				>
+			</div>
+
+			<div class="flex items-center">
+				<img
+					class="max-w-[30px] rounded-full"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703069109699-image.png"
+				/>
+				<img
+					class="max-w-[30px] ml-[-8px] rounded-full"
+					src="https://pbs.twimg.com/profile_images/1699084265974030336/7AFDmfHM_400x400.jpg"
+				/>
+				<img
+					class="max-w-[30px] ml-[-8px] rounded-full"
+					src="https://pbs.twimg.com/profile_images/1679050978933329920/1T4q1SuX_400x400.jpg"
+				/>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-2 mt-16 font-bold _editor-title text-lg">Content</div>
 	<div class="_section bg-[#feffe9] my-8 group">
 		<div class="flex items-center justify-between w-full">
 			<div class="">
