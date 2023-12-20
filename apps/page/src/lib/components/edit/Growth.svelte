@@ -2,6 +2,8 @@
 	export let page;
 	export let selectedGrowthTab;
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import { goto } from '$app/navigation';
+	import isMomentumWidgetCollapsed from 'lib-render/stores/isMomentumWidgetCollapsed';
 </script>
 
 <div
@@ -87,10 +89,10 @@
 </div> -->
 
 <div class="">
-	<div class="_section bg-[#e9f0ff] my-8" style="border: none;">
+	<div class="_section bg-[#e9f0ff] my-8">
 		<div class="flex items-center justify-between w-full">
 			<div class="">
-				<div class="font-bold">Design your product with Momentum team</div>
+				<div class="font-bold">Need nice images for your social media?</div>
 
 				<div class="mt-2 opacity-80">Get free marketing assets to promote your Momentum page</div>
 
@@ -128,6 +130,134 @@
 				<img
 					class="max-w-[30px] ml-[-8px] rounded-full"
 					src="https://pbs.twimg.com/profile_images/1679050978933329920/1T4q1SuX_400x400.jpg"
+				/>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="_section w-full cursor-pointer"
+		on:click={() => {
+			goto('https://studio.saltnbold.com/new/logo');
+		}}
+	>
+		Logo in 3 days
+
+		<div>
+			<div class="inline-block font-semibold mt-1">$159.99</div>
+			<div class="inline-block line-through ml-2 mt-1 opacity-70">$679.99</div>
+		</div>
+	</div>
+
+	<div
+		class="_section w-full cursor-pointer"
+		on:click={() => {
+			goto('https://studio.saltnbold.com/new/ui-ux-prototype');
+		}}
+	>
+		UI/UX prototype in 3 days
+		<div>
+			<div class="inline-block font-semibold mt-1">$199.99</div>
+			<div class="inline-block line-through ml-2 mt-1 opacity-70">$679.99</div>
+		</div>
+	</div>
+
+	<div
+		class="_section w-full cursor-pointer"
+		on:click={() => {
+			goto('https://studio.saltnbold.com/new/product-demo-video');
+		}}
+	>
+		Product Video in 5 days
+		<div>
+			<div class="inline-block font-semibold mt-1">$679.99</div>
+			<div class="inline-block line-through ml-2 mt-1 opacity-70">$1,179.99</div>
+		</div>
+	</div>
+
+	<div class="_section bg-[white] my-8 group" style="border-color: rgb(142 216 151 / 60%);">
+		<div class="flex items-center justify-between w-full">
+			<div class="">
+				<div class="font-bold">Need $165k in tech discounts? 😏</div>
+				<div class="mt-2">
+					Share valuable content in your feed for 10 days and get $165k in tech discounts for <b
+						>free</b
+					>!
+				</div>
+
+				<div class="mt-2 opacity-80" />
+
+				<div class="py-4 w-full object-image">
+					<img
+						class="w-full w-full"
+						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703065410238-image.png"
+					/>
+				</div>
+				<div class="my-2">
+					Tools that every startup needs: from company incorporation and CRMs, to code hosting and
+					product management tools.
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="flex items-center justify-between  mt-4">
+			<div
+				on:click={() => {
+					$isMomentumWidgetCollapsed = false;
+				}}
+				class="w-full"
+				class:hidden={!page._id}
+				target="_blank"
+			>
+				<button class="_small _secondary" style="border-color: rgb(28 255 54); color: #333333;"
+					>🔐 Unlock discounts</button
+				>
+			</div>
+			<!-- https://www.loom.com/share/2d5b3f59bf354f1ead5fba5ebb7a7224?sid=eada9aa6-31ca-4372-b1a4-6cfe47a7a5d4 -->
+			<div class="flex items-center">
+				<img
+					class="max-w-[30px] rounded-full"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703065483491-image.png"
+				/>
+			</div>
+		</div>
+	</div>
+
+	<div class="_section bg-[#feffe9] my-8 group">
+		<div class="flex items-center justify-between w-full">
+			<div class="">
+				<div class="font-bold">Have something to tell?</div>
+
+				<div class="mt-2 opacity-80">Join the 15-minutes podcast and promote your product</div>
+
+				<div class="py-4 w-full object-image">
+					<img
+						class="group-hover:hidden h-[186px]"
+						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703062395534-image.png"
+					/>
+					<img
+						class="w-full object-cover w-full hidden group-hover:block h-[186px]"
+						src="https://fra1.digitaloceanspaces.com/ship-app-assets/stream/recEyMKJycFOIWyqd/1678363110857-Trimmed_2_AdobeExpress.gif"
+					/>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="flex items-center justify-between  mt-4">
+			<a
+				href="https://twitter.com/John__McT"
+				class="w-full"
+				class:hidden={!page._id}
+				target="_blank"
+			>
+				<button class="_small _secondary _promo" style="background-color: #e0fc03; color: #333333;"
+					>Get my podcast →</button
+				>
+			</a>
+			<div class="flex items-center">
+				<img
+					class="max-w-[30px] rounded-full"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703063111928-image.png"
 				/>
 			</div>
 		</div>

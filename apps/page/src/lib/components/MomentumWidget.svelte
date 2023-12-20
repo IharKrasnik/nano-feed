@@ -16,12 +16,11 @@
 	import clickOutside from 'lib/use/clickOutside';
 	import currentUser from 'lib/stores/currentUser';
 	import feedLastUpdatedOn from 'lib-render/stores/feedLastUpdatedOn';
+	import isMomentumWidgetCollapsed from 'lib-render/stores/isMomentumWidgetCollapsed';
 
 	import { showSuccessMessage } from 'lib/services/toast';
 
 	let urlToSubmitToStream;
-
-	let isCollapsed = true;
 
 	let urlEl;
 	let titleEl;
@@ -50,7 +49,7 @@
 			});
 
 			page.streams = page.streams || {};
-			page.streams.feed = streams;
+			page.streams.feed = stream;
 		}
 
 		await post('feed/from-url', {
@@ -60,22 +59,28 @@
 
 		urlToSubmitToStream = null;
 		$feedLastUpdatedOn = new Date();
-		isCollapsed = true;
+		$isMomentumWidgetCollapsed = true;
 
 		showSuccessMessage('Congrats! Your post is published in your "Feed" database.');
 	};
 
 	let publishNewMoment = async () => {
-		if (!page.streamSlug) {
-			const { streamSlug } = await put(`pages/${page._id}/embed-stream`);
-			page.streamSlug = streamSlug;
+		page.streams = page.streams || {};
+
+		if (!page.streams?.feed) {
+			const { stream } = await put(`pages/${page._id}/embed-stream`, {
+				title: 'Feed',
+				isFeedStream: true
+			});
+
+			page.streams.feed = stream;
 		}
 
 		await post('feed', {
 			title: newMoment.title,
 			content: newMoment.content,
 			attachments: [{ type: 'image', url: newMoment.imageUrl }],
-			projects: [{ slug: page.streamSlug }],
+			projects: [{ _id: page.streams.feed._id }],
 			isSyncToTwitter: newMoment.isSyncToTwitter,
 			isSyncToLinkedIn: newMoment.isSyncToLinkedIn
 		});
@@ -83,7 +88,7 @@
 		newMoment = {};
 
 		$feedLastUpdatedOn = new Date();
-		isCollapsed = true;
+		$isMomentumWidgetCollapsed = true;
 
 		showSuccessMessage('Congrats! Your post is published in your "Feed" database.');
 	};
@@ -115,16 +120,16 @@
 		in:fly={{ y: 50, duration: 150, delay: 150 }}
 		use:clickOutside
 		on:clickOutside={() => {
-			isCollapsed = true;
+			$isMomentumWidgetCollapsed = true;
 		}}
-		class="fixed right-12 bottom-0 {isCollapsed
+		class="fixed right-12 bottom-0 {$isMomentumWidgetCollapsed
 			? 'p-4'
-			: 'p-8'} bg-[#222] m-8 text-white {isCollapsed
+			: 'p-8'} bg-[#222] m-8 text-white {$isMomentumWidgetCollapsed
 			? 'rounded-xl'
 			: 'rounded-2xl'} opacity-98 max-w-[600px]"
 		style="z-index: 100;"
 	>
-		{#if isCollapsed}
+		{#if $isMomentumWidgetCollapsed}
 			<div class="flex">
 				<!-- <div class="w-[30px] mr-4">
 				<svg
@@ -149,7 +154,7 @@
 						rows="1"
 						placeholder="What have you created today?"
 						on:focus={() => {
-							isCollapsed = false;
+							$isMomentumWidgetCollapsed = false;
 							setTimeout(() => {
 								urlEl.focus();
 							}, 0);
