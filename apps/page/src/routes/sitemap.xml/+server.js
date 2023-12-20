@@ -24,7 +24,7 @@ ${sitemap.rules
 export const GET = async ({ url, params, session, cookies }) => {
 	let currentDomain = url.searchParams.get('pageSlug') || getDomain(url.href);
 
-	let sitemap = await get(`sitemaps/${currentDomain}`);
+	let sitemap = await get(`sitemaps/${currentDomain.replace('.mmntm.page', '')}`);
 
 	return new Response(getXml({ sitemap, currentDomain }), {
 		headers: {
