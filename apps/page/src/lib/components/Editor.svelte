@@ -1118,9 +1118,23 @@
 						<Loader />
 					{/if}
 				{:else}
-					<button class="_primary" on:click={loginWithGoogle} style="padding: 4px 12px;">
-						Log In
-					</button>
+					<div
+						on:click={loginWithGoogle}
+						class="flex cursor-pointer items-center  p-2 px-6 rounded-full  {page.name
+							? 'border border-green-500 bg-[#758b6c] text-white shadow-green-800/30'
+							: ''}"
+					>
+						{#if page.name?.length}
+							<div in:fade>Log In to save your changes →</div>
+						{:else}
+							<button
+								class="_primary {page.name?.length ? '_green' : ''}"
+								style="padding: 4px 12px;"
+							>
+								Log In
+							</button>
+						{/if}
+					</div>
 				{/if}
 			</div>
 

@@ -4,7 +4,17 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import { goto } from '$app/navigation';
 	import isMomentumWidgetCollapsed from 'lib-render/stores/isMomentumWidgetCollapsed';
+	import Modal from 'lib/components/Modal.svelte';
+	import KickstartPromo from 'lib/components/KickstartPromo.svelte';
+
+	let isKickstartModalShown;
 </script>
+
+{#if isKickstartModalShown}
+	<Modal isShown={true} onClosed={() => (isKickstartModalShown = false)}>
+		<KickstartPromo />
+	</Modal>
+{/if}
 
 <div
 	class="_section cursor-pointer"
@@ -88,6 +98,62 @@
 	</div>
 </div> -->
 
+<div class="_section bg-[white] my-8 group" style="border-color: rgb(142 216 151 / 60%);">
+	<div class="flex items-center justify-between w-full">
+		<div class="">
+			<div class="font-bold">Need $165k in tech discounts? 😏</div>
+			<div
+				class="flex items-center mt-2 py-1 cursor-pointer"
+				on:click={() => {
+					isKickstartModalShown = true;
+				}}
+			>
+				<div class="text-sm block underline mr-2">Learn more</div>
+				<FeatherIcon name="help-circle" size="13" />
+			</div>
+			<div class="mt-2">
+				Share valuable content in your feed for <b>15 days</b> and get <b>$165k</b> in tech discounts
+			</div>
+			<!-- 
+			<div class="mt-2 opacity-80" />
+
+			<div class="py-4 w-full object-image">
+				<img
+					class="w-full w-full"
+					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703065410238-image.png"
+				/>
+			</div>
+			<div class="my-2">
+				Tools that every startup needs: from company incorporation and CRMs, to code hosting and
+				product management tools.
+			</div> -->
+		</div>
+	</div>
+	<hr class="my-4" />
+
+	<div class="flex items-center justify-between mt-4">
+		<div
+			on:click={() => {
+				$isMomentumWidgetCollapsed = false;
+			}}
+			class="w-full"
+			class:hidden={!page._id}
+			target="_blank"
+		>
+			<button class="_small _secondary" style="border-color: rgb(28 255 54); color: #333333;"
+				>🔐 Unlock discounts</button
+			>
+		</div>
+		<!-- https://www.loom.com/share/2d5b3f59bf354f1ead5fba5ebb7a7224?sid=eada9aa6-31ca-4372-b1a4-6cfe47a7a5d4 -->
+		<div class="flex items-center">
+			<img
+				class="max-w-[30px] rounded-full"
+				src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703065483491-image.png"
+			/>
+		</div>
+	</div>
+</div>
+
 <div class="">
 	<div class="mb-2 mt-16 font-bold _editor-title text-lg">Design</div>
 	<div class="_section bg-[#e9f0ff] my-8">
@@ -112,7 +178,7 @@
 				target="_blank"
 			>
 				<button class="_small _secondary _promo" style="background-color: #1d60ff;"
-					>Design my marketing assets uil</button
+					>Design my marketing assets →</button
 				>
 			</a>
 			<div class="flex items-center">
@@ -177,56 +243,6 @@
 		</div>
 	</div>
 
-	<div class="mb-2 mt-16 font-bold _editor-title text-lg">Startup Discounts</div>
-
-	<div class="_section bg-[white] my-8 group" style="border-color: rgb(142 216 151 / 60%);">
-		<div class="flex items-center justify-between w-full">
-			<div class="">
-				<div class="font-bold">Need $165k in tech discounts? 😏</div>
-				<div class="mt-2">
-					Share valuable content in your feed for 10 days and get $165k in tech discounts for <b
-						>free</b
-					>!
-				</div>
-
-				<div class="mt-2 opacity-80" />
-
-				<div class="py-4 w-full object-image">
-					<img
-						class="w-full w-full"
-						src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703065410238-image.png"
-					/>
-				</div>
-				<div class="my-2">
-					Tools that every startup needs: from company incorporation and CRMs, to code hosting and
-					product management tools.
-				</div>
-			</div>
-		</div>
-		<hr />
-		<div class="flex items-center justify-between  mt-4">
-			<div
-				on:click={() => {
-					$isMomentumWidgetCollapsed = false;
-				}}
-				class="w-full"
-				class:hidden={!page._id}
-				target="_blank"
-			>
-				<button class="_small _secondary" style="border-color: rgb(28 255 54); color: #333333;"
-					>🔐 Unlock discounts</button
-				>
-			</div>
-			<!-- https://www.loom.com/share/2d5b3f59bf354f1ead5fba5ebb7a7224?sid=eada9aa6-31ca-4372-b1a4-6cfe47a7a5d4 -->
-			<div class="flex items-center">
-				<img
-					class="max-w-[30px] rounded-full"
-					src="https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1703065483491-image.png"
-				/>
-			</div>
-		</div>
-	</div>
-
 	<div class="mb-2 mt-16 font-bold _editor-title text-lg">Build</div>
 
 	<div class="_section my-8 group bg-[#ffe9fa]" style="border-color: rgb(216 142 210 / 60%);">
@@ -241,8 +257,10 @@
 					> of MVPs before.
 				</div>
 				<div class="my-2">
-					• Web applications <br />• Full-stack JavaScript <br /> • AI and API integrations <br />•
-					No-code automation
+					✓ Web applications <br />
+					✓ UI/UX + marketing design <br />
+					✓ Full-stack JavaScript, AI and APIs<br />
+					✓ No-code automation
 				</div>
 
 				<div class="mt-2 opacity-80" />
