@@ -183,7 +183,7 @@
 				{#if isIframeFallback || isUrlEmbeddable(url)}
 					<iframe
 						src={url}
-						class="mmntm-iframe w-full h-full {imgClass} {imgClass.includes('h-')
+						class="mmntm-iframe w-full {imgClass} {imgClass.includes('h-')
 							? ''
 							: 'h-[600px] overflow-y-auto'}"
 						style="border:none;"
