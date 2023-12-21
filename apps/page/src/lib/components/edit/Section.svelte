@@ -258,7 +258,7 @@
 			<EditSectionItem
 				class="p-0"
 				isWithGrid={false}
-				isWithSubtitle
+				isWithLabel
 				isWithInteractive
 				onRemove={null}
 				bind:page
@@ -595,7 +595,7 @@
 				<EditSectionItem
 					class="p-0"
 					isWithGrid={false}
-					isWithSubtitle
+					isWithLabel
 					isWithInteractive
 					onRemove={null}
 					bind:page

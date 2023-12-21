@@ -21,7 +21,7 @@
 
 	export let isWithUrl = true;
 	export let isWithGrid = true;
-	export let isWithSubtitle = false;
+	export let isWithLabel = false;
 	export let isWithSettings = true;
 
 	export let item;
@@ -129,8 +129,8 @@
 				<EditSectionSettings bind:page bind:section bind:sectionItem={item} />
 			{/if}
 
-			{#if isWithSubtitle}
-				<input class="ml-4 w-full" placeholder="Subtitle" bind:value={item.subtitle} />
+			{#if isWithLabel}
+				<input class="ml-4 w-full" placeholder="Label" bind:value={item.label} />
 			{/if}
 		</div>
 

@@ -1,15 +1,5 @@
 import { darken, lighten } from 'lib/helpers/color';
 
-let fontPairs = [
-	{ title: 'Inter', text: 'Inter' },
-	{ title: 'Calistoga', text: 'IBM Plex Sans' },
-	{ title: 'Chillax', text: 'Gilroy' },
-	{ title: 'Fraunces', text: 'Poppins' },
-	{ title: 'Syne', text: 'Syne' },
-	{ title: 'Quattrocento', text: 'Questrial' },
-	{ title: 'Albert Sans', text: 'Barlow' }
-];
-
 function hexToRGBA(hex, opacity = 1) {
 	if (!hex) {
 		hex = '#111111';
@@ -38,14 +28,15 @@ export default (page) => {
 	let styles = {
 		'container-width': page.theme?.containerWidth || '1200px',
 		'logo-font': page.theme?.logoFont || 'monospace',
-		'title-font': page.theme?.titleFont || fontPairs[0].title || 'Inter',
+		'title-font': page.theme?.titleFont || 'Inter',
 		'subtitle-font':
 			page.theme?.subtitleFont || page.theme?.textFont || page.theme?.titleFont || 'Inter',
 		'title-line-height': '1.0',
 		'button-radius': page.theme?.buttonRadius || '24px',
 		'button-huge-radius': `${parseInt(page.theme?.buttonRadius?.replace('px', '') || '24') + 8}px`,
 		'button-large-radius': `${parseInt(page.theme?.buttonRadius?.replace('px', '') || '24') + 4}px`,
-		'text-font': page.theme?.textFont || fontPairs[0].text || 'Inter',
+		'text-font': page.theme?.textFont || 'Inter',
+		'label-font': page.theme?.labelFont || 'Inter',
 		'text-font-size': '18px',
 		'text-line-height': 1.55,
 		'background-color': page.theme?.backgroundColor || '#ffffff',

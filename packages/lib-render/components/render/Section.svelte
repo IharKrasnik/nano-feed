@@ -436,16 +436,16 @@
 							</div>
 						{/if}
 
-						{#if section.subtitle}
-							<div class="text-sm mb-4 opacity-50" style="font-weight: 500;">
-								<ContentEditableIf class="" bind:innerHTML={section.subtitle} condition={isEdit} />
+						{#if section.label}
+							<div class="text-sm mb-4 opacity-50 _section-label" style="font-weight: 500;">
+								<ContentEditableIf class="" bind:innerHTML={section.label} condition={isEdit} />
 							</div>
 						{/if}
 
 						<div class="mb-8 sm:mb-12">
 							{#if section.title}
 								<h2
-									class="_title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
+									class="_section-title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
 										? 'sm:text-6xl font-medium'
 										: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||

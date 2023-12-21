@@ -720,6 +720,10 @@ button._alternative:hover {
 	opacity: 0.9;
 }
 
+._section-label {
+	font-family: var(--label-font) !important;
+}
+
 /* ._section-title._alternative-accent b {
 	position: relative;
 	color: var(--button-color);

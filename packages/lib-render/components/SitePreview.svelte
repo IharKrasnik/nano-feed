@@ -292,7 +292,10 @@
 		<PortfolioPage bind:page />
 	{:else}
 		<div class="" bind:this={previewEl}>
-			<div class="relative color-site min-h-screen" style="{cssVarStyles};">
+			<div
+				class="relative color-site min-h-screen"
+				style="{cssVarStyles}; font-family: var(--text-font);"
+			>
 				<!-- {#if page.isSectionsCloneable}
 					<div class="fixed w-[400px] h-screen p-4 bg-accent top-0" style="z-index: 100">
 						Clone this page
@@ -487,7 +490,6 @@
 
 	.color-site {
 		color: var(--text-color, black);
-		font-family: var(--text-font);
 		font-size: var(--text-font-size, 18);
 		line-height: var(--text-line-height, 1.2);
 	}

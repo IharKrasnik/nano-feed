@@ -13,26 +13,26 @@
 	let isColorPickerShown = false;
 	export let page;
 
-	let fontPairs = [
-		{ title: 'Inter', subtitle: 'Space Grotesk', text: 'Inter' },
-		{ title: 'DM Sans', text: 'Inter' },
-		{ title: 'Changa', text: 'Inter' },
-		{ title: 'Syne', text: 'Syne' },
-		{ title: 'Archivo', text: 'Inter' },
-		{ title: 'Calistoga', text: 'IBM Plex Sans' },
-		{ title: 'Cabin', text: 'Montserrat' },
-		{ title: 'Fraunces', text: 'Poppins' }
+	let titleFonts = [
+		'Inter',
+		'DM Sans',
+		'Changa',
+		'Syne',
+		'Archivo',
+		'Calistoga',
+		'Cabin',
+		'Fraunces',
+		'Montserrat',
+		'Space Grotesk'
 	];
 
-	fontPairs.forEach((p, i) => {
-		if (i > 0) {
-			p.id = p.title + ' + ' + p.text;
-		}
-	});
+	let labelFonts = ['Inter', 'Space Grotesk', 'Fraunces'];
+
+	let textFonts = ['Inter', 'Montserrat', 'Poppins'];
 
 	if (page.theme && !page.theme.titleFont) {
-		page.theme.titleFont = fontPairs[0].title;
-		page.theme.textFont = fontPairs[0].text;
+		page.theme.titleFont = titleFonts[0];
+		page.theme.textFont = textFonts[0];
 	}
 
 	let sectionBackgroundColors = {
@@ -211,26 +211,6 @@
 		page.theme = {};
 	}
 
-	let updateFonts = () => {
-		let fontPair = fontPairs.find((p) => p.id === page.theme.fontPairId);
-
-		page.theme.titleFont = fontPair.title;
-
-		if (fontPair.subtitleFont) {
-			page.theme.subtitleFont = fontPair.subtitleFont;
-		}
-
-		page.theme.textFont = fontPair.text;
-
-		themes = themes.map((t) => {
-			t.titleFont = fontPair.title;
-			t.textFont = fontPair.text;
-			t.fontPairId = fontPair.id;
-
-			return t;
-		});
-	};
-
 	let bgColorRGB;
 
 	let setButtonRadius = (size) => {
@@ -360,40 +340,59 @@
 								</div>
 							</div>
 
-							<div>
-								Advanced
+							<div class="_section">
+								<div class="font-bold mb-1">Advanced</div>
+								<div class="text-sm opacity-80 mb-4">Know how to work with colors?</div>
 								<div class="grid grid-cols-2 gap-4">
 									<div class="_section">
 										<div class="shrink-0">
 											<div class="text-sm font-bold">Text Color</div>
+											<div class="flex items-center justify-between w-full">
+												<input
+													type="color"
+													id="head"
+													name="head"
+													class="mr-4"
+													bind:value={page.theme.textColor}
+												/>
 
-											<div class="flex flex-wrap mt-4">
-												{#each colors.textColor as color}
-													<div
-														class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
-														on:click={() => {
-															page.theme.textColor = color;
-														}}
-														style="background-color: {color};"
-													/>
-												{/each}
+												<div class="flex flex-wrap mt-4">
+													{#each colors.textColor as color}
+														<div
+															class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
+															on:click={() => {
+																page.theme.textColor = color;
+															}}
+															style="background-color: {color};"
+														/>
+													{/each}
+												</div>
 											</div>
 										</div>
 									</div>
 									<div class="_section">
 										<div class="shrink-0">
 											<div class="text-sm font-bold">Button Text Color</div>
+											<div class="flex items-center justify-between w-full">
+												<input
+													type="color"
+													id="head"
+													name="head"
+													class="mr-4"
+													bind:value={page.theme.buttonColor}
+												/>
 
-											<div class="flex flex-wrap mt-4">
-												{#each colors.buttonColor as color}
-													<div
-														class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
-														on:click={() => {
-															page.theme.buttonColor = color;
-														}}
-														style="background-color: {color};"
-													/>
-												{/each}
+												<div class="flex flex-wrap mt-4">
+													{#each colors.buttonColor as color}
+														<div
+															class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
+															on:click={() => {
+																page.theme.buttonColor = color;
+															}}
+															style="background-color: {color};"
+														/>
+													{/each}
+												</div>
 											</div>
 										</div>
 									</div>
@@ -414,19 +413,41 @@
 
 							<div class="grid grid-cols-1 gap-4 mb-2">
 								<div class="_section">
-									<div class="font-semibold">Fonts</div>
-									<div class="text-sm mb-4 opacity-80">Select your font below</div>
+									<div class="font-bold mb-2">Fonts</div>
 
-									<select bind:value={page.theme.fontPairId} on:change={updateFonts}>
-										{#each fontPairs as fontPair}
-											<option value={fontPair.id}>{fontPair.title} + {fontPair.text}</option>
-										{/each}
-									</select>
+									<div class="grid grid-cols-2 gap-4">
+										<div class="_section w-full">
+											<div class="font-bold mb-2">Title Font</div>
 
-									<div class="mt-4">
-										<input type="checkbox" bind:checked={page.theme.isGradientTitle} />
+											<select class="w-full" bind:value={page.theme.titleFont}>
+												{#each titleFonts as titleFont}
+													<option value={titleFont}>{titleFont}</option>
+												{/each}
+											</select>
+											<div class="mt-4">
+												<input type="checkbox" bind:checked={page.theme.isGradientTitle} />
 
-										Are Titles Gradient
+												Are Titles Gradient
+											</div>
+										</div>
+
+										<div class="_section w-full">
+											<div class="font-bold mb-2">Text Font</div>
+
+											<select class="w-full" bind:value={page.theme.textFont}>
+												{#each textFonts as textFont}
+													<option value={textFont}>{textFont}</option>
+												{/each}
+											</select>
+
+											<div class="font-bold mb-2 mt-4">Label Font</div>
+
+											<select class="w-full" bind:value={page.theme.labelFont}>
+												{#each labelFonts as labelFont}
+													<option value={labelFont}>{labelFont}</option>
+												{/each}
+											</select>
+										</div>
 									</div>
 								</div>
 
@@ -502,7 +523,7 @@
 							<!-- <BrowserFrame scale={'0.4'}> -->
 							<div style="zoom: .5;" class="rounded-2xl transition" on:click={() => setTheme(t)}>
 								<BrowserFrame>
-									<div class="max-h-[1000px] overflow-y-scroll">
+									<div class="max-h-[3000px] overflow-y-scroll">
 										<SitePreview isEmbed isNoBadge page={{ ...page }} />
 									</div>
 								</BrowserFrame>
