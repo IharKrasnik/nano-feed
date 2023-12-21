@@ -349,9 +349,9 @@
 					: ''} {clazz?.includes('w-full') ? '' : 'sm:w-auto'}"
 			>
 				<a
-					class="shrink-0 cursor-pointer w-full {clazz?.includes('w-full')
-						? ''
-						: 'sm:w-auto'} {urlClass}"
+					class="shrink-0 {sectionItem.isUrlLink
+						? '_link'
+						: ''} cursor-pointer w-full {clazz?.includes('w-full') ? '' : 'sm:w-auto'} {urlClass}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					class:heatmap={$heatmap}
 					data-heatmap-clicks-count={$heatmap
@@ -426,7 +426,9 @@
 
 				{#if sectionItem.interactiveRenderType === 'links'}
 					<a
-						class="shrink-0 w-full sm:w-auto cursor-pointer {url2Class}"
+						class="shrink-0 w-full sm:w-auto cursor-pointer {url2Class} {sectionItem.isUrl2Link
+							? '_link'
+							: ''}"
 						class:heatmap={$heatmap}
 						data-heatmap-clicks-count={$heatmap
 							? getHeatmapClicksCount({
@@ -526,5 +528,14 @@
 		background: var(--background-color);
 		color: var(--text-color);
 		@apply transition rounded-lg;
+	}
+
+	._link {
+		@apply transition;
+		color: var(--accent-color);
+	}
+
+	._link:hover {
+		@apply opacity-70;
 	}
 </style>
