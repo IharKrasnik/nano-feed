@@ -1235,7 +1235,7 @@
 							{/if}
 
 							{#if $sectionToEdit && selectedTab === 'editor'}
-								<div class="bg-white pl-0 z-40 pb-[1000px] h-screen">
+								<div class="bg-white pl-0 z-40 pb-[1000px] min-h-screen">
 									<div
 										class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 										on:click={() => {
@@ -1269,7 +1269,7 @@
 							{/if}
 
 							{#if !$sectionToEdit}
-								<div>
+								<div class="pb-[1000px]">
 									{#if selectedTab === 'editor' && page.name && !$sectionToEdit}
 										{#if page._id}
 											<div class="flex items-center mb-4">
