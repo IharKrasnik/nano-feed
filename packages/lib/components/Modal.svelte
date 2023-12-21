@@ -1,6 +1,5 @@
 <script>
 	import { fly } from 'svelte/transition';
-	import { page } from '$app/stores';
 	import portal from 'lib/use/portal';
 	import CrossSvg from 'lib/icons/cross.svelte';
 	import clickOutside from 'lib/use/clickOutside';
@@ -52,21 +51,11 @@
 					style={maxWidth ? `max-width: ${maxWidth}px;` : ''}
 				>
 					{#if isClosable}
-						<div
-							class="_cross"
-							on:click={closeModal}
-							style={$page.data?.page
-								? `stroke: ${$page.data?.page?.theme?.theme === 'dark' ? '#fff' : '#000'};`
-								: ''}
-						>
+						<div class="_cross" on:click={closeModal} style="stroke: #000000">
 							<CrossSvg />
 						</div>
 					{/if}
-					<div
-						class="_modal-contents {$page.data?.page?.theme?.theme === 'dark'
-							? 'bg-[#111] text-white'
-							: 'bg-[#fff]'}"
-					>
+					<div class="_modal-contents bg-[#fff]">
 						<slot />
 					</div>
 				</div>

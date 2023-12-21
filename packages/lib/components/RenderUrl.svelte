@@ -86,6 +86,8 @@
 	};
 </script>
 
+<div class="h-[600px] hidden" />
+
 {#if url}
 	{#if isUrl() || isServiceUrl()}
 		<div class="w-full {clazz}" {style}>
