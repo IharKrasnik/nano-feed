@@ -289,9 +289,15 @@
 									<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertical
 								</div>
 							{/if}
+
 							<div class="flex shrink-0 font-normal items-center">
 								<input bind:checked={hero.theme.isHugeTitle} class="mr-2" type="checkbox" /> Is Huge
 							</div>
+
+							<div class="flex shrink-0 font-normal items-center">
+								<input bind:checked={hero.theme.isGiantTitle} class="mr-2" type="checkbox" /> Is Giant
+							</div>
+
 							<div class="flex shrink-0 font-normal items-center">
 								<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
 							</div>

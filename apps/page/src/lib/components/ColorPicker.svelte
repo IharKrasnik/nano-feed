@@ -16,6 +16,7 @@
 	let fontPairs = [
 		{ title: 'Inter', subtitle: 'Space Grotesk', text: 'Inter' },
 		{ title: 'DM Sans', text: 'Inter' },
+		{ title: 'Changa', text: 'Inter' },
 		{ title: 'Syne', text: 'Syne' },
 		{ title: 'Archivo', text: 'Inter' },
 		{ title: 'Calistoga', text: 'IBM Plex Sans' },

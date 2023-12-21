@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { writable } from 'svelte/store';
-import { get } from 'lib/api';
+import { get, post } from 'lib/api';
 
 const feedStore = writable({});
 
@@ -128,6 +128,23 @@ export const getFeed = async ({
 		isWithUrlOnly: streamSettings?.isWithUrlOnly,
 		isWithImageOnly: streamSettings?.isWithImageOnly,
 		page
+	});
+};
+
+export let updateFeedSortOrder = async ({ sortedItems, streamId, streamSlug }) => {
+	feedStore.update((s) => {
+		s[streamSlug] = {
+			...s[streamSlug],
+			feed: sortedItems
+		};
+
+		return s;
+	});
+
+	await post(`streamSortOrders`, {
+		streamId,
+		streamSlug,
+		sortOrder: sortedItems.map((i) => i._id)
 	});
 };
 

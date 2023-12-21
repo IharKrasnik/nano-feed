@@ -202,6 +202,8 @@
 											{!hero.demoUrl || hero.theme?.isVertical
 									? page.renderType === 'article'
 										? 'sm:max-w-[712px]'
+										: page.activeHero?.theme?.isGiantTitle
+										? 'sm:max-w-[1100px]'
 										: 'sm:max-w-[912px]'
 									: ''}"
 								style={hero.title ? '' : 'opacity: 20%;'}
@@ -219,9 +221,10 @@
 
 						{#if hero.subtitle}
 							<h2
-								class="_subtitle opacity-80 {hero.theme.isHugeTitle
-									? 'text-xl'
-									: 'text-xl'}  whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
+								class="_subtitle opacity-80 {hero.theme.isHugeTitle ? 'text-xl' : 'text-xl'} {hero
+									.theme.isGiantTitle
+									? 'text-3xl'
+									: ''} whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
 									? page.renderType === 'article'
 										? 'max-w-[712px]'
 										: 'max-w-[650px]'

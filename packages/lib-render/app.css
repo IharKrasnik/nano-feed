@@ -729,3 +729,13 @@ button._alternative:hover {
 	background: var(--accent-color);
 	transform: rotate(-1deg);
 }
+
+@media (max-width: 640px) {
+	._hero-title br {
+		display: none;
+	}
+
+	._item-title br {
+		display: none;
+	}
+}

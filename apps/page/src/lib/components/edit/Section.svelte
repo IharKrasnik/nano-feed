@@ -191,7 +191,7 @@
 	</div>
 {:else}
 	<div
-		class="absolute right-4 top-4 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
+		class="absolute right-4 top-6 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
 		title="Remove Item"
 		on:click={onRemove}
 	>
@@ -540,6 +540,7 @@
 
 								<select class="w-full" bind:value={section.streamSettings.sortBy}>
 									<option value="_sample">Random</option>
+									<option value="order">Sort by Order</option>
 									<option value="-publishedOn">Newest First</option>
 									<option value="-viewsCount">Popular First</option>
 								</select>

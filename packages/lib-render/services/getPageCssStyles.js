@@ -79,7 +79,11 @@ export default (page) => {
 			page.theme?.theme === 'dark' ? 'rgba(255,255,255, .7)' : 'rgba(0,0,0, .7)',
 		'section-description-text-color-opposite':
 			page.theme?.theme === 'dark' ? 'rgba(0,0,0, .7)' : 'rgba(255,255,255, .7)',
-		'title-font-size': page.activeHero?.theme?.isHugeTitle ? '72px' : '48px',
+		'title-font-size': page.activeHero?.theme?.isHugeTitle
+			? '72px'
+			: page.activeHero?.theme?.isGiantTitle
+			? '105px'
+			: '48px',
 		'section-title-font-size': page.theme?.containerWidth <= 900 ? '20px' : '24px',
 		'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',
 

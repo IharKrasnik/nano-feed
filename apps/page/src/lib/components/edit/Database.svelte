@@ -5,19 +5,22 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
-	import feedCache, { getFeed } from 'lib-render/stores/feedCache';
+	import feedCache, { getFeed, updateFeedSortOrder } from 'lib-render/stores/feedCache';
 	import EditFeedItem from '$lib/components/edit/FeedItem.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import csv from 'csvtojson';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 	import allPages from 'lib-render/stores/allPages';
+	import { dndzone } from 'svelte-dnd-action';
 
 	let posts = [];
+
+	let LAST_STREAM_SLUG_KEY = 'LAST_DATABASE_STREAM_SLUG';
 
 	export let setPageAndDraft;
 	export let selectedTab;
 	export let page;
-	export let selectedStreamSlug;
+	export let selectedStreamSlug = localStorage[LAST_STREAM_SLUG_KEY];
 	export let selectedCustomer;
 
 	let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
@@ -28,9 +31,22 @@
 	// 	slug: `${(page.parentPage || page).name}-feed`
 	// };
 
-	let lastStreamSlug = 'LAST_DATABASE_STREAM_SLUG';
-
 	let isLoading = false;
+
+	let handleDndConsider = (e) => {
+		$feedCache[activeStream.slug] = {
+			...$feedCache[activeStream.slug],
+			feed: e.detail.items
+		};
+	};
+
+	let handleDndFinalize = async (e) => {
+		await updateFeedSortOrder({
+			streamId: activeStream._id,
+			streamSlug: activeStream.slug,
+			sortedItems: e.detail.items
+		});
+	};
 
 	let loadChildStreams = async () => {
 		if (!parentPage.streams) {
@@ -42,16 +58,16 @@
 		$childStreams = await refreshChildStreams({ page });
 
 		activeStream =
-			selectedStreamSlug || localStorage[lastStreamSlug]
+			selectedStreamSlug || localStorage[LAST_STREAM_SLUG_KEY]
 				? $childStreams.find((s) =>
 						selectedStreamSlug
 							? s.slug === selectedStreamSlug
-							: s.slug === localStorage[lastStreamSlug]
+							: s.slug === localStorage[LAST_STREAM_SLUG_KEY]
 				  ) || $childStreams[0]
 				: $childStreams[0];
 
 		selectedStreamSlug = activeStream?.slug;
-		localStorage[lastStreamSlug] = selectedStreamSlug;
+		localStorage[LAST_STREAM_SLUG_KEY] = selectedStreamSlug;
 
 		isLoading = false;
 
@@ -66,7 +82,7 @@
 		activeStream = childStream;
 		isStreamEdit = false;
 		selectedStreamSlug = activeStream?.slug;
-		localStorage[lastStreamSlug] = selectedStreamSlug;
+		localStorage[LAST_STREAM_SLUG_KEY] = selectedStreamSlug;
 	};
 
 	let selectBuiltInStream = async ({
@@ -122,7 +138,7 @@
 	};
 
 	let loadFeed = async () => {
-		await getFeed({ streamSlug: activeStream.slug, perPage: 100 });
+		await getFeed({ streamSlug: activeStream.slug, sort: 'order', perPage: 100 });
 	};
 
 	$: if (activeStream?.slug) {
@@ -145,6 +161,12 @@
 			feed: [...feed],
 			totalCount: ($feedCache[activeStream.slug].totalCount || 0) + 1
 		};
+
+		await updateFeedSortOrder({
+			streamId: activeStream._id,
+			streamSlug: activeStream.slug,
+			sortedItems: $feedCache[activeStream.slug].feed
+		});
 
 		if (isShowSuccessMessage) {
 			showSuccessMessage('Record created');
@@ -209,6 +231,12 @@
 			...createdFeedItems,
 			...($feedCache[activeStream.slug]?.feed?.filter((fi) => fi._id) || [])
 		];
+
+		await updateFeedSortOrder({
+			streamId: activeStream._id,
+			streamSlug: activeStream.slug,
+			sortedItems: $feedCache[activeStream.slug].feed
+		});
 
 		showSuccessMessage(`Created ${createdFeedItems.length} items. Nice!`);
 	};
@@ -289,7 +317,7 @@
 		selectBuiltInStream({ isChangelogStream: true });
 	}
 
-	let addItem = ({ title = '', content = '', url = '' } = {}) => {
+	let addItem = async ({ title = '', content = '', url = '' } = {}) => {
 		$feedCache[activeStream.slug] = {
 			...$feedCache[activeStream.slug],
 			feed: [
@@ -360,6 +388,9 @@
 			{/if}
 
 			<option value="_new">New Database</option>
+			{#if !selectedStreamSlug}
+				<option value="">No Selected</option>
+			{/if}
 		</select>
 	</div>
 </div>
@@ -425,6 +456,7 @@
 			>
 		</div>
 	{/if}
+
 	{#if activeStream && $feedCache[activeStream.slug]}
 		<div class="flex justify-between items-center mt-8 mb-2">
 			<div class="text-sm font-bold opacity-80">
@@ -461,7 +493,15 @@
 			</div>
 		{/if}
 
-		<div>
+		<div
+			class="py-8"
+			use:dndzone={{
+				items: $feedCache[activeStream.slug]?.feed,
+				flipDurationMs: 300
+			}}
+			on:consider={handleDndConsider}
+			on:finalize={handleDndFinalize}
+		>
 			{#each $feedCache[activeStream.slug]?.feed?.filter((feedItem) => {
 				if (!searchStr) {
 					return true;

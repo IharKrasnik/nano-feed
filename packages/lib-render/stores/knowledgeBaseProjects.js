@@ -11,6 +11,12 @@ export const update = async ({} = {}) => {
 	};
 
 	await get('projects', query).then(({ results }) => {
+		results.sort((r) => {
+			if (r.slug.includes('marketing')) {
+				return -1;
+			}
+			return 1;
+		});
 		store.set(results);
 	});
 };
