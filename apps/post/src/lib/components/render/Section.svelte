@@ -53,7 +53,7 @@
 			{/if}
 
 			{#if section.title}
-				<h2 class="_title sm:text-4xl text-3xl font-bold mb-4 sm:max-w-[750px] sm:mx-auto">
+				<h2 class="_section-title sm:text-4xl text-3xl font-bold mb-4 sm:max-w-[750px] sm:mx-auto">
 					{@html section.title}
 				</h2>
 			{/if}
@@ -113,7 +113,9 @@
 								{/if}
 
 								{#if item.title}
-									<h2 class="{headerTextStyle(item)[section.columns]} _title font-bold mb-4">
+									<h2
+										class="{headerTextStyle(item)[section.columns]} _section-title font-bold mb-4"
+									>
 										{@html item.title}
 									</h2>
 								{/if}

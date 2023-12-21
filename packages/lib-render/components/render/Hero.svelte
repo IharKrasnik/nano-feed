@@ -202,7 +202,7 @@
 											{!hero.demoUrl || hero.theme?.isVertical
 									? page.renderType === 'article'
 										? 'sm:max-w-[712px]'
-										: page.activeHero?.theme?.isGiantTitle
+										: page.activeHero?.theme?.titleSize === 'giant'
 										? 'sm:max-w-[1100px]'
 										: 'sm:max-w-[912px]'
 									: ''}"
@@ -221,8 +221,9 @@
 
 						{#if hero.subtitle}
 							<h2
-								class="_subtitle opacity-80 {hero.theme.isHugeTitle ? 'text-xl' : 'text-xl'} {hero
-									.theme.isGiantTitle
+								class="_subtitle opacity-80 {hero.theme?.titleSize === 'huge'
+									? 'text-xl'
+									: 'text-xl'} {hero.theme?.titleSize === 'giant'
 									? 'text-3xl'
 									: ''} whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
 									? page.renderType === 'article'
@@ -257,7 +258,7 @@
 									class={hero.theme.isLeft || (hero.demoUrl && !hero.theme.isVertical)
 										? ''
 										: 'max-w-[600px] mx-auto justify-center'}
-									size={hero.theme.isHugeTitle ? 'huge' : 'large'}
+									size={hero.theme.titleSize === 'huge' ? 'huge' : 'large'}
 									bind:page
 									bind:sectionItem={hero}
 								/>

@@ -68,6 +68,8 @@
 		hero.theme = {};
 	}
 
+	hero.theme.titleSize = hero.theme.titleSize || (hero.theme.isHugeTitle ? 'huge' : 'normal');
+
 	export let focuses;
 
 	export let isCollapsedDefault = true;
@@ -290,12 +292,18 @@
 								</div>
 							{/if}
 
-							<div class="flex shrink-0 font-normal items-center">
-								<input bind:checked={hero.theme.isHugeTitle} class="mr-2" type="checkbox" /> Is Huge
-							</div>
-
-							<div class="flex shrink-0 font-normal items-center">
-								<input bind:checked={hero.theme.isGiantTitle} class="mr-2" type="checkbox" /> Is Giant
+							<div class="flex gap-4 items-center">
+								{#each [{ value: 'normal' }, { value: 'huge' }, { value: 'giant' }] as titleSize}
+									<div class="flex items-center">
+										<input
+											bind:group={hero.theme.titleSize}
+											class="mr-2"
+											type="radio"
+											value={titleSize.value}
+										/>
+										{_.capitalize(titleSize.value)}
+									</div>
+								{/each}
 							</div>
 
 							<div class="flex shrink-0 font-normal items-center">

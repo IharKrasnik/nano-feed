@@ -708,38 +708,38 @@ button._alternative:hover {
 	font-family: var(--title-font) !important;
 }
 
-._title {
+._section-title {
 	font-family: var(--title-font) !important;
 }
 
 ._hero-title b,
 ._hero-title em,
-._title b,
-._title em {
+._section-title b,
+._section-title em {
 	color: var(--accent-color);
 	opacity: 0.9;
 }
 
-._title._alternative-accent b {
+/* ._section-title._alternative-accent b {
 	position: relative;
 	color: var(--button-color);
 	@apply p-2;
 }
 
-._title._alternative-accent b::before {
+._section-title._alternative-accent b::before {
 	@apply absolute top-0 left-0 w-full h-full rounded opacity-80;
 	z-index: -1;
 	content: '';
 	background: var(--accent-color);
 	transform: rotate(-1deg);
-}
+} */
 
 @media (max-width: 640px) {
 	._hero-title br {
 		display: none;
 	}
 
-	._title br {
+	._section-title br {
 		display: none;
 	}
 

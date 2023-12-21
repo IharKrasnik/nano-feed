@@ -62,7 +62,6 @@
 			'#ffffff',
 			'#fafafa',
 			'#111111',
-			'#1c1c1c',
 			'#222222',
 			lighten(page?.theme?.accentColor || '#fff', 0.8),
 			darken(page?.theme?.accentColor || '#fff', 0.99)
