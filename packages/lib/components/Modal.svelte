@@ -42,9 +42,7 @@
 			<div class="flex items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 				<div
 					class="absolute _modal-backdrop inset-0 transition-opacity"
-					style="background-color: {$page.data?.page?.theme?.theme === 'dark'
-						? 'rgba(0,0,0,0.8)'
-						: 'rgba(255,255,255,0.8)'};"
+					style="background-color: rgba(0,0,0,0.8);"
 				/>
 
 				<div
