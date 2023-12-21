@@ -708,6 +708,10 @@ button._alternative:hover {
 	font-family: var(--title-font) !important;
 }
 
+._title {
+	font-family: var(--title-font) !important;
+}
+
 ._hero-title b,
 ._hero-title em,
 ._title b,
@@ -732,6 +736,10 @@ button._alternative:hover {
 
 @media (max-width: 640px) {
 	._hero-title br {
+		display: none;
+	}
+
+	._title br {
 		display: none;
 	}
 
