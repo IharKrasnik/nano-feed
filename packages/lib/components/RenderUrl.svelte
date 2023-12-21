@@ -183,10 +183,11 @@
 						src={url}
 						class="mmntm-iframe w-full h-full {imgClass} {imgClass.includes('h-')
 							? ''
-							: 'h-[600px]'}"
+							: 'h-[600px] overflow-y-auto'}"
 						style="border:none;"
-						onload={`iFrameResize({}, '.mmntm-iframe')`}
-					/>{:else}{/if}
+					/>
+					<!-- onload={`iFrameResize({}, '.mmntm-iframe')`} -->
+				{:else}{/if}
 			{/if}
 		</div>
 	{:else}

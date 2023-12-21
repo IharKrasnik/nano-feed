@@ -71,7 +71,7 @@ export default (page) => {
 		'section-description-text-color-opposite':
 			page.theme?.theme === 'dark' ? 'rgba(0,0,0, .7)' : 'rgba(255,255,255, .7)',
 		'title-font-size':
-			page.activeHero?.theme?.titleSize !== 'normal'
+			page.activeHero?.theme?.titleSize && page.activeHero?.theme?.titleSize !== 'normal'
 				? page.activeHero?.theme?.titleSize === 'huge'
 					? '72px'
 					: '105px'
