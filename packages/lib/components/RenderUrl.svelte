@@ -181,8 +181,10 @@
 				{#if isIframeFallback || isUrlEmbeddable(url)}
 					<iframe
 						src={url}
-						class="mmntm-iframe w-full h-full {imgClass}"
-						style="border:none; height: 600px;"
+						class="mmntm-iframe w-full h-full {imgClass} {imgClass.includes('h-')
+							? ''
+							: 'h-[600px]'}"
+						style="border:none;"
 						onload={`iFrameResize({}, '.mmntm-iframe')`}
 					/>{:else}{/if}
 			{/if}
