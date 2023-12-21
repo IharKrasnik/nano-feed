@@ -933,7 +933,6 @@
 												<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
 
 												<RenderUrlWithBackground
-													isIframeFallback={false}
 													aspectRatio={section.theme?.imageAspectRatio ||
 														item.theme?.imageAspectRatio}
 													urlImgClass="object-cover {item.theme?.isReversedImage
@@ -1290,7 +1289,6 @@
 																: ''}"
 														>
 															<RenderUrlWithBackground
-																isIframeFallback={false}
 																aspectRatio={section.theme?.imageAspectRatio ||
 																	item.theme?.imageAspectRatio}
 																urlImgClass="w-full object-cover h-auto {section.imageClass ||
