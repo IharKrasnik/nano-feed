@@ -339,7 +339,7 @@
 									urlImgMaxWidth={hero.imgMaxWidth || 0}
 									urlImgClass="{hero.imgMaxWidth
 										? `rounded-lg mx-auto`
-										: 'w-full rounded-xl'} shadow-md object-cover"
+										: 'w-full rounded-xl'} object-cover"
 								/>
 							{/if}
 						</div>
