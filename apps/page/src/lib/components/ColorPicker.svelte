@@ -78,6 +78,8 @@
 			'#FFA200',
 			'#E60004'
 		],
+		textColor: ['#f6f5f4', '#111111'],
+		buttonColor: ['#f6f5f4', '#111111'],
 		dark: [],
 		light: []
 	};
@@ -355,6 +357,46 @@
 											style="background-color: {color};"
 										/>
 									{/each}
+								</div>
+							</div>
+
+							<div>
+								Advanced
+								<div class="grid grid-cols-2 gap-4">
+									<div class="_section">
+										<div class="shrink-0">
+											<div class="text-sm font-bold">Text Color</div>
+
+											<div class="flex flex-wrap mt-4">
+												{#each colors.textColor as color}
+													<div
+														class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
+														on:click={() => {
+															page.theme.textColor = color;
+														}}
+														style="background-color: {color};"
+													/>
+												{/each}
+											</div>
+										</div>
+									</div>
+									<div class="_section">
+										<div class="shrink-0">
+											<div class="text-sm font-bold">Button Text Color</div>
+
+											<div class="flex flex-wrap mt-4">
+												{#each colors.buttonColor as color}
+													<div
+														class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
+														on:click={() => {
+															page.theme.buttonColor = color;
+														}}
+														style="background-color: {color};"
+													/>
+												{/each}
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 

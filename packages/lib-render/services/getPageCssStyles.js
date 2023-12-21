@@ -64,7 +64,7 @@ export default (page) => {
 				? lighten(page.theme?.backgroundColor, 0.1)
 				: darken(page.theme?.backgroundColor, 0.15),
 		'border-color': page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
-		'text-color': page.theme?.theme === 'dark' ? '#fbf5ec' : '#111111',
+		'text-color': page.theme.textColor || (page.theme?.theme === 'dark' ? '#fbf5ec' : '#111111'),
 		'accent-color': accentColor,
 		'accent-color-darker': darken(accentColor, 0.5),
 		'accent-color-lighter': lighten(accentColor, 0.5),
