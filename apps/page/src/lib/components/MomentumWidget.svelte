@@ -50,6 +50,7 @@
 
 	let submitLink = async () => {
 		let streamSlug = '';
+		let successMessage = '';
 		if ($momentumWidgetTab === 'feed') {
 			if (!page.streams?.feed) {
 				const { stream } = await put(`pages/${page._id}/embed-stream`, {
@@ -58,9 +59,11 @@
 
 				page.streams = page.streams || {};
 				page.streams.feed = stream;
-				streamSlug = stream.slug;
 			}
+			streamSlug = page.streams.feed.slug;
+			successMessage = 'Congrats! Your post is published in your "Feed" database.';
 		} else {
+			successMessage = `Thank you! Your awesome link was posted to the community stream. We appreciate you!`;
 			streamSlug = 'momentum-knowledge-base-community';
 		}
 
@@ -73,7 +76,7 @@
 		$feedLastUpdatedOn = new Date();
 		$isMomentumWidgetCollapsed = true;
 
-		showSuccessMessage('Congrats! Your post is published in your "Feed" database.');
+		showSuccessMessage(successMessage);
 	};
 
 	let publishNewMoment = async () => {
