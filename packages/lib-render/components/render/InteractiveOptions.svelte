@@ -35,6 +35,8 @@
 	let isUrlLoading = false;
 	let isUrl2Loading = false;
 
+	let isCtaPopupShown = false;
+
 	import refreshConditionsTimestamp from 'lib-render/stores/refreshConditionsTimestamp';
 
 	let clazz = '';
@@ -298,6 +300,16 @@
 			{#if isHeader}
 				<button
 					class="shrink-0 ring-1"
+					on:click={() => {
+						let emailInput = document.getElementsByClassName('_email-input')[0];
+						if (emailInput) {
+							emailInput.focus();
+							emailInput.scrollIntoView({
+								block: 'center',
+								inline: 'nearest'
+							});
+						}
+					}}
 					style="--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
 						? 'var(--accent-color-lighter)'
 						: 'var(--accent-color-darker)'};"
