@@ -35,7 +35,7 @@
 </script>
 
 <h3 class="text-xl font-bold mb-2">Domains</h3>
-<div class="text-sm mb-4">Attach your custom domain for free</div>
+<div class="text-sm mb-4">Attach your custom website domain</div>
 
 <div class="flex items-center">
 	<input placeholder="mydomain.com" bind:value={newDomainUrl} />

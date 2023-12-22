@@ -15,8 +15,10 @@
 	import MomentumWidget from 'lib/components/MomentumWidget.svelte';
 	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
 	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
+	import pricingPage from '$lib/stores/pricingPage';
+	import PricingPage from '$lib/components/PricingPage.svelte';
 	import PageContainer from 'lib-render/components/PageContainer.svelte';
-	import knowledgeBaseProjects from 'lib-render/stores/knowledgeBaseProjects';
+	import knowledgeBaseProjects from 'lib/stores/knowledgeBaseProjects';
 
 	export let page;
 	export let selectedGrowthTab = 'dashboard';
@@ -46,21 +48,12 @@
 
 	let goalPercentage = 0;
 
-	let pricingPage = null;
-	let defaultPricingPage = null;
-
-	let getPricingPage = async () => {
-		pricingPage = await get(`pricing`);
-		defaultPricingPage = _.cloneDeep(pricingPage);
-	};
-
 	let pricingStats = null;
 
 	let getPricingStats = async () => {
 		pricingStats = await get(`pricing/${parentPage._id}`);
 	};
 
-	getPricingPage();
 	getPricingStats();
 	let currentGoal = '';
 	let goalCurrentValue = '';
@@ -76,17 +69,10 @@
 	}
 
 	let newMoment = {};
-
-	let _pricingRefreshTimestamp = new Date();
-
-	let updatePricingButtons = () => {
-		pricingPage = _.cloneDeep(defaultPricingPage);
-		_pricingRefreshTimestamp = new Date();
-	};
 </script>
 
 <PageContainer class="min-h-screen p-8" bind:page>
-	<div class="mx-auto">
+	<div class="max-w-[1000px] mx-auto">
 		{#if selectedGrowthTab === 'dashboard'}
 			<div class="mb-8">
 				<div class="text-lg font-bold mb-2 opacity-90">Current Goal</div>
@@ -169,7 +155,7 @@
 				</div>
 			</div>
 
-			{#if pricingPage && pricingStats}
+			{#if $pricingPage && pricingStats}
 				<div class="mt-8">
 					<div class="text-lg font-bold mb-4 opacity-90">Momentum Usage</div>
 
@@ -181,7 +167,7 @@
 									<div class="w-full flex justify-between">
 										<div>Custom subpages</div>
 										<div>
-											{pricingStats.subPages}/{pricingPage.limits.subPages[
+											{pricingStats.subPages}/{$pricingPage.limits.subPages[
 												parentPage.subscription?.plan || 'free'
 											]}
 										</div>
@@ -189,7 +175,7 @@
 									<div class="w-full flex justify-between">
 										<div>Blog Articles</div>
 										<div>
-											{pricingStats.articles}/{pricingPage.limits.articles[
+											{pricingStats.articles}/{$pricingPage.limits.articles[
 												parentPage.subscription?.plan || 'free'
 											]}
 										</div>
@@ -197,7 +183,7 @@
 									<div class="w-full flex justify-between">
 										<div>CMS Pages</div>
 										<div>
-											{pricingStats.cmsPages}/{pricingPage.limits.cmsPages[
+											{pricingStats.cmsPages}/{$pricingPage.limits.cmsPages[
 												parentPage.subscription?.plan || 'free'
 											]}
 										</div>
@@ -211,7 +197,7 @@
 								<div class="flex flex-col w-full gap-2">
 									<div class="w-full flex justify-between">
 										<div>Emails Sent</div>
-										{pricingStats.totalEmailsMonthly}/{pricingPage.limits.totalEmailsMonthly[
+										{pricingStats.totalEmailsMonthly}/{$pricingPage.limits.totalEmailsMonthly[
 											parentPage.subscription?.plan || 'free'
 										]}
 									</div>
@@ -238,14 +224,14 @@
 									<div class="w-full flex justify-between">
 										<div>Database Items</div>
 										<div>
-											{pricingStats.databaseItems}/{pricingPage.limits.databaseItems[
+											{pricingStats.databaseItems}/{$pricingPage.limits.databaseItems[
 												parentPage.subscription?.plan || 'free'
 											]}
 										</div>
 									</div>
 									<div class="w-full flex justify-between">
 										<div>Feed Items</div>
-										{pricingStats.feedItems}/{pricingPage.limits.feedItems[
+										{pricingStats.feedItems}/{$pricingPage.limits.feedItems[
 											parentPage.subscription?.plan || 'free'
 										]}
 									</div>
@@ -258,96 +244,6 @@
 						</div>
 					</div>
 				</div>
-
-				{#key _pricingRefreshTimestamp}
-					<RenderSection
-						page={{ ...pricingPage, theme: parentPage.theme }}
-						section={{
-							...pricingPage.sections[0],
-							columns: pricingPage.sections[0].items.length - 1,
-							items: pricingPage.sections[0].items
-								.filter((i) => i.pricing.amount > 0)
-								.map((plan) => {
-									plan.onUrlClick = async () => {
-										let planName = plan.title.toLowerCase();
-
-										let { url, isUpgraded, subscription } = await get('stripe/subscribe', {
-											pageId: page.parentPage?._id || page._id,
-											plan: planName
-										});
-
-										if (isUpgraded) {
-											parentPage.subscription = {
-												id: subscription.id,
-												plan: planName,
-												activatedOn: new Date()
-											};
-
-											showSuccessMessage(
-												`You've upgraded ${parentPage.name} to ${plan.title} plan. Thank you!`
-											);
-
-											updatePricingButtons();
-										} else if (url) {
-											goto(url);
-										}
-									};
-
-									if (parentPage.subscription && !parentPage.subscription.isStopped) {
-										let subscriptionPlan = parentPage.subscription.plan;
-
-										if (subscriptionPlan === plan.title.toLowerCase()) {
-											if (!parentPage.subscription.cancelledOn) {
-												plan.interactiveRenderType = 'link';
-												plan.isUrlAlternative = true;
-												plan.callToActionText = 'Cancel';
-												plan.title += ' (Current Plan)';
-												plan.url = '';
-
-												plan.onUrlClick = async () => {
-													await post(`stripe/cancel?pageId=${parentPage._id}`);
-													parentPage.subscription.cancelledOn = new Date();
-													showSuccessMessage(`Plan ${parentPage.subscription.plan} was cancelled.`);
-													updatePricingButtons();
-												};
-											} else {
-												let planName = plan.title;
-												plan.interactiveRenderType = 'link';
-												plan.title += ' (Current Plan)';
-												plan.callToActionText = 'Reactivate';
-												plan.url = '';
-												plan.ctaExplainer = `Cancelled on ${moment(
-													parentPage.subscription.cancelledOn
-												).format('MMM DD')}`;
-
-												plan.onUrlClick = async () => {
-													await post(`stripe/reactivate?pageId=${parentPage._id}`);
-													parentPage.subscription.cancelledOn = null;
-													plan.callToActionText = '';
-
-													showSuccessMessage(`Plan ${planName} was reactivated. Thank you!`);
-													updatePricingButtons();
-												};
-											}
-										} else if (subscriptionPlan === 'startup') {
-											if (plan.title === 'Launch') {
-												plan.callToActionText = 'Downgrade';
-												plan.isUrlAlternative = true;
-											}
-										} else {
-											plan.callToActionText = 'Upgrade';
-										}
-									} else {
-										plan.callToActionText = 'Upgrade';
-									}
-
-									return plan;
-								}),
-							title: 'Upgrade',
-							description: ''
-						}}
-					/>
-				{/key}
 			{:else}
 				<div class="flex justify-center my-8"><Loader /></div>
 			{/if}
@@ -412,6 +308,7 @@
 				{/if}
 			{/if}
 		{/if}
+		<PricingPage bind:page />
 	</div>
 </PageContainer>
 {#if selectedGrowthTab === 'boost'}{/if}

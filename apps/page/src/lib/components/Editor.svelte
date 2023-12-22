@@ -31,7 +31,6 @@
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import EditPost from 'lib/components/post/EditPost.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
-	import EditPageLinks from '$lib/components/edit/PageLinks.svelte';
 	import EditCTA from '$lib/components/edit/CallToAction.svelte';
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
 	import Insert from '$lib/components/edit/Insert.svelte';
@@ -61,6 +60,7 @@
 	import DatabaseTab from '$lib/components/tabs/DatabaseTab.svelte';
 	import BlogTab from '$lib/components/tabs/BlogTab.svelte';
 	import GrowthTab from '$lib/components/tabs/GrowthTab.svelte';
+	import EditWebsiteSettingsTab from '$lib/components/tabs/WebsiteSettingsTab.svelte';
 
 	import SignupForm from '$lib/components/signup-form.svelte';
 
@@ -75,6 +75,7 @@
 	import EditCustomers from '$lib/components/edit/Customers.svelte';
 	import EditSubmissions from '$lib/components/edit/Submissions.svelte';
 	import EditMessaging from '$lib/components/edit/Messaging.svelte';
+	import EditWebsiteSettings from '$lib/components/edit/WebsiteSettings.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
@@ -95,6 +96,8 @@
 	import heatmap from 'lib-render/stores/heatmap';
 	import isInsertPopupShown from 'lib-render/stores/isInsertPopupShown';
 	import selectedTemplatePage from 'lib-render/stores/selectedTemplatePage';
+	import selectedSettingsPage from '$lib/stores/selectedSettingsPage';
+	import selectedSettingsTab from '$lib/stores/selectedSettingsTab';
 
 	//
 	onMount(async () => {
@@ -636,43 +639,8 @@
 	let selectedGrowthTab = 'dashboard';
 </script>
 
-{#if isSettingsModalShown}
-	<Modal
-		isShown
-		maxWidth={800}
-		onClosed={() => {
-			isSettingsModalShown = false;
-		}}
-	>
-		<div class="p-4 sm:p-8">
-			<Settings
-				bind:page
-				onDeleted={() => {
-					$allPages = $allPages.filter((p) => p._id !== page._id);
-					isSettingsModalShown = false;
-
-					showSuccessMessage(`Page ${page.name} was deleted`);
-
-					setPageAndDraft(
-						{ ...($allPages[0] || defaultPage) },
-						{
-							force: true
-						}
-					);
-				}}
-			/>
-		</div>
-	</Modal>
-{/if}
-
 {#if isPasteSectionModalOpen}
-	<Modal
-		bind:isShown={isPasteSectionModalOpen}
-		maxWidth={600}
-		onClosed={() => {
-			isSettingsModalShown = false;
-		}}
-	>
+	<Modal bind:isShown={isPasteSectionModalOpen} maxWidth={600} onClosed={() => {}}>
 		<div class="_editor p-4 sm:p-8">
 			<textarea
 				rows="8"
@@ -789,17 +757,6 @@
 			> for any help with Page. Let's make your page converting and beautiful.
 		</div>
 	</Modal>
-{/if}
-
-{#if isPageLinksModalShown}
-	<Modal
-		bind:isShown={isPageLinksModalShown}
-		onClosed={() => {
-			isPageLinksModalShown = false;
-		}}
-	>
-		<div class="p-8"><EditPageLinks bind:isShown={isPageLinksModalShown} bind:page /></div></Modal
-	>
 {/if}
 
 {#if !$sveltePage.data.pageSlug || $sveltePage.url.href.includes('/page-templates') || $sveltePage.url.href.includes('/ide')}
@@ -1042,8 +999,9 @@
 			<div class="2xl:absolute w-full flex items-center justify-center">
 				{#if $currentUser}
 					{#if $allPages}
-						<div class="flex items-center">
-							<!-- <select
+						<div>
+							<div class="flex items-center">
+								<!-- <select
 								class="w-full max-w-[200px] bg-[#f1f1f1]"
 								bind:value={pageSlug}
 								on:change={(evt) => {
@@ -1067,53 +1025,54 @@
 								{/each}
 							</select> -->
 
-							{#if selectedTab === 'editor' && page._id}
-								<select
-									in:fade={{}}
-									class="ml-2 w-full bg-[#f1f1f1]"
-									bind:value={page._id}
-									on:change={async (evt) => {
-										if (evt.target.value === '') {
+								{#if selectedTab === 'editor' && page._id}
+									<select
+										in:fade={{}}
+										class="ml-2 w-full bg-[#f1f1f1]"
+										bind:value={page._id}
+										on:change={async (evt) => {
+											if (evt.target.value === '') {
+												evt.preventDefault();
+												return addSubpage();
+											}
+
+											if (page.parentPage && evt.target.value === page.parentPage._id) {
+												setPageAndDraft(
+													{ ...$allPages.find((p) => p._id === page.parentPage._id) },
+													{
+														force: true
+													}
+												);
+											} else {
+												setPageAndDraft(
+													await get(`pages/${evt.target.value}`, {
+														parentPageSlug: page.parentPage?.slug || page.slug
+													}),
+													{ force: true }
+												);
+											}
 											evt.preventDefault();
-											return addSubpage();
-										}
+										}}
+									>
+										<option value={page.parentPage?._id || page._id}>Home</option>
+										{#if $subPages?.length}
+											{#each $subPages as subpage (subpage._id)}
+												<option value={subpage._id}>/{subpage.slug}</option>
+											{/each}
+										{/if}
+									</select>
 
-										if (page.parentPage && evt.target.value === page.parentPage._id) {
-											setPageAndDraft(
-												{ ...$allPages.find((p) => p._id === page.parentPage._id) },
-												{
-													force: true
-												}
-											);
-										} else {
-											setPageAndDraft(
-												await get(`pages/${evt.target.value}`, {
-													parentPageSlug: page.parentPage?.slug || page.slug
-												}),
-												{ force: true }
-											);
-										}
-										evt.preventDefault();
-									}}
-								>
-									<option value={page.parentPage?._id || page._id}>Home</option>
-									{#if $subPages?.length}
-										{#each $subPages as subpage (subpage._id)}
-											<option value={subpage._id}>/{subpage.slug}</option>
-										{/each}
-									{/if}
-								</select>
-
-								<button
-									class="ml-4 shrink-0 _secondary _small opacity-50 hover:opacity-100"
-									style="padding: 4px 12px;"
-									on:click={() => {
-										addSubpage();
-									}}
-								>
-									Add Subpage</button
-								>
-							{/if}
+									<button
+										class="ml-4 shrink-0 _secondary _small opacity-50 hover:opacity-100"
+										style="padding: 4px 12px;"
+										on:click={() => {
+											addSubpage();
+										}}
+									>
+										Add Subpage</button
+									>
+								{/if}
+							</div>
 						</div>
 					{:else}
 						<Loader />
@@ -1158,7 +1117,7 @@
 								{onlineUsersCount || 0} users online
 							</div>
 							<div
-								class="ml-2 opacity-80 hover:opacity-100 transition cursor-pointer _bare"
+								class="ml-2 opacity-80 hover:opacity-100 transition cursor-pointer _bare "
 								on:click={getOnlineCount}
 							>
 								<FeatherIcon name="refresh-cw" class="opacity-50" color="#333" size="15" />
@@ -1169,12 +1128,27 @@
 
 				{#if page._id}
 					<div
-						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded"
+						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded {selectedTab === 'settings'
+							? 'bg-green-800'
+							: 'bg-[#f3f3f3]'}"
 						on:click={() => {
-							isSettingsModalShown = true;
+							$selectedSettingsTab = 'settings';
+
+							if (selectedTab !== 'settings') {
+								selectedTab = 'settings';
+
+								$selectedSettingsPage = null;
+							} else {
+								selectedTab = 'editor';
+								$selectedSettingsPage = null;
+							}
 						}}
 					>
-						<FeatherIcon size="15" name="settings" />
+						<FeatherIcon
+							color={selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
+							size="15"
+							name="settings"
+						/>
 					</div>
 					<div class:opacity-70={!page?._id || !page?.isDirty}>
 						<Button
@@ -1262,16 +1236,6 @@
 														</div>
 													</div>
 
-													<div class="mr-2 flex items-center">
-														<div class="mr-2">
-															<button
-																on:click={() => (isPageLinksModalShown = true)}
-																class="bg-[#f1f1f1] rounded-full border-black/40 border w-[31px] h-[31px] flex items-center justify-center"
-																>🔗</button
-															>
-														</div>
-													</div>
-
 													<select
 														class="w-full bg-[#f1f1f1]"
 														bind:value={pageSlug}
@@ -1331,12 +1295,20 @@
 														<div class="flex items-center shrink-0 ml-4">
 															<ColorPicker bind:page />
 															<div
-																class="text-2xl ml-2 cursor-pointer bg-[#f3f3f3] p-2 rounded-full"
+																class="text-2xl ml-2 cursor-pointer {selectedTab === 'settings'
+																	? 'bg-green-800'
+																	: 'bg-[#f3f3f3]'} p-2 rounded-full"
 																on:click={() => {
-																	isSettingsModalShown = true;
+																	selectedTab = 'settings';
+																	$selectedSettingsTab = 'settings';
+																	$selectedSettingsPage = page;
 																}}
 															>
-																<FeatherIcon size="15" name="settings" />
+																<FeatherIcon
+																	size="15"
+																	color={selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
+																	name="settings"
+																/>
 															</div>
 														</div>
 
@@ -1957,7 +1929,9 @@
 												{:else if selectedTab === 'newsletter'}
 													<EditNewsletter bind:page />
 													<EditWelcomeEmail bind:page />
-												{:else if selectedTab === 'blog'}{/if}
+												{:else if selectedTab === 'blog'}{:else if selectedTab === 'settings'}
+													<EditWebsiteSettings bind:page />
+												{/if}
 											</div>
 										{/if}
 									</div>
@@ -2120,6 +2094,8 @@
 											<GrowthTab bind:page bind:selectedGrowthTab />
 										{:else if selectedTab === 'newsletter'}
 											<NewsletterTab bind:page />
+										{:else if selectedTab === 'settings'}
+											<EditWebsiteSettingsTab bind:page />
 										{/if}
 									</div>
 								{/if}

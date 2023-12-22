@@ -28,6 +28,10 @@
 	@apply border right-4 bg-white w-[35px] h-[35px] flex items-center justify-center rounded-full shadow-lg opacity-50 transition;
 }
 
+._section._settings::after {
+	content: '⚙️';
+}
+
 ._selected._section.cursor-pointer::after {
 	opacity: 100 !important;
 }

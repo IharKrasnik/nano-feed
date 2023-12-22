@@ -39,7 +39,7 @@
 
 		<div class="mt-4">
 			<div class="font-bold">{striptags(page.openGraph.title || page.name)}</div>
-			<div>{striptags(page.openGraph.description || page.title)}</div>
+			<div>{striptags(page.openGraph.description || page.heros[0]?.title)}</div>
 		</div>
 	</div>
 </div>
@@ -53,9 +53,10 @@
 					bind:value={page.openGraph.title}
 					class="w-full"
 					type="text"
-					placeholder={page.name}
+					placeholder={page.heros[0]?.title}
 				/>
 			</div>
+
 			<div class="w-full ml-4">
 				<div class="text-sm  mb-2">Image (1200px x 630px)</div>
 				<FileInput theme="light" bind:url={page.openGraph.imageUrl} />
@@ -66,7 +67,7 @@
 		<input
 			class="w-full"
 			type="text"
-			placeholder={page.title}
+			placeholder={page.heros[0]?.subtitle}
 			bind:value={page.openGraph.description}
 		/>
 	</div>
