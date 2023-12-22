@@ -17,6 +17,7 @@
 	import Emulator from 'lib-render/components/Emulator.svelte';
 	import Popup from 'lib-render/components/Popup.svelte';
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
+	import typewriter from '$lib/use/typewriter';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -210,7 +211,13 @@
 								in:fly={{ y: 25, duration: 1000 }}
 							>
 								{#if hero.title}
-									<div>{@html hero.title || ''}</div>
+									{#if hero.theme?.isAnimatedTitle}
+										{#key hero.title}
+											<div use:typewriter>{@html hero.title || ''}</div>
+										{/key}
+									{:else}
+										<div>{@html hero.title || ''}</div>
+									{/if}
 								{:else if isEmbed && !page.parentPage}
 									{#if page.renderType !== 'article'}
 										{'Type Tagline...'}

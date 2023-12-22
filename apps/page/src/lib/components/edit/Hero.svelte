@@ -310,6 +310,19 @@
 								<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
 							</div>
 						</div>
+
+						<div class="mt-4">
+							<div class="flex shrink-0 font-normal items-center">
+								<input bind:checked={hero.theme.isAnimatedTitle} class="mr-2" type="checkbox" /> Animate
+								Highlights
+							</div>
+							{#if hero.theme.isAnimatedTitle}
+								<div class="text-sm opacity-80">
+									Make some text <b>bold</b> to animate it. Separate words with comma to animate
+									multiple words like this: <b>one, two, three</b>
+								</div>
+							{/if}
+						</div>
 					{/if}
 
 					<div class="mt-4 mb-2">

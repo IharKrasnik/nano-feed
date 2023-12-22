@@ -10,8 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-   
-  },
-  "devDependencies": {
+    "typed.js": "^2.1.0"
   }
 }
