@@ -74,7 +74,12 @@ export const fetchFeed = async ({
 	let { results: feed, count } = await get('feed', query);
 
 	feedStore.update((st) => {
-		st[cacheId] = { updatedOn: new Date(), feed, tags: getTags(feed), totalCount: count };
+		st[cacheId] = {
+			updatedOn: new Date(),
+			feed: feed.map((f) => ({ ...f, id: f.id || f._id })),
+			tags: getTags(feed),
+			totalCount: count
+		};
 		st.updatedOn = new Date();
 		localStorage[getCacheKey(cacheId)] = JSON.stringify(st[cacheId]);
 		return st;

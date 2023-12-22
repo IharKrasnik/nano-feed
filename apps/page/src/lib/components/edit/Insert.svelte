@@ -25,7 +25,8 @@
 
 	let loadTemplateFeed = async () => {
 		let feedResults = await get('feed', {
-			projectSlug: 'momentum-page-templates'
+			projectSlug: 'momentum-page-templates',
+			sort: 'order'
 		});
 
 		$templateFeed = feedResults;
