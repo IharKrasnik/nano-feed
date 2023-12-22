@@ -19,6 +19,8 @@
 	import PricingPage from '$lib/components/PricingPage.svelte';
 	import PageContainer from 'lib-render/components/PageContainer.svelte';
 	import knowledgeBaseProjects from 'lib/stores/knowledgeBaseProjects';
+	import isMomentumWidgetCollapsed from 'lib-render/stores/isMomentumWidgetCollapsed';
+	import momentumWidgetTab from 'lib-render/stores/momentumWidgetTab';
 
 	export let page;
 	export let selectedGrowthTab = 'dashboard';
@@ -257,7 +259,22 @@
 				onSent={() => {}}
 			/>
 		{:else if selectedGrowthTab === 'knowledge-base'}
-			<div class="_title text-3xl mb-4">Knowledge Base</div>
+			<div class="flex justify-between">
+				<div>
+					<div class="_title text-3xl mb-2">Knowledge Base</div>
+					<div class=" text-xl mb-8 opacity-80">
+						Useful resources on startup growth, curated by Momentum team and community
+					</div>
+				</div>
+				<div>
+					<button
+						on:click={() => {
+							$momentumWidgetTab = 'knowledge-base';
+							$isMomentumWidgetCollapsed = false;
+						}}>Share my link with community</button
+					>
+				</div>
+			</div>
 			{selectKbProject($knowledgeBaseProjects[0]) && ''}
 
 			{#if $knowledgeBaseProjects}

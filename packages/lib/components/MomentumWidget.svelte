@@ -145,9 +145,13 @@
 				isCollapsed = true;
 			}
 		}}
-		class="{isFixed ? 'fixed right-12 bottom-0' : ''} {isCollapsed
-			? 'p-4'
-			: 'p-8'} bg-[#222] text-white {isCollapsed ? 'rounded-xl' : 'rounded-2xl'} opacity-98"
+		class="{isFixed
+			? isCollapsed
+				? 'fixed right-12 bottom-0'
+				: 'fixed top-[50%] left-[50%] _translate-left _translate-top'
+			: ''} {isCollapsed ? 'p-4' : 'p-8'} bg-[#222] text-white {isCollapsed
+			? 'rounded-xl'
+			: 'rounded-2xl'} opacity-98"
 		style="z-index: 100; width: {width};"
 	>
 		{#if isCollapsed}

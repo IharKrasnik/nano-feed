@@ -1,6 +1,8 @@
 <script>
 	export let page;
 
+	let parentPage = page.parentPage || page;
+
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { get, post, put } from 'lib/api';
 	import { GOOGLE_LOGIN_URL, LINKEDIN_LOGIN_URL, TWITTER_LOGIN_URL, PAGE_URL } from 'lib/env';
@@ -17,6 +19,8 @@
 	import currentUser from 'lib/stores/currentUser';
 	import feedLastUpdatedOn from 'lib-render/stores/feedLastUpdatedOn';
 	import isMomentumWidgetCollapsed from 'lib-render/stores/isMomentumWidgetCollapsed';
+	import momentumWidgetTab from 'lib-render/stores/momentumWidgetTab';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	import { showSuccessMessage } from 'lib/services/toast';
 
@@ -28,6 +32,8 @@
 	let activeTab;
 
 	let newMoment;
+
+	$momentumWidgetTab = 'feed';
 
 	const setTab = (selectedTab) => {
 		activeTab = selectedTab;
@@ -43,18 +49,24 @@
 	setTab('url');
 
 	let submitLink = async () => {
-		if (!page.streams?.feed) {
-			const { stream } = await put(`pages/${page._id}/embed-stream`, {
-				title: 'Feed'
-			});
+		let streamSlug = '';
+		if ($momentumWidgetTab === 'feed') {
+			if (!page.streams?.feed) {
+				const { stream } = await put(`pages/${page._id}/embed-stream`, {
+					title: 'Feed'
+				});
 
-			page.streams = page.streams || {};
-			page.streams.feed = stream;
+				page.streams = page.streams || {};
+				page.streams.feed = stream;
+				streamSlug = stream.slug;
+			}
+		} else {
+			streamSlug = 'momentum-knowledge-base-community';
 		}
 
 		await post('feed/from-url', {
 			url: urlToSubmitToStream,
-			projectSlug: page.feedStreamSlug
+			projectSlug: streamSlug
 		});
 
 		urlToSubmitToStream = null;
@@ -122,7 +134,9 @@
 		on:clickOutside={() => {
 			$isMomentumWidgetCollapsed = true;
 		}}
-		class="fixed right-12 bottom-0 {$isMomentumWidgetCollapsed
+		class="fixed {$isMomentumWidgetCollapsed
+			? 'fixed right-12 bottom-0'
+			: 'fixed top-[50%] left-[50%] _translate-top-left'} {$isMomentumWidgetCollapsed
 			? 'p-4'
 			: 'p-8'} bg-[#222] m-8 text-white {$isMomentumWidgetCollapsed
 			? 'rounded-xl'
@@ -186,26 +200,81 @@
 			</div>
 
 			<div class="text-lg font-bold">Submit Content</div>
-			<div>Feature links to your Momentum Stream so they appear on your page.</div>
 
-			<div class="flex mt-8">
-				<button
-					class="tab p-2 mr-2"
-					class:selected={activeTab === 'url'}
-					on:click={() => setTab('url')}>Submit URL</button
-				>
-				<button class="tab p-2" class:selected={activeTab === 'new'} on:click={() => setTab('new')}
-					>Write new post</button
-				>
+			<div class="flex items-center  mb-4 mt-2">
+				<select class="_dark mr-4" bind:value={$momentumWidgetTab}>
+					<option value="feed">My Feed</option>
+					<option value="knowledge-base">Knowledge Base</option>
+				</select>
+
+				{#if parentPage?.streams?.feed || $momentumWidgetTab !== 'feed'}
+					<a
+						target="_blank"
+						href="https://feed.momentum.page/{$momentumWidgetTab === 'feed'
+							? parentPage.streams?.feed?.slug || page.slug
+							: 'momentum-knowledge-base-community'}"
+					>
+						<button class="_secondary _small flex items-center opacity-80"
+							><FeatherIcon size="16" class="mr-2" name="external-link" color="#fff" /> Open Feed
+						</button></a
+					>
+					<span class="ml-4 text-sm opacity-80"
+						>@{$momentumWidgetTab === 'feed'
+							? parentPage.streams?.feed?.slug || page.slug
+							: 'knowledge-base-community'}</span
+					>
+				{/if}
 			</div>
+			{#if $momentumWidgetTab === 'feed'}
+				<div class="_section">
+					Regularly save the links to your best content into Feed database. Attach the feed posts to
+					your pages.
+				</div>
+
+				<div class="flex mt-8">
+					<button
+						class="tab p-2 mr-2"
+						class:selected={activeTab === 'url'}
+						on:click={() => setTab('url')}>Submit URL</button
+					>
+					<button
+						class="tab p-2"
+						class:selected={activeTab === 'new'}
+						on:click={() => setTab('new')}>Write new post</button
+					>
+				</div>
+			{:else if $momentumWidgetTab === 'knowledge-base'}
+				<div class="_section">
+					<div>
+						Share the links that will help other founders grow their startups. Get featured in
+						Knowledge Base and Momentum media resources.
+					</div>
+
+					<div class="mt-2">
+						We'd appreciate resources about: <br />
+						• Marketing <br />
+						• Sales <br />
+						• Startup Validation <br />
+						• Product Management <br />
+						• Audience Building <br />
+						• Anything else you find useful <br />
+					</div>
+				</div>
+			{/if}
 
 			{#if activeTab === 'url'}
 				<div class="mt-4 mb-2 font-bold">Post URL</div>
 
-				<div class="text-sm mb-4">
-					URL to your Tweet, LinkedIn post, YouTube Video, Blog Article, Notion Document or any
-					other link you've created
-				</div>
+				{#if $momentumWidgetTab === 'feed'}
+					<div class="text-sm mb-4">
+						URL to your Tweet, LinkedIn post, YouTube Video, Blog Article, Notion Document or any
+						other link you've created
+					</div>
+				{:else}
+					<div class="text-sm mb-4">
+						URL to Tweet, Blog Article, Website, Database or any other useful link
+					</div>
+				{/if}
 
 				<input
 					class="_dark w-full"
@@ -309,3 +378,9 @@
 		{/if}
 	</div>
 {/if}
+
+<style>
+	._translate-top-left {
+		transform: translateX(-50%) translateY(-50%);
+	}
+</style>

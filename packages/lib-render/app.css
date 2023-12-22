@@ -347,7 +347,8 @@ input:not(._input):not([type='color']):not(._dark) {
 	background: #f6f5f5;
 }
 
-input._dark {
+input._dark,
+select._dark {
 	background: none;
 	border: 1px rgba(255, 255, 255, 0.3) solid;
 }
