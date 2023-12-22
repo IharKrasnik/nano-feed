@@ -29,7 +29,7 @@
 	<div use:portal={'#modal-portal'}>
 		<div
 			in:fly={{ y: 50, duration: 150, delay: 150 }}
-			class="_modal inset-0 overflow-y-hidden rounded-2xl max-h-[100%] py-8"
+			class="_modal inset-0 overflow-y-hidden max-h-[100%] py-8"
 			aria-labelledby="modal-title"
 			role="dialog"
 			aria-modal="true"
