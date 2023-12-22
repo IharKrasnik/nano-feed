@@ -238,8 +238,14 @@
 							</h2>
 						{/if}
 
-						{#if hero.keyFeaturesStr}
-							<div class="my-8 opacity-80 hidden sm:block" in:fade={{ delay: 300, duration: 600 }}>
+						{#if hero.keyFeaturesStr && hero.theme.isLeft}
+							<div
+								class="my-8 opacity-80 hidden  {hero.theme.isLeft ||
+								(hero.demoUrl && !hero.theme.isVertical)
+									? 'sm:block'
+									: 'sm:flex gap-4'}"
+								in:fade={{ delay: 300, duration: 600 }}
+							>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center  mb-2">
 										<div class="mr-2 rounded-full p-1 _bg-opposite flex">
@@ -295,10 +301,12 @@
 							</div>
 						{/if}
 
-						{#if hero.keyFeaturesStr}
-							<div class="my-8 opacity-80 flex flex-col items-center sm:hidden">
+						{#if hero.keyFeaturesStr && !hero.theme.isLeft}
+							<div
+								class="my-8 mt-12 opacity-80 flex flex-wrap justify-center sm:justify-start gap-4 items-center"
+							>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
-									<div class="flex items-center mb-2">
+									<div class="flex items-center mb-2 shrink-0">
 										<div
 											class="mr-2 rounded-full p-1 flex"
 											style="background-color: var(--accent-color);"
