@@ -38,6 +38,10 @@
 		cssVarStyles = res.cssVarStyles;
 		styles = res.styles;
 		parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
+
+		if (parentPage.subscription?.plan === 'to_the_moon') {
+			parentPage.subscription.plan = 'launch';
+		}
 	}
 
 	let goalPercentage = 0;
