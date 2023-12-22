@@ -1,19 +1,25 @@
 <script>
-	import { get, post, del } from 'lib/api';
+	import { get, put, del } from 'lib/api';
 	import currentUser from 'lib/stores/currentUser';
 	import Button from 'lib/components/Button.svelte';
+
 	import EditDomains from '$lib/components/settings/Domains.svelte';
 	import EditOpenGraph from '$lib/components/settings/OpenGraph.svelte';
 	import EditCustomCode from '$lib/components/settings/CustomCode.svelte';
+	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
+
 	import PageBadge from '$lib/components/PageBadge.svelte';
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
+
+	import selectedSettingsTab from '$lib/stores/selectedSettingsTab';
 
 	export let page;
 	export let onDeleted;
 
+	let parentPage = page.parentPage || page;
+
 	let subscribe = async () => {
-		let { url } = await get('stripe/subscribe', { pageId: page._id });
-		window.location.href = url;
+		$selectedSettingsTab = 'plans';
 	};
 
 	let deletePage = async () => {
@@ -21,12 +27,55 @@
 		onDeleted();
 	};
 
+	let hideBadge = async () => {
+		await put(`pages/${page._id}/settings`, {
+			fieldName: 'isNoBadge',
+			value: { value: true }
+		});
+
+		parentPage.isNoBadge = true;
+
+		showSuccessMessage('Momentum badge is hidden now');
+	};
+
+	let showBadge = async () => {
+		await put(`pages/${page._id}/settings`, {
+			fieldName: 'isNoBadge',
+			value: { value: false }
+		});
+		parentPage.isNoBadge = false;
+
+		showSuccessMessage('Momentum badge is shown now');
+	};
+
+	let makeAnalyticsPrivate = async () => {
+		await put(`pages/${page._id}/settings`, {
+			fieldName: 'isAnalyticsPrivate',
+			value: { value: true }
+		});
+
+		parentPage.isAnalyticsPrivate = true;
+
+		showSuccessMessage('Your web analytics is private now.');
+	};
+
+	let makeAnalyticsPublic = async () => {
+		await put(`pages/${page._id}/settings`, {
+			fieldName: 'isAnalyticsPrivate',
+			value: { value: false }
+		});
+
+		parentPage.isAnalyticsPrivate = false;
+
+		showSuccessMessage('Your web analytics is public now.');
+	};
+
 	let isDeleteIntent = false;
 </script>
 
 <div class="_editor">
 	<h2 class="text-2xl font-bold mb-2">Website Settings</h2>
-	<div class="mb-4">{(page.parentPage || page).name}</div>
+	<div class="mb-4">{parentPage.name}</div>
 
 	<!-- 	
 
@@ -56,9 +105,26 @@
 				<h3 class="text-xl font-bold mb-2">Momentum Badge</h3>
 				<div class="mb-4">Show the branded Momentum badge on your page</div>
 			</div>
-			<div>
-				<Button class="_primary _small _green" onClick={subscribe}>⚡️ Hide Badge</Button>
-			</div>
+			{#if parentPage.isNoBadge}
+				<div class="flex flex-col items-end">
+					<Button class="_primary _small" onClick={showBadge}>Show Badge</Button>
+					<div class="mt-1 opacity-80 text-right text-sm">The badge is hidden now</div>
+				</div>
+			{:else if parentPage.subscription && !parentPage.subscription.isStopped}
+				<div class="flex flex-col items-end">
+					<div>
+						<Button class="_primary _small" onClick={hideBadge}>Hide Badge</Button>
+					</div>
+					<div class="mt-1 opacity-80 text-right text-sm">The badge is shown now</div>
+				</div>
+			{:else}
+				<div>
+					<Button class="_primary _small _green" onClick={subscribe}
+						>⚡️ Upgrade to Hide badge</Button
+					>
+					<div class="mt-1 opacity-80 text-right text-sm">Paid plan is required</div>
+				</div>
+			{/if}
 		</div>
 		<div class="bg-zinc-700 p-4">
 			<div class="my-4"><PageBadge isFixed={false} /></div>
@@ -74,9 +140,24 @@
 				<div class="mb-4">Publish your analytics for Momentum community</div>
 			</div>
 
-			<div>
-				<Button class="_primary _small _green" onClick={subscribe}>⚡️ Make Private</Button>
-			</div>
+			{#if parentPage.isAnalyticsPrivate}
+				<div class="flex flex-col items-end">
+					<Button class="_primary _small" onClick={makeAnalyticsPublic}>Make Public</Button>
+					<div class="mt-1 opacity-80 text-right text-sm">Your analytics is private now</div>
+				</div>
+			{:else if parentPage.subscription && !parentPage.subscription.isStopped}
+				<div class="flex flex-col items-end">
+					<div>
+						<Button class="_primary _small" onClick={makeAnalyticsPrivate}>Make Private</Button>
+					</div>
+					<div class="mt-1 opacity-80 text-right text-sm">Your analytics is public now</div>
+				</div>
+			{:else}
+				<div>
+					<Button class="_primary _small" onClick={subscribe}>⚡️ Upgrade to Make Private</Button>
+					<div class="mt-1 opacity-80 text-right text-sm">Paid plan is required</div>
+				</div>
+			{/if}
 		</div>
 
 		<div class="text-sm mb-4">

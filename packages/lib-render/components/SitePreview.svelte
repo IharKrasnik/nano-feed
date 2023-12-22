@@ -466,7 +466,7 @@
 					</div>
 				{/if}
 
-				{#if !isNoBadge && !page.isNoBadge}
+				{#if !isNoBadge && !page.parentPage?.isNoBadge && !page.isNoBadge}
 					<PageBadge theme={page.theme?.theme || 'light'} />
 				{/if}
 			</div>
