@@ -658,7 +658,9 @@
 												<div in:fade>
 													<RenderUrlWithBackground
 														aspectRatio={selectCarouselItem.theme?.imageAspectRatio}
-														urlImgClass="object-cover {section.description ? 'rounded-b-lg' : ''}"
+														urlImgClass="w-full object-cover {section.description
+															? 'rounded-b-lg'
+															: ''}"
 														imageUrl={selectedCarouselItem.imageUrl}
 														imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
 													/>
@@ -888,7 +890,7 @@
 																		? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
 																		: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
 																>
-																	{#if !section.streamSlug}
+																	{#if !section.isDatabase}
 																		{#key item.theme}
 																			<Emoji
 																				class="inline"
@@ -1197,7 +1199,7 @@
 																					? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
 																					: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
 																			>
-																				{#if !section.streamSlug}
+																				{#if !section.isDatabase}
 																					{#key item.theme}
 																						<Emoji
 																							class="inline"

@@ -374,7 +374,7 @@ textarea {
 
 ._editor select,
 ._editor textarea,
-._editor input:not(._dark) {
+._editor input:not(._dark):not(._email-input) {
 	background: #f6f5f5 !important;
 }
 
@@ -549,7 +549,11 @@ a._item-title:hover {
 	position: relative;
 	border-radius: var(--button-radius);
 	max-width: 470px;
-	@apply sm:min-w-[340px];
+	@apply sm:min-w-[310px];
+}
+
+._input_container._long {
+	@apply sm:min-w-[370px];
 }
 
 @media (min-width: 640px) {
@@ -622,6 +626,14 @@ button[type='submit'] {
 	font-size: 15px;
 	font-weight: 500;
 	@apply transition;
+}
+
+@media (max-width: 640px) {
+	button,
+	.button,
+	button[type='submit'] {
+		padding: 12px;
+	}
 }
 
 button:hover {

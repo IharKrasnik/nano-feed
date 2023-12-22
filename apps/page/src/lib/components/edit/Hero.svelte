@@ -406,13 +406,19 @@
 	>
 		<div class="overflow-x-hidden">
 			{#if isCollapsed}
-				{#if hero.title || hero.subtitle}
+				{#if hero.title || hero.subtitle || hero.callToActionText}
 					<div class="text font-bold">
 						{@html striptags(hero.title || '')}
 					</div>
 					{#if hero.subtitle}
 						<div class="mt-1 truncate">
 							{@html striptags(hero.subtitle || '')}
+						</div>
+					{/if}
+
+					{#if hero.callToActionText}
+						<div class="mt-2 opacity-80">
+							{hero.callToActionText}
 						</div>
 					{/if}
 				{:else}

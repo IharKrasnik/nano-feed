@@ -253,11 +253,11 @@
 							</div>
 						{/if}
 						{#if hero.interactiveRenderType}
-							<div in:fly={{ y: 25, delay: 500, duration: 900 }}>
+							<div class="w-full sm:w-auto" in:fly={{ y: 25, delay: 500, duration: 900 }}>
 								<RenderInteractiveOptions
 									class={hero.theme.isLeft || (hero.demoUrl && !hero.theme.isVertical)
 										? ''
-										: 'max-w-[600px] mx-auto justify-center'}
+										: 'max-w-[600px] mx-auto justify-center w-full sm:w-auto'}
 									size={hero.theme.titleSize === 'huge' ? 'huge' : 'large'}
 									bind:page
 									bind:sectionItem={hero}

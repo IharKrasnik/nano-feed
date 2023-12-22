@@ -317,29 +317,38 @@
 					</div>
 				</div>
 			{:else}
-				<div class="_input_container _border w-full">
-					<form
-						class="w-full flex flex-col sm:flex-row gap-4"
-						on:submit|preventDefault={submitEmail}
+				<div class="flex flex-col sm:flex-row items-center w-full sm:w-auto">
+					<div
+						class="_input_container {sectionItem.callToActionText?.length >= 14
+							? ''
+							: '_long'} _border w-full"
 					>
-						<input
-							placeholder="myemail@gmail.com"
-							bind:value={emailAddress}
-							class="_input _email-input w-full ring-2 ring-white/20"
-							style="
-							--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
-								? 'var(--accent-color-lighter)'
-								: 'var(--accent-color-darker)'};"
-						/>
+						<form
+							class="w-full flex flex-col sm:flex-row gap-4"
+							on:submit|preventDefault={submitEmail}
+						>
+							<input
+								placeholder="myemail@gmail.com"
+								bind:value={emailAddress}
+								class="_input _email-input w-full"
+								style=""
+							/>
+							{#if sectionItem.callToActionText?.length < 14}
+								<button
+									type="submit"
+									class="_input_button px-16 text-center justify-center sm:absolute "
+									>{sectionItem.callToActionText || 'Subscribe'}</button
+								>
+							{/if}
+						</form>
+					</div>
+					{#if sectionItem.callToActionText?.length >= 14}
 						<button
 							type="submit"
-							class="_input_button px-16 text-center justify-center sm:absolute ring-2"
-							style="--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
-								? 'var(--accent-color-lighter)'
-								: 'var(--accent-color-darker)'};"
+							class=" shrink-0 px-16 py-4 text-center justify-center sm:h-full sm:ml-4 mt-4 sm:mt-0 w-full sm:w-auto"
 							>{sectionItem.callToActionText || 'Subscribe'}</button
 						>
-					</form>
+					{/if}
 				</div>
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
@@ -513,6 +522,13 @@
 		font-size: 18px;
 		padding: 12px 24px;
 		border-radius: var(--button-large-radius);
+	}
+
+	@media (min-width: 640px) {
+		._input_button {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
 	}
 
 	.emoji-button:hover {

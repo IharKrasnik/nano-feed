@@ -181,6 +181,16 @@
 				<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
 				<input class="w-full" bind:value={sectionItem.url2} {placeholder} type="url" />
 			{/if}
+		{:else if sectionItem.interactiveRenderType === 'email'}
+			<div class="mb-2 mt-4">
+				<div class="shrink-0 text-sm mb-2 opacity-70">Button text</div>
+				<input
+					class="w-full"
+					bind:value={sectionItem.callToActionText}
+					placeholder="Learn More"
+					type="text"
+				/>
+			</div>
 		{:else if sectionItem.id !== section.id}
 			<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
 			<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
