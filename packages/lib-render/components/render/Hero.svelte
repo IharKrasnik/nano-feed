@@ -17,7 +17,7 @@
 	import Emulator from 'lib-render/components/Emulator.svelte';
 	import Popup from 'lib-render/components/Popup.svelte';
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
-	import typewriter from '$lib/use/typewriter';
+	import typewriter from 'lib-render/use/typewriter';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
