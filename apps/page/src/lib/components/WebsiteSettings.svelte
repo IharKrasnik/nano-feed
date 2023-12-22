@@ -50,22 +50,22 @@
 
 	let makeAnalyticsPrivate = async () => {
 		await put(`pages/${page._id}/settings`, {
-			fieldName: 'isAnalyticsPrivate',
+			fieldName: 'isAnalyticsHidden',
 			value: { value: true }
 		});
 
-		parentPage.isAnalyticsPrivate = true;
+		parentPage.isAnalyticsHidden = true;
 
 		showSuccessMessage('Your web analytics is private now.');
 	};
 
 	let makeAnalyticsPublic = async () => {
 		await put(`pages/${page._id}/settings`, {
-			fieldName: 'isAnalyticsPrivate',
+			fieldName: 'isAnalyticsHidden',
 			value: { value: false }
 		});
 
-		parentPage.isAnalyticsPrivate = false;
+		parentPage.isAnalyticsHidden = false;
 
 		showSuccessMessage('Your web analytics is public now.');
 	};
@@ -140,7 +140,7 @@
 				<div class="mb-4">Publish your analytics for Momentum community</div>
 			</div>
 
-			{#if parentPage.isAnalyticsPrivate}
+			{#if parentPage.isAnalyticsHidden}
 				<div class="flex flex-col items-end">
 					<Button class="_primary _small" onClick={makeAnalyticsPublic}>Make Public</Button>
 					<div class="mt-1 opacity-80 text-right text-sm">Your analytics is private now</div>
