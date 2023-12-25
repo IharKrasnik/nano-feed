@@ -2074,7 +2074,7 @@
 												/>
 											{/if}
 										{:else if $isInsertPopupShown}
-											<InsertTab bind:page bind:setPageAndDraft />
+											<!-- <InsertTab bind:page bind:setPageAndDraft /> -->
 										{:else if selectedTab === 'database'}
 											<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 										{:else if selectedTab === 'analytics'}
