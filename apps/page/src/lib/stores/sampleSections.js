@@ -1,13 +1,8 @@
+import _ from 'lodash';
 import { writable } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 
 let sections = [
-	{
-		name: 'Empty',
-		section: {
-			title: 'Hello World 👋'
-		}
-	},
 	{
 		name: 'Features',
 		section: {
@@ -173,12 +168,12 @@ let store = writable(sections);
 export default store;
 
 export let cloneSection = (section) => {
-	return {
+	return _.cloneDeep({
 		...section,
 		items: (section.items || []).map((item) => ({
 			...item,
 			id: uuidv4()
 		})),
 		id: uuidv4()
-	};
+	});
 };

@@ -2016,7 +2016,7 @@
 											: ''}
 										in:fade
 									>
-										{#if selectedTab === 'editor' && (!$isInsertPopupShown || !$selectedTemplatePage)}
+										{#if selectedTab === 'editor' && !$isInsertPopupShown}
 											{#if page?._id}
 												<div
 													class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
@@ -2074,7 +2074,7 @@
 												/>
 											{/if}
 										{:else if $isInsertPopupShown}
-											<!-- <InsertTab bind:page bind:setPageAndDraft /> -->
+											<InsertTab bind:page bind:setPageAndDraft />
 										{:else if selectedTab === 'database'}
 											<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 										{:else if selectedTab === 'analytics'}

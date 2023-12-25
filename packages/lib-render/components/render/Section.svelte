@@ -44,6 +44,7 @@
 	export let themeStyles = {};
 	export let isSkipHeader = false;
 	export let isEdit = false;
+	export let isEmbed = false;
 	export let isCloneable = false;
 	export let isFooter;
 
@@ -369,7 +370,7 @@
 			/>
 		{/if}
 
-		{#if section.title && (section.items?.length || section.streamSlug)}
+		{#if section.title && (section.items?.length || section.streamSlug) && !isEmbed}
 			<div
 				class="mx-auto h-px max-w-[500px] opacity-[15%] w-full"
 				style="background:linear-gradient(to right, rgba(0,0,0,0), {page.theme

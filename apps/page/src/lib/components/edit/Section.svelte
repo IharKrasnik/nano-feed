@@ -16,7 +16,6 @@
 	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
-	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import { getFeed } from 'lib-render/stores/feedCache';
@@ -412,11 +411,7 @@
     </div> -->
 		</div>
 		<div>
-			<div class="p-4">
-				<!-- {#if $sectionToEdit}
-				<RenderSection bind:section={$sectionToEdit} />
-			{/if} -->
-			</div>
+			<div class="p-4" />
 		</div>
 
 		{#if section.renderType === 'form'}

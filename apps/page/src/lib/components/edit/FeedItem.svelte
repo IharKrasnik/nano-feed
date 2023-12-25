@@ -12,7 +12,6 @@
 	import Modal from 'lib/components/Modal.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import EditFeedItemSettings from '$lib/components/edit/FeedItemSettings.svelte';
-	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
