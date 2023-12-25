@@ -3,6 +3,7 @@
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
+	import RenderUrl from 'lib/components/RenderUrl.svelte';
 
 	export let page;
 	export let section;
@@ -21,7 +22,7 @@
 
 <div class="flex justify-between">
 	<div
-		class="_section-item overflow-hidden w-full relative items-center mb-4 sm:mb-8 grid sm:grid-cols-12 {section.className ||
+		class="_section-item relative overflow-hidden w-full relative items-center mb-4 sm:mb-8 grid sm:grid-cols-12 {section.className ||
 			''} {section.theme?.isTransparent ? '_transparent' : ''} {section.theme?.isOppositeColors
 			? '_bg-opposite'
 			: ''}"
@@ -29,8 +30,24 @@
 			? `background-color: ${section.theme?.backgroundColor};`
 			: ''}
 	>
+		{#if section.bgImageUrl}
+			<RenderUrl
+				url={section.bgImageUrl}
+				imgClass={'absolute left-0 top-0 w-full h-full object-cover rounded-xl'}
+				style="z-index: 0;"
+			/>
+
+			{#if !section.theme?.isNotBgImageDimmed}
+				<div
+					class="absolute top-0 left-0 w-full h-full rounded-xl"
+					style="background-color: {page.theme.theme === 'dark'
+						? 'rgba(0,0,0,0.85)'
+						: 'rgba(255,255,255,.85)'}; z-index: 1;"
+				/>
+			{/if}
+		{/if}
 		<div
-			class="sm:col-span-{section.innerColSpan || (section.imageUrl ? 6 : 12)}
+			class="relative z-10 sm:col-span-{section.innerColSpan || (section.imageUrl ? 6 : 12)}
   {section.theme?.isReversedImage ? 'order-last' : ''}
   {(!section.innerColSpan || section.innerColSpan === 12) && section.imageUrl ? 'mb-8' : ''}"
 		>
@@ -115,7 +132,6 @@
   {section.theme?.isReversedImage}"
 		>
 			<RenderUrlWithBackground
-				isIframeFallback={false}
 				aspectRatio={section.theme?.imageAspectRatio || section.theme?.imageAspectRatio}
 				urlImgClass="object-cover {section.theme?.isReversedImage
 					? 'rounded-l-lg'

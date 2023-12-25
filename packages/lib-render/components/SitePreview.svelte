@@ -363,88 +363,93 @@
 												style="z-index: 40;"
 											>
 												{#each page.sections || [] as section, i}
-													{#if $sectionToEdit && $sectionToEdit.id === section.id}
-														<div bind:this={editEl} style="scroll-margin-top: 60px;">
-															<div
-																class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
-															>
-																<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
-																	name="arrow-down"
+													<div class="relative">
+														{#if section.containerBgImageUrl}
+															<RenderUrl
+																url={section.containerBgImageUrl}
+																class={'absolute left-0 top-0 w-screen h-full'}
+																imgClass={'w-full h-full object-cover'}
+																style="z-index: 0;"
+															/>
+
+															{#if !section.theme?.isNotContainerBgImageDimmed}
+																<div
+																	class="absolute top-0 left-0 w-screen h-full z-1"
+																	style="background-color: {page.theme?.theme === 'dark'
+																		? 'rgba(0,0,0,0.7)'
+																		: 'rgba(255,255,255,.7)'}; z-index: 1;"
 																/>
-															</div>
+															{/if}
+														{/if}
+														{#if $sectionToEdit && $sectionToEdit.id === section.id}
 															<div
-																class="bg-site _container-width mx-auto {section.containerBgImageUrl
-																	? 'py-8'
-																	: ''}"
+																bind:this={editEl}
+																style="scroll-margin-top: 60px;"
+																class="relative z-10"
 															>
-																<RenderSection
-																	bind:page
-																	bind:themeStyles={styles}
-																	bind:section={$sectionToEdit}
-																	bind:isEdit
-																	{onInsert}
-																/>
-															</div>
-															<div
-																class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
-															>
-																<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
-																	name="arrow-up"
-																/>
-															</div>
-														</div>
-														{focusEditEl() || ''}
-													{:else}
-														<div
-															class="relative overflow-y-hidden"
-															class:opacity-30={!!$sectionToEdit}
-															class:grayscale={!!$sectionToEdit}
-														>
-															{#if section.containerBgImageUrl}
-																<div class="absolute left-0 top-0 w-screen h-full">
-																	<img
-																		class="w-full h-full object-cover"
-																		src={section.containerBgImageUrl}
+																<div
+																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																>
+																	<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
+																		name="arrow-down"
 																	/>
 																</div>
-
-																{#if !section.theme.isNotContainerBgImageDimmed}
-																	<div
-																		class="absolute top-0 left-0 w-screen h-full z-1"
-																		style="background-color: {page.theme?.theme === 'dark'
-																			? 'rgba(0,0,0,0.7)'
-																			: 'rgba(255,255,255,.7)'}; z-index: 1;"
+																<div
+																	class="bg-site _container-width mx-auto {section.containerBgImageUrl
+																		? 'py-8'
+																		: ''}"
+																>
+																	<RenderSection
+																		bind:page
+																		bind:themeStyles={styles}
+																		bind:section={$sectionToEdit}
+																		bind:isEdit
+																		{onInsert}
 																	/>
-																{/if}
-															{/if}
-
-															<div
-																class="bg-site _container-width mx-auto {section.containerBgImageUrl
-																	? 'py-8'
-																	: ''}"
-															>
-																<RenderSection
-																	bind:page
-																	bind:section
-																	bind:themeStyles={styles}
-																	bind:isEdit
-																	bind:isCloneable={isSectionsCloneable}
-																	{onInsert}
-																	style={false && page.theme?.isZebra && i % 2 === 0
-																		? page.theme?.theme === 'dark'
-																			? `background-color: ${lighten(
-																					styles['background-color'],
-																					0.01
-																			  )};`
-																			: `background-color: ${darken(
-																					styles['background-color'],
-																					0.08
-																			  )};`
-																		: ''}
-																/>
+																</div>
+																<div
+																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																>
+																	<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
+																		name="arrow-up"
+																	/>
+																</div>
 															</div>
-														</div>
-													{/if}
+															{focusEditEl() || ''}
+														{:else}
+															<div
+																class="relative z-10 overflow-y-hidden"
+																class:opacity-30={!!$sectionToEdit}
+																class:grayscale={!!$sectionToEdit}
+															>
+																<div
+																	class="bg-site _container-width mx-auto {section.containerBgImageUrl
+																		? 'py-8'
+																		: ''}"
+																>
+																	<RenderSection
+																		bind:page
+																		bind:section
+																		bind:themeStyles={styles}
+																		bind:isEdit
+																		bind:isCloneable={isSectionsCloneable}
+																		{onInsert}
+																		style={false && page.theme?.isZebra && i % 2 === 0
+																			? page.theme?.theme === 'dark'
+																				? `background-color: ${lighten(
+																						styles['background-color'],
+																						0.01
+																				  )};`
+																				: `background-color: ${darken(
+																						styles['background-color'],
+																						0.08
+																				  )};`
+																			: ''}
+																	/>
+																</div>
+															</div>
+														{/if}
+													</div>
 												{/each}
 											</div>
 										{/if}

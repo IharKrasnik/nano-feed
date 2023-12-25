@@ -81,53 +81,51 @@
 				<div class="mb-2 font-bold">Alignment & Size</div>
 
 				{#if sectionItem.renderType === 'callout' || sectionItem.id !== section.id}
-					{#if (section.columns > 1 && sectionItem.renderType !== 'callout') || (sectionItem.imageUrl && section)}
-						<div class="_section">
-							<div class="font-bold mb-2">Item size</div>
+					<div class="_section">
+						<div class="font-bold mb-2">Item size</div>
 
-							<div class=" mb-4">
-								{#if section.columns > 1 && sectionItem.renderType !== 'callout'}
-									{#if section.isMasonryGrid}
-										<div class="_section _info">
-											Masonry grid doesn't support custom column sizes
+						<div class=" mb-4">
+							{#if section.columns > 1 && sectionItem.renderType !== 'callout'}
+								{#if section.isMasonryGrid}
+									<div class="_section _info">Masonry grid doesn't support custom column sizes</div>
+								{:else}
+									<div>
+										<input
+											type="number"
+											class="max-w-[60px] mr-2"
+											placeholder="1"
+											bind:value={sectionItem.colSpan}
+										/>
+										columns
+										<div class="text-sm mt-2">
+											{(((sectionItem.colSpan || 1) / section.columns) * 100).toFixed(2)}% width
 										</div>
-									{:else}
-										<div>
-											<input
-												type="number"
-												class="max-w-[60px] mr-2"
-												placeholder="1"
-												bind:value={sectionItem.colSpan}
-											/>
-											columns
-											<div class="text-sm mt-2">
-												{(((sectionItem.colSpan || 1) / section.columns) * 100).toFixed(2)}% width
-											</div>
-										</div>
-										<div class="mt-2">
-											<input
-												type="number"
-												class="max-w-[60px] mr-2 mt-2"
-												placeholder="1"
-												bind:value={sectionItem.rowSpan}
-											/> rows
-										</div>
-									{/if}
-								{:else if sectionItem.imageUrl && section}
-									<select bind:value={sectionItem.innerColSpan}>
-										<option value="">Default (6x6)</option>
-										<option value="8">8 x 4</option>
-										<option value="4">4 x 8</option>
-										<!-- <option value="12">12 x 12</option> -->
-									</select>
+									</div>
+									<div class="mt-2">
+										<input
+											type="number"
+											class="max-w-[60px] mr-2 mt-2"
+											placeholder="1"
+											bind:value={sectionItem.rowSpan}
+										/> rows
+									</div>
 								{/if}
-							</div>
+							{:else if section}
+								<select class="w-full" bind:value={sectionItem.innerColSpan}>
+									<option value="">Default (6x6)</option>
+									<option value="8">8 x 4</option>
+									<option value="4">4 x 8</option>
+									<!-- <option value="12">12 x 12</option> -->
+								</select>
+							{/if}
+						</div>
+						{#if section.columns > 1}
 							{#if section.isMasonryGrid}
 								<input class="ml-r" type="checkbox" bind:checked={section.isFunkyGrid} /> funky
 							{/if}
 							<input class="mr-2" type="checkbox" bind:checked={section.isMasonryGrid} /> masonry
-						</div>
-					{/if}
+						{/if}
+					</div>
 				{/if}
 
 				{#if (sectionItem !== section || sectionItem.renderType === 'callout') && sectionItem.imageUrl}
@@ -307,17 +305,17 @@
 		<div class="_section mb-2">
 			<div class="font-semibold mb-2">Background</div>
 
+			<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
+
+			<input
+				class="mr-2 my-2"
+				type="checkbox"
+				bind:checked={sectionItem.theme.isTransparent}
+				disabled={sectionItem.theme?.isOverrideColors || sectionItem.theme?.isOppositeColors}
+			/>
+			Transparent background
+
 			{#if !sectionItem.bgImageUrl}
-				<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
-
-				<input
-					class="mr-2 my-2"
-					type="checkbox"
-					bind:checked={sectionItem.theme.isTransparent}
-					disabled={sectionItem.theme?.isOverrideColors || sectionItem.theme?.isOppositeColors}
-				/>
-				Transparent background
-
 				<div class="flex items-center">
 					{#if sectionItem.theme.isOverrideColors}
 						<input

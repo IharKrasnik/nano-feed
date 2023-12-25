@@ -49,26 +49,73 @@
 		</div>
 	</div>
 
-	<div
-		class="_section cursor-pointer"
-		on:click={() => {
-			selectedGrowthTab = 'knowledge-base';
-		}}
-		class:_selected={selectedGrowthTab === 'knowledge-base'}
-	>
+	<!-- <div class="_section">
 		<div class="flex">
 			<div
 				class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full bg-yellow-300 shadow-md  shadow-yellow-300/50 mr-4"
 			>
-				<FeatherIcon name="book-open" class="opacity-80" color="#333333" size="18" />
+				<FeatherIcon name="hash" class="opacity-80" color="#333333" size="18" />
 			</div>
 
 			<div>
-				<div class="font-bold mb-1">Knowledge Base</div>
-				<div class="opacity-80">Learn how to validate, build and grow startups</div>
+				<div>
+					<div class="font-bold mb-1">Community</div>
+					<div class="opacity-80">
+						Engage with other Momentum founders, learn and promote your services
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
+		<div
+			class="_section  cursor-pointer mt-4"
+			on:click={() => {
+				selectedGrowthTab = 'knowledge-base';
+			}}
+			class:_selected={selectedGrowthTab === 'knowledge-base'}
+		>
+			<div class="font-bold mb-1">#knowledge-base</div>
+			<div class="opacity-80">Learn how to validate, build and grow startups</div>
+		</div>
+		<div
+			class="_section cursor-pointer mt-4"
+			on:click={() => {
+				selectedGrowthTab = 'intros';
+			}}
+			class:_selected={selectedGrowthTab === 'intros'}
+		>
+			<div class="font-bold mb-1">#intros</div>
+			<div class="opacity-80">Say hi to other founders to connect and learn</div>
+		</div>
+		<div
+			class="_section cursor-pointer mt-4"
+			on:click={() => {
+				selectedGrowthTab = 'intros';
+			}}
+			class:_selected={selectedGrowthTab === 'intros'}
+		>
+			<div class="font-bold mb-1">#services</div>
+			<div class="opacity-80">Sell your services, help other founders and earn revenue</div>
+		</div>
+		<div
+			class="_section cursor-pointer mt-4"
+			on:click={() => {
+				selectedGrowthTab = 'intros';
+			}}
+			class:_selected={selectedGrowthTab === 'momentum'}
+		>
+			<div class="font-bold mb-1">#general</div>
+			<div class="opacity-80">Feed from all momentum streams</div>
+		</div>
+	</div> -->
+
+	<!-- 
+				Title — Get UI/UX prototype in 48 hours
+				Deliverables — Clickable Figma prototype up to 10 screens
+				Description/pitch
+				Price — $199.99
+				Portfolio / case studies — [{ title, description, image, url }]
+				Get started: 1-2-3: fill the form, get first design to review in 48 business hours, request changes, get final prototype
+			 -->
 
 	<!-- <div
 	class="_section cursor-pointer"

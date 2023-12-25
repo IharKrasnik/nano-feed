@@ -10,6 +10,7 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import BackTo from '$lib/components/BackTo.svelte';
 	import { page as sveltePage } from '$app/stores';
+	import sampleSections, { cloneSection } from '$lib/stores/sampleSections';
 	import isInsertPopupShown from 'lib-render/stores/isInsertPopupShown';
 	import selectedTemplatePage from 'lib-render/stores/selectedTemplatePage';
 	import striptags from 'striptags';
@@ -89,6 +90,34 @@
 				<div class="text-sm opacity-70">Design from scratch</div>
 			</div>
 
+			<div class="text-base py-4 _section mt-4">
+				Choose Section
+				<div class="text-sm opacity-70">Select built section from templates</div>
+
+				{#each $sampleSections as sampleSection}
+					<div
+						class="_section mt-4 cursor-pointer"
+						on:click={(section) => {
+							let newSection = cloneSection(sampleSection.section);
+
+							page.sections = [...page.sections, newSection];
+
+							$sectionToEdit = newSection;
+
+							$selectedTemplatePage = null;
+							$isInsertPopupShown = false;
+						}}
+					>
+						{sampleSection.name}
+					</div>
+					<!-- <div class="_section mt-4 cursor-pointer">FAQ</div>
+					<div class="_section mt-4 cursor-pointer">Features Showcase Left-Right</div>
+					<div class="_section mt-4 cursor-pointer">Features Showcase #2</div>
+					<div class="_section mt-4 cursor-pointer">Callout</div>
+					<div class="_section mt-4 cursor-pointer">Stepper</div> -->
+				{/each}
+			</div>
+
 			{#if false}
 				<div class="border-bottom py-4 w-full _section mt-4">
 					<div class="font-medium opacity-80 mb-2">Embed File or URL</div>
@@ -106,8 +135,8 @@
 						<FeatherIcon name="gift" color="#f6f5f4" />
 					</div>
 					<div>
-						<div class="font-semibold">Use Templates</div>
-						<div>Copy any section or clone the whole page</div>
+						<div class="font-semibold">Use page templates</div>
+						<div>Copy any section to your page or clone the whole page</div>
 					</div>
 				</div>
 			</div>

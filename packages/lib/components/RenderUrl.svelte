@@ -185,10 +185,12 @@
 						src={url}
 						class="mmntm-iframe w-full {imgClass} {imgClass.includes('h-')
 							? ''
-							: 'h-[600px] overflow-y-auto'}"
+							: 'overflow-y-auto min-h-[600px]'}"
+						onload={() => {
+							iFrameResize({}, '.mmntm-iframe');
+						}}
 						style="border:none;"
 					/>
-					<!-- onload={`iFrameResize({}, '.mmntm-iframe')`} -->
 				{:else}{/if}
 			{/if}
 		</div>

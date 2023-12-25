@@ -340,10 +340,10 @@
 			</div>
 		{/if}
 
-		{#if section.bgImageUrl}
-			<img
-				src={section.bgImageUrl}
-				class="absolute left-0 top-0 w-full h-full object-cover rounded-xl "
+		{#if section.bgImageUrl && section.renderType !== 'callout'}
+			<RenderUrl
+				url={section.bgImageUrl}
+				imgClass={'absolute left-0 top-0 w-full h-full object-cover rounded-xl'}
 				style="z-index: 0;"
 			/>
 
@@ -1028,11 +1028,12 @@
 												{/if}
 
 												{#if item.bgImageUrl}
-													<img
-														src={item.bgImageUrl}
-														class="absolute left-0 top-0 w-full h-full object-cover rounded-xl"
+													<RenderUrl
+														url={item.bgImageUrl}
+														imgClass={'absolute left-0 top-0 w-full h-full object-cover rounded-xl'}
 														style="z-index: 0;"
 													/>
+
 													{#if !item.theme?.isNotBgImageDimmed}
 														<div
 															class="absolute top-0 left-0 w-full h-full rounded-xl"
