@@ -20,6 +20,7 @@
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import { getFeed } from 'lib-render/stores/feedCache';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
+	import { dndzone } from 'svelte-dnd-action';
 
 	import striptags from 'striptags';
 
@@ -35,6 +36,14 @@
 
 	if (!section.renderType) {
 		section.renderType = 'grid';
+	}
+
+	function handleDndConsider(e) {
+		section.items = e.detail.items;
+	}
+
+	function handleDndFinalize(e) {
+		section.items = e.detail.items;
 	}
 
 	let innerSection;
@@ -143,7 +152,7 @@
 					{striptags((section.faqs || []).map((f) => f.question).join(', '))}
 				</div>
 			{:else if section.items}
-				{#each section.items as item}
+				{#each section.items as item (item.id)}
 					<div>
 						{striptags(item.title || '')}
 					</div>
@@ -248,7 +257,7 @@
 
 	<div class="_section rounded-xl" style="padding:0;">
 		<div class="flex justify-between items-center">
-			<div class="_title p-4" style="margin: 0;">Header</div>
+			<div class="_title p-4" style="margin: 0;">Section</div>
 		</div>
 
 		<hr class="border-[#8B786D] opacity-30" />
@@ -265,50 +274,7 @@
 				bind:item={section}
 			/>
 		</div>
-	</div>
-
-	{#if section.renderType === 'embedCode'}
-		<div class="_section">
-			<div class="font-bold mb-4">Custom Code</div>
-			<div class="text-sm mb-2">Custom HTML Code</div>
-
-			<textarea
-				placeholder="<div>Hello World</div>"
-				class="w-full"
-				rows="8"
-				bind:value={section.customCodeHTML}
-			/>
-
-			<div class="mt-4">
-				<div class="text-sm mb-2">3rd-party script URL</div>
-
-				<input
-					type="url"
-					class="w-full"
-					placeholder="https://ship-assets.fra1.cdn.digitaloceanspaces.com/console/17-10-2023-cd6a3dfb.js"
-					bind:value={section.thirdPartyScriptUrl}
-				/>
-			</div>
-		</div>
-	{:else if section.renderType === 'faq'}
-		<EditFAQ bind:section />
-	{:else if section.renderType === 'testimonials'}
-		<EditTestimonials bind:section />
-	{:else}
-		{#if section.renderType === 'pricing'}
-			<div class="_section rounded-xl p-4">
-				<div class="flex items-center font-bold">
-					Benefits icon <EmojiPicker
-						class="ml-4"
-						defaultIcon="✅"
-						bind:icon={section.benefitsEmoji}
-					/>
-				</div>
-				<div class="mt-2">This icon is used to show benefits</div>
-			</div>
-		{/if}
 		<div
-			class="_section rounded-xl"
 			style="padding: 0px;"
 			use:clickOutside
 			on:clickOutside={() => {
@@ -320,21 +286,8 @@
 			}}
 		>
 			{#if section.renderType === 'grid' || section.renderType === 'pricing'}
-				<div class="bg-white top-[60px] rounded-xl">
-					<div class="p-4 pb-0 flex justify-between items-center">
-						<div class="_title" style="margin: 0;">Columns</div>
-						<div>
-							<!-- <input type="checkbox" bind:checked={section.isShowSource} /> show url source -->
-						</div>
-
-						<!-- <div class="opacity-70 hover:opacity-100 transition text-right w-full text-sm">
-					<a class="cursor-pointer text-[#8B786D]" title="Remove Whole Section" on:click={onRemove}
-						>🗑</a
-					>
-				</div> -->
-					</div>
-
-					<hr class="mt-4 border-[#8B786D] opacity-30" />
+				<hr class="mt-4 border-[#8B786D] opacity-30" />
+				<div class="bg-white  my-4">
 					<div class="relative mt-4">
 						<div class="px-4 flex items-center">
 							{#if section.renderType !== 'pricing'}
@@ -389,27 +342,75 @@
 							</div>
 						</div>
 					</div>
-					<hr class="mt-4 border-[#8B786D] opacity-30" />
 				</div>
 			{/if}
-
-			{#each section.items || [] as item}
-				<EditSectionItem bind:page bind:section bind:item />
-
-				<hr class=" border-[#8B786D] opacity-30" />
-			{/each}
-
-			{#if !section.streamSlug}
-				<a
-					class="w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
-					on:click={addNewItem}>Add {section.renderType === 'article' ? 'Subparagraph' : 'Item'}</a
-				>
-			{/if}
-
-			<!-- <div class="flex items-center mt-2 text-[14px]">
-      <input type="checkbox" class="mr-2"  /> Collect Emails
-    </div> -->
 		</div>
+	</div>
+
+	{#if section.renderType === 'embedCode'}
+		<div class="_section">
+			<div class="font-bold mb-4">Custom Code</div>
+			<div class="text-sm mb-2">Custom HTML Code</div>
+
+			<textarea
+				placeholder="<div>Hello World</div>"
+				class="w-full"
+				rows="8"
+				bind:value={section.customCodeHTML}
+			/>
+
+			<div class="mt-4">
+				<div class="text-sm mb-2">3rd-party script URL</div>
+
+				<input
+					type="url"
+					class="w-full"
+					placeholder="https://ship-assets.fra1.cdn.digitaloceanspaces.com/console/17-10-2023-cd6a3dfb.js"
+					bind:value={section.thirdPartyScriptUrl}
+				/>
+			</div>
+		</div>
+	{:else if section.renderType === 'faq'}
+		<EditFAQ bind:section />
+	{:else if section.renderType === 'testimonials'}
+		<EditTestimonials bind:section />
+	{:else}
+		{#if section.renderType === 'pricing'}
+			<div class="_section rounded-xl p-4">
+				<div class="flex items-center font-bold">
+					Benefits icon <EmojiPicker
+						class="ml-4"
+						defaultIcon="✅"
+						bind:icon={section.benefitsEmoji}
+					/>
+				</div>
+				<div class="mt-2">This icon is used to show benefits</div>
+			</div>
+		{/if}
+
+		<div class="mb-4 font-bold mt-8">Section Items</div>
+		<hr class="mt-4 mb-8" />
+
+		{#if section.items?.length}
+			<div
+				use:dndzone={{ items: section.items, flipDurationMs: 300 }}
+				on:consider={handleDndConsider}
+				on:finalize={handleDndFinalize}
+			>
+				{#each section.items || [] as item (item.id)}
+					<div class="_section cursor-auto">
+						<EditSectionItem class="p-0" bind:page bind:section bind:item />
+					</div>
+				{/each}
+			</div>
+		{/if}
+		{#if !section.streamSlug}
+			<button
+				class="_secondary _small  w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
+				on:click={addNewItem}
+				>Add {section.renderType === 'article' ? 'Subparagraph' : 'Section Item'}</button
+			>
+		{/if}
 		<div>
 			<div class="p-4" />
 		</div>

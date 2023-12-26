@@ -20,6 +20,10 @@
 	position: relative;
 }
 
+._section.cursor-auto {
+	cursor: auto !important;
+}
+
 ._section.cursor-pointer::after {
 	position: absolute;
 	content: '→';

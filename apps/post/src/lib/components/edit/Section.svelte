@@ -215,8 +215,9 @@
 				<hr class=" border-[#8B786D] opacity-30" />
 			{/each}
 
-			<a class="w-full p-4 flex justify-center cursor-pointer text-[#8B786D]" on:click={addNewItem}
-				>Add Item</a
+			<a
+				class="w-full p-4 flex justify-center cursor-pointer text-[#8B786D] my-8"
+				on:click={addNewItem}>Add Item</a
 			>
 
 			<!-- <div class="flex items-center mt-2 text-[14px]">
