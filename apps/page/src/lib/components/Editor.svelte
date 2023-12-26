@@ -810,26 +810,25 @@
 				{/if}
 
 				{#if selectedTab === 'editor' || !page._id}
-					<div
+					<a
+						href="/ide"
 						in:fade={{ delay: 0 }}
 						class:_selected={$isInsertPopupShown}
 						class="relative ml-4 flex items-center p-1 cursor-pointer p-2  {$isInsertPopupShown
 							? ''
 							: 'opacity-70 hover:opacity-100'}"
 						on:click={() => {
-							if (!$sveltePage.url.href.includes('/page-templates')) {
-								if ($isInsertPopupShown) {
-									$isInsertPopupShown = false;
-								} else {
-									$isInsertPopupShown = true;
-									selectedTab = 'editor';
-								}
+							if ($isInsertPopupShown) {
+								$isInsertPopupShown = false;
+							} else {
+								$isInsertPopupShown = true;
+								selectedTab = 'editor';
 							}
 						}}
 					>
 						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="plus" />
 						Insert
-					</div>
+					</a>
 				{:else if page._id || (!page._id && $allPages.length > 0)}
 					<div
 						in:fly={{ delay: 75 }}

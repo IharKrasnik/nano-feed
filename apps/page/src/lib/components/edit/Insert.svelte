@@ -69,6 +69,30 @@
 				Quick Sections
 			</div>
 
+			<!-- <div class="text-base py-4 _section mt-4">
+				Choose Section
+				<div class="text-sm opacity-70">Select built section from templates</div>
+
+			
+			</div> -->
+			<!-- {#each $sampleSections as sampleSection}
+					<div
+						class="_section mt-4 cursor-pointer"
+						on:click={(section) => {
+							let newSection = cloneSection(sampleSection.section);
+
+							page.sections = [...page.sections, newSection];
+
+							$sectionToEdit = newSection;
+
+							$selectedTemplatePage = null;
+							$isInsertPopupShown = false;
+						}}
+					>
+						{sampleSection.name}
+					</div>
+				{/each} -->
+
 			<div
 				class="text-base py-4 cursor-pointer _section mt-4"
 				on:click={(section) => {
@@ -88,34 +112,6 @@
 			>
 				Add Empty Section
 				<div class="text-sm opacity-70">Design from scratch</div>
-			</div>
-
-			<div class="text-base py-4 _section mt-4">
-				Choose Section
-				<div class="text-sm opacity-70">Select built section from templates</div>
-
-				{#each $sampleSections as sampleSection}
-					<div
-						class="_section mt-4 cursor-pointer"
-						on:click={(section) => {
-							let newSection = cloneSection(sampleSection.section);
-
-							page.sections = [...page.sections, newSection];
-
-							$sectionToEdit = newSection;
-
-							$selectedTemplatePage = null;
-							$isInsertPopupShown = false;
-						}}
-					>
-						{sampleSection.name}
-					</div>
-					<!-- <div class="_section mt-4 cursor-pointer">FAQ</div>
-					<div class="_section mt-4 cursor-pointer">Features Showcase Left-Right</div>
-					<div class="_section mt-4 cursor-pointer">Features Showcase #2</div>
-					<div class="_section mt-4 cursor-pointer">Callout</div>
-					<div class="_section mt-4 cursor-pointer">Stepper</div> -->
-				{/each}
 			</div>
 
 			{#if false}

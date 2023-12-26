@@ -19,6 +19,7 @@
 	import isInsertPopupShown from 'lib-render/stores/isInsertPopupShown';
 	import selectedTemplatePage from 'lib-render/stores/selectedTemplatePage';
 	import RenderSection from 'lib-render/components/render//Section.svelte';
+	import PageContainer from 'lib-render/components/PageContainer.svelte';
 	import sampleSections, { cloneSection } from '$lib/stores/sampleSections';
 
 	import {
@@ -88,7 +89,7 @@
 
 	<div class="bg-background overflow-y-auto" style={cssVarStyles}>
 		{#if $selectedTemplatePage}
-			{#key $selectedTemplatePage._id}
+			{#key page._id + $selectedTemplatePage._id}
 				<SitePreview
 					class="p-4"
 					isNoVars
@@ -96,8 +97,7 @@
 					noStickyHeader={true}
 					isNoBadge={true}
 					isEdit
-					isCloneable
-					isSectionsCloneable={!!page._id}
+					isSectionsCloneable={true}
 					page={$selectedTemplatePage}
 					onInsert={(section) => {
 						let newSection = _.cloneDeep(section);
@@ -133,8 +133,6 @@
 		</div> -->
 
 			<div
-				class="bg-white break-inside-avoid mb-4 mr-4 p-4 cursor-pointer hover:scale-105 transition"
-				style=""
 				on:click={() => {
 					let newSection = cloneSection(sampleSection.section);
 					page.sections = [...page.sections, newSection];
@@ -144,17 +142,20 @@
 					$selectedTemplatePage = null;
 					$isInsertPopupShown = false;
 				}}
+				class="break-inside-avoid mb-4 mr-4 cursor-pointer hover:scale-105 transition overflow-hidden"
 			>
-				<div>
-					<div
-						style="transform: scale(.5); transform-origin: top left; transform-box: inherit;"
-						use:shrinkheight
-					>
-						<div style="width: 200%; height: 200%;">
-							<RenderSection {page} isEmbed bind:section={sampleSection.section} />
+				<PageContainer class="p-4 " {page}>
+					<div>
+						<div
+							style="transform: scale(.5); transform-origin: top left; transform-box: inherit;"
+							use:shrinkheight
+						>
+							<div style="width: 200%; height: 200%;">
+								<RenderSection {page} isEmbed bind:section={sampleSection.section} />
+							</div>
 						</div>
 					</div>
-				</div>
+				</PageContainer>
 			</div>
 		{/each}
 	</div>

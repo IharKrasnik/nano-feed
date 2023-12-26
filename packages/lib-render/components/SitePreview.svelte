@@ -251,7 +251,6 @@
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
-
 {#key page.slug}
 	{#if page.theme?.layoutType === 'portfolio' || page.parentPage?.theme?.layoutType === 'portfolio'}
 		<PortfolioPage bind:page />
@@ -290,7 +289,7 @@
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						{#if !page.isSectionsCloneable}
+						{#if !isSectionsCloneable}
 							{#if page.name || page.parentPage?._id}
 								<RenderHeader bind:page bind:isEdit />
 							{/if}
@@ -309,7 +308,7 @@
 											bind:page
 											bind:isEmbed
 											bind:isEdit
-											bind:isSectionsCloneable
+											bind:isCloneable={isSectionsCloneable}
 										/>
 									</div>
 								{/if}

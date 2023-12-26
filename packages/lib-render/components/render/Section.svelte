@@ -323,6 +323,7 @@
 					if (!page) {
 						navigator.clipboard.writeText(JSON.stringify(section));
 					} else {
+						navigator.clipboard.writeText(JSON.stringify(section));
 						onInsert(section);
 					}
 					showSuccessMessage('Copied Section');
