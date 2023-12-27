@@ -12,6 +12,8 @@
 	export let isEdit;
 	export let isEmbed;
 
+	let parentPage = page.parentPage || page;
+
 	let isMenuOpen = false;
 
 	$: if (browser && $sveltePage.url) {
@@ -32,7 +34,7 @@
 	let groupLinks = ({ isHeader, isFooter } = {}) => {
 		let grouped = {};
 
-		(page.links || [])
+		(parentPage.links || [])
 			.filter((link) => link.groupName)
 			.filter((link) => (isHeader ? link.isShowInHeader : link.isShowInFooter))
 			.forEach((link) => {
@@ -68,22 +70,22 @@
 				on:click={() => {
 					trackClick({
 						pageId: page?._id,
-						sectionId: `${page.parentPage?._id || page._id}_header`,
+						sectionId: `${parentPage._id}_header`,
 						linkId: 'home',
 						url: '/',
-						text: page.parentPage?.name || page.name
+						text: parentPage.name
 					});
 				}}
 				class:heatmap={$heatmap}
 				data-heatmap-clicks-count={$heatmap
 					? getHeatmapClicksCount({
-							sectionId: `${page.parentPage?._id || page._id}_header`,
+							sectionId: `${parentPage._id}_header`,
 							linkId: `home`
 					  })
 					: ''}
 			>
-				{#if page?.parentPage?.logo || page?.logo}
-					<Emoji width="25" class="mr-2 rounded" emoji={page.parentPage?.logo || page.logo} />
+				{#if parentPage.logo || page?.logo}
+					<Emoji width="25" class="mr-2 rounded" emoji={parentPage.logo} />
 
 					{#if !page.theme?.isHidePageName}
 						<span class="font-medium text-base {page.theme?.heroBgImage ? 'light-colors' : ''}">
@@ -95,7 +97,7 @@
 						class="font-bold {page.theme?.heroBgImage ? 'light-colors' : ''}"
 						style="font-family: var(--logo-font)"
 					>
-						{page.parentPage?.name || page.name}
+						{parentPage.name}
 					</span>
 				{/if}
 			</a>
@@ -108,14 +110,14 @@
 					: 'justify-end'} text-sm py-1 gap-4 w-full mr-8"
 				style="z-index: 50"
 			>
-				{#each (page.links || []).filter((l) => !l.groupName && l.isShowInHeader) as link}
+				{#each (parentPage.links || []).filter((l) => !l.groupName && l.isShowInHeader) as link}
 					<a
 						href={`${link.url || `/${link.pageSlug || link.slug}`}`}
 						data-sveltekit-preload-data="hover"
 						on:click={() => {
 							trackClick({
 								pageId: page?._id,
-								sectionId: `${page.parentPage?._id || page._id}_header`,
+								sectionId: `${page._id}_header`,
 								linkId: link.id,
 								url: `${link.url}`,
 								text: link.name
@@ -124,7 +126,8 @@
 						class:heatmap={$heatmap}
 						data-heatmap-clicks-count={$heatmap
 							? getHeatmapClicksCount({
-									sectionId: `${page.parentPage?._id || page._id}_header`,
+									pageId: page?._id,
+									sectionId: `${page._id}_header`,
 									linkId: link.id
 							  })
 							: ''}>{link.name}</a
