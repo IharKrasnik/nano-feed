@@ -85,7 +85,8 @@
 			? `--section-bg-color: ${
 					hero.theme.backgroundColor
 			  }; --section-bg-color-opacity-50: ${hexToRgba(hero.theme.backgroundColor, 0.5)};`
-			: ''} {hero.theme?.isOverrideColors ? `background: ${hero.theme?.backgroundColor};` : ''}"
+			: ''} {hero.theme?.isOverrideColors ? `background: ${hero.theme?.backgroundColor};` : ''}
+				"
 	>
 		<!-- {#if isCloneable}
 			<div

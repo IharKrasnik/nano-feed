@@ -77,6 +77,7 @@
 	import EditMessaging from '$lib/components/edit/Messaging.svelte';
 	import EditWebsiteSettings from '$lib/components/edit/WebsiteSettings.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import EditService from '$lib/components/edit/Service.svelte';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -356,6 +357,16 @@
 
 			if (!page._id && page.name?.includes(':')) {
 				page.slug = page.name;
+			}
+
+			if ($sectionToEdit) {
+				page.sections = page.sections.map((s) => {
+					if (s.id === $sectionToEdit.id) {
+						return { ...$sectionToEdit };
+					} else {
+						return s;
+					}
+				});
 			}
 
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
@@ -1523,81 +1534,89 @@
 										</div>
 									</div> -->
 											{/if}
-											{#if page?._id}
-												<div
-													class="_section cursor-pointer"
-													on:click={() => {
-														selectedTab = 'growth';
-													}}
-												>
-													<div class="flex">
-														<div
-															class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full  shadow-md bg-green-300 shadow-md shadow-green-300/50 mr-4"
-														>
-															<svg
-																width="20"
-																height="20"
-																viewBox="0 0 15 15"
-																fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																><path
-																	d="M11.1464 6.85355C11.3417 7.04882 11.6583 7.04882 11.8536 6.85355C12.0488 6.65829 12.0488 6.34171 11.8536 6.14645L7.85355 2.14645C7.65829 1.95118 7.34171 1.95118 7.14645 2.14645L3.14645 6.14645C2.95118 6.34171 2.95118 6.65829 3.14645 6.85355C3.34171 7.04882 3.65829 7.04882 3.85355 6.85355L7.5 3.20711L11.1464 6.85355ZM11.1464 12.8536C11.3417 13.0488 11.6583 13.0488 11.8536 12.8536C12.0488 12.6583 12.0488 12.3417 11.8536 12.1464L7.85355 8.14645C7.65829 7.95118 7.34171 7.95118 7.14645 8.14645L3.14645 12.1464C2.95118 12.3417 2.95118 12.6583 3.14645 12.8536C3.34171 13.0488 3.65829 13.0488 3.85355 12.8536L7.5 9.20711L11.1464 12.8536Z"
-																	fill="currentColor"
-																	fill-rule="evenodd"
-																	clip-rule="evenodd"
-																/></svg
+
+											{#if page.renderType === 'service'}
+												<EditService bind:page bind:setPageAndDraft />
+											{:else}
+												{#if page?._id}
+													<div
+														class="_section cursor-pointer"
+														on:click={() => {
+															selectedTab = 'growth';
+														}}
+													>
+														<div class="flex">
+															<div
+																class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full  shadow-md bg-green-300 shadow-md shadow-green-300/50 mr-4"
 															>
-														</div>
-														<div>
-															<div class="font-bold mb-2">Boost Your Product</div>
+																<svg
+																	width="20"
+																	height="20"
+																	viewBox="0 0 15 15"
+																	fill="none"
+																	xmlns="http://www.w3.org/2000/svg"
+																	><path
+																		d="M11.1464 6.85355C11.3417 7.04882 11.6583 7.04882 11.8536 6.85355C12.0488 6.65829 12.0488 6.34171 11.8536 6.14645L7.85355 2.14645C7.65829 1.95118 7.34171 1.95118 7.14645 2.14645L3.14645 6.14645C2.95118 6.34171 2.95118 6.65829 3.14645 6.85355C3.34171 7.04882 3.65829 7.04882 3.85355 6.85355L7.5 3.20711L11.1464 6.85355ZM11.1464 12.8536C11.3417 13.0488 11.6583 13.0488 11.8536 12.8536C12.0488 12.6583 12.0488 12.3417 11.8536 12.1464L7.85355 8.14645C7.65829 7.95118 7.34171 7.95118 7.14645 8.14645L3.14645 12.1464C2.95118 12.3417 2.95118 12.6583 3.14645 12.8536C3.34171 13.0488 3.65829 13.0488 3.85355 12.8536L7.5 9.20711L11.1464 12.8536Z"
+																		fill="currentColor"
+																		fill-rule="evenodd"
+																		clip-rule="evenodd"
+																	/></svg
+																>
+															</div>
 															<div>
-																Get free marketing assets, $165k in discounts, record a podcast and
-																more.
+																<div class="font-bold mb-2">Boost Your Product</div>
+																<div>
+																	Get free marketing assets, $165k in discounts, record a podcast
+																	and more.
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
-											{/if}
-											<div>
-												{#if page._id && page.renderType === 'article'}
-													<div class="mt-4">
-														<div class="_section">
-															<EditInteractiveOptions
-																class=""
-																options={[
-																	{ value: '', text: 'No interaction' },
-																	{ value: 'multiple_choice', text: 'Reactions — multiple choice' }
-																]}
-																section={page}
-																sectionItem={page}
-																isWithButton={false}
-															/>
+												{/if}
+
+												<div>
+													{#if page._id && page.renderType === 'article'}
+														<div class="mt-4">
+															<div class="_section">
+																<EditInteractiveOptions
+																	class=""
+																	options={[
+																		{ value: '', text: 'No interaction' },
+																		{
+																			value: 'multiple_choice',
+																			text: 'Reactions — multiple choice'
+																		}
+																	]}
+																	section={page}
+																	sectionItem={page}
+																	isWithButton={false}
+																/>
+															</div>
 														</div>
-													</div>
-												{/if}
-
-												{#if page._id}
-													{#each page.heros as hero}
-														<EditHero
-															class="my-4"
-															bind:hero
-															bind:page
-															bind:focuses
-															isShowTips={page.heros?.length < 2}
-															isCollapsedDefault={!!(page.activeHero
-																? page.activeHero.title
-																: page.title)}
-														/>
-													{/each}
-
-													{#if !page.heros?.length}
-														<button class="_secondary" on:click={addDefaultHero}
-															>Add Hero Section</button
-														>
 													{/if}
-												{/if}
 
-												<!-- 
+													{#if page._id}
+														{#each page.heros as hero}
+															<EditHero
+																class="my-4"
+																bind:hero
+																bind:page
+																bind:focuses
+																isShowTips={page.heros?.length < 2}
+																isCollapsedDefault={!!(page.activeHero
+																	? page.activeHero.title
+																	: page.title)}
+															/>
+														{/each}
+
+														{#if !page.heros?.length}
+															<button class="_secondary" on:click={addDefaultHero}
+																>Add Hero Section</button
+															>
+														{/if}
+													{/if}
+
+													<!-- 
 									{#if page?._id}
 										<div class="opacity-70 hover:opacity-100 my-4">
 											<button
@@ -1609,82 +1628,83 @@
 										</div>
 									{/if} -->
 
-												<!-- <EditTestimonials bind:page /> -->
+													<!-- <EditTestimonials bind:page /> -->
 
-												{#if page._id}
-													<div
-														class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
-													>
-														<div class="flex items-center">
-															<div class="text-lg font-bold  _editor-title">
-																{page.renderType === 'article' ? 'Paragraphs' : 'Sections'}
+													{#if page._id}
+														<div
+															class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
+														>
+															<div class="flex items-center">
+																<div class="text-lg font-bold  _editor-title">
+																	{page.renderType === 'article' ? 'Paragraphs' : 'Sections'}
+																</div>
+
+																{#if page.sections?.length}
+																	<div class="ml-4 number-tag">
+																		{page.sections?.length || 0}
+																	</div>
+																{/if}
 															</div>
 
-															{#if page.sections?.length}
-																<div class="ml-4 number-tag">
-																	{page.sections?.length || 0}
-																</div>
-															{/if}
-														</div>
-
-														{#if !page.sections?.length}
-															<div>
-																<!-- <button
+															{#if !page.sections?.length}
+																<div>
+																	<!-- <button
 													class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
 													on:click={addNewSection}
 												>
 													Add Empty Section
 												</button> -->
-															</div>
-
-															{#if page.sections?.length > 1}
-																<div
-																	class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
-																	on:click={() => (isOrdering = true)}
-																>
-																	💫 Reorder Sections
 																</div>
+
+																{#if page.sections?.length > 1}
+																	<div
+																		class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+																		on:click={() => (isOrdering = true)}
+																	>
+																		💫 Reorder Sections
+																	</div>
+																{/if}
 															{/if}
-														{/if}
-													</div>
-												{/if}
-
-												{#if page.sections?.length}
-													<div>
-														<div
-															use:dndzone={{ items: page.sections, flipDurationMs }}
-															on:consider={handleDndConsider}
-															on:finalize={handleDndFinalize}
-														>
-															{#each page.sections || [] as section (section.id)}
-																<div animate:flip={{ duration: flipDurationMs }}>
-																	<EditSection
-																		bind:page
-																		bind:section
-																		onRemove={() => {
-																			page.sections = page.sections.filter((s) => s !== section);
-																		}}
-																	/>
-																</div>
-															{/each}
 														</div>
-													</div>
-												{/if}
+													{/if}
 
-												{#if page?._id}
-													<button
-														class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
-														on:click={() => {
-															if (page.renderType === 'article') {
-																addNewSection();
-															} else {
-																$isInsertPopupShown = true;
-															}
-														}}>Add {page.renderType === 'article' ? 'Paragraph' : 'Section'}</button
-													>
-													<!-- <div class="text-sm mb-2">or use templates</div> -->
-													<!-- <div class="flex flex-wrap gap-4 p-4 bg-[#fafafa] _section rounded"> -->
-													<!-- <button
+													{#if page.sections?.length}
+														<div>
+															<div
+																use:dndzone={{ items: page.sections, flipDurationMs }}
+																on:consider={handleDndConsider}
+																on:finalize={handleDndFinalize}
+															>
+																{#each page.sections || [] as section (section.id)}
+																	<div animate:flip={{ duration: flipDurationMs }}>
+																		<EditSection
+																			bind:page
+																			bind:section
+																			onRemove={() => {
+																				page.sections = page.sections.filter((s) => s !== section);
+																			}}
+																		/>
+																	</div>
+																{/each}
+															</div>
+														</div>
+													{/if}
+
+													{#if page?._id}
+														<button
+															class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
+															on:click={() => {
+																if (page.renderType === 'article') {
+																	addNewSection();
+																} else {
+																	$isInsertPopupShown = true;
+																}
+															}}
+															>Add {page.renderType === 'article' ? 'Paragraph' : 'Section'}</button
+														>
+														<!-- <div class="text-sm mb-2">or use templates</div> -->
+														<!-- <div class="flex flex-wrap gap-4 p-4 bg-[#fafafa] _section rounded"> -->
+														<!-- <button
 												class="_primary _small _inverted p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'benefits' })}>🙌 Add Benefits</button
 											>
@@ -1716,14 +1736,14 @@
 													isPasteSectionModalOpen = true;
 												}}>⌨️ Paste section</button
 											> -->
-													<!-- 
+														<!-- 
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'carousel' })}
 												>🎠 Add Carousel with Menu</button
 											> -->
 
-													<!-- <button
+														<!-- <button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'interactive-question' })}
 												>🤩 Ask Interactive Question</button
@@ -1742,7 +1762,7 @@
 												🔤 Form
 											</button> -->
 
-													<!--
+														<!--
 											<button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'newsletter' })}
@@ -1750,16 +1770,16 @@
 												✉️ Newsletter</button
 											> -->
 
-													<!-- <button
+														<!-- <button
 												class="_primary _small _inverted mt-4 mr-4 p-4 flex justify-center cursor-pointer text-[#8B786D]"
 												on:click={() => addNewSection({ type: 'community_chat' })}
 											>
 												💫 Community Chat</button
 											> -->
-													<!-- </div> -->
-												{/if}
+														<!-- </div> -->
+													{/if}
 
-												<!-- {#if page._id && !page.parentPage}
+													<!-- {#if page._id && !page.parentPage}
 										<div class="_section my-8">
 											<div class="_title flex justify-between w-full">
 												Social Links
@@ -1801,30 +1821,31 @@
 										</div>
 									{/if} -->
 
-												{#if page._id && page.sections?.length}
-													<div class="relative flex items-center my-4  mt-12">
-														<div class="font-bold text-lg mr-2 py-4">Call-To-Action</div>
+													{#if page._id && page.sections?.length}
+														<div class="relative flex items-center my-4  mt-12">
+															<div class="font-bold text-lg mr-2 py-4">Call-To-Action</div>
 
-														<div
-															class="w-[35px] h-[35px] bg-[#f1f1f1] rounded-xl flex items-center justify-center cursor-pointer"
-														>
-															{#if page.ctaFooter}
-																<EditSectionSettings
-																	bind:page
-																	bind:section={page.ctaFooter}
-																	bind:sectionItem={page.ctaFooter}
-																/>
-															{/if}
+															<div
+																class="w-[35px] h-[35px] bg-[#f1f1f1] rounded-xl flex items-center justify-center cursor-pointer"
+															>
+																{#if page.ctaFooter}
+																	<EditSectionSettings
+																		bind:page
+																		bind:section={page.ctaFooter}
+																		bind:sectionItem={page.ctaFooter}
+																	/>
+																{/if}
+															</div>
 														</div>
-													</div>
 
-													<EditCTA class="my-4" bind:page />
-												{/if}
+														<EditCTA class="my-4" bind:page />
+													{/if}
 
-												<!-- {#if page._id && page.name && page.title}
+													<!-- {#if page._id && page.name && page.title}
 										<hr class="my-8 border-[#8B786D] opacity-30" />
 									{/if} -->
-											</div>
+												</div>
+											{/if}
 
 											{#if page.name}
 												<div class="font-bold text-lg mb-4 mt-16  _editor-title">Publish Page</div>
@@ -1911,7 +1932,7 @@
 														bind:setPageAndDraft
 													/>
 												{:else if selectedTab === 'growth'}
-													<EditGrowth bind:page bind:selectedGrowthTab />
+													<EditGrowth bind:page bind:selectedGrowthTab bind:setPageAndDraft />
 												{:else if selectedTab === 'blog'}
 													<EditBlog bind:setPageAndDraft bind:page />
 												{:else if selectedTab === 'analytics'}

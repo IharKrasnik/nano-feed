@@ -35,6 +35,7 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import trackClick from 'lib/services/trackClick';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 
 	export let section;
 	let clazz;
@@ -314,7 +315,14 @@
 			? 'min-h-screen sm:min-h-min'
 			: ''} {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
+			: ''} {isEdit && $sectionToEdit?.id !== section.id
+			? 'cursor-pointer hover:border-8 border-purple-300'
 			: ''}"
+		on:click={() => {
+			if (isEdit) {
+				$sectionToEdit = section;
+			}
+		}}
 	>
 		{#if isCloneable}
 			<div

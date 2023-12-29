@@ -15,6 +15,7 @@
 	import MomentumWidget from 'lib/components/MomentumWidget.svelte';
 	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
 	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
+	import ServicesTab from '$lib/components/tabs/ServicesTab.svelte';
 	import pricingPage from '$lib/stores/pricingPage';
 	import PricingPage from '$lib/components/PricingPage.svelte';
 	import PageContainer from 'lib-render/components/PageContainer.svelte';
@@ -258,6 +259,8 @@
 				bind:newMoment
 				onSent={() => {}}
 			/>
+		{:else if selectedGrowthTab === 'services'}
+			<ServicesTab bind:page />
 		{:else if selectedGrowthTab === 'knowledge-base'}
 			<div class="flex justify-between">
 				<div>
@@ -325,7 +328,9 @@
 				{/if}
 			{/if}
 		{/if}
-		<PricingPage bind:page />
+		{#if selectedGrowthTab === 'dashboard'}
+			<PricingPage bind:page />
+		{/if}
 	</div>
 </PageContainer>
 {#if selectedGrowthTab === 'boost'}{/if}
