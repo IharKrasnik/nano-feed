@@ -149,7 +149,7 @@
 			<RenderUrl
 				class="absolute left-0 top-0 w-screen h-full opacity-90 overflow-hidden z-0"
 				isAutoplay={!isEdit}
-				imgClass="w-screen h-full object-cover overflow-hidden"
+				imgClass="w-screen h-full object-contain overflow-hidden"
 				url={hero.bgImageUrl}
 			/>
 		{/if}
