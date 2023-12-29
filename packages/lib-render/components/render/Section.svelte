@@ -988,7 +988,7 @@
 													? '_transparent'
 													: ''} {item.url && !item.interactiveRenderType
 													? '_interactive'
-													: ''} h-full overflow-hidden"
+													: ''} h-full {$heatmap ? '' : 'overflow-hidden'}"
 												on:click={() => {
 													if (section.carousel) {
 														selectCarouselItem(item);
