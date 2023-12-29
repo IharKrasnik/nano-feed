@@ -88,7 +88,7 @@
 			: ''} {hero.theme?.isOverrideColors ? `background: ${hero.theme?.backgroundColor};` : ''}
 				"
 	>
-		<!-- {#if isCloneable}
+		{#if isCloneable}
 			<div
 				class="absolute z-20 right-4 top-12 _bg-opposite p-2 rounded opacity-50 hover:opacity-100 cursor-pointer"
 				on:click={() => {
@@ -106,7 +106,7 @@
 					/> Copy Hero
 				</div>
 			</div>
-		{/if} -->
+		{/if}
 
 		{#if hero.theme?.bgPattern}
 			<RenderBackgroundPattern
