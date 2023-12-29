@@ -284,43 +284,50 @@
 					</div>
 
 					{#if hero.theme}
-						<div class="flex flex-wrap gap-4 mt-4">
-							{#if hero.demoUrl}
-								<div class="flex shrink-0 font-normal items-center">
-									<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertical
-								</div>
-							{/if}
-
-							<div class="flex gap-4 items-center">
-								{#each [{ value: 'normal' }, { value: 'huge' }, { value: 'giant' }] as titleSize}
-									<div class="flex items-center">
-										<input
-											bind:group={hero.theme.titleSize}
-											class="mr-2"
-											type="radio"
-											value={titleSize.value}
-										/>
-										{_.capitalize(titleSize.value)}
-									</div>
-								{/each}
-							</div>
-
-							<div class="flex shrink-0 font-normal items-center">
-								<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
-							</div>
+						<div class="flex shrink-0 font-normal items-center mb-4">
+							<input bind:checked={hero.theme.isFullScreen} class="mr-2" type="checkbox" /> Full Screen
 						</div>
 
-						<div class="mt-4">
-							<div class="flex shrink-0 font-normal items-center">
-								<input bind:checked={hero.theme.isAnimatedTitle} class="mr-2" type="checkbox" /> Animate
-								Highlights
-							</div>
-							{#if hero.theme.isAnimatedTitle}
-								<div class="text-sm opacity-80">
-									Make some text <b>bold</b> to animate it. Separate words with comma to animate
-									multiple words like this: <b>one, two, three</b>
+						<div class="_section">
+							<div class="font-semibold mb-2">Text & Layout</div>
+							<div class="flex flex-wrap gap-4 mt-4">
+								{#if hero.demoUrl}
+									<div class="flex shrink-0 font-normal items-center">
+										<input bind:checked={hero.theme.isVertical} class="mr-2" type="checkbox" /> Is Vertical
+									</div>
+								{/if}
+
+								<div class="flex gap-4 items-center">
+									{#each [{ value: 'normal' }, { value: 'huge' }, { value: 'giant' }] as titleSize}
+										<div class="flex items-center">
+											<input
+												bind:group={hero.theme.titleSize}
+												class="mr-2"
+												type="radio"
+												value={titleSize.value}
+											/>
+											{_.capitalize(titleSize.value)}
+										</div>
+									{/each}
 								</div>
-							{/if}
+
+								<div class="flex shrink-0 font-normal items-center">
+									<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Is Left Aligned
+								</div>
+							</div>
+
+							<div class="mt-4">
+								<div class="flex shrink-0 font-normal items-center">
+									<input bind:checked={hero.theme.isAnimatedTitle} class="mr-2" type="checkbox" /> Animate
+									Highlights
+								</div>
+								{#if hero.theme.isAnimatedTitle}
+									<div class="text-sm opacity-80">
+										Make some text <b>bold</b> to animate it. Separate words with comma to animate
+										multiple words like this: <b>one, two, three</b>
+									</div>
+								{/if}
+							</div>
 						</div>
 					{/if}
 

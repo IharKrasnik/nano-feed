@@ -8,6 +8,7 @@
 	import SenjaIcon from 'lib/icons/senja.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
 	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
+	import { v4 as uuidv4 } from 'uuid';
 
 	import { onMount } from 'svelte';
 
@@ -41,6 +42,8 @@
 	} else {
 		isFile = false;
 	}
+
+	let id = uuidv4();
 
 	let isMounted;
 	let videoEl;
@@ -183,11 +186,12 @@
 				{#if isIframeFallback || isUrlEmbeddable(url)}
 					<iframe
 						src={url}
+						id="mmntm-{id}"
 						class="mmntm-iframe w-full {imgClass} {imgClass.includes('h-')
 							? ''
 							: 'overflow-y-auto min-h-[600px]'}"
-						onload={() => {
-							iFrameResize({}, '.mmntm-iframe');
+						on:load={() => {
+							iFrameResize({}, `#mmntm-${id}`);
 						}}
 						style="border:none;"
 					/>

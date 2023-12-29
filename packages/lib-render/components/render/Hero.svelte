@@ -140,16 +140,16 @@
 		{#if hero.bgImageUrl}
 			{#if !hero.theme.isNotBgImageDimmed}
 				<div
-					class="absolute top-0 left-0 w-screen h-screen z-1"
+					class="absolute top-0 left-0 w-screen h-full z-1"
 					style="background-color: {page.theme?.theme === 'dark'
 						? 'rgba(0,0,0,0.7)'
 						: 'rgba(255,255,255,.7)'}; z-index: 1;"
 				/>
 			{/if}
 			<RenderUrl
-				class="absolute left-0 top-0 w-screen h-screen opacity-90 overflow-hidden z-0"
+				class="absolute left-0 top-0 w-screen h-full opacity-90 overflow-hidden z-0"
 				isAutoplay={!isEdit}
-				imgClass="w-screen h-screen object-cover overflow-hidden"
+				imgClass="w-screen h-full object-cover overflow-hidden"
 				url={hero.bgImageUrl}
 			/>
 		{/if}
@@ -161,7 +161,7 @@
 		<div
 			class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {(hero.theme
 				?.isVertical ||
-				(page.sections?.length && !hero.demoUrl)) &&
+				(page.sections?.length && !hero.demoUrl && !hero.theme.isFullScreen)) &&
 			hero.theme?.bgPattern !== 'cursors'
 				? ''
 				: 'min-h-screen sm:h-screen'} {hero.theme?.bgPattern === 'canvas' ? 'max-w-max' : ''}"
