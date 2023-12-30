@@ -88,6 +88,28 @@
 			: ''} {hero.theme?.isOverrideColors ? `background: ${hero.theme?.backgroundColor};` : ''}
 				"
 	>
+		{#if hero.bgImageUrl}
+			{#if !hero.theme.isNotBgImageDimmed}
+				<div
+					class="absolute top-0 left-0 {isEdit ? 'w-full' : 'w-screen'} h-full z-1"
+					style="background-color: {page.theme?.theme === 'dark'
+						? 'rgba(0,0,0,0.7)'
+						: 'rgba(255,255,255,.7)'}; z-index: 1;"
+				/>
+			{/if}
+
+			<RenderUrl
+				class="absolute left-0 top-0 {isEdit
+					? 'w-full'
+					: 'w-screen'} h-full opacity-90 overflow-hidden z-0"
+				isAutoplay={!isEdit}
+				imgClass="{isEdit ? 'w-full' : 'w-screen'} h-full {isEdit
+					? 'object-cover'
+					: 'object-contain'}
+		 overflow-hidden"
+				url={hero.bgImageUrl}
+			/>
+		{/if}
 		{#if isCloneable}
 			<div
 				class="absolute z-20 right-4 top-12 _bg-opposite p-2 rounded opacity-50 hover:opacity-100 cursor-pointer"
@@ -137,25 +159,6 @@
 				class="absolute w-screen h-screen object-cover"
 				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
 			/> -->
-		{#if hero.bgImageUrl}
-			{#if !hero.theme.isNotBgImageDimmed}
-				<div
-					class="absolute top-0 left-0 {isEdit ? 'w-full' : 'w-screen'} h-full z-1"
-					style="background-color: {page.theme?.theme === 'dark'
-						? 'rgba(0,0,0,0.7)'
-						: 'rgba(255,255,255,.7)'}; z-index: 1;"
-				/>
-			{/if}
-			<RenderUrl
-				class="absolute left-0 top-0 {isEdit
-					? 'w-full'
-					: 'w-screen'} h-full opacity-90 overflow-hidden z-0"
-				isAutoplay={!isEdit}
-				imgClass="{isEdit ? 'w-full' : 'w-screen'} h-full object-contain
-				 overflow-hidden"
-				url={hero.bgImageUrl}
-			/>
-		{/if}
 
 		{#if page.activeHero?.theme?.bgGradient?.type}
 			<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />

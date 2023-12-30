@@ -1227,7 +1227,7 @@
 												bind:section={$sectionToEdit}
 												bind:page
 												onRemove={() => {
-													page.sections = page.sections.filter((s) => s.id !== $sectionToEdit.id);
+													page.sections = page.sections.filter((s) => s.id !== $sectionToEdit?.id);
 													$sectionToEdit = null;
 												}}
 											/>

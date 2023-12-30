@@ -751,7 +751,7 @@ See you!
 									class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 									on:click={() => {
 										blog.sections = blog.sections.map((s) => {
-											if (s.id === $sectionToEdit.id) {
+											if (s.id === $sectionToEdit?.id) {
 												return { ...$sectionToEdit };
 											} else {
 												return s;
@@ -771,7 +771,7 @@ See you!
 										bind:blog
 										bind:section={$sectionToEdit}
 										onRemove={() => {
-											blog.sections = blog.sections.filter((s) => s.id !== $sectionToEdit.id);
+											blog.sections = blog.sections.filter((s) => s.id !== $sectionToEdit?.id);
 											$sectionToEdit = null;
 										}}
 									/>
@@ -785,7 +785,7 @@ See you!
 									class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 									on:click={() => {
 										blog.sections = blog.sections.map((s) => {
-											if (s.id === $sectionToEdit.id) {
+											if (s.id === $sectionToEdit?.id) {
 												return { ...$sectionToEdit };
 											} else {
 												return s;
@@ -805,7 +805,7 @@ See you!
 										bind:section={$sectionToEdit}
 										bind:blog
 										onRemove={() => {
-											blog.sections = blog.sections.filter((s) => s.id !== $sectionToEdit.id);
+											blog.sections = blog.sections.filter((s) => s.id !== $sectionToEdit?.id);
 											$sectionToEdit = null;
 										}}
 									/>
