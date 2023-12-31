@@ -275,8 +275,10 @@
 							style="z-index: 40;"
 							in:slide={{ duration: 150 }}
 						>
-							<div class="_container-width mx-auto flex items-center justify-between">
-								<div class="text-lg opacity-70">
+							<div
+								class="_container-width mx-auto flex items-center justify-center sm:justify-between"
+							>
+								<div class="hidden sm:block text-lg opacity-70">
 									<a href="/blog" class="_link">Blog</a> / {page.activeHero?.title || ''}
 								</div>
 								<div class="opacity-70 hover:opacity-100 transition">
