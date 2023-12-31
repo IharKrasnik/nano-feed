@@ -338,9 +338,9 @@
 
 					{#if hero.demoUrl}
 						<div
-							class="relative  w-full mt-16 sm:mt-0 {hero.theme?.isVertical
-								? ''
-								: 'sm:ml-8 sm:max-w-[600px]'}"
+							class="relative  w-full {page.renderType === 'article'
+								? 'mt-0'
+								: 'mt-16'} sm:mt-0 {hero.theme?.isVertical ? '' : 'sm:ml-8 sm:max-w-[600px]'}"
 							in:fly={{ y: 25, delay: 1000, duration: 900 }}
 							on:click={() => {
 								// if (hero.demoUrl.includes('/emulator-full')) {

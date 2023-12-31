@@ -11,7 +11,7 @@
 	<div class="hidden sm:block absolute ml-[50%] h-full top-6 w-[2px] _border-theme" />
 	{#if section.items}
 		{#each section.items as step, i}
-			<div class="flex sm:hidden block w-full justify-center">
+			<div class="flex sm:hidden block w-full justify-center mb-8">
 				<div
 					class="rounded-full w-[40px] h-[40px] border  _border-theme flex items-center justify-center backdrop-blur"
 				>
@@ -20,7 +20,9 @@
 			</div>
 
 			<div
-				class="flex relative sm:w-[50%] p-8 mb-8 justify-center text-center {i % 2
+				class="flex relative sm:w-[50%] sm:p-8 mb-8 justify-center {page.renderType === 'article'
+					? 'text-left'
+					: 'text-center'} {i % 2
 					? 'sm:ml-[50%] sm:justify-start sm:text-left'
 					: 'sm:justify-end sm:text-right'}"
 			>

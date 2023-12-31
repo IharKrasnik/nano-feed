@@ -145,18 +145,16 @@
 			</div>
 			{#if section.renderType === 'testimonials'}
 				<div>
-					{striptags((section.testimonials || []).map((f) => f.name).join(', '))}
+					{@html striptags((section.testimonials || []).map((f) => f.name).join(', '))}
 				</div>
 			{:else if section.type === 'faq'}
 				<div>
-					{striptags((section.faqs || []).map((f) => f.question).join(', '))}
+					{@html striptags((section.faqs || []).map((f) => f.question).join(', '))}
 				</div>
 			{:else if section.items}
-				{#each section.items as item (item.id)}
-					<div>
-						{striptags(item.title || '')}
-					</div>
-				{/each}
+				<div class="overflow-hidden _line-clamp-4">
+					{@html section.items.map((item) => striptags(item.title || '')).join('<br/>')}
+				</div>
 			{/if}
 
 			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.streamSlug || ['testimonials', 'pricing', 'form', 'carousel', 'stepper', 'article'].includes(section.renderType)}

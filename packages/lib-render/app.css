@@ -515,6 +515,15 @@ a[href] {
 	-webkit-line-clamp: 4;
 }
 
+._link {
+	@apply transition underline underline-offset-4;
+	color: var(--accent-color);
+}
+
+._link:hover {
+	@apply opacity-70;
+}
+
 .dense img:first-child {
 	margin-right: -25px;
 }

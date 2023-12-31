@@ -557,13 +557,4 @@
 		color: var(--text-color);
 		@apply transition rounded-lg;
 	}
-
-	._link {
-		@apply transition;
-		color: var(--accent-color);
-	}
-
-	._link:hover {
-		@apply opacity-70;
-	}
 </style>

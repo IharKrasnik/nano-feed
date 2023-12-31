@@ -33,25 +33,42 @@ function restoreSelection() {
 	}
 }
 
-function createLink(url) {
-	// var savedSel = saveSelection();
-	// restoreSelection(savedSel);
+// function createLink(url) {
+// 	document.execCommand('CreateLink', false, url);
+// }
 
-	document.execCommand('CreateLink', false, url);
-}
+let onPaste = async (e) => {
+	e.preventDefault();
+
+	let text = e.clipboardData.getData('text/plain');
+
+	if (text.startsWith('http')) {
+		let selection = document.getSelection();
+		debugger;
+		document.execCommand(
+			'insertHTML',
+			false,
+			'<a href="' + text + '" class="_link" target="_blank">' + selection + '</a>'
+		);
+	} else {
+		document.execCommand('insertText', false, text);
+	}
+
+	// function (e) {
+	// 	e.preventDefault();
+
+	// 	let text = e.clipboardData.getData('text/plain');
+
+	// 	if (text.startsWith('http')) {
+	// 		createLink(text);
+	// 	} else {
+	// 		document.execCommand('insertText', false, text);
+	// 	}
+	// }
+};
 
 export default (node, { isWithMenu = false } = {}) => {
-	node.addEventListener('paste', function (e) {
-		e.preventDefault();
-
-		let text = e.clipboardData.getData('text/plain');
-
-		if (text.startsWith('http')) {
-			createLink(text);
-		} else {
-			document.execCommand('insertText', false, text);
-		}
-	});
+	node.addEventListener('paste', onPaste);
 
 	if (isWithMenu) {
 		let control;

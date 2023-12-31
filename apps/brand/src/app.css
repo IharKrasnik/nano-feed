@@ -42,6 +42,7 @@ body {
 ._link {
 	cursor: pointer;
 	color: var(--accent-color);
+	@apply underline;
 }
 
 .number-tag {

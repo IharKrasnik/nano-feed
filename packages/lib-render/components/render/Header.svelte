@@ -12,7 +12,8 @@
 	export let isEdit;
 	export let isEmbed;
 
-	let parentPage = page.parentPage || page;
+	let parentPage;
+	$: parentPage = page.parentPage || page;
 
 	let isMenuOpen = false;
 

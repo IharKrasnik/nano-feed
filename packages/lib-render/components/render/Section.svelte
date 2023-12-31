@@ -395,16 +395,12 @@
 				? '_transparent'
 				: ''} {section.type} {section.renderType} 
 				{section.bgImageUrl ? '_bg-image' : ''}
-				
+				px-4 xl:px-0 
 				{clazz
 				? clazz
 				: section.renderType === 'article'
 				? 'sm:pb-16'
-				: `${
-						section.items?.length
-							? `px-4 xl:px-0 ${isFooter ? '' : 'py-8 sm:py-16'}`
-							: 'px-4 xl:px-0 py-8 sm:py-16'
-				  }`}
+				: `${section.items?.length ? `${isFooter ? '' : 'py-8 sm:py-16'}` : 'py-8 sm:py-16'}`}
 					{section.renderType === 'changelog' ? 'sm:w-[600px] mx-auto' : ''}
 					
 					"
@@ -461,7 +457,7 @@
 										: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||
 									section.theme?.isTitleLeft ||
 									section.renderType === 'article'
-										? 'sm:max-w-[712px]'
+										? 'sm:max-w-[712px] sm:mx-auto'
 										: 'sm:max-w-[768px] sm:mx-auto'}"
 								>
 									<ContentEditableIf
@@ -475,11 +471,10 @@
 								<h3
 									class="mb-8 {page.theme.isTitlesHuge || section.theme?.isHugeTitle
 										? 'text-xl leading-8'
-										: 'text-lg font-medium'} whitespace-pre-wrap opacity-70 {section.renderType ===
-									'article'
-										? 'sm:max-w-[712px]'
-										: page.theme.isTitlesLeft || section.theme?.isTitleLeft
-										? 'sm:max-w-[712px]'
+										: 'text-lg font-medium'} whitespace-pre-wrap {section.renderType === 'article'
+										? 'opacity-90 sm:max-w-[712px]'
+										: `opacity-70 ${page.theme.isTitlesLeft || section.theme?.isTitleLeft}`
+										? 'sm:max-w-[712px] sm:mx-auto'
 										: 'sm:max-w-[592px] sm:mx-auto'}"
 								>
 									{#if isEdit && page.renderType === 'article'}
