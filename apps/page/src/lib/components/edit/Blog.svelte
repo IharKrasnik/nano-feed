@@ -1,5 +1,6 @@
 <script>
 	import _ from 'lodash';
+	import striptags from 'striptags';
 	import moment from 'moment-timezone';
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { get, post, put, del } from 'lib/api';
@@ -174,8 +175,6 @@
 			<div class="text-sm mt-2">Share your knowledge and grow!</div>
 		</div>
 
-		<hr class="my-8" />
-
 		{#each articles as article (article._id)}
 			<div
 				class="_section cursor-pointer"
@@ -187,16 +186,16 @@
 					}
 				}}
 			>
-				<div class="flex justify-between items-center">
+				<div class="flex justify-between overflow-hidden items-center">
 					<div>
-						<div class="flex justify-between items-center">
-							<div class="relative">
-								<div class=" font-bold">
-									{article.heros[0]?.title || ''}
+						<div class="flex justify-between  items-center">
+							<div class=" relative">
+								<div class="truncate font-bold">
+									{@html striptags(article.heros[0]?.title || '')}
 								</div>
 
 								<div class="truncate">
-									{article.heros[0]?.subtitle || ''}
+									{@html striptags(article.heros[0]?.subtitle || '')}
 								</div>
 
 								<!-- {#if $pageDraft[article._id]?.isDirty}
@@ -213,6 +212,7 @@
 							{moment(article.createdOn).format('DD MMM')}
 						</div>
 					</div>
+
 					<div class="flex items-center">
 						<FeatherIcon class="mr-2" size="15" name="eye" color="#333333" />
 						{article.totalViewsCount || 0}

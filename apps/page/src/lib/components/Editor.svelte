@@ -1066,7 +1066,7 @@
 									>
 										<option value={page.parentPage?._id || page._id}>Home</option>
 										{#if $subPages?.length}
-											{#each $subPages as subpage (subpage._id)}
+											{#each $subPages.filter((sp) => sp.renderType !== 'article') as subpage (subpage._id)}
 												<option value={subpage._id}>/{subpage.slug}</option>
 											{/each}
 										{/if}
