@@ -255,7 +255,7 @@
 	{#if page.theme?.layoutType === 'portfolio' || page.parentPage?.theme?.layoutType === 'portfolio'}
 		<PortfolioPage bind:page />
 	{:else}
-		<div class="" bind:this={previewEl}>
+		<div class={page.interactiveAnswers ? 'pb-16' : ''} bind:this={previewEl}>
 			<div
 				class="relative color-site min-h-screen"
 				style="{cssVarStyles}; font-family: var(--text-font);"
@@ -269,16 +269,26 @@
 				{#if page.interactiveAnswers}
 					{#if scrollY > 100}
 						<div
-							class="fixed bottom-0 w-full w-screen z-10"
+							class="fixed  {(page.parentPage || page).theme?.theme === 'dark'
+								? 'bg-black/70'
+								: 'bg-white/70'} backdrop-blur w-full w-screen z-10 py-2 bottom-0"
 							style="z-index: 40;"
 							in:slide={{ duration: 150 }}
 						>
-							<RenderInteractiveOptions
-								class="w-full justify-center"
-								trackId={`${page._id}`}
-								bind:sectionItem={page}
-								bind:page
-							/>
+							<div class="_container-width mx-auto flex items-center justify-between">
+								<div class="text-lg opacity-70">
+									<a href="/blog" class="_link">Blog</a> / {page.activeHero?.title || ''}
+								</div>
+								<div class="opacity-70 hover:opacity-100 transition">
+									<RenderInteractiveOptions
+										class="w-full justify-center"
+										trackId={`${page._id}`}
+										isNoLabel
+										bind:sectionItem={page}
+										bind:page
+									/>
+								</div>
+							</div>
 						</div>
 					{/if}
 				{/if}

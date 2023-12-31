@@ -20,7 +20,9 @@
 			</div>
 
 			<div
-				class="flex relative sm:w-[50%] sm:p-8 mb-8 justify-center {page.renderType === 'article'
+				class="flex relative sm:w-[50%] sm:pt-8 {i % 2
+					? 'sm:pl-8'
+					: 'sm:pr-8'} mb-8 justify-center {page.renderType === 'article'
 					? 'text-left'
 					: 'text-center'} {i % 2
 					? 'sm:ml-[50%] sm:justify-start sm:text-left'
@@ -41,7 +43,11 @@
 						condition={isEdit}
 					/>
 					{#if step.description}
-						<ContentEditableIf class="mt-4" bind:innerHTML={step.description} condition={isEdit} />
+						<ContentEditableIf
+							class="mt-4 opacity-90"
+							bind:innerHTML={step.description}
+							condition={isEdit}
+						/>
 					{/if}
 					{#if step.imageUrl}
 						<RenderUrlWithBackground

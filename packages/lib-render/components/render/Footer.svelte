@@ -8,7 +8,7 @@
 	let groupLinks = () => {
 		let grouped = {};
 
-		(page.links || [])
+		(parentPage.links || [])
 			.filter((link) => link.groupName)
 			.filter((link) => link.isShowInFooter)
 			.forEach((link) => {
@@ -41,8 +41,8 @@
 </script>
 
 <div class="_container-width mx-auto text-sm my-16">
-	<div class="flex w-full justify-between items-start">
-		<div class="px-2 text-sm  shrink-0 ">
+	<div class="flex flex-col sm:flex-row w-full justify-between items-start">
+		<div class="px-4 sm:px-2 text-sm  shrink-0 ">
 			<div class="flex items-center sm:min-w-[500px]">
 				<Emoji class="mr-2" width="20" emoji={parentPage.logo} />
 				<span class=" font-medium">
@@ -54,13 +54,19 @@
 			</div>
 		</div>
 
-		<div class="w-full grid grid-cols-{grouppedLinks?.length < 4 ? '3' : '4'} justify-end">
+		<div
+			class="w-full grid sm:grid-cols-{grouppedLinks?.length < 4
+				? '3'
+				: '4'} sm:justify-end p-4 sm:p-0 sm:mt-0"
+		>
 			{#each grouppedLinks as link}
 				<div>
-					<div class="font-semibold mb-4 ">{link.groupName}</div>
+					<div class="font-semibold mt-8 mb-2 sm:mb-4">{link.groupName}</div>
 
 					{#each link.links as subLink}
-						<a class="block py-2 opacity-70 hover:opacity-100" href={subLink.url}>{subLink.name}</a>
+						<a class="block py-1 sm:py-2 opacity-70 hover:opacity-100" href={subLink.url}
+							>{subLink.name}</a
+						>
 					{/each}
 				</div>
 			{/each}

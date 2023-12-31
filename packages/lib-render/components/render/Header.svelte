@@ -222,8 +222,10 @@
 		{/if}
 
 		<div class="flex flex-col mt-8">
-			{#each (page.subPages || page.parentPage?.subPages || []).filter((sp) => !sp.slug.includes('/')) as subPage}
-				<a class="block py-4 border-b border-white/20" href="/{subPage.slug}">{subPage.name}</a>
+			{#each (parentPage.links || []).filter((l) => !l.isHidden && l.isShowInHeader) as link}
+				<a class="block py-4 border-b border-white/20" href={link.url || `/${link.slug}`}
+					>{link.name}</a
+				>
 			{/each}
 		</div>
 	</div>

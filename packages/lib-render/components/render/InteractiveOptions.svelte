@@ -28,9 +28,10 @@
 	export let size;
 
 	export let parentSectionId;
-	export let itemClass = 'p-4 mx-4';
+	export let itemClass = 'p-2 mx-3';
 	export let urlClass = '';
 	export let url2Class = '';
+	export let isNoLabel = false;
 
 	let isUrlLoading = false;
 	let isUrl2Loading = false;
@@ -514,7 +515,7 @@
 		</div>
 	{/if}
 
-	{#if ['short_answer', 'single_choice', 'multiple_choice'].includes(sectionItem.interactiveRenderType)}
+	{#if !isNoLabel && ['short_answer', 'single_choice', 'multiple_choice'].includes(sectionItem.interactiveRenderType)}
 		<div class="flex w-full items-center justify-center mt-4 ">
 			<div class="opacity-80 text-sm">Live answers from the community</div>
 			<div class="ml-2 w-[7px] h-[7px] rounded-full bg-green-300" />
