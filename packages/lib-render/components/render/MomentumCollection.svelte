@@ -24,9 +24,9 @@
 	let databaseSection = {
 		id: section.id,
 		isShowSource: section.isShowSource,
-		renderType: section.streamSlug.includes('-blog') ? 'article' : section.renderType,
-
+		renderType: section.renderType,
 		isDatabase: true,
+		isBlog: section.streamSlug?.includes('-blog'),
 		columns: section.columns,
 		items: [],
 		linkType: 'interactive',
@@ -128,8 +128,9 @@
 						tagsStr
 					};
 				}
+				//1
 			);
-
+		debugger;
 		if (!isEdit) {
 			replaceVars();
 		}

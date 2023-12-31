@@ -872,7 +872,7 @@
 
 													{#if isShowAuthor}
 														<div>
-															<ArticleAuthorLabel isWithAuthor={false} class={`my-2 `} bind:page />
+															<!-- <ArticleAuthorLabel isWithAuthor={false} class={`my-2 `} bind:page /> -->
 														</div>
 													{/if}
 
@@ -919,6 +919,12 @@
 																bind:page
 																itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
 															/>
+														</div>
+													{/if}
+
+													{#if section.isBlog}
+														<div class="text-sm opacity-70 mt-4">
+															{moment(item.publishedOn).format('MMM DD, YYYY')}
 														</div>
 													{/if}
 												</div>

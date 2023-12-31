@@ -489,7 +489,7 @@
 						{/if}
 
 						{#if !$childStreams.find((cs) => cs.slug.includes('-blog'))}
-							<option value={'_changelog'}>Blog Articles</option>
+							<option value={'_blog'}>Blog Articles</option>
 						{/if}
 
 						{#each $childStreams as stream (stream._id)}
