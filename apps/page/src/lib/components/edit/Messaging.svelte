@@ -228,18 +228,19 @@ See you!
 			imageUrl: selectedNewsletter.imageUrl
 		});
 
-		broadcastEmail.isSent = true;
-		broadcastEmail.customerIds = customerIds;
-
-		broadcastEmails.results = [
+		broadcastEmails = [
 			{
-				subject: broadcastEmail.subject,
-				customerIds: broadcastEmail.customerIds,
-				html: broadcastEmail.html,
+				subject: selectedNewsletter.subject,
+				customerIds,
+				html: selectedNewsletter.html,
 				createdOn: new Date()
 			},
-			...(broadcastEmails.results || [])
+			...(broadcastEmails || [])
 		];
+
+		showSuccessMessage(`Newsletter was sent to ${customerIds.length} customers`);
+
+		selectedNewsletter = null;
 	};
 </script>
 
@@ -260,12 +261,17 @@ See you!
 	<div class="flex items-center w-full justify-between mb-4">
 		<div class="font-bold text-lg ">Newsletters</div>
 
-		{#if broadcastEmails?.length}
-			<button class="_secondary _small">Send new</button>
+		{#if broadcastEmails?.length && !selectedNewsletter}
+			<button
+				class="_secondary _small"
+				on:click={() => {
+					selectedNewsletter = { ...newBroadcastEmail };
+				}}>Send new</button
+			>
 		{/if}
 	</div>
 
-	{#if broadcastEmails?.length}
+	{#if broadcastEmails?.length && !selectedNewsletter}
 		{#each broadcastEmails as broadcastEmail}
 			<div class="_section">
 				<div>{broadcastEmail.subject}</div>
