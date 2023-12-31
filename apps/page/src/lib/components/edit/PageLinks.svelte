@@ -184,11 +184,6 @@
 					<button class="_primary _small mt-4 block" on:click={addLink}>Add Link</button>
 				</div>
 			{/if}
-			<div>
-				<button class="_primary _small mt-8" on:click={() => (isShown = false)}
-					>Save and Close</button
-				>
-			</div>
 		</div>
 	</div>
 {/if}

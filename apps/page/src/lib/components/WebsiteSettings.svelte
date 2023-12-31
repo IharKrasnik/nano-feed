@@ -154,7 +154,9 @@
 				</div>
 			{:else}
 				<div>
-					<Button class="_primary _small" onClick={subscribe}>⚡️ Upgrade to Make Private</Button>
+					<Button class="_primary _green _small" onClick={subscribe}
+						>⚡️ Upgrade to Make Private</Button
+					>
 					<div class="mt-1 opacity-80 text-right text-sm">Paid plan is required</div>
 				</div>
 			{/if}

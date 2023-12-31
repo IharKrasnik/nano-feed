@@ -9,7 +9,9 @@
 	let parentPage = page.parentPage || page;
 </script>
 
-<div class="text-lg font-bold mb-4">Settings</div>
+<div class="text-lg font-bold mb-1">Settings</div>
+<div class="opacity-80 mb-6">{parentPage.name}</div>
+<hr class="my-8" />
 
 <div
 	class="_section cursor-pointer"
@@ -25,10 +27,8 @@
 			<Emoji width={30} height={30} emoji={parentPage.emoji} />
 		</div>
 		<div>
-			<div class="font-bold">
-				{parentPage.name}
-			</div>
-			<div class="opacity-80 mt-1">Website settings: Domains, Badge, Analytics</div>
+			<div class="font-bold">Website Settings</div>
+			<div class="opacity-80 mt-1">Manage Domains, Momentum Badge, Analytics</div>
 		</div>
 	</div>
 </div>
@@ -50,9 +50,7 @@
 	</div>
 </div>
 
-<hr class="my-8" />
-
-<div class="text-lg font-bold mb-4">Subscription</div>
+<div class="text-lg font-bold mb-4 mt-16">Subscription</div>
 <div
 	class="_section cursor-pointer flex items-start"
 	class:_selected={$selectedSettingsTab === 'plans'}
@@ -70,15 +68,13 @@
 	</div>
 </div>
 
-<hr class="my-8" />
-
-<div class="flex mb-2 items-center">
-	<div class="text-lg font-bold">Pages</div>
+<div class="flex mb-2 items-center mt-16">
+	<div class="text-lg font-bold">Pages Settings</div>
 	<div class="ml-4 px-3 rounded-full border ring-1 ring-black text-sm">
-		{$subPages.length}
+		{$subPages.length + 1}
 	</div>
 </div>
-<div class="opacity-80 mt-2">OpenGraph, custom code</div>
+<div class="opacity-80 mt-2">OpenGraph, Custom Code</div>
 {#each [parentPage, ...$subPages] as subPage}
 	<div
 		class="_section cursor-pointer mt-4"

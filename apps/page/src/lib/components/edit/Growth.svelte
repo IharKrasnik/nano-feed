@@ -20,7 +20,12 @@
 {/if}
 
 {#if selectedGrowthTab === 'services'}
-	<BackTo to="Dashboard" />
+	<BackTo
+		to="Dashboard"
+		onClick={() => {
+			selectedGrowthTab = 'dashboard';
+		}}
+	/>
 	<EditServices bind:page bind:setPageAndDraft />
 {:else}
 	<div>
@@ -311,7 +316,7 @@
 
 				<div>
 					<div class="inline-block font-semibold mt-1">$159.99</div>
-					<div class="inline-block line-through ml-2 mt-1 opacity-70">$679.99</div>
+					<div class="inline-block line-through ml-2 mt-1 opacity-70">$379.99</div>
 				</div>
 			</div>
 
