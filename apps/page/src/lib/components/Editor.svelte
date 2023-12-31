@@ -1066,7 +1066,7 @@
 									>
 										<option value={page.parentPage?._id || page._id}>Home</option>
 										{#if $subPages?.length}
-											{#each $subPages.filter((sp) => sp.renderType !== 'article') as subpage (subpage._id)}
+											{#each $subPages as subpage (subpage._id)}
 												<option value={subpage._id}>/{subpage.slug}</option>
 											{/each}
 										{/if}
@@ -1538,7 +1538,7 @@
 											{#if page.renderType === 'service'}
 												<EditService bind:page bind:setPageAndDraft />
 											{:else}
-												{#if page?._id}
+												{#if page?._id && !page.renderType}
 													<div
 														class="_section cursor-pointer"
 														on:click={() => {
@@ -1603,9 +1603,6 @@
 																bind:page
 																bind:focuses
 																isShowTips={page.heros?.length < 2}
-																isCollapsedDefault={!!(page.activeHero
-																	? page.activeHero.title
-																	: page.title)}
 															/>
 														{/each}
 

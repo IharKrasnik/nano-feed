@@ -71,9 +71,12 @@
 
 	export let focuses;
 
-	export let isCollapsedDefault = true;
+	export let isCollapsedDefault =
+		page.renderType === 'article'
+			? false
+			: !!(page.activeHero ? page.activeHero.title : page.title);
 	let isCollapsed = isCollapsedDefault;
-
+	console.log('isCollapsedDefault', isCollapsedDefault);
 	let isSelectBackgroundModalShown = false;
 
 	let isSettingsShown = false;
