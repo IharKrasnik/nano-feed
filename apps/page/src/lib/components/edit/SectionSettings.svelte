@@ -119,11 +119,14 @@
 								</select>
 							{/if}
 						</div>
-						{#if section.columns > 1}
-							{#if section.isMasonryGrid}
-								<input class="ml-r" type="checkbox" bind:checked={section.isFunkyGrid} /> funky
-							{/if}
-							<input class="mr-2" type="checkbox" bind:checked={section.isMasonryGrid} /> masonry
+					</div>
+				{/if}
+
+				{#if section.columns > 1}
+					<div class="my-2">
+						<input class="mr-2" type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
+						{#if section.isMasonryGrid}
+							<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
 						{/if}
 					</div>
 				{/if}

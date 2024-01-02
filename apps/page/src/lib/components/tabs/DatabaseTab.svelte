@@ -24,7 +24,7 @@
 		items: [],
 		linkType: 'interactive',
 		totalItemsLength: 0,
-		isMasonryGrid: false
+		isMasonryGrid: true
 	});
 </script>
 
