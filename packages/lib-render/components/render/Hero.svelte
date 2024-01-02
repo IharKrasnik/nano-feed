@@ -148,7 +148,7 @@
 		{/if}
 
 		{#if hero.theme?.bgPattern === 'canvas'}
-			<CanvasAnimation animationCode={hero.theme?.canvasAnimationCode} />
+			<CanvasAnimation {isEdit} animationCode={hero.theme?.canvasAnimationCode} />
 		{/if}
 
 		{#if hero.theme?.bgPattern === 'stars'}

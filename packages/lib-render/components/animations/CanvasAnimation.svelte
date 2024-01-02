@@ -2,12 +2,20 @@
 	import { onMount } from 'svelte';
 
 	export let animationCode;
+	export let isEdit = false;
+	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	let canvasEl;
 
 	onMount(() => {
 		window.backgroundCanvas = canvasEl;
-		eval(animationCode);
+		try {
+			eval(animationCode);
+		} catch (err) {
+			if (isEdit) {
+				showErrorMessage('Canvas code execution error');
+			}
+		}
 	});
 </script>
 
