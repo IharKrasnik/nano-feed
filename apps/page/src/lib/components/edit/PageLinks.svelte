@@ -37,6 +37,9 @@
 		if (l.slug) {
 			l.pageSlug = l.slug;
 		}
+		if (!l.id) {
+			l.id = uuidv4();
+		}
 	});
 
 	let handleDndConsider = (e) => {

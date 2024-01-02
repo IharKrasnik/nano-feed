@@ -514,7 +514,6 @@
 					{/if}
 
 					{#if section.streamSlug && section.streamSlug !== '_new'}
-						__d {section.streamSettings.limit}
 						{#if section.streamSettings}
 							<div class="grid grid-cols-2 gap-4">
 								<div class="_section">
