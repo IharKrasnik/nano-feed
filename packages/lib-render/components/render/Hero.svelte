@@ -163,7 +163,6 @@
 		{#if page.activeHero?.theme?.bgGradient?.type}
 			<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
 		{/if}
-
 		<div
 			class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {(hero.theme
 				?.isVertical ||
