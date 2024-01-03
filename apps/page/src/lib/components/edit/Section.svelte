@@ -32,6 +32,8 @@
 	export let onEditStarted = () => {};
 	export let onEditEnded = () => {};
 
+	export let isInnerSection = false;
+
 	export let isShort = true;
 
 	if (!section.renderType) {
@@ -137,6 +139,9 @@
 			class="_section cursor-pointer"
 			on:click={() => {
 				// isShort = false;
+				if (isInnerSection) {
+					section.isInnerSection = true;
+				}
 				$sectionToEdit = section;
 				// onEditStarted(section);
 			}}
@@ -202,13 +207,15 @@
 		</div>
 	</div>
 {:else}
-	<div
-		class="absolute right-4 top-6 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
-		title="Remove Item"
-		on:click={onRemove}
-	>
-		Delete Section 🗑
-	</div>
+	{#if !section.isInnerSection}
+		<div
+			class="absolute right-4 top-6 opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
+			title="Remove Item"
+			on:click={onRemove}
+		>
+			Delete Section 🗑
+		</div>
+	{/if}
 
 	<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
 		<div class="font-bold mb-2">Render this section as...</div>
@@ -260,97 +267,99 @@
 		{/if}
 	</div>
 
-	<div class="_section rounded-xl" style="padding:0;">
-		<div class="flex justify-between items-center">
-			<div class="_title p-4" style="margin: 0;">Section</div>
-		</div>
+	{#if !section.isInnerSection}
+		<div class="_section rounded-xl" style="padding:0;">
+			<div class="flex justify-between items-center">
+				<div class="_title p-4" style="margin: 0;">Section</div>
+			</div>
 
-		<hr class="border-[#8B786D] opacity-30" />
+			<hr class="border-[#8B786D] opacity-30" />
 
-		<div class="p-4">
-			<EditSectionItem
-				class="p-0"
-				isWithGrid={false}
-				isWithLabel
-				isWithInteractive
-				onRemove={null}
-				bind:page
-				bind:section
-				bind:item={section}
-			/>
-		</div>
-		<div
-			style="padding: 0px;"
-			use:clickOutside
-			on:clickOutside={() => {
-				// isShort = true;
-				// section = { ...section };
-				// $sectionToEdit = null;
-				// section = null;
-				// onEditEnded(section);
-			}}
-		>
-			{#if section.renderType === 'grid' || section.renderType === 'pricing'}
-				<hr class="mt-4 border-[#8B786D] opacity-30" />
-				<div class="bg-white  my-4">
-					<div class="relative mt-4">
-						<div class="px-4 flex items-center">
-							{#if section.renderType !== 'pricing'}
+			<div class="p-4">
+				<EditSectionItem
+					class="p-0"
+					isWithGrid={false}
+					isWithLabel
+					isWithInteractive
+					onRemove={null}
+					bind:page
+					bind:section
+					bind:item={section}
+				/>
+			</div>
+			<div
+				style="padding: 0px;"
+				use:clickOutside
+				on:clickOutside={() => {
+					// isShort = true;
+					// section = { ...section };
+					// $sectionToEdit = null;
+					// section = null;
+					// onEditEnded(section);
+				}}
+			>
+				{#if section.renderType === 'grid' || section.renderType === 'pricing'}
+					<hr class="mt-4 border-[#8B786D] opacity-30" />
+					<div class="bg-white  my-4">
+						<div class="relative mt-4">
+							<div class="px-4 flex items-center">
+								{#if section.renderType !== 'pricing'}
+									<div
+										class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+										class:aspect-square={section.columns !== 1}
+										class:px-4={section.columns === 1}
+										on:click={() => (section.columns = 1)}
+									>
+										1
+										{#if section.columns === 1}column{/if}
+									</div>
+								{/if}
+
 								<div
-									class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									class:aspect-square={section.columns !== 1}
-									class:px-4={section.columns === 1}
-									on:click={() => (section.columns = 1)}
+									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									on:click={() => (section.columns = 2)}
+									class:aspect-square={section.columns !== 2}
+									class:px-4={section.columns === 2}
 								>
-									1
-									{#if section.columns === 1}column{/if}
+									2
+									{#if section.columns === 2}columns{/if}
 								</div>
-							{/if}
 
-							<div
-								class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-								on:click={() => (section.columns = 2)}
-								class:aspect-square={section.columns !== 2}
-								class:px-4={section.columns === 2}
-							>
-								2
-								{#if section.columns === 2}columns{/if}
-							</div>
+								<div
+									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									class:aspect-square={section.columns !== 3}
+									class:px-4={section.columns === 3}
+									on:click={() => (section.columns = 3)}
+								>
+									3
+									{#if section.columns === 3}columns{/if}
+								</div>
 
-							<div
-								class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-								class:aspect-square={section.columns !== 3}
-								class:px-4={section.columns === 3}
-								on:click={() => (section.columns = 3)}
-							>
-								3
-								{#if section.columns === 3}columns{/if}
-							</div>
-
-							<div
-								class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-								class:aspect-square={section.columns !== 4}
-								class:px-4={section.columns === 4}
-								on:click={() => (section.columns = 4)}
-							>
-								4
-								{#if section.columns === 4}columns{/if}
-							</div>
-							<div
-								class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-								class:aspect-square={section.columns !== 12}
-								class:px-4={section.columns === 12}
-								on:click={() => (section.columns = 12)}
-							>
-								12
-								{#if section.columns === 12}columns{/if}
+								<div
+									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									class:aspect-square={section.columns !== 4}
+									class:px-4={section.columns === 4}
+									on:click={() => (section.columns = 4)}
+								>
+									4
+									{#if section.columns === 4}columns{/if}
+								</div>
+								<div
+									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									class:aspect-square={section.columns !== 12}
+									class:px-4={section.columns === 12}
+									on:click={() => (section.columns = 12)}
+								>
+									12
+									{#if section.columns === 12}columns{/if}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			{/if}
+				{/if}
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	{#if section.renderType === 'embedCode'}
 		<div class="_section">

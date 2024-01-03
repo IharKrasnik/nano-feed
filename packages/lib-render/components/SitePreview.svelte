@@ -315,9 +315,10 @@
 								<div class="overflow-y-hidden">
 									{#if page.activeHero}
 										<div
-											class="sticky bg-site"
-											class:opacity-30={!!$sectionToEdit}
-											class:grayscale={!!$sectionToEdit}
+											class="sticky bg-site {$sectionToEdit &&
+											$sectionToEdit.id !== page.activeHero?.formSection?.id
+												? 'opacity-30 grayscale'
+												: ''}"
 										>
 											<RenderHero
 												bind:hero={page.activeHero}

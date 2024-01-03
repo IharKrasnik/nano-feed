@@ -1656,14 +1656,7 @@
 															</div>
 
 															{#if !page.sections?.length}
-																<div>
-																	<!-- <button
-													class="_primary _small w-full text-center cursor-pointer text-[#8B786D]"
-													on:click={addNewSection}
-												>
-													Add Empty Section
-												</button> -->
-																</div>
+																<div />
 
 																{#if page.sections?.length > 1}
 																	<div

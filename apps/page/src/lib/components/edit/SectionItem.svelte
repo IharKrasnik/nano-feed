@@ -217,6 +217,11 @@
 				{/each}
 			</div>
 		{/if}
+	{:else if section.renderType === 'form' && item?.id !== section?.id}
+		<div class="_section  mt-4">
+			<div class="mb-2 font-bold">Interaction</div>
+			<EditInteractiveOptions class="" bind:section bind:sectionItem={item} isWithButton={false} />
+		</div>
 	{:else if section.renderType !== 'form' || item.isActionSuccessSection}
 		{#if item.id === section.id || section.renderType !== 'callout'}
 			<div class="relative flex justify-between items-center">
@@ -230,17 +235,7 @@
 				/>
 			</div>
 		{/if}
-		{#if section.renderType === 'form' && item?.id !== section?.id}
-			<div class="_section  mt-4">
-				<div class="mb-2 font-bold">Interaction</div>
-				<EditInteractiveOptions
-					class=""
-					bind:section
-					bind:sectionItem={item}
-					isWithButton={false}
-				/>
-			</div>
-		{/if}
+
 		{#if item.imageUrl}
 			<div class="flex items-center mt-2 justify-between">
 				<div class="text-xs flex gap-2 items-center">

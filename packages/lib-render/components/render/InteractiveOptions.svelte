@@ -17,6 +17,7 @@
 	import trackClick from 'lib/services/trackClick';
 	import trackForm from 'lib/services/trackForm';
 	import trackInteractiveAnswer from 'lib/services/trackInteractiveAnswer';
+	import RenderForm from 'lib-render/components/render/Form.svelte';
 
 	export let page;
 
@@ -502,6 +503,8 @@
 					</a>
 				{/if}
 			</div>
+		{:else if sectionItem.interactiveRenderType === 'form'}
+			<RenderForm bind:section={sectionItem.formSection} bind:page />
 		{/if}
 	</div>
 

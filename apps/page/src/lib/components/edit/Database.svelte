@@ -333,17 +333,19 @@
 			{/each}
 
 			{#if !parentPage.streams?.feed}
-				<option value="{parentPage.name.toLowerCase().replace(' ', '-')}-feed">Content Feed</option>
+				<option value="{parentPage.slug}-feed">Content Feed</option>
 			{/if}
 
 			{#if !parentPage.streams?.changelog}
-				<option value="{parentPage.name?.toLowerCase().replace(' ', '-')}-changelog"
-					>Changelog</option
-				>
+				<option value="{parentPage.slug}-changelog">Changelog</option>
 			{/if}
 
 			{#if !parentPage.streams?.blog}
-				<option value="{parentPage.name.toLowerCase().replace(' ', '-')}-blog">Blog</option>
+				<option value="{parentPage.slug}-blog">Blog</option>
+			{/if}
+
+			{#if !parentPage.streams?.portfolio}
+				<option value="{parentPage.slug}-blog">Portfolio</option>
 			{/if}
 
 			<option value="_new">New Database</option>

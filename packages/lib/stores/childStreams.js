@@ -9,7 +9,6 @@ export const refreshChildStreams = async ({ page }) => {
 
 		childStreamsStore.set(results);
 
-		console.log('refrech results', results);
 		return results;
 	}
 };

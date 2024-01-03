@@ -58,7 +58,7 @@
 </script>
 
 {#if !isFormSubmitted}
-	<div class="_section-item max-w-[500px]  w-full mx-auto">
+	<div class="_section-item max-w-[600px] sm:min-w-[500px] w-full sm:mx-auto">
 		<form class="w-full flex flex-col gap-4 p-8" on:submit|preventDefault={submitForm}>
 			{#if section.items.length}
 				{#each section.items as formField}

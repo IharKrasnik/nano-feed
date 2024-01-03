@@ -21,25 +21,36 @@
 			heros: [],
 			name: newServiceName,
 			parentPage: page.parentPage ? { _id: page.parentPage._id } : { _id: page._id },
-			sections: [
+			heros: [
 				{
 					id: uuidv4(),
-					renderType: 'form',
+
 					title: newServiceName,
-					description: '',
-					callToActionText: 'Get My Prototype',
-					items: [
-						{
-							title: 'Email',
-							interactiveRenderType: 'email'
-						},
-						{
-							title: 'Message',
-							interactiveRenderType: 'textarea'
-						}
-					]
+					subtitle: '',
+					interactiveRenderType: 'form',
+
+					formSection: {
+						id: uuidv4(),
+						renderType: 'form',
+						callToActionText: 'Get My Prototype',
+						actionType: 'service_chat',
+
+						items: [
+							{
+								id: uuidv4(),
+								title: 'Email',
+								interactiveRenderType: 'email'
+							},
+							{
+								id: uuidv4(),
+								title: 'Message',
+								interactiveRenderType: 'textarea'
+							}
+						]
+					}
 				}
-			]
+			],
+			sections: []
 		});
 
 		newServicePage.parentPage.links = [

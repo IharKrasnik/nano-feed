@@ -109,18 +109,20 @@
 				<option value="link">Click 1 Link</option>
 				<option value="links">Click Few Links</option>
 				<option value="email">Submit Email</option>
+				<option value="form">Submit Form</option>
 				<option value="single_choice">Community Single Choice</option>
 				<option value="multiple_choice">Community Multiple Choice</option>
 				<option value="short_answer">Community Answer</option>
-				<option value="wave_analytics">See Public Web Analytics</option>
+				<!-- <option value="wave_analytics">See Public Web Analytics</option> -->
 			{/if}
 		</select>
 
 		{#if section?.renderType === 'form' && ['text', 'textarea', 'email'].includes(sectionItem.interactiveRenderType)}
-			<div class="my-2">
+			<div class="mb-2 mt-4">
 				<div class="text-sm opacity-70 mb-2">Placeholder</div>
 				<input
 					type="text"
+					class="w-full"
 					placeholder="Placeholder"
 					bind:value={sectionItem.interactivePlaceholder}
 				/>
@@ -192,10 +194,12 @@
 				/>
 			</div>
 		{:else if sectionItem.id !== section.id}
-			<div class="my-2">
-				<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
-				<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
-			</div>
+			{#if section.renderType !== 'form'}
+				<div class="my-2">
+					<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
+					<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
+				</div>
+			{/if}
 		{:else}
 			<div>
 				{#if sectionItem.interactiveAnswers?.length && (!sectionItem.interactiveRenderType || sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice')}

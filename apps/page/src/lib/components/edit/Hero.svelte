@@ -69,7 +69,7 @@
 
 	hero.theme.titleSize = hero.theme.titleSize || (hero.theme.isHugeTitle ? 'huge' : 'normal');
 
-	export let focuses;
+	export let focuses = {};
 
 	export let isCollapsedDefault =
 		page.renderType === 'article'
@@ -572,7 +572,7 @@
 							<br />
 						</div>
 					{:else}
-						Product Demo
+						{page.renderType === 'service' ? 'Service Demo' : 'Product Demo'}
 						<div class="font-normal text-sm opacity-70">
 							Screenshot, live GIF or a <a
 								href="//loom.com"
@@ -661,11 +661,17 @@
 				<div class="_title flex justify-between w-full">Call To Action</div>
 
 				<EditInteractiveOptions
-					class=" mt-4"
+					class="mt-4"
 					bind:section={hero}
 					bind:sectionItem={hero}
 					isWithButton={false}
 				/>
+
+				{#if hero.interactiveRenderType === 'form'}
+					<div class="mt-4">
+						<EditSection bind:section={hero.formSection} isInnerSection />
+					</div>
+				{/if}
 			</div>
 
 			{#if page.renderType !== 'article'}
