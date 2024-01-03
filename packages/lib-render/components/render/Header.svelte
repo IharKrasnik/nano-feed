@@ -223,7 +223,7 @@
 
 		<div class="flex flex-col mt-8">
 			{#each (parentPage.links || []).filter((l) => !l.isHidden && l.isShowInHeader) as link}
-				<a class="block py-4 border-b border-white/20" href={link.url || `/${link.slug}`}
+				<a class="block py-4 border-b border-white/20 shrink-0" href={link.url || `/${link.slug}`}
 					>{link.name}</a
 				>
 			{/each}

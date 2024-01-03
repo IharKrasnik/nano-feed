@@ -11,6 +11,7 @@ export const fetch = async ({
 	project,
 	creatorUsername,
 	isExplore,
+	attachedToPageId,
 	isWithUrlOnly = false
 } = {}) => {
 	feedStore.set([]);
@@ -39,6 +40,10 @@ export const fetch = async ({
 
 	if (isWithUrlOnly) {
 		query.isWithUrlOnly = true;
+	}
+
+	if (attachedToPageId) {
+		query.attachedToPageId = attachedToPageId;
 	}
 
 	const { results: feed } = await get('feed', query);

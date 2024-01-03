@@ -233,8 +233,30 @@
 		}
 	};
 
-	let setPageAndDraft = (p, { force = false } = {}) => {
+	let editableFields = [
+		'heros',
+		'sections',
+		'ctaFooter',
+		'theme',
+		'renderType',
+		'layoutType',
+		'interactiveAnswers',
+		'isInDir',
+		'isUseDatabase',
+		'dirName',
+		'links'
+	];
+
+	let setPageAndDraft = (p = defaultPage, { force = false, isSetEditorTab = true } = {}) => {
 		page = { ..._.cloneDeep(p) };
+
+		// if ($allPages?.find((p) => p._id === page._id)) {
+		// 	page = { ...$allPages.find((p) => p._id === page._id), ..._.pick(page, editableFields) };
+		// }
+
+		// if ($subPages?.find((p) => p._id === page._id)) {
+		// 	page = { ...$subPages.find((p) => p._id === page._id), ..._.pick(page, editableFields) };
+		// }
 
 		if (
 			!force &&
@@ -254,7 +276,9 @@
 
 		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug, lastPageId: page._id };
 
-		selectedTab = 'editor';
+		if (isSetEditorTab) {
+			selectedTab = 'editor';
+		}
 
 		if (!page.heros) {
 			page.heros = [];
@@ -509,20 +533,6 @@
 
 		page.sections = [...(page.sections || []), newSection];
 	};
-
-	let editableFields = [
-		'heros',
-		'sections',
-		'ctaFooter',
-		'theme',
-		'renderType',
-		'layoutType',
-		'interactiveAnswers',
-		'isInDir',
-		'isUseDatabase',
-		'dirName',
-		'links'
-	];
 
 	$: if (page) {
 		if (
@@ -1536,7 +1546,9 @@
 											{/if}
 
 											{#if page.renderType === 'service'}
-												<EditService bind:page bind:setPageAndDraft />
+												{#key page._id}
+													<EditService bind:page bind:setPageAndDraft />
+												{/key}
 											{:else}
 												{#if page?._id && !page.renderType}
 													<div
@@ -2112,7 +2124,7 @@
 										{:else if selectedTab === 'newsletter'}
 											<NewsletterTab bind:page />
 										{:else if selectedTab === 'settings'}
-											<EditWebsiteSettingsTab bind:page />
+											<EditWebsiteSettingsTab bind:page bind:setPageAndDraft />
 										{/if}
 									</div>
 								{/if}

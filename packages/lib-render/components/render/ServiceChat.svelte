@@ -17,7 +17,7 @@
 	let getMessages = async () => {
 		let { results } = await get(`customerMessages`, {
 			pageId: page.parentPage?._id || page._id,
-			roomId
+			chatRoomId: roomId
 		});
 
 		messages = results;
@@ -27,12 +27,12 @@
 		messages = [...messages, newMessage];
 		let toCreate = newMessage;
 
-		newMessage = { content: '', attachments: [] };
+		newMessage = { messageHTML: '', attachments: [] };
 
 		let createdMessage = await post(`customerMessages`, {
 			...toCreate,
-			page: { _id: page.parentPage?._id || page._id },
-			roomId
+			pageId: page.parentPage?._id || page._id,
+			chatRoomId: roomId
 		});
 
 		messages = [...messages.filter((m) => m._id), createdMessage];
@@ -69,16 +69,18 @@
 		{#each messages as message}
 			<div class="message my-4" class:my={message.customer} class:their={message.user}>
 				<div class="content">
-					{message.content}
+					{message.messageHTML}
 				</div>
 			</div>
 		{/each}
 	</div>
 
 	<div class="w-full flex gap-4 items-center justify-between">
-		<textarea class="w-full" placeholder="Your Message" bind:value={newMessage.content} />
-		<button disabled={!newMessage.content} on:click={sendMessage} class="_primary _small shrink-0"
-			>Send Message</button
+		<textarea class="w-full" placeholder="Your Message" bind:value={newMessage.messageHTML} />
+		<button
+			disabled={!newMessage.messageHTML}
+			on:click={sendMessage}
+			class="_primary _small shrink-0">Send Message</button
 		>
 	</div>
 </div>

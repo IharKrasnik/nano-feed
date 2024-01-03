@@ -111,9 +111,13 @@
 	if (!section.streamSettings) {
 		section.streamSettings = {};
 	}
+
+	if (section.streamSlug) {
+		section.isUseDb = true;
+	}
 </script>
 
-{#if isDatabaseModalShown}
+<!-- {#if isDatabaseModalShown}
 	<Modal
 		isShown
 		maxWidth={1200}
@@ -125,7 +129,7 @@
 			<EditDatabase selectedStreamSlug={section.streamSlug} bind:page />
 		</div>
 	</Modal>
-{/if}
+{/if} -->
 
 {#if isShort}
 	<div>
@@ -221,6 +225,7 @@
 			<option value="article">Article</option>
 			<option value="form">Form</option>
 			<option value="embedCode">HTML Code Embed</option>
+			<option value="service_chat">Service Chat</option>
 		</select>
 
 		{#if section.renderType === 'carousel'}
@@ -388,7 +393,24 @@
 			</div>
 		{/if}
 
-		<div class="mb-4 font-bold mt-8">Section Items</div>
+		<div class="w-full flex justify-between mt-8">
+			<div class="mb-4 font-bold">
+				{section.renderType === 'form' ? 'Form Fields' : 'Section Items'}
+			</div>
+			<div>
+				{#if section.renderType !== 'form'}
+					<input
+						type="checkbox"
+						bind:checked={section.isUseDb}
+						on:change={(evt) => {
+							if (!evt.target.checked) {
+								section.streamSlug = null;
+							}
+						}}
+					/> Attach to database
+				{/if}
+			</div>
+		</div>
 		<hr class="mt-4 mb-8" />
 
 		{#if section.items?.length}
@@ -404,11 +426,16 @@
 				{/each}
 			</div>
 		{/if}
-		{#if !section.streamSlug}
+
+		{#if !section.isUseDb && !section.streamSlug}
 			<button
 				class="_secondary _small  w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
 				on:click={addNewItem}
-				>Add {section.renderType === 'article' ? 'Subparagraph' : 'Section Item'}</button
+				>Add {section.renderType === 'article'
+					? 'Subparagraph'
+					: section.renderType === 'form'
+					? 'Form Field'
+					: 'Section Item'}</button
 			>
 		{/if}
 		<div>
@@ -417,6 +444,7 @@
 
 		{#if section.renderType === 'form'}
 			<div class="_section">
+				<div class="font-bold">Submit Button & What's Next</div>
 				<div class="font-normal text-sm opacity-70 mb-2 mt-4">Button text</div>
 
 				<input class="mb-4 w-full" bind:value={section.callToActionText} placeholder="Submit" />
@@ -436,6 +464,7 @@
 				<div class="w-full mb-2">
 					<select bind:value={section.actionType} class="w-full">
 						<option value="success">Show thank you message</option>
+						<option value="service_chat">Redirect to service chat</option>
 						<option value="url">Redirect to URL</option>
 					</select>
 				</div>
@@ -472,111 +501,19 @@
 			</div>
 		{/if}
 	{/if}
-	{#if true}
-		{#if !section.renderType || section.renderType === 'grid'}
-			<hr class="my-8" />
-			<div class="_section">
-				<div class="_title mt-4" style="margin: 0;">Sync from database</div>
-
-				<div class="w-full flex flex-col gap-4 mb-4 mt-2">
-					<select class="w-full" bind:value={section.streamSlug}>
-						<option value="">No</option>
-
-						{#if !$childStreams.find((cs) => cs.slug.includes('-feed'))}
-							<option value={'_feed'}>Feed</option>
-						{/if}
-
-						{#if !$childStreams.find((cs) => cs.slug.includes('-changelog'))}
-							<option value={'_changelog'}>Changelog</option>
-						{/if}
-
-						{#if !$childStreams.find((cs) => cs.slug.includes('-blog'))}
-							<option value={'_blog'}>Blog Articles</option>
-						{/if}
-
-						{#each $childStreams as stream (stream._id)}
-							<option value={stream.slug}>{stream.title}</option>
-						{/each}
-						<option value="_new">Add New</option>
-					</select>
-
-					{#if section.streamSlug && section.streamSlug !== '_new'}
-						<button class="w-full _small _secondary" on:click={() => (isDatabaseModalShown = true)}
-							>Edit Data</button
-						>
-					{/if}
-
-					{#if section.streamSlug === '_new'}
-						<input placeholder="Database Name" class="w-full" bind:value={newStreamTitle} />
-						<Button class="shrink-0 _small _secondary" onClick={createStream}
-							>Create Database</Button
-						>
-					{/if}
-
-					{#if section.streamSlug && section.streamSlug !== '_new'}
-						{#if section.streamSettings}
-							<div class="grid grid-cols-2 gap-4">
-								<div class="_section">
-									<div class="text-sm mb-2">Limit items</div>
-									<input type="number" class="w-full" bind:value={section.streamSettings.limit} />
-									<div class="text-xs mt-2">Leave 0 for pagination</div>
-								</div>
-								<div class="_section">
-									<div class="text-sm mb-2">Filter by tags</div>
-									<input
-										type="text"
-										class="w-full"
-										bind:value={section.streamSettings.filterTags}
-									/>
-									<div class="text-xs mt-2">Leave empty to not filter</div>
-								</div>
-							</div>
-							<div class="_section">
-								<div class="text-sm mb-2">Sort</div>
-
-								<select class="w-full" bind:value={section.streamSettings.sortBy}>
-									<option value="_sample">Random</option>
-									<option value="order">Sort by Order</option>
-									<option value="-publishedOn">Newest First</option>
-									<option value="-viewsCount">Popular First</option>
-								</select>
-							</div>
-							<div class="_section">
-								<div class="text-sm mb-2">Show best sample</div>
-								<div>
-									<input type="checkbox" bind:checked={section.streamSettings.isWithImageOnly} /> Include
-									only items with image
-								</div>
-
-								<div>
-									<input type="checkbox" bind:checked={section.streamSettings.isWithUrlOnly} /> Include
-									only items with URL
-								</div>
-							</div>
-						{/if}
-
-						<Button
-							class="shrink-0 _small _secondary"
-							theme="light"
-							onClick={() => {
-								if (section.streamSlug.startsWith('_')) {
-									return [];
-								}
-
-								return getFeed({
-									cacheId: section.id,
-									streamSlug: section.streamSlug,
-									streamSettings: section.streamSettings,
-									forceRefresh: true,
-									perPage: 20
-								});
-							}}>💫 refresh</Button
-						>
-					{/if}
-				</div>
-			</div>
-		{/if}
+	{#if section.isUseDb}
+		__d sectionid {section.id}
+		<EditDatabase
+			isWithButton={false}
+			cacheId={section.id}
+			bind:streamSettings={section.streamSettings}
+			selectedStreamSlug={section.streamSlug}
+			bind:page
+			attachToPages={[{ _id: page._id }]}
+			defaultAttachedPages={[page]}
+		/>
 	{/if}
+
 	{#if section.streamSettings?.limit}
 		{section.footer ? '' : (section.footer = { id: uuidv4() }) && ''}
 

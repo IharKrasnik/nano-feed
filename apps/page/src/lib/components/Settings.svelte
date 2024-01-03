@@ -7,6 +7,8 @@
 	import EditCustomCode from '$lib/components/settings/CustomCode.svelte';
 	import PageBadge from '$lib/components/PageBadge.svelte';
 	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
+	import subPages from 'lib/stores/subPages';
+	import allPages from 'lib-render/stores/allPages';
 
 	export let page;
 	export let onDeleted;
@@ -18,6 +20,8 @@
 
 	let deletePage = async () => {
 		await del(`pages/${page._id}`);
+		$subPages = $subPages.filter((sp) => sp._id !== page._id);
+		$allPages = $allPages.filter((p) => p._id !== page._id);
 		onDeleted();
 	};
 

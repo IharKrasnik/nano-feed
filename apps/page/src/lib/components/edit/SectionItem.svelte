@@ -168,7 +168,7 @@
 						bind:value={item.tagsStr}
 					/>
 				</div>
-			{:else}
+			{:else if section.renderType !== 'form'}
 				<div
 					class="text-xs opacity-70 hover:opacity-100 text-underline cursor-pointer"
 					on:click={() => {
@@ -180,15 +180,6 @@
 				</div>
 			{/if}
 		</div>
-	{/if}
-
-	{#if section.renderType === 'form' && item?.id !== section?.id}
-		<EditInteractiveOptions
-			class=" mt-4"
-			bind:section
-			bind:sectionItem={item}
-			isWithButton={false}
-		/>
 	{/if}
 
 	{#if section.renderType === 'pricing' && item.pricing}
@@ -236,6 +227,17 @@
 					bind:url={item.imageUrl}
 					isWithIntegrations
 					theme="light"
+				/>
+			</div>
+		{/if}
+		{#if section.renderType === 'form' && item?.id !== section?.id}
+			<div class="_section  mt-4">
+				<div class="mb-2 font-bold">Interaction</div>
+				<EditInteractiveOptions
+					class=""
+					bind:section
+					bind:sectionItem={item}
+					isWithButton={false}
 				/>
 			</div>
 		{/if}

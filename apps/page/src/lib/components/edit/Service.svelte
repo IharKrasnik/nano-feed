@@ -1,6 +1,7 @@
 <script>
 	import { get, post, put, del } from 'lib/api';
 	import _ from 'lodash';
+	import { v4 as uuidv4 } from 'uuid';
 	import moment from 'moment';
 	import tooltip from 'lib/use/tooltip';
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
@@ -21,12 +22,14 @@
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 	import isUrl from 'lib/helpers/isUrl';
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
+	import getEmbeddedStreamSlug from '$lib/helpers/getEmbeddedStreamSlug';
 	import subPages from 'lib/stores/subPages';
 	import allServices from '$lib/stores/allServices';
 	import servicePortfolioItems from '$lib/stores/servicePortfolioItems';
 	import EditSection from '$lib/components/edit/Section.svelte';
 
 	export let page;
+	export let setPageAndDraft;
 
 	let clazz = 'p-4';
 	export { clazz as class };
@@ -37,17 +40,55 @@
 		page.sections = [
 			...page.sections,
 			{
+				id: uuidv4(),
 				functionalType: 'deliverables',
-				isHidden: true
+				columns: 3
 			}
 		];
+
+		page = { ...page };
 	}
+
+	let setPortfolioStreamSlug = async () => {
+		let streamSlug = await getEmbeddedStreamSlug({ page, streamType: 'portfolio' });
+		portfolioSection.streamSlug = streamSlug;
+		portfolioSection.streamSettings = portfolioSection.streamSettings || {};
+		portfolioSection.streamSettings.attachedToPageId = page._id;
+	};
+
+	if (!page.sections.find((s) => s.functionalType === 'portfolio')) {
+		page.sections = [
+			...page.sections,
+			{
+				id: uuidv4(),
+				functionalType: 'portfolio',
+				columns: 3,
+				streamSlug: '',
+
+				title: 'Portfolio',
+				subtitle: '',
+				items: []
+			}
+		];
+
+		setPortfolioStreamSlug();
+
+		page = { ...page };
+	}
+
+	// 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1704229361929-image.png',
+	// 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1704229322932-image.png',
+	// 'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1704229248483-image.png'
 
 	let mainSection;
 	$: mainSection = page.sections.find((s) => s.renderType === 'form');
 
-	let deliverablesSection = page.sections.find((s) => s.functionalType === 'deliverables') || {};
-	let portfolioSection = page.sections.find((s) => s.functionalType === 'portfolio');
+	let deliverablesSection = page.sections.find((s) => s.functionalType === 'deliverables');
+
+	let portfolioSection;
+	$: portfolioSection = page.sections.find((s) => s.functionalType === 'portfolio');
+
+	setPortfolioStreamSlug();
 </script>
 
 <div
@@ -121,10 +162,19 @@
 	</div>
 </div>
 
-<div class="font-bold mb-4">Portfolio</div>
+<div class="_section cursor-pointer" on:click={() => ($sectionToEdit = mainSection)}>
+	<div class="font-bold">Apply Form</div>
+	<div class="mt-2 opacity-70">Edit service form</div>
+</div>
 
-<EditSection bind:section={deliverablesSection} />
+<div class="font-bold mb-4 mt-8">Portfolio</div>
 
+{#key page._id}
+	{#if portfolioSection}
+		<EditSection bind:section={portfolioSection} />
+	{/if}
+{/key}
+<!-- 
 {#each $servicePortfolioItems as portfolioFeedItem}
 	<EditServicePortfolioItem bind:portfolioFeedItem />
-{/each}
+{/each} -->

@@ -8,8 +8,14 @@ export const refreshChildStreams = async ({ page }) => {
 		let { results } = await get(`pages/${page.parentPage?._id || page._id}/childStreams`);
 
 		childStreamsStore.set(results);
+
+		console.log('refrech results', results);
 		return results;
 	}
 };
+
+childStreamsStore.subscribe((v) => {
+	// debugger;
+});
 
 export default childStreamsStore;

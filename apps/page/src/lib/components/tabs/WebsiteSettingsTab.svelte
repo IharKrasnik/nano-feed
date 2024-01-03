@@ -27,6 +27,7 @@
 	import selectedSettingsTab from '$lib/stores/selectedSettingsTab';
 
 	export let page;
+	export let setPageAndDraft;
 </script>
 
 <div class="bg-white">
@@ -34,10 +35,28 @@
 		{#if $selectedSettingsTab === 'settings'}
 			{#if $selectedSettingsPage}
 				{#key $selectedSettingsPage?._id}
-					<PageSettings bind:page={$selectedSettingsPage} onDeleted={() => {}} />
+					<PageSettings
+						bind:page={$selectedSettingsPage}
+						onDeleted={() => {
+							if (page._id === $selectedSettingsPage._id) {
+								if (page.parentPage) {
+									setPageAndDraft(
+										$allPages.find((p) => p._id === page.parentPage._id),
+										{
+											isSetEditorTab: false
+										}
+									);
+								} else {
+									setPageAndDraft($allPages[0]);
+								}
+							}
+
+							$selectedSettingsPage = null;
+						}}
+					/>
 				{/key}
 			{:else}
-				<WebsiteSettings bind:page onDeleted={() => {}} />
+				<WebsiteSettings bind:page />
 			{/if}
 		{:else if $selectedSettingsTab === 'header-footer'}
 			{#key (page.parentPage || page)._id}

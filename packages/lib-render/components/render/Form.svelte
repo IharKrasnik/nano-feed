@@ -39,7 +39,7 @@
 
 		trackForm({ sectionId: section.id, text: section.title || section.description });
 
-		let submission = await post(`pages/${page.slug}/submissions`, postData);
+		let submission = await post(`pages/${page._id}/submissions`, postData);
 
 		if (submission.customer) {
 			$currentCustomer = submission.customer;
@@ -47,6 +47,10 @@
 
 		if (section.actionType === 'url' && section.actionUrl) {
 			window.location.href = section.actionUrl;
+		}
+
+		if (section.actionType === 'service_chat') {
+			window.location.href = `/service-requests/${submission._id}`;
 		}
 
 		isFormSubmitted = true;
@@ -142,7 +146,11 @@
 	</div>
 {/if}
 
-{#if section.actionSuccessSection && (isEdit || isFormSubmitted)}
+{#if section.actionType === 'service_chat'}
+	<div class="text-sm mt-4 w-full text-center">Once submitted you'll be redirected to the chat</div>
+{/if}
+
+{#if section.actionSuccessSection && ((isEdit && section.actionType === 'success') || isFormSubmitted)}
 	<div in:fly={{ y: 50, duration: 150 }}>
 		<RenderSection section={section.actionSuccessSection} {page} />
 	</div>

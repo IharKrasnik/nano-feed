@@ -28,6 +28,7 @@
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import RenderHeader from 'lib-render/components/render/Header.svelte';
+	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
 
 	import trackClick from 'lib/services/trackClick';
 
@@ -308,141 +309,145 @@
 						{/if}
 
 						{#if !isLoading}
-							<div class="overflow-y-hidden">
-								{#if page.activeHero}
+							{#if page.renderType === 'service_chat'}
+								<RenderServiceChat roomId={$sveltePage.params.serviceRequestId} {page} />
+							{:else}
+								<div class="overflow-y-hidden">
+									{#if page.activeHero}
+										<div
+											class="sticky bg-site"
+											class:opacity-30={!!$sectionToEdit}
+											class:grayscale={!!$sectionToEdit}
+										>
+											<RenderHero
+												bind:hero={page.activeHero}
+												bind:page
+												bind:isEmbed
+												bind:isEdit
+												bind:isCloneable={isSectionsCloneable}
+											/>
+										</div>
+									{/if}
+
 									<div
-										class="sticky bg-site"
-										class:opacity-30={!!$sectionToEdit}
-										class:grayscale={!!$sectionToEdit}
+										class="sticky _root bg-site overflow-hidden {isEdit
+											? 'max-h-full overflow-y-auto'
+											: ''}"
+										style="background: none;"
 									>
-										<RenderHero
-											bind:hero={page.activeHero}
-											bind:page
-											bind:isEmbed
-											bind:isEdit
-											bind:isCloneable={isSectionsCloneable}
-										/>
-									</div>
-								{/if}
-
-								<div
-									class="sticky _root bg-site overflow-hidden {isEdit
-										? 'max-h-full overflow-y-auto'
-										: ''}"
-									style="background: none;"
-								>
-									{#if !isAboveTheFold}
-										{#if page.sections?.length}
-											<div
-												in:fade={{ delay: page.activeHero?.title ? 900 : 0 }}
-												class="relative  z-10 {page.streamSlug ? '' : ''}"
-												style="z-index: 40;"
-											>
-												{#each page.sections || [] as section, i}
-													<div class="relative">
-														{#if section.containerBgImageUrl}
-															<RenderUrl
-																url={section.containerBgImageUrl}
-																class={'absolute left-0 top-0 w-screen h-full'}
-																imgClass={'w-full h-full object-cover'}
-																style="z-index: 0;"
-															/>
-
-															{#if !section.theme?.isNotContainerBgImageDimmed}
-																<div
-																	class="absolute top-0 left-0 w-screen h-full z-1"
-																	style="background-color: {page.theme?.theme === 'dark'
-																		? 'rgba(0,0,0,0.7)'
-																		: 'rgba(255,255,255,.7)'}; z-index: 1;"
+										{#if !isAboveTheFold}
+											{#if page.sections?.length}
+												<div
+													in:fade={{ delay: page.activeHero?.title ? 900 : 0 }}
+													class="relative  z-10 {page.streamSlug ? '' : ''}"
+													style="z-index: 40;"
+												>
+													{#each page.sections || [] as section, i}
+														<div class="relative">
+															{#if section.containerBgImageUrl}
+																<RenderUrl
+																	url={section.containerBgImageUrl}
+																	class={'absolute left-0 top-0 w-screen h-full'}
+																	imgClass={'w-full h-full object-cover'}
+																	style="z-index: 0;"
 																/>
+
+																{#if !section.theme?.isNotContainerBgImageDimmed}
+																	<div
+																		class="absolute top-0 left-0 w-screen h-full z-1"
+																		style="background-color: {page.theme?.theme === 'dark'
+																			? 'rgba(0,0,0,0.7)'
+																			: 'rgba(255,255,255,.7)'}; z-index: 1;"
+																	/>
+																{/if}
 															{/if}
-														{/if}
-														{#if $sectionToEdit && $sectionToEdit.id === section.id}
-															<div
-																bind:this={editEl}
-																style="scroll-margin-top: 60px;"
-																class="relative z-10"
-															>
+															{#if $sectionToEdit && $sectionToEdit.id === section.id}
 																<div
-																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																	bind:this={editEl}
+																	style="scroll-margin-top: 60px;"
+																	class="relative z-10"
 																>
-																	<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
-																		name="arrow-down"
-																	/>
+																	<div
+																		class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																	>
+																		<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
+																			name="arrow-down"
+																		/>
+																	</div>
+																	<div
+																		class="bg-site _container-width mx-auto {section.containerBgImageUrl
+																			? 'py-8'
+																			: ''}"
+																	>
+																		<RenderSection
+																			bind:page
+																			bind:themeStyles={styles}
+																			bind:section={$sectionToEdit}
+																			bind:isEdit
+																			{onInsert}
+																		/>
+																	</div>
+																	<div
+																		class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																	>
+																		<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
+																			name="arrow-up"
+																		/>
+																	</div>
 																</div>
+																{focusEditEl() || ''}
+															{:else}
 																<div
-																	class="bg-site _container-width mx-auto {section.containerBgImageUrl
-																		? 'py-8'
-																		: ''}"
+																	class="relative z-10 overflow-y-hidden"
+																	class:opacity-30={!!$sectionToEdit}
+																	class:grayscale={!!$sectionToEdit}
 																>
-																	<RenderSection
-																		bind:page
-																		bind:themeStyles={styles}
-																		bind:section={$sectionToEdit}
-																		bind:isEdit
-																		{onInsert}
-																	/>
+																	<div
+																		class="bg-site _container-width mx-auto {section.containerBgImageUrl
+																			? 'py-8'
+																			: ''}"
+																	>
+																		<RenderSection
+																			bind:page
+																			bind:section
+																			bind:themeStyles={styles}
+																			bind:isEdit
+																			bind:isCloneable={isSectionsCloneable}
+																			{onInsert}
+																			style={false && page.theme?.isZebra && i % 2 === 0
+																				? page.theme?.theme === 'dark'
+																					? `background-color: ${lighten(
+																							styles['background-color'],
+																							0.01
+																					  )};`
+																					: `background-color: ${darken(
+																							styles['background-color'],
+																							0.08
+																					  )};`
+																				: ''}
+																		/>
+																	</div>
 																</div>
-																<div
-																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
-																>
-																	<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
-																		name="arrow-up"
-																	/>
-																</div>
-															</div>
-															{focusEditEl() || ''}
-														{:else}
-															<div
-																class="relative z-10 overflow-y-hidden"
-																class:opacity-30={!!$sectionToEdit}
-																class:grayscale={!!$sectionToEdit}
-															>
-																<div
-																	class="bg-site _container-width mx-auto {section.containerBgImageUrl
-																		? 'py-8'
-																		: ''}"
-																>
-																	<RenderSection
-																		bind:page
-																		bind:section
-																		bind:themeStyles={styles}
-																		bind:isEdit
-																		bind:isCloneable={isSectionsCloneable}
-																		{onInsert}
-																		style={false && page.theme?.isZebra && i % 2 === 0
-																			? page.theme?.theme === 'dark'
-																				? `background-color: ${lighten(
-																						styles['background-color'],
-																						0.01
-																				  )};`
-																				: `background-color: ${darken(
-																						styles['background-color'],
-																						0.08
-																				  )};`
-																			: ''}
-																	/>
-																</div>
-															</div>
-														{/if}
-													</div>
-												{/each}
-											</div>
+															{/if}
+														</div>
+													{/each}
+												</div>
+											{/if}
 										{/if}
+									</div>
+
+									{#if isMountedDelayed && (page.activeHero?.title || page.ctaFooter?.title) && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && $sveltePage.url.pathname !== '/blog'}
+										<div
+											class="overflow-hidden"
+											bind:this={$ctaFooterEl}
+											class:opacity-30={!!$sectionToEdit}
+											class:grayscale={!!$sectionToEdit}
+										>
+											<RenderCTA {page} section={page.ctaFooter} />
+										</div>
 									{/if}
 								</div>
-
-								{#if isMountedDelayed && (page.activeHero?.title || page.ctaFooter?.title) && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && $sveltePage.url.pathname !== '/blog'}
-									<div
-										class="overflow-hidden"
-										bind:this={$ctaFooterEl}
-										class:opacity-30={!!$sectionToEdit}
-										class:grayscale={!!$sectionToEdit}
-									>
-										<RenderCTA {page} section={page.ctaFooter} />
-									</div>
-								{/if}
-							</div>
+							{/if}
 						{/if}
 					</div>
 				{/if}

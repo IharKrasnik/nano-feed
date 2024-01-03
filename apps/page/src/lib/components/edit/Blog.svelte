@@ -12,6 +12,7 @@
 	import Loader from 'lib/components/Loader.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
+	import getEmbeddedStreamSlug from '$lib/helpers/getEmbeddedStreamSlug';
 
 	import { v4 as uuidv4 } from 'uuid';
 
@@ -70,15 +71,7 @@
 
 	let enableBlog = async () => {
 		if (!parentPage.streams?.blog) {
-			const { stream } = await put(`pages/${parentPage._id}/embed-stream`, {
-				title: 'Blog',
-				isBlogStream: true
-			});
-
-			$childStreams = [...$childStreams, stream];
-
-			parentPage.streams = parentPage.streams || {};
-			parentPage.streams.blog = stream;
+			await getEmbeddedStreamSlug({ page, streamType: 'blog' });
 		}
 
 		let blogPage = await post('pages', {

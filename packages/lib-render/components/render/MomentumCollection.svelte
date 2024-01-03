@@ -91,7 +91,8 @@
 		});
 	};
 
-	$: if ($feedCache[cacheId] || filterTag) {
+	$: if ($feedCache[cacheId]?.feed || filterTag) {
+		console.log('render cacheId', cacheId);
 		databaseSection.items = $feedCache[cacheId].feed
 			.filter((item) => {
 				if (!filterTag) {
@@ -130,7 +131,6 @@
 				}
 				//1
 			);
-		debugger;
 		if (!isEdit) {
 			replaceVars();
 		}

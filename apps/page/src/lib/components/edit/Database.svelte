@@ -12,6 +12,8 @@
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 	import allPages from 'lib-render/stores/allPages';
 	import { dndzone } from 'svelte-dnd-action';
+	import getEmbeddedStreamSlug from '$lib/helpers/getEmbeddedStreamSlug';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	let posts = [];
 
@@ -22,8 +24,12 @@
 	export let page;
 	export let selectedStreamSlug = localStorage[LAST_STREAM_SLUG_KEY];
 	export let selectedCustomer;
+	export let isWithButton = true;
+	export let streamSettings = null;
+	export let attachToPages = null;
+	export let cacheId;
 
-	let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
+	let parentPage = page.parentPage || page;
 
 	let activeStream = null;
 
@@ -34,8 +40,8 @@
 	let isLoading = false;
 
 	let handleDndConsider = (e) => {
-		$feedCache[activeStream.slug] = {
-			...$feedCache[activeStream.slug],
+		$feedCache[cacheId || activeStream.slug] = {
+			...$feedCache[cacheId || activeStream.slug],
 			feed: e.detail.items
 		};
 	};
@@ -85,36 +91,10 @@
 		localStorage[LAST_STREAM_SLUG_KEY] = selectedStreamSlug;
 	};
 
-	let selectBuiltInStream = async ({
-		isFeedStream = false,
-		isChangelogStream = false,
-		isBlogStream = false
-	} = {}) => {
-		let key = 'blog';
+	let selectBuiltInStream = async ({ streamType } = {}) => {
+		await getEmbeddedStreamSlug({ page, streamType });
 
-		if (isFeedStream) {
-			key = 'feed';
-		} else if (isChangelogStream) {
-			key = 'changelog';
-		}
-
-		if (!parentPage.streams || !parentPage.streams[key]) {
-			const { stream } = await put(`pages/${parentPage._id}/embed-stream`, {
-				title: _.capitalize(key),
-				isFeedStream,
-				isChangelogStream,
-				isBlogStream
-			});
-
-			$childStreams = [...($childStreams || []), stream];
-
-			parentPage.streams = parentPage.streams || {};
-			parentPage.streams[key] = stream;
-
-			selectStream(stream);
-		} else {
-			selectStream($childStreams.find((s) => s._id === parentPage.streams[key]._id));
-		}
+		selectStream($childStreams.find((s) => s._id === parentPage.streams[streamType]._id));
 	};
 
 	let newDatabaseName = '';
@@ -145,34 +125,6 @@
 		loadFeed();
 	}
 
-	let createFeedItem = async ({ feedItem }, { isShowSuccessMessage = true } = {}) => {
-		let created = await post(`feed`, { ...feedItem, projects: [{ slug: activeStream.slug }] });
-
-		feed = feed.map((fi) => {
-			if (fi.id === feedItem.id) {
-				return created;
-			}
-
-			return fi;
-		});
-
-		$feedCache[activeStream.slug] = {
-			...$feedCache[activeStream.slug],
-			feed: [...feed],
-			totalCount: ($feedCache[activeStream.slug].totalCount || 0) + 1
-		};
-
-		await updateFeedSortOrder({
-			streamId: activeStream._id,
-			streamSlug: activeStream.slug,
-			sortedItems: $feedCache[activeStream.slug].feed
-		});
-
-		if (isShowSuccessMessage) {
-			showSuccessMessage('Record created');
-		}
-	};
-
 	let uploaderEl;
 
 	let parseCSV = async (e) => {
@@ -193,8 +145,8 @@
 						return fileLine;
 					});
 
-				$feedCache[activeStream.slug] = {
-					...$feedCache[activeStream.slug],
+				$feedCache[cacheId || activeStream.slug] = {
+					...$feedCache[cacheId || activeStream.slug],
 					feed: [
 						...parsedFile.map((item) => {
 							return {
@@ -206,11 +158,11 @@
 								tagsStr: item.type || item.tags
 							};
 						}),
-						...($feedCache[activeStream.slug]?.feed || [])
+						...($feedCache[cacheId || activeStream.slug]?.feed || [])
 					]
 				};
 
-				resolve($feedCache[activeStream.slug]?.feed || []);
+				resolve($feedCache[cacheId || activeStream.slug]?.feed || []);
 			};
 		});
 
@@ -218,7 +170,7 @@
 	};
 
 	let saveAll = async () => {
-		let newItems = $feedCache[activeStream.slug]?.feed?.filter((f) => !f._id) || [];
+		let newItems = $feedCache[cacheId || activeStream.slug]?.feed?.filter((f) => !f._id) || [];
 
 		let failedCount = 0;
 
@@ -227,15 +179,15 @@
 			feedItems: newItems
 		});
 
-		$feedCache[activeStream.slug].feed = [
+		$feedCache[cacheId || activeStream.slug].feed = [
 			...createdFeedItems,
-			...($feedCache[activeStream.slug]?.feed?.filter((fi) => fi._id) || [])
+			...($feedCache[cacheId || activeStream.slug]?.feed?.filter((fi) => fi._id) || [])
 		];
 
 		await updateFeedSortOrder({
 			streamId: activeStream._id,
 			streamSlug: activeStream.slug,
-			sortedItems: $feedCache[activeStream.slug].feed
+			sortedItems: $feedCache[cacheId || activeStream.slug].feed
 		});
 
 		showSuccessMessage(`Created ${createdFeedItems.length} items. Nice!`);
@@ -244,7 +196,9 @@
 	let searchStr = '';
 
 	let fetchAllMetaTags = async () => {
-		let newItemsWithUrl = $feedCache[activeStream.slug]?.feed?.filter((f) => !f._id && f.url);
+		let newItemsWithUrl = $feedCache[cacheId || activeStream.slug]?.feed?.filter(
+			(f) => !f._id && f.url
+		);
 
 		if (
 			true ||
@@ -284,14 +238,14 @@
 									];
 								}
 
-								$feedCache[activeStream.slug].feed = $feedCache[activeStream.slug].feed.map(
-									(fi) => {
-										if (fi.id === feedItem.id) {
-											return feedItem;
-										}
-										return fi;
+								$feedCache[cacheId || activeStream.slug].feed = $feedCache[
+									cacheId || activeStream.slug
+								].feed.map((fi) => {
+									if (fi.id === feedItem.id) {
+										return feedItem;
 									}
-								);
+									return fi;
+								});
 							} catch (err) {
 								showErrorMessage(`Failed to load ${feedItem.url}`);
 							}
@@ -314,12 +268,12 @@
 	let addNew = () => {};
 
 	if (!parentPage.streams) {
-		selectBuiltInStream({ isChangelogStream: true });
+		selectBuiltInStream({ streamType: 'changelog' });
 	}
 
 	let addItem = async ({ title = '', content = '', url = '' } = {}) => {
-		$feedCache[activeStream.slug] = {
-			...$feedCache[activeStream.slug],
+		$feedCache[cacheId || activeStream.slug] = {
+			...$feedCache[cacheId || activeStream.slug],
 			feed: [
 				{
 					id: uuidv4(),
@@ -329,15 +283,18 @@
 					attachments: [{ url: '' }],
 					projects: [{ slug: activeStream.slug }]
 				},
-				...($feedCache[activeStream.slug]?.feed || [])
+				...($feedCache[cacheId || activeStream.slug]?.feed || [])
 			]
 		};
 	};
+
+	let isShowFilter = false;
 </script>
 
 <div class="flex w-full justify-between items-center  mb-4">
-	<div class="text-lg font-bold opacity-80">Databases</div>
-	{#if selectedStreamSlug !== '_new'}
+	<div class="text font-bold opacity-80">Databases</div>
+
+	{#if isWithButton && selectedStreamSlug !== '_new'}
 		<button
 			class="_secondary _small opacity-50 hover:opacity-100"
 			on:click={() => {
@@ -357,11 +314,13 @@
 				}
 
 				if (selectedStreamSlug.includes('-changelog')) {
-					selectBuiltInStream({ isChangelogStream: true });
+					selectBuiltInStream({ streamType: 'changelog' });
 				} else if (selectedStreamSlug.includes('-feed')) {
-					selectBuiltInStream({ isFeedStream: true });
+					selectBuiltInStream({ streamType: 'feed' });
 				} else if (selectedStreamSlug.includes('-blog')) {
-					selectBuiltInStream({ isBlogStream: true });
+					selectBuiltInStream({ streamType: 'blog' });
+				} else if (selectedStreamSlug.includes('-portfolio')) {
+					selectBuiltInStream({ streamType: 'portfolio' });
 				} else {
 					selectStream($childStreams.find((s) => s.slug === selectedStreamSlug));
 				}
@@ -392,7 +351,58 @@
 				<option value="">No Selected</option>
 			{/if}
 		</select>
+
+		{#if streamSettings}
+			<div
+				class="cursor-pointer border-2 border-[#ccccd0] rounded-full aspect-square shrink-0 w-[30px] h-[30px] flex items-center justify-center
+				{isShowFilter ? 'bg-green-800' : ''}"
+				on:click={() => {
+					isShowFilter = !isShowFilter;
+				}}
+			>
+				<FeatherIcon color={isShowFilter ? '#ffffff' : '#333333'} size="15" name="filter" />
+			</div>
+		{/if}
 	</div>
+
+	{#if isShowFilter}
+		<div class="font-bold mt-6">Filter Items</div>
+		<div class="grid grid-cols-2 gap-4 mt-4">
+			<div class="_section">
+				<div class="text-sm mb-2">Limit items</div>
+
+				<input type="number" class="w-full" bind:value={streamSettings.limit} />
+				<div class="text-xs mt-2">Leave 0 for pagination</div>
+			</div>
+			<div class="_section">
+				<div class="text-sm mb-2">Filter by tags</div>
+				<input type="text" class="w-full" bind:value={streamSettings.filterTags} />
+				<div class="text-xs mt-2">Leave empty to not filter</div>
+			</div>
+		</div>
+		<div class="_section">
+			<div class="text-sm mb-2">Sort</div>
+
+			<select class="w-full" bind:value={streamSettings.sortBy}>
+				<option value="_sample">Random</option>
+				<option value="order">Sort as you order</option>
+				<option value="-publishedOn">Newest First</option>
+				<option value="-viewsCount">Popular First</option>
+			</select>
+		</div>
+		<div class="_section">
+			<div class="text-sm mb-2">Show best sample</div>
+			<div>
+				<input type="checkbox" bind:checked={streamSettings.isWithImageOnly} /> Include only items with
+				image
+			</div>
+
+			<div>
+				<input type="checkbox" bind:checked={streamSettings.isWithUrlOnly} /> Include only items with
+				URL
+			</div>
+		</div>
+	{/if}
 </div>
 
 {#if selectedStreamSlug === '_new'}
@@ -456,12 +466,12 @@
 			>
 		</div>
 	{/if}
-
-	{#if activeStream && $feedCache[activeStream.slug]}
+	__d cacheId {cacheId} __d {activeStream?.slug}
+	{#if activeStream && $feedCache[cacheId || activeStream?.slug]}
 		<div class="flex justify-between items-center mt-8 mb-2">
 			<div class="text-sm font-bold opacity-80">
-				Database Items ({$feedCache[activeStream.slug].totalCount ||
-					$feedCache[activeStream.slug]?.feed?.length ||
+				Database Items ({$feedCache[cacheId || activeStream.slug].totalCount ||
+					$feedCache[cacheId || activeStream.slug]?.feed?.length ||
 					0})
 			</div>
 			<button class="_secondary _small shrink-0" on:click={addItem}>Add Item</button>
@@ -476,16 +486,17 @@
 			</button>
 		</div> -->
 
-		{#if $feedCache[activeStream.slug]?.feed?.length > 1}
+		{#if $feedCache[cacheId || activeStream.slug]?.feed?.length > 1}
 			<div class="my-2 w-full">
 				<input type="text" class="w-full" placeholder="Search item..." bind:value={searchStr} />
 			</div>
 		{/if}
 
-		{#if $feedCache[activeStream.slug]?.feed?.filter((f) => !f._id).length > 1}
+		{#if $feedCache[cacheId || activeStream.slug]?.feed?.filter((f) => !f._id).length > 1}
 			<div class="flex my-8">
 				<Button class="_primary _small" onClick={saveAll}>
-					💾 Save {$feedCache[activeStream.slug].feed.filter((f) => !f._id).length} items 💾</Button
+					💾 Save {$feedCache[cacheId || activeStream.slug].feed.filter((f) => !f._id).length} items
+					💾</Button
 				>
 				<Button class="shrink-0 _secondary _small ml-4" theme={'light'} onClick={fetchAllMetaTags}
 					>🪄 Fetch All Descriptions</Button
@@ -496,13 +507,13 @@
 		<div
 			class="py-8"
 			use:dndzone={{
-				items: $feedCache[activeStream.slug]?.feed,
+				items: $feedCache[cacheId || activeStream.slug]?.feed,
 				flipDurationMs: 300
 			}}
 			on:consider={handleDndConsider}
 			on:finalize={handleDndFinalize}
 		>
-			{#each $feedCache[activeStream.slug]?.feed?.filter((feedItem) => {
+			{#each $feedCache[cacheId || activeStream.slug]?.feed?.filter((feedItem) => {
 				if (!searchStr) {
 					return true;
 				}
@@ -524,12 +535,13 @@
 				<EditFeedItem
 					bind:feedItem
 					bind:setPageAndDraft
+					{attachToPages}
 					isContentFeed={activeStream.slug.includes('-feed')}
 					isChangelog={activeStream.slug.includes('-changelog')}
 					onUpdated={(updatedFeedItem) => {
-						$feedCache[activeStream.slug] = {
-							...$feedCache[activeStream.slug],
-							feed: $feedCache[activeStream.slug]?.feed?.map((item) => {
+						$feedCache[cacheId || activeStream.slug] = {
+							...$feedCache[cacheId || activeStream.slug],
+							feed: $feedCache[cacheId || activeStream.slug]?.feed?.map((item) => {
 								if (item._id === feedItem._id) {
 									return updatedFeedItem;
 								} else {
@@ -539,9 +551,9 @@
 						};
 					}}
 					onRemoved={() => {
-						$feedCache[activeStream.slug] = {
-							...$feedCache[activeStream.slug],
-							feed: $feedCache[activeStream.slug]?.feed?.filter((f) =>
+						$feedCache[cacheId || activeStream.slug] = {
+							...$feedCache[cacheId || activeStream.slug],
+							feed: $feedCache[cacheId || activeStream.slug]?.feed?.filter((f) =>
 								feedItem._id ? f._id !== feedItem._id : f.id !== feedItem.id
 							)
 						};

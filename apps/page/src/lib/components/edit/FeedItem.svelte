@@ -31,6 +31,7 @@
 	export let isContentFeed = false;
 	export let isChangelog = false;
 	export let setPageAndDraft;
+	export let attachToPages = null;
 
 	let originalFeedItem = _.cloneDeep(feedItem);
 
@@ -41,6 +42,11 @@
 	}
 
 	let updateFeedItem = async () => {
+		debugger;
+		if (attachToPages) {
+			feedItem.attachedToPages = attachToPages;
+		}
+
 		if (feedItem._id) {
 			let updated = await put(`feed/${feedItem._id}`, feedItem);
 			originalFeedItem = _.cloneDeep(updated);
@@ -199,7 +205,7 @@
 			</div>
 
 			<div
-				data-placeholder="Content"
+				data-placeholder="Description"
 				class="w-full mb-4 textarea"
 				contenteditable
 				use:contenteditable
@@ -220,7 +226,12 @@
 
 			<div class="mt-2 flex items-center">
 				<div class="text-sm mr-4 opacity-80">Tags</div>
-				<input class="w-full" placeholder="Tags" bind:value={feedItem.tagsStr} theme="light" />
+				<input
+					class="w-full"
+					placeholder="Tag1, Tag2"
+					bind:value={feedItem.tagsStr}
+					theme="light"
+				/>
 			</div>
 		{/if}
 

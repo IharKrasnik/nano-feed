@@ -21,6 +21,7 @@
 	import isMomentumWidgetCollapsed from 'lib-render/stores/isMomentumWidgetCollapsed';
 	import momentumWidgetTab from 'lib-render/stores/momentumWidgetTab';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import getEmbeddedStreamSlug from '$lib/helpers/getEmbeddedStreamSlug';
 
 	import { showSuccessMessage } from 'lib/services/toast';
 
@@ -52,15 +53,7 @@
 		let streamSlug = '';
 		let successMessage = '';
 		if ($momentumWidgetTab === 'feed') {
-			if (!page.streams?.feed) {
-				const { stream } = await put(`pages/${page._id}/embed-stream`, {
-					title: 'Feed'
-				});
-
-				page.streams = page.streams || {};
-				page.streams.feed = stream;
-			}
-			streamSlug = page.streams.feed.slug;
+			streamSlug = await getEmbeddedStreamSlug({ page, streamType: 'feed' });
 			successMessage = 'Congrats! Your post is published in your "Feed" database.';
 		} else {
 			successMessage = `Thank you! Your awesome link was posted to the community stream. We appreciate you!`;
@@ -80,16 +73,7 @@
 	};
 
 	let publishNewMoment = async () => {
-		page.streams = page.streams || {};
-
-		if (!page.streams?.feed) {
-			const { stream } = await put(`pages/${page._id}/embed-stream`, {
-				title: 'Feed',
-				isFeedStream: true
-			});
-
-			page.streams.feed = stream;
-		}
+		await getEmbeddedStreamSlug({ page, streamType: 'feed' });
 
 		await post('feed', {
 			title: newMoment.title,

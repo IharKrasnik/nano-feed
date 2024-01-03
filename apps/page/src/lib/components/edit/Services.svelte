@@ -16,6 +16,8 @@
 	let addService = async () => {
 		let newServicePage = await post('pages', {
 			renderType: 'service',
+			isInDir: true,
+			dirName: 'Services',
 			heros: [],
 			name: newServiceName,
 			parentPage: page.parentPage ? { _id: page.parentPage._id } : { _id: page._id },
@@ -39,6 +41,19 @@
 				}
 			]
 		});
+
+		newServicePage.parentPage.links = [
+			...(newServicePage.parentPage.links || []),
+			{
+				id: newServicePage._id,
+				pageId: newServicePage._id,
+				url: `/${newServicePage.slug}`,
+				name: newServicePage.name,
+				groupName: newServicePage.dirName,
+				isShowInFooter: true,
+				isShowInHeader: true
+			}
+		];
 
 		$subPages = [...$subPages, newServicePage];
 
@@ -119,13 +134,15 @@
 		/>
 	{/if}
 {:else}
-	<div class="_section _info">
-		<div class="font-bold mb-2">No Services, Yet</div>
-		<div>
-			Add your productised services to earn revenue while growing your product. Promote to Momentum
-			community, publish great offers and get featured.
+	{#if $subPages.filter((sp) => sp.renderType === 'service').length}{:else}
+		<div class="_section _info">
+			<div class="font-bold mb-2">No Services, Yet</div>
+			<div>
+				Add your productised services to earn revenue while growing your product. Promote to
+				Momentum community, publish great offers and get featured.
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	<div class="_section">
 		<div class="mb-2">What service can your provide for startup founders?</div>
@@ -137,4 +154,15 @@
 			<Button class="_primary _small" onClick={addService}>Add Service</Button>
 		</div>
 	</div>
+
+	{#each $subPages.filter((sp) => sp.renderType === 'service') as servicePage}
+		<div
+			class="_section cursor-pointer"
+			on:click={() => {
+				setPageAndDraft(servicePage);
+			}}
+		>
+			<div class="font-bold">{servicePage.name}</div>
+		</div>
+	{/each}
 {/if}

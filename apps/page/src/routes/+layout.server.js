@@ -31,11 +31,25 @@ export async function load({ url, params, session, cookies }) {
 	const { subPageSlug, feedItemSlug } = params;
 
 	//
-	let extend = {
-		pageSlug
-	};
+	let extend = {};
 
-	if (pageSlug && pageSlug !== 'templates') {
+	if (url.href.includes('service-requests/')) {
+		let parentPage = await get(`pages/bySlug`, {
+			slug: pageSlug
+		});
+
+		extend = {
+			page: {
+				renderType: 'service_chat',
+				parentPage,
+				heros: [],
+				sections: []
+			},
+			ogTitle: 'Service Request',
+			ogDescription: 'Chat on your request',
+			ogImage: ''
+		};
+	} else if (pageSlug && pageSlug !== 'templates') {
 		let page;
 
 		if (feedItemSlug) {
@@ -90,8 +104,6 @@ export async function load({ url, params, session, cookies }) {
 				'https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1691926283375-telegram-cloud-document-2-5386494382004252533.jpg'
 		};
 	}
-
-	console.log('extending page', extend.page);
 
 	let authData = await authServerGuard({ url, params, session, cookies }, 'Momentum IDE');
 

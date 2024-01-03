@@ -552,7 +552,7 @@
 					<RenderMomentumCollection bind:section bind:page bind:themeStyles bind:isEdit />
 				{:else if section.type === 'momentum_feed'}
 					<RenderMomentumFeed bind:page bind:themeStyles />
-				{:else if section.type === 'service_chat'}
+				{:else if section.renderType === 'service_chat'}
 					<RenderServiceChat bind:page bind:section bind:themeStyles />
 					<!-- {:else if section.type === 'newsletter'}
 				<RenderNewsletter bind:page bind:section bind:themeStyles /> -->
