@@ -1,26 +1,20 @@
 <script>
 	import 'lib-render/app.css';
 	import '../app.css';
-
 	import Page from 'lib-render/components/Page.svelte';
-	import Editor from '$lib/components/Editor.svelte';
 	import { get } from 'lib/api';
 	import { API_URL } from 'lib/env';
 	import currentPage from 'lib-render/stores/currentPage';
 	import { browser } from '$app/environment';
 	import Emoji from 'lib/components/Emoji.svelte';
-
 	import { page as sveltePage } from '$app/stores';
 	import { onMount } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
 
-	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
-	import Dock from 'lib/components/Dock.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 
 	import 'lazysizes';
-	// import a plugin 1
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 
 	let prevSlug;
@@ -106,29 +100,12 @@
 
 <div id="modal-portal" />
 <div id="popup-portal" />
-{#if !$isUserLoading}
-	<div class="relative" style="	">
-		{#if !$sveltePage.url.href.includes('/emulator')}
-			{#if !$sveltePage.url.href.includes('/page-templates') && !$sveltePage.url.href.includes('/ide') && $sveltePage.data.pageSlug}
-				<Page />
-				{#if browser}
-					<script defer src="https://wave.mmntm.build/wave.js"></script>
-					<!-- <script defer src="http://localhost:5173/wave.js"></script> -->
-				{/if}
-			{:else}
-				<script defer src="https://wave.mmntm.build/wave.js"></script>
-				<Editor />
-			{/if}
-		{/if}
 
-		<slot />
-	</div>
-{/if}
-<!-- 
-<div class:sm:hidden={!($currentUser && !$sveltePage.data.pageSlug && !$sectionToEdit)}>
-	{#if !$sveltePage.url.href.includes('/emulator')}
-		<div class="hidden sm:block">
-			<Dock activeIcon="page" />
-		</div>
+<div class="relative" style="	">
+	<Page />
+	{#if browser}
+		<script defer src="https://wave.mmntm.build/wave.js"></script>
+		<!-- <script defer src="http://localhost:5173/wave.js"></script> -->
 	{/if}
-</div> -->
+	<slot />
+</div>
