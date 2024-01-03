@@ -466,7 +466,6 @@
 			>
 		</div>
 	{/if}
-	__d cacheId {cacheId} __d {activeStream?.slug}
 	{#if activeStream && $feedCache[cacheId || activeStream?.slug]}
 		<div class="flex justify-between items-center mt-8 mb-2">
 			<div class="text-sm font-bold opacity-80">

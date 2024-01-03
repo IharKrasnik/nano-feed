@@ -502,7 +502,6 @@
 		{/if}
 	{/if}
 	{#if section.isUseDb}
-		__d sectionid {section.id}
 		<EditDatabase
 			isWithButton={false}
 			cacheId={section.id}
