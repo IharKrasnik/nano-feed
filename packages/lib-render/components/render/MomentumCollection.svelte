@@ -125,7 +125,13 @@
 						description: content,
 						imageUrl: attachments && attachments[0] && attachments[0].url,
 						emoji: logoUrl,
-						url: url || (meta?.pageSlug ? `/blog/posts/${meta.pageSlug}` : ''),
+						url:
+							url ||
+							(meta?.pageSlug
+								? section.streamSlug.includes('blog')
+									? `/blog/posts/${meta.pageSlug}`
+									: `/${meta.pageSlug}`
+								: ''),
 						tagsStr
 					};
 				}

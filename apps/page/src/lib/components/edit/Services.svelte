@@ -4,14 +4,18 @@
 	import allServices from '$lib/stores/allServices';
 	import selectedService from '$lib/stores/selectedService';
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
+	import striptags from 'striptags';
 
 	import EditService from '$lib/components/edit/Service.svelte';
 	import Button from 'lib/components/Button.svelte';
+	import getEmbeddedStreamSlug from '$lib/helpers/getEmbeddedStreamSlug';
 
 	export let page;
 	export let setPageAndDraft;
 
 	let newServiceName = '';
+
+	let parentPage = page.parentPage || page;
 
 	let addService = async () => {
 		let newServicePage = await post('pages', {
@@ -20,7 +24,7 @@
 			dirName: 'Services',
 			heros: [],
 			name: newServiceName,
-			parentPage: page.parentPage ? { _id: page.parentPage._id } : { _id: page._id },
+			parentPage: { _id: parentPage._id },
 			heros: [
 				{
 					id: uuidv4(),
@@ -119,9 +123,75 @@
 	if (!$selectedService && $allServices?.length) {
 		$selectedService = $allServices[0];
 	}
+
+	let enableServices = async () => {
+		if (!parentPage.streams?.services) {
+			await getEmbeddedStreamSlug({ page, streamType: 'services' });
+		}
+
+		let servicesPage = await post('pages', {
+			theme: {},
+			name: 'Services',
+			heros: [
+				{
+					id: uuidv4(),
+					title: 'Services',
+					subtitle: '',
+					interactiveRenderType: '',
+					callToActionText: '',
+					ctaExplainer: '',
+					theme: { isTitleLeft: true }
+				}
+			],
+			sections: [
+				{
+					id: uuidv4(),
+					streamSlug: parentPage.streams.services.slug,
+					title: 'All Services',
+					subtitle: '',
+					theme: {},
+					columns: 1,
+					items: []
+				}
+			],
+			renderType: 'blog',
+			parentPage: parentPage
+		});
+
+		$subPages = [...$subPages, servicesPage];
+	};
 </script>
 
-<div class="font-bold mb-2">Services</div>
+<div>
+	<div class="font-bold opacity-80 mb-2">Services</div>
+
+	{#if !$subPages.find((s) => s.slug === 'services')}
+		<div class="_section _info">
+			<div class="font-bold mb-2">No Services Yet</div>
+
+			<div>
+				Add your productised services to earn revenue while growing your product. Promote to
+				Momentum community, publish great offers and get featured.
+			</div>
+
+			<Button class="_primary _small mt-4" onClick={enableServices}>Enable Services</Button>
+			<div class="mt-2 text-sm opacity-80">Will create /services subpage</div>
+		</div>
+	{:else}
+		<div
+			class="_section cursor-pointer"
+			on:click={() => setPageAndDraft($subPages.find((s) => s.slug === 'services'))}
+		>
+			<div class="font-bold">
+				{@html striptags(
+					$subPages.find((s) => s.slug === 'services').heros[0].title ||
+						$subPages.find((s) => s.slug === 'services').heros[0].subtitle ||
+						''
+				)}
+			</div>
+		</div>
+	{/if}
+</div>
 
 {#if $allServices?.length}
 	<select
@@ -146,13 +216,7 @@
 	{/if}
 {:else}
 	{#if $subPages.filter((sp) => sp.renderType === 'service').length}{:else}
-		<div class="_section _info">
-			<div class="font-bold mb-2">No Services, Yet</div>
-			<div>
-				Add your productised services to earn revenue while growing your product. Promote to
-				Momentum community, publish great offers and get featured.
-			</div>
-		</div>
+
 	{/if}
 
 	<div class="_section">

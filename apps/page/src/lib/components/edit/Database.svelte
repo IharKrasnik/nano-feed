@@ -14,13 +14,16 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import getEmbeddedStreamSlug from '$lib/helpers/getEmbeddedStreamSlug';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+
+	import selectedTab from '$lib/stores/selectedTab';
+	import selectedGrowthTab from '$lib/stores/selectedGrowthTab';
 
 	let posts = [];
 
 	let LAST_STREAM_SLUG_KEY = 'LAST_DATABASE_STREAM_SLUG';
 
 	export let setPageAndDraft;
-	export let selectedTab;
 	export let page;
 	export let selectedStreamSlug = localStorage[LAST_STREAM_SLUG_KEY];
 	export let selectedCustomer;
@@ -463,8 +466,23 @@
 			<button
 				class="_secondary _small mt-4"
 				on:click={() => {
-					selectedTab = 'blog';
+					$selectedTab = 'blog';
 				}}>Edit Blog →</button
+			>
+		</div>
+	{/if}
+
+	{#if activeStream?.slug?.includes('-services')}
+		<div class="_section bg-[#fafafa]">
+			<div class="font-bold mb-2">Auto-Sync</div>
+			Services database is automatically synchronised with your services.<br />
+			<button
+				class="_secondary _small mt-4"
+				on:click={() => {
+					$selectedTab = 'growth';
+					$selectedGrowthTab = 'services';
+					$sectionToEdit = null;
+				}}>Edit Services →</button
 			>
 		</div>
 	{/if}

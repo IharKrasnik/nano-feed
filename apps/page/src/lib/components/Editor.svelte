@@ -99,6 +99,8 @@
 	import selectedTemplatePage from 'lib-render/stores/selectedTemplatePage';
 	import selectedSettingsPage from '$lib/stores/selectedSettingsPage';
 	import selectedSettingsTab from '$lib/stores/selectedSettingsTab';
+	import selectedTab from '$lib/stores/selectedTab';
+	import selectedGrowthTab from '$lib/stores/selectedGrowthTab';
 
 	//
 	onMount(async () => {
@@ -160,7 +162,6 @@
 	}
 
 	let pageSlug = '_new';
-	let selectedTab = 'editor';
 
 	let conversions;
 
@@ -277,7 +278,7 @@
 		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug, lastPageId: page._id };
 
 		if (isSetEditorTab) {
-			selectedTab = 'editor';
+			$selectedTab = 'editor';
 		}
 
 		if (!page.heros) {
@@ -612,7 +613,7 @@
 			variablesValues: page.variablesValues
 		};
 
-		selectedTab = 'editor';
+		$selectedTab = 'editor';
 
 		// page = { ...$allPages[0], parentPage: page, _id: null, slug: '_new' };
 		setPageAndDraft(page, { force: true });
@@ -656,8 +657,6 @@
 
 	let isPasteSectionModalOpen = false;
 	let newSectionCode = '';
-
-	let selectedGrowthTab = 'dashboard';
 </script>
 
 {#if isPasteSectionModalOpen}
@@ -800,9 +799,9 @@
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
 					class="relative logo cursor-pointer"
-					class:_selected={selectedTab === 'editor'}
+					class:_selected={$selectedTab === 'editor'}
 					on:click={() => {
-						selectedTab = 'editor';
+						$selectedTab = 'editor';
 					}}
 				>
 					<path
@@ -830,7 +829,7 @@
 					<div class="ml-2">Momentum IDE</div>
 				{/if}
 
-				{#if selectedTab === 'editor' || !page._id}
+				{#if $selectedTab === 'editor' || !page._id}
 					<a
 						href="/ide"
 						in:fade={{ delay: 0 }}
@@ -843,7 +842,7 @@
 								$isInsertPopupShown = false;
 							} else {
 								$isInsertPopupShown = true;
-								selectedTab = 'editor';
+								$selectedTab = 'editor';
 							}
 						}}
 					>
@@ -858,7 +857,7 @@
 							if (!page._id) {
 								setPageAndDraft({ ...$allPages[0] });
 							}
-							selectedTab = 'editor';
+							$selectedTab = 'editor';
 						}}
 					>
 						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="arrow-left" />
@@ -870,9 +869,9 @@
 					<div
 						in:fade={{ delay: 75 }}
 						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100 transition _growth"
-						class:_selected={selectedTab === 'growth'}
+						class:_selected={$selectedTab === 'growth'}
 						on:click={() => {
-							selectedTab = 'growth';
+							$selectedTab = 'growth';
 						}}
 					>
 						<FeatherIcon color="#f6f5f4" class="mr-2 _header-icon" size="20" name="bar-chart" />
@@ -881,9 +880,9 @@
 					<div
 						in:fade={{ delay: 75 }}
 						class="relative flex items-center p-1 cursor-pointer p-2  opacity-70 hover:opacity-100"
-						class:_selected={selectedTab === 'analytics'}
+						class:_selected={$selectedTab === 'analytics'}
 						on:click={() => {
-							selectedTab = 'analytics';
+							$selectedTab = 'analytics';
 							selectedCustomer = null;
 						}}
 					>
@@ -894,9 +893,9 @@
 					<div
 						in:fade={{ delay: 150 }}
 						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
-						class:_selected={selectedTab === 'blog'}
+						class:_selected={$selectedTab === 'blog'}
 						on:click={() => {
-							selectedTab = 'blog';
+							$selectedTab = 'blog';
 						}}
 					>
 						<FeatherIcon class="mr-2 _header-icon" size="20" name="edit-3" color="#f6f5f4" />
@@ -906,9 +905,9 @@
 					<div
 						in:fade={{ delay: 225 }}
 						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
-						class:_selected={selectedTab === 'database'}
+						class:_selected={$selectedTab === 'database'}
 						on:click={() => {
-							selectedTab = 'database';
+							$selectedTab = 'database';
 						}}
 					>
 						<FeatherIcon class="mr-2 _header-icon" size="20" name="database" color="#f6f5f4" />
@@ -918,9 +917,9 @@
 					<div
 						in:fade={{ delay: 375 }}
 						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
-						class:_selected={selectedTab === 'messaging'}
+						class:_selected={$selectedTab === 'messaging'}
 						on:click={() => {
-							selectedTab = 'messaging';
+							$selectedTab = 'messaging';
 							selectedTrigger = null;
 							selectedChatRoom = null;
 						}}
@@ -938,9 +937,9 @@
 					<div
 						in:fade={{ delay: 300 }}
 						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
-						class:_selected={selectedTab === 'audience'}
+						class:_selected={$selectedTab === 'audience'}
 						on:click={() => {
-							selectedTab = 'audience';
+							$selectedTab = 'audience';
 							selectedSubmission = null;
 						}}
 					>
@@ -952,9 +951,9 @@
 					<div
 						in:fade={{ delay: 450 }}
 						class="relative flex items-center p-1 cursor-pointer p-2 opacity-70 hover:opacity-100"
-						class:_selected={selectedTab === 'newsletter'}
+						class:_selected={$selectedTab === 'newsletter'}
 						on:click={() => {
-							selectedTab = 'newsletter';
+							$selectedTab = 'newsletter';
 						}}
 					>
 						<FeatherIcon class="mr-2" size="20" name="mail" color="#f6f5f4" />
@@ -963,14 +962,14 @@
 				{/if}
 				<!-- {
 					action: () => {
-						selectedTab = 'editor';
+						$selectedTab = 'editor';
 					},
 					title: 'Editor',
 					featherIcon: 'file-text'
 				},
 				{
 					action: () => {
-						selectedTab = 'analytics';
+						$selectedTab = 'analytics';
 						selectedCustomer = null;
 					},
 					title: `Customers`,
@@ -978,7 +977,7 @@
 				},
 				{
 					action: () => {
-						selectedTab = 'audience';
+						$selectedTab = 'audience';
 						selectedSubmission = null;
 					},
 					title: `Submissions`,
@@ -986,7 +985,7 @@
 				},
 				{
 					action: () => {
-						selectedTab = 'messaging';
+						$selectedTab = 'messaging';
 						selectedTrigger = null;
 						selectedChatRoom = null;
 					},
@@ -995,21 +994,21 @@
 				},
 				{
 					action: () => {
-						selectedTab = 'database';
+						$selectedTab = 'database';
 					},
 					title: 'Databases',
 					featherIcon: 'database'
 				},
 				{
 					action: () => {
-						selectedTab = 'blog';
+						$selectedTab = 'blog';
 					},
 					title: 'Blog',
 					featherIcon: 'book-open'
 				},
 				{
 					action: () => {
-						selectedTab = 'newsletter';
+						$selectedTab = 'newsletter';
 					},
 					title: 'Newsletter',
 					featherIcon: 'mail'
@@ -1045,7 +1044,7 @@
 								{/each}
 							</select> -->
 
-								{#if selectedTab === 'editor' && page._id}
+								{#if $selectedTab === 'editor' && page._id}
 									<select
 										in:fade={{}}
 										class="ml-2 w-full bg-[#f1f1f1]"
@@ -1148,24 +1147,25 @@
 
 				{#if page._id}
 					<div
-						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded {selectedTab === 'settings'
+						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded {$selectedTab ===
+						'settings'
 							? 'bg-green-800'
 							: 'bg-[#f3f3f3]'}"
 						on:click={() => {
 							$selectedSettingsTab = 'settings';
 
-							if (selectedTab !== 'settings') {
-								selectedTab = 'settings';
+							if ($selectedTab !== 'settings') {
+								$selectedTab = 'settings';
 
 								$selectedSettingsPage = null;
 							} else {
-								selectedTab = 'editor';
+								$selectedTab = 'editor';
 								$selectedSettingsPage = null;
 							}
 						}}
 					>
 						<FeatherIcon
-							color={selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
+							color={$selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
 							size="15"
 							name="settings"
 						/>
@@ -1200,7 +1200,7 @@
 						class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] overflow-x-hidden pt-0 h-screen overflow-y-scroll bg-white"
 					>
 						<div class="w-full mr-4" style="max-width: 100vw;">
-							<div class="px-6 py-6 {selectedTab === 'growth' ? 'border-green-300 border-r' : ''}">
+							<div class="px-6 py-6 {$selectedTab === 'growth' ? 'border-green-300 border-r' : ''}">
 								{#if !page._id}
 									{#if page.parentPage}
 										<div class="pt-4 text-lg font-bold">{page.parentPage?.name || ''}</div>
@@ -1211,7 +1211,7 @@
 									{addGuids(page.sections) && ''}
 								{/if}
 
-								{#if $sectionToEdit && selectedTab === 'editor'}
+								{#if $sectionToEdit && $selectedTab === 'editor'}
 									<div class="bg-white pl-0 z-40 min-h-screen">
 										<div
 											class="flex items-center cursor-pointer text-[#8B786D] mb-4"
@@ -1247,7 +1247,7 @@
 
 								{#if !$sectionToEdit}
 									<div>
-										{#if selectedTab === 'editor' && page.name && !$sectionToEdit}
+										{#if $selectedTab === 'editor' && page.name && !$sectionToEdit}
 											{#if page._id}
 												<div class="flex items-center mb-4">
 													<div class="mr-2 flex items-center">
@@ -1315,18 +1315,18 @@
 														<div class="flex items-center shrink-0 ml-4">
 															<ColorPicker bind:page />
 															<div
-																class="text-2xl ml-2 cursor-pointer {selectedTab === 'settings'
+																class="text-2xl ml-2 cursor-pointer {$selectedTab === 'settings'
 																	? 'bg-green-800'
 																	: 'bg-[#f3f3f3]'} p-2 rounded-full"
 																on:click={() => {
-																	selectedTab = 'settings';
+																	$selectedTab = 'settings';
 																	$selectedSettingsTab = 'settings';
 																	$selectedSettingsPage = page;
 																}}
 															>
 																<FeatherIcon
 																	size="15"
-																	color={selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
+																	color={$selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
 																	name="settings"
 																/>
 															</div>
@@ -1342,7 +1342,7 @@
 															<div class="font-bold mb-2 opacity-80">Page performance</div>
 															<div
 																class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer hover:bg-[#f1f1f1]"
-																on:click={() => (selectedTab = 'growth')}
+																on:click={() => ($selectedTab = 'growth')}
 															>
 																<div class="border-gray-300 text-sm font-semibold opacity-300">
 																	Unique Views
@@ -1357,7 +1357,7 @@
 																	class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  hover:bg-[#f1f1f1]  {getConversionColor(
 																		conversions.forms
 																	)}"
-																	on:click={() => (selectedTab = 'analytics')}
+																	on:click={() => ($selectedTab = 'analytics')}
 																>
 																	<div class="border-gray-300 text-sm font-semibold opacity-300">
 																		Forms Conversion Rate
@@ -1374,7 +1374,7 @@
 																	class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer hover:bg-[#f1f1f1] {getConversionColor(
 																		conversions.clicks
 																	)}"
-																	on:click={() => (selectedTab = 'analytics')}
+																	on:click={() => ($selectedTab = 'analytics')}
 																>
 																	<div class="text-sm font-semibold">Clicks Conversion Rate</div>
 																	<div class="ml-2 font-bold">
@@ -1386,7 +1386,7 @@
 
 															{#if !conversions?.clicks && !conversions?.forms}
 																<div
-																	on:click={() => (selectedTab = 'analytics')}
+																	on:click={() => ($selectedTab = 'analytics')}
 																	class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-[#f1f1f1]"
 																>
 																	<div class="">Conversion Rate</div>
@@ -1399,7 +1399,7 @@
 											{/if}
 										{/if}
 
-										{#if selectedTab === 'editor'}
+										{#if $selectedTab === 'editor'}
 											{#if !page._id || isBrandNameEdit}
 												<div class="_section">
 													<div class="flex justify-between">
@@ -1554,7 +1554,7 @@
 													<div
 														class="_section cursor-pointer"
 														on:click={() => {
-															selectedTab = 'growth';
+															$selectedTab = 'growth';
 														}}
 													>
 														<div class="flex">
@@ -1926,32 +1926,27 @@
 											<hr class="my-8" />
 										{:else}
 											<div class="mb-[70px]">
-												{#if selectedTab === 'database'}
-													<EditDatabase
-														bind:page
-														bind:selectedStreamSlug
-														bind:selectedTab
-														bind:setPageAndDraft
-													/>
-												{:else if selectedTab === 'growth'}
-													<EditGrowth bind:page bind:selectedGrowthTab bind:setPageAndDraft />
-												{:else if selectedTab === 'blog'}
+												{#if $selectedTab === 'database'}
+													<EditDatabase bind:page bind:selectedStreamSlug bind:setPageAndDraft />
+												{:else if $selectedTab === 'growth'}
+													<EditGrowth bind:page bind:setPageAndDraft />
+												{:else if $selectedTab === 'blog'}
 													<EditBlog bind:setPageAndDraft bind:page />
-												{:else if selectedTab === 'analytics'}
+												{:else if $selectedTab === 'analytics'}
 													<EditCustomers bind:page bind:selectedCustomer />
-												{:else if selectedTab === 'messaging'}
+												{:else if $selectedTab === 'messaging'}
 													<EditMessaging
 														bind:page
 														bind:selectedTrigger
 														bind:selectedNewsletter
 														bind:selectedChatRoom
 													/>
-												{:else if selectedTab === 'audience'}
+												{:else if $selectedTab === 'audience'}
 													<EditSubmissions bind:page bind:selectedSubmission />
-												{:else if selectedTab === 'newsletter'}
+												{:else if $selectedTab === 'newsletter'}
 													<EditNewsletter bind:page />
 													<EditWelcomeEmail bind:page />
-												{:else if selectedTab === 'blog'}{:else if selectedTab === 'settings'}
+												{:else if $selectedTab === 'blog'}{:else if $selectedTab === 'settings'}
 													<EditWebsiteSettings bind:page />
 												{/if}
 											</div>
@@ -1973,12 +1968,12 @@
 					<!-- PREVIEW -->
 
 					<div
-						class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {selectedTab ===
+						class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {$selectedTab ===
 						'editor'
 							? 'p-8'
 							: 'p-0'} bg-[#e5e5e5] overflow-hidden"
 						class:hidden={page.slug === '_slug'}
-						style={selectedTab === 'editor' ? 'height: calc(100vh - 60px);' : ''}
+						style={$selectedTab === 'editor' ? 'height: calc(100vh - 60px);' : ''}
 						in:fade={{ delay: 150 }}
 					>
 						{#if !$isInsertPopupShown && !page.name}
@@ -2033,12 +2028,12 @@
 
 									<div
 										class=""
-										style={selectedTab === 'editor'
+										style={$selectedTab === 'editor'
 											? 'height: calc(100vh - 120px); overflow-y: auto;}'
 											: ''}
 										in:fade
 									>
-										{#if selectedTab === 'editor' && !$isInsertPopupShown}
+										{#if $selectedTab === 'editor' && !$isInsertPopupShown}
 											{#if page?._id}
 												<div
 													class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
@@ -2097,26 +2092,26 @@
 											{/if}
 										{:else if $isInsertPopupShown}
 											<InsertTab bind:page bind:setPageAndDraft />
-										{:else if selectedTab === 'database'}
+										{:else if $selectedTab === 'database'}
 											<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
-										{:else if selectedTab === 'analytics'}
+										{:else if $selectedTab === 'analytics'}
 											<AnalyticsTab bind:page bind:customer={selectedCustomer} />
-										{:else if selectedTab === 'messaging'}
+										{:else if $selectedTab === 'messaging'}
 											<MessagingTab
 												bind:page
 												bind:selectedNewsletter
 												bind:trigger={selectedTrigger}
 												bind:chatRoom={selectedChatRoom}
 											/>
-										{:else if selectedTab === 'audience'}
+										{:else if $selectedTab === 'audience'}
 											<AudienceTab bind:page bind:selectedSubmission />
-										{:else if selectedTab === 'blog'}
+										{:else if $selectedTab === 'blog'}
 											<BlogTab bind:page bind:setPageAndDraft />
-										{:else if selectedTab === 'growth'}
-											<GrowthTab bind:page bind:selectedGrowthTab />
-										{:else if selectedTab === 'newsletter'}
+										{:else if $selectedTab === 'growth'}
+											<GrowthTab bind:page />
+										{:else if $selectedTab === 'newsletter'}
 											<NewsletterTab bind:page />
-										{:else if selectedTab === 'settings'}
+										{:else if $selectedTab === 'settings'}
 											<EditWebsiteSettingsTab bind:page bind:setPageAndDraft />
 										{/if}
 									</div>

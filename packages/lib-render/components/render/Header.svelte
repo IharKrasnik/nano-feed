@@ -156,7 +156,7 @@
 							style="transform: translateY(0%);"
 						>
 							<div
-								class="_bg-cta ring-1 ring-white/30 p-3 shadow-md shadow-black flex  gap-2 rounded"
+								class="_bg-cta ring-1 ring-white/30 p-3 shadow-md shadow-black flex flex-col gap-2 rounded"
 							>
 								{#each link.links || [] as subLink}
 									<a

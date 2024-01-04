@@ -1,6 +1,5 @@
 <script>
 	export let page;
-	export let selectedGrowthTab;
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import { goto } from '$app/navigation';
 	import isMomentumWidgetCollapsed from 'lib-render/stores/isMomentumWidgetCollapsed';
@@ -8,6 +7,7 @@
 	import BackTo from '$lib/components/BackTo.svelte';
 	import KickstartPromo from 'lib/components/KickstartPromo.svelte';
 	import EditServices from '$lib/components/edit/Services.svelte';
+	import selectedGrowthTab from '$lib/stores/selectedGrowthTab';
 
 	let isKickstartModalShown;
 	export let setPageAndDraft;
@@ -19,11 +19,11 @@
 	</Modal>
 {/if}
 
-{#if selectedGrowthTab === 'services'}
+{#if $selectedGrowthTab === 'services'}
 	<BackTo
 		to="Dashboard"
 		onClick={() => {
-			selectedGrowthTab = 'dashboard';
+			$selectedGrowthTab = 'dashboard';
 		}}
 	/>
 	<EditServices bind:page bind:setPageAndDraft />
@@ -32,9 +32,9 @@
 		<div
 			class="_section cursor-pointer"
 			on:click={() => {
-				selectedGrowthTab = 'dashboard';
+				$selectedGrowthTab = 'dashboard';
 			}}
-			class:_selected={selectedGrowthTab === 'dashboard'}
+			class:_selected={$selectedGrowthTab === 'dashboard'}
 		>
 			<div class="flex">
 				<div
@@ -64,9 +64,9 @@
 		<div
 			class="_section cursor-pointer"
 			on:click={() => {
-				selectedGrowthTab = 'services';
+				$selectedGrowthTab = 'services';
 			}}
-			class:_selected={selectedGrowthTab === 'services'}
+			class:_selected={$selectedGrowthTab === 'services'}
 		>
 			<div class="flex">
 				<div
@@ -104,9 +104,9 @@
 			<div
 				class="_section  cursor-pointer mt-4"
 				on:click={() => {
-					selectedGrowthTab = 'knowledge-base';
+					$selectedGrowthTab = 'knowledge-base';
 				}}
-				class:_selected={selectedGrowthTab === 'knowledge-base'}
+				class:_selected={$selectedGrowthTab === 'knowledge-base'}
 			>
 				<div class="font-bold mb-1">#knowledge-base</div>
 				<div class="opacity-80">Learn how to validate, build and grow startups</div>

@@ -53,6 +53,7 @@
 	export let isEdit = false;
 	export let isSectionsCloneable = false;
 	export let onInsert;
+	export let isNoHeaderFooter = false;
 
 	export let page = {
 		name: 'momentum',
@@ -97,7 +98,6 @@
 		]
 	};
 
-	export let noStickyHeader = false;
 	export let isNoVars = false;
 	let isMounted = false;
 	let isMountedDelayed = false;
@@ -302,7 +302,7 @@
 						style="z-index: 32;"
 						in:fade={{ duration: 150 }}
 					>
-						{#if !isSectionsCloneable}
+						{#if !isSectionsCloneable && !isNoHeaderFooter}
 							{#if page.name || page.parentPage?._id}
 								<RenderHeader bind:page bind:isEdit />
 							{/if}
@@ -437,7 +437,7 @@
 										{/if}
 									</div>
 
-									{#if isMountedDelayed && (page.activeHero?.title || page.ctaFooter?.title) && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && $sveltePage.url.pathname !== '/blog'}
+									{#if isMountedDelayed && !isNoHeaderFooter && (page.activeHero?.title || page.ctaFooter?.title) && !page.ctaFooter?.isHidden && page.sections?.filter((s) => s.isShown)?.length && $sveltePage.url.pathname !== '/blog'}
 										<div
 											class="overflow-hidden"
 											bind:this={$ctaFooterEl}

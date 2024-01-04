@@ -22,9 +22,9 @@
 	import knowledgeBaseProjects from 'lib/stores/knowledgeBaseProjects';
 	import isMomentumWidgetCollapsed from 'lib-render/stores/isMomentumWidgetCollapsed';
 	import momentumWidgetTab from 'lib-render/stores/momentumWidgetTab';
+	import selectedGrowthTab from '$lib/stores/selectedGrowthTab';
 
 	export let page;
-	export let selectedGrowthTab = 'dashboard';
 
 	let selectedKBProject;
 
@@ -76,7 +76,7 @@
 
 <PageContainer class="min-h-screen p-8" bind:page>
 	<div class="max-w-[1000px] mx-auto">
-		{#if selectedGrowthTab === 'dashboard'}
+		{#if $selectedGrowthTab === 'dashboard'}
 			<div class="mb-8">
 				<div class="text-lg font-bold mb-2 opacity-90">Current Goal</div>
 				<div class="_section">
@@ -250,7 +250,7 @@
 			{:else}
 				<div class="flex justify-center my-8"><Loader /></div>
 			{/if}
-		{:else if selectedGrowthTab === 'create'}
+		{:else if $selectedGrowthTab === 'create'}
 			<MomentumWidget
 				title="Publish Content & Grow"
 				description="Share useful content about your product and journey. Create daily. Build trust and grow your metrics."
@@ -259,9 +259,9 @@
 				bind:newMoment
 				onSent={() => {}}
 			/>
-		{:else if selectedGrowthTab === 'services'}
+		{:else if $selectedGrowthTab === 'services'}
 			<ServicesTab bind:page />
-		{:else if selectedGrowthTab === 'knowledge-base'}
+		{:else if $selectedGrowthTab === 'knowledge-base'}
 			<div class="flex justify-between">
 				<div>
 					<div class="_title text-3xl mb-2">Knowledge Base</div>
@@ -328,11 +328,11 @@
 				{/if}
 			{/if}
 		{/if}
-		{#if selectedGrowthTab === 'dashboard'}
+		{#if $selectedGrowthTab === 'dashboard'}
 			<PricingPage bind:page />
 		{/if}
 	</div>
 </PageContainer>
-{#if selectedGrowthTab === 'boost'}{/if}
+{#if $selectedGrowthTab === 'boost'}{/if}
 
-{#if selectedGrowthTab === 'knowledge-base'}{/if}
+{#if $selectedGrowthTab === 'knowledge-base'}{/if}
