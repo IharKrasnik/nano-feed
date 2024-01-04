@@ -1,4 +1,5 @@
 <script>
+	import { get } from 'lib/api';
 	export let page;
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import { goto } from '$app/navigation';
@@ -8,6 +9,7 @@
 	import KickstartPromo from 'lib/components/KickstartPromo.svelte';
 	import EditServices from '$lib/components/edit/Services.svelte';
 	import selectedGrowthTab from '$lib/stores/selectedGrowthTab';
+	import selectedServicePage, { selectServicePage } from '$lib/stores/selectedServicePage';
 
 	let isKickstartModalShown;
 	export let setPageAndDraft;
@@ -274,16 +276,18 @@
 				</div>
 				<hr />
 				<div class="flex items-center justify-between  mt-4">
-					<a
-						href="https://studio.saltnbold.com/new/marketing-assets-promo"
-						class="w-full"
-						class:hidden={!page._id}
-						target="_blank"
-					>
-						<button class="_small _secondary _promo" style="background-color: #1d60ff;"
-							>Design marketing assets →</button
+					<div class="w-full" class:hidden={!page._id} target="_blank">
+						<button
+							class="_small _secondary _promo"
+							style="background-color: #1d60ff;"
+							on:click={async () => {
+								await selectServicePage({
+									pageId: '6596f017956c1a001596c7ad',
+									parentPageId: '655cae4ab9f10700147e13da'
+								});
+							}}>Design marketing assets →</button
 						>
-					</a>
+					</div>
 					<div class="flex items-center">
 						<img
 							class="max-w-[30px] rounded-full"
@@ -308,8 +312,11 @@
 
 			<div
 				class="_section w-full cursor-pointer"
-				on:click={() => {
-					goto('https://studio.saltnbold.com/new/logo');
+				on:click={async () => {
+					await selectServicePage({
+						pageId: '6596fa38956c1a001596d2ba',
+						parentPageId: '655cae4ab9f10700147e13da'
+					});
 				}}
 			>
 				Logo in 3 days
@@ -322,8 +329,11 @@
 
 			<div
 				class="_section w-full cursor-pointer"
-				on:click={() => {
-					goto('https://studio.saltnbold.com/new/ui-ux-prototype');
+				on:click={async () => {
+					await selectServicePage({
+						pageId: '6596a094a090d00015c62448',
+						parentPageId: '655cae4ab9f10700147e13da'
+					});
 				}}
 			>
 				UI/UX prototype in 3 days
@@ -335,8 +345,11 @@
 
 			<div
 				class="_section w-full cursor-pointer"
-				on:click={() => {
-					goto('https://studio.saltnbold.com/new/product-demo-video');
+				on:click={async () => {
+					await selectServicePage({
+						pageId: '6596a0fca090d00015c624b2',
+						parentPageId: '655cae4ab9f10700147e13da'
+					});
 				}}
 			>
 				Product Video in 5 days

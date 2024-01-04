@@ -304,7 +304,7 @@
 					>
 						{#if !isSectionsCloneable && !isNoHeaderFooter}
 							{#if page.name || page.parentPage?._id}
-								<RenderHeader bind:page bind:isEdit />
+								<RenderHeader bind:isEmbed bind:page bind:isEdit />
 							{/if}
 						{/if}
 

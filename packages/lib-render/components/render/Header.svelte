@@ -59,8 +59,8 @@
 </script>
 
 <div
-	class="{isEmbed ? '' : 'fixed'} w-full _header backdrop-blur-lg _border-b-theme"
-	style="{isEdit ? 'width: calc(100% - 498px);' : ''} z-index: 100;"
+	class=" fixed w-full _header backdrop-blur-lg _border-b-theme"
+	style="{isEdit || isEmbed ? 'width: calc(100% - 498px);' : ''} z-index: 100;"
 >
 	<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
 		<div class="flex flex-grow py-4 sm:py-0">
