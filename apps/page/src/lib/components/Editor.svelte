@@ -1732,7 +1732,23 @@ See you!
 										class="max-h-screen overflow-y-scroll"
 										links={[
 											{ url: `explore`, title: 'Explore Pages', emoji: '🙌' },
-											{ url: 'about', title: 'About Momentum', emoji: '📄', target: '_blank' }
+											{ url: 'about', title: 'About Momentum', emoji: '📄', target: '_blank' },
+											...($currentUser
+												? [
+														{
+															url: 'logout',
+															title: 'Log Out',
+															emoji: '',
+															onClick: () => {
+																$currentUser = null;
+																setPageAndDraft(null);
+																goto('/', {
+																	replaceState: true
+																});
+															}
+														}
+												  ]
+												: [])
 										]}
 										frameBgColor="#494949"
 									>

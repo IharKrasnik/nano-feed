@@ -71,6 +71,9 @@
 					<a
 						class="text-sm flex block items-center mr-6"
 						href={link.url}
+						on:click={() => {
+							link.onClick && link.onClick();
+						}}
 						target={link.target || ''}
 					>
 						{link.emoji || ''}
