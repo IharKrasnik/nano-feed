@@ -78,6 +78,46 @@
 		$sectionToEdit = deliverablesSection;
 	};
 
+	let addHowItWorks = async () => {
+		let howItWorksSection = {
+			id: uuidv4(),
+			functionalType: 'how-it-works',
+			renderType: 'stepper',
+			title: 'No calls, no complex proposals, no friction',
+			description: 'How <i>Fast Design</i> Works?',
+			items: [
+				{
+					id: uuidv4(),
+					title: 'Submit a simple form',
+					description: 'Get instant chat access',
+					emoji: ''
+				},
+				{
+					id: uuidv4(),
+					title: 'Activate your request',
+					description: 'Pre-pay $9.99 to start the work',
+					emoji: ''
+				},
+				{
+					id: uuidv4(),
+					title: 'Get designs & Review',
+					description: 'Get notified via email once we ready',
+					emoji: ''
+				},
+				{
+					id: uuidv4(),
+					title: 'Approve & Pay',
+					description: 'Pay service price to download the design files',
+					emoji: ''
+				}
+			]
+		};
+
+		page.sections = [...page.sections, howItWorksSection];
+
+		$sectionToEdit = howItWorksSection;
+	};
+
 	let addPortfolio = async () => {
 		portfolioSection = {
 			id: uuidv4(),
@@ -263,6 +303,25 @@
 	</div>
 {/if}
 
+{#if !page.sections.find((s) => s.functionalType === 'how-it-works')}
+	<div class="_section mb-4 mt-4 cursor-pointer" on:click={addHowItWorks}>
+		<div class="flex">
+			<div
+				class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full bg-orange-300 shadow-md  shadow-orange-300/50 mr-4"
+			>
+				<FeatherIcon name="help-circle" class="opacity-80" color="#333333" size="18" />
+			</div>
+			<div>
+				<div class="font-bold">Add How-It-Works</div>
+				<div class="opacity-80">
+					Explain what happens once customer submits their request so they understand your process
+					and the next steps
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
 {#if !page.sections.find((s) => s.functionalType === 'portfolio')}
 	<div class="_section mb-4 mt-4 cursor-pointer" on:click={addPortfolio}>
 		<div class="flex">
@@ -274,7 +333,7 @@
 			<div>
 				<div class="font-bold">Add portfolio</div>
 				<div class="opacity-80">
-					Show examples of your past work so your customer knows what to expect
+					Show examples of your past work so your customer knows what results to expect
 				</div>
 			</div>
 		</div>
