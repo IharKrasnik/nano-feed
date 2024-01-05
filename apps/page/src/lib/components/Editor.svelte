@@ -1385,7 +1385,7 @@
 														>
 															<div class="font-bold">{(page.parentPage || page).name}</div>
 														</div>
-														<div class="font-bold mb-2 mt-8">Sub-Pages</div>
+														<div class="font-bold mb-2 mt-8">SubPages</div>
 
 														<div class="_section">
 															<NewPage

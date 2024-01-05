@@ -83,4 +83,4 @@
 	</div>
 {/if}
 
-<Button class="_primary _small" onClick={() => createPage(newPage)}>Create Sub-Page</Button>
+<Button class="_primary _small" onClick={() => createPage(newPage)}>Create SubPage</Button>
