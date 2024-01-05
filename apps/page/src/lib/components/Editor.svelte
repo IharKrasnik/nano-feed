@@ -59,6 +59,7 @@
 	import InsertTab from '$lib/components/tabs/InsertTab.svelte';
 	import DatabaseTab from '$lib/components/tabs/DatabaseTab.svelte';
 	import BlogTab from '$lib/components/tabs/BlogTab.svelte';
+	import SubmissionsTab from '$lib/components/tabs/SubmissionsTab.svelte';
 	import GrowthTab from '$lib/components/tabs/GrowthTab.svelte';
 	import EditWebsiteSettingsTab from '$lib/components/tabs/WebsiteSettingsTab.svelte';
 	import NewPage from '$lib/components/NewPage.svelte';
@@ -630,7 +631,6 @@
 	let selectedStreamSlug;
 
 	let selectedCustomer;
-	let selectedSubmission;
 	let selectedTrigger;
 	let selectedChatRoom;
 	let selectedNewsletter;
@@ -921,7 +921,7 @@
 					<div
 						in:fade={{ delay: 150 }}
 						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
-						class:_selected={$selectedTab === 'blog'}
+						class:_selected={$selectedTab === 'requests'}
 						on:click={() => {
 							$selectedTab = 'requests';
 						}}
@@ -960,87 +960,7 @@
 						/>
 						Engage
 					</div>
-
-					<!-- 
-					<div
-						in:fade={{ delay: 300 }}
-						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
-						class:_selected={$selectedTab === 'audience'}
-						on:click={() => {
-							$selectedTab = 'audience';
-							selectedSubmission = null;
-						}}
-					>
-						<FeatherIcon color="#f6f5f4" class="mr-2" size="20" name="check-square" />
-						Submissions
-					</div>
-
-
-					<div
-						in:fade={{ delay: 450 }}
-						class="relative flex items-center p-1 cursor-pointer p-2 opacity-70 hover:opacity-100"
-						class:_selected={$selectedTab === 'newsletter'}
-						on:click={() => {
-							$selectedTab = 'newsletter';
-						}}
-					>
-						<FeatherIcon class="mr-2" size="20" name="mail" color="#f6f5f4" />
-						Newsletter
-					</div> -->
 				{/if}
-				<!-- {
-					action: () => {
-						$selectedTab = 'editor';
-					},
-					title: 'Editor',
-					featherIcon: 'file-text'
-				},
-				{
-					action: () => {
-						$selectedTab = 'analytics';
-						selectedCustomer = null;
-					},
-					title: `Customers`,
-					featherIcon: 'activity'
-				},
-				{
-					action: () => {
-						$selectedTab = 'audience';
-						selectedSubmission = null;
-					},
-					title: `Submissions`,
-					featherIcon: 'check-square'
-				},
-				{
-					action: () => {
-						$selectedTab = 'messaging';
-						selectedTrigger = null;
-						selectedChatRoom = null;
-					},
-					title: 'Messaging',
-					featherIcon: 'message-square'
-				},
-				{
-					action: () => {
-						$selectedTab = 'database';
-					},
-					title: 'Databases',
-					featherIcon: 'database'
-				},
-				{
-					action: () => {
-						$selectedTab = 'blog';
-					},
-					title: 'Blog',
-					featherIcon: 'book-open'
-				},
-				{
-					action: () => {
-						$selectedTab = 'newsletter';
-					},
-					title: 'Newsletter',
-					featherIcon: 'mail'
-				} -->
 			</div>
 
 			<div class="2xl:absolute w-full flex items-center justify-center">
@@ -1402,7 +1322,7 @@
 														{#each getEditorSubpages() as subPage}
 															<div
 																class="_section cursor-pointer"
-																class:_selected={subPage._id === page._id}
+																class:_active={subPage._id === page._id}
 																on:click={() => setPageAndDraft(subPage)}
 															>
 																<div class="font-bold">{subPage.name}</div>
@@ -1828,8 +1748,8 @@
 														bind:selectedNewsletter
 														bind:selectedChatRoom
 													/>
-												{:else if $selectedTab === 'audience'}
-													<EditSubmissions bind:page bind:selectedSubmission />
+												{:else if $selectedTab === 'requests'}
+													<EditSubmissions bind:page />
 												{:else if $selectedTab === 'newsletter'}
 													<EditNewsletter bind:page />
 													<EditWelcomeEmail bind:page />
@@ -1991,9 +1911,11 @@
 												bind:chatRoom={selectedChatRoom}
 											/>
 										{:else if $selectedTab === 'audience'}
-											<AudienceTab bind:page bind:selectedSubmission />
+											<AudienceTab bind:page />
 										{:else if $selectedTab === 'blog'}
 											<BlogTab bind:page bind:setPageAndDraft />
+										{:else if $selectedTab === 'requests'}
+											<SubmissionsTab bind:page bind:setPageAndDraft />
 										{:else if $selectedTab === 'growth'}
 											<GrowthTab bind:page />
 										{:else if $selectedTab === 'newsletter'}

@@ -3,21 +3,24 @@
 	import { get, post, put, del } from 'lib/api';
 	import { fade } from 'svelte/transition';
 	import { countryCodeEmoji } from 'country-code-emoji';
-	import submissions from 'lib/stores/submissions';
+	import selectedTab from '$lib/stores/selectedTab';
+	import selectedSubmission from '$lib/stores/selectedSubmission';
+
+	import submissions, {
+		refresh as refreshSubmissions,
+		isLoading as isSubmissionsLoading
+	} from 'lib/stores/submissions';
+
+	import submissionsOutbound, {
+		refresh as refreshSubmissionsOutbound,
+		isLoading as isSubmissionsOutboundLoading
+	} from 'lib/stores/submissionsOutbound';
+
 	import Button from 'lib/components/Button.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 
 	export let page;
-	export let selectedSubmission;
-
-	let loadSubmissions = async () => {
-		let submissionsResults = await get(`pages/${page.parentPage?._id || page._id}/submissions`, {});
-
-		$submissions = submissionsResults.results.map((s) => {
-			s.isCollapsed = true;
-			return s;
-		});
-	};
 
 	let formatSubmission = (submission) => {
 		if (submission.vars) {
@@ -29,46 +32,92 @@
 		}
 	};
 
-	loadSubmissions();
+	refreshSubmissions({ page });
+	refreshSubmissionsOutbound({});
+
+	let selectedSubmissionsTab = 'inbound';
 </script>
 
-{#each $submissions as submission}
-	<div
-		class="_section cursor-pointer"
-		class:_active={!submission.isCollapsed}
-		on:click={() => {
-			$submissions = $submissions.map((s) => {
-				s.isCollapsed = true;
-				if (s._id === submission._id) {
-					s.isCollapsed = false;
-				}
-				return s;
-			});
+<div class="font-bold mb-2">Submissions</div>
 
-			selectedSubmission = submission;
-		}}
-	>
-		<div class=" flex justify-between items-center">
-			{formatSubmission(submission)}
+<ToggleGroup
+	class="my-4"
+	tabs={[
+		{
+			key: 'inbound',
+			isSelected: selectedSubmissionsTab === 'inbound',
+			name: 'Inbound'
+		},
+		{
+			key: 'outbound',
+			isSelected: selectedSubmissionsTab === 'outbound',
+			name: 'Outbound'
+		}
+	]}
+	onTabSelected={(tab) => {
+		selectedSubmissionsTab = tab.key;
+	}}
+/>
 
-			<div class="flex gap-2 items-center">
-				{#if submission.customer?.visitor?.payload?.deviceType}
-					{#if submission.customer.visitor.payload.deviceType === 'desktop'}
-						<FeatherIcon theme="light" size="15" name="monitor" />
-					{:else}
-						<FeatherIcon theme="light" size="15" name="smartphone" />
+{#if !$isSubmissionsLoading && !$isSubmissionsOutboundLoading}
+	{#if selectedSubmissionsTab === 'inbound'}
+		{#if !$submissions.length}
+			<div class="_section _info">
+				<div class="font-bold">No requests yet</div>
+				<div>Add forms to your pages and promote to get submissions</div>
+			</div>
+		{/if}
+	{:else if !$submissionsOutbound.length}
+		<div class="_section _info">
+			<div class="font-bold">No outbound requests yet</div>
+			<div>Get free and paid startup services to grow your product</div>
+			<button
+				class="_primary _small mt-2"
+				on:click={() => {
+					$selectedTab = 'growth';
+				}}>See promoted services</button
+			>
+		</div>
+	{/if}
+
+	{#each selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound as submission}
+		<div
+			class="_section cursor-pointer"
+			class:_active={submission._id === $selectedSubmission?._id}
+			on:click={() => {
+				$submissions = $submissions.map((s) => {
+					s.isCollapsed = true;
+					if (s._id === submission._id) {
+						s.isCollapsed = false;
+					}
+					return s;
+				});
+
+				$selectedSubmission = submission;
+			}}
+		>
+			<div class=" flex justify-between items-center">
+				{formatSubmission(submission)}
+
+				<div class="flex gap-2 items-center">
+					{#if submission.customer?.visitor?.payload?.deviceType}
+						{#if submission.customer.visitor.payload.deviceType === 'desktop'}
+							<FeatherIcon theme="light" size="15" name="monitor" />
+						{:else}
+							<FeatherIcon theme="light" size="15" name="smartphone" />
+						{/if}
 					{/if}
-				{/if}
-				{#if submission.customer?.visitor?.geoData?.country}
-					{countryCodeEmoji(submission.customer?.visitor?.geoData?.country)}
-				{/if}
+					{#if submission.customer?.visitor?.geoData?.country}
+						{countryCodeEmoji(submission.customer?.visitor?.geoData?.country)}
+					{/if}
+				</div>
+			</div>
+			<div class="text-sm mt-2">
+				{moment(submission.createdOn).format('MMM DD HH:mm')}
 			</div>
 		</div>
-		<div class="text-sm mt-2">
-			{moment(submission.createdOn).format('MMM DD HH:mm')}
-		</div>
-	</div>
-{/each}
+	{/each}
+{/if}
 
 <style>
 	._active {

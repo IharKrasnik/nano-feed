@@ -63,7 +63,7 @@
 				</div>
 			</div>
 		</div>
-		<div
+		<!-- <div
 			class="_section cursor-pointer"
 			on:click={() => {
 				$selectedGrowthTab = 'services';
@@ -84,7 +84,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<div class="_section">
 			<div class="flex">

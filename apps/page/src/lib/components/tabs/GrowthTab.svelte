@@ -78,7 +78,19 @@
 
 {#if $selectedGrowthTab === 'promo_services'}
 	{#if $selectedServicePage}
-		<SitePreview isNoBadge isEmbed page={{ ...$selectedServicePage }} />
+		<SitePreview
+			isNoBadge
+			isEmbed
+			page={{
+				...$selectedServicePage,
+				heros: [
+					{
+						...$selectedServicePage.heros[0],
+						formSection: { ...$selectedServicePage.heros[0].formSection, actionType: 'success' }
+					}
+				]
+			}}
+		/>
 	{/if}
 {:else}
 	<PageContainer class="min-h-screen p-8" bind:page>

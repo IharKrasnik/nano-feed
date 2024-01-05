@@ -4,6 +4,8 @@
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import trackForm from 'lib/services/trackForm';
+	import submissions from 'lib/stores/submissions';
+	import submissionsOutbound from 'lib/stores/submissionsOutbound';
 
 	export let section;
 	export let page;
@@ -37,6 +39,8 @@
 		trackForm({ sectionId: section.id, text: section.title || section.description });
 
 		let submission = await post(`pages/${page._id}/submissions`, postData);
+
+		$submissionsOutbound = [submission, ...$submissionsOutbound];
 
 		if (submission.customer) {
 			$currentCustomer = submission.customer;

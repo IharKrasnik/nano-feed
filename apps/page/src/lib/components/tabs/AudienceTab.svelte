@@ -12,6 +12,7 @@
 	import currentUser from 'lib/stores/currentUser';
 	import submissions from 'lib/stores/submissions';
 	import FileInput from 'lib/components/FileInput.svelte';
+	import selectedSubmission from '$lib/stores/selectedSubmission';
 
 	import formsCache, { getForm } from 'lib-render/stores/formsCache';
 
@@ -21,7 +22,6 @@
 	let styles;
 
 	export let page;
-	export let selectedSubmission;
 
 	$: if (page) {
 		let res = getPageCssStyles(page);
@@ -29,18 +29,21 @@
 		styles = res.styles;
 	}
 
-	$: if (selectedSubmission) {
-		getForm({ pageId: selectedSubmission.page._id, sectionId: selectedSubmission.sectionId });
+	$: if ($selectedSubmission) {
+		getForm({ pageId: $selectedSubmission.page._id, sectionId: $selectedSubmission.sectionId });
 	}
 </script>
 
 <div class="px-8 py-16 bg-background" style={cssVarStyles}>
-	{#if selectedSubmission}
-		{#key selectedSubmission._id}
+	{#if $selectedSubmission}
+		{#key $selectedSubmission._id}
 			{#if $formsCache[selectedSubmission.sectionId]}
 				<RenderSection
 					{page}
-					section={{ ...$formsCache[selectedSubmission.sectionId], submission: selectedSubmission }}
+					section={{
+						...$formsCache[$selectedSubmission.sectionId],
+						submission: $selectedSubmission
+					}}
 				/>
 			{/if}
 		{/key}

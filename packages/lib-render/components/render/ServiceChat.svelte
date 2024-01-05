@@ -1,11 +1,17 @@
 <script>
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
-	import { get, post } from 'lib/api';
+	import { get, post, put } from 'lib/api';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import currentUser from 'lib/stores/currentUser';
+	import currentCustomer from 'lib/stores/currentCustomer';
 
 	export let page;
-	export let roomId;
+	export let submission;
+	export let submissionId = submission?._id;
+	import autofocus from 'lib/use/autofocus';
+	import clickOutside from 'lib/use/clickOutside';
 
 	let messages = [];
 
@@ -16,14 +22,17 @@
 
 	let getMessages = async () => {
 		let { results } = await get(`customerMessages`, {
-			pageId: page.parentPage?._id || page._id,
-			chatRoomId: roomId
+			pageId: submission.page.parentPage?._id || submission.page._id,
+			chatRoomId: submission._id
 		});
 
 		messages = results;
 	};
 
 	let sendMessage = async () => {
+		newMessage.fromUser = $currentUser;
+		newMessage.fromCustomer = $currentCustomer;
+
 		messages = [...messages, newMessage];
 		let toCreate = newMessage;
 
@@ -31,8 +40,8 @@
 
 		let createdMessage = await post(`customerMessages`, {
 			...toCreate,
-			pageId: page.parentPage?._id || page._id,
-			chatRoomId: roomId
+			pageId: submission.page.parentPage?._id || submission.page._id,
+			chatRoomId: submission._id
 		});
 
 		messages = [...messages.filter((m) => m._id), createdMessage];
@@ -57,31 +66,128 @@
 	if (browser) {
 		onMount(() => scrollToBottom(chatEl));
 	}
+
+	let isMyMessage = (message) => {
+		if ($currentUser) {
+			return $currentUser._id === message.fromUser?._id;
+		} else {
+			return message.fromCustomer && !message.fromUser;
+		}
+	};
+
+	let isMenuShown = false;
+
+	let closeRequest = async () => {
+		let updatedSubmission = await put(`serviceRequests/${submission._id}/close`);
+		submission = updatedSubmission;
+	};
+
+	let isMessageShown = false;
 </script>
 
-<div
-	class="flex flex-col flex-1 h-full justify-between max-w-[600px] mx-auto _section-item"
-	bind:this={chatEl}
->
-	<div
-		class="flex flex-col h-full flex-1 min-h-[400px] max-h-[400px] overflow-y-scroll justify-end p-8"
-	>
-		{#each messages as message}
-			<div class="message my-4" class:my={message.customer} class:their={message.user}>
-				<div class="content">
-					{message.messageHTML}
+<div class="max-w-[600px] mx-auto">
+	<div class="flex justify-between">
+		<div>
+			<div class="flex items-center">
+				<div class="text-lg font-bold mb-2 shrink-0">
+					{submission.page.name}
+				</div>
+				<div class="mt-[-5px] ml-4">
+					{#if submission.status === 'closed'}
+						<div class="text-center text-sm p-1 px-3 border rounded-full border-orange-300">
+							Closed
+						</div>
+					{:else}
+						<div class="text-center text-sm p-1 px-3 border rounded-full border-green-300">
+							Active
+						</div>
+					{/if}
 				</div>
 			</div>
-		{/each}
+
+			<div class="text-lg mb-4 opacity-70">
+				Chat with {submission.page.parentPage.name}
+			</div>
+		</div>
+
+		<div>
+			{#if submission.status === 'closed'}{:else}
+				<div class="cursor-pointer relative" on:click={() => (isMenuShown = true)}>
+					<FeatherIcon theme={(page.parentPage || page)?.theme?.theme} name="more-horizontal" />
+
+					{#if isMenuShown}
+						<div
+							class="absolute left-0 top-0"
+							style="transform:translateY(100%);"
+							use:clickOutside
+							on:clickOutside={() => (isMenuShown = false)}
+						>
+							<div on:click={closeRequest}>Close Request</div>
+						</div>
+					{/if}
+				</div>
+			{/if}
+		</div>
 	</div>
 
-	<div class="w-full flex gap-4 items-center justify-between">
-		<textarea class="w-full" placeholder="Your Message" bind:value={newMessage.messageHTML} />
-		<button
-			disabled={!newMessage.messageHTML}
-			on:click={sendMessage}
-			class="_primary _small shrink-0">Send Message</button
+	<div class="flex flex-col flex-1 h-full justify-between _section-item mt-4" bind:this={chatEl}>
+		<div
+			class="flex flex-col h-full flex-1 min-h-[500px] max-h-[500px] overflow-y-scroll justify-end p-8"
+			style="border-radius: 0;"
 		>
+			{#each messages as message}
+				<div
+					class="message my-4"
+					class:my={isMyMessage(message)}
+					class:their={!isMyMessage(message)}
+				>
+					{#if !isMyMessage(message)}
+						<img
+							src={message.fromUser?.avatarUrl || message.fromCustomer?.avatarUrl}
+							class="w-[25px] h-[25px] rounded-full"
+						/>
+					{/if}
+
+					<div class="content bg-cta-stronger">
+						{message.messageHTML}
+					</div>
+					{#if isMyMessage(message)}
+						<img
+							src={$currentUser?.avatarUrl || $currentCustomer?.avatarUrl}
+							class="w-[25px] h-[25px] rounded-full"
+						/>
+					{/if}
+				</div>
+			{/each}
+		</div>
+
+		{#if submission.status === 'closed' && !isMessageShown}
+			<div>
+				<div class="max-w-[300px] text-center mx-auto py-4">
+					<div class="w-full text-center mb-2 text-sm">This chat is closed</div>
+					<button
+						class="_small w-auto"
+						on:click={() => {
+							isMessageShown = true;
+						}}>Send message anyway</button
+					>
+				</div>
+			</div>
+		{:else}
+			<div class="w-full flex gap-4 items-center justify-between" style="border-radius: 0;">
+				<textarea
+					class="w-full"
+					placeholder="Your Message"
+					use:autofocus
+					bind:value={newMessage.messageHTML}
+				/>
+				<button
+					disabled={!newMessage.messageHTML}
+					on:click={sendMessage}
+					class="_primary _small shrink-0">Send Message</button
+				>
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -95,7 +201,7 @@
 	}
 
 	.system .content {
-		@apply flex items-center border border-gray-400 p-4 px-8 rounded-xl m-4;
+		@apply flex items-center border border-gray-400  p-4 px-8 rounded-t-xl m-4;
 	}
 
 	.message {
@@ -114,7 +220,7 @@
 		background: var(--accent-color);
 		color: var(--button-text-color);
 
-		@apply rounded-tr-none mr-2;
+		@apply rounded-br-none mr-2;
 	}
 
 	.their .content {
