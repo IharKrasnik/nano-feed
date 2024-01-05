@@ -239,6 +239,7 @@
 	};
 
 	let editableFields = [
+		'name',
 		'heros',
 		'sections',
 		'ctaFooter',

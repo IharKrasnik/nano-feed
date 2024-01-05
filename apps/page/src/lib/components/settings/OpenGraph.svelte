@@ -20,7 +20,10 @@
 	};
 </script>
 
-<h3 class="text-xl font-bold mb-2">Open Graph</h3>
+<h3 class="text-lg font-bold mb-2">Page Name</h3>
+<input bind:value={page.name} placeholder="Page Name" />
+
+<h3 class="text-lg font-bold mb-2 mt-8">Open Graph</h3>
 <div class="text-sm mb-4">
 	Customize how your link will be shown when shared in social networks and web.
 </div>
