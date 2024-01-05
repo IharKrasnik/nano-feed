@@ -411,7 +411,7 @@
 				: ''} {section.bottomImageUrl ? 'padding-bottom: 0 !important;' : ''} {style || ''} "
 		>
 			{#if section.renderType === 'callout'}
-				<RenderCalloutSection bind:page bind:section bind:isEdit />
+				<RenderCalloutSection bind:page bind:section bind:isEdit bind:isEmbed />
 			{:else}
 				{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
 					{#if section.renderType !== 'article' && section.title && (section.items?.length || section.streamSlug)}
@@ -512,6 +512,8 @@
 									bind:sectionItem={section}
 									size="large"
 									bind:page
+									bind:isEdit
+									bind:isEmbed
 								/>
 							</div>
 						{/if}
@@ -655,6 +657,8 @@
 												<div>
 													<RenderInteractiveOptions
 														bind:sectionItem={selectedCarouselItem}
+														bind:isEdit
+														bind:isEmbed
 														class="p-4"
 														{page}
 													/>
@@ -918,6 +922,8 @@
 																parentSectionId={section.id}
 																bind:page
 																itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																bind:isEdit
+																bind:isEmbed
 															/>
 														</div>
 													{/if}
@@ -1286,6 +1292,8 @@
 																			parentSectionId={section.id}
 																			bind:page
 																			itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																			bind:isEdit
+																			bind:isEmbed
 																		/>
 																	</div>
 																{/if}

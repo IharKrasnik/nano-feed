@@ -19,6 +19,10 @@
 	export let page;
 	export let setPageAndDraft;
 
+	let clazz;
+
+	export { clazz as class };
+
 	let parentPage = page.parentPage ? $allPages.find((p) => p._id === page.parentPage._id) : page;
 
 	let isBlogPostsLoading = true;
@@ -109,8 +113,8 @@
 	getBlogPosts();
 </script>
 
-<div>
-	<div class="font-bold opacity-80 mb-2 text-lg">Blog</div>
+<div class={clazz}>
+	<div class="font-bold opacity-80 mb-2">Blog</div>
 
 	{#if !$subPages.find((s) => s.slug === 'blog')}
 		<div class="_section">

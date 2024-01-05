@@ -42,7 +42,6 @@
 	}
 
 	let updateFeedItem = async () => {
-		debugger;
 		if (attachToPages) {
 			feedItem.attachedToPages = attachToPages;
 		}

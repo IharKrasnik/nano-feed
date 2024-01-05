@@ -293,6 +293,8 @@
 									size={hero.theme.titleSize === 'huge' ? 'huge' : 'large'}
 									bind:page
 									bind:sectionItem={hero}
+									bind:isEdit
+									bind:isEmbed
 								/>
 							</div>
 						{/if}

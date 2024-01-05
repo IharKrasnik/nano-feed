@@ -189,6 +189,8 @@
 							bind:sectionItem={page.activeHero}
 							bind:page
 							isHeader
+							bind:isEdit
+							bind:isEmbed
 						/>
 					{/if}
 				{:else if page.parentPage.heros?.length}
@@ -198,6 +200,8 @@
 						sectionItem={page.parentPage.heros[0]}
 						{page}
 						isHeader
+						bind:isEdit
+						bind:isEmbed
 					/>
 				{/if}
 				<!-- {#each page.subPages || page.parentPage?.subPages || [] as subPage}
@@ -216,9 +220,20 @@
 		class="left-0 top-[66px] fixed w-screen h-screen overflow-y-auto bg-background p-4"
 	>
 		{#if page.activeHero}
-			<RenderInteractiveOptions bind:sectionItem={page.activeHero} bind:page />
+			<RenderInteractiveOptions
+				bind:sectionItem={page.activeHero}
+				bind:page
+				bind:isEdit
+				bind:isEmbed
+			/>
 		{:else if page.parentPage && page.parentPage.heros?.length}
-			<RenderInteractiveOptions size="small" sectionItem={page.parentPage.heros[0]} {page} />
+			<RenderInteractiveOptions
+				size="small"
+				sectionItem={page.parentPage.heros[0]}
+				{page}
+				bind:isEdit
+				bind:isEmbed
+			/>
 		{/if}
 
 		<div class="flex flex-col mt-8">

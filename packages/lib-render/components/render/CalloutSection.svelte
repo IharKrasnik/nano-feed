@@ -8,6 +8,7 @@
 	export let page;
 	export let section;
 	export let isEdit;
+	export let isEmbed;
 
 	let getEmojiTheme = () => {
 		let pageTheme = page.parentPage?.theme?.theme || page.theme?.theme || 'light';
@@ -114,6 +115,8 @@
 								parentSectionId={section.id}
 								bind:page
 								itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+								bind:isEdit
+								bind:isEmbed
 							/>
 						</div>
 					{/if}

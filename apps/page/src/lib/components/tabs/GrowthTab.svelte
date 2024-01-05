@@ -78,7 +78,7 @@
 
 {#if $selectedGrowthTab === 'promo_services'}
 	{#if $selectedServicePage}
-		<SitePreview isNoBadge isEmbed page={$selectedServicePage} />
+		<SitePreview isNoBadge isEmbed page={{ ...$selectedServicePage }} />
 	{/if}
 {:else}
 	<PageContainer class="min-h-screen p-8" bind:page>

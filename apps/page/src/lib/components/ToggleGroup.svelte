@@ -1,0 +1,38 @@
+<script>
+	let clazz;
+	export { clazz as class };
+	export let tabs = [];
+	export let onTabSelected = (tab) => {};
+
+	let selectTab = (tab) => {
+		let selectedTab = tabs.find((t) => t.isSelected);
+
+		if (selectedTab) {
+			selectedTab.isSelected = false;
+		}
+
+		tab.isSelected = true;
+		tabs = [...tabs];
+
+		onTabSelected(tab);
+	};
+
+	if (!tabs.find((t) => t.isSelected)) {
+		selectTab(tabs[0]);
+	}
+</script>
+
+<div class=" flex gap-2 rounded {clazz} w-full justify-between">
+	{#each tabs as tab}
+		<div
+			class="cursor-pointer rounded text-sm  px-4 py-1 w-full text-center {tab.isSelected
+				? 'border border-[#8b786d]'
+				: '_border-section transition opacity-50 hover:opacity-100'}"
+			on:click={() => {
+				selectTab(tab);
+			}}
+		>
+			{tab.name}
+		</div>
+	{/each}
+</div>

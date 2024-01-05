@@ -163,7 +163,7 @@
 </script>
 
 <div>
-	<div class="font-bold opacity-80 mb-2">Services</div>
+	<div class="font-bold opacity-80 mb-2">Services Page</div>
 
 	{#if !$subPages.find((s) => s.slug === 'services')}
 		<div class="_section _info">
@@ -192,6 +192,8 @@
 		</div>
 	{/if}
 </div>
+
+<div class="font-bold opacity-80 mb-2 mt-8">Services</div>
 
 {#if $allServices?.length}
 	<select

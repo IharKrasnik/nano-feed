@@ -287,6 +287,8 @@
 										class="w-full justify-center"
 										trackId={`${page._id}`}
 										isNoLabel
+										bind:isEdit
+										bind:isEmbed
 										bind:sectionItem={page}
 										bind:page
 									/>

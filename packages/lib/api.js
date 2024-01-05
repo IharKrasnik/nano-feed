@@ -106,18 +106,24 @@ const ftch = async (method, url, params, options = {}) => {
 		return data;
 	} else {
 		const data = await res.json();
+		debugger;
 		if (browser && !options?.isNoNotifications) {
-			toast.push('Error: ' + (data?.errors?.global || 'unknown'), {
-				duration: 3000,
-				pausable: true,
-				theme: {
-					'--toastWidth:': '500px',
-					'--toastColor': 'white',
-					'--toastBackground': '#b13131',
-					'--toastBarBackground': 'red',
-					'--toastPadding': '10px 15px'
+			toast.push(
+				`Error: ${
+					data?.errors?.global || res.status === 401 ? 'Unauthorised. Please log in.' : 'unknown'
+				}`,
+				{
+					duration: 3000,
+					pausable: true,
+					theme: {
+						'--toastWidth:': '500px',
+						'--toastColor': 'white',
+						'--toastBackground': '#b13131',
+						'--toastBarBackground': 'red',
+						'--toastPadding': '10px 15px'
+					}
 				}
-			});
+			);
 		}
 
 		throw new ValidationError({ message: `Could not load ${url}`, data, status: res.status });

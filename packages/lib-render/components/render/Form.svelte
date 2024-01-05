@@ -8,14 +8,15 @@
 	export let section;
 	export let page;
 	export let isEdit;
+	export let isEmbed;
 
 	let formData = {};
 
 	section.items.forEach((item) => {
 		if (item.varName === 'email' || item.varName === 'name') {
-			formData[item.varName] = (section?.submission && section.submission[item.varName]) || '';
+			formData[item.id] = (section?.submission && section.submission[item.varName]) || '';
 		} else {
-			formData[item.varName] =
+			formData[item.id] =
 				(section?.submission?.vars && section.submission.vars[item.varName]) || '';
 		}
 	});
@@ -23,17 +24,13 @@
 	let isFormSubmitted = false;
 
 	let submitForm = async () => {
-		let postData = { vars: {}, sectionId: section.id };
+		let postData = { vars: {}, sectionId: section.id, customer: $currentCustomer };
 
-		section.items.forEach(({ varName, interactiveRenderType }) => {
+		section.items.forEach(({ id, title, varName, interactiveRenderType }) => {
 			if (interactiveRenderType === 'email') {
 				postData.email = $currentCustomer.email;
-			} else if (varName) {
-				if (varName === 'name') {
-					postData[varName] = $currentCustomer[varName];
-				} else {
-					postData.vars[varName] = formData[varName];
-				}
+			} else {
+				postData.vars[varName || title] = formData[id];
 			}
 		});
 
@@ -50,7 +47,11 @@
 		}
 
 		if (section.actionType === 'service_chat') {
-			window.location.href = `/service-requests/${submission._id}`;
+			if (section.onSubmitted) {
+				section.onSubmitted();
+			} else {
+				window.location.href = `/service-requests/${submission._id}`;
+			}
 		}
 
 		isFormSubmitted = true;
@@ -90,14 +91,14 @@
 									class="w-full _transparent"
 									placeholder={formField.interactivePlaceholder || 'Type your message...'}
 									type="text"
-									bind:value={formData[formField.varName]}
+									bind:value={formData[formField.id]}
 								/>
 							{/if}
 						{:else if formField.interactiveRenderType === 'textarea'}
 							<textarea
 								class="w-full _transparent"
 								placeholder={formField.interactivePlaceholder || 'Type your message...'}
-								bind:value={formData[formField.varName]}
+								bind:value={formData[formField.id]}
 							/>
 						{:else if formField.interactiveRenderType === 'email'}
 							{#if section.submission}

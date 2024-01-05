@@ -1,7 +1,10 @@
 import { writable } from 'svelte/store';
 import { get } from 'lib/api';
 import selectedGrowthTab from '$lib/stores/selectedGrowthTab';
+import { get as getStoreValue } from 'svelte/store';
 import selectedServicePage from '$lib/stores/selectedServicePage';
+import currentCustomer from 'lib/stores/currentCustomer';
+import currentUser from 'lib/stores/currentUser';
 
 const store = writable(null);
 
@@ -16,6 +19,19 @@ export let selectServicePage = async ({ pageId, parentPageId }) => {
 	if (pageCache[pageId]) {
 		selectedServicePage.update((p) => pageCache[pageId]);
 		return;
+	}
+	let currentUserValue = getStoreValue(currentUser);
+
+	if (currentUserValue) {
+		currentCustomer.update((customer) => {
+			customer.email = currentUserValue.email;
+			customer.fullName = currentUserValue.fullName;
+			customer.isEmailVerified = true;
+			customer.userId = currentUserValue._id;
+			customer.avatarUrl = currentUserValue.avatarUrl;
+
+			return customer;
+		});
 	}
 
 	let page = await get(`pages/${pageId}`, {

@@ -2,9 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+	--section-border-color: #e0dede;
+}
+
+@layer utilities {
+	._border-section {
+		border: 1px var(--section-border-color) solid;
+	}
+}
+
 ._section {
-	border: 1px #e0dede solid;
-	@apply rounded-lg p-4 mb-4;
+	@apply rounded-lg p-4 mb-4 _border-section;
 }
 
 ._section._clickable {

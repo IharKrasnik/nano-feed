@@ -263,7 +263,7 @@
 
 {#key page._id}
 	<div
-		class="relative flex justify-center items-center cursor-pointer w-[25px] h-[25px] rounded-full"
+		class="relative flex justify-center items-center cursor-pointer w-[25px] h-[25px] shrink-0 rounded-full"
 		style="outline: 2px {page.theme?.accentColor} solid; background-color: {page.theme
 			?.backgroundColor}; color: {page.theme?.textColor}"
 		on:click={() => {

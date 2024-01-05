@@ -34,6 +34,9 @@
 	export let url2Class = '';
 	export let isNoLabel = false;
 
+	export let isEdit;
+	export let isEmbed;
+
 	let isUrlLoading = false;
 	let isUrl2Loading = false;
 
@@ -504,7 +507,7 @@
 				{/if}
 			</div>
 		{:else if sectionItem.interactiveRenderType === 'form'}
-			<RenderForm bind:section={sectionItem.formSection} bind:page />
+			<RenderForm bind:isEdit bind:isEmbed bind:section={sectionItem.formSection} bind:page />
 		{/if}
 	</div>
 
