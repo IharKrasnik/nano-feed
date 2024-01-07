@@ -4,6 +4,7 @@
 	import Button from 'lib/components/Button.svelte';
 
 	import EditDomains from '$lib/components/settings/Domains.svelte';
+	import EditEditors from '$lib/components/settings/Editors.svelte';
 	import EditOpenGraph from '$lib/components/settings/OpenGraph.svelte';
 	import EditCustomCode from '$lib/components/settings/CustomCode.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
@@ -92,6 +93,9 @@
 
 	<hr class="my-8 border-[#8B786D] opacity-30" />
 	<EditDomains bind:page />
+
+	<hr class="my-8 border-[#8B786D] opacity-30" />
+	<EditEditors bind:page />
 
 	<!-- <hr class="my-8 border-[#8B786D] opacity-30" /> -->
 
