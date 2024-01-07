@@ -59,6 +59,10 @@ const ftch = async (method, url, params, options = {}) => {
 			headers['Authorization'] = `Bearer ${cookies.access_token}`;
 		}
 
+		if (cookies.customer_access_token) {
+			headers['Authorization-Customer'] = `Bearer ${cookies.customer_access_token}`;
+		}
+
 		if (cookies['wave_fingerprint']) {
 			headers['X-FINGERPRINT'] = cookies['wave_fingerprint'];
 		}
@@ -106,7 +110,7 @@ const ftch = async (method, url, params, options = {}) => {
 		return data;
 	} else {
 		const data = await res.json();
-		debugger;
+
 		if (browser && !options?.isNoNotifications) {
 			toast.push(
 				`Error: ${

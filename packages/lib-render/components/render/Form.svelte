@@ -1,11 +1,12 @@
 <script>
-	import { post } from 'lib/api';
+	import { get, post } from 'lib/api';
 	import { fly } from 'svelte/transition';
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import trackForm from 'lib/services/trackForm';
 	import submissions from 'lib/stores/submissions';
 	import submissionsOutbound from 'lib/stores/submissionsOutbound';
+	import Cookies from 'js-cookie';
 
 	export let section;
 	export let page;
@@ -37,6 +38,14 @@
 		});
 
 		trackForm({ sectionId: section.id, text: section.title || section.description });
+
+		if (!$currentCustomer._id) {
+			let { customer, token } = await get('auth/customer', {
+				pageSlug: page._id
+			});
+			$currentCustomer = customer;
+			Cookies.set('customer_access_token', token);
+		}
 
 		let submission = await post(`pages/${page._id}/submissions`, postData);
 

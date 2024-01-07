@@ -28,7 +28,7 @@
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import RenderHeader from 'lib-render/components/render/Header.svelte';
-	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
+	import RenderServiceChatPage from 'lib-render/components/render/ServiceChatPage.svelte';
 
 	import trackClick from 'lib/services/trackClick';
 
@@ -312,7 +312,7 @@
 
 						{#if !isLoading}
 							{#if page.renderType === 'service_chat'}
-								<RenderServiceChat roomId={$sveltePage.params.serviceRequestId} {page} />
+								<RenderServiceChatPage {page} />
 							{:else}
 								<div class="overflow-y-hidden">
 									{#if page.activeHero}

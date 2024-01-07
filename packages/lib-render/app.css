@@ -159,6 +159,10 @@ body {
 	@apply mt-16 mb-32;
 }
 
+.color-accent {
+	color: var(--button-color);
+}
+
 ._section-container._darker {
 	background: var(--accent-color-darker-3xl);
 	color: var(--button-color);

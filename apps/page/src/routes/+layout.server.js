@@ -33,7 +33,7 @@ export async function load({ url, params, session, cookies }) {
 	//
 	let extend = {};
 
-	if (url.href.includes('service-requests/')) {
+	if (url.href.includes('service-requests')) {
 		let parentPage = await get(`pages/bySlug`, {
 			slug: pageSlug
 		});
@@ -42,6 +42,7 @@ export async function load({ url, params, session, cookies }) {
 			page: {
 				renderType: 'service_chat',
 				parentPage,
+				theme: {},
 				heros: [],
 				sections: []
 			},
