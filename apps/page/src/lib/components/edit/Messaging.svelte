@@ -18,6 +18,7 @@
 	export let selectedTrigger;
 	export let selectedChatRoom;
 	export let selectedNewsletter;
+	export let selectedCustomer;
 
 	let triggers = [];
 
@@ -265,6 +266,7 @@ See you!
 			<button
 				class="_secondary _small"
 				on:click={() => {
+					selectedChatRoom = null;
 					selectedNewsletter = { ...newBroadcastEmail };
 				}}>Send new</button
 			>
@@ -287,6 +289,7 @@ See you!
 				<button
 					class="_primary _small"
 					on:click={() => {
+						selectedChatRoom = null;
 						selectedNewsletter = { ...newBroadcastEmail };
 					}}>Send first newsletter</button
 				>

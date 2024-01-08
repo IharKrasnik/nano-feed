@@ -1755,6 +1755,7 @@
 															bind:selectedTrigger
 															bind:selectedNewsletter
 															bind:selectedChatRoom
+															bind:selectedCustomer
 														/>
 													{:else if $selectedTab === 'requests'}
 														<EditSubmissions bind:page />

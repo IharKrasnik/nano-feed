@@ -5,19 +5,41 @@
 	import { countryCodeEmoji } from 'country-code-emoji';
 	import Button from 'lib/components/Button.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
+	import Loader from 'lib/components/Loader.svelte';
 
 	export let page;
 	export let selectedCustomer;
 
 	let customers = [];
 
+	let selectedCustomerTab = 'all';
+
+	let isCustomersLoading = false;
+
 	let loadCustomers = async () => {
-		let customerResult = await get(`customers`, { pageId: page.parentPage?._id || page._id });
+		let customerResult;
+		isCustomersLoading = true;
+
+		if (selectedCustomerTab === 'customers') {
+			customerResult = await get(`customers`, {
+				pageId: page.parentPage?._id || page._id,
+				isWithEmail: true
+			});
+		} else if (selectedCustomerTab === 'visitors') {
+			customerResult = await get(`customers`, {
+				pageId: page.parentPage?._id || page._id,
+				isNoEmail: true
+			});
+		} else {
+			customerResult = await get(`customers`, { pageId: page.parentPage?._id || page._id });
+		}
 
 		customers = customerResult.results.map((c) => {
 			c.isCollapsed = true;
 			return c;
 		});
+		isCustomersLoading = false;
 	};
 
 	loadCustomers();
@@ -42,7 +64,35 @@
 
 <h3 class="text-lg font-bold mb-4">Customers</h3>
 
-{#if customers?.length}
+<ToggleGroup
+	class="my-4"
+	tabs={[
+		{
+			key: 'all',
+			isSelected: selectedCustomerTab === 'all',
+			name: 'All'
+		},
+		{
+			key: 'customers',
+			isSelected: selectedCustomerTab === 'customers',
+			name: 'With Email'
+		},
+
+		{
+			key: 'visitors',
+			isSelected: selectedCustomerTab === 'visitors',
+			name: 'Anonymous'
+		}
+	]}
+	onTabSelected={(tab) => {
+		selectedCustomerTab = tab.key;
+		loadCustomers();
+	}}
+/>
+
+{#if isCustomersLoading}
+	<Loader />
+{:else if customers?.length}
 	{#each customers as customer}
 		{#if customer.isCollapsed}
 			<div

@@ -65,7 +65,7 @@
 
 		let createdMessage = await post(`customerMessages?pageId=${parentPage._id}`, {
 			...toCreate,
-			chatRoom: { _id: chatRoom._id }
+			chatRoomId: chatRoom._id
 		});
 
 		messages = [...messages.filter((m) => m._id), createdMessage];
