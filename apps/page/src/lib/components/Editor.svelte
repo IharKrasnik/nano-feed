@@ -1748,7 +1748,7 @@
 													{:else if $selectedTab === 'blog'}
 														<EditBlog bind:setPageAndDraft bind:page />
 													{:else if $selectedTab === 'analytics'}
-														<EditCustomers bind:page bind:selectedCustomer />
+														<EditCustomers bind:selectedChatRoom bind:page bind:selectedCustomer />
 													{:else if $selectedTab === 'messaging'}
 														<EditMessaging
 															bind:page
@@ -1913,7 +1913,7 @@
 											{:else if $selectedTab === 'database'}
 												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
 											{:else if $selectedTab === 'analytics'}
-												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+												<AnalyticsTab bind:page bind:selectedCustomer bind:selectedChatRoom />
 											{:else if $selectedTab === 'messaging'}
 												<MessagingTab
 													bind:page

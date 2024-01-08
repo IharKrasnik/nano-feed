@@ -5,6 +5,7 @@
 	import { fade } from 'svelte/transition';
 	import { countryCodeEmoji } from 'country-code-emoji';
 	import Button from 'lib/components/Button.svelte';
+	import EditChatRoom from '$lib/components/edit/ChatRoom.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import contenteditable from 'lib/use/contenteditable';
@@ -170,7 +171,7 @@ See you!
 
 	loadChatRooms();
 
-	let openChatRoom = ({ chatRoom }) => {
+	let openChatRoom = (chatRoom) => {
 		selectedChatRoom = chatRoom;
 	};
 
@@ -512,21 +513,11 @@ See you!
 
 	{#if chatRooms.length}
 		{#each chatRooms as chatRoom}
-			<div
-				class="my-4 _section p-4 truncate overflow-hidden cursor-pointer"
-				class:_active={chatRoom._id === selectedChatRoom?._id}
-				on:click={() => openChatRoom({ chatRoom })}
-			>
-				{@html striptags(chatRoom.lastMessageHTML || '')}
-
-				<div class="mt-4 text-sm">
-					<div class="text-sm mb-2" class:text-orange-700={!chatRoom.customers}>
-						{chatRoom.customers ? chatRoom.customers[0].email : 'chat with yourself'}
-					</div>
-
-					{moment(chatRoom.lastMessageSentOn).format('MMM DD, HH:mm')}
-				</div>
-			</div>
+			<EditChatRoom
+				isActive={chatRoom._id === selectedChatRoom?._id}
+				{chatRoom}
+				openChatRoom={() => openChatRoom(chatRoom)}
+			/>
 		{/each}
 	{:else}
 		<div class="_section _info">

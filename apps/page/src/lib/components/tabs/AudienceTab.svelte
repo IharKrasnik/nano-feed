@@ -3,7 +3,7 @@
 	import moment from 'moment-timezone';
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import { get, post, put } from 'lib/api';
-	import RenderSection from 'lib-render/components/render//Section.svelte';
+	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import tooltip from 'lib/use/tooltip';
 	import clickOutside from 'lib/use/clickOutside';
 	import contenteditable from 'lib/use/contenteditable';
@@ -13,6 +13,7 @@
 	import submissions from 'lib/stores/submissions';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import selectedSubmission from '$lib/stores/selectedSubmission';
+	import selectedChatRoom from '$lib/stores/selectedSubmission';
 
 	import formsCache, { getForm } from 'lib-render/stores/formsCache';
 

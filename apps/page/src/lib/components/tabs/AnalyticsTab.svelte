@@ -6,12 +6,14 @@
 
 	import Loader from 'lib/components/Loader.svelte';
 	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
+	import ChatRoomTab from '$lib/components/tabs/ChatRoomTab.svelte';
 	import CustomerAnalytics from 'lib-render/components/render//CustomerAnalytics.svelte';
 	import currentUser from 'lib/stores/currentUser';
 	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
 
 	export let page;
-	export let customer;
+	export let selectedCustomer;
+	export let selectedChatRoom;
 
 	let cssVarStyles;
 	let styles;
@@ -24,10 +26,14 @@
 </script>
 
 <div class="px-8 py-16 bg-background overflow-y-auto" style={cssVarStyles}>
-	{#if customer}
-		{#key customer._id}
-			<CustomerAnalytics bind:page bind:customer />
-		{/key}
+	{#if selectedCustomer}
+		{#if selectedChatRoom}
+			<ChatRoomTab {page} chatRoom={selectedChatRoom} />
+		{:else}
+			{#key selectedCustomer._id}
+				<CustomerAnalytics bind:page bind:customer={selectedCustomer} />
+			{/key}
+		{/if}
 	{:else}
 		<div class="" in:fly={{ y: 50, duration: 150 }} style="height: calc(100vh - 60px);">
 			<div class="mt-8 w-full">

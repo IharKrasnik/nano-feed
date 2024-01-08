@@ -8,19 +8,24 @@
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import EditCustomer from '$lib/components/edit/Customer.svelte';
+	import EditChatRoom from '$lib/components/edit/ChatRoom.svelte';
 	import csv from 'csvtojson';
 	import { showSuccessMessage } from 'lib/services/toast';
+	import BackTo from '$lib/components/BackTo.svelte';
 
 	export let page;
 	let parentPage = page.parentPage || page;
 
 	export let selectedCustomer;
+	export let selectedChatRoom;
 
 	let customers = [];
 
 	let selectedCustomerTab = 'all';
 
 	let isCustomersLoading = false;
+
+	let chatRooms = [];
 
 	let loadCustomers = async () => {
 		let customerResult;
@@ -44,6 +49,7 @@
 			c.isCollapsed = true;
 			return c;
 		});
+
 		isCustomersLoading = false;
 	};
 
@@ -125,36 +131,65 @@
 		newCustomers = [...parsedCustomers, ...newCustomers];
 	};
 
+	let loadChatRooms = async () => {
+		let result = await get(`customerChatRooms`, {
+			customerId: selectedCustomer._id,
+			pageId: parentPage._id
+		});
+
+		chatRooms = result.results;
+	};
+
+	let selectCustomer = async (customer) => {
+		selectedCustomer = customer;
+		await loadChatRooms();
+	};
+
 	let newCustomers = [];
+
+	let sendNewMessage = async () => {
+		let chatRoom = await post(
+			`customerChatRooms?pageId=${parentPage._id}&customerId=${selectedCustomer._id}`
+		);
+
+		chatRooms = [chatRoom, ...chatRooms];
+
+		selectedChatRoom = chatRoom;
+	};
 </script>
 
 <div class="flex justify-between items-center  mb-4">
 	<h3 class="text-lg font-bold">Customers</h3>
 
-	<div class="flex items-center gap-2">
-		<div class="text-sm opacity-70 hover:opacity-100 transition cursor-pointer" on:click={() => {}}>
-			<label class="cursor-pointer block" for="csvfile">
-				<FeatherIcon size="17" name="upload" />
+	{#if !selectedCustomer}
+		<div class="flex items-center gap-2">
+			<div
+				class="text-sm opacity-70 hover:opacity-100 transition cursor-pointer"
+				on:click={() => {}}
+			>
+				<label class="cursor-pointer block" for="csvfile">
+					<FeatherIcon size="17" name="upload" />
 
-				<input id="csvfile" type="file" on:change={uploadCustomers} hidden />
-			</label>
+					<input id="csvfile" type="file" on:change={uploadCustomers} hidden />
+				</label>
+			</div>
+			<div
+				class="text-sm opacity-70 hover:opacity-100 transition cursor-pointer"
+				on:click={() => {
+					newCustomers = [
+						{
+							email: '',
+							fullName: '',
+							avatarUrl: ''
+						},
+						...newCustomers
+					];
+				}}
+			>
+				<FeatherIcon size="17" name="plus" />
+			</div>
 		</div>
-		<div
-			class="text-sm opacity-70 hover:opacity-100 transition cursor-pointer"
-			on:click={() => {
-				newCustomers = [
-					{
-						email: '',
-						fullName: '',
-						avatarUrl: ''
-					},
-					...newCustomers
-				];
-			}}
-		>
-			<FeatherIcon size="17" name="plus" />
-		</div>
-	</div>
+	{/if}
 </div>
 
 {#if newCustomers?.length}
@@ -179,53 +214,78 @@
 		/>
 	{/each}
 {:else}
-	<ToggleGroup
-		class="my-4"
-		tabs={[
-			{
-				key: 'all',
-				isSelected: selectedCustomerTab === 'all',
-				name: 'All'
-			},
-			{
-				key: 'customers',
-				isSelected: selectedCustomerTab === 'customers',
-				name: 'With Email'
-			},
+	{#if selectedCustomer}
+		<BackTo
+			to="Customers List"
+			class="mb-4"
+			onClick={() => {
+				selectedCustomer = null;
+				selectedChatRoom = null;
+			}}
+		/>
+	{:else}
+		<ToggleGroup
+			class="my-4"
+			tabs={[
+				{
+					key: 'all',
+					isSelected: selectedCustomerTab === 'all',
+					name: 'All'
+				},
+				{
+					key: 'customers',
+					isSelected: selectedCustomerTab === 'customers',
+					name: 'With Email'
+				},
 
-			{
-				key: 'visitors',
-				isSelected: selectedCustomerTab === 'visitors',
-				name: 'Anonymous'
-			}
-		]}
-		onTabSelected={(tab) => {
-			selectedCustomerTab = tab.key;
-			loadCustomers();
-		}}
-	/>
+				{
+					key: 'visitors',
+					isSelected: selectedCustomerTab === 'visitors',
+					name: 'Anonymous'
+				}
+			]}
+			onTabSelected={(tab) => {
+				selectedCustomerTab = tab.key;
+				loadCustomers();
+			}}
+		/>
+	{/if}
 
 	{#if isCustomersLoading}
 		<Loader />
 	{:else if customers?.length}
-		{#each customers as customer}
-			<EditCustomer
-				{customer}
-				{saveCustomer}
-				onSelected={() => {
-					selectedCustomer = customer;
-
-					customers = customers.map((c) => {
-						c.isCollapsed = true;
-						if (c._id === customer._id) {
-							c.isCollapsed = false;
-						}
-						return c;
-					});
-				}}
-			/>
-		{/each}
+		{#if selectedCustomer}
+			<EditCustomer customer={selectedCustomer} {saveCustomer} />
+		{:else}
+			{#each customers as customer}
+				<EditCustomer {customer} isCollapsed onSelected={() => selectCustomer(customer)} />
+			{/each}
+		{/if}
 	{:else}
 		<div class="_section _info">You don't have any visitors yet</div>
+	{/if}
+{/if}
+
+{#if selectedCustomer?.email}
+	<div class="font-bold mb-2 mt-8">Chats</div>
+
+	{#if chatRooms.length}
+		<div>
+			{#each chatRooms as chatRoom}
+				<EditChatRoom
+					{page}
+					{chatRoom}
+					isActive={selectedChatRoom?._id === chatRoom._id}
+					openChatRoom={() => {
+						selectedChatRoom = chatRoom;
+					}}
+				/>
+			{/each}
+		</div>
+	{:else}
+		<div class="_section _info">
+			<div class="font-bold mb-2">No chats yet</div>
+			<Button class="_primary _small mt-4" onClick={sendNewMessage}>Send message</Button>
+		</div>
 	{/if}
 {/if}

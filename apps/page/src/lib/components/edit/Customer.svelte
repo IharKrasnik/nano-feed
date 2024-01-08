@@ -12,10 +12,11 @@
 	export let customer;
 	export let saveCustomer;
 	export let removeCustomer;
+	export let isCollapsed = false;
 	export let onSelected = () => {};
 </script>
 
-{#if customer._id && customer.isCollapsed}
+{#if customer._id && isCollapsed}
 	<div
 		class="_section cursor-pointer"
 		on:click={() => {
