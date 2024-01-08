@@ -991,244 +991,250 @@
 				{/if}
 			</div>
 
-			<div class="relative flex items-center shrink-0" transition:fly={{ x: 50, duration: 150 }}>
-				{#if page._id && onlineUsersCount !== -1}
-					<div
-						class="flex mr-8 shrink-0 items-center justify-between flex border {onlineUsersCount
-							? 'border-green-300'
-							: 'border-gray-300'} {onlineUsersCount
-							? 'bg-green-300/10'
-							: 'bg-gray-300/10'} transition px-2 py-1 rounded-lg"
-					>
-						<div class="flex justify-between items-center w-full">
-							<div class="flex items-center">
+			{#if !$sveltePage.url.href.includes('claim/')}
+				<div class="relative flex items-center shrink-0" transition:fly={{ x: 50, duration: 150 }}>
+					{#if page._id && onlineUsersCount !== -1}
+						<div
+							class="flex mr-8 shrink-0 items-center justify-between flex border {onlineUsersCount
+								? 'border-green-300'
+								: 'border-gray-300'} {onlineUsersCount
+								? 'bg-green-300/10'
+								: 'bg-gray-300/10'} transition px-2 py-1 rounded-lg"
+						>
+							<div class="flex justify-between items-center w-full">
+								<div class="flex items-center">
+									<div
+										class="{onlineUsersCount
+											? 'bg-green-400'
+											: 'bg-gray-600 opacity-30'} w-[8px] h-[8px] rounded-full mr-2"
+									/>
+									{onlineUsersCount || 0} users online
+								</div>
 								<div
-									class="{onlineUsersCount
-										? 'bg-green-400'
-										: 'bg-gray-600 opacity-30'} w-[8px] h-[8px] rounded-full mr-2"
-								/>
-								{onlineUsersCount || 0} users online
-							</div>
-							<div
-								class="ml-2 opacity-80 hover:opacity-100 transition cursor-pointer _bare "
-								on:click={getOnlineCount}
-							>
-								<FeatherIcon name="refresh-cw" class="opacity-50" color="#333" size="15" />
+									class="ml-2 opacity-80 hover:opacity-100 transition cursor-pointer _bare "
+									on:click={getOnlineCount}
+								>
+									<FeatherIcon name="refresh-cw" class="opacity-50" color="#333" size="15" />
+								</div>
 							</div>
 						</div>
-					</div>
-				{/if}
+					{/if}
 
-				{#if page._id}
-					<div
-						class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded {$selectedTab ===
-						'settings'
-							? 'bg-green-800'
-							: 'bg-[#f3f3f3]'}"
-						on:click={() => {
-							$selectedSettingsTab = 'settings';
+					{#if page._id}
+						<div
+							class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded {$selectedTab ===
+							'settings'
+								? 'bg-green-800'
+								: 'bg-[#f3f3f3]'}"
+							on:click={() => {
+								$selectedSettingsTab = 'settings';
 
-							if ($selectedTab !== 'settings') {
-								$selectedTab = 'settings';
+								if ($selectedTab !== 'settings') {
+									$selectedTab = 'settings';
 
-								$selectedSettingsPage = null;
-							} else {
-								$selectedTab = 'editor';
-								$selectedSettingsPage = null;
-							}
-						}}
-					>
-						<FeatherIcon
-							color={$selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
-							size="15"
-							name="settings"
-						/>
-					</div>
-					<div class:opacity-70={!page?._id || !page?.isDirty}>
-						<Button
-							class="bg-yellow-500 right-0 _primary flex justify-center w-full"
-							onClick={publishPage}
-							style="margin-left: 78px;
+									$selectedSettingsPage = null;
+								} else {
+									$selectedTab = 'editor';
+									$selectedSettingsPage = null;
+								}
+							}}
+						>
+							<FeatherIcon
+								color={$selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
+								size="15"
+								name="settings"
+							/>
+						</div>
+						<div class:opacity-70={!page?._id || !page?.isDirty}>
+							<Button
+								class="bg-yellow-500 right-0 _primary flex justify-center w-full"
+								onClick={publishPage}
+								style="margin-left: 78px;
 										padding: 4px 12px;
 										right: 3px;
 										width: auto;
 										margin: -4px -10px -4px 0px;
 										"
-						>
-							Publish
-						</Button>
-					</div>
-				{/if}
-			</div>
+							>
+								Publish
+							</Button>
+						</div>
+					{/if}
+				</div>
+			{/if}
 		</div>
 
-		<!-- {#if isSignupFormShown}
-		<SignupForm />
-	{/if} -->
-
-		<div class="relative pt-[60px]">
-			<div class="flex relative">
-				<!-- EDITOR-->
-				{#key $sectionToEdit?.id}
-					<div
-						class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] overflow-x-hidden pt-0 h-screen overflow-y-scroll bg-white"
-					>
-						<div class="w-full mr-4" style="max-width: 100vw;">
-							<div class="px-6 py-6 {$selectedTab === 'growth' ? 'border-green-300 border-r' : ''}">
-								{#if !page._id}
-									{#if page.parentPage}
-										<div class="pt-4 text-lg font-bold">{page.parentPage?.name || ''}</div>
-									{:else}
-										<div class="pt-4 pb-2">Launch your landing page in seconds 👇</div>
+		<div class="h-[60px]" />
+		{#if $sveltePage.url.href.includes('/ide/claim')}{:else}
+			<div class="relative">
+				<div class="flex relative">
+					<!-- EDITOR-->
+					{#key $sectionToEdit?.id}
+						<div
+							class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] overflow-x-hidden pt-0 h-screen overflow-y-scroll bg-white"
+						>
+							<div class="w-full mr-4" style="max-width: 100vw;">
+								<div
+									class="px-6 py-6 {$selectedTab === 'growth' ? 'border-green-300 border-r' : ''}"
+								>
+									{#if !page._id}
+										{#if page.parentPage}
+											<div class="pt-4 text-lg font-bold">{page.parentPage?.name || ''}</div>
+										{:else}
+											<div class="pt-4 pb-2">Launch your landing page in seconds 👇</div>
+										{/if}
+									{:else if page.sections}
+										{addGuids(page.sections) && ''}
 									{/if}
-								{:else if page.sections}
-									{addGuids(page.sections) && ''}
-								{/if}
 
-								{#if $sectionToEdit && $selectedTab === 'editor'}
-									<div class="bg-white pl-0 z-40 min-h-screen">
-										<div
-											class="flex items-center cursor-pointer text-[#8B786D] mb-4"
-											on:click={() => {
-												page.sections = page.sections.map((s) => {
-													if (s.id === $sectionToEdit.id) {
-														return { ...$sectionToEdit };
-													} else {
-														return s;
-													}
-												});
+									{#if $sectionToEdit && $selectedTab === 'editor'}
+										<div class="bg-white pl-0 z-40 min-h-screen">
+											<div
+												class="flex items-center cursor-pointer text-[#8B786D] mb-4"
+												on:click={() => {
+													page.sections = page.sections.map((s) => {
+														if (s.id === $sectionToEdit.id) {
+															return { ...$sectionToEdit };
+														} else {
+															return s;
+														}
+													});
 
-												$sectionToEdit = null;
-											}}
-										>
-											<BackArrowSvg />
-											Back
-										</div>
-
-										<div in:fly={{ y: 50, duration: 150 }}>
-											<EditSection
-												isShort={false}
-												bind:section={$sectionToEdit}
-												bind:page
-												onRemove={() => {
-													page.sections = page.sections.filter((s) => s.id !== $sectionToEdit?.id);
 													$sectionToEdit = null;
 												}}
-											/>
-										</div>
-									</div>
-								{/if}
+											>
+												<BackArrowSvg />
+												Back
+											</div>
 
-								{#if !$sectionToEdit}
-									<div>
-										{#if $selectedTab === 'editor' && page.name && !$sectionToEdit}
-											{#if page._id}
-												<div class="flex items-center mb-4">
-													<div class="mr-2 flex items-center">
-														<div>
-															<EmojiPicker bind:icon={page.logo} />
-														</div>
-													</div>
-
-													<select
-														class="w-full bg-[#f1f1f1]"
-														bind:value={pageSlug}
-														on:change={(evt) => {
-															let slug = evt.target.value;
-
-															if (slug === '_new') {
-																setPageAndDraft({ ...defaultPage });
-																// page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-																// pageSlug = page.slug;
-															} else {
-																setPageAndDraft({
-																	..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
-																});
-																// refreshData();
-															}
-														}}
-													>
-														<option value="_new">📄 Create Website</option>
-														{#each $allPages as page}
-															<option value={page.slug}>{page.name}</option>
-														{/each}
-													</select>
-												</div>
-
-												<ToggleGroup
-													class="my-4"
-													tabs={[
-														{
-															key: 'pages',
-															isSelected: $selectedEditorTab === 'pages',
-															name: 'Pages'
-														},
-														{
-															key: 'blog',
-															isSelected: $selectedEditorTab === 'blog',
-															name: 'Blog'
-														},
-														// {
-														// 	key: 'changelog',
-														// 	isSelected: $selectedEditorTab === 'changelog',
-														// 	name: 'Changelog'
-														// },
-														{
-															key: 'services',
-															isSelected: $selectedEditorTab === 'services',
-															name: 'Services'
-														}
-													]}
-													onTabSelected={(tab) => {
-														isPageResetting = true;
-														$selectedEditorTab = tab.key;
+											<div in:fly={{ y: 50, duration: 150 }}>
+												<EditSection
+													isShort={false}
+													bind:section={$sectionToEdit}
+													bind:page
+													onRemove={() => {
+														page.sections = page.sections.filter(
+															(s) => s.id !== $sectionToEdit?.id
+														);
+														$sectionToEdit = null;
 													}}
 												/>
+											</div>
+										</div>
+									{/if}
 
-												{#if !isPageResetting}
-													<div class="_section mb-8">
-														<div class="flex justify-between items-center ">
-															<ColorPicker bind:page />
-
-															<div
-																class="relative ml-4 py-2 px-3 text-sm rounded-lg bg-[#f1f1f1] cursor-pointer w-full opacity-90"
-																on:click={() => (isPageResetting = true)}
-															>
-																{page.name}
-
-																<FeatherIcon
-																	name="chevron-down"
-																	size="15"
-																	class="absolute right-2 top-0 h-full flex items-center"
-																/>
+									{#if !$sectionToEdit}
+										<div>
+											{#if $selectedTab === 'editor' && page.name && !$sectionToEdit}
+												{#if page._id}
+													<div class="flex items-center mb-4">
+														<div class="mr-2 flex items-center">
+															<div>
+																<EmojiPicker bind:icon={page.logo} />
 															</div>
+														</div>
 
-															<div class="flex items-center shrink-0 ml-2">
+														<select
+															class="w-full bg-[#f1f1f1]"
+															bind:value={pageSlug}
+															on:change={(evt) => {
+																let slug = evt.target.value;
+
+																if (slug === '_new') {
+																	setPageAndDraft({ ...defaultPage });
+																	// page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+																	// pageSlug = page.slug;
+																} else {
+																	setPageAndDraft({
+																		..._.cloneDeep(
+																			$allPages.find((p) => p.slug === evt.target.value)
+																		)
+																	});
+																	// refreshData();
+																}
+															}}
+														>
+															<option value="_new">📄 Create Website</option>
+															{#each $allPages as page}
+																<option value={page.slug}>{page.name}</option>
+															{/each}
+														</select>
+													</div>
+
+													<ToggleGroup
+														class="my-4"
+														tabs={[
+															{
+																key: 'pages',
+																isSelected: $selectedEditorTab === 'pages',
+																name: 'Pages'
+															},
+															{
+																key: 'blog',
+																isSelected: $selectedEditorTab === 'blog',
+																name: 'Blog'
+															},
+															// {
+															// 	key: 'changelog',
+															// 	isSelected: $selectedEditorTab === 'changelog',
+															// 	name: 'Changelog'
+															// },
+															{
+																key: 'services',
+																isSelected: $selectedEditorTab === 'services',
+																name: 'Services'
+															}
+														]}
+														onTabSelected={(tab) => {
+															isPageResetting = true;
+															$selectedEditorTab = tab.key;
+														}}
+													/>
+
+													{#if !isPageResetting}
+														<div class="_section mb-8">
+															<div class="flex justify-between items-center ">
+																<ColorPicker bind:page />
+
 																<div
-																	class="text-2xl ml-2 cursor-pointer {$selectedTab === 'settings'
-																		? 'bg-green-800'
-																		: 'bg-[#f3f3f3]'} p-2 rounded-full"
-																	on:click={() => {
-																		$selectedTab = 'settings';
-																		$selectedSettingsTab = 'settings';
-																		$selectedSettingsPage = page;
-																	}}
+																	class="relative ml-4 py-2 px-3 text-sm rounded-lg bg-[#f1f1f1] cursor-pointer w-full opacity-90"
+																	on:click={() => (isPageResetting = true)}
 																>
+																	{page.name}
+
 																	<FeatherIcon
+																		name="chevron-down"
 																		size="15"
-																		color={$selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
-																		name="settings"
+																		class="absolute right-2 top-0 h-full flex items-center"
 																	/>
 																</div>
-															</div>
 
-															<!-- <Button
+																<div class="flex items-center shrink-0 ml-2">
+																	<div
+																		class="text-2xl ml-2 cursor-pointer {$selectedTab === 'settings'
+																			? 'bg-green-800'
+																			: 'bg-[#f3f3f3]'} p-2 rounded-full"
+																		on:click={() => {
+																			$selectedTab = 'settings';
+																			$selectedSettingsTab = 'settings';
+																			$selectedSettingsPage = page;
+																		}}
+																	>
+																		<FeatherIcon
+																			size="15"
+																			color={$selectedTab === 'settings' ? '#f6f5f4' : '#333333'}
+																			name="settings"
+																		/>
+																	</div>
+																</div>
+
+																<!-- <Button
 													class="_secondary _small shrink-0 ml-4 opacity-70 transition hover:opacity-100"
 													onClick={addSubpage}>Add Subpage</Button
 												> -->
-														</div>
-														{#if page._id}
-															<!-- <div class="_section mt-4" style="margin-bottom: 0;">
+															</div>
+															{#if page._id}
+																<!-- <div class="_section mt-4" style="margin-bottom: 0;">
 															<div class="font-bold mb-2 opacity-80">Page performance</div>
 															<div
 																class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer hover:bg-[#f1f1f1]"
@@ -1284,661 +1290,666 @@
 																</div>
 															{/if}
 														</div> -->
-														{/if}
-													</div>
-												{/if}
-											{/if}
-										{/if}
-
-										{#if $selectedTab === 'editor'}
-											{#if isPageResetting}
-												<div in:fly={{ y: 25, duration: 150 }} class="mt-8">
-													{#if $selectedEditorTab === 'pages'}
-														<div class="font-bold mb-2">Home Page</div>
-														<div
-															class="_section cursor-pointer"
-															class:_selected={!page.parentPage}
-															on:click={() =>
-																setPageAndDraft(
-																	$allPages.find((p) => (page.parentPage || page)._id)
-																)}
-														>
-															<div class="font-bold">{(page.parentPage || page).name}</div>
-														</div>
-														<div class="font-bold mb-2 mt-8">SubPages</div>
-
-														<div class="_section">
-															<NewPage
-																{page}
-																createPage={async (newPage) => {
-																	setPageAndDraft(newPage);
-																	isPageResetting = true;
-																	await publishPage({ isDraft: true });
-																	isPageResetting = false;
-																}}
-															/>
-														</div>
-
-														{#each getEditorSubpages() as subPage}
-															<div
-																class="_section cursor-pointer"
-																class:_active={subPage._id === page._id}
-																on:click={() => setPageAndDraft(subPage)}
-															>
-																<div class="font-bold">{subPage.name}</div>
-																<div class="">/{subPage.slug}</div>
-															</div>
-														{/each}
-													{:else if $selectedEditorTab === 'blog'}
-														<EditBlog bind:setPageAndDraft bind:page />
-													{:else if $selectedEditorTab === 'services'}
-														<EditServices bind:page bind:setPageAndDraft />
-													{/if}
-												</div>
-											{:else if !isPageResetting}
-												{#if !page._id || isBrandNameEdit}
-													<div class="_section">
-														<div class="flex justify-between">
-															{#if page.parentPage}
-																<div class="_title">Subpage Name</div>
-															{:else}
-																<div class="_title">Page Name</div>
 															{/if}
 														</div>
-														<div class="w-full flex justify-between items-center">
-															{#if page.isInDir}
+													{/if}
+												{/if}
+											{/if}
+
+											{#if $selectedTab === 'editor'}
+												{#if isPageResetting}
+													<div in:fly={{ y: 25, duration: 150 }} class="mt-8">
+														{#if $selectedEditorTab === 'pages'}
+															<div class="font-bold mb-2">Home Page</div>
+															<div
+																class="_section cursor-pointer"
+																class:_selected={!page.parentPage}
+																on:click={() =>
+																	setPageAndDraft(
+																		$allPages.find((p) => (page.parentPage || page)._id)
+																	)}
+															>
+																<div class="font-bold">{(page.parentPage || page).name}</div>
+															</div>
+															<div class="font-bold mb-2 mt-8">SubPages</div>
+
+															<div class="_section">
+																<NewPage
+																	{page}
+																	createPage={async (newPage) => {
+																		setPageAndDraft(newPage);
+																		isPageResetting = true;
+																		await publishPage({ isDraft: true });
+																		isPageResetting = false;
+																	}}
+																/>
+															</div>
+
+															{#each getEditorSubpages() as subPage}
+																<div
+																	class="_section cursor-pointer"
+																	class:_active={subPage._id === page._id}
+																	on:click={() => setPageAndDraft(subPage)}
+																>
+																	<div class="font-bold">{subPage.name}</div>
+																	<div class="">/{subPage.slug}</div>
+																</div>
+															{/each}
+														{:else if $selectedEditorTab === 'blog'}
+															<EditBlog bind:setPageAndDraft bind:page />
+														{:else if $selectedEditorTab === 'services'}
+															<EditServices bind:page bind:setPageAndDraft />
+														{/if}
+													</div>
+												{:else if !isPageResetting}
+													{#if !page._id || isBrandNameEdit}
+														<div class="_section">
+															<div class="flex justify-between">
+																{#if page.parentPage}
+																	<div class="_title">Subpage Name</div>
+																{:else}
+																	<div class="_title">Page Name</div>
+																{/if}
+															</div>
+															<div class="w-full flex justify-between items-center">
+																{#if page.isInDir}
+																	<input
+																		class="w-full"
+																		bind:value={page.dirName}
+																		placeholder="Resources"
+																		use:autofocus
+																	/>
+
+																	<div class="p-4">/</div>
+																{/if}
 																<input
 																	class="w-full"
-																	bind:value={page.dirName}
-																	placeholder="Resources"
+																	bind:value={page.name}
+																	placeholder={page.parentPage ? 'About' : 'Momentum'}
 																	use:autofocus
 																/>
-
-																<div class="p-4">/</div>
-															{/if}
-															<input
-																class="w-full"
-																bind:value={page.name}
-																placeholder={page.parentPage ? 'About' : 'Momentum'}
-																use:autofocus
-															/>
-														</div>
-
-														{#if page.parentPage}
-															<div class="my-2 _section opacity-50 hover:opacity-100 mt-4">
-																{#if page.parentPage}
-																	<div class="font-bold mb-2">⚙️ Advanced</div>
-																	<div class="flex items-center">
-																		{#if !page.isInDir}
-																			<div class="mr-2">
-																				<input type="checkbox" bind:checked={page.isUseDatabase} /> Attach
-																				Database
-																			</div>
-																		{/if}
-																		{#if !page.isUseDatabase}
-																			<div>
-																				<input type="checkbox" bind:checked={page.isInDir} /> In sub-directory
-																			</div>
-																		{/if}
-																	</div>
-																{/if}
 															</div>
-														{/if}
-														{#if page.isUseDatabase}
-															<div class="mt-2">
-																Page url: /{page.name.toLowerCase().replace(' ', '-')}/$data.slug
-															</div>
-														{/if}
-														{#if page.isInDir}
-															<div class="mt-2">
-																Page url: /{(page.dirName || '').toLowerCase()}/{page.name
-																	.toLowerCase()
-																	.replace(' ', '-')}
-															</div>
-														{/if}
-													</div>
 
-													{#if page.isUseDatabase}
-														<div class="_section">
-															<div class="_title">Database</div>
-
-															{#if $childStreams?.length}
-																<select class="w-full">
-																	{#each $childStreams as childStream}
-																		{childStream.name}
-																	{/each}
-																</select>
-															{:else}
-																<input
-																	class="w-full"
-																	placeholder="templates"
-																	type="text"
-																	bind:value={newStreamName}
-																/>
-															{/if}
-														</div>
-													{/if}
-
-													{#if !page._id && page.name && page.activeHero && !page.parentPage}
-														<div class="_section" in:fade>
-															<div class="_title">Tagline</div>
-
-															<div
-																class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
-																contenteditable
-																use:contenteditable
-																data-placeholder="Build a better product in public."
-																bind:innerHTML={page.activeHero.title}
-																on:focus={() => (focuses.title = true)}
-																on:blur={() => (focuses.title = false)}
-															/>
-
-															{#if (focuses.title || page.activeHero.title) && !page._id}
-																<div
-																	class="p-4  mt-4 rounded-xl font-bold bg-[#fafafa] opacity-70 _section"
-																	in:fly={{ y: 50, duration: 150 }}
-																>
-																	<div class="flex items-center mb-4">
-																		<div class="mr-2">
-																			<FeatherIcon
-																				size="20"
-																				name="arrow-right-circle"
-																				color="#111"
-																			/>
+															{#if page.parentPage}
+																<div class="my-2 _section opacity-50 hover:opacity-100 mt-4">
+																	{#if page.parentPage}
+																		<div class="font-bold mb-2">⚙️ Advanced</div>
+																		<div class="flex items-center">
+																			{#if !page.isInDir}
+																				<div class="mr-2">
+																					<input
+																						type="checkbox"
+																						bind:checked={page.isUseDatabase}
+																					/> Attach Database
+																				</div>
+																			{/if}
+																			{#if !page.isUseDatabase}
+																				<div>
+																					<input type="checkbox" bind:checked={page.isInDir} /> In sub-directory
+																				</div>
+																			{/if}
 																		</div>
-
-																		Start with a bold tagline
-																	</div>
-																	<div class="font-normal mt-2">
-																		Make a big promise to your customer. Start with a verb. Spark
-																		curiosity and hook their attention.
-																	</div>
-																</div>
-															{/if}
-														</div>
-													{/if}
-
-													{#if !page._id && page.activeHero?.title}
-														<div class="_section">
-															<div class="_title flex justify-between w-full">Call To Action</div>
-
-															<EditInteractiveOptions
-																class=" mt-4"
-																options={[
-																	{ value: 'email', text: 'Collect emails' },
-																	{ value: 'link', text: 'Button' }
-																]}
-																bind:section={page.activeHero}
-																bind:sectionItem={page.activeHero}
-																isWithButton={false}
-															/>
-														</div>
-													{/if}
-												{:else}{/if}
-
-												{#if isPageResetting}{:else}
-													{#if page.renderType === 'service'}
-														{#key page._id}
-															<EditService bind:page bind:setPageAndDraft />
-														{/key}
-													{:else}
-														{#if page?._id && !page.renderType}
-															<div
-																class="_section cursor-pointer"
-																on:click={() => {
-																	$selectedTab = 'growth';
-																}}
-															>
-																<div class="flex">
-																	<div
-																		class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full  shadow-md bg-green-300 shadow-md shadow-green-300/50 mr-4"
-																	>
-																		<svg
-																			width="20"
-																			height="20"
-																			viewBox="0 0 15 15"
-																			fill="none"
-																			xmlns="http://www.w3.org/2000/svg"
-																			><path
-																				d="M11.1464 6.85355C11.3417 7.04882 11.6583 7.04882 11.8536 6.85355C12.0488 6.65829 12.0488 6.34171 11.8536 6.14645L7.85355 2.14645C7.65829 1.95118 7.34171 1.95118 7.14645 2.14645L3.14645 6.14645C2.95118 6.34171 2.95118 6.65829 3.14645 6.85355C3.34171 7.04882 3.65829 7.04882 3.85355 6.85355L7.5 3.20711L11.1464 6.85355ZM11.1464 12.8536C11.3417 13.0488 11.6583 13.0488 11.8536 12.8536C12.0488 12.6583 12.0488 12.3417 11.8536 12.1464L7.85355 8.14645C7.65829 7.95118 7.34171 7.95118 7.14645 8.14645L3.14645 12.1464C2.95118 12.3417 2.95118 12.6583 3.14645 12.8536C3.34171 13.0488 3.65829 13.0488 3.85355 12.8536L7.5 9.20711L11.1464 12.8536Z"
-																				fill="currentColor"
-																				fill-rule="evenodd"
-																				clip-rule="evenodd"
-																			/></svg
-																		>
-																	</div>
-																	<div>
-																		<div class="font-bold mb-2">Boost Your Product</div>
-																		<div>
-																			Get free marketing assets, $165k in discounts, record a
-																			podcast and more.
-																		</div>
-																	</div>
-																</div>
-															</div>
-														{/if}
-
-														<div>
-															{#if page._id && page.renderType === 'article'}
-																<div class="mt-4">
-																	<div class="_section">
-																		<EditInteractiveOptions
-																			class=""
-																			options={[
-																				{ value: '', text: 'No interaction' },
-																				{
-																					value: 'multiple_choice',
-																					text: 'Reactions — multiple choice'
-																				}
-																			]}
-																			section={page}
-																			sectionItem={page}
-																			isWithButton={false}
-																		/>
-																	</div>
-																</div>
-															{/if}
-
-															{#if page._id}
-																{#each page.heros as hero}
-																	<EditHero
-																		class="my-4"
-																		bind:hero
-																		bind:page
-																		bind:focuses
-																		isShowTips={page.heros?.length < 2}
-																	/>
-																{/each}
-
-																{#if !page.heros?.length}
-																	<button class="_secondary" on:click={addDefaultHero}
-																		>Add Hero Section</button
-																	>
-																{/if}
-															{/if}
-
-															{#if page._id}
-																<div
-																	class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
-																>
-																	<div class="flex items-center">
-																		<div class="text-lg font-bold  _editor-title">
-																			{page.renderType === 'article' ? 'Paragraphs' : 'Sections'}
-																		</div>
-
-																		{#if page.sections?.length}
-																			<div class="ml-4 number-tag">
-																				{page.sections?.length || 0}
-																			</div>
-																		{/if}
-																	</div>
-
-																	{#if !page.sections?.length}
-																		<div />
-
-																		{#if page.sections?.length > 1}
-																			<div
-																				class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
-																				on:click={() => (isOrdering = true)}
-																			>
-																				💫 Reorder Sections
-																			</div>
-																		{/if}
 																	{/if}
 																</div>
 															{/if}
+															{#if page.isUseDatabase}
+																<div class="mt-2">
+																	Page url: /{page.name.toLowerCase().replace(' ', '-')}/$data.slug
+																</div>
+															{/if}
+															{#if page.isInDir}
+																<div class="mt-2">
+																	Page url: /{(page.dirName || '').toLowerCase()}/{page.name
+																		.toLowerCase()
+																		.replace(' ', '-')}
+																</div>
+															{/if}
+														</div>
 
-															{#if page.sections?.length}
-																<div>
+														{#if page.isUseDatabase}
+															<div class="_section">
+																<div class="_title">Database</div>
+
+																{#if $childStreams?.length}
+																	<select class="w-full">
+																		{#each $childStreams as childStream}
+																			{childStream.name}
+																		{/each}
+																	</select>
+																{:else}
+																	<input
+																		class="w-full"
+																		placeholder="templates"
+																		type="text"
+																		bind:value={newStreamName}
+																	/>
+																{/if}
+															</div>
+														{/if}
+
+														{#if !page._id && page.name && page.activeHero && !page.parentPage}
+															<div class="_section" in:fade>
+																<div class="_title">Tagline</div>
+
+																<div
+																	class="w-full bg-[#f5f5f5] p-2 rounded-lg block"
+																	contenteditable
+																	use:contenteditable
+																	data-placeholder="Build a better product in public."
+																	bind:innerHTML={page.activeHero.title}
+																	on:focus={() => (focuses.title = true)}
+																	on:blur={() => (focuses.title = false)}
+																/>
+
+																{#if (focuses.title || page.activeHero.title) && !page._id}
 																	<div
-																		use:dndzone={{ items: page.sections, flipDurationMs }}
-																		on:consider={handleDndConsider}
-																		on:finalize={handleDndFinalize}
+																		class="p-4  mt-4 rounded-xl font-bold bg-[#fafafa] opacity-70 _section"
+																		in:fly={{ y: 50, duration: 150 }}
 																	>
-																		{#each page.sections || [] as section (section.id)}
-																			<div animate:flip={{ duration: flipDurationMs }}>
-																				<EditSection
-																					bind:page
-																					bind:section
-																					onRemove={() => {
-																						page.sections = page.sections.filter(
-																							(s) => s !== section
-																						);
-																					}}
+																		<div class="flex items-center mb-4">
+																			<div class="mr-2">
+																				<FeatherIcon
+																					size="20"
+																					name="arrow-right-circle"
+																					color="#111"
 																				/>
 																			</div>
-																		{/each}
-																	</div>
-																</div>
-															{/if}
 
-															{#if page?._id}
-																<button
-																	class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
-																	on:click={() => {
-																		if (page.renderType === 'article') {
-																			addNewSection();
-																		} else {
-																			$isInsertPopupShown = true;
-																		}
-																	}}
-																	>Add {page.renderType === 'article'
-																		? 'Paragraph'
-																		: 'Section'}</button
-																>
-															{/if}
-
-															{#if page._id && page.sections?.length}
-																<div class="relative flex items-center my-4  mt-12">
-																	<div class="font-bold text-lg mr-2 py-4">Call-To-Action</div>
-
-																	<div
-																		class="w-[35px] h-[35px] bg-[#f1f1f1] rounded-xl flex items-center justify-center cursor-pointer"
-																	>
-																		{#if page.ctaFooter}
-																			<EditSectionSettings
-																				bind:page
-																				bind:section={page.ctaFooter}
-																				bind:sectionItem={page.ctaFooter}
-																			/>
-																		{/if}
-																	</div>
-																</div>
-
-																<EditCTA class="my-4" bind:page />
-															{/if}
-														</div>
-													{/if}
-
-													{#if page.name}
-														<div class="font-bold text-lg mb-4 mt-16  _editor-title">
-															Publish Page
-														</div>
-
-														{#if (!page._id && page.parentPage) || page.isDraft}
-															<div
-																class="py-16 mb-8 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
-															>
-																<div class="flex items-center w-full justify-between">
-																	<div class=" w-full">
-																		<div>
-																			<Button
-																				class="_primary mr-2"
-																				onClick={() => publishPage({ isDraft: true })}
-																				>Save As Draft</Button
-																			>
-																			<div class="text-sm mt-2">
-																				Save page but don't publish yet
-																			</div>
+																			Start with a bold tagline
+																		</div>
+																		<div class="font-normal mt-2">
+																			Make a big promise to your customer. Start with a verb. Spark
+																			curiosity and hook their attention.
 																		</div>
 																	</div>
-																</div>
-															</div>
-														{/if}
-
-														{#if page._id || !page.parentPage}
-															<div
-																class="py-16 mb-32 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
-															>
-																<div>
-																	<div>
-																		{#if page._id || !page.parentPage}
-																			<div>
-																				{#if page.name}
-																					{#if page.renderType === 'article'}
-																						<Button class="_primary" onClick={publishPage}>
-																							Publish Article</Button
-																						>
-																					{:else}
-																						<Button class="_primary" onClick={publishPage}
-																							>Publish Page</Button
-																						>
-																					{/if}
-																				{/if}
-																				<div class="text-sm mt-2">
-																					The changes will appear on your page live URL
-																				</div>
-																			</div>
-																		{/if}
-																	</div>
-
-																	{#if page._id && page.isDirty}
-																		<div
-																			class="cursor-pointer text-sm text-orange-500 mt-4"
-																			on:click={async () => {
-																				setPageAndDraft(
-																					await get(`pages/${page._id}`, {
-																						...(page.parentPage
-																							? { parentPageSlug: page.parentPage?.slug }
-																							: {})
-																					}),
-																					{ force: true }
-																				);
-
-																				showSuccessMessage('Page changes were reset');
-																			}}
-																		>
-																			Reset changes
-																		</div>
-																	{/if}
-																</div>
-																{#if !page._id || page.isDraft}{:else}
-
 																{/if}
 															</div>
 														{/if}
-													{/if}
-													<hr class="my-8" />
-												{/if}
-											{/if}
-										{:else}
-											<div class="mb-[70px]">
-												{#if $selectedTab === 'database'}
-													<EditDatabase bind:page bind:selectedStreamSlug bind:setPageAndDraft />
-												{:else if $selectedTab === 'growth'}
-													<EditGrowth bind:page bind:setPageAndDraft />
-												{:else if $selectedTab === 'blog'}
-													<EditBlog bind:setPageAndDraft bind:page />
-												{:else if $selectedTab === 'analytics'}
-													<EditCustomers bind:page bind:selectedCustomer />
-												{:else if $selectedTab === 'messaging'}
-													<EditMessaging
-														bind:page
-														bind:selectedTrigger
-														bind:selectedNewsletter
-														bind:selectedChatRoom
-													/>
-												{:else if $selectedTab === 'requests'}
-													<EditSubmissions bind:page />
-												{:else if $selectedTab === 'newsletter'}
-													<EditNewsletter bind:page />
-													<EditWelcomeEmail bind:page />
-												{:else if $selectedTab === 'blog'}{:else if $selectedTab === 'settings'}
-													<EditWebsiteSettings bind:page />
-												{/if}
-											</div>
-										{/if}
-									</div>
-								{/if}
-								<div class="pb-[1000px]" />
-							</div>
 
-							<!-- {#if page._id}
+														{#if !page._id && page.activeHero?.title}
+															<div class="_section">
+																<div class="_title flex justify-between w-full">Call To Action</div>
+
+																<EditInteractiveOptions
+																	class=" mt-4"
+																	options={[
+																		{ value: 'email', text: 'Collect emails' },
+																		{ value: 'link', text: 'Button' }
+																	]}
+																	bind:section={page.activeHero}
+																	bind:sectionItem={page.activeHero}
+																	isWithButton={false}
+																/>
+															</div>
+														{/if}
+													{:else}{/if}
+
+													{#if isPageResetting}{:else}
+														{#if page.renderType === 'service'}
+															{#key page._id}
+																<EditService bind:page bind:setPageAndDraft />
+															{/key}
+														{:else}
+															{#if page?._id && !page.renderType}
+																<div
+																	class="_section cursor-pointer"
+																	on:click={() => {
+																		$selectedTab = 'growth';
+																	}}
+																>
+																	<div class="flex">
+																		<div
+																			class="w-[40px] h-[40px] shrink-0 flex items-center justify-center rounded-full  shadow-md bg-green-300 shadow-md shadow-green-300/50 mr-4"
+																		>
+																			<svg
+																				width="20"
+																				height="20"
+																				viewBox="0 0 15 15"
+																				fill="none"
+																				xmlns="http://www.w3.org/2000/svg"
+																				><path
+																					d="M11.1464 6.85355C11.3417 7.04882 11.6583 7.04882 11.8536 6.85355C12.0488 6.65829 12.0488 6.34171 11.8536 6.14645L7.85355 2.14645C7.65829 1.95118 7.34171 1.95118 7.14645 2.14645L3.14645 6.14645C2.95118 6.34171 2.95118 6.65829 3.14645 6.85355C3.34171 7.04882 3.65829 7.04882 3.85355 6.85355L7.5 3.20711L11.1464 6.85355ZM11.1464 12.8536C11.3417 13.0488 11.6583 13.0488 11.8536 12.8536C12.0488 12.6583 12.0488 12.3417 11.8536 12.1464L7.85355 8.14645C7.65829 7.95118 7.34171 7.95118 7.14645 8.14645L3.14645 12.1464C2.95118 12.3417 2.95118 12.6583 3.14645 12.8536C3.34171 13.0488 3.65829 13.0488 3.85355 12.8536L7.5 9.20711L11.1464 12.8536Z"
+																					fill="currentColor"
+																					fill-rule="evenodd"
+																					clip-rule="evenodd"
+																				/></svg
+																			>
+																		</div>
+																		<div>
+																			<div class="font-bold mb-2">Boost Your Product</div>
+																			<div>
+																				Get free marketing assets, $165k in discounts, record a
+																				podcast and more.
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															{/if}
+
+															<div>
+																{#if page._id && page.renderType === 'article'}
+																	<div class="mt-4">
+																		<div class="_section">
+																			<EditInteractiveOptions
+																				class=""
+																				options={[
+																					{ value: '', text: 'No interaction' },
+																					{
+																						value: 'multiple_choice',
+																						text: 'Reactions — multiple choice'
+																					}
+																				]}
+																				section={page}
+																				sectionItem={page}
+																				isWithButton={false}
+																			/>
+																		</div>
+																	</div>
+																{/if}
+
+																{#if page._id}
+																	{#each page.heros as hero}
+																		<EditHero
+																			class="my-4"
+																			bind:hero
+																			bind:page
+																			bind:focuses
+																			isShowTips={page.heros?.length < 2}
+																		/>
+																	{/each}
+
+																	{#if !page.heros?.length}
+																		<button class="_secondary" on:click={addDefaultHero}
+																			>Add Hero Section</button
+																		>
+																	{/if}
+																{/if}
+
+																{#if page._id}
+																	<div
+																		class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
+																	>
+																		<div class="flex items-center">
+																			<div class="text-lg font-bold  _editor-title">
+																				{page.renderType === 'article' ? 'Paragraphs' : 'Sections'}
+																			</div>
+
+																			{#if page.sections?.length}
+																				<div class="ml-4 number-tag">
+																					{page.sections?.length || 0}
+																				</div>
+																			{/if}
+																		</div>
+
+																		{#if !page.sections?.length}
+																			<div />
+
+																			{#if page.sections?.length > 1}
+																				<div
+																					class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+																					on:click={() => (isOrdering = true)}
+																				>
+																					💫 Reorder Sections
+																				</div>
+																			{/if}
+																		{/if}
+																	</div>
+																{/if}
+
+																{#if page.sections?.length}
+																	<div>
+																		<div
+																			use:dndzone={{ items: page.sections, flipDurationMs }}
+																			on:consider={handleDndConsider}
+																			on:finalize={handleDndFinalize}
+																		>
+																			{#each page.sections || [] as section (section.id)}
+																				<div animate:flip={{ duration: flipDurationMs }}>
+																					<EditSection
+																						bind:page
+																						bind:section
+																						onRemove={() => {
+																							page.sections = page.sections.filter(
+																								(s) => s !== section
+																							);
+																						}}
+																					/>
+																				</div>
+																			{/each}
+																		</div>
+																	</div>
+																{/if}
+
+																{#if page?._id}
+																	<button
+																		class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
+																		on:click={() => {
+																			if (page.renderType === 'article') {
+																				addNewSection();
+																			} else {
+																				$isInsertPopupShown = true;
+																			}
+																		}}
+																		>Add {page.renderType === 'article'
+																			? 'Paragraph'
+																			: 'Section'}</button
+																	>
+																{/if}
+
+																{#if page._id && page.sections?.length}
+																	<div class="relative flex items-center my-4  mt-12">
+																		<div class="font-bold text-lg mr-2 py-4">Call-To-Action</div>
+
+																		<div
+																			class="w-[35px] h-[35px] bg-[#f1f1f1] rounded-xl flex items-center justify-center cursor-pointer"
+																		>
+																			{#if page.ctaFooter}
+																				<EditSectionSettings
+																					bind:page
+																					bind:section={page.ctaFooter}
+																					bind:sectionItem={page.ctaFooter}
+																				/>
+																			{/if}
+																		</div>
+																	</div>
+
+																	<EditCTA class="my-4" bind:page />
+																{/if}
+															</div>
+														{/if}
+
+														{#if page.name}
+															<div class="font-bold text-lg mb-4 mt-16  _editor-title">
+																Publish Page
+															</div>
+
+															{#if (!page._id && page.parentPage) || page.isDraft}
+																<div
+																	class="py-16 mb-8 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
+																>
+																	<div class="flex items-center w-full justify-between">
+																		<div class=" w-full">
+																			<div>
+																				<Button
+																					class="_primary mr-2"
+																					onClick={() => publishPage({ isDraft: true })}
+																					>Save As Draft</Button
+																				>
+																				<div class="text-sm mt-2">
+																					Save page but don't publish yet
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															{/if}
+
+															{#if page._id || !page.parentPage}
+																<div
+																	class="py-16 mb-32 _section _borderless bg-[#f1f1f1] shadow shadow-black/30"
+																>
+																	<div>
+																		<div>
+																			{#if page._id || !page.parentPage}
+																				<div>
+																					{#if page.name}
+																						{#if page.renderType === 'article'}
+																							<Button class="_primary" onClick={publishPage}>
+																								Publish Article</Button
+																							>
+																						{:else}
+																							<Button class="_primary" onClick={publishPage}
+																								>Publish Page</Button
+																							>
+																						{/if}
+																					{/if}
+																					<div class="text-sm mt-2">
+																						The changes will appear on your page live URL
+																					</div>
+																				</div>
+																			{/if}
+																		</div>
+
+																		{#if page._id && page.isDirty}
+																			<div
+																				class="cursor-pointer text-sm text-orange-500 mt-4"
+																				on:click={async () => {
+																					setPageAndDraft(
+																						await get(`pages/${page._id}`, {
+																							...(page.parentPage
+																								? { parentPageSlug: page.parentPage?.slug }
+																								: {})
+																						}),
+																						{ force: true }
+																					);
+
+																					showSuccessMessage('Page changes were reset');
+																				}}
+																			>
+																				Reset changes
+																			</div>
+																		{/if}
+																	</div>
+																	{#if !page._id || page.isDraft}{:else}
+
+																	{/if}
+																</div>
+															{/if}
+														{/if}
+														<hr class="my-8" />
+													{/if}
+												{/if}
+											{:else}
+												<div class="mb-[70px]">
+													{#if $selectedTab === 'database'}
+														<EditDatabase bind:page bind:selectedStreamSlug bind:setPageAndDraft />
+													{:else if $selectedTab === 'growth'}
+														<EditGrowth bind:page bind:setPageAndDraft />
+													{:else if $selectedTab === 'blog'}
+														<EditBlog bind:setPageAndDraft bind:page />
+													{:else if $selectedTab === 'analytics'}
+														<EditCustomers bind:page bind:selectedCustomer />
+													{:else if $selectedTab === 'messaging'}
+														<EditMessaging
+															bind:page
+															bind:selectedTrigger
+															bind:selectedNewsletter
+															bind:selectedChatRoom
+														/>
+													{:else if $selectedTab === 'requests'}
+														<EditSubmissions bind:page />
+													{:else if $selectedTab === 'newsletter'}
+														<EditNewsletter bind:page />
+														<EditWelcomeEmail bind:page />
+													{:else if $selectedTab === 'blog'}{:else if $selectedTab === 'settings'}
+														<EditWebsiteSettings bind:page />
+													{/if}
+												</div>
+											{/if}
+										</div>
+									{/if}
+									<div class="pb-[1000px]" />
+								</div>
+
+								<!-- {#if page._id}
 							<div class="pb-16">
 								<MomentumHub bind:page />
 							</div>
 						{/if} -->
-						</div>
-					</div>
-					<!-- END EDITOR -->
-
-					<!-- PREVIEW -->
-
-					<div
-						class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {$selectedTab ===
-						'editor'
-							? 'p-8'
-							: 'p-0'} bg-[#e5e5e5] overflow-hidden"
-						class:hidden={page.slug === '_slug'}
-						style={$selectedTab === 'editor' ? 'height: calc(100vh - 60px);' : ''}
-						in:fade={{ delay: 150 }}
-					>
-						{#if !$isInsertPopupShown && !page.name}
-							<div
-								class="absolute z-10 bg-white left-0 top-0 w-full h-full self-stretch flex-col flex items-center justify-center"
-								in:slide
-								style="z-index: 100"
-							>
-								<svg
-									width="190"
-									height="114"
-									viewBox="0 0 190 114"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<rect width="190" height="114" rx="7" fill="#F5F5F5" />
-									<path
-										d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
-										stroke="#828282"
-										stroke-width="3"
-										stroke-linecap="round"
-									/>
-									<path
-										d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
-										stroke="#828282"
-										stroke-width="3"
-										stroke-linecap="round"
-									/>
-									<line
-										x1="89.5"
-										y1="84.5"
-										x2="100.5"
-										y2="84.5"
-										stroke="#828282"
-										stroke-width="3"
-										stroke-linecap="round"
-									/>
-								</svg>
-
-								<div class="text-[#828282] mt-4">Your design will appear here</div>
 							</div>
-						{/if}
+						</div>
+						<!-- END EDITOR -->
 
-						{#if page}
-							{#key page._id}
-								{#if page}
-									{#if isJustCreated}
-										<div class="absolute left-[50%]">
-											<ConfettiExplosion stageHeight={1500} particleCount={300} force={0.3} />
+						<!-- PREVIEW -->
+
+						<div
+							class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {$selectedTab ===
+							'editor'
+								? 'p-8'
+								: 'p-0'} bg-[#e5e5e5] overflow-hidden"
+							class:hidden={page.slug === '_slug'}
+							style={$selectedTab === 'editor' ? 'height: calc(100vh - 60px);' : ''}
+							in:fade={{ delay: 150 }}
+						>
+							{#if !$isInsertPopupShown && !page.name}
+								<div
+									class="absolute z-10 bg-white left-0 top-0 w-full h-full self-stretch flex-col flex items-center justify-center"
+									in:slide
+									style="z-index: 100"
+								>
+									<svg
+										width="190"
+										height="114"
+										viewBox="0 0 190 114"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<rect width="190" height="114" rx="7" fill="#F5F5F5" />
+										<path
+											d="M67 44C67 50.0751 62.0751 55 56 55C49.9249 55 45 50.0751 45 44"
+											stroke="#828282"
+											stroke-width="3"
+											stroke-linecap="round"
+										/>
+										<path
+											d="M144 44C144 50.0751 139.075 55 133 55C126.925 55 122 50.0751 122 44"
+											stroke="#828282"
+											stroke-width="3"
+											stroke-linecap="round"
+										/>
+										<line
+											x1="89.5"
+											y1="84.5"
+											x2="100.5"
+											y2="84.5"
+											stroke="#828282"
+											stroke-width="3"
+											stroke-linecap="round"
+										/>
+									</svg>
+
+									<div class="text-[#828282] mt-4">Your design will appear here</div>
+								</div>
+							{/if}
+
+							{#if page}
+								{#key page._id}
+									{#if page}
+										{#if isJustCreated}
+											<div class="absolute left-[50%]">
+												<ConfettiExplosion stageHeight={1500} particleCount={300} force={0.3} />
+											</div>
+										{/if}
+
+										<div
+											class=""
+											style={$selectedTab === 'editor'
+												? 'height: calc(100vh - 120px); overflow-y: auto;}'
+												: ''}
+											in:fade
+										>
+											{#if $selectedTab === 'editor' && !$isInsertPopupShown}
+												{#if page?._id}
+													<div
+														class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
+													>
+														<div class="opacity-70 ">
+															<a
+																target="_blank"
+																class="flex py-0 mt-1 px-2 items-center bg-green-400/20 hover:bg-green-400 transition rounded-full"
+																href={getPageUrl({ page })}
+															>
+																<FeatherIcon size={10} name="globe" class="mr-2" />
+
+																{getPageUrl({ page })
+																	.replace('https://', '')
+																	.replace('www.', '')}</a
+															>
+														</div>
+														<div class="flex justify-center">
+															<input
+																class="mr-2"
+																type="checkbox"
+																bind:checked={isShowHeatmap}
+																on:change={() => {
+																	if (isShowHeatmap) {
+																		refreshHeatmap();
+																	} else {
+																		$heatmap = null;
+																	}
+																}}
+															/> Show Heatmap
+														</div>
+													</div>
+												{/if}
+
+												{#if $sectionToPreview}
+													<SitePreview
+														isNoVars
+														isEmbed
+														noStickyHeader={true}
+														isNoBadge={true}
+														isEdit
+														page={{
+															name: page.name,
+															logo: page.logo,
+															theme: page.theme,
+															sections: [$sectionToPreview]
+														}}
+													/>
+												{:else}
+													<SitePreview
+														isNoVars
+														isEmbed
+														noStickyHeader={true}
+														isNoBadge={true}
+														isEdit
+														bind:page
+													/>
+												{/if}
+											{:else if $isInsertPopupShown}
+												<InsertTab bind:page bind:setPageAndDraft />
+											{:else if $selectedTab === 'database'}
+												<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
+											{:else if $selectedTab === 'analytics'}
+												<AnalyticsTab bind:page bind:customer={selectedCustomer} />
+											{:else if $selectedTab === 'messaging'}
+												<MessagingTab
+													bind:page
+													bind:selectedNewsletter
+													bind:trigger={selectedTrigger}
+													bind:chatRoom={selectedChatRoom}
+												/>
+											{:else if $selectedTab === 'audience'}
+												<AudienceTab bind:page />
+											{:else if $selectedTab === 'blog'}
+												<BlogTab bind:page bind:setPageAndDraft />
+											{:else if $selectedTab === 'requests'}
+												<SubmissionsTab bind:page bind:setPageAndDraft />
+											{:else if $selectedTab === 'growth'}
+												<GrowthTab bind:page />
+											{:else if $selectedTab === 'newsletter'}
+												<NewsletterTab bind:page />
+											{:else if $selectedTab === 'settings'}
+												<EditWebsiteSettingsTab bind:page bind:setPageAndDraft />
+											{/if}
 										</div>
 									{/if}
+								{/key}
+							{/if}
 
-									<div
-										class=""
-										style={$selectedTab === 'editor'
-											? 'height: calc(100vh - 120px); overflow-y: auto;}'
-											: ''}
-										in:fade
-									>
-										{#if $selectedTab === 'editor' && !$isInsertPopupShown}
-											{#if page?._id}
-												<div
-													class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
-												>
-													<div class="opacity-70 ">
-														<a
-															target="_blank"
-															class="flex py-0 mt-1 px-2 items-center bg-green-400/20 hover:bg-green-400 transition rounded-full"
-															href={getPageUrl({ page })}
-														>
-															<FeatherIcon size={10} name="globe" class="mr-2" />
+							{#if page._id && !$sectionToEdit}
+								<div class="hidden sm:block">
+									<MomentumWidget bind:page />
+								</div>
+							{/if}
+						</div>
 
-															{getPageUrl({ page }).replace('https://', '').replace('www.', '')}</a
-														>
-													</div>
-													<div class="flex justify-center">
-														<input
-															class="mr-2"
-															type="checkbox"
-															bind:checked={isShowHeatmap}
-															on:change={() => {
-																if (isShowHeatmap) {
-																	refreshHeatmap();
-																} else {
-																	$heatmap = null;
-																}
-															}}
-														/> Show Heatmap
-													</div>
-												</div>
-											{/if}
-
-											{#if $sectionToPreview}
-												<SitePreview
-													isNoVars
-													isEmbed
-													noStickyHeader={true}
-													isNoBadge={true}
-													isEdit
-													page={{
-														name: page.name,
-														logo: page.logo,
-														theme: page.theme,
-														sections: [$sectionToPreview]
-													}}
-												/>
-											{:else}
-												<SitePreview
-													isNoVars
-													isEmbed
-													noStickyHeader={true}
-													isNoBadge={true}
-													isEdit
-													bind:page
-												/>
-											{/if}
-										{:else if $isInsertPopupShown}
-											<InsertTab bind:page bind:setPageAndDraft />
-										{:else if $selectedTab === 'database'}
-											<DatabaseTab bind:page bind:streamSlug={selectedStreamSlug} />
-										{:else if $selectedTab === 'analytics'}
-											<AnalyticsTab bind:page bind:customer={selectedCustomer} />
-										{:else if $selectedTab === 'messaging'}
-											<MessagingTab
-												bind:page
-												bind:selectedNewsletter
-												bind:trigger={selectedTrigger}
-												bind:chatRoom={selectedChatRoom}
-											/>
-										{:else if $selectedTab === 'audience'}
-											<AudienceTab bind:page />
-										{:else if $selectedTab === 'blog'}
-											<BlogTab bind:page bind:setPageAndDraft />
-										{:else if $selectedTab === 'requests'}
-											<SubmissionsTab bind:page bind:setPageAndDraft />
-										{:else if $selectedTab === 'growth'}
-											<GrowthTab bind:page />
-										{:else if $selectedTab === 'newsletter'}
-											<NewsletterTab bind:page />
-										{:else if $selectedTab === 'settings'}
-											<EditWebsiteSettingsTab bind:page bind:setPageAndDraft />
-										{/if}
-									</div>
-								{/if}
-							{/key}
-						{/if}
-
-						{#if page._id && !$sectionToEdit}
-							<div class="hidden sm:block">
-								<MomentumWidget bind:page />
-							</div>
-						{/if}
-					</div>
-
-					<!-- END PREVIEW -->
-				{/key}
+						<!-- END PREVIEW -->
+					{/key}
+				</div>
 			</div>
-		</div>
+		{/if}
 	{/if}
 {/if}
 

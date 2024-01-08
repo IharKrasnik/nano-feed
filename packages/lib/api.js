@@ -114,7 +114,7 @@ const ftch = async (method, url, params, options = {}) => {
 		if (browser && !options?.isNoNotifications) {
 			toast.push(
 				`Error: ${
-					data?.errors?.global || res.status === 401 ? 'Unauthorised. Please log in.' : 'unknown'
+					data?.errors?.global || (res.status === 401 ? 'Unauthorised. Please log in.' : 'unknown')
 				}`,
 				{
 					duration: 3000,

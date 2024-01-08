@@ -7,6 +7,7 @@
 	import EditEditors from '$lib/components/settings/Editors.svelte';
 	import EditOpenGraph from '$lib/components/settings/OpenGraph.svelte';
 	import EditCustomCode from '$lib/components/settings/CustomCode.svelte';
+	import EditClaimCode from '$lib/components/settings/ClaimCode.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	import PageBadge from '$lib/components/PageBadge.svelte';
@@ -193,6 +194,10 @@
 			</div>
 		</div>
 	</div>
+
+	<hr class="my-8 border-[#8B786D] opacity-30" />
+
+	<EditClaimCode bind:page />
 	<!-- 
 	<hr class="my-8 border-[#8B786D] opacity-30" />
 
