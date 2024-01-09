@@ -152,7 +152,7 @@
 						</div>
 
 						<div
-							class="hidden opacity-0 group-hover:opacity-100 group-hover:block transition duration-300 absolute  top-[20px] py-6 right-0 rounded"
+							class="hidden opacity-0 group-hover:opacity-100 group-hover:block transition duration-300 absolute  top-[20px] py-6 right-0 rounded min-w-[200px]"
 							style="transform: translateY(0%);"
 						>
 							<div
@@ -161,7 +161,7 @@
 								{#each link.links || [] as subLink}
 									<a
 										href={subLink.url}
-										class="px-2 py-2 cursor-pointer rounded transition duration-75 hover:bg-cta-stronger"
+										class="block shrink-0 px-2 py-2 cursor-pointer rounded transition duration-75 hover:bg-cta-stronger"
 									>
 										{subLink.name}
 									</a>
