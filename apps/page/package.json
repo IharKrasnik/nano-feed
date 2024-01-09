@@ -44,6 +44,7 @@
 		"marked": "^4.2.12",
 		"satori": "^0.1.1",
 		"satori-html": "^0.3.2",
+		"svelte-awesome-color-picker": "^2.4.8",
 		"svelte-confetti-explosion": "^0.4.0",
 		"svelte-markdown": "^0.2.3",
 		"uuid": "^9.0.0"
