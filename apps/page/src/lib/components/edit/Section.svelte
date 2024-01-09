@@ -390,11 +390,7 @@
 		{#if section.renderType === 'pricing'}
 			<div class="_section rounded-xl p-4">
 				<div class="flex items-center font-bold">
-					Benefits icon <EmojiPicker
-						class="ml-4"
-						defaultIcon="✅"
-						bind:icon={section.benefitsEmoji}
-					/>
+					<EmojiPicker class="mr-2" defaultIcon="✅" bind:icon={section.benefitsEmoji} /> Benefits icon
 				</div>
 				<div class="mt-2">This icon is used to show benefits</div>
 			</div>

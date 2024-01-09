@@ -813,9 +813,12 @@
 											: 'mb-4 sm:mb-8'}
 							{section.renderType === 'changelog'
 											? '_transparent _no-padding sm:w-[600px] mx-auto'
-											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.theme?.isTransparent
-											? '_transparent'
-											: ''} {item.theme?.isOppositeColors ? '_bg-opposite' : ''}"
+											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.isFeatured
+											? '_highlighted'
+											: ''} {item.theme?.isTransparent ? '_transparent' : ''} {item.theme
+											?.isOppositeColors
+											? '_bg-opposite'
+											: ''}"
 										style={item.theme?.isOverrideColors
 											? `background-color: ${item.theme?.backgroundColor};`
 											: ''}
@@ -898,7 +901,7 @@
 														<div class="my-4 mt-6 flex flex-wrap gap-2">
 															{#each item.tagsStr.split(',') as tag}
 																<div
-																	class="px-3 py-1 text-sm opacity-80 rounded-full inline ring {page
+																	class="flex items-center px-3 py-1 text-sm opacity-80 rounded-full inline ring {page
 																		.parentPage?.theme?.theme || page.theme?.theme === 'dark'
 																		? 'ring-zinc-900'
 																		: 'ring-zinc-100'} bg-black"
@@ -910,7 +913,7 @@
 																	{#if !section.isDatabase}
 																		{#key item.theme}
 																			<Emoji
-																				class="inline"
+																				class="block mr-2"
 																				theme={getEmojiTheme({ item })}
 																				width={14}
 																				emoji={item.emoji || 'feather:check'}
@@ -923,20 +926,7 @@
 														</div>
 													{/if}
 
-													{#if item.interactiveRenderType}
-														<div class="mt-4">
-															<RenderInteractiveOptions
-																bind:sectionItem={item}
-																parentSectionId={section.id}
-																bind:page
-																itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-																bind:isEdit
-																bind:isEmbed
-															/>
-														</div>
-													{/if}
-
-													{#if item.pricing}
+													{#if item.pricing?.amount}
 														<div class="flex items-end mt-4 mb-4">
 															<div class="text-5xl font-bold mr-2">
 																{item.pricing.amount
@@ -952,32 +942,46 @@
 														<div class="mb-8 opacity-70">
 															{@html item.description}
 														</div>
+													{/if}
 
-														{#if item.pricing.benefitsStr}
-															<div class="mb-4">
-																{#each item.pricing.benefitsStr.split('\n') as benefit}
-																	<div class="my-2 flex items-center">
-																		<Emoji
-																			theme={page.parentPage?.theme?.theme ||
-																				page?.theme?.theme ||
-																				'light'}
-																			emoji={section.benefitsEmoji || '✅'}
-																			class="mr-2 opacity-70"
-																		/>
-																		{benefit}
-																	</div>
-																{/each}
-															</div>
-														{:else if item.pricing.benefits}
-															<div class="mb-4">
-																{#each item.pricing.benefits as benefit}
-																	<div class="my-2">
-																		<span class="inline-block mr-1">✅</span>
-																		{benefit.name}
-																	</div>
-																{/each}
-															</div>
-														{/if}
+													{#if item.pricing?.benefitsStr}
+														<div class="mt-4 mb-8">
+															{#each item.pricing.benefitsStr.split('\n') as benefit}
+																<div class="my-2 flex items-center">
+																	<Emoji
+																		theme={page.parentPage?.theme?.theme ||
+																			page?.theme?.theme ||
+																			'light'}
+																		emoji={section.benefitsEmoji || '✅'}
+																		class="mr-2 opacity-70"
+																	/>
+																	{benefit}
+																</div>
+															{/each}
+														</div>
+													{:else if item.pricing?.benefits}
+														<div class="mb-4">
+															{#each item.pricing.benefits as benefit}
+																<div class="my-2">
+																	<span class="inline-block mr-1">✅</span>
+																	{benefit.name}
+																</div>
+															{/each}
+														</div>
+													{/if}
+
+													{#if item.interactiveRenderType}
+														<div class="mt-4">
+															<RenderInteractiveOptions
+																bind:sectionItem={item}
+																parentSectionId={section.id}
+																class={`${item.pricing ? 'w-full' : ''}`}
+																bind:page
+																itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																bind:isEdit
+																bind:isEmbed
+															/>
+														</div>
 													{/if}
 
 													{#if section.isBlog}
@@ -1042,10 +1046,10 @@
 												id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
 												class="_section-item group block relative {item.bgImageUrl
 													? '_bg-image'
-													: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.theme
-													?.isTransparent
-													? '_transparent'
-													: ''} {item.url && !item.interactiveRenderType
+													: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.isFeatured
+													? '_highlighted'
+													: ''} {item.theme?.isTransparent ? '_transparent' : ''} {item.url &&
+												!item.interactiveRenderType
 													? '_interactive'
 													: ''} h-full {$heatmap ? '' : 'overflow-hidden'}"
 												on:click={() => {
@@ -1259,7 +1263,7 @@
 																	<div class="my-4 mt-6 flex flex-wrap gap-2">
 																		{#each item.tagsStr.split(',') as tag}
 																			<div
-																				class="px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-1 {getEmojiTheme(
+																				class="flex items-center px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-1 {getEmojiTheme(
 																					{ item }
 																				) === 'dark'
 																					? 'ring-zinc-700'
@@ -1272,7 +1276,7 @@
 																				{#if !section.isDatabase}
 																					{#key item.theme}
 																						<Emoji
-																							class="inline"
+																							class="block mr-2"
 																							theme={getEmojiTheme({ item })}
 																							width={14}
 																							emoji={item.emoji || 'feather:check'}

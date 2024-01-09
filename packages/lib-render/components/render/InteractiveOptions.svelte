@@ -429,7 +429,8 @@
 								? `_is${size}`
 								: ''}"
 							style="--tw-shadow-color: var(--accent-color) !important;"
-							class:_alternative={sectionItem.isUrlAlternative}
+							class:_alternative={sectionItem.isUrlAlternative ||
+								(sectionItem.pricing && !sectionItem.isFeatured)}
 						>
 							{#if isUrlLoading}
 								<div

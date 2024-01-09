@@ -79,12 +79,12 @@
 	>
 		<div class="w-full py-4">
 			<div class="_section">
-				<div class="mb-2 font-bold">Alignment & Layout</div>
+				<div class="mb-4 font-bold">Alignment & Layout</div>
 
 				{#if sectionItem.renderType === 'callout' || sectionItem.id !== section.id}
 					<div class="_section">
-						<div class="font-bold mb-1">Item Layout</div>
-						<div class="mb-3 text-sm opacity-80">Position of the image inside section</div>
+						<div class="font-bold mb-1">Layout</div>
+						<div class="mb-3 text-sm opacity-70">Position of the image inside section item</div>
 
 						<div class="">
 							{#if section.columns > 1 && sectionItem.renderType !== 'callout'}
@@ -134,32 +134,34 @@
 						</div>
 					</div>
 
-					<div class="_section">
-						<div class="font-bold mb-2">Max Width</div>
+					{#if section.columns === 1 || section.renderType === 'callout'}
+						<div class="_section">
+							<div class="font-bold mb-2">Max Width</div>
 
-						<div class="">
-							<ToggleGroup
-								bind:value={sectionItem.theme.maxWidth}
-								tabs={[
-									{
-										key: 'full',
-										name: 'Full'
-									},
-									{
-										key: '50p',
-										name: '50%'
-									},
-									{
-										key: '33p',
-										name: '33%'
-									}
-								]}
-							/>
+							<div class="">
+								<ToggleGroup
+									bind:value={sectionItem.theme.maxWidth}
+									tabs={[
+										{
+											key: 'full',
+											name: 'Full'
+										},
+										{
+											key: '50p',
+											name: '50%'
+										},
+										{
+											key: '33p',
+											name: '33%'
+										}
+									]}
+								/>
+							</div>
 						</div>
-					</div>
+					{/if}
 				{/if}
 
-				{#if section.columns > 1}
+				{#if section.columns > 1 && sectionItem.id === section.id}
 					<div class="my-2">
 						<input class="mr-2" type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
 						{#if section.isMasonryGrid}
@@ -201,61 +203,50 @@
 				{/if}
 
 				{#if section.id === sectionItem.id && section.renderType !== 'callout'}
-					<div class="mb-2 font-semibold mt-4">Section images aspect ratio</div>
+					<div class="mb-2 font-semibold mt-6">Section images aspect ratio</div>
 
-					<div class="flex items-center gap-2">
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								sectionItem.theme.imageAspectRatio = 'og';
-							}}
-							class:font-semibold={sectionItem.theme?.imageAspectRatio === 'og'}
-						>
-							OG (120x63)
-						</div>
-
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								sectionItem.theme.imageAspectRatio = 'image';
-							}}
-							class:font-semibold={sectionItem.theme?.imageAspectRatio === 'image'}
-						>
-							4x3
-						</div>
-
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								sectionItem.theme.imageAspectRatio = 'square';
-							}}
-							class:font-semibold={sectionItem.theme?.imageAspectRatio === 'square'}
-						>
-							1x1
-						</div>
-
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								sectionItem.theme.imageAspectRatio = null;
-							}}
-							class:font-semibold={!sectionItem.theme?.imageAspectRatio}
-						>
-							Auto
-						</div>
-					</div>
+					<ToggleGroup
+						tabs={[
+							{
+								key: 'og',
+								name: 'OG'
+							},
+							{
+								key: 'image',
+								name: '4x3'
+							},
+							{
+								key: 'square',
+								name: '1x1'
+							},
+							{
+								key: '',
+								name: 'Auto'
+							}
+						]}
+						bind:value={sectionItem.theme.imageAspectRatio}
+					/>
 
 					{#if sectionItem.theme?.imageAspectRatio}
 						<input
-							class="mt-4"
+							class="mt-6"
 							type="checkbox"
 							bind:checked={sectionItem.theme.isScrollImageOnHover}
 						/>
 						Scroll image on hover
-						<div class="text-xs mt-2">Useful for long screenshots of website or portfolio</div>
+						<div class="text-xs mt-1">Useful for long screenshots of websites or portfolio</div>
 					{/if}
 				{/if}
 			</div>
+
+			{#if sectionItem.id !== section.id}
+				<div class="_section my-4">
+					<div class="mb-2 font-bold">Style</div>
+
+					<input type="checkbox" bind:checked={sectionItem.isFeatured} /> Is Featured
+					<div class="text-sm opacity-70">Feature specific section for focus</div>
+				</div>
+			{/if}
 
 			<div class="my-4">
 				{#if section === sectionItem}
@@ -344,58 +335,60 @@
 		<div class="_section mb-2">
 			<div class="font-semibold mb-2">Background</div>
 
-			<div class="font-normal text-sm opacity-70 mb-2">Background color</div>
+			<div class="font-normal text-sm opacity-70 mb-2">Background color and image</div>
 
-			<input
-				class="mr-2 my-2"
-				type="checkbox"
-				bind:checked={sectionItem.theme.isTransparent}
-				disabled={sectionItem.theme?.isOverrideColors || sectionItem.theme?.isOppositeColors}
-			/>
-			Transparent background
+			{#if sectionItem.id !== section.id}
+				<input
+					class="mr-2 my-2"
+					type="checkbox"
+					bind:checked={sectionItem.theme.isTransparent}
+					disabled={sectionItem.theme?.isOverrideColors || sectionItem.theme?.isOppositeColors}
+				/>
+				Transparent background
 
-			{#if !sectionItem.bgImageUrl}
-				<div class="flex items-center">
-					{#if sectionItem.theme.isOverrideColors}
-						<input
-							type="color"
-							id="head"
-							name="head"
-							class="mr-4 my-2"
-							bind:value={sectionItem.theme.backgroundColor}
-						/>
-					{:else}{/if}
+				{#if !sectionItem.bgImageUrl}
+					<div class="flex items-center">
+						{#if sectionItem.theme.isOverrideColors}
+							<input
+								type="color"
+								id="head"
+								name="head"
+								class="mr-4 my-2"
+								bind:value={sectionItem.theme.backgroundColor}
+							/>
+						{:else}{/if}
 
-					<div>
-						<input
-							bind:checked={sectionItem.theme.isOverrideColors}
-							disabled={sectionItem.theme.isTransparent}
-							class="mr-2 my-2"
-							type="checkbox"
-							on:change={() => {
-								if (sectionItem.theme.isOverrideColors) {
-									sectionItem.theme.backgroundColor = page.theme.backgroundColor;
-								} else {
-									sectionItem.theme.backgroundColor = null;
-								}
-							}}
-						/>
+						<div>
+							<input
+								bind:checked={sectionItem.theme.isOverrideColors}
+								disabled={sectionItem.theme.isTransparent}
+								class="mr-2 my-2"
+								type="checkbox"
+								on:change={() => {
+									if (sectionItem.theme.isOverrideColors) {
+										sectionItem.theme.backgroundColor = page.theme.backgroundColor;
+									} else {
+										sectionItem.theme.backgroundColor = null;
+									}
+								}}
+							/>
 
-						Use different background color
+							Use different background color
+						</div>
 					</div>
+				{/if}
+
+				<div class="mb-4">
+					<input
+						disabled={sectionItem.theme.isTransparent}
+						bind:checked={sectionItem.theme.isOppositeColors}
+						class="mr-2"
+						type="checkbox"
+					/>
+
+					Use opposite colors
 				</div>
 			{/if}
-
-			<div class="mb-4">
-				<input
-					disabled={sectionItem.theme.isTransparent}
-					bind:checked={sectionItem.theme.isOppositeColors}
-					class="mr-2"
-					type="checkbox"
-				/>
-
-				Use opposite colors
-			</div>
 
 			{#if false}
 				{#if !sectionItem.bgImageUrl}
@@ -414,8 +407,8 @@
 			{/if}
 
 			{#if !sectionItem.theme.isOverrideColors}
-				<div class="font-normal mt-8 text-sm opacity-70 mb-2">
-					Section background image or video
+				<div class="font-normal mt-4 text-sm opacity-70 mb-2">
+					Section background image or media
 				</div>
 
 				<FileInput
@@ -440,7 +433,7 @@
 
 				{#if sectionItem === section}
 					<div class="font-normal mt-4 text-sm opacity-70 mb-2">
-						Container background image or video
+						Container background image or media
 					</div>
 
 					<FileInput

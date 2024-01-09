@@ -4,6 +4,9 @@
 	export let tabs = [];
 	export let onTabSelected = (tab) => {};
 	export let value;
+	if (!value) {
+		value = '';
+	}
 
 	let selectTab = (tab) => {
 		let selectedTab = tabs.find((t) => t.isSelected);
@@ -19,7 +22,7 @@
 	};
 
 	if (!tabs.find((t) => t.isSelected)) {
-		selectTab(value ? tabs.find((t) => t.key === value) || tabs[0] : tabs[0]);
+		selectTab(tabs.find((t) => t.key === value) || tabs[0]);
 	}
 </script>
 
@@ -34,6 +37,12 @@
 			}}
 		>
 			{tab.name}
+
+			<div class="text-xs opacity-70">
+				{#if tab.description}
+					{tab.description}
+				{/if}
+			</div>
 		</div>
 	{/each}
 </div>
