@@ -67,7 +67,7 @@
 			<a
 				class="flex items-center shrink-0 _logo"
 				href="/"
-				data-sveltekit-preload-data="hover"
+				data-sveltekit-preload-data={isEdit ? null : 'hover'}
 				on:click={() => {
 					trackClick({
 						pageId: page?._id,
@@ -114,7 +114,7 @@
 				{#each (parentPage.links || []).filter((l) => !l.groupName && l.isShowInHeader) as link}
 					<a
 						href={`${link.url || `/${link.pageSlug || link.slug}`}`}
-						data-sveltekit-preload-data="hover"
+						data-sveltekit-preload-data={isEdit ? null : 'hover'}
 						on:click={() => {
 							trackClick({
 								pageId: page?._id,
@@ -131,7 +131,7 @@
 									sectionId: `${page._id}_header`,
 									linkId: link.id
 							  })
-							: ''}>{link.name}</a
+							: null}>{link.name}</a
 					>
 				{/each}
 
