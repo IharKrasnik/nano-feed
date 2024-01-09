@@ -801,8 +801,14 @@
 							{#each section.items as item}
 								<div class="flex justify-between">
 									<div
-										class="_section-item w-full relative items-center {section.renderType ===
-											'article' || section.streamSlug?.includes('-blog')
+										class="_section-item {item.theme?.maxWidth
+											? item.theme.maxWidth === '50p'
+												? 'sm:w-[50%] sm:mx-auto'
+												: item.theme.maxWidth === '33p'
+												? 'sm:w-[33%] sm:mx-auto'
+												: 'w-full'
+											: 'w-full'} relative items-center {section.renderType === 'article' ||
+										section.streamSlug?.includes('-blog')
 											? '_article mb-8'
 											: 'mb-4 sm:mb-8'}
 							{section.renderType === 'changelog'
@@ -880,11 +886,13 @@
 														</div>
 													{/if}
 
-													<ContentEditableIf
-														class="_item-description whitespace-pre-wrap"
-														bind:innerHTML={item.description}
-														condition={isEdit}
-													/>
+													{#if section.renderType !== 'pricing'}
+														<ContentEditableIf
+															class="_item-description whitespace-pre-wrap"
+															bind:innerHTML={item.description}
+															condition={isEdit}
+														/>
+													{/if}
 
 													{#if item.tagsStr}
 														<div class="my-4 mt-6 flex flex-wrap gap-2">
@@ -926,6 +934,50 @@
 																bind:isEmbed
 															/>
 														</div>
+													{/if}
+
+													{#if item.pricing}
+														<div class="flex items-end mt-4 mb-4">
+															<div class="text-5xl font-bold mr-2">
+																{item.pricing.amount
+																	? toDollars(item.pricing.amount * 100)
+																	: 'Free'}
+															</div>
+															{#if item.pricing.amount}
+																<div class="text-lg">
+																	/{item.pricing.per}
+																</div>
+															{/if}
+														</div>
+														<div class="mb-8 opacity-70">
+															{@html item.description}
+														</div>
+
+														{#if item.pricing.benefitsStr}
+															<div class="mb-4">
+																{#each item.pricing.benefitsStr.split('\n') as benefit}
+																	<div class="my-2 flex items-center">
+																		<Emoji
+																			theme={page.parentPage?.theme?.theme ||
+																				page?.theme?.theme ||
+																				'light'}
+																			emoji={section.benefitsEmoji || '✅'}
+																			class="mr-2 opacity-70"
+																		/>
+																		{benefit}
+																	</div>
+																{/each}
+															</div>
+														{:else if item.pricing.benefits}
+															<div class="mb-4">
+																{#each item.pricing.benefits as benefit}
+																	<div class="my-2">
+																		<span class="inline-block mr-1">✅</span>
+																		{benefit.name}
+																	</div>
+																{/each}
+															</div>
+														{/if}
 													{/if}
 
 													{#if section.isBlog}

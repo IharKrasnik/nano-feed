@@ -11,8 +11,10 @@
 	export let page;
 	export let createPage;
 
+	let parentPage = page.parentPage || page;
+
 	let newPage = {
-		parentPage: page,
+		parentPage,
 		heros: [{ id: uuidv4(), title: '', subtitle: '' }]
 	};
 

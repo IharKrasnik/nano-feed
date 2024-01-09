@@ -3,22 +3,23 @@
 	export { clazz as class };
 	export let tabs = [];
 	export let onTabSelected = (tab) => {};
+	export let value;
 
 	let selectTab = (tab) => {
 		let selectedTab = tabs.find((t) => t.isSelected);
-
 		if (selectedTab) {
 			selectedTab.isSelected = false;
 		}
 
 		tab.isSelected = true;
+		value = tab.key;
 		tabs = [...tabs];
 
 		onTabSelected(tab);
 	};
 
 	if (!tabs.find((t) => t.isSelected)) {
-		selectTab(tabs[0]);
+		selectTab(value ? tabs.find((t) => t.key === value) || tabs[0] : tabs[0]);
 	}
 </script>
 

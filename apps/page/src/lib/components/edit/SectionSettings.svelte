@@ -5,6 +5,7 @@
 	import isUrl from 'lib/helpers/isUrl';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 
 	export let section;
 	export let sectionItem;
@@ -78,13 +79,14 @@
 	>
 		<div class="w-full py-4">
 			<div class="_section">
-				<div class="mb-2 font-bold">Alignment & Size</div>
+				<div class="mb-2 font-bold">Alignment & Layout</div>
 
 				{#if sectionItem.renderType === 'callout' || sectionItem.id !== section.id}
 					<div class="_section">
-						<div class="font-bold mb-2">Item size</div>
+						<div class="font-bold mb-1">Item Layout</div>
+						<div class="mb-3 text-sm opacity-80">Position of the image inside section</div>
 
-						<div class=" mb-4">
+						<div class="">
 							{#if section.columns > 1 && sectionItem.renderType !== 'callout'}
 								{#if section.isMasonryGrid}
 									<div class="_section _info">Masonry grid doesn't support custom column sizes</div>
@@ -111,13 +113,48 @@
 									</div>
 								{/if}
 							{:else if section}
-								<select class="w-full" bind:value={sectionItem.innerColSpan}>
-									<option value="">Default (6x6)</option>
-									<option value="8">8 x 4</option>
-									<option value="4">4 x 8</option>
-									<!-- <option value="12">12 x 12</option> -->
-								</select>
+								<ToggleGroup
+									bind:value={sectionItem.innerColSpan}
+									tabs={[
+										{
+											key: '',
+											name: '6x6'
+										},
+										{
+											key: '8',
+											name: '8x4'
+										},
+										{
+											key: '4',
+											name: '4x8'
+										}
+									]}
+								/>
 							{/if}
+						</div>
+					</div>
+
+					<div class="_section">
+						<div class="font-bold mb-2">Max Width</div>
+
+						<div class="">
+							<ToggleGroup
+								bind:value={sectionItem.theme.maxWidth}
+								tabs={[
+									{
+										key: 'full',
+										name: 'Full'
+									},
+									{
+										key: '50p',
+										name: '50%'
+									},
+									{
+										key: '33p',
+										name: '33%'
+									}
+								]}
+							/>
 						</div>
 					</div>
 				{/if}
@@ -144,15 +181,14 @@
 					</div>
 				{/if}
 
-				{#if sectionItem.id !== section.id}
+				{#if sectionItem.id !== section.id && section.columns > 1}
 					<div class="flex">
 						<div class="my-2">
-							<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Is Huge
-							Title
+							<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Huge Title
 						</div>
 
 						<div class="ml-2 my-2">
-							<input class="" type="checkbox" bind:checked={sectionItem.theme.isInlineTitle} /> Is Inline
+							<input class="" type="checkbox" bind:checked={sectionItem.theme.isInlineTitle} /> Inline
 							Title
 						</div>
 					</div>

@@ -303,17 +303,15 @@
 					<div class="bg-white  my-4">
 						<div class="relative mt-4">
 							<div class="px-4 flex items-center">
-								{#if section.renderType !== 'pricing'}
-									<div
-										class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-										class:aspect-square={section.columns !== 1}
-										class:px-4={section.columns === 1}
-										on:click={() => (section.columns = 1)}
-									>
-										1
-										{#if section.columns === 1}column{/if}
-									</div>
-								{/if}
+								<div
+									class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									class:aspect-square={section.columns !== 1}
+									class:px-4={section.columns === 1}
+									on:click={() => (section.columns = 1)}
+								>
+									1
+									{#if section.columns === 1}column{/if}
+								</div>
 
 								<div
 									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"

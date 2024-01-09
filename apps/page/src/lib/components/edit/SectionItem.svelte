@@ -198,7 +198,14 @@
 		</div>
 
 		<div class="mt-4 text-sm mb-2">Benefits (separate by new line)</div>
-		<textarea class="w-full" bind:value={item.pricing.benefitsStr} />
+		<textarea
+			class="w-full"
+			placeholder={`Benefit 1 
+Benefit 2
+Benefit 3`}
+			rows="6"
+			bind:value={item.pricing.benefitsStr}
+		/>
 
 		{#if item.pricing?.benefits?.length}
 			<div class="mt-4">
