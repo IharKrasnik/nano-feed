@@ -214,7 +214,6 @@
 		trackForm({ sectionId: sectionItem.id, text: sectionItem.callToActionText });
 
 		let submission = await post(`pages/${page._id}/submissions`, { email: emailAddress });
-
 		if (page.actionUrl) {
 			setTimeout(() => {
 				window.location.href = page.actionUrl?.startsWith('/')
