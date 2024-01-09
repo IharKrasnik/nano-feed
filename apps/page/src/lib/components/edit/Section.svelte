@@ -515,7 +515,7 @@
 			isWithButton={false}
 			cacheId={section.id}
 			bind:streamSettings={section.streamSettings}
-			selectedStreamSlug={section.streamSlug}
+			bind:selectedStreamSlug={section.streamSlug}
 			bind:page
 			attachToPages={[{ _id: page._id }]}
 			defaultAttachedPages={[page]}
