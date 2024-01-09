@@ -76,9 +76,7 @@ export async function load({ url, params, session, cookies }) {
 					renderType: 'article'
 				});
 			} else {
-				page = await get(`pages/${pageSlug}/subpages/blog`, {
-					renderType: 'article'
-				});
+				page = await get(`pages/${pageSlug}/subpages/blog`);
 			}
 		} else {
 			page = await get(`pages/${subPageSlug || pageSlug}`, {
