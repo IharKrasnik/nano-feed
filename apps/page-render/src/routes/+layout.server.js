@@ -28,7 +28,7 @@ export async function load({ url, params, session, cookies }) {
 		}
 	}
 
-	const { subPageSlug, feedItemSlug } = params;
+	const { subPageSlug, feedItemSlug, articleSlug } = params;
 
 	//
 	let extend = {};
@@ -70,14 +70,10 @@ export async function load({ url, params, session, cookies }) {
 			}
 
 			setPageVars({ page, feedItem });
-		} else if (url.href.includes('/blog')) {
-			if (subPageSlug) {
-				page = await get(`pages/${pageSlug}/subpages/${subPageSlug}`, {
-					renderType: 'article'
-				});
-			} else {
-				page = await get(`pages/${pageSlug}/subpages/blog`);
-			}
+		} else if (articleSlug) {
+			page = await get(`pages/${pageSlug}/subpages/${articleSlug}`, {
+				renderType: 'article'
+			});
 		} else {
 			page = await get(`pages/${subPageSlug || pageSlug}`, {
 				parentPageSlug: subPageSlug ? pageSlug : '',
