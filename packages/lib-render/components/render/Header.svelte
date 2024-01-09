@@ -7,6 +7,7 @@
 	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
 	import { page as sveltePage } from '$app/stores';
 	import { browser } from '$app/environment';
+	import getPageUrl from 'lib-render/helpers/getPageUrl';
 
 	export let page;
 	export let isEdit;
@@ -56,6 +57,8 @@
 		});
 		return groupArr;
 	};
+
+	let pageUrl = getPageUrl({ page });
 </script>
 
 <div
@@ -66,7 +69,8 @@
 		<div class="flex flex-grow py-4 sm:py-0">
 			<a
 				class="flex items-center shrink-0 _logo"
-				href="/"
+				href="{isEdit ? pageUrl : ''}/"
+				target={isEdit ? '_blank' : null}
 				data-sveltekit-preload-data={isEdit ? null : 'hover'}
 				on:click={() => {
 					trackClick({
@@ -113,7 +117,8 @@
 			>
 				{#each (parentPage.links || []).filter((l) => !l.groupName && l.isShowInHeader) as link}
 					<a
-						href={`${link.url || `/${link.pageSlug || link.slug}`}`}
+						href={`${link.url || `${isEdit ? pageUrl : ''}/${link.pageSlug || link.slug}`}`}
+						target={isEdit ? '_blank' : null}
 						data-sveltekit-preload-data={isEdit ? null : 'hover'}
 						on:click={() => {
 							trackClick({
