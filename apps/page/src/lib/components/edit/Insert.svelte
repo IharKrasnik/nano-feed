@@ -113,7 +113,7 @@
 	let jsonPlaceholder = JSON.stringify(
 		{
 			title: 'Hello World',
-			subtitle: 'World, hello!',
+			description: 'World, hello!',
 			imageUrl: 'https://imageormedia.com',
 			columns: 2,
 
@@ -189,7 +189,8 @@
 					let newSection = {
 						id: uuidv4(),
 						columns: 1,
-						title: 'Hello World'
+						title: 'Hello World',
+						description: 'World, Hello!'
 					};
 					page.sections = [...page.sections, newSection];
 					$sectionToEdit = newSection;
