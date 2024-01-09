@@ -6,6 +6,8 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
+	import sectionClipboard from '$lib/stores/sectionClipboard';
+	import { showSuccessMessage } from 'lib/services/toast';
 
 	export let section;
 	export let sectionItem;
@@ -472,5 +474,17 @@
 				/>
 			</div>
 		{/if}
+
+		<div class="_section">
+			<div class="mb-1 font-bold">Copy</div>
+			<div class="opacity-70 text-sm mb-3">Copy section to a different page or website</div>
+			<button
+				class="_small _secondary w-full flex justify-center items-center mr-2"
+				on:click={() => {
+					$sectionClipboard = JSON.stringify(section);
+					showSuccessMessage('Copied section. Click Insert→From Clipboard to paste.');
+				}}><FeatherIcon size="15" class="mr-2" name="copy" /> Copy Section</button
+			>
+		</div>
 	</div>
 {/if}
