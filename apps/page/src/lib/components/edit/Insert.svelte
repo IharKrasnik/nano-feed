@@ -187,7 +187,15 @@
 			<div
 				class="text-base py-4 cursor-pointer _section mt-4"
 				on:click={(section) => {
-					isPasteSectionModalOpen = true;
+					let newSection = {
+						id: uuidv4(),
+						columns: 1,
+						title: 'Hello World'
+					};
+					page.sections = [...page.sections, newSection];
+					$sectionToEdit = newSection;
+					$selectedTemplatePage = null;
+					$isInsertPopupShown = false;
 				}}
 			>
 				Add Empty Section
