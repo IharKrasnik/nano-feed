@@ -23,7 +23,7 @@
 				{#each section.items as faq}
 					<div class="flex justify-between py-2">
 						<div class="text-xl font-bold">
-							{faq.title}
+							{@html faq.title}
 						</div>
 						<div
 							class="cursor-pointer opacity-80 hover:opacity-100 transition"
