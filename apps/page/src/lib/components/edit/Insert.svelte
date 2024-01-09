@@ -183,7 +183,6 @@
 						{sampleSection.name}
 					</div>
 				{/each} -->
-
 			<div
 				class="text-base py-4 cursor-pointer _section mt-4"
 				on:click={(section) => {
