@@ -213,7 +213,7 @@
 
 		trackForm({ sectionId: sectionItem.id, text: sectionItem.callToActionText });
 
-		let submission = await post(`pages/${page.slug}/submissions`, { email: emailAddress });
+		let submission = await post(`pages/${page._id}/submissions`, { email: emailAddress });
 
 		if (page.actionUrl) {
 			setTimeout(() => {
