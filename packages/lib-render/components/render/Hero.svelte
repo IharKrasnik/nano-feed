@@ -312,16 +312,14 @@
 							<div class="py-4 mt-16">
 								<div
 									class="_social-proof _dense _small {hero.socialProof.className ||
-										''} flex justify-center w-full  {hero.demoUrl ||
+										''} flex justify-center  {(hero.demoUrl && !hero.theme?.isVertical) ||
 									(hero.theme?.isLeft && !hero.theme?.isVertical)
-										? 'sm:block'
-										: ''}"
+										? 'inline-flex'
+										: 'w-full'}"
 								>
-									<div class="flex">
-										{#each _.shuffle(hero.socialProof.logos).filter((l) => l.url) as logo}
-											<img class="rounded-full" src={logo.url} />
-										{/each}
-									</div>
+									{#each _.shuffle(hero.socialProof.logos).filter((l) => l.url) as logo}
+										<img class="rounded-full" src={logo.url} />
+									{/each}
 								</div>
 								<div class="text-sm mt-4 opacity-80 max-w-[400px]">
 									{@html hero.socialProof.title || ''}
@@ -392,13 +390,19 @@
 	._social-proof img {
 		width: 50px;
 		height: 50px;
-		margin-right: -20px;
 		border: 1px var(--text-color) solid;
 	}
 
 	._social-proof._small img {
 		width: 30px;
 		height: 30px;
+	}
+
+	._social-proof img:not(:last-child) {
+		margin-right: -20px;
+	}
+
+	._social-proof._small img:not(:last-child) {
 		margin-right: -10px;
 	}
 

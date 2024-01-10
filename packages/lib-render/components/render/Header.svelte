@@ -117,7 +117,12 @@
 			>
 				{#each (parentPage.links || []).filter((l) => !l.groupName && l.isShowInHeader) as link}
 					<a
-						href={`${link.url || `${isEdit ? pageUrl : ''}/${link.pageSlug || link.slug}`}`}
+						href={`${
+							(link.url && !link.url.startsWith('/')) ||
+							`${isEdit ? pageUrl : ''}${
+								link.pageSlug || link.slug ? `/${link.pageSlug || link.slug}` : link.url
+							}`
+						}`}
 						target={isEdit ? '_blank' : null}
 						data-sveltekit-preload-data={isEdit ? null : 'hover'}
 						on:click={() => {

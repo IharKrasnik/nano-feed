@@ -225,17 +225,17 @@
 
 		<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
 			<option value="grid">Default Grid Section</option>
-			<option value="pricing">Pricing</option>
-			<option value="testimonials">Testimonials</option>
-			<option value="carousel">Carousel Menu</option>
-			<option value="stepper">1-2-3 Stepper</option>
 			<option value="callout">Callout</option>
-			<option value="changelog">Changelog</option>
+			<option value="stepper">1-2-3 Stepper</option>
+			<option value="testimonials">Testimonials</option>
+			<option value="pricing">Pricing</option>
+			<option value="carousel">Carousel Menu</option>
 			<option value="faq">FAQ</option>
 			<option value="article">Article</option>
+			<option value="changelog">Changelog</option>
 			<option value="form">Form</option>
 			<option value="embedCode">HTML Code Embed</option>
-			<option value="service_chat">Service Chat</option>
+			<!-- <option value="service_chat">Service Chat</option> -->
 		</select>
 
 		{#if section.renderType === 'carousel'}
