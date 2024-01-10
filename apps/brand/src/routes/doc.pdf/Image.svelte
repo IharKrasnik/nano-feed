@@ -2,6 +2,7 @@
 	import _ from 'lodash';
 	import { lighten, darken, getLuminance } from 'lib/helpers/color';
 	import fileFonts from '$lib/stores/fileFonts';
+	import striptags from 'striptags';
 
 	export let page;
 
@@ -9,7 +10,7 @@
 	export let width = page.size?.width || 0;
 	export let height = page.size?.height || 0;
 
-	export let headerFont = 'Bowlby';
+	export let headerFont = 'Inter';
 	export let textFont = 'Inter';
 
 	let isHorizontal = page.size && page.size.width > page.size.height;
@@ -18,6 +19,13 @@
 		gaegu: {
 			title: [
 				{ fontSize: 120, lineHeight: 0.9, maxLength: 200 },
+				{ fontSize: 64, lineHeight: 1, maxLength: 1000 }
+			],
+			subtitle: [{ fontSize: 70, lineHeight: 0.9, maxLength: 1000 }]
+		},
+		inter: {
+			title: [
+				{ fontSize: 100, lineHeight: 1, maxLength: 200 },
 				{ fontSize: 64, lineHeight: 1, maxLength: 1000 }
 			],
 			subtitle: [{ fontSize: 70, lineHeight: 0.9, maxLength: 1000 }]
@@ -41,7 +49,7 @@
 	let getFontSize = (title) => {
 		let res;
 
-		_.each(fontsConfig[page.theme?.font || 'archivo'].title, (fontConfig) => {
+		_.each(fontsConfig[page.theme?.textFont.toLowerCase() || 'inter'].title, (fontConfig) => {
 			if (!res && title.length < fontConfig.maxLength) {
 				res = fontConfig;
 			}
@@ -53,7 +61,7 @@
 	let getSubtitleFontSize = (subtitle) => {
 		let res;
 
-		_.each(fontsConfig[page.theme?.font || 'archivo'].subtitle, (fontConfig) => {
+		_.each(fontsConfig[page.theme?.textFont.toLowerCase() || 'inter'].subtitle, (fontConfig) => {
 			if (!res && subtitle.length < fontConfig.maxLength) {
 				res = fontConfig;
 			}
@@ -110,13 +118,21 @@
 	let textFontName;
 
 	$: if (page.theme) {
-		let font = page.theme?.font
-			? $fileFonts.filter((f) => f.name === page.theme.font)[0]
+		let font = page.theme?.textFont
+			? $fileFonts.filter((f) => f.title === page.theme.textFont)[0]
 			: $fileFonts[0];
 
 		titleFontName = font.titleFont;
 		textFontName = font.textFont;
 	}
+	let pageTitle = striptags(
+		(page.heros && page.heros[0].title) ||
+			(page.parentPage?.heros && page.parentPage.heros[0].title) ||
+			page.title
+	);
+	let pageSubtitle = ''; //page.subtitle || page.heros[0].subtitle;
+	let pageName = page.parentPage ? page.parentPage.name : page.name;
+	let pageLogo = page.parentPage ? page.parentPage.logo : page.logo;
 </script>
 
 <!-- style="background-image: url(http://localhost:5173/backgrounds/gradient-7.svg)"> -->
@@ -151,10 +167,7 @@
 		<img src={bgUrl} class="absolute w-full h-full object-cover" style="z-index: -1;" />
 	{/if}
 
-	<div
-		class="og transition"
-		style=" background: url('https://i.stack.imgur.com/GySvQ.png'); background-color: {bgColor}; color: {textColor};"
-	>
+	<div class="og transition" style="background-color: {bgColor}; color: {textColor};">
 		<div class="flex justify-between items-center" style="width: {width}px;">
 			<div class="flex {isVertical ? 'flex-col' : 'flex-row'} justify-between items-center w-full">
 				<div
@@ -166,47 +179,45 @@
 						: `width: ${width}px; height: ${height}px;`}
 				>
 					<div class="flex flex-col items-start justify-center h-full w-full max-w-[95%] mx-auto">
-						<div
-							class="flex items-center justify-start {page.logo || page.name ? 'mb-[40px]' : ''}"
-						>
-							{#if page.logo}
-								{#if page.logo.startsWith('http') || page.logo.startsWith('//')}
-									<img style="width: 40px; margin-right: 20px" src={page.logo} />
+						<div class="flex items-center justify-start {pageLogo || pageName ? 'mb-[50px]' : ''}">
+							{#if pageLogo}
+								{#if pageLogo.startsWith('http') || pageLogo.startsWith('//')}
+									<img style="width: 40px; margin-right: 15px" src={pageLogo} />
 								{:else}
-									<div class="width: 60px; margin-right: 20px;">
-										{page.logo}
+									<div class="width: 60px; margin-right: 15px;">
+										{pageLogo}
 									</div>
 								{/if}
 							{/if}
 
-							{#if page.name}
+							{#if pageName}
 								<div
 									class="_title flex items-center font-bold opacity-90 shrink-0 mb-0"
 									style="font-size: 32px; color: {textColor}; max-width: 95%; margin-left: 20px; margin-bottom: 0;"
 								>
-									{page.name}
+									{pageName}
 								</div>
 							{/if}
 						</div>
 
-						{#if page.title}
+						{#if pageTitle}
 							<div
-								class="flex flex-col _title {page.subtitle ? 'mb-[40px]' : ''}"
-								style="font-family: {titleFontName}; {getFontSize(page.title)};"
+								class="flex flex-col _title {pageSubtitle ? 'mb-[40px]' : ''}"
+								style="font-family: {titleFontName}; {getFontSize(pageTitle)};"
 							>
-								{page.title}
+								{pageTitle}
 							</div>
 						{/if}
 
-						{#if page.subtitle}
+						{#if pageSubtitle}
 							<div
 								class="flex flex-col"
-								style="margin-top: 40px; {getSubtitleFontSize(page.subtitle)}"
+								style="margin-top: 40px; {getSubtitleFontSize(pageSubtitle)}"
 							>
 								{#if isPreview}
-									{@html page.subtitle.replace(/\n/g, '<br/>')}
+									{@html pageSubtitle.replace(/\n/g, '<br/>')}
 								{:else}
-									{page.subtitle.replace(/\n/g, '<br/>')}
+									{pageSubtitle.replace(/\n/g, '<br/>')}
 								{/if}
 							</div>
 						{/if}

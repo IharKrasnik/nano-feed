@@ -16,7 +16,7 @@ export const GET = async ({ url }) => {
 	let page;
 
 	if (pageId) {
-		page = await get(`pages/${pageId}`);
+		page = await get(`pages/${pageId}`, { isId: true });
 		delete page.subtitle;
 		page.size = {
 			width: 1200,

@@ -117,18 +117,6 @@
 								{page.logo}
 							{/if}
 						{/if}
-						{#if page.name}
-							<div
-								class="_title flex items-center font-bold opacity-90 shrink-0 {isVertical
-									? 'justify-center w-full'
-									: ''}"
-								style="font-size: 32px; color: {textColor}; max-width: 95%; {isVertical
-									? 'text-align: center; margin: 0 auto;'
-									: 'text-align: left;'};"
-							>
-								{page.name}
-							</div>
-						{/if}
 					</div>
 
 					{#if page.title}

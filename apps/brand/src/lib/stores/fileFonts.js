@@ -8,6 +8,12 @@ const fileFontsStore = writable([
 		textFont: 'Inter'
 	},
 	{
+		name: 'inter',
+		title: 'Inter',
+		titleFont: 'Inter',
+		textFont: 'Inter'
+	},
+	{
 		name: 'archivo',
 		title: 'Archivo',
 		titleFont: 'Archivo',
