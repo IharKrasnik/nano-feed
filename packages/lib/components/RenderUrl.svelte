@@ -190,6 +190,7 @@
 						src={url}
 						id="mmntm-{id}"
 						bind:this={iframeEl}
+						allow="clipboard-read; clipboard-write"
 						class="mmntm-iframe w-full {imgClass} {imgClass.includes('h-')
 							? ''
 							: 'overflow-y-auto min-h-[600px]'}"
