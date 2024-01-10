@@ -186,22 +186,51 @@
 				{/if}
 
 				{#if sectionItem.id !== section.id && section.columns > 1}
-					<div class="flex">
-						<div class="my-2">
-							<input class="" type="checkbox" bind:checked={sectionItem.theme.isHugeTitle} /> Huge Title
+					<div class="_section">
+						<ToggleGroup
+							class="mb-2"
+							bind:value={sectionItem.renderType}
+							tabs={[
+								{
+									key: '',
+									name: 'Default'
+								},
+								{
+									key: 'testimonial',
+									name: 'Testimonial'
+								}
+							]}
+						/>
+						<div class="flex">
+							<div class="my-2">
+								<input
+									class=""
+									disabled={sectionItem.renderType}
+									type="checkbox"
+									bind:checked={sectionItem.theme.isHugeTitle}
+								/> Huge Title
+							</div>
+
+							<div class="ml-2 my-2">
+								<input
+									class=""
+									disabled={sectionItem.renderType}
+									type="checkbox"
+									bind:checked={sectionItem.theme.isInlineTitle}
+								/> Inline Title
+							</div>
 						</div>
 
-						<div class="ml-2 my-2">
-							<input class="" type="checkbox" bind:checked={sectionItem.theme.isInlineTitle} /> Inline
-							Title
-						</div>
+						{#if sectionItem.emoji}
+							<div class="my-2">
+								<input
+									type="checkbox"
+									disabled={sectionItem.renderType}
+									bind:checked={sectionItem.theme.isIconLeft}
+								/> Show Icon Near Title
+							</div>
+						{/if}
 					</div>
-
-					{#if sectionItem.emoji}
-						<div class="my-2">
-							<input type="checkbox" bind:checked={sectionItem.theme.isIconLeft} /> Show Icon Near Title
-						</div>
-					{/if}
 				{/if}
 
 				{#if section.id === sectionItem.id && section.renderType !== 'callout'}

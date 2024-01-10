@@ -1158,200 +1158,235 @@
 														>
 															<div class="max-w-[600px]">
 																{#if item.title || item.emoji}
-																	{#if item.emoji && !item.theme?.isIconLeft}
-																		<div
-																			class="{emojiStyle[section.columns]} _section-img mr-2 mb-4"
-																		>
+																	{#if item.renderType === 'testimonial'}
+																		<div class="flex items-center mb-3">
 																			<Emoji
 																				bind:emoji={item.emoji}
 																				bind:color={item.iconColor}
 																				bind:bgColor={item.emojiBgColor}
-																				width={30}
+																				class="rounded-full mr-2"
+																				width={48}
 																				theme={page.parentPage?.theme?.theme ||
 																					page?.theme?.theme ||
 																					'light'}
 																			/>
-																		</div>
-																	{/if}
-
-																	{#if !item.theme?.isInlineTitle}
-																		<div
-																			class="flex {item.description
-																				? page?.theme?.containerWidth
-																					? 'mb-2'
-																					: 'mb-4'
-																				: ''} {section.columns < 3
-																				? 'flex-col items-start'
-																				: 'items-center'}"
-																		>
-																			{#if item.emoji && item.theme?.isIconLeft}
-																				<div
-																					class="{emojiStyle[
-																						section.columns
-																					]} flex _section-img mr-2"
-																				>
-																					<Emoji
-																						bind:emoji={item.emoji}
-																						bind:color={item.iconColor}
-																						bind:bgColor={item.emojiBgColor}
-																						width={25}
-																						theme={page.parentPage?.theme?.theme ||
-																							page?.theme?.theme ||
-																							'light'}
+																			<div>
+																				<h2 class="_item-description" style="font-weight: bold;">
+																					<ContentEditableIf
+																						class=""
+																						bind:innerHTML={item.title}
+																						condition={isEdit}
 																					/>
-																				</div>
-																			{/if}
-																			<h2
-																				class="{headerTextStyle(item)[section.columns]} _item-title"
-																			>
-																				<ContentEditableIf
-																					class=""
-																					bind:innerHTML={item.title}
-																					condition={isEdit}
-																				/>
-																			</h2>
+																				</h2>
+																				{#if item.label}
+																					<div class="opacity-70 _item-description">
+																						<ContentEditableIf
+																							class=""
+																							bind:innerHTML={item.label}
+																							condition={isEdit}
+																						/>
+																					</div>
+																				{/if}
+																			</div>
 																		</div>
-																	{/if}
-																{/if}
-
-																{#if isShowAuthor}
-																	<div>
-																		<ArticleAuthorLabel
-																			isWithAuthor={false}
-																			class="my-2"
-																			bind:page
-																		/>
-																	</div>
-																{/if}
-
-																{#if item.description && !item.pricing}
-																	<h3
-																		class="{descriptionStyle[
-																			section.columns
-																		]} _item-description whitespace-pre-wrap "
-																	>
-																		{#if item.title && item.theme?.isInlineTitle}
-																			{#if item.emoji && item.theme.isIconLeft}
+																	{:else}
+																		{#if item.emoji && !item.theme?.isIconLeft}
+																			<div
+																				class="{emojiStyle[section.columns]} _section-img mr-2 mb-4"
+																			>
 																				<Emoji
-																					width={16}
 																					bind:emoji={item.emoji}
 																					bind:color={item.iconColor}
 																					bind:bgColor={item.emojiBgColor}
-																					class="sm:inline mb-1 sm:mb-0"
+																					width={30}
 																					theme={page.parentPage?.theme?.theme ||
 																						page?.theme?.theme ||
 																						'light'}
-																				/>{/if}<ContentEditableIf
-																				class="_inline_title sm:inline mb-1 sm:mb-0 font-medium"
-																				style="color: {page.theme?.theme === 'dark'
-																					? '#ffffff'
-																					: '#111111'};"
-																				bind:innerHTML={item.title}
-																				condition={isEdit}
-																			/><span class="hidden sm:inline">&nbsp;</span
-																			>{/if}<ContentEditableIf
-																			class="sm:inline inline {section.isDatabase
-																				? '_line-clamp-4 hover:line-clamp-5'
-																				: ''}"
-																			bind:innerHTML={item.description}
-																			condition={isEdit}
-																		/>
-																	</h3>
-																{/if}
-
-																{#if item.tagsStr}
-																	<div class="my-4 mt-6 flex flex-wrap gap-2">
-																		{#each item.tagsStr.split(',') as tag}
-																			<div
-																				class="flex items-center px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-1 {getEmojiTheme(
-																					{ item }
-																				) === 'dark'
-																					? 'ring-zinc-700'
-																					: 'ring-zinc-200'} bg-black"
-																				style={page.parentPage?.theme?.theme ||
-																				page.theme?.theme === 'dark'
-																					? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
-																					: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
-																			>
-																				{#if !section.isDatabase}
-																					{#key item.theme}
-																						<Emoji
-																							class="block mr-2"
-																							theme={getEmojiTheme({ item })}
-																							width={14}
-																							emoji={item.emoji || 'feather:check'}
-																						/>
-																					{/key}
-																				{/if}
-																				{tag}
-																			</div>
-																		{/each}
-																	</div>
-																{/if}
-
-																{#if item.pricing}
-																	<div class="flex items-end mt-4 mb-4">
-																		<div class="text-5xl font-bold mr-2">
-																			{item.pricing.amount
-																				? toDollars(item.pricing.amount * 100)
-																				: 'Free'}
-																		</div>
-																		{#if item.pricing.amount}
-																			<div class="text-lg">
-																				/{item.pricing.per}
+																				/>
 																			</div>
 																		{/if}
-																	</div>
-																	<div class="mb-8 opacity-70">
-																		{@html item.description}
-																	</div>
 
-																	{#if item.pricing.benefitsStr}
-																		<div class="mb-4">
-																			{#each item.pricing.benefitsStr.split('\n') as benefit}
-																				<div class="my-2 flex items-center">
+																		{#if !item.theme?.isInlineTitle}
+																			<div
+																				class="flex {item.description
+																					? page?.theme?.containerWidth
+																						? 'mb-2'
+																						: 'mb-4'
+																					: ''} {section.columns < 3
+																					? 'flex-col items-start'
+																					: 'items-center'}"
+																			>
+																				{#if item.emoji && item.theme?.isIconLeft}
+																					<div
+																						class="{emojiStyle[
+																							section.columns
+																						]} flex _section-img mr-2"
+																					>
+																						<Emoji
+																							bind:emoji={item.emoji}
+																							bind:color={item.iconColor}
+																							bind:bgColor={item.emojiBgColor}
+																							width={25}
+																							theme={page.parentPage?.theme?.theme ||
+																								page?.theme?.theme ||
+																								'light'}
+																						/>
+																					</div>
+																				{/if}
+																				<h2
+																					class="{headerTextStyle(item)[
+																						section.columns
+																					]} _item-title"
+																				>
+																					<ContentEditableIf
+																						class=""
+																						bind:innerHTML={item.title}
+																						condition={isEdit}
+																					/>
+																				</h2>
+																			</div>
+																		{/if}
+																	{/if}
+
+																	{#if isShowAuthor}
+																		<div>
+																			<ArticleAuthorLabel
+																				isWithAuthor={false}
+																				class="my-2"
+																				bind:page
+																			/>
+																		</div>
+																	{/if}
+
+																	{#if item.description && !item.pricing}
+																		<h3
+																			class="{descriptionStyle[
+																				section.columns
+																			]} _item-description whitespace-pre-wrap "
+																		>
+																			{#if item.title && item.theme?.isInlineTitle}
+																				{#if item.emoji && item.theme.isIconLeft}
 																					<Emoji
+																						width={16}
+																						bind:emoji={item.emoji}
+																						bind:color={item.iconColor}
+																						bind:bgColor={item.emojiBgColor}
+																						class="sm:inline mb-1 sm:mb-0"
 																						theme={page.parentPage?.theme?.theme ||
 																							page?.theme?.theme ||
 																							'light'}
-																						emoji={section.benefitsEmoji || '✅'}
-																						class="mr-2 opacity-70"
-																					/>
-																					{benefit}
-																				</div>
-																			{/each}
-																		</div>
-																	{:else if item.pricing.benefits}
-																		<div class="mb-4">
-																			{#each item.pricing.benefits as benefit}
-																				<div class="my-2">
-																					<span class="inline-block mr-1">✅</span>
-																					{benefit.name}
+																					/>{/if}<ContentEditableIf
+																					class="_inline_title sm:inline mb-1 sm:mb-0 font-medium"
+																					style="color: {page.theme?.theme === 'dark'
+																						? '#ffffff'
+																						: '#111111'};"
+																					bind:innerHTML={item.title}
+																					condition={isEdit}
+																				/><span class="hidden sm:inline">&nbsp;</span
+																				>{/if}<ContentEditableIf
+																				class="sm:inline inline {section.isDatabase
+																					? '_line-clamp-4 hover:line-clamp-5'
+																					: ''}"
+																				bind:innerHTML={item.description}
+																				condition={isEdit}
+																			/>
+																		</h3>
+																	{/if}
+
+																	{#if item.tagsStr}
+																		<div class="my-4 mt-6 flex flex-wrap gap-2">
+																			{#each item.tagsStr.split(',') as tag}
+																				<div
+																					class="flex items-center px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-1 {getEmojiTheme(
+																						{ item }
+																					) === 'dark'
+																						? 'ring-zinc-700'
+																						: 'ring-zinc-200'} bg-black"
+																					style={page.parentPage?.theme?.theme ||
+																					page.theme?.theme === 'dark'
+																						? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
+																						: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
+																				>
+																					{#if !section.isDatabase}
+																						{#key item.theme}
+																							<Emoji
+																								class="block mr-2"
+																								theme={getEmojiTheme({ item })}
+																								width={14}
+																								emoji={item.emoji || 'feather:check'}
+																							/>
+																						{/key}
+																					{/if}
+																					{tag}
 																				</div>
 																			{/each}
 																		</div>
 																	{/if}
-																{/if}
 
-																{#if item.interactiveRenderType}
-																	<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
-																		<RenderInteractiveOptions
-																			class={`${
-																				section.columns === 1 &&
-																				(section.interactiveRenderType === 'single_choice' ||
-																					section.interactiveRenderType === 'multiple_choice')
-																					? 'justify-center'
-																					: 'justify-start'
-																			} ${item.pricing ? 'w-full' : ''}`}
-																			size={item.pricing ? 'large' : 'normal'}
-																			bind:sectionItem={item}
-																			parentSectionId={section.id}
-																			bind:page
-																			itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-																			bind:isEdit
-																			bind:isEmbed
-																		/>
-																	</div>
+																	{#if item.pricing}
+																		<div class="flex items-end mt-4 mb-4">
+																			<div class="text-5xl font-bold mr-2">
+																				{item.pricing.amount
+																					? toDollars(item.pricing.amount * 100)
+																					: 'Free'}
+																			</div>
+																			{#if item.pricing.amount}
+																				<div class="text-lg">
+																					/{item.pricing.per}
+																				</div>
+																			{/if}
+																		</div>
+																		<div class="mb-8 opacity-70">
+																			{@html item.description}
+																		</div>
+
+																		{#if item.pricing.benefitsStr}
+																			<div class="mb-4">
+																				{#each item.pricing.benefitsStr.split('\n') as benefit}
+																					<div class="my-2 flex items-center">
+																						<Emoji
+																							theme={page.parentPage?.theme?.theme ||
+																								page?.theme?.theme ||
+																								'light'}
+																							emoji={section.benefitsEmoji || '✅'}
+																							class="mr-2 opacity-70"
+																						/>
+																						{benefit}
+																					</div>
+																				{/each}
+																			</div>
+																		{:else if item.pricing.benefits}
+																			<div class="mb-4">
+																				{#each item.pricing.benefits as benefit}
+																					<div class="my-2">
+																						<span class="inline-block mr-1">✅</span>
+																						{benefit.name}
+																					</div>
+																				{/each}
+																			</div>
+																		{/if}
+																	{/if}
+
+																	{#if item.interactiveRenderType}
+																		<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
+																			<RenderInteractiveOptions
+																				class={`${
+																					section.columns === 1 &&
+																					(section.interactiveRenderType === 'single_choice' ||
+																						section.interactiveRenderType === 'multiple_choice')
+																						? 'justify-center'
+																						: 'justify-start'
+																				} ${item.pricing ? 'w-full' : ''}`}
+																				size={item.pricing ? 'large' : 'normal'}
+																				bind:sectionItem={item}
+																				parentSectionId={section.id}
+																				bind:page
+																				itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																				bind:isEdit
+																				bind:isEmbed
+																			/>
+																		</div>
+																	{/if}
 																{/if}
 															</div>
 														</div>

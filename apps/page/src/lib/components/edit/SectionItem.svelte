@@ -180,6 +180,12 @@
 				</div>
 			{/if}
 		</div>
+
+		<div class="mb-4">
+			{#if item.renderType === 'testimonial'}
+				<input bind:value={item.label} type="text" class="w-full" placeholder="CEO, Some Company" />
+			{/if}
+		</div>
 	{/if}
 
 	{#if section.renderType === 'pricing' && item.pricing}
