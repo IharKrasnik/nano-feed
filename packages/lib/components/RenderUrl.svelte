@@ -87,6 +87,8 @@
 
 		return query[param];
 	};
+
+	let iframeEl;
 </script>
 
 <div class="h-[600px] hidden" />
@@ -187,11 +189,12 @@
 					<iframe
 						src={url}
 						id="mmntm-{id}"
+						bind:this={iframeEl}
 						class="mmntm-iframe w-full {imgClass} {imgClass.includes('h-')
 							? ''
 							: 'overflow-y-auto min-h-[600px]'}"
 						on:load={() => {
-							iFrameResize({}, `#mmntm-${id}`);
+							iFrameResize({}, iframeEl);
 						}}
 						style="border:none;"
 					/>
