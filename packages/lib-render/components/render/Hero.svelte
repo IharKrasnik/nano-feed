@@ -317,7 +317,7 @@
 										? 'inline-flex'
 										: 'w-full'}"
 								>
-									{#each _.shuffle(hero.socialProof.logos).filter((l) => l.url) as logo}
+									{#each (isEdit ? hero.socialProof.logos : _.shuffle(hero.socialProof.logos)).filter((l) => l.url) as logo}
 										<img class="rounded-full" src={logo.url} />
 									{/each}
 								</div>
