@@ -348,7 +348,7 @@
 			{/if}
 
 			{#if !parentPage.streams?.portfolio}
-				<option value="{parentPage.slug}-blog">Portfolio</option>
+				<option value="{parentPage.slug}-portfolio">Portfolio</option>
 			{/if}
 
 			<option value="_new">New Database</option>
