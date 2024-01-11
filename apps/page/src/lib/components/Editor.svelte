@@ -1231,7 +1231,7 @@
 																class:_selected={!page.parentPage}
 																on:click={() =>
 																	setPageAndDraft(
-																		$allPages.find((p) => (page.parentPage || page)._id)
+																		$allPages.find((p) => (page.parentPage || page)._id === p._id)
 																	)}
 															>
 																<div class="font-bold">{(page.parentPage || page).name}</div>
