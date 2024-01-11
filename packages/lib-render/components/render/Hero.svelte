@@ -307,7 +307,6 @@
 								{page}
 							/>
 						{/if}
-
 						{#if isMounted && hero.socialProof}
 							<div class="py-4 mt-16">
 								<div
