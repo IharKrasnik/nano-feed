@@ -891,7 +891,37 @@
 			<div class="2xl:absolute w-full flex items-center justify-center">
 				{#if $currentUser}
 					{#if $allPages}
-						<div />
+						<div class="flex h-full items-center">
+							<div class="mr-2 flex items-center">
+								<div>
+									<EmojiPicker bind:icon={page.logo} />
+								</div>
+							</div>
+
+							<select
+								class="w-full bg-[#f1f1f1]"
+								bind:value={pageSlug}
+								on:change={(evt) => {
+									let slug = evt.target.value;
+
+									if (slug === '_new') {
+										setPageAndDraft({ ...defaultPage });
+										// page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
+										// pageSlug = page.slug;
+									} else {
+										setPageAndDraft({
+											..._.cloneDeep($allPages.find((p) => p.slug === evt.target.value))
+										});
+										// refreshData();
+									}
+								}}
+							>
+								<option value="_new">📄 Create Website</option>
+								{#each $allPages as page}
+									<option value={page.slug}>{page.name}</option>
+								{/each}
+							</select>
+						</div>
 					{:else}
 						<Loader />
 					{/if}
@@ -1052,42 +1082,8 @@
 										<div>
 											{#if $selectedTab === 'editor' && page.name && !$sectionToEdit}
 												{#if page._id}
-													<div class="flex items-center mb-4">
-														<div class="mr-2 flex items-center">
-															<div>
-																<EmojiPicker bind:icon={page.logo} />
-															</div>
-														</div>
-
-														<select
-															class="w-full bg-[#f1f1f1]"
-															bind:value={pageSlug}
-															on:change={(evt) => {
-																let slug = evt.target.value;
-
-																if (slug === '_new') {
-																	setPageAndDraft({ ...defaultPage });
-																	// page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
-																	// pageSlug = page.slug;
-																} else {
-																	setPageAndDraft({
-																		..._.cloneDeep(
-																			$allPages.find((p) => p.slug === evt.target.value)
-																		)
-																	});
-																	// refreshData();
-																}
-															}}
-														>
-															<option value="_new">📄 Create Website</option>
-															{#each $allPages as page}
-																<option value={page.slug}>{page.name}</option>
-															{/each}
-														</select>
-													</div>
-
 													<ToggleGroup
-														class="my-4"
+														class="mb-4"
 														tabs={[
 															{
 																key: 'pages',
