@@ -515,5 +515,24 @@
 				}}><FeatherIcon size="15" class="mr-2" name="copy" /> Copy Section</button
 			>
 		</div>
+
+		<div class="_section">
+			<div class="mb-1 font-bold">Visibility</div>
+			<div class="opacity-70 text-sm mb-3">Hide and show sections</div>
+
+			<ToggleGroup
+				bind:value={sectionItem.isHidden}
+				tabs={[
+					{
+						key: false,
+						name: 'visible'
+					},
+					{
+						key: true,
+						name: 'hidden'
+					}
+				]}
+			/>
+		</div>
 	</div>
 {/if}

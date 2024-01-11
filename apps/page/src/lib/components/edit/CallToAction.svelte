@@ -17,7 +17,6 @@
 	import loginWithGoogle from 'lib/helpers/loginWithGoogle';
 	import striptags from 'striptags';
 
-	import EditSection from '$lib/components/edit/Section.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditPricing from '$lib/components/edit/Pricing.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
