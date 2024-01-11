@@ -834,7 +834,6 @@
 												</div>
 											</div>
 										{/if}
-
 										<div
 											class="{section.renderType === 'changelog'
 												? 'col-span-12'
