@@ -52,6 +52,7 @@
 	import pageDraft from 'lib-render/stores/pageDraft';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import aboveTheFoldEl from 'lib-render/stores/aboveTheFoldEl';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
@@ -273,6 +274,16 @@
 							/>
 
 							{#if hero.bgImageUrl}
+								<ToggleGroup
+									class="my-2"
+									tabs={[
+										{ key: '', name: 'cover' },
+										{ key: 'contain', name: 'contain' },
+										{ key: 'none', name: 'none' }
+									]}
+									bind:value={hero.theme.bgImageObjectFit}
+								/>
+
 								<div class="flex text-sm mt-4 font-normal items-center">
 									<input
 										bind:checked={hero.theme.isNotBgImageDimmed}

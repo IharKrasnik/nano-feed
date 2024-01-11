@@ -103,10 +103,12 @@
 					? 'w-full'
 					: 'w-screen'} h-full opacity-90 overflow-hidden z-0"
 				isAutoplay={!isEdit}
-				imgClass="{isEdit ? 'w-full' : 'w-screen'} h-full {isEdit
-					? 'object-cover'
-					: 'object-contain'}
-		 overflow-hidden"
+				imgClass="{isEdit ? 'w-full' : 'w-screen'} h-full {hero.theme?.bgImageObjectFit ===
+				'contain'
+					? 'object-contain'
+					: hero.theme?.bgImageObjectFit === 'none'
+					? 'object-none'
+					: 'object-cover'} overflow-hidden"
 				url={hero.bgImageUrl}
 			/>
 		{/if}
