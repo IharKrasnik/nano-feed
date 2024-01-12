@@ -451,7 +451,7 @@
 					{/if}
 				</a>
 
-				{#if sectionItem.interactiveRenderType === 'links'}
+				{#if sectionItem.interactiveRenderType === 'links' && !isHeader}
 					<a
 						class="shrink-0 w-full sm:w-auto cursor-pointer {url2Class} {sectionItem.isUrl2Link
 							? '_link'
