@@ -30,11 +30,14 @@
 			$sveltePage.data.pageSlug &&
 			$sveltePage.data.pageSlug !== prevSlug) ||
 		(!$sveltePage.params.feedItemSlug &&
+			!$sveltePage.params.articleSlug &&
 			$sveltePage.params.subPageSlug &&
 			$sveltePage.params.subPageSlug !== prevSlug) ||
-		($sveltePage.params.feedItemSlug && $sveltePage.params.feedItemSlug !== prevSlug)
+		($sveltePage.params.feedItemSlug && $sveltePage.params.feedItemSlug !== prevSlug) ||
+		($sveltePage.params.articleSlug && $sveltePage.params.articleSlug !== prevSlug)
 	) {
 		prevSlug =
+			$sveltePage.params.articleSlug ||
 			$sveltePage.params.feedItemSlug ||
 			$sveltePage.params.subPageSlug ||
 			$sveltePage.data.pageSlug;
