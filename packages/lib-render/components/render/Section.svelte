@@ -311,7 +311,7 @@
 
 {#if section.isShown}
 	<div
-		class="relative {section.bgImageUrl ? 'p-8 my-16' : ''} {section.renderType === 'callout'
+		class="relative {section.bgImageUrl ? 'p-8' : ''} {section.renderType === 'callout'
 			? 'min-h-screen sm:min-h-min'
 			: ''} {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
