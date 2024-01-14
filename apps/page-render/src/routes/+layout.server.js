@@ -42,10 +42,12 @@ export async function load({ url, params, session, cookies }) {
 			page: {
 				renderType: 'service_chat',
 				parentPage,
+
 				theme: {},
 				heros: [],
 				sections: []
 			},
+
 			ogTitle: 'Service Request',
 			ogDescription: 'Chat on your request',
 			ogImage: ''
