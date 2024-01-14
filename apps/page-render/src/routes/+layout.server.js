@@ -104,5 +104,7 @@ export async function load({ url, params, session, cookies }) {
 
 	let authData = await authServerGuard({ url, params, session, cookies }, 'Momentum IDE');
 
+	console.log('extend.page', extend.page);
+
 	return { ...authData, ...extend, pageSlug };
 }
