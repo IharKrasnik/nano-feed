@@ -43,6 +43,14 @@
 		isFile = false;
 	}
 
+	let createUrl = () => {
+		try {
+			return new URL(url);
+		} catch (err) {
+			console.log('Invalid URL', url);
+		}
+	};
+
 	let id = uuidv4();
 
 	let isMounted;
@@ -50,7 +58,6 @@
 
 	onMount(() => {
 		window.iFrameResize = iFrameResize;
-
 		setTimeout(
 			() => {
 				isMounted = true;
@@ -112,7 +119,7 @@
 						loading="lazy"
 						class="w-full lazyload {imgClass}"
 						style="aspect-ratio: 536/300;"
-						data-src="https://www.youtube.com/embed/{new URL(url).searchParams.get('v') ||
+						data-src="https://www.youtube.com/embed/{createUrl()?.searchParams.get('v') ||
 							url.replace('https://youtu.be', '')}?rel=0{isAutoplay
 							? '&autoplay=1&mute=1&controls=0'
 							: ''}"
@@ -142,7 +149,7 @@
 			{:else if url.includes('vimeo.com')}
 				{#if !isFilesOnly}
 					<iframe
-						data-src="https://player.vimeo.com/video/{new URL(url).pathname.replace('/', '')}"
+						data-src="https://player.vimeo.com/video/{createUrl()?.pathname.replace('/', '')}"
 						class="w-full aspect-video lazyload {imgClass}"
 						frameborder="0"
 						allow="autoplay; fullscreen; picture-in-picture"
