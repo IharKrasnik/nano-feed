@@ -25,7 +25,7 @@
 				<div class="min-w-[300px]">
 					{#each $submissionsOutbound as submission}
 						<a class="_section-item block p-4 mb-4 w-full" href="/app/requests/{submission._id}"
-							>{submission.vars.Message}</a
+							>{submission.vars.Message || submission.page?.name || ''}</a
 						>
 					{/each}
 				</div>
