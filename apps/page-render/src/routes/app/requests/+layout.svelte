@@ -10,15 +10,3 @@
 		refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
 	}
 </script>
-
-{#if $currentCustomer?._id}
-	{#if $submissionsOutbound?.length}
-		{#each $submissionsOutbound as submission}
-			{submission.message}
-		{/each}
-	{:else}
-		You don't have any service requests yet
-	{/if}
-{:else}
-	<button>Login</button>
-{/if}

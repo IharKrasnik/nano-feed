@@ -11,6 +11,7 @@
 	}
 </script>
 
+<!-- 
 {#if $currentCustomer?._id}
 	{#if $submissionsOutbound?.length}
 		{#each $submissionsOutbound as submission}
@@ -21,4 +22,4 @@
 	{/if}
 {:else}
 	<button>Login</button>
-{/if}
+{/if} -->
