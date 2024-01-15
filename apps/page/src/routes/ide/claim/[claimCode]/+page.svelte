@@ -6,6 +6,9 @@
 	import { get, post } from 'lib/api';
 	import { page as sveltePage } from '$app/stores';
 	import { getGoogleLoginUrl } from 'lib/env';
+	import { goto } from '$app/navigation';
+	import allPages from 'lib-render/stores/allPages';
+	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	let isClaimed = false;
 	let getPage = async () => {
@@ -15,9 +18,14 @@
 	};
 
 	let claimPage = async () => {
-		let result = await post(`claimCodes/claim?pageId=${$pageToClaim._id}`, {
+		let { page } = await post(`claimCodes/claim?pageId=${$pageToClaim._id}`, {
 			code: $sveltePage.params.claimCode
 		});
+
+		$allPages = [page, ...$allPages];
+		showSuccessMessage(`Page ${page.name} was claimed`);
+
+		goto('/ide');
 	};
 
 	getPage();
