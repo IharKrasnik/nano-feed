@@ -176,7 +176,7 @@
 						{/if}
 
 						<div class="content bg-cta-stronger color-accent">
-							{message.messageHTML}
+							{@html message.messageHTML}
 						</div>
 						{#if isMyMessage(message)}
 							<img

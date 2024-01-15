@@ -13,7 +13,7 @@
 	if ($currentCustomer._id) {
 		refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
 	}
-	let submissionId = $sveltePage.params.serviceRequestId;
+	let submissionId = $sveltePage.params.requestId;
 </script>
 
 <div class="py-[100px] mb-[200px]">
@@ -28,11 +28,11 @@
 					>
 				{/each}
 			</div>
-			{#key $sveltePage.params.serviceRequestId}
+			{#key $sveltePage.params.requestId}
 				<RenderServiceChat
 					class="w-[600px] mx-16"
 					{page}
-					submissionId={$sveltePage.params.serviceRequestId}
+					submissionId={$sveltePage.params.requestId}
 				/>
 			{/key}
 		</div>
