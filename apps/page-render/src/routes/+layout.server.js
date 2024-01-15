@@ -33,25 +33,42 @@ export async function load({ url, params, session, cookies }) {
 	//
 	let extend = {};
 
-	if (url.href.includes('app/requests')) {
+	if (url.href.includes('app')) {
 		let parentPage = await get(`pages/bySlug`, {
 			slug: pageSlug
 		});
 
-		extend = {
-			page: {
-				renderType: 'service_chat',
-				parentPage,
+		if (url.href.includes('/requests')) {
+			extend = {
+				page: {
+					renderType: 'service_chat',
+					parentPage,
 
-				theme: {},
-				heros: [],
-				sections: []
-			},
+					theme: {},
+					heros: [],
+					sections: []
+				},
 
-			ogTitle: 'Service Request',
-			ogDescription: 'Chat on your request',
-			ogImage: ''
-		};
+				ogTitle: 'Service Request',
+				ogDescription: 'Chat on your request',
+				ogImage: ''
+			};
+		} else if (url.href.includes('/profile')) {
+			extend = {
+				page: {
+					renderType: 'edit_profile',
+					parentPage,
+
+					theme: {},
+					heros: [],
+					sections: []
+				},
+
+				ogTitle: 'Profile',
+				ogDescription: 'Edit your user profile',
+				ogImage: ''
+			};
+		}
 	} else if (pageSlug && pageSlug !== 'templates') {
 		let page;
 
