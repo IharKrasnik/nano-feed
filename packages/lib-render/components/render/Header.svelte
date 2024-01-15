@@ -221,7 +221,7 @@
 			</div>
 		</div>
 
-		{#if $currentCustomer._id}
+		{#if $currentCustomer._id && !isEdit}
 			<div class="ml-4 border border-accent rounded-full">
 				<img src={$currentCustomer.avatarUrl} class="w-[34px] h-[34px] rounded-full" />
 			</div>
