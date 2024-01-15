@@ -30,13 +30,25 @@
 	let isShowLoginCode = false;
 	let loginCode = '';
 
+	let loginCustomer = async () => {
+		let { customer, token } = await post(
+			`customers/auth?pageId=${page._id || page.parentPage?._id}`,
+			{
+				email: $currentCustomer.email,
+				loginCode
+			}
+		);
+		$currentCustomer = customer;
+		Cookies.set('customer_access_token', token);
+	};
+
 	let submitForm = async () => {
 		if (
 			(section.isAuthRequired || section.actionType === 'service_chat') &&
 			!$currentCustomer._id &&
 			!loginCode
 		) {
-			await post(`customers/auth/login-token?pageId=${page._id}`, {
+			await post(`customers/auth/login-token?pageId=${page._id || page.parentPage?._id}`, {
 				email: $currentCustomer.email
 			});
 			isShowLoginCode = true;
@@ -53,24 +65,26 @@
 			}
 		});
 
-		if (handleSubmit) {
-			await handleSubmit({ postData });
-		} else {
-			trackForm({ sectionId: section.id, text: section.title || section.description });
+		if (section.isAuthRequired && section.items.length === 1) {
+			await loginCustomer();
 
+			if (section.onSubmitted) {
+				section.onSubmitted();
+			}
+		} else {
 			if (
 				(section.isAuthRequired || section.actionType === 'service_chat') &&
 				!$currentCustomer._id
 			) {
-				let { customer, token } = await post(`customers/auth?pageId=${page._id}`, {
-					email: postData.email,
-					loginCode
-				});
-				$currentCustomer = customer;
-				Cookies.set('customer_access_token', token);
+				await loginCustomer();
 			}
 
-			let submission = await post(`pages/${page._id}/submissions`, postData);
+			trackForm({ sectionId: section.id, text: section.title || section.description });
+
+			let submission = await post(
+				`pages/${page._id || page.parentPage?._id}/submissions`,
+				postData
+			);
 
 			$submissionsOutbound = [submission, ...$submissionsOutbound];
 

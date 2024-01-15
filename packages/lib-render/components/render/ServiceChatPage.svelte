@@ -16,11 +16,11 @@
 	let submissionId = $sveltePage.params.serviceRequestId;
 </script>
 
-<div class="py-[100px]">
+<div class="py-[100px] mb-[200px]">
 	<RenderSection {page} section={{ id: 'servicerequests', title: 'Service Requests' }} />
 
 	{#if $currentCustomer._id}
-		<div class="flex  justify-center w-full">
+		<div class="flex justify-center w-full">
 			<div class="min-w-[300px]">
 				{#each $submissionsOutbound as submission}
 					<a
@@ -39,7 +39,12 @@
 		</div>
 	{:else}
 		<div>
-			<RenderCustomerLoginForm {page} />
+			<RenderCustomerLoginForm
+				{page}
+				onLogin={() => {
+					refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
+				}}
+			/>
 		</div>
 	{/if}
 </div>

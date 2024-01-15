@@ -5,65 +5,16 @@
 	import Cookies from 'js-cookie';
 
 	export let page;
-
-	// syncConfig = {
-	// 	page: { _id: '' },
-
-	// 	keys: {
-	// 		api: { signToken: '' },
-	// 		zapier: { apiToken }
-	// 	},
-
-	// 	events: {
-	// 		'user:created': [
-	// 			{
-	// 				type: 'api',
-	// 				userSyncUrl: '',
-	// 				userAuthUrl: '',
-	// 				signToken: ''
-	// 			},
-	// 			{
-	// 				type: 'slack',
-	// 				slackWebhookUrl: ''
-	// 			},
-	// 			{
-	// 				type: 'zapier',
-	// 				token: '',
-	// 				zapId: ''
-	// 			}
-	// 		],
-	// 		'customerMessage:created': [
-	// 			{
-	// 				type: 'slack',
-	// 				slackWebhookUrl: ''
-	// 			}
-	// 		],
-	// 		'analyticsReport:created': [
-	// 			{
-	// 				type: 'email',
-	// 				filter: [{ label: 'stuff' }],
-	// 				to: 'email@email.com'
-	// 			}
-	// 		]
-	// 	}
-	// };
+	export let onLogin = () => {};
 </script>
 
 <div>
 	<RenderForm
 		{page}
-		handleSubmit={async ({ postData }) => {
-			let email = { postData };
-
-			let { customer, token } = await post(`customers/auth?pageId=${page._id}`, {
-				email
-			});
-
-			$currentCustomer = customer;
-			Cookies.set('customer_access_token', token);
-		}}
 		section={{
 			id: 'login',
+			isAuthRequired: true,
+			onSubmitted: onLogin,
 			items: [
 				{
 					interactiveRenderType: 'email',
