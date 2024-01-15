@@ -33,7 +33,7 @@ export async function load({ url, params, session, cookies }) {
 	//
 	let extend = {};
 
-	if (url.href.includes('service-requests')) {
+	if (url.href.includes('app/requests')) {
 		let parentPage = await get(`pages/bySlug`, {
 			slug: pageSlug
 		});

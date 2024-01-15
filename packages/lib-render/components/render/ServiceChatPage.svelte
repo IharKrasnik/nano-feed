@@ -23,9 +23,8 @@
 		<div class="flex justify-center w-full">
 			<div class="min-w-[300px]">
 				{#each $submissionsOutbound as submission}
-					<a
-						class="_section-item block p-4 mb-4 w-full"
-						href="/service-requests/{submission._id}?pageSlug=lets-go">{submission.vars.Message}</a
+					<a class="_section-item block p-4 mb-4 w-full" href="/app/requests/{submission._id}"
+						>{submission.vars.Message}</a
 					>
 				{/each}
 			</div>

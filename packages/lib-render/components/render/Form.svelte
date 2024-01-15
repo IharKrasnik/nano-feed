@@ -100,7 +100,7 @@
 				if (section.onSubmitted) {
 					section.onSubmitted();
 				} else {
-					window.location.href = `/service-requests/${submission._id}`;
+					window.location.href = `/app/requests/${submission._id}`;
 				}
 			}
 		}

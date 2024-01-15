@@ -8,6 +8,7 @@
 	import { page as sveltePage } from '$app/stores';
 	import { browser } from '$app/environment';
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
+	import currentCustomer from 'lib/stores/currentCustomer';
 
 	export let page;
 	export let isEdit;
@@ -219,6 +220,12 @@
   {/each} -->
 			</div>
 		</div>
+
+		{#if $currentCustomer._id}
+			<div class="ml-4 border border-accent rounded-full">
+				<img src={$currentCustomer.avatarUrl} class="w-[34px] h-[34px] rounded-full" />
+			</div>
+		{/if}
 	</div>
 </div>
 
