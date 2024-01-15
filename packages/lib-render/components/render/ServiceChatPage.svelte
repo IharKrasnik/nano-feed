@@ -16,34 +16,36 @@
 	let submissionId = $sveltePage.params.requestId;
 </script>
 
-<div class="py-[100px] mb-[200px]">
-	<RenderSection {page} section={{ id: 'servicerequests', title: 'Service Requests' }} />
+<div class="py-[100px]">
+	<div class="mb-[200px]">
+		<RenderSection {page} section={{ id: 'servicerequests', title: 'Service Requests' }} />
 
-	{#if $currentCustomer._id}
-		<div class="flex justify-center w-full">
-			<div class="min-w-[300px]">
-				{#each $submissionsOutbound as submission}
-					<a class="_section-item block p-4 mb-4 w-full" href="/app/requests/{submission._id}"
-						>{submission.vars.Message}</a
-					>
-				{/each}
+		{#if $currentCustomer._id}
+			<div class="flex justify-center w-full">
+				<div class="min-w-[300px]">
+					{#each $submissionsOutbound as submission}
+						<a class="_section-item block p-4 mb-4 w-full" href="/app/requests/{submission._id}"
+							>{submission.vars.Message}</a
+						>
+					{/each}
+				</div>
+				{#key $sveltePage.params.requestId}
+					<RenderServiceChat
+						class="w-[600px] mx-16"
+						{page}
+						submissionId={$sveltePage.params.requestId}
+					/>
+				{/key}
 			</div>
-			{#key $sveltePage.params.requestId}
-				<RenderServiceChat
-					class="w-[600px] mx-16"
+		{:else}
+			<div>
+				<RenderCustomerLoginForm
 					{page}
-					submissionId={$sveltePage.params.requestId}
+					onLogin={() => {
+						refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
+					}}
 				/>
-			{/key}
-		</div>
-	{:else}
-		<div>
-			<RenderCustomerLoginForm
-				{page}
-				onLogin={() => {
-					refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
-				}}
-			/>
-		</div>
-	{/if}
+			</div>
+		{/if}
+	</div>
 </div>
