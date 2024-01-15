@@ -9,6 +9,7 @@
 	import subPages from 'lib/stores/subPages';
 	import selectedSubmission from '$lib/stores/selectedSubmission';
 
+	import RenderForm from 'lib-render/components/render/Form.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import SitePreview from 'lib-render/components/SitePreview.svelte';
@@ -18,14 +19,20 @@
 	export let page;
 	export let setPageAndDraft;
 
-	let blogPage = $subPages.find((s) => s.slug === 'blog');
-
 	let selectedSubmissionsTab = 'inbound';
 </script>
 
 {#if $selectedSubmission}
 	{#key $selectedSubmission._id}
 		<PageContainer class="p-8 mb-4 w-full h-full" {page}>
+			<RenderForm
+				{page}
+				section={{
+					id: 'sub',
+					submission: $selectedSubmission,
+					items: []
+				}}
+			/>
 			<RenderServiceChat bind:submission={$selectedSubmission} bind:page />
 		</PageContainer>
 	{/key}

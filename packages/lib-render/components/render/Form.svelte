@@ -12,6 +12,7 @@
 	export let page;
 	export let isEdit;
 	export let isEmbed;
+	export let handleSubmit = null;
 
 	let formData = {};
 
@@ -37,33 +38,38 @@
 			}
 		});
 
-		trackForm({ sectionId: section.id, text: section.title || section.description });
+		if (handleSubmit) {
+			await handleSubmit({ postData });
+		} else {
+			trackForm({ sectionId: section.id, text: section.title || section.description });
 
-		if (!$currentCustomer._id) {
-			let { customer, token } = await get('auth/customer', {
-				pageSlug: page._id
-			});
-			$currentCustomer = customer;
-			Cookies.set('customer_access_token', token);
-		}
+			if (!$currentCustomer._id) {
+				let { customer, token } = await post(`customers/auth?pageId=${page._id}`, {
+					email: postData.email,
+					pageId: page._id
+				});
+				$currentCustomer = customer;
+				Cookies.set('customer_access_token', token);
+			}
 
-		let submission = await post(`pages/${page._id}/submissions`, postData);
+			let submission = await post(`pages/${page._id}/submissions`, postData);
 
-		$submissionsOutbound = [submission, ...$submissionsOutbound];
+			$submissionsOutbound = [submission, ...$submissionsOutbound];
 
-		if (submission.customer) {
-			$currentCustomer = submission.customer;
-		}
+			if (submission.customer) {
+				$currentCustomer = submission.customer;
+			}
 
-		if (section.actionType === 'url' && section.actionUrl) {
-			window.location.href = section.actionUrl;
-		}
+			if (section.actionType === 'url' && section.actionUrl) {
+				window.location.href = section.actionUrl;
+			}
 
-		if (section.actionType === 'service_chat') {
-			if (section.onSubmitted) {
-				section.onSubmitted();
-			} else {
-				window.location.href = `/service-requests/${submission._id}`;
+			if (section.actionType === 'service_chat') {
+				if (section.onSubmitted) {
+					section.onSubmitted();
+				} else {
+					window.location.href = `/service-requests/${submission._id}`;
+				}
 			}
 		}
 
@@ -89,14 +95,14 @@
 										class="w-full _transparent"
 										type="text"
 										disabled
-										value={section.submission.name}
+										value={section.submission.fullName}
 									/>
 								{:else}
 									<input
 										class="w-full _transparent"
 										placeholder={formField.interactivePlaceholder || 'Paul Graham'}
 										type="text"
-										bind:value={$currentCustomer.name}
+										bind:value={$currentCustomer.fullName}
 									/>
 								{/if}
 							{:else}
