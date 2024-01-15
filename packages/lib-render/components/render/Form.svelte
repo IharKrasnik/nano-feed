@@ -27,7 +27,22 @@
 
 	let isFormSubmitted = false;
 
+	let isShowLoginCode = false;
+	let loginCode = '';
+
 	let submitForm = async () => {
+		if (
+			(section.isAuthRequired || section.actionType === 'service_chat') &&
+			!$currentCustomer._id &&
+			!loginCode
+		) {
+			await post(`customers/auth/login-token?pageId=${page._id}`, {
+				email: $currentCustomer.email
+			});
+			isShowLoginCode = true;
+			return;
+		}
+
 		let postData = { vars: {}, sectionId: section.id, customer: $currentCustomer };
 
 		section.items.forEach(({ id, title, varName, interactiveRenderType }) => {
@@ -43,10 +58,13 @@
 		} else {
 			trackForm({ sectionId: section.id, text: section.title || section.description });
 
-			if (!$currentCustomer._id) {
+			if (
+				(section.isAuthRequired || section.actionType === 'service_chat') &&
+				!$currentCustomer._id
+			) {
 				let { customer, token } = await post(`customers/auth?pageId=${page._id}`, {
 					email: postData.email,
-					pageId: page._id
+					loginCode
 				});
 				$currentCustomer = customer;
 				Cookies.set('customer_access_token', token);
@@ -80,75 +98,97 @@
 {#if !isFormSubmitted}
 	<div class="_section-item max-w-[600px] sm:min-w-[500px] w-full sm:mx-auto">
 		<form class="w-full flex flex-col gap-4 p-8" on:submit|preventDefault={submitForm}>
-			{#if section.items.length}
-				{#each section.items as formField}
-					<div>
-						<div class="mb-4">
-							<div class="text-lg font-semibold opacity-80">{@html formField.title}</div>
-							<div class="text-sm opacity-80 mb-2">{@html formField.description || ''}</div>
+			{#if isShowLoginCode}
+				<div>
+					<div class="mb-4">
+						<div class="text-lg font-semibold opacity-80">Login Code</div>
+						<div class="text-sm opacity-80 mb-2">
+							Please insert the code that you've received to {$currentCustomer.email}
 						</div>
 
-						{#if formField.interactiveRenderType === 'text'}
-							{#if formField.varName === 'name'}
+						<input
+							class="w-full _transparent"
+							placeholder={'1234'}
+							type="text"
+							bind:value={loginCode}
+						/>
+					</div>
+
+					<button class="_primary mt-8" type="submit">{section.callToActionText || 'Submit'}</button
+					>
+				</div>
+			{:else}
+				{#if section.items.length}
+					{#each section.items as formField}
+						<div>
+							<div class="mb-4">
+								<div class="text-lg font-semibold opacity-80">{@html formField.title}</div>
+								<div class="text-sm opacity-80 mb-2">{@html formField.description || ''}</div>
+							</div>
+
+							{#if formField.interactiveRenderType === 'text'}
+								{#if formField.varName === 'name'}
+									{#if section.submission}
+										<input
+											class="w-full _transparent"
+											type="text"
+											disabled
+											value={section.submission.fullName}
+										/>
+									{:else}
+										<input
+											class="w-full _transparent"
+											placeholder={formField.interactivePlaceholder || 'Paul Graham'}
+											type="text"
+											bind:value={$currentCustomer.fullName}
+										/>
+									{/if}
+								{:else}
+									<input
+										class="w-full _transparent"
+										placeholder={formField.interactivePlaceholder || 'Type your message...'}
+										type="text"
+										bind:value={formData[formField.id]}
+									/>
+								{/if}
+							{:else if formField.interactiveRenderType === 'textarea'}
+								<textarea
+									class="w-full _transparent"
+									placeholder={formField.interactivePlaceholder || 'Type your message...'}
+									bind:value={formData[formField.id]}
+								/>
+							{:else if formField.interactiveRenderType === 'email'}
 								{#if section.submission}
 									<input
 										class="w-full _transparent"
-										type="text"
+										type="email"
 										disabled
-										value={section.submission.fullName}
+										value={section.submission.email}
 									/>
 								{:else}
 									<input
 										class="w-full _transparent"
-										placeholder={formField.interactivePlaceholder || 'Paul Graham'}
-										type="text"
-										bind:value={$currentCustomer.fullName}
+										type="email"
+										placeholder={formField.interactivePlaceholder || 'my@email.com'}
+										bind:value={$currentCustomer.email}
 									/>
 								{/if}
-							{:else}
-								<input
-									class="w-full _transparent"
-									placeholder={formField.interactivePlaceholder || 'Type your message...'}
-									type="text"
-									bind:value={formData[formField.id]}
-								/>
 							{/if}
-						{:else if formField.interactiveRenderType === 'textarea'}
-							<textarea
-								class="w-full _transparent"
-								placeholder={formField.interactivePlaceholder || 'Type your message...'}
-								bind:value={formData[formField.id]}
-							/>
-						{:else if formField.interactiveRenderType === 'email'}
-							{#if section.submission}
-								<input
-									class="w-full _transparent"
-									type="email"
-									disabled
-									value={section.submission.email}
-								/>
-							{:else}
-								<input
-									class="w-full _transparent"
-									type="email"
-									placeholder={formField.interactivePlaceholder || 'my@email.com'}
-									bind:value={$currentCustomer.email}
-								/>
-							{/if}
-						{/if}
-					</div>
-				{/each}
-			{:else if section.submission && section.submission.email}
-				<input
-					class="w-full _transparent"
-					type="email"
-					disabled
-					bind:value={section.submission.email}
-				/>
-			{/if}
+						</div>
+					{/each}
+				{:else if section.submission && section.submission.email}
+					<input
+						class="w-full _transparent"
+						type="email"
+						disabled
+						bind:value={section.submission.email}
+					/>
+				{/if}
 
-			{#if !section.submission}
-				<button class="_primary mt-8" type="submit">{section.callToActionText || 'Submit'}</button>
+				{#if !section.submission}
+					<button class="_primary mt-8" type="submit">{section.callToActionText || 'Submit'}</button
+					>
+				{/if}
 			{/if}
 		</form>
 	</div>
