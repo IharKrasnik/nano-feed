@@ -129,7 +129,7 @@
 							url ||
 							(meta?.pageSlug
 								? section.streamSlug.includes('blog')
-									? `/blog/posts/${meta.pageSlug}`
+									? `/blog/post/${meta.pageSlug}`
 									: `/${meta.pageSlug}`
 								: ''),
 						tagsStr
