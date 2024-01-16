@@ -103,7 +103,6 @@
 </svelte:head>
 
 <SvelteToast />
-
 <div id="modal-portal" />
 <div id="popup-portal" />
 {#if !$isUserLoading}
