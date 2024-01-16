@@ -310,7 +310,6 @@
 								<RenderHeader bind:isEmbed bind:page bind:isEdit />
 							{/if}
 						{/if}
-
 						{#if !isLoading}
 							{#if page.renderType === 'service_chat'}
 								<RenderServiceChatPage {page} />

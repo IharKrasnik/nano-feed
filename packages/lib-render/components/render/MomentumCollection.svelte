@@ -140,7 +140,6 @@
 			replaceVars();
 		}
 	}
-
 	let loadChildStreams = async () => {
 		let { results } = await get('projects', {
 			hubStreamSlug: page.streams?.hub?.slug || page.streamSlug

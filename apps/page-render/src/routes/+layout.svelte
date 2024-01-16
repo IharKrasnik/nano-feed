@@ -102,7 +102,6 @@
 <SvelteToast />
 
 <div id="modal-portal" />
-
 <div id="popup-portal" />
 
 <div class="relative" style="	">
