@@ -90,6 +90,10 @@
 		welcomeEmail: null
 	};
 
+	if ($sveltePage.url.searchParams.get('ref') === 'producthunt') {
+		goto('https://momentum.page');
+	}
+
 	let page = { ..._.cloneDeep($pageDraft['_new'] || defaultPage) };
 
 	let isPageSet = false;
