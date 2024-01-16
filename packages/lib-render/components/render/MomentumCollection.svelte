@@ -135,7 +135,6 @@
 						tagsStr
 					};
 				}
-				//1
 			);
 		if (!isEdit) {
 			replaceVars();
