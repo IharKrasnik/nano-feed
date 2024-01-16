@@ -419,7 +419,7 @@
 									class="absolute h-full rounded top-0 left-[-5px] bg-[#8B786D] opacity-20"
 									style="width: {(referralStat.count / maxReferralCount) * 100}%;"
 								/>
-								{referralStat.origin || '(none)'}
+								{referralStat.origin || referralStat.referrerUrl?.replace('https', '') || '(none)'}
 							</div>
 							<div class="w-[100px] shrink-0 text-right">
 								{referralStat.count}
