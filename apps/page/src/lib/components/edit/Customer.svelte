@@ -110,7 +110,6 @@
 			<Button
 				class="_small _primary mt-4 block"
 				onClick={() => {
-					debugger;
 					saveCustomer(customer);
 				}}>💾 Save Customer</Button
 			>

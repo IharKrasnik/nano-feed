@@ -5,6 +5,7 @@
 	import Emoji from 'lib/components/Emoji.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
+	import RenderCustomerMenu from 'lib-render/components/render/CustomerMenu.svelte';
 	import { page as sveltePage } from '$app/stores';
 	import { browser } from '$app/environment';
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
@@ -151,7 +152,7 @@
 						<div
 							class="font-medium flex items-center justify-center group-hover:bg-cta-stronger p-1 rounded cursor-pointer"
 						>
-							{link.groupName}
+							{link.groupName || ''}
 							<div class=" ">
 								<FeatherIcon
 									class="ml-1 group-hover:rotate-180 origin-center transition"
@@ -181,10 +182,6 @@
 						</div>
 					</div>
 				{/each}
-
-				{#if !page._id && page.parentPage && !page.isUseDatabase && !page.isInDir}
-					<span>{page.name}</span>
-				{/if}
 			</div>
 		</div>
 
@@ -222,9 +219,7 @@
 		</div>
 
 		{#if $currentCustomer._id && !isEdit}
-			<div class="ml-4 border border-accent rounded-full">
-				<img src={$currentCustomer.avatarUrl} class="w-[34px] h-[34px] rounded-full" />
-			</div>
+			<RenderCustomerMenu />
 		{/if}
 	</div>
 </div>

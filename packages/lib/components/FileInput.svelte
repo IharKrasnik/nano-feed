@@ -11,6 +11,7 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import { showErrorMessage } from 'lib/services/toast';
 	import currentUser from 'lib/stores/currentUser';
+	import currentCustomer from 'lib/stores/currentCustomer';
 
 	export let isCanSearch = false;
 	export let isSearching = false;
@@ -39,6 +40,7 @@
 
 	let clazz;
 	export { clazz as class };
+	export let previewClass = '';
 
 	const dispatch = createEventDispatcher();
 
@@ -48,7 +50,10 @@
 		isLoading = true;
 
 		try {
-			const newFile = await postFile('files', file);
+			const newFile =
+				!$currentUser && $currentCustomer.isEmailVerified
+					? await postFile('files/customer', file)
+					: await postFile('files', file);
 
 			let fileUrl = newFile.url.startsWith('http') ? newFile.url : `https://${newFile.url}`;
 
@@ -77,7 +82,7 @@
 	};
 
 	const onFileUpload = async (e) => {
-		if (!$currentUser) {
+		if (!$currentUser && !$currentCustomer?.isEmailVerified) {
 			return showErrorMessage('Please log in to upload files');
 		}
 		return uploadFile((e.target?.files || e.detail?.files)[0]);
@@ -129,7 +134,7 @@
 			bind:url
 			class="ml-4 rounded aspect-square flex items-center"
 			style="width: 35px; height: 35px;"
-			imgClass={'h-full w-full object-cover'}
+			imgClass={`h-full w-full object-cover ${previewClass}`}
 			isFilesOnly={true}
 		/>
 
