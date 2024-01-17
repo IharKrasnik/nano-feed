@@ -516,23 +516,25 @@
 			>
 		</div>
 
-		<div class="_section">
-			<div class="mb-1 font-bold">Visibility</div>
-			<div class="opacity-70 text-sm mb-3">Hide and show sections</div>
+		{#if section.id === sectionItem.id}
+			<div class="_section">
+				<div class="mb-1 font-bold">Visibility</div>
+				<div class="opacity-70 text-sm mb-3">Hide and show sections</div>
 
-			<ToggleGroup
-				bind:value={sectionItem.isHidden}
-				tabs={[
-					{
-						key: false,
-						name: 'visible'
-					},
-					{
-						key: true,
-						name: 'hidden'
-					}
-				]}
-			/>
-		</div>
+				<ToggleGroup
+					bind:value={sectionItem.isHidden}
+					tabs={[
+						{
+							key: false,
+							name: 'visible'
+						},
+						{
+							key: true,
+							name: 'hidden'
+						}
+					]}
+				/>
+			</div>
+		{/if}
 	</div>
 {/if}
