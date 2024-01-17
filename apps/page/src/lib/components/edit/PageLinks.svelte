@@ -81,7 +81,7 @@
 				{#key _refreshTimestamp}
 					<PageContainer class="p-8 mb-4 w-full" {page}>
 						<div class="w-full">
-							<RenderHeader bind:page isEmbed />
+							<RenderHeader bind:page isEmbed isEdit />
 
 							<div class="mt-8 w-full">
 								<RenderFooter bind:page />

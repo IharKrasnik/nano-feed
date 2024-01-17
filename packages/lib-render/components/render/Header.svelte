@@ -64,8 +64,8 @@
 </script>
 
 <div
-	class=" fixed w-full _header backdrop-blur-lg _border-b-theme"
-	style="{isEdit || isEmbed ? 'width: calc(100% - 498px);' : ''} z-index: 100;"
+	class=" {isEmbed ? '' : 'fixed'} w-full _header backdrop-blur-lg _border-b-theme"
+	style="{isEdit && !isEmbed ? 'width: calc(100% - 498px);' : ''} z-index: 100;"
 >
 	<div class="px-4 sm:px-0 mb-4 _header-content flex justify-between items-center">
 		<div class="flex flex-grow py-4 sm:py-0">
@@ -120,10 +120,11 @@
 				{#each (parentPage.links || []).filter((l) => !l.groupName && l.isShowInHeader) as link}
 					<a
 						href={`${
-							(link.url && !link.url.startsWith('/')) ||
-							`${isEdit ? pageUrl : ''}${
-								link.pageSlug || link.slug ? `/${link.pageSlug || link.slug}` : link.url
-							}`
+							link.url && !link.url.startsWith('/')
+								? link.url
+								: `${isEdit ? pageUrl : ''}${
+										link.pageSlug || link.slug ? `/${link.pageSlug || link.slug}` : link.url
+								  }`
 						}`}
 						target={isEdit ? '_blank' : null}
 						data-sveltekit-preload-data={isEdit ? null : 'hover'}

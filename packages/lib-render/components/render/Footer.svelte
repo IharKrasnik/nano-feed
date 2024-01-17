@@ -9,7 +9,12 @@
 		let grouped = {};
 
 		(parentPage.links || [])
-			.filter((link) => link.groupName)
+			.map((link) => {
+				return {
+					...link,
+					groupName: link.groupName || 'Browse'
+				};
+			})
 			.filter((link) => link.isShowInFooter)
 			.forEach((link) => {
 				if (!grouped[link.groupName]) {
