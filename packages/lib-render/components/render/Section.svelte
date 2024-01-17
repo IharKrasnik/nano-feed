@@ -320,6 +320,15 @@
 			: ''}"
 		on:click={() => {
 			if (isEdit) {
+				if ($sectionToEdit) {
+					page.sections = page.sections.map((s) => {
+						if (s.id === $sectionToEdit.id) {
+							return { ...$sectionToEdit };
+						} else {
+							return s;
+						}
+					});
+				}
 				$sectionToEdit = section;
 			}
 		}}

@@ -692,6 +692,16 @@
 			}
 		});
 	};
+
+	let updateSectionToEdit = () => {
+		page.sections = page.sections.map((s) => {
+			if (s.id === $sectionToEdit.id) {
+				return { ...$sectionToEdit };
+			} else {
+				return s;
+			}
+		});
+	};
 </script>
 
 <!-- 
@@ -1054,14 +1064,7 @@
 											<div
 												class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 												on:click={() => {
-													page.sections = page.sections.map((s) => {
-														if (s.id === $sectionToEdit.id) {
-															return { ...$sectionToEdit };
-														} else {
-															return s;
-														}
-													});
-
+													updateSectionToEdit();
 													$sectionToEdit = null;
 												}}
 											>
