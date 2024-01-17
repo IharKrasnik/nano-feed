@@ -14,6 +14,7 @@
 	import striptags from 'striptags';
 	import BackTo from '$lib/components/BackTo.svelte';
 	import placeholder from 'lib/use/placeholder';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 
 	export let page;
 	export let selectedTrigger;
@@ -244,6 +245,8 @@ See you!
 
 		selectedNewsletter = null;
 	};
+
+	let selectedMessagingTab = '';
 </script>
 
 {#if selectedTrigger || selectedNewsletter}
@@ -259,7 +262,28 @@ See you!
 	/>
 {/if}
 
-{#if !selectedTrigger}
+{#if !selectedNewsletter && !selectedTrigger}
+	<ToggleGroup
+		bind:value={selectedMessagingTab}
+		class="mb-8"
+		tabs={[
+			{
+				key: 'chats',
+				name: 'Chats'
+			},
+			{
+				key: 'newsletters',
+				name: 'Newsletters'
+			},
+			{
+				key: 'triggers',
+				name: 'Trigggers'
+			}
+		]}
+	/>
+{/if}
+
+{#if selectedMessagingTab === 'newsletters'}
 	<div class="flex items-center w-full justify-between mb-4">
 		<div class="font-bold text-lg ">Newsletters</div>
 
@@ -299,7 +323,7 @@ See you!
 	{/if}
 {/if}
 
-{#if !selectedNewsletter}
+{#if selectedMessagingTab === 'triggers'}
 	<div class="font-bold text-lg mt-8 mb-4">Messaging Triggers</div>
 
 	{#each triggers as trigger}
@@ -438,7 +462,9 @@ See you!
 	{#if forms.length && !triggers.find((t) => t.on === 'form:submitted')}
 		<button class="_secondary w-full mt-4" on:click={addFormTrigger}> Add Form Trigger </button>
 	{/if}
-{:else}
+{/if}
+
+{#if selectedNewsletter}
 	<div class="_section">
 		<div class=" mb-2 font-bold">Email Subject</div>
 
@@ -508,7 +534,7 @@ See you!
 	</div>
 {/if}
 
-{#if !selectedNewsletter && !selectedTrigger}
+{#if selectedMessagingTab === 'chats'}
 	<div class="font-bold text-lg mb-4 mt-8">Messages</div>
 
 	{#if chatRooms.length}
