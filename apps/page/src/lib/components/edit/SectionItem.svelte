@@ -274,6 +274,14 @@ Benefit 3`}
 								Medium
 							</div>
 						</div>
+					{:else if item.id !== section.id && section.theme.imageAspectRatio}
+						{section.theme.imageAspectRatio === 'og'
+							? 'OG (120x63)'
+							: section.theme.imageAspectRatio === 'image'
+							? 'Image (4x3)'
+							: section.theme.imageAspectRatio === 'square'
+							? 'Square (1x1)'
+							: ''}
 					{:else}
 						<div
 							class="cursor-pointer"
