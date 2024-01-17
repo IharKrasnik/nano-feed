@@ -6,19 +6,28 @@
 	import RenderHeader from 'lib-render/components/render/Header.svelte';
 	import RenderFooter from 'lib-render/components/render/Footer.svelte';
 	import PageContainer from 'lib-render/components/PageContainer.svelte';
+	import allPages from 'lib-render/stores/allPages';
+	import pageDraft from 'lib-render/stores/pageDraft';
 
 	export let page;
 	export let isShown = true;
 
-	if (!page.links) {
-		page.links =
-			page.subPages
+	if (page.parentPage) {
+		page.parentPage =
+			$pageDraft[page.parentPage._id] || $allPages.find((p) => p._id === page.parentPage._id);
+	}
+
+	let parentPage = page.parentPage || page;
+
+	if (!parentPage.links) {
+		parentPage.links =
+			parentPage.subPages
 				?.map((sp) => {
 					return _.cloneDeep({
 						id: uuidv4(),
 						...sp,
-						isShowInFooter: !sp.slug.includes('/') && page.renderType !== 'article',
-						isShowInHeader: !sp.slug.includes('/') && page.renderType !== 'article'
+						isShowInFooter: !sp.slug.includes('/') && parentPage.renderType !== 'article',
+						isShowInHeader: !sp.slug.includes('/') && parentPage.renderType !== 'article'
 					});
 				})
 				.sort((sp) => {
@@ -33,7 +42,7 @@
 		console.log('refreshed');
 	};
 
-	page.links.forEach((l) => {
+	parentPage.links.forEach((l) => {
 		if (l.slug) {
 			l.pageSlug = l.slug;
 		}
@@ -43,15 +52,15 @@
 	});
 
 	let handleDndConsider = (e) => {
-		page.links = e.detail.items;
+		parentPage.links = e.detail.items;
 	};
 
 	let handleDndFinalize = (e) => {
-		page.links = e.detail.items;
+		parentPage.links = e.detail.items;
 	};
 
 	let addLink = () => {
-		page.links = [
+		parentPage.links = [
 			{
 				id: uuidv4(),
 				name: '',
@@ -59,7 +68,7 @@
 				isShowInHeader: true,
 				isShowInFooter: true
 			},
-			...page.links
+			...parentPage.links
 		];
 	};
 </script>
@@ -76,49 +85,35 @@
 			</div>
 		</div>
 
-		{#if page}
-			<div class="flex justify-between">
-				{#key _refreshTimestamp}
-					<PageContainer class="p-8 mb-4 w-full" {page}>
-						<div class="w-full">
-							<RenderHeader bind:page isEmbed isEdit />
-
-							<div class="mt-8 w-full">
-								<RenderFooter bind:page />
-							</div>
-						</div>
-					</PageContainer>
-				{/key}
-			</div>
-		{/if}
 		<div class="_section flex items-center gap-4">
 			<div class="font-bold">Header Styles</div>
 			<div>
-				<input class="mr-2" type="checkbox" bind:checked={page.theme.isHidePageName} />
+				<input class="mr-2" type="checkbox" bind:checked={parentPage.theme.isHidePageName} />
 				Hide brand name near logo
 			</div>
 			<div class="ml-4">
 				Align links
 
-				<select class="ml-2" bind:value={page.theme.headerAlign}>
+				<select class="ml-2" bind:value={parentPage.theme.headerAlign}>
 					<option value="right">Right</option>
 					<option value="left">Left</option>
 					<option value="center">Center</option>
 				</select>
 			</div>
 		</div>
+
 		<div class="mt-8">
-			{#if page.links?.length}
+			{#if parentPage.links?.length}
 				<div
 					class="grid"
 					use:dndzone={{
-						items: page.links,
+						items: parentPage.links,
 						flipDurationMs: 300
 					}}
 					on:consider={handleDndConsider}
 					on:finalize={handleDndFinalize}
 				>
-					{#each page.links || [] as link (link.id)}
+					{#each parentPage.links || [] as link (link.id)}
 						<div class="flex justify-between items-center text-sm py-[1px]">
 							<FeatherIcon name="list" class="opacity-30 mr-4" />
 							<div class="overflow-hidden w-full flex">
@@ -173,7 +168,7 @@
 							<div
 								class="ml-8 cursor-pointer"
 								on:click={() => {
-									page.links = page.links.filter((l) => l.id !== link.id);
+									parentPage.links = parentPage.links.filter((l) => l.id !== link.id);
 								}}
 							>
 								<FeatherIcon name="trash-2" size="15" class="opacity-50 hover:opacity-100" />
@@ -188,5 +183,24 @@
 				</div>
 			{/if}
 		</div>
+		{#if page}
+			<div class="font-bold mb-2 mt-16">Header & Foooter Preview</div>
+			<div class="flex justify-between  mt-8">
+				{#key _refreshTimestamp}
+					<PageContainer class="mb-4 w-full" {page}>
+						<div class="w-full">
+							<div class="_section">
+								<RenderHeader bind:page={parentPage} isEmbed isEdit />
+							</div>
+							<div class="mt-8 w-full">
+								<div class="_section">
+									<RenderFooter bind:page />
+								</div>
+							</div>
+						</div></PageContainer
+					>
+				{/key}
+			</div>
+		{/if}
 	</div>
 {/if}

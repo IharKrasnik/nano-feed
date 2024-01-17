@@ -282,6 +282,13 @@
 			};
 		}
 
+		if (page.parentPage) {
+			page.parentPage =
+				$pageDraft[page.parentPage._id] ||
+				$allPages.find((p) => p._id === page.parentPage._id) ||
+				page.parentPage;
+		}
+
 		pageSlug = page.parentPage?.slug || page.slug;
 
 		$pageDraft = { ...$pageDraft, lastPageSlug: page.slug, lastPageId: page._id };
@@ -1225,10 +1232,11 @@
 															<div
 																class="_section cursor-pointer"
 																class:_selected={!page.parentPage}
-																on:click={() =>
+																on:click={() => {
 																	setPageAndDraft(
 																		$allPages.find((p) => (page.parentPage || page)._id === p._id)
-																	)}
+																	);
+																}}
 															>
 																<div class="font-bold">{(page.parentPage || page).name}</div>
 															</div>

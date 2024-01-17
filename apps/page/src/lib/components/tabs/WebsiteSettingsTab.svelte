@@ -60,7 +60,7 @@
 			{/if}
 		{:else if $selectedSettingsTab === 'header-footer'}
 			{#key (page.parentPage || page)._id}
-				<EditPageLinks page={page.parentPage || page} />
+				<EditPageLinks {page} />
 			{/key}
 		{:else if $selectedSettingsTab === 'plans'}
 			<PageContainer class="p-8" bind:page>
