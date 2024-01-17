@@ -291,20 +291,13 @@
 									<div class="text-sm font-bold">Background Color</div>
 									<div class="text-sm mb-2 opacity-80">Page background color</div>
 
-									<div class="w-0 p-2">
-										<ColorPicker
-											bind:hex={page.theme.backgroundColor}
-											on:input={changeBackgroundColor}
-											label=""
-										/>
-									</div>
-									<!-- <input
+									<input
 										type="color"
 										id="head"
 										name="head"
 										bind:value={page.theme.backgroundColor}
 										on:input={changeBackgroundColor}
-									/> -->
+									/>
 								</div>
 								<div class="flex flex-wrap gap-2">
 									{#each colors.background as color}
@@ -325,13 +318,13 @@
 									<div class="text-sm font-bold">Accent Color</div>
 									<div class="text-sm mb-2 opacity-80">Buttons and highlight color</div>
 
-									<div class="w-0 p-2">
-										<ColorPicker
-											bind:hex={page.theme.accentColor}
-											on:input={changeAccentColor}
-											label=""
-										/>
-									</div>
+									<input
+										type="color"
+										id="head"
+										name="head"
+										bind:value={page.theme.accentColor}
+										on:input={changeAccentColor}
+									/>
 								</div>
 								<div class="flex flex-wrap">
 									{#each colors.accent as color}
@@ -355,9 +348,13 @@
 										<div class="shrink-0">
 											<div class="text-sm font-bold">Text Color</div>
 											<div class="flex items-center justify-between w-full">
-												<div class="w-0 p-2">
-													<ColorPicker bind:hex={page.theme.textColor} label="" />
-												</div>
+												<input
+													type="color"
+													id="head"
+													name="head"
+													class="mr-4"
+													bind:value={page.theme.textColor}
+												/>
 
 												<div class="flex flex-wrap mt-4">
 													{#each colors.textColor as color}
@@ -377,9 +374,13 @@
 										<div class="shrink-0">
 											<div class="text-sm font-bold">Button Text Color</div>
 											<div class="flex items-center justify-between w-full">
-												<div class="w-0 p-2">
-													<ColorPicker bind:hex={page.theme.buttonColor} label="" />
-												</div>
+												<input
+													type="color"
+													id="head"
+													name="head"
+													class="mr-4"
+													bind:value={page.theme.buttonColor}
+												/>
 
 												<div class="flex flex-wrap mt-4">
 													{#each colors.buttonColor as color}
