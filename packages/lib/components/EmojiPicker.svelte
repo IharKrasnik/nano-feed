@@ -184,7 +184,7 @@
 									isEmojiPickerShown = false;
 								}}
 							>
-								<FeatherIcon size="20" name={featherIconName} {color} />
+								<FeatherIcon size="20" name={featherIconName} />
 							</div>
 						{/each}
 					</div>

@@ -436,6 +436,8 @@
 									: ''} {page.theme?.isTitlesHuge ? 'text-[70px]' : ''}"
 							>
 								<Emoji
+									bind:color={section.iconColor}
+									bind:bgColor={section.emojiBgColor}
 									theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 									bind:emoji={section.emoji}
 								/>
@@ -854,6 +856,21 @@
 													<!-- {#if item.emoji !== '✨'}
 												<Emoji bind:emoji={item.emoji} />
 												{/if} -->
+													{#if item.emoji}
+														<div class="mr-2 mb-4 ">
+															<Emoji
+																bind:emoji={item.emoji}
+																bind:color={item.iconColor}
+																bind:bgColor={item.emojiBgColor}
+																class="rounded-full text-2xl"
+																width={30}
+																theme={page.parentPage?.theme?.theme ||
+																	page?.theme?.theme ||
+																	'light'}
+															/>
+														</div>
+													{/if}
+
 													{#if item.url && !item.interactiveRenderType}
 														<a
 															class="_item-title block mb-4"
@@ -1159,16 +1176,18 @@
 																{#if item.title || item.emoji}
 																	{#if item.renderType === 'testimonial'}
 																		<div class="flex items-center mb-3">
-																			<Emoji
-																				bind:emoji={item.emoji}
-																				bind:color={item.iconColor}
-																				bind:bgColor={item.emojiBgColor}
-																				class="rounded-full mr-2"
-																				width={48}
-																				theme={page.parentPage?.theme?.theme ||
-																					page?.theme?.theme ||
-																					'light'}
-																			/>
+																			<div class="mr-2">
+																				<Emoji
+																					bind:emoji={item.emoji}
+																					bind:color={item.iconColor}
+																					bind:bgColor={item.emojiBgColor}
+																					class="rounded-full text-3xl"
+																					width={48}
+																					theme={page.parentPage?.theme?.theme ||
+																						page?.theme?.theme ||
+																						'light'}
+																				/>
+																			</div>
 																			<div>
 																				<h2 class="_item-description" style="font-weight: bold;">
 																					<ContentEditableIf
@@ -1197,6 +1216,7 @@
 																					bind:emoji={item.emoji}
 																					bind:color={item.iconColor}
 																					bind:bgColor={item.emojiBgColor}
+																					class="text-2xl"
 																					width={30}
 																					theme={page.parentPage?.theme?.theme ||
 																						page?.theme?.theme ||
@@ -1225,6 +1245,7 @@
 																							bind:emoji={item.emoji}
 																							bind:color={item.iconColor}
 																							bind:bgColor={item.emojiBgColor}
+																							class="text-xl"
 																							width={25}
 																							theme={page.parentPage?.theme?.theme ||
 																								page?.theme?.theme ||
