@@ -75,13 +75,13 @@
 
 {#if page && isShown}
 	<div class="_editor">
-		<div class="flex w-full justify-between ">
+		<div class="flex w-full justify-between items-center  mb-8">
 			<div>
-				<div class="text-lg font-bold mb-2">Page Header & Footer</div>
-				<div class="mt-2 mb-4">Edit the links and styles of your header and footer</div>
+				<div class="text-lg font-bold mb-1">Website Header & Footer</div>
+				<div class="">Edit the links and styles of your header and footer</div>
 			</div>
 			<div>
-				<button class="_primary _small" on:click={addLink}>Add Link</button>
+				<button class="_primary _small" on:click={addLink}>Add New Link</button>
 			</div>
 		</div>
 
@@ -189,14 +189,8 @@
 				{#key _refreshTimestamp}
 					<PageContainer class="mb-4 w-full" {page}>
 						<div class="w-full">
-							<div class="_section">
-								<RenderHeader bind:page={parentPage} isEmbed isEdit />
-							</div>
-							<div class="mt-8 w-full">
-								<div class="_section">
-									<RenderFooter bind:page />
-								</div>
-							</div>
+							<RenderHeader bind:page={parentPage} isEmbed isEdit />
+							<RenderFooter class="mt-8" bind:page />
 						</div></PageContainer
 					>
 				{/key}

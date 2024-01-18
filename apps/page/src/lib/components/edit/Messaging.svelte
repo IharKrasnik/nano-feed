@@ -15,6 +15,10 @@
 	import BackTo from '$lib/components/BackTo.svelte';
 	import placeholder from 'lib/use/placeholder';
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
+	import allTriggers, {
+		refresh as refreshTriggers,
+		isLoading as isTriggersLoading
+	} from '$lib/stores/allTriggers';
 
 	export let page;
 	export let selectedTrigger;
@@ -22,7 +26,7 @@
 	export let selectedNewsletter;
 	export let selectedCustomer;
 
-	let triggers = [];
+	let parentPage = page.parentPage || page;
 
 	let chatRooms = [];
 
@@ -46,47 +50,34 @@ See you!
 	};
 
 	let formatTrigger = (trigger) => {
-		if (trigger.on === 'email:submitted') {
+		if (trigger.on[0].eventName === 'email:submitted') {
 			return 'Email Submitted';
 		}
-		if (trigger.on === 'form:submitted') {
+		if (trigger.on[0].eventName === 'form:submitted') {
 			return 'Form Submitted';
 		}
 	};
 
 	let selectTrigger = (trigger) => {
-		if (trigger.isCollapsed) {
-			triggers = triggers.map((t) => {
-				t.isCollapsed = true;
-				if (t._id === trigger._id) {
-					t.isCollapsed = false;
-				}
-				return t;
-			});
+		selectedTrigger = trigger;
+		trigger.isEdit = true;
+	};
 
-			selectedTrigger = trigger;
-		}
+	let getMessagingTriggers = () => {
+		return $allTriggers.filter((t) =>
+			t.on.find((e) => e.eventName === 'form:submitted' || e.eventName === 'email:submitted')
+		);
 	};
 
 	let loadTriggers = async () => {
-		let triggersResults = await get(`triggers`, {
-			pageId: page.parentPage?._id || page._id
-		});
+		await refreshTriggers({ pageId: parentPage._id });
 
-		triggers = [
-			...triggers,
-			...triggersResults.results.map((s) => {
-				s.isCollapsed = true;
-				return s;
-			})
-		];
-
-		if (!triggers.length) {
-			triggers = [
+		if (!getMessagingTriggers().length) {
+			$allTriggers = [
 				{
 					isCollapsed: true,
 					isEnabled: false,
-					on: 'email:submitted',
+					on: [{ eventName: 'email:submitted' }],
 					actionSequence: [
 						{
 							inMinutes: 0,
@@ -98,7 +89,8 @@ See you!
 							}
 						}
 					]
-				}
+				},
+				...$allTriggers
 			];
 		}
 	};
@@ -111,7 +103,7 @@ See you!
 		let formTrigger = {
 			isCollapsed: true,
 			isEnabled: true,
-			on: 'form:submitted',
+			on: [{ eventName: 'form:submitted' }],
 			actionSequence: [
 				{
 					inMinutes: 0,
@@ -138,7 +130,10 @@ See you!
 
 	loadForms();
 
-	let saveTrigger = async ({ isCollapse = true } = {}) => {
+	let saveTrigger = async () => {
+		if (!selectedTrigger) {
+			return;
+		}
 		let updatedTrigger;
 
 		if (selectedTrigger._id) {
@@ -156,10 +151,9 @@ See you!
 		showSuccessMessage('Trigger saved');
 
 		_.extend(selectedTrigger, updatedTrigger);
-		if (isCollapse) {
-			selectedTrigger.isCollapsed = true;
-			selectedTrigger = null;
-		}
+
+		selectedTrigger.isEdit = false;
+		selectedTrigger = null;
 	};
 
 	let loadChatRooms = async () => {
@@ -249,15 +243,28 @@ See you!
 	let selectedMessagingTab = '';
 </script>
 
-{#if selectedTrigger || selectedNewsletter}
+{#if selectedNewsletter}
 	<BackTo
 		to={'Messaging'}
 		onClick={() => {
 			if (selectedTrigger) {
-				selectedTrigger.isCollapsed = true;
+				selectedTrigger.isEdit = false;
 			}
 			selectedTrigger = null;
 			selectedNewsletter = null;
+			selectedMessagingTab = 'chats';
+		}}
+	/>
+{/if}
+
+{#if selectedTrigger}
+	<BackTo
+		to={'Triggers'}
+		onClick={() => {
+			if (selectedTrigger) {
+				selectedTrigger.isEdit = false;
+			}
+			selectedTrigger = null;
 		}}
 	/>
 {/if}
@@ -277,7 +284,7 @@ See you!
 			},
 			{
 				key: 'triggers',
-				name: 'Trigggers'
+				name: 'Triggers'
 			}
 		]}
 	/>
@@ -324,27 +331,27 @@ See you!
 {/if}
 
 {#if selectedMessagingTab === 'triggers'}
-	<div class="font-bold text-lg mt-8 mb-4">Messaging Triggers</div>
+	{#if selectedTrigger}
+		<div class="font-bold text-lg mt-8 mb-4">Edit Trigger</div>
+	{:else}
+		<div class="font-bold text-lg mt-8 mb-4">Messaging Triggers</div>
+	{/if}
 
-	{#each triggers as trigger}
+	{#each getMessagingTriggers() as trigger}
 		<div class="_section cursor-pointer" on:click={() => selectTrigger(trigger)}>
 			<div class=" flex justify-between items-center">
 				<div class="flex gap-2 items-center">
 					On: <span class="font-semibold">{formatTrigger(trigger)}</span>
 				</div>
-				{#if trigger.isCollapsed}
+				{#if !trigger.isEdit}
 					{trigger.isEnabled ? 'Enabled' : 'Disabled'}
 				{:else}
 					<div>
-						<input
-							type="checkbox"
-							bind:checked={trigger.isEnabled}
-							on:change={() => saveTrigger({ isCollapse: false })}
-						/> Enabled
+						<input type="checkbox" bind:checked={trigger.isEnabled} /> Enabled
 					</div>
 				{/if}
 			</div>
-			{#if !trigger.isCollapsed}
+			{#if trigger === selectedTrigger}
 				<div class="my-4" in:fade={{ duration: 150 }}>
 					{#if !trigger.isEnabled}
 						<div class="p-4 rounded-xl bg-orange-300">Trigger is currenty disabled</div>
@@ -418,7 +425,7 @@ See you!
 							</div>
 							<FileInput class="w-full" bind:url={triggerAction.data.imageUrl} />
 
-							{#if selectedTrigger?.on?.includes('email')}
+							{#if selectedTrigger?.on[0]?.eventName?.includes('email')}
 								<div class="my-4 p-4 bg-green-600 rounded-xl text-white _section bg-[#f1f1f1]">
 									Welcome email is sent once a user <b>submitted</b> their email. <br />
 
@@ -439,7 +446,7 @@ See you!
 				{/each}
 			{/if}
 
-			{#if !trigger.isCollapsed}
+			{#if trigger === selectedTrigger}
 				<div class="mt-4  flex justify-between items-center">
 					<div>
 						<Button
@@ -448,11 +455,7 @@ See you!
 						>
 					</div>
 					<div>
-						<input
-							type="checkbox"
-							bind:checked={trigger.isEnabled}
-							on:change={() => saveTrigger({ isCollapse: false })}
-						/> Enabled
+						<input type="checkbox" bind:checked={trigger.isEnabled} /> Enabled
 					</div>
 				</div>
 			{/if}
@@ -549,7 +552,7 @@ See you!
 		<div class="_section _info">
 			<div class="font-bold mb-2">No messages yet</div>
 
-			{#if triggers.filter((t) => t.isEnabled).length}
+			{#if $allTriggers.filter((t) => t.isEnabled).length}
 				<div>Go get signups!</div>
 			{:else}
 				<div>You will see messages chats with your customers here</div>

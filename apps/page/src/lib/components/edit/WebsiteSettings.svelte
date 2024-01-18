@@ -50,6 +50,25 @@
 	</div>
 </div>
 
+<div
+	class="_section cursor-pointer flex items-start"
+	class:_selected={$selectedSettingsTab === 'automations'}
+	on:click={() => {
+		$selectedSettingsTab = 'automations';
+	}}
+>
+	<div class="mr-2 pr-2">
+		<Emoji width={30} height={30} emoji={'🤖'} />
+	</div>
+
+	<div class="">
+		<div class="font-bold">API and Event Automations</div>
+		<div class="opacity-80 mt-1">
+			Integrate Momentum with 3rd party apps, edit notifications preferences
+		</div>
+	</div>
+</div>
+
 <div class="text-lg font-bold mb-4 mt-16">Subscription</div>
 <div
 	class="_section cursor-pointer flex items-start"

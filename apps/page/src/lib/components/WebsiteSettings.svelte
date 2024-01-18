@@ -76,7 +76,7 @@
 </script>
 
 <div class="_editor">
-	<h2 class="text-2xl font-bold mb-2">Website Settings</h2>
+	<h2 class="text-xl font-bold mb-1">Website Settings</h2>
 	<div class="mb-4">{parentPage.name}</div>
 
 	<!-- 	

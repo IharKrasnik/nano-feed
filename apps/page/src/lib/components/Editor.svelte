@@ -1850,7 +1850,7 @@
 												<MessagingTab
 													bind:page
 													bind:selectedNewsletter
-													bind:trigger={selectedTrigger}
+													bind:selectedTrigger
 													bind:chatRoom={selectedChatRoom}
 												/>
 											{:else if $selectedTab === 'audience'}

@@ -22,6 +22,7 @@
 	import WebsiteSettings from '$lib/components/WebsiteSettings.svelte';
 	import PageSettings from '$lib/components/Settings.svelte';
 	import EditPageLinks from '$lib/components/edit/PageLinks.svelte';
+	import EditAutomations from '$lib/components/edit/Automations.svelte';
 
 	import selectedSettingsPage from '$lib/stores/selectedSettingsPage';
 	import selectedSettingsTab from '$lib/stores/selectedSettingsTab';
@@ -61,6 +62,10 @@
 		{:else if $selectedSettingsTab === 'header-footer'}
 			{#key (page.parentPage || page)._id}
 				<EditPageLinks {page} />
+			{/key}
+		{:else if $selectedSettingsTab === 'automations'}
+			{#key (page.parentPage || page)._id}
+				<EditAutomations {page} />
 			{/key}
 		{:else if $selectedSettingsTab === 'plans'}
 			<PageContainer class="p-8" bind:page>

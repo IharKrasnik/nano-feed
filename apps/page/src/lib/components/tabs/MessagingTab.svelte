@@ -12,7 +12,7 @@
 	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
 
 	export let page;
-	export let trigger;
+	export let selectedTrigger;
 	export let chatRoom;
 	export let selectedNewsletter;
 
@@ -29,21 +29,23 @@
 </script>
 
 <div class="px-8 py-16 bg-background overflow-y-auto" style={cssVarStyles}>
-	{#if trigger}
-		{#key trigger._id}
+	{#if selectedTrigger}
+		{#key selectedTrigger._id}
 			<div class="flex flex-col items-center">
 				<div class="text-2xl font-bold">
-					When a user submits a {trigger.on.includes('email') ? 'email' : 'form'}..
+					When a user submits a {selectedTrigger.on.includes('email') ? 'email' : 'form'}..
 				</div>
 
 				<div class="relative my-4 h-[50px]">
 					<div class="absolute left-[50%] border-r border-black/50 h-full" />
 				</div>
 
-				{#each trigger.actionSequence as triggerAction}
+				{#each selectedTrigger.actionSequence as triggerAction}
 					<div class="w-full">
 						<div class="text-xl font-bold  text-center">
-							{trigger.inMinutes ? `In ${trigger.inMinutes} minutes` : 'Immediately'} send them message
+							{selectedTrigger.inMinutes
+								? `In ${selectedTrigger.inMinutes} minutes`
+								: 'Immediately'} send them message
 						</div>
 
 						<div class="border p-8 w-full max-w-[800px] mx-auto mt-8">
