@@ -31,8 +31,6 @@
 
 	refreshTriggers({ pageId: parentPage._id });
 
-	let slackUrl = 'https://hooks.slack.com/services/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';
-
 	let addNewTrigger = () => {
 		$allTriggers = [
 			{
