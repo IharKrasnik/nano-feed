@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	let clazz = 'max-w-[600px] mx-auto';
 	export { clazz as class };
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -37,7 +38,7 @@
 			chatRoomId: submission._id
 		});
 
-		messages = results;
+		messages = _.reverse(results);
 
 		customerSocketIoService.emit('subscribe', `customerChatRoom-${submissionId}`);
 
@@ -180,7 +181,7 @@
 
 		<div class="flex flex-col flex-1 h-full justify-between _section-item mt-4" bind:this={chatEl}>
 			<div
-				class="flex flex-col h-full flex-1 min-h-[400px] max-h-[500px] overflow-y-scroll justify-end p-8"
+				class="h-full flex-1 min-h-[400px] max-h-[500px] overflow-y-scroll justify-end p-8"
 				style="border-radius: 0;"
 			>
 				{#each messages as message}
@@ -258,7 +259,7 @@
 	}
 
 	.message .content {
-		@apply rounded-xl flex shrink-0 p-4 max-w-[70%];
+		@apply rounded-xl  p-4 max-w-[70%];
 	}
 
 	.my {

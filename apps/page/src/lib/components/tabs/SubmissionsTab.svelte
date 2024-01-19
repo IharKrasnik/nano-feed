@@ -25,14 +25,6 @@
 {#if $selectedSubmission}
 	{#key $selectedSubmission._id}
 		<PageContainer class="p-8 mb-4 w-full h-full" {page}>
-			<RenderForm
-				{page}
-				section={{
-					id: 'sub',
-					submission: $selectedSubmission,
-					items: []
-				}}
-			/>
 			<RenderServiceChat bind:submission={$selectedSubmission} bind:page />
 		</PageContainer>
 	{/key}
