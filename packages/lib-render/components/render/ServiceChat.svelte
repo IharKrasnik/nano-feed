@@ -10,6 +10,8 @@
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import submissions from 'lib/stores/submissions';
 	import submissionsOutbound from 'lib/stores/submissionsOutbound';
+	import * as customerSocketIoService from 'lib-render/customerSocketIoService';
+	import { v4 as uuidv4 } from 'uuid';
 
 	export let page;
 	export let submission;
@@ -19,10 +21,15 @@
 
 	let messages = [];
 
-	let newMessage = {
-		content: '',
-		attachments: []
+	let getDefaultNewMessage = () => {
+		return {
+			id: uuidv4(),
+			content: '',
+			attachments: []
+		};
 	};
+
+	let newMessage = getDefaultNewMessage();
 
 	let getMessages = async () => {
 		let { results } = await get(`customerMessages`, {
@@ -31,6 +38,14 @@
 		});
 
 		messages = results;
+
+		customerSocketIoService.emit('subscribe', `customerChatRoom-${submissionId}`);
+
+		customerSocketIoService.on('customerMessage:created', ({ customerMessage: message }) => {
+			if (message.chatRoom._id === submission._id && !messages.find((m) => m.id === message.id)) {
+				messages = [message, ...messages];
+			}
+		});
 	};
 
 	let getSubmission = async () => {
@@ -53,7 +68,7 @@
 		messages = [...messages, newMessage];
 		let toCreate = newMessage;
 
-		newMessage = { messageHTML: '', attachments: [] };
+		newMessage = getDefaultNewMessage();
 
 		let createdMessage = await post(`customerMessages`, {
 			...toCreate,
@@ -109,6 +124,12 @@
 	};
 
 	let isMessageShown = false;
+
+	onMount(() => {
+		return () => {
+			customerSocketIoService.emit('unsubscribe', `customerChatRoom-${submissionId}`);
+		};
+	});
 </script>
 
 <div class={clazz}>

@@ -13,7 +13,6 @@
 	import { goto } from '$app/navigation';
 	import subPages, { refreshSubPages } from 'lib/stores/subPages';
 	import MomentumWidget from 'lib/components/MomentumWidget.svelte';
-	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
 	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
 	import PageContainer from 'lib-render/components/PageContainer.svelte';
 	import pricingPage from '$lib/stores/pricingPage';

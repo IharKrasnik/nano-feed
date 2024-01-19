@@ -8,7 +8,7 @@
 	import { browser } from '$app/environment';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import { page as sveltePage } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
 
 	import { SvelteToast } from '@zerodevx/svelte-toast';
@@ -16,6 +16,19 @@
 
 	import 'lazysizes';
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
+
+	import {
+		connect as connectSocketIo,
+		disconnect as disconnectSocketIo
+	} from 'lib-render/customerSocketIoService';
+
+	if (browser) {
+		connectSocketIo();
+
+		onDestroy(() => {
+			disconnectSocketIo();
+		});
+	}
 
 	let prevSlug;
 
