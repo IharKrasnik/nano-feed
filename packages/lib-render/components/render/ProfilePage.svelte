@@ -14,7 +14,7 @@
 	let customerEditData = _.pick($currentCustomer, ['fullName', 'avatarUrl', 'email']);
 
 	let refreshCurrentCustomer = async () => {
-		$currentCustomer = await get('customers/current');
+		$currentCustomer = await put(`customers/current?pageId=${page.parentPage._id}`);
 	};
 
 	refreshCurrentCustomer();

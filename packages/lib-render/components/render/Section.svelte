@@ -23,6 +23,7 @@
 	import RenderStepper from 'lib-render/components/render/Stepper.svelte';
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import RenderCalloutSection from 'lib-render/components/render/CalloutSection.svelte';
+	import RenderComments from 'lib-render/components/render/CommentsSection.svelte';
 
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
@@ -559,6 +560,8 @@
 					{/if}
 				{:else if section.renderType === 'faq'}
 					<RenderFAQ bind:section bind:page bind:isEdit />
+				{:else if section.renderType === 'comments'}
+					<RenderComments bind:page bind:section />
 				{:else if section.renderType === 'testimonials'}
 					<RenderTestimonials bind:page bind:section />
 				{:else if section.streamSlug}

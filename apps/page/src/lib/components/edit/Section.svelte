@@ -234,6 +234,7 @@
 			<option value="article">Article</option>
 			<option value="changelog">Changelog</option>
 			<option value="form">Form</option>
+			<option value="comments">Comments</option>
 			<option value="embedCode">HTML Code Embed</option>
 			<!-- <option value="service_chat">Service Chat</option> -->
 		</select>
@@ -385,7 +386,7 @@
 				/>
 			</div>
 		</div>
-	{:else if section.renderType === 'faq'}
+	{:else if section.renderType === 'comments'}{:else if section.renderType === 'faq'}
 		<EditFAQ bind:section />
 	{:else if section.renderType === 'testimonials'}
 		<EditTestimonials bind:section />

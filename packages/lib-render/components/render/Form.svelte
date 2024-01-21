@@ -60,6 +60,8 @@
 		section.items.forEach(({ id, title, varName, interactiveRenderType }) => {
 			if (interactiveRenderType === 'email') {
 				postData.email = $currentCustomer.email;
+			} else if (interactiveRenderType === 'name') {
+				postData.fullName = $currentCustomer.fullName;
 			} else {
 				postData.vars[varName || title] = formData[id];
 			}
@@ -71,6 +73,9 @@
 			if (section.onSubmitted) {
 				section.onSubmitted();
 			}
+		} else if (handleSubmit) {
+			handleSubmit({ postData });
+			isFormSubmitted = true;
 		} else {
 			if (
 				(section.isAuthRequired || section.actionType === 'service_chat') &&
@@ -111,7 +116,7 @@
 
 {#if !isFormSubmitted}
 	<div class="_section-item max-w-[600px] sm:min-w-[500px] w-full sm:mx-auto">
-		<form class="w-full flex flex-col gap-4 p-8" on:submit|preventDefault={submitForm}>
+		<form class="w-full flex flex-col gap-8 p-8" on:submit|preventDefault={submitForm}>
 			{#if isShowLoginCode}
 				<div>
 					<div class="mb-4">
@@ -140,31 +145,29 @@
 								<div class="text-sm opacity-80 mb-2">{@html formField.description || ''}</div>
 							</div>
 
-							{#if formField.interactiveRenderType === 'text'}
-								{#if formField.varName === 'name'}
-									{#if section.submission}
-										<input
-											class="w-full _transparent"
-											type="text"
-											disabled
-											value={section.submission.fullName}
-										/>
-									{:else}
-										<input
-											class="w-full _transparent"
-											placeholder={formField.interactivePlaceholder || 'Paul Graham'}
-											type="text"
-											bind:value={$currentCustomer.fullName}
-										/>
-									{/if}
+							{#if formField.interactiveRenderType === 'name'}
+								{#if section.submission}
+									<input
+										class="w-full _transparent"
+										type="text"
+										disabled
+										value={section.submission.fullName}
+									/>
 								{:else}
 									<input
 										class="w-full _transparent"
-										placeholder={formField.interactivePlaceholder || 'Type your message...'}
+										placeholder={formField.interactivePlaceholder || 'Paul Graham'}
 										type="text"
-										bind:value={formData[formField.id]}
+										bind:value={$currentCustomer.fullName}
 									/>
 								{/if}
+							{:else if formField.interactiveRenderType === 'text'}
+								<input
+									class="w-full _transparent"
+									placeholder={formField.interactivePlaceholder || 'Type your message...'}
+									type="text"
+									bind:value={formData[formField.id]}
+								/>
 							{:else if formField.interactiveRenderType === 'textarea'}
 								<textarea
 									class="w-full _transparent"
@@ -200,7 +203,7 @@
 				{/if}
 
 				{#if !section.submission}
-					<button class="_primary mt-8" type="submit">{section.callToActionText || 'Submit'}</button
+					<button class="_primary mt-4" type="submit">{section.callToActionText || 'Submit'}</button
 					>
 				{/if}
 			{/if}
