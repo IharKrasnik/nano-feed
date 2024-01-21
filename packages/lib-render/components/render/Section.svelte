@@ -388,14 +388,14 @@
 				accentColor={page.theme?.accentColor}
 			/>
 		{/if}
-
+		<!-- 
 		{#if section.title && (section.items?.length || section.streamSlug) && !isEmbed}
 			<div
 				class="mx-auto h-px max-w-[500px] opacity-[15%] w-full"
 				style="background:linear-gradient(to right, rgba(0,0,0,0), {page.theme
 					?.accentColor}, rgba(0,0,0,0))"
 			/>
-		{/if}
+		{/if} -->
 
 		<div
 			class=" _section-container {section.isGlowing
@@ -460,7 +460,7 @@
 							</div>
 						{/if}
 
-						<div class="mb-8 sm:mb-12">
+						<div class="mb-8 {section.description ? 'sm:mb-12' : ''}">
 							{#if section.title}
 								<h2
 									class="_section-title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
@@ -859,7 +859,7 @@
 											<div>
 												<div
 													class="{section.renderType === 'article'
-														? 'sm:px-8'
+														? 'sm:px-0'
 														: ' _borderless p-4 sm:p-8'}
 													{section.renderType === 'changelog' ? '_transparent _no-padding' : ''}
 													
