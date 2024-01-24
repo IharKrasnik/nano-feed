@@ -50,7 +50,7 @@ socket.on('connect', () => {
 			}
 		} else {
 			if (currentCustomerId) {
-				emit('unsubscribe', `customer-${customer._id}`);
+				emit('unsubscribe', `customer-${currentCustomerId}`);
 			}
 			currentCustomerId = null;
 		}

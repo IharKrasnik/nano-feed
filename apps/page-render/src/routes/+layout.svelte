@@ -18,15 +18,15 @@
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 
 	import {
-		connect as connectSocketIo,
-		disconnect as disconnectSocketIo
+		connect as connectCustomerSocketIo,
+		disconnect as disconnectCustomerSocketIo
 	} from 'lib-render/customerSocketIoService';
 
 	if (browser) {
-		connectSocketIo();
+		connectCustomerSocketIo();
 
 		onDestroy(() => {
-			disconnectSocketIo();
+			disconnectCustomerSocketIo();
 		});
 	}
 
@@ -38,6 +38,8 @@
 		$currentPage._refreshTimestamp = +new Date();
 	}
 
+	let prevAppUrl;
+
 	$: if (
 		(!$sveltePage.params.subPageSlug &&
 			$sveltePage.data.pageSlug &&
@@ -47,13 +49,16 @@
 			$sveltePage.params.subPageSlug &&
 			$sveltePage.params.subPageSlug !== prevSlug) ||
 		($sveltePage.params.feedItemSlug && $sveltePage.params.feedItemSlug !== prevSlug) ||
-		($sveltePage.params.articleSlug && $sveltePage.params.articleSlug !== prevSlug)
+		($sveltePage.params.articleSlug && $sveltePage.params.articleSlug !== prevSlug) ||
+		($sveltePage.url.href.includes('/app') && prevAppUrl !== $sveltePage.url.href)
 	) {
 		prevSlug =
 			$sveltePage.params.articleSlug ||
 			$sveltePage.params.feedItemSlug ||
 			$sveltePage.params.subPageSlug ||
 			$sveltePage.data.pageSlug;
+
+		prevAppUrl = $sveltePage.url.href;
 
 		$currentPage = $sveltePage.data.page;
 

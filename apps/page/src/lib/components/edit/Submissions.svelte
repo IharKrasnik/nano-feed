@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import { countryCodeEmoji } from 'country-code-emoji';
 	import selectedTab from '$lib/stores/selectedTab';
+	import formatSubmission from '$lib/helpers/formatSubmission';
 	import selectedSubmission from '$lib/stores/selectedSubmission';
 
 	import submissions, {
@@ -22,20 +23,10 @@
 
 	export let page;
 
-	let formatSubmission = (submission) => {
-		if (submission.vars) {
-			return Object.keys(submission.vars)
-				.map((varName) => submission.vars[varName])
-				.join('; ');
-		} else {
-			return submission.email || submission.name;
-		}
-	};
-
 	refreshSubmissions({ page });
 	refreshSubmissionsOutbound({});
 
-	let selectedSubmissionsTab = 'inbound';
+	export let selectedSubmissionsTab = 'inbound';
 </script>
 
 <div class="font-bold mb-2">Submissions</div>
@@ -82,7 +73,7 @@
 
 	{#each selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound as submission}
 		<div
-			class="_section cursor-pointer"
+			class="_section cursor-pointer  overflow-hidden"
 			class:_active={submission._id === $selectedSubmission?._id}
 			on:click={() => {
 				$submissions = $submissions.map((s) => {
@@ -96,7 +87,7 @@
 				$selectedSubmission = submission;
 			}}
 		>
-			<div class=" flex justify-between items-center">
+			<div class=" flex justify-between items-center _line-clamp-4">
 				{formatSubmission(submission)}
 
 				<div class="flex gap-2 items-center">

@@ -9,7 +9,7 @@
 	import { page as sveltePage } from '$app/stores';
 	import { browser } from '$app/environment';
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
-	import currentCustomer from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
 
 	export let page;
 	export let isEdit;
@@ -219,7 +219,7 @@
 			</div>
 		</div>
 
-		{#if $currentCustomer._id && !isEdit}
+		{#if $isAuthorized && !isEdit}
 			<RenderCustomerMenu />
 		{/if}
 	</div>

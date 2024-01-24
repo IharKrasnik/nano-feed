@@ -4,7 +4,7 @@
 	import { page as sveltePage } from '$app/stores';
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
-	import currentCustomer from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
 	import RenderForm from 'lib-render/components/render/Form.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import { showSuccessMessage } from 'lib/services/toast';
@@ -17,7 +17,9 @@
 		$currentCustomer = await put(`customers/current?pageId=${page.parentPage._id}`);
 	};
 
-	refreshCurrentCustomer();
+	if ($isAuthorized) {
+		refreshCurrentCustomer();
+	}
 
 	let updateProfile = async () => {
 		let updatedCustomer = await put('customers/current', customerEditData);
@@ -30,7 +32,7 @@
 	<div class="mb-[200px]">
 		<RenderSection {page} section={{ id: 'profile', title: 'Edit Profile' }} />
 
-		{#if $currentCustomer._id}
+		{#if $isAuthorized}
 			<div class="_section-item max-w-[500px] mx-auto">
 				<div class="flex justify-center w-full px-8 py-16 w-full">
 					<form class="w-full" on:submit|preventDefault={updateProfile}>

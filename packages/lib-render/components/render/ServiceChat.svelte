@@ -12,6 +12,7 @@
 	import submissions from 'lib/stores/submissions';
 	import submissionsOutbound from 'lib/stores/submissionsOutbound';
 	import * as customerSocketIoService from 'lib-render/customerSocketIoService';
+	import * as socketIoService from 'lib/socketIoService';
 	import { v4 as uuidv4 } from 'uuid';
 
 	export let page;
@@ -32,6 +33,16 @@
 
 	let newMessage = getDefaultNewMessage();
 
+	const scrollToBottom = (node = chatEl) => {
+		const scroll = () =>
+			node.scroll({
+				top: node.scrollHeight
+			});
+		scroll();
+
+		return { update: scroll };
+	};
+
 	let getMessages = async () => {
 		let { results } = await get(`customerMessages`, {
 			pageId: submission.page.parentPage?._id || submission.page._id,
@@ -40,11 +51,20 @@
 
 		messages = _.reverse(results);
 
-		customerSocketIoService.emit('subscribe', `customerChatRoom-${submissionId}`);
+		setTimeout(() => {
+			scrollToBottom();
+		}, 0);
 
-		customerSocketIoService.on('customerMessage:created', ({ customerMessage: message }) => {
+		let socketService = $currentUser ? socketIoService : customerSocketIoService;
+		socketService.emit('subscribe', `customerChatRoom-${submissionId}`);
+
+		socketService.on('customerMessage:created', ({ customerMessage: message }) => {
 			if (message.chatRoom._id === submission._id && !messages.find((m) => m.id === message.id)) {
-				messages = [message, ...messages];
+				messages = [...messages, message];
+
+				setTimeout(() => {
+					scrollToBottom();
+				}, 0);
 			}
 		});
 	};
@@ -81,16 +101,6 @@
 	};
 
 	let chatEl;
-
-	const scrollToBottom = (node = chatEl) => {
-		const scroll = () =>
-			node.scroll({
-				top: node.scrollHeight
-			});
-		scroll();
-
-		return { update: scroll };
-	};
 
 	if (browser) {
 		onMount(() => chatEl && scrollToBottom(chatEl));
@@ -155,23 +165,34 @@
 				</div>
 
 				<div class="text-lg mb-4 opacity-70">
-					Chat with {submission.page.parentPage.name}
+					Chat with
+					{#if $currentUser}
+						{submission.customer?.fullName || 'anonymous'} ({submission.customer.email ||
+							'no email'})
+					{:else}
+						{submission.page.parentPage.name}
+					{/if}
 				</div>
 			</div>
 
 			<div>
 				{#if submission.status === 'closed'}{:else}
-					<div class="cursor-pointer relative" on:click={() => (isMenuShown = true)}>
+					<div class="cursor-pointer relative" on:click={() => (isMenuShown = !isMenuShown)}>
 						<FeatherIcon theme={(page.parentPage || page)?.theme?.theme} name="more-horizontal" />
 
 						{#if isMenuShown}
 							<div
-								class="absolute left-0 top-0"
+								class="absolute right-0 top-0 min-w-[150px] "
 								style="transform:translateY(100%);"
 								use:clickOutside
 								on:clickOutside={() => (isMenuShown = false)}
 							>
-								<div on:click={closeRequest}>Close Request</div>
+								<div
+									class="p-2 _border-accent rounded hover:bg-accent transition"
+									on:click={closeRequest}
+								>
+									Close Request
+								</div>
 							</div>
 						{/if}
 					</div>
@@ -179,10 +200,11 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col flex-1 h-full justify-between _section-item mt-4" bind:this={chatEl}>
+		<div class="flex flex-col flex-1 h-full justify-between _section-item mt-4">
 			<div
 				class="h-full flex-1 min-h-[400px] max-h-[500px] overflow-y-scroll justify-end p-8"
 				style="border-radius: 0;"
+				bind:this={chatEl}
 			>
 				{#each messages as message}
 					<div

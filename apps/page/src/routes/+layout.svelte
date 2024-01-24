@@ -11,7 +11,7 @@
 	import Emoji from 'lib/components/Emoji.svelte';
 
 	import { page as sveltePage } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
 
 	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
@@ -22,6 +22,19 @@
 	import 'lazysizes';
 	// import a plugin 1
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
+
+	import {
+		connect as connectSocketIo,
+		disconnect as disconnectSocketIo
+	} from 'lib/socketIoService';
+
+	if (browser) {
+		connectSocketIo();
+
+		onDestroy(() => {
+			disconnectSocketIo();
+		});
+	}
 
 	let prevSlug;
 

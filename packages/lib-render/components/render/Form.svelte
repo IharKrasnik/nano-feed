@@ -1,7 +1,7 @@
 <script>
 	import { get, post } from 'lib/api';
 	import { fly } from 'svelte/transition';
-	import currentCustomer from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import trackForm from 'lib/services/trackForm';
 	import submissions from 'lib/stores/submissions';
@@ -40,12 +40,13 @@
 		);
 		$currentCustomer = customer;
 		Cookies.set('customer_access_token', token);
+		$isAuthorized = true;
 	};
 
 	let submitForm = async () => {
 		if (
 			(section.isAuthRequired || section.actionType === 'service_chat') &&
-			!$currentCustomer._id &&
+			!$isAuthorized &&
 			!loginCode
 		) {
 			await post(`customers/auth/login-token?pageId=${page._id || page.parentPage?._id}`, {
@@ -77,10 +78,7 @@
 			handleSubmit({ postData });
 			isFormSubmitted = true;
 		} else {
-			if (
-				(section.isAuthRequired || section.actionType === 'service_chat') &&
-				!$currentCustomer._id
-			) {
+			if ((section.isAuthRequired || section.actionType === 'service_chat') && !$isAuthorized) {
 				await loginCustomer();
 			}
 
@@ -127,7 +125,7 @@
 
 						<input
 							class="w-full _transparent"
-							placeholder={'1234'}
+							placeholder={'1312'}
 							type="text"
 							bind:value={loginCode}
 						/>
@@ -138,7 +136,13 @@
 				</div>
 			{:else}
 				{#if section.items.length}
-					{#each section.items as formField}
+					{#each section.items.filter((formField) => {
+						if (formField.interactiveRenderType === 'email' && $isAuthorized) {
+							return false;
+						}
+
+						return true;
+					}) as formField}
 						<div>
 							<div class="mb-4">
 								<div class="text-lg font-semibold opacity-80">{@html formField.title}</div>

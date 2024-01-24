@@ -16,7 +16,7 @@
 
 	<div class="mt-4 text-sm">
 		<div class="text-sm mb-2" class:text-orange-700={!chatRoom.customers}>
-			{chatRoom.customers ? chatRoom.customers[0].email : 'chat with yourself'}
+			{chatRoom.customers ? chatRoom.customers[0]?.email || '' : 'chat with yourself'}
 		</div>
 
 		{moment(chatRoom.lastMessageSentOn).format('MMM DD, HH:mm')}

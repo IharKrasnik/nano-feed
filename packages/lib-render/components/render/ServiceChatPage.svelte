@@ -8,13 +8,13 @@
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
-	import currentCustomer from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
 
 	import submissionsOutbound, {
 		refresh as refreshSubmissionsOutbound
 	} from 'lib/stores/submissionsOutbound';
 
-	if ($currentCustomer._id) {
+	if ($isAuthorized) {
 		refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
 	}
 
@@ -65,9 +65,26 @@
 
 <div class="py-[100px]">
 	<div class="mb-[200px]">
-		<RenderSection {page} section={{ id: 'servicerequests', title: 'Service Requests' }} />
+		{#if $submissionsOutbound?.length}
+			<RenderSection
+				{page}
+				section={{
+					id: 'yesreq',
+					title: 'Service Requests'
+				}}
+			/>
+		{:else}
+			<RenderSection
+				{page}
+				section={{
+					id: 'noreq',
+					title: 'Service Requests',
+					description: 'No requests yet'
+				}}
+			/>
+		{/if}
 
-		{#if $currentCustomer._id}
+		{#if $isAuthorized}
 			<div class="flex justify-center w-full">
 				<div class="min-w-[300px]">
 					{#each $submissionsOutbound as submission}
@@ -109,7 +126,7 @@
 							</div>
 						{/if}
 					</div>
-				{/if}
+				{:else}{/if}
 			</div>
 		{:else}
 			<div>

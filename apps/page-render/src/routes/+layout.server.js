@@ -41,6 +41,9 @@ export async function load({ url, params, session, cookies }) {
 		if (url.href.includes('/requests')) {
 			extend = {
 				page: {
+					_id: parentPage._id,
+					slug: 'service_chat',
+					_refreshTimestamp: new Date(),
 					renderType: 'service_chat',
 					parentPage,
 
@@ -56,6 +59,9 @@ export async function load({ url, params, session, cookies }) {
 		} else if (url.href.includes('/profile')) {
 			extend = {
 				page: {
+					_id: parentPage._id,
+					slug: 'edit_profile',
+					_refreshTimestamp: new Date(),
 					renderType: 'edit_profile',
 					parentPage,
 
@@ -66,6 +72,23 @@ export async function load({ url, params, session, cookies }) {
 
 				ogTitle: 'Profile',
 				ogDescription: 'Edit your user profile',
+				ogImage: ''
+			};
+		} else if (url.href.includes('/logout')) {
+			extend = {
+				page: {
+					_id: parentPage._id,
+					slug: 'logout',
+					_refreshTimestamp: new Date(),
+					parentPage,
+
+					theme: {},
+					heros: [],
+					sections: []
+				},
+
+				ogTitle: 'Logout',
+				ogDescription: 'Logout',
 				ogImage: ''
 			};
 		}

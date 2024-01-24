@@ -62,13 +62,15 @@
 </script>
 
 {#if chatRoom.customers}
-	<div class="max-w-[900px] mx-auto mb-4">
-		<div class="text-lg mb-2 font-bold opacity-80">Chat with customer</div>
+	{#if chatRoom.customers?.length}
+		<div class="max-w-[900px] mx-auto mb-4">
+			<div class="text-lg mb-2 font-bold opacity-80">Chat with customer</div>
 
-		<div>
-			{chatRoom.customers[0].email || 'anonymous'}
+			<div>
+				{chatRoom.customers[0].email || 'anonymous'}
+			</div>
 		</div>
-	</div>
+	{:else}{/if}
 {:else}
 	<div class=" max-w-[900px] mx-auto mb-4">
 		<div class="text-lg mb-2 font-bold opacity-80">Chat with yourself</div>
@@ -105,7 +107,9 @@
 			<textarea
 				class="w-full"
 				placeholder="Your Message {chatRoom.customers
-					? `(will be sent to ${chatRoom.customers[0].email})`
+					? chatRoom.customers?.length > 0
+						? `(will be sent to ${chatRoom.customers[0].email})`
+						: ''
 					: `will be sent to your ${$currentUser.email}`}"
 				bind:value={newMessage.messageHTML}
 			/>

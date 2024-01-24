@@ -20,8 +20,9 @@
 		isLoading as isTriggersLoading
 	} from '$lib/stores/allTriggers';
 
+	import selectedTrigger from '$lib/stores/selectedTrigger';
+
 	export let page;
-	export let selectedTrigger;
 	export let selectedChatRoom;
 	export let selectedNewsletter;
 	export let selectedCustomer;
@@ -59,7 +60,7 @@ See you!
 	};
 
 	let selectTrigger = (trigger) => {
-		selectedTrigger = trigger;
+		$selectedTrigger = trigger;
 		trigger.isEdit = true;
 	};
 
@@ -131,29 +132,29 @@ See you!
 	loadForms();
 
 	let saveTrigger = async () => {
-		if (!selectedTrigger) {
+		if (!$selectedTrigger) {
 			return;
 		}
 		let updatedTrigger;
 
-		if (selectedTrigger._id) {
+		if ($selectedTrigger._id) {
 			updatedTrigger = await put(
-				`triggers/${selectedTrigger._id}?pageId=${page.parentPage?._id || page._id}`,
-				selectedTrigger
+				`triggers/${$selectedTrigger._id}?pageId=${page.parentPage?._id || page._id}`,
+				$selectedTrigger
 			);
 		} else {
 			updatedTrigger = await post(
 				`triggers?pageId=${page.parentPage?._id || page._id}`,
-				selectedTrigger
+				$selectedTrigger
 			);
 		}
 
 		showSuccessMessage('Trigger saved');
 
-		_.extend(selectedTrigger, updatedTrigger);
+		_.extend($selectedTrigger, updatedTrigger);
 
-		selectedTrigger.isEdit = false;
-		selectedTrigger = null;
+		$selectedTrigger.isEdit = false;
+		$selectedTrigger = null;
 	};
 
 	let loadChatRooms = async () => {
@@ -241,35 +242,48 @@ See you!
 	};
 
 	let selectedMessagingTab = '';
+
+	let addTriggerAction = () => {
+		$selectedTrigger.actionSequence = [
+			...$selectedTrigger.actionSequence,
+			{
+				data: {
+					subject: 'Something Useful'
+				},
+				isDelayed: true,
+				delay: { amount: 1, unit: 'days' }
+			}
+		];
+	};
 </script>
 
 {#if selectedNewsletter}
 	<BackTo
 		to={'Messaging'}
 		onClick={() => {
-			if (selectedTrigger) {
-				selectedTrigger.isEdit = false;
+			if ($selectedTrigger) {
+				$selectedTrigger.isEdit = false;
 			}
-			selectedTrigger = null;
+			$selectedTrigger = null;
 			selectedNewsletter = null;
 			selectedMessagingTab = 'chats';
 		}}
 	/>
 {/if}
 
-{#if selectedTrigger}
+{#if $selectedTrigger}
 	<BackTo
 		to={'Triggers'}
 		onClick={() => {
-			if (selectedTrigger) {
-				selectedTrigger.isEdit = false;
+			if ($selectedTrigger) {
+				$selectedTrigger.isEdit = false;
 			}
-			selectedTrigger = null;
+			$selectedTrigger = null;
 		}}
 	/>
 {/if}
 
-{#if !selectedNewsletter && !selectedTrigger}
+{#if !selectedNewsletter && !$selectedTrigger}
 	<ToggleGroup
 		bind:value={selectedMessagingTab}
 		class="mb-8"
@@ -331,7 +345,7 @@ See you!
 {/if}
 
 {#if selectedMessagingTab === 'triggers'}
-	{#if selectedTrigger}
+	{#if $selectedTrigger}
 		<div class="font-bold text-lg mt-8 mb-4">Edit Trigger</div>
 	{:else}
 		<div class="font-bold text-lg mt-8 mb-4">Messaging Triggers</div>
@@ -343,15 +357,8 @@ See you!
 				<div class="flex gap-2 items-center">
 					On: <span class="font-semibold">{formatTrigger(trigger)}</span>
 				</div>
-				{#if !trigger.isEdit}
-					{trigger.isEnabled ? 'Enabled' : 'Disabled'}
-				{:else}
-					<div>
-						<input type="checkbox" bind:checked={trigger.isEnabled} /> Enabled
-					</div>
-				{/if}
 			</div>
-			{#if trigger === selectedTrigger}
+			{#if trigger === $selectedTrigger}
 				<div class="my-4" in:fade={{ duration: 150 }}>
 					{#if !trigger.isEnabled}
 						<div class="p-4 rounded-xl bg-orange-300">Trigger is currenty disabled</div>
@@ -361,92 +368,9 @@ See you!
 						</div>
 					{/if}
 				</div>
-
-				{#each trigger.actionSequence as triggerAction}
-					<div class="_section">
-						<!-- <select bind:value={triggerAction.when}>
-						<option>Immediately</option>
-						<option>In 24 hours</option>
-						<option>In 1 week</option>
-					</select> -->
-
-						<div>
-							<div class="">
-								<div class="text-sm opacity-70 mb-2">Subject</div>
-								<input
-									type="text"
-									class="w-full"
-									placeholder="Welcome to {page.name}!"
-									bind:value={triggerAction.data.subject}
-								/>
-							</div>
-							<div class="mt-2 w-full">
-								<div class="text-sm opacity-70 mb-2">Email</div>
-
-								<div
-									contenteditable="true"
-									use:contenteditable
-									bind:innerHTML={triggerAction.data.messageHTML}
-									class="w-full p-4 bg-[#f1f1f1]"
-								/>
-							</div>
-
-							<hr class="my-8 border-[#8B786D] opacity-30" />
-
-							<div class="mt-4">Call To Action (optional)</div>
-							<div class="text-sm mb-2 opacity-70">
-								Text & link for the button at the bottom of your email
-							</div>
-
-							<div class="flex w-full">
-								<div class="w-full">
-									<div class="text-sm mb-2">Button Text</div>
-									<input
-										class="w-full"
-										placeholder="Join discovery call"
-										bind:value={triggerAction.data.callToActionText}
-									/>
-								</div>
-
-								<div class="ml-4 w-full">
-									<div class="text-sm mb-2">URL</div>
-									<input
-										class="w-full"
-										type="text"
-										placeholder="https://cal.com/igor-krasnik-7uhewy/30min"
-										bind:value={triggerAction.data.callToActionUrl}
-									/>
-								</div>
-							</div>
-
-							<div class="mt-4 mb-2">Image (optional)</div>
-							<div class="text-sm mt-2 mb-4">
-								Add friendly photo or product demo to the end of email.
-							</div>
-							<FileInput class="w-full" bind:url={triggerAction.data.imageUrl} />
-
-							{#if selectedTrigger?.on[0]?.eventName?.includes('email')}
-								<div class="my-4 p-4 bg-green-600 rounded-xl text-white _section bg-[#f1f1f1]">
-									Welcome email is sent once a user <b>submitted</b> their email. <br />
-
-									🤝 Make it friendly and personal <br />
-									⏳ Keep it short and sweet <br />
-									⚡️ Stimulate reader to take action: book a call, check out the link, reply to email,
-									share in social media <br />
-								</div>
-							{/if}
-
-							<div class="flex items-center">
-								<Button class="_secondary my-8" onClick={() => sendTestEmail({ triggerAction })}
-									>🔬 Send Test Message + Email</Button
-								>
-							</div>
-						</div>
-					</div>
-				{/each}
 			{/if}
 
-			{#if trigger === selectedTrigger}
+			{#if trigger === $selectedTrigger}
 				<div class="mt-4  flex justify-between items-center">
 					<div>
 						<Button
@@ -460,9 +384,127 @@ See you!
 				</div>
 			{/if}
 		</div>
+
+		{#if trigger === $selectedTrigger}
+			{#each $selectedTrigger.actionSequence as triggerAction}
+				<div class="_section">
+					<!-- <select bind:value={triggerAction.when}>
+						<option>Immediately</option>
+						<option>In 24 hours</option>
+						<option>In 1 week</option>
+					</select> -->
+
+					<div>
+						<div class="_section">
+							<input
+								type="checkbox"
+								bind:checked={triggerAction.isDelayed}
+								on:change={() => {
+									if (triggerAction.isDelayed) {
+										triggerAction.delay = { amount: '1', unit: 'day' };
+									} else {
+										triggerAction.delay = null;
+									}
+								}}
+							/>
+							Delay trigger
+
+							{#if triggerAction.isDelayed && triggerAction.delay}
+								<div class="flex items-center mt-4">
+									<input
+										class="max-w-[100px] mr-4"
+										type="number"
+										bind:value={triggerAction.delay.amount}
+									/>
+									<ToggleGroup
+										bind:value={triggerAction.delay.unit}
+										tabs={[
+											{ name: 'Days', key: 'days' },
+											{ name: 'Hours', key: 'hours' }
+										]}
+									/>
+								</div>
+							{/if}
+						</div>
+						<div class="">
+							<div class="text-sm opacity-70 mb-2">Subject</div>
+							<input
+								type="text"
+								class="w-full"
+								placeholder="Welcome to {page.name}!"
+								bind:value={triggerAction.data.subject}
+							/>
+						</div>
+						<div class="mt-4 w-full">
+							<div class="text-sm opacity-70 mb-2">Email</div>
+
+							<div
+								contenteditable="true"
+								use:contenteditable
+								bind:innerHTML={triggerAction.data.messageHTML}
+								class="w-full p-4 bg-[#f1f1f1]"
+							/>
+						</div>
+
+						<hr class="my-8 border-[#8B786D] opacity-30" />
+
+						<div class="mt-4">Call To Action (optional)</div>
+						<div class="text-sm mb-2 opacity-70">
+							Text & link for the button at the bottom of your email
+						</div>
+
+						<div class="flex w-full">
+							<div class="w-full">
+								<div class="text-sm mb-2">Button Text</div>
+								<input
+									class="w-full"
+									placeholder="Join discovery call"
+									bind:value={triggerAction.data.callToActionText}
+								/>
+							</div>
+
+							<div class="ml-4 w-full">
+								<div class="text-sm mb-2">URL</div>
+								<input
+									class="w-full"
+									type="text"
+									placeholder="https://cal.com/igor-krasnik-7uhewy/30min"
+									bind:value={triggerAction.data.callToActionUrl}
+								/>
+							</div>
+						</div>
+
+						<div class="mt-8 mb-2">Image (optional)</div>
+						<div class="text-sm mt-2 mb-4">
+							Add friendly photo or product demo to the end of email.
+						</div>
+						<FileInput class="w-full" bind:url={triggerAction.data.imageUrl} />
+
+						{#if $selectedTrigger?.on[0]?.eventName?.includes('email')}
+							<div class="my-4 p-4 bg-green-600 rounded-xl text-white _section bg-[#f1f1f1]">
+								Welcome email is sent once a user <b>submitted</b> their email. <br />
+
+								🤝 Make it friendly and personal <br />
+								⏳ Keep it short and sweet <br />
+								⚡️ Stimulate reader to take action: book a call, check out the link, reply to email,
+								share in social media <br />
+							</div>
+						{/if}
+
+						<div class="flex items-center">
+							<Button class="_secondary mt-8" onClick={() => sendTestEmail({ triggerAction })}
+								>🔬 Send Test Message + Email</Button
+							>
+						</div>
+					</div>
+				</div>
+			{/each}
+
+			<button class="w-full _secondary" on:click={addTriggerAction}>Add Trigger Action</button>
+		{/if}
 	{/each}
 
-	{#if forms.length && !triggers.find((t) => t.on === 'form:submitted')}
+	{#if forms.length && !$allTriggers.find((t) => t.on === 'form:submitted')}
 		<button class="_secondary w-full mt-4" on:click={addFormTrigger}> Add Form Trigger </button>
 	{/if}
 {/if}

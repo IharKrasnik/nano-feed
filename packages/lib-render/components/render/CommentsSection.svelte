@@ -3,7 +3,7 @@
 	import { get, post, put } from 'lib/api';
 	export let page;
 	export let section;
-	import currentCustomer from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
 	import CustomerAvatar from 'lib-render/components/CustomerAvatar.svelte';
 	import RenderForm from 'lib-render/components/render/Form.svelte';
 
@@ -44,10 +44,10 @@
 	};
 
 	let sendComment = async ({ message }) => {
-		if (!$currentCustomer.isAuthorized) {
+		if (!$isAuthorized) {
 			await put(
 				`customers/current?pageId=${page._id}`,
-				$currentCustomer.isAuthorized
+				$isAuthorized
 					? {}
 					: {
 							email: $currentCustomer.email,

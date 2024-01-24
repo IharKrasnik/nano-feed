@@ -276,9 +276,11 @@ body {
 	/* @apply p-8; */
 }
 
-.bg-accent {
-	background: var(--accent-color) !important;
-	color: var(--button-color) !important;
+@layer utilities {
+	.bg-accent {
+		background: var(--accent-color) !important;
+		color: var(--button-color) !important;
+	}
 }
 
 .bg-background {
