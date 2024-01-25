@@ -7,5 +7,5 @@ const formatter = new Intl.NumberFormat('en-US', {
 	//maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 export default (amount) => {
-	return formatter.format(amount / 100);
+	return formatter.format((amount || 0) / 100);
 };

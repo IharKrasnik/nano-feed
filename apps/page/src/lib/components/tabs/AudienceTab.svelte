@@ -12,8 +12,7 @@
 	import currentUser from 'lib/stores/currentUser';
 	import submissions from 'lib/stores/submissions';
 	import FileInput from 'lib/components/FileInput.svelte';
-	import selectedSubmission from '$lib/stores/selectedSubmission';
-	import selectedChatRoom from '$lib/stores/selectedSubmission';
+	import selectedSubmission from 'lib-render/stores/selectedSubmission';
 
 	import formsCache, { getForm } from 'lib-render/stores/formsCache';
 

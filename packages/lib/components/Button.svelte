@@ -37,7 +37,13 @@
 	};
 </script>
 
-<button class="relative overflow-hidden {clazz} flex justify-center" {style} on:click={load}>
+<button
+	class="relative overflow-hidden {clazz} flex {clazz?.includes('justify-')
+		? ''
+		: 'justify-center'}}"
+	{style}
+	on:click={load}
+>
 	{#if isLoading}
 		<div class="absolute top-0 h-full flex items-center z-10">
 			<Loader {theme} />

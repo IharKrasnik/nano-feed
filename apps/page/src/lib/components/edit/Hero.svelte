@@ -180,14 +180,25 @@
 {/if}
 
 <div class="relative">
-	<div class="w-full flex items-center my-4 mt-8 py-4 ">
-		<div class="text-lg font-bold mr-4 _editor-title">Hero Section</div>
-		<div
-			class="w-[37px] h-[37px] bg-[#fafafa] rounded-full flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100"
-			on:click={showSettings}
-		>
-			<FeatherIcon size="15" name="settings" color="#333" />
+	<div class="w-full flex items-center justify-between  my-4 mt-8 py-4 ">
+		<div class="flex items-center">
+			<div class="text-lg font-bold mr-4 _editor-title">Hero Section</div>
+			<div
+				class="w-[37px] h-[37px] bg-[#fafafa] rounded-full flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100"
+				on:click={showSettings}
+			>
+				<FeatherIcon size="15" name="settings" color="#333" />
+			</div>
 		</div>
+
+		{#if !isCollapsed}
+			<div
+				class="flex items-center opacity-50 hover:opacity-100 cursor-pointer"
+				on:click={() => (isCollapsed = true)}
+			>
+				<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse
+			</div>
+		{/if}
 	</div>
 
 	{#if isSettingsShown}
@@ -467,13 +478,6 @@
 		<div class="flex w-full items-center justify-between mb-4 ">
 			<div class="flex items-center ">
 				<div class="font-bold mr-4">Hero Section</div>
-			</div>
-
-			<div
-				class="flex items-center opacity-50 hover:opacity-100 cursor-pointer"
-				on:click={() => (isCollapsed = true)}
-			>
-				<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse Hero
 			</div>
 		</div>
 

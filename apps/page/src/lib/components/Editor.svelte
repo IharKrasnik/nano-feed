@@ -107,7 +107,8 @@
 	import selectedGrowthTab from '$lib/stores/selectedGrowthTab';
 	import selectedEditorTab from '$lib/stores/selectedEditorTab';
 	import selectedTrigger from '$lib/stores/selectedTrigger';
-	import selectedSubmission from '$lib/stores/selectedSubmission';
+	import selectedSubmission from 'lib-render/stores/selectedSubmission';
+	import * as socketIoService from 'lib/socketIoService';
 
 	//
 	onMount(async () => {
@@ -259,6 +260,20 @@
 	let isPageResetting = false;
 
 	let setPageAndDraft = (p = defaultPage, { force = false, isSetEditorTab = true } = {}) => {
+		if ($currentUser) {
+			let oldPageId = (page?.parentPage || page)?._id;
+			let newPageId = (p.parentPage || p)._id;
+
+			if (oldPageId !== newPageId) {
+				if (newPageId) {
+					socketIoService.emit('subscribe', `page-${newPageId}`);
+				}
+				if (oldPageId) {
+					socketIoService.emit('unsubscribe', `page-${oldPageId}`);
+				}
+			}
+		}
+
 		page = { ..._.cloneDeep(p) };
 		isPageResetting = false;
 

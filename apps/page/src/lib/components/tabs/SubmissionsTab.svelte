@@ -7,16 +7,17 @@
 	import allPages from 'lib-render/stores/allPages';
 	import currentUser from 'lib/stores/currentUser';
 	import subPages from 'lib/stores/subPages';
-	import selectedSubmission from '$lib/stores/selectedSubmission';
-	import formatSubmission from '$lib/helpers/formatSubmission';
+	import selectedSubmission from 'lib-render/stores/selectedSubmission';
+	import formatSubmission from 'lib-render/helpers/formatSubmission';
 
 	import RenderForm from 'lib-render/components/render/Form.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import SitePreview from 'lib-render/components/SitePreview.svelte';
 	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
+	import ServiceRequestsPage from 'lib-render/components/render/ServiceRequestsPage.svelte';
 	import PageContainer from 'lib-render/components/PageContainer.svelte';
-	import ServiceRequestCard from '$lib/components/ServiceRequestCard.svelte';
+	import ServiceRequestCard from 'lib-render/components/ServiceRequestCard.svelte';
 
 	import submissions from 'lib/stores/submissions';
 	import submissionsOutbound from 'lib/stores/submissionsOutbound';
@@ -26,6 +27,10 @@
 	export let setPageAndDraft;
 </script>
 
+<PageContainer class="min-h-screen overflow-y-scroll" {page}>
+	<ServiceRequestsPage bind:page selectedSubmissionsTab="inbound" />
+</PageContainer>
+<!-- 
 {#if $selectedSubmission}
 	{#key $selectedSubmission._id}
 		<PageContainer class="p-8 mb-4 w-full h-full" {page}>
@@ -39,14 +44,14 @@
 			<div class="my-2">
 				<div class="font-bold text-lg mb-4">To Do</div>
 
-				{#each (selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound).filter((s) => s.activateAmount && !s.isActivated) as submission}
+				{#each (selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound).filter((s) => !s.isActivated && !s.isClosed) as submission}
 					<ServiceRequestCard bind:submission />
 				{/each}
 			</div>
 			<div class="my-2">
 				<div class="font-bold text-lg mb-4">In Progress</div>
 
-				{#each (selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound).filter((s) => s.isActivated || (!s.activateAmount && !(s.isClosed || s.isPaid))) as submission}
+				{#each (selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound).filter((s) => s.isActivated && !s.isClosed && !s.isPaid) as submission}
 					<ServiceRequestCard bind:submission />
 				{/each}
 			</div>
@@ -59,4 +64,4 @@
 			</div>
 		</div>
 	</div>
-{/if}
+{/if} -->

@@ -7,6 +7,7 @@
 	export let condition = false;
 
 	let isShowEditable = false;
+	let editableEl;
 </script>
 
 {#if isShowEditable}
@@ -16,6 +17,7 @@
 		contenteditable=""
 		bind:innerHTML
 		use:clickOutside
+		bind:this={editableEl}
 		on:clickOutside={() => {
 			isShowEditable = false;
 		}}

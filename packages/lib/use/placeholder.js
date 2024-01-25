@@ -1,7 +1,5 @@
 export default (node, placeholder = 'placeholder') => {
 	let setPlaceholder = () => {
-		// debugger;
-		console.log('!node.innerHTML', node.innerHTML);
 		if (!node.innerHTML || node.innerHTML === '<br>') {
 			node.dataset.placeholder = placeholder;
 		} else {

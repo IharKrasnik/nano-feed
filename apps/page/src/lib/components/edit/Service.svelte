@@ -27,6 +27,7 @@
 	import allServices from '$lib/stores/allServices';
 	import servicePortfolioItems from '$lib/stores/servicePortfolioItems';
 	import EditSection from '$lib/components/edit/Section.svelte';
+	import EditServicePricing from '$lib/components/edit/ServicePricing.svelte';
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 	export let page;
@@ -224,64 +225,10 @@
 {#each page.heros as hero (hero.id)}
 	<EditHero class="my-4" bind:hero bind:page isShowTips={page.heros?.length < 2} />
 {/each}
-<!-- 
-<div
-	in:fade={{ duration: 150 }}
-	class="_section {clazz}"
-	style="padding: 0"
-	use:clickOutside
-	on:clickOutside={() => {}}
->
-	<div class="font-bold p-4">Main Info</div>
-
-	<hr class="border-[#8B786D] opacity-30 s-dr4iJsSC3dPL" />
-
-	<div class="p-4">
-		<div class="flex w-full items-center mb-4">
-			<div
-				contenteditable
-				bind:innerHTML={page.activeHero.title}
-				data-placeholder="Service title"
-				use:contenteditable
-			/>
-		</div>
-
-		<div
-			data-placeholder="1-line service description"
-			class="w-full mb-4 textarea"
-			contenteditable
-			use:contenteditable
-			bind:innerHTML={page.activeHero.subtitle}
-		/>
-
-		<div class="flex items-center">
-			<div class="mr-2">$</div>
-
-			<input class="mr-2" type="number" bind:value={page.activeHero.price} placeholder="29.99" />
-
-			<select class="w-full h-full" bind:value={page.activeHero.pricePer}>
-				<option value="one-time">One-Time</option>
-				<option value="week">Per Week</option>
-				<option value="month">Per Month</option>
-			</select>
-		</div>
-
-		<div class="relative flex justify-between items-center mt-4">
-			<FileInput
-				class="w-full"
-				placeholder="Service cover image"
-				bind:url={page.activeHero.demoUrl}
-				theme="light"
-			/>
-		</div>
-
-		<div class="flex justify-between items-center">
-		
-		</div>
-	</div>
-</div> -->
 
 {#if page._id}
+	<EditServicePricing bind:page />
+
 	<div
 		class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
 	>

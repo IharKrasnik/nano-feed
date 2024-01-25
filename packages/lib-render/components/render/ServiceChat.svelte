@@ -14,8 +14,11 @@
 	import * as customerSocketIoService from 'lib-render/customerSocketIoService';
 	import * as socketIoService from 'lib/socketIoService';
 	import { v4 as uuidv4 } from 'uuid';
+	import RenderUrl from 'lib/components/RenderUrl.svelte';
 
 	export let page;
+	let parentPage = page.parentPage || page;
+
 	export let submission;
 	export let submissionId = submission?._id;
 	import autofocus from 'lib/use/autofocus';
@@ -44,11 +47,12 @@
 	};
 
 	let getMessages = async () => {
-		let { results } = await get(`customerMessages`, {
-			pageId: submission.page.parentPage?._id || submission.page._id,
-			chatRoomId: submission._id
-		});
-
+		let { results } = submission.chatRoom._id
+			? await get(`customerMessages`, {
+					pageId: submission.page.parentPage?._id || submission.page._id,
+					chatRoomId: submission.chatRoom._id
+			  })
+			: { results: [] };
 		messages = _.reverse(results);
 
 		setTimeout(() => {
@@ -57,6 +61,12 @@
 
 		let socketService = $currentUser ? socketIoService : customerSocketIoService;
 		socketService.emit('subscribe', `customerChatRoom-${submissionId}`);
+
+		socketService.on('submission:isUpdated', ({ submission: updatedSubmission }) => {
+			if (updatedSubmission._id === submission._id) {
+				submission = updatedSubmission;
+			}
+		});
 
 		socketService.on('customerMessage:created', ({ customerMessage: message }) => {
 			if (message.chatRoom._id === submission._id && !messages.find((m) => m.id === message.id)) {
@@ -83,6 +93,14 @@
 	}
 
 	let sendMessage = async () => {
+		if (!submission.chatRoom) {
+			let { chatRoom } = await post(
+				`serviceRequests/${submission._id}/chatRoom?pageId=${parentPage._id}`
+			);
+
+			submission.chatRoom = chatRoom;
+		}
+
 		newMessage.fromUser = $currentUser;
 		newMessage.fromCustomer = $currentCustomer;
 
@@ -94,7 +112,7 @@
 		let createdMessage = await post(`customerMessages`, {
 			...toCreate,
 			pageId: submission.page.parentPage?._id || submission.page._id,
-			chatRoomId: submission._id
+			chatRoomId: submission.chatRoom._id
 		});
 
 		messages = [...messages.filter((m) => m._id), createdMessage];
@@ -114,26 +132,6 @@
 		}
 	};
 
-	let isMenuShown = false;
-
-	let closeRequest = async () => {
-		let updatedSubmission = await put(`serviceRequests/${submission._id}/close`);
-		submission = updatedSubmission;
-
-		$submissionsOutbound = $submissionsOutbound.map((s) => {
-			if (s._id === submission._id) {
-				return submission;
-			}
-			return s;
-		});
-		$submissions = $submissions.map((s) => {
-			if (s._id === submission._id) {
-				return submission;
-			}
-			return s;
-		});
-	};
-
 	let isMessageShown = false;
 
 	onMount(() => {
@@ -145,61 +143,6 @@
 
 <div class={clazz}>
 	{#if page && submission}
-		<div class="flex justify-between">
-			<div>
-				<div class="flex items-center">
-					<div class="text-lg font-bold mb-2 shrink-0">
-						{submission.page.name}
-					</div>
-					<div class="mt-[-5px] ml-4">
-						{#if submission.status === 'closed'}
-							<div class="text-center text-sm p-1 px-3 border rounded-full border-orange-300">
-								Closed
-							</div>
-						{:else}
-							<div class="text-center text-sm p-1 px-3 border rounded-full border-green-300">
-								Active
-							</div>
-						{/if}
-					</div>
-				</div>
-
-				<div class="text-lg mb-4 opacity-70">
-					Chat with
-					{#if $currentUser}
-						{submission.customer?.fullName || 'anonymous'} ({submission.customer.email ||
-							'no email'})
-					{:else}
-						{submission.page.parentPage.name}
-					{/if}
-				</div>
-			</div>
-
-			<div>
-				{#if submission.status === 'closed'}{:else}
-					<div class="cursor-pointer relative" on:click={() => (isMenuShown = !isMenuShown)}>
-						<FeatherIcon theme={(page.parentPage || page)?.theme?.theme} name="more-horizontal" />
-
-						{#if isMenuShown}
-							<div
-								class="absolute right-0 top-0 min-w-[150px] "
-								style="transform:translateY(100%);"
-								use:clickOutside
-								on:clickOutside={() => (isMenuShown = false)}
-							>
-								<div
-									class="p-2 _border-accent rounded hover:bg-accent transition"
-									on:click={closeRequest}
-								>
-									Close Request
-								</div>
-							</div>
-						{/if}
-					</div>
-				{/if}
-			</div>
-		</div>
-
 		<div class="flex flex-col flex-1 h-full justify-between _section-item mt-4">
 			<div
 				class="h-full flex-1 min-h-[400px] max-h-[500px] overflow-y-scroll justify-end p-8"
@@ -232,6 +175,14 @@
 				{/each}
 			</div>
 
+			{#if newMessage.files?.length}
+				<div class="flex">
+					{#each newMessage.files as file}
+						<RenderUrl imgClass="max-h-[100px] w-auto mr-4" url={file.url} />
+					{/each}
+				</div>
+			{/if}
+
 			{#if submission.status === 'closed' && !isMessageShown}
 				<div>
 					<div class="max-w-[300px] text-center mx-auto py-4">
@@ -245,9 +196,10 @@
 					</div>
 				</div>
 			{:else}
-				<div class="w-full flex gap-4 items-center justify-between" style="border-radius: 0;">
+				<div class="w-full flex gap-0 items-center justify-between" style="border-radius: 0;">
 					<textarea
 						class="w-full"
+						style="border-radius: 0;"
 						placeholder="Your Message"
 						use:autofocus
 						bind:value={newMessage.messageHTML}
@@ -255,7 +207,8 @@
 					<button
 						disabled={!newMessage.messageHTML}
 						on:click={sendMessage}
-						class="_primary _small shrink-0">Send Message</button
+						class="_alternative min-w-[200px] h-[60px]"
+						style="border-radius: 0;">Send Message</button
 					>
 				</div>
 			{/if}

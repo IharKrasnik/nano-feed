@@ -28,7 +28,7 @@
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import RenderHeader from 'lib-render/components/render/Header.svelte';
-	import RenderServiceChatPage from 'lib-render/components/render/ServiceChatPage.svelte';
+	import RenderServiceRequestsPage from 'lib-render/components/render/ServiceRequestsPage.svelte';
 	import RenderProfilePage from 'lib-render/components/render/ProfilePage.svelte';
 
 	import trackClick from 'lib/services/trackClick';
@@ -312,7 +312,7 @@
 						{/if}
 						{#if !isLoading}
 							{#if page.renderType === 'service_chat'}
-								<RenderServiceChatPage {page} />
+								<RenderServiceRequestsPage {page} />
 							{:else if page.renderType === 'edit_profile'}
 								<RenderProfilePage {page} />
 							{:else}

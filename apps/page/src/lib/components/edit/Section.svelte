@@ -169,6 +169,11 @@
 				<div class="overflow-hidden _line-clamp-4">
 					{@html section.items.map((item) => striptags(item.title || '')).join('<br/>')}
 				</div>
+				{#if section.callToActionText}
+					<div class="mt-2">
+						{section.callToActionText}
+					</div>
+				{/if}
 			{/if}
 
 			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.streamSlug || ['testimonials', 'pricing', 'form', 'carousel', 'stepper', 'article'].includes(section.renderType)}

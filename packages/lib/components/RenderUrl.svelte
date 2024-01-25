@@ -102,7 +102,7 @@
 
 {#if url}
 	{#if isUrl() || isServiceUrl()}
-		<div class="w-full {clazz}" {style}>
+		<div class="{clazz?.includes('w-') ? '' : 'w-full'} {clazz}" {style}>
 			{#if url.includes('loom.com')}
 				{#if !isFilesOnly}
 					<iframe

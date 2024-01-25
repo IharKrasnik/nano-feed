@@ -3,6 +3,7 @@
 	import portal from 'lib/use/portal';
 	import CrossSvg from 'lib/icons/cross.svelte';
 	import clickOutside from 'lib/use/clickOutside';
+	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
 
 	export let isShown;
 	export let isClosable = true;
@@ -12,6 +13,8 @@
 	export let onClosed = () => {};
 
 	export let page;
+
+	export let position = 'center';
 
 	const closePopup = () => {
 		isShown = false;
@@ -23,6 +26,15 @@
 			closePopup();
 		}
 	};
+
+	let cssVarStyles;
+	let styles;
+
+	$: if (page) {
+		let res = getPageCssStyles(page);
+		cssVarStyles = res.cssVarStyles;
+		styles = res.styles;
+	}
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -30,8 +42,8 @@
 {#if isShown}
 	<div use:portal={'#popup-portal'}>
 		<div
-			in:fly={{ y: 50, duration: 150, delay: 150 }}
-			class="inset-0 overflow-y-hidden rounded-2xl max-h-[100%] py-8 {page?.theme.theme === 'dark'
+			in:fly={{ ...(position === 'center' ? { y: 50 } : { x: 150 }), duration: 150, delay: 150 }}
+			class="inset-0 overflow-y-hidden max-h-[100%] py-8 {page?.theme.theme === 'dark'
 				? '_dark'
 				: '_light'}"
 			aria-labelledby="popup-title"
@@ -40,13 +52,15 @@
 			class:hidden={!isShown}
 			class:fixed={isFixed}
 			class:absolute={!isFixed}
-			style="z-index: {zIndex}"
+			style="z-index: {zIndex};"
 		>
 			<div class="flex items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 				<div class="absolute _popup-backdrop inset-0 transition-opacity" aria-hidden="true" />
 
 				<div
-					class="popup-content max-h-full overflow-y-auto absolute inline-block align-bottom rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
+					class="popup-content {position === 'center'
+						? 'positiion-center rounded-2xl'
+						: 'position-right'} max-h-full overflow-y-auto absolute inline-block align-bottom text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
 					use:clickOutside
 					on:clickOutside={closePopup}
 					style={maxWidth ? `max-width: ${maxWidth}px;` : ''}
@@ -56,7 +70,7 @@
 							<CrossSvg />
 						</div>
 					{/if}
-					<div class="_popup-contents">
+					<div class="_popup-contents" style="{cssVarStyles}; color: var(--text-color);">
 						<slot />
 					</div>
 				</div>
@@ -96,11 +110,24 @@
 		background: rgba(255, 255, 255, 0.8);
 	}
 
-	.popup-content {
+	.popup-content.positiion-center {
 		top: 50%;
 		left: 50%;
 		transform: translateX(-50%) translateY(-50%);
 		width: calc(100% - 32px);
+	}
+
+	.popup-content.position-right {
+		top: 50%;
+		right: 0;
+		transform: translateX(0%) translateY(-50%);
+		width: calc(100% - 32px);
+		height: 100vw;
+	}
+
+	.position-right ._popup-contents {
+		height: 100vh;
+		@apply overflow-y-scroll;
 	}
 
 	._dark ._popup-contents {

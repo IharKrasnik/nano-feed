@@ -281,27 +281,27 @@ body {
 		background: var(--accent-color) !important;
 		color: var(--button-color) !important;
 	}
-}
 
-.bg-background {
-	background: var(--background-color);
-	color: var(--text-color);
-}
+	.bg-background {
+		background: var(--background-color);
+		color: var(--text-color);
+	}
 
-._border-accent {
-	border: 1px var(--accent-color) solid;
-}
+	._border-accent {
+		border: 1px var(--accent-color) solid;
+	}
 
-._border-theme {
-	border: 1px var(--border-color) solid;
-}
+	._border-theme {
+		border: 1px var(--border-color) solid;
+	}
 
-._bg-border {
-	background: 1px var(--border-color) solid;
-}
+	._bg-border {
+		background: 1px var(--border-color) solid;
+	}
 
-._border-b-theme {
-	border-bottom: 1px var(--border-color) solid;
+	._border-b-theme {
+		border-bottom: 1px var(--border-color) solid;
+	}
 }
 
 ._section-item._color ._section-img {
@@ -554,6 +554,10 @@ a[href] {
 	/* margin-bottom: 16px; */
 }
 
+._app-section {
+	@apply _border-theme p-4 rounded-lg;
+}
+
 a._item-title {
 	@apply transition;
 }
@@ -655,10 +659,16 @@ button[type='submit'] {
 	cursor: pointer;
 
 	background-color: var(--accent-color);
-	color: var(--button-color);
+
 	font-size: 15px;
 	font-weight: 500;
 	@apply transition;
+}
+
+button:not(._transparent),
+.button:not(._transparent),
+button[type='submit']:not(._transparent) {
+	color: var(--button-color, #ffffff);
 }
 
 @media (max-width: 640px) {

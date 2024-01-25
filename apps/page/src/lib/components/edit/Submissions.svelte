@@ -4,8 +4,8 @@
 	import { fade } from 'svelte/transition';
 	import { countryCodeEmoji } from 'country-code-emoji';
 	import selectedTab from '$lib/stores/selectedTab';
-	import formatSubmission from '$lib/helpers/formatSubmission';
-	import selectedSubmission from '$lib/stores/selectedSubmission';
+	import formatSubmission from 'lib-render/helpers/formatSubmission';
+	import selectedSubmission from 'lib-render/stores/selectedSubmission';
 
 	import submissions, {
 		refresh as refreshSubmissions,

@@ -21,6 +21,6 @@
 		class="rounded-full border {_.sample(colors)} flex items-center justify-center {clazz}"
 		style="width: {size}px; height: {size}px;"
 	>
-		{_.capitalize((customer.email || customer.fullName || '')[0]) || ''}
+		{_.capitalize((customer.email || customer.fullName || '')[0]) || '🥸'}
 	</div>
 {/if}
