@@ -8,13 +8,12 @@
 	export let isShown;
 	export let isClosable = true;
 	export let isFixed = true;
-	export let maxWidth = 1080;
+	export let position = 'center';
+	export let maxWidth = position === 'center' ? 1080 : 900;
 	export let zIndex = 2000;
 	export let onClosed = () => {};
 
 	export let page;
-
-	export let position = 'center';
 
 	const closePopup = () => {
 		isShown = false;

@@ -362,7 +362,7 @@ input:not(._input):not([type='color']) {
 	border-radius: 8px;
 }
 
-input:not(._input):not([type='color']):not(._dark) {
+input:not(._input):not([type='color']):not(._dark):not(.app-input) {
 	background: #f6f5f5;
 }
 
@@ -398,7 +398,7 @@ textarea {
 
 ._editor select,
 ._editor textarea,
-._editor input:not(._dark):not(._email-input) {
+._editor input:not(._dark):not(._email-input):not(.app-input) {
 	background: #f6f5f5 !important;
 }
 
@@ -671,6 +671,15 @@ button[type='submit']:not(._transparent) {
 	color: var(--button-color, #ffffff);
 }
 
+.app-button {
+	border-radius: 8px;
+	padding: 0 14px;
+	height: 32px;
+	font-size: 14px;
+	font-weight: 500;
+	@apply flex items-center;
+}
+
 @media (max-width: 640px) {
 	button,
 	.button,
@@ -705,6 +714,12 @@ button._alternative:hover {
 
 ._transparent {
 	background: none !important;
+}
+
+.app-input {
+	background: none !important;
+	color: var(--text-color, #ffffff);
+	border: 1px var(--border-color) solid;
 }
 
 ._container-width {

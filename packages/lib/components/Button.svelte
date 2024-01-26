@@ -40,7 +40,7 @@
 <button
 	class="relative overflow-hidden {clazz} flex {clazz?.includes('justify-')
 		? ''
-		: 'justify-center'}}"
+		: 'justify-center'}"
 	{style}
 	on:click={load}
 >

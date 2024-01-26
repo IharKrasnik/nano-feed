@@ -5,6 +5,7 @@
 	export let submission;
 	import selectedSubmission from 'lib-render/stores/selectedSubmission';
 	import CustomerAvatar from 'lib-render/components/CustomerAvatar.svelte';
+	import ServiceRequestStatus from 'lib-render/components/ServiceRequestStatus.svelte';
 	import currentUser from 'lib/stores/currentUser';
 
 	export let onClick = () => {
@@ -21,11 +22,17 @@
 	</div>
 
 	{#if submission.description}
-		<div class="truncate text-sm mb-2 opacity-80">{@html striptags(submission.description)}</div>
+		<div class="truncate text-sm mb-2 mt-1 opacity-80">
+			{@html striptags(submission.description)}
+		</div>
 	{/if}
-	<div class="text-sm mb-1 opacity-80">
-		{moment(submission.createdOn).fromNow()}
-	</div>
+
+	<ServiceRequestStatus
+		sizeClass="text-xs p-1 rounded"
+		class="inline-flex my-2"
+		{submission}
+		size="sm"
+	/>
 
 	{#if submission.chatRoom}
 		<div class="_bg-cta p-3 rounded-lg mt-2 text-sm">
@@ -36,10 +43,17 @@
 			</div>
 		</div>
 	{/if}
-
+	<div class="text-sm mb-1 mt-2 opacity-80">
+		{moment(submission.createdOn).fromNow()}
+	</div>
 	{#if $currentUser}
 		<div class="flex text-sm items-center mt-4">
-			<CustomerAvatar size={20} class="mr-2 shrink-0" bind:customer={submission.customer} />
+			<CustomerAvatar
+				isRandomBorderColor
+				size={20}
+				class="mr-2 shrink-0"
+				bind:customer={submission.customer}
+			/>
 			{submission.customer.fullName || submission.customer.email || 'Anonymous'}
 		</div>
 	{/if}

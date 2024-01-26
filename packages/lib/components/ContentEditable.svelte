@@ -221,8 +221,8 @@
 	};
 </script>
 
-<div>
-	<div class="fixed z-10 rounded-lg opacity-90" style={menuStyle}>
+<div class="relative {clazz}">
+	<div class="fixed z-10 rounded opacity-90" style={menuStyle}>
 		{#if $isShowContentEditableMenu}
 			<div
 				use:clickOutside
@@ -236,7 +236,6 @@
 	</div>
 
 	<div
-		class={clazz}
 		contenteditable
 		use:usePlaceholder={placeholder}
 		bind:innerHTML={value}
