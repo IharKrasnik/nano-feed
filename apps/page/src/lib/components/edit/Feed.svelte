@@ -35,7 +35,7 @@
 
 <Button class="_secondary _small mb-4 w-full" onClick={addNewPost}>Add New Post</Button>
 
-{#if parentPage?.streams?.feed?.slug}
+{#if parentPage && parentPage.streams && parentPage.feed}
 	{#each $feedCache[parentPage.streams.feed.slug]?.feed || [] as feedItem}
 		<div
 			class="_section cursor-pointer"
