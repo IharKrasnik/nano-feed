@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import { get } from 'lib/api';
 import { get as getFromStore } from 'svelte/store';
+import { isAuthorized } from 'lib/stores/currentCustomer';
 import currentUser from 'lib/stores/currentUser';
 
 const store = writable([]);
@@ -13,8 +14,10 @@ export let refresh = async ({ customerId } = {}) => {
 
 	if (!customerId) {
 		result = await get('submissions/outbound');
-	} else {
+	} else if (getFromStore(isAuthorized)) {
 		result = await get('submissions/from-customer');
+	} else {
+		result = { results: [] };
 	}
 
 	store.update((s) => result.results);

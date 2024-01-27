@@ -31,7 +31,7 @@
 	<div use:portal={'#popup-portal'}>
 		<div
 			in:fly={{ y: 50, duration: 150, delay: 150 }}
-			class="inset-0 overflow-y-hidden rounded-2xl max-h-[100%] py-8 {page?.theme.theme === 'dark'
+			class="inset-0 overflow-y-hidden rounded-2xl max-h-[100%] py-8 {page.theme?.theme === 'dark'
 				? '_dark'
 				: '_light'}"
 			aria-labelledby="popup-title"

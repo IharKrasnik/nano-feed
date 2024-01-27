@@ -718,7 +718,7 @@
 							<div class="opacity-60">
 								{servicePage.heros[0].subtitle}
 							</div>
-							{#if servicePage.metadata.coverImageUrl}
+							{#if servicePage.metadata?.coverImageUrl}
 								<img
 									class="mt-4 w-full h-auto object-cover aspect-image"
 									src={servicePage.metadata.coverImageUrl}
