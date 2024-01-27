@@ -406,7 +406,9 @@
 																>
 																	<div
 																		class="bg-site {section.imgMaxWidth === 'full-screen'
-																			? 'w-screen'
+																			? isEdit
+																				? 'w-full'
+																				: 'w-screen'
 																			: '_container-width'} mx-auto {section.containerBgImageUrl
 																			? 'py-8'
 																			: ''}"

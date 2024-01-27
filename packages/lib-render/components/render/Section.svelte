@@ -537,13 +537,17 @@
 								<RenderUrlWithBackground
 									class=""
 									urlImgMaxWidth={section.imgMaxWidth === 'full-screen'
-										? '100vw'
+										? isEdit
+											? '100%'
+											: 'w-screen'
 										: section.imgMaxWidth}
 									urlImgClass="{section.theme?.isTitleLeft ? '' : 'mx-auto'} {isGif(
 										section.imageUrl
 									)
 										? 'w-full object-cover'
-										: ''} {section.imgMaxWidth === 'full-screen' ? 'w-screen min-h-screen' : ''}"
+										: ''} {section.imgMaxWidth === 'full-screen'
+										? `${isEdit ? 'w-full' : 'w-screen'} min-h-screen`
+										: ''}"
 									imageUrl={section.imageUrl}
 									imageBackgroundUrl={section.imageBackgroundUrl}
 								/>
