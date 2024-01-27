@@ -86,7 +86,7 @@
 	};
 
 	let selectedFeedTab = 'drafts';
-	let isConnectingExpanded = false;
+	let isConnectingExpanded = !$currentUser?.socialProfiles?.length;
 
 	let publishNow = async () => {
 		$selectedFeedItem.scheduleOn = null;

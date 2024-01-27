@@ -16,20 +16,26 @@
 	let msgLength;
 
 	$: msgLength = striptags(post.content || '').length || 0;
+
+	let twitterData = ($currentUser.socialProfiles && $currentUser.socialProfiles[0]) || {
+		name: 'anonymous',
+		profile_image_url: '',
+		username: 'unknown'
+	};
 </script>
 
 <div class="flex items-start w-full">
 	<img
-		src={$currentUser.twitterData.profile_image_url}
+		src={twitterData.profile_image_url}
 		class="w-[48px] h-[48px] shrink-0 rounded-full object-cover"
 	/>
 	<div class=" ml-3 w-full">
 		<div class="flex items-center">
 			<div class="font-semibold">
-				{$currentUser.twitterData.name}
+				{twitterData.name}
 			</div>
 			<div class="opacity-50 ml-2">
-				@{$currentUser.twitterData.username}
+				@{twitterData.username}
 			</div>
 		</div>
 		<div
