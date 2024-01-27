@@ -67,7 +67,7 @@
 		return {
 			title: '',
 			description: '',
-			page: $servicePages[0]
+			page: null
 		};
 	};
 	let newSubmission;
@@ -76,8 +76,10 @@
 		if (!$servicePages) {
 			await refreshServicePages({ parentPageId: (page.parentPage || page)._id });
 		}
+
 		newSubmission = getDefaultSubmission();
 		isRequestAdding = true;
+		// isRequestAdding = true;
 	};
 
 	let createRequest = async () => {
@@ -146,16 +148,18 @@
 					</Popup>
 				{/if}
 
-				<div class="min-w-[900px] mx-auto">
-					<div class="text-2xl font-bold mb-4 mt-8">Requests</div>
+				<div class="w-[900px] mx-auto">
+					<div class="text-2xl font-bold mb-3 mt-8">Requests</div>
+					<div class="opacity-70 mb-8 mt-3">Create service requests and track their status</div>
+
 					<div class="grid grid-cols-3 gap-4">
 						<div class="my-2">
 							<div />
-							<div class="font-bold mb-4">To Do</div>
+							<div class="text-sm opacity-70 font-semibold mb-4">To Do</div>
 
 							{#if !$currentUser}
 								<Button
-									class="mb-4 text-sm _transparent _app-section w-full  justify-start"
+									class="mb-4 text-sm _transparent _app-section w-full  justify-start max-w-[300px]"
 									onClick={startAddingRequest}
 								>
 									<div class="flex items-center">
@@ -178,14 +182,14 @@
 							{/each}
 						</div>
 						<div class="my-2">
-							<div class="font-bold  mb-4">In Progress</div>
+							<div class="text-sm opacity-70 font-semibold mb-4">In Progress</div>
 
 							{#each (selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound).filter((s) => s.isActivated && !s.isClosed && !s.isPaid) as submission}
 								<ServiceRequestCard bind:submission />
 							{/each}
 						</div>
 						<div class="my-2">
-							<div class="font-bold  mb-4">Done</div>
+							<div class="text-sm opacity-70 font-semibold mb-4">Done</div>
 
 							{#each (selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound).filter((s) => s.isClosed || s.isPaid) as submission}
 								<ServiceRequestCard bind:submission />

@@ -3,6 +3,7 @@
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import DollarInput from 'lib/components/DollarInput.svelte';
+	import FileInput from 'lib/components/FileInput.svelte';
 	import toDollars from 'lib/helpers/toDollars';
 
 	export let page;
@@ -150,6 +151,12 @@
 				/>
 			</div>
 		{/if}
+	</div>
+	<div class="_section">
+		<div class="flex justify-between">
+			<div class="mb-1 font-bold">Cover Image</div>
+		</div>
+		<FileInput class="w-full mt-2" bind:url={page.metadata.coverImageUrl} />
 	</div>
 {:else}
 	<div

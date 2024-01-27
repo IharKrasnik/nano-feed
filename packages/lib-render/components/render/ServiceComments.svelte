@@ -164,7 +164,7 @@
 								bind:value={newMessage.messageHTML}
 							/>
 
-							<label for="new-file" class="ml-4 p-2 cursor-pointer">
+							<label for="new-file" class="ml-4 p-2 cursor-pointer opacity-70 hover:opacity-100">
 								<FeatherIcon name="paperclip" theme={parentPage.theme?.theme} />
 
 								<input
@@ -185,7 +185,7 @@
 							<button
 								disabled={!newMessage.messageHTML}
 								on:click={sendMessage}
-								class="_transparent p-2"
+								class="_transparent p-2 opacity-70 hover:opacity-100"
 								style="border-radius: 0;"
 								><FeatherIcon name="send" theme={parentPage.theme?.theme} />
 							</button>
