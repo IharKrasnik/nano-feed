@@ -31,7 +31,6 @@
 	}
 
 	let prevSlug;
-
 	$currentPage = $sveltePage.data.page;
 
 	if ($currentPage) {
