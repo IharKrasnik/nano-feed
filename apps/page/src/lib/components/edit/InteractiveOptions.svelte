@@ -15,6 +15,7 @@
 
 	export let isWithButton = true;
 	export let options = [];
+	export let isRenderTypeLocked = false;
 
 	export let placeholder = 'https://myurl.com';
 	export let isShown = !isWithButton;
@@ -68,56 +69,63 @@
 		use:clickOutside
 		on:clickOutside={() => (isWithButton ? close() : null)}
 	>
-		<div class="font-normal text-sm opacity-70 mb-2">How users can interact?</div>
+		{#if !sectionItem.isMustHaveField && !isRenderTypeLocked}
+			<div class="font-normal text-sm opacity-70 mb-2">How users can interact?</div>
 
-		<select
-			class="w-full"
-			bind:value={sectionItem.interactiveRenderType}
-			on:change={() => {
-				if (sectionItem.interactiveRenderType === 'email') {
-					sectionItem.varName = 'email';
-				} else {
-					sectionItem.varName = '';
-				}
+			<select
+				class="w-full"
+				bind:value={sectionItem.interactiveRenderType}
+				on:change={() => {
+					if (sectionItem.interactiveRenderType === 'email') {
+						sectionItem.varName = 'email';
+					} else {
+						sectionItem.varName = '';
+					}
 
-				if (sectionItem.interactiveRenderType === 'single_choice') {
-					sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
-				}
+					if (sectionItem.interactiveRenderType === 'single_choice') {
+						sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
+					}
 
-				if (sectionItem.interactiveRenderType === 'multiple_choice') {
-					sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '🎉' }, { emoji: '💯' }];
-				}
-			}}
-		>
-			{#if options?.length}
-				{#each options as option}
-					<option value={option.value}>{option.text}</option>
-				{/each}
-			{:else if sectionItem.isActionSuccessSection}
-				<option value="">No interaction</option>
-				<option value="link">Click 1 Link</option>
-				<option value="links">Click Few Links</option>
-				<option value="single_choice">Community Single Choice</option>
-				<option value="multiple_choice">Community Multiple Choice</option>
-				<option value="short_answer">Community Answer</option>
-			{:else if section?.renderType === 'form'}
-				<option value="email">Email</option>
-				<option value="text">Short Text</option>
-				<option value="textarea">Long Text</option>
-			{:else}
-				<option value="">{sectionItem.url ? 'Open URL on click' : 'No interaction'}</option>
-				<option value="link">Click 1 Link</option>
-				<option value="links">Click Few Links</option>
-				<option value="email">Submit Email</option>
-				<option value="form">Submit Form</option>
-				<option value="single_choice">Community Single Choice</option>
-				<option value="multiple_choice">Community Multiple Choice</option>
-				<option value="short_answer">Community Answer</option>
-				<!-- <option value="wave_analytics">See Public Web Analytics</option> -->
-			{/if}
-		</select>
+					if (sectionItem.interactiveRenderType === 'multiple_choice') {
+						sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '🎉' }, { emoji: '💯' }];
+					}
+				}}
+			>
+				{#if options?.length}
+					{#each options as option}
+						<option value={option.value}>{option.text}</option>
+					{/each}
+				{:else if sectionItem.isActionSuccessSection}
+					<option value="">No interaction</option>
+					<option value="link">Click 1 Link</option>
+					<option value="links">Click Few Links</option>
+					<option value="single_choice">Community Single Choice</option>
+					<option value="multiple_choice">Community Multiple Choice</option>
+					<option value="short_answer">Community Answer</option>
+				{:else if section?.renderType === 'form'}
+					{#if !section.items?.includes((i) => {
+						return i.interactiveRenderType === 'email';
+					})}
+						<option value="email">Email </option>
+					{/if}
+					<option value="text">Short Text</option>
+					<option value="url">URL</option>
+					<option value="textarea">Long Text</option>
+				{:else}
+					<option value="">{sectionItem.url ? 'Open URL on click' : 'No interaction'}</option>
+					<option value="link">Click 1 Link</option>
+					<option value="links">Click Few Links</option>
+					<option value="email">Submit Email</option>
+					<option value="form">Submit Form</option>
+					<option value="single_choice">Community Single Choice</option>
+					<option value="multiple_choice">Community Multiple Choice</option>
+					<option value="short_answer">Community Answer</option>
+					<!-- <option value="wave_analytics">See Public Web Analytics</option> -->
+				{/if}
+			</select>
+		{/if}
 
-		{#if section?.renderType === 'form' && ['text', 'textarea', 'email'].includes(sectionItem.interactiveRenderType)}
+		{#if section?.renderType === 'form' && ['text', 'textarea', 'email', 'description'].includes(sectionItem.interactiveRenderType)}
 			<div class="mb-2 mt-4">
 				<div class="text-sm opacity-70 mb-2">Placeholder</div>
 				<input

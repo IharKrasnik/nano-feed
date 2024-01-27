@@ -671,6 +671,10 @@ button[type='submit']:not(._transparent) {
 	color: var(--button-color, #ffffff);
 }
 
+._editor button {
+	color: #111;
+}
+
 .app-button {
 	border-radius: 8px;
 	padding: 0 14px;

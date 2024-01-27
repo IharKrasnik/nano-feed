@@ -63,6 +63,9 @@
 				postData.email = $currentCustomer.email;
 			} else if (interactiveRenderType === 'name') {
 				postData.fullName = $currentCustomer.fullName;
+			} else if (interactiveRenderType === 'description') {
+				postData.description = formData.description;
+				postData.title = postData.title || page.name;
 			} else {
 				postData.vars[varName || title] = formData[id];
 			}
@@ -137,7 +140,7 @@
 			{:else}
 				{#if section.items.length}
 					{#each section.items.filter((formField) => {
-						if (formField.interactiveRenderType === 'email' && $isAuthorized) {
+						if (!isEdit && formField.interactiveRenderType === 'email' && $isAuthorized) {
 							return false;
 						}
 
@@ -145,8 +148,8 @@
 					}) as formField}
 						<div>
 							<div class="mb-4">
-								<div class="text-lg font-semibold opacity-80">{@html formField.title}</div>
-								<div class="text-sm opacity-80 mb-2">{@html formField.description || ''}</div>
+								<div class="text-lg font-semibold opacity-90">{@html formField.title}</div>
+								<div class="text-sm opacity-60 mb-2">{@html formField.description || ''}</div>
 							</div>
 
 							{#if formField.interactiveRenderType === 'name'}
@@ -165,11 +168,24 @@
 										bind:value={$currentCustomer.fullName}
 									/>
 								{/if}
+							{:else if formField.interactiveRenderType === 'description'}
+								<textarea
+									class="w-full _transparent"
+									placeholder={formField.interactivePlaceholder || 'Type your message...'}
+									bind:value={formData.description}
+								/>
 							{:else if formField.interactiveRenderType === 'text'}
 								<input
 									class="w-full _transparent"
 									placeholder={formField.interactivePlaceholder || 'Type your message...'}
 									type="text"
+									bind:value={formData[formField.id]}
+								/>
+							{:else if formField.interactiveRenderType === 'url'}
+								<input
+									class="w-full _transparent"
+									placeholder={formField.interactivePlaceholder || 'https://www.mywebsite.com'}
+									type="url"
 									bind:value={formData[formField.id]}
 								/>
 							{:else if formField.interactiveRenderType === 'textarea'}

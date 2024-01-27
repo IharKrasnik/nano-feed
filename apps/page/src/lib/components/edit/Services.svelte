@@ -43,12 +43,14 @@
 							{
 								id: uuidv4(),
 								title: 'Email',
-								interactiveRenderType: 'email'
+								interactiveRenderType: 'email',
+								isMustHaveField: true
 							},
 							{
 								id: uuidv4(),
 								title: 'Message',
-								interactiveRenderType: 'textarea'
+								interactiveRenderType: 'description',
+								isMustHaveField: true
 							}
 						]
 					}

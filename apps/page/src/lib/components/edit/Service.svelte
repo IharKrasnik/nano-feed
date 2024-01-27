@@ -34,6 +34,7 @@
 	export let setPageAndDraft;
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 	import EditHero from '$lib/components/edit/Hero.svelte';
+	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 
 	let clazz = 'p-4';
 	export { clazz as class };
@@ -224,6 +225,24 @@
 
 {#each page.heros as hero (hero.id)}
 	<EditHero class="my-4" bind:hero bind:page isShowTips={page.heros?.length < 2} />
+
+	<div class="_section">
+		<div class="_title flex justify-between w-full">Service Request Form</div>
+
+		<EditInteractiveOptions
+			class="mt-4"
+			isRenderTypeLocked
+			bind:section={hero}
+			bind:sectionItem={hero}
+			isWithButton={false}
+		/>
+
+		{#if hero.interactiveRenderType === 'form'}
+			<div class="mt-4">
+				<EditSection bind:section={hero.formSection} isInnerSection />
+			</div>
+		{/if}
+	</div>
 {/each}
 
 {#if page._id}

@@ -133,7 +133,7 @@
 			{/if}
 		</div>
 
-		{#if !item.isActionSuccessSection && onRemove}
+		{#if !item.isMustHaveField && !item.isActionSuccessSection && onRemove}
 			<div
 				class="opacity-70 hover:opacity-100 transition  text-sm cursor-pointer text-[#8B786D]"
 				title="Remove Item"

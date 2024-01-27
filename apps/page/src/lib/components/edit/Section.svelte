@@ -66,6 +66,7 @@
 			  };
 
 		newItem.id = uuidv4();
+		newItem.isMustHaveField = false;
 
 		if (section.renderType === 'pricing') {
 			newItem.pricing = { amount: 1.99, per: 'month' };

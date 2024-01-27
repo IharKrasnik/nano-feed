@@ -672,22 +672,24 @@
 		</div>
 
 		{#if hero}
-			<div class="_section">
-				<div class="_title flex justify-between w-full">Call To Action</div>
+			{#if page.renderType !== 'service'}
+				<div class="_section">
+					<div class="_title flex justify-between w-full">Call To Action</div>
 
-				<EditInteractiveOptions
-					class="mt-4"
-					bind:section={hero}
-					bind:sectionItem={hero}
-					isWithButton={false}
-				/>
+					<EditInteractiveOptions
+						class="mt-4"
+						bind:section={hero}
+						bind:sectionItem={hero}
+						isWithButton={false}
+					/>
 
-				{#if hero.interactiveRenderType === 'form'}
-					<div class="mt-4">
-						<EditSection bind:section={hero.formSection} isInnerSection />
-					</div>
-				{/if}
-			</div>
+					{#if hero.interactiveRenderType === 'form'}
+						<div class="mt-4">
+							<EditSection bind:section={hero.formSection} isInnerSection />
+						</div>
+					{/if}
+				</div>
+			{/if}
 
 			{#if page.renderType !== 'article'}
 				<div class="_section">

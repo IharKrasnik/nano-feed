@@ -87,7 +87,7 @@
 					description: submission.description,
 					files: submission.files
 			  })
-			: await post(`serviceRequests?pageId=${parentPage._id}`, {
+			: await post(`serviceRequests?pageId=${submission.page._id}`, {
 					title: submission.page.name,
 					description: submission.description,
 					files: submission.files,
@@ -105,7 +105,6 @@
 	let isSubmittingForReviewInProgress = false;
 
 	// __ddd
-	submission.fields = [{ title: 'Your Website Url', interactiveRenderType: 'text' }];
 
 	let newReview = $currentUser
 		? {
