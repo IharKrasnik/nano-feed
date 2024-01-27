@@ -18,7 +18,13 @@
 		isLoading = true;
 
 		try {
-			await onClick();
+			let data = await onClick();
+			let isNoStatus = data?.isNoStatus;
+
+			if (isNoStatus) {
+				return;
+			}
+
 			isJustDone = true;
 
 			setTimeout(() => {

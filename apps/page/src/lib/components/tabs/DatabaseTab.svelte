@@ -48,5 +48,3 @@
 {:else if $selectedDatabaseTab === 'feed'}
 	<RenderPostEditor bind:page />
 {/if}
-
-<div class="px-8 py-16" />

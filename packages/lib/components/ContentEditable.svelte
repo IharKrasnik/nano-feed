@@ -238,6 +238,7 @@
 	<div
 		contenteditable
 		use:usePlaceholder={placeholder}
+		data-placeholder={placeholder}
 		bind:innerHTML={value}
 		on:keyup={onpointerup}
 		on:pointerup={onpointerup}

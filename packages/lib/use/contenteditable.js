@@ -44,7 +44,7 @@ let onPaste = async (e) => {
 
 	if (text.startsWith('http')) {
 		let selection = document.getSelection();
-		debugger;
+
 		document.execCommand(
 			'insertHTML',
 			false,

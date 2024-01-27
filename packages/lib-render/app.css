@@ -499,7 +499,7 @@ a[href] {
 	font-size: 14px;
 }
 
-._editor [contenteditable][data-placeholder]:not(._preview):empty:before {
+* [contenteditable][data-placeholder]:not(._preview):empty:before {
 	content: attr(data-placeholder);
 	position: block;
 	color: gray;
