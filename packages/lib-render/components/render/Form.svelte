@@ -49,6 +49,10 @@
 			!$isAuthorized &&
 			!loginCode
 		) {
+			if (!$currentCustomer.email) {
+				return;
+			}
+
 			await post(`customers/auth/login-token?pageId=${page._id || page.parentPage?._id}`, {
 				email: $currentCustomer.email
 			});
@@ -122,8 +126,9 @@
 				<div>
 					<div class="mb-4">
 						<div class="text-lg font-semibold opacity-80">Login Code</div>
-						<div class="text-sm opacity-80 mb-2">
-							Please insert the code that you've received to {$currentCustomer.email}
+						<div class="text-sm opacity-80 mb-3">
+							Please insert the code that you've received to {$currentCustomer.email}.
+							<span class="underline" on:click={() => (isShowLoginCode = false)}>Reset</span>
 						</div>
 
 						<input

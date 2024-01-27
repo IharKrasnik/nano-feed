@@ -672,7 +672,11 @@ button[type='submit']:not(._transparent) {
 }
 
 ._editor button {
-	color: #111;
+	color: #f6f5f4;
+}
+
+._editor button._secondary {
+	color: #111111;
 }
 
 .app-button {

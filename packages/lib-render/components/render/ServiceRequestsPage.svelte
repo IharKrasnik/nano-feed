@@ -102,16 +102,6 @@
 </script>
 
 <div class="pt-[80px]">
-	{#if $isAuthorized || $currentUser}{:else}
-		<div class="flex items-center justify-center">
-			<RenderCustomerLoginForm
-				{page}
-				onLogin={() => {
-					refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
-				}}
-			/>
-		</div>
-	{/if}
 	<div class="flex justify-center w-full">
 		<div>
 			{#if $selectedSubmission || isRequestAdding}
@@ -128,7 +118,9 @@
 						{#if isRequestAdding}
 							<ServiceRequest bind:page bind:submission={newSubmission} />
 						{:else}
-							<ServiceRequest bind:page bind:submission={$selectedSubmission} />
+							{#key $selectedSubmission._id}
+								<ServiceRequest bind:page bind:submission={$selectedSubmission} />
+							{/key}
 						{/if}
 
 						<!-- {#if $servicePages}
@@ -208,4 +200,15 @@
 			</div>
 		</div>
 	</div>
+
+	{#if $isAuthorized || $currentUser}{:else}
+		<div class="flex items-center justify-center mt-16">
+			<RenderCustomerLoginForm
+				{page}
+				onLogin={() => {
+					refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
+				}}
+			/>
+		</div>
+	{/if}
 </div>

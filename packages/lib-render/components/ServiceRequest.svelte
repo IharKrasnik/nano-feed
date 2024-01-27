@@ -17,13 +17,18 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import ServiceRequestStatus from 'lib-render/components/ServiceRequestStatus.svelte';
-	import currentCustomer from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
 	import servicePages, { refresh as refreshServicePages } from 'lib-render/stores/servicePages';
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
+	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
 
 	export let submission;
 	export let page;
 	let parentPage = page.parentPage || page;
+
+	if (!submission.vars) {
+		submission.vars = {};
+	}
 
 	let isSubmissionEdit = !submission._id;
 	let isMenuShown = false;
@@ -85,7 +90,8 @@
 			? await put(`serviceRequests/${submission._id}?pageId=${parentPage._id}`, {
 					title: submission.title,
 					description: submission.description,
-					files: submission.files
+					files: submission.files,
+					vars: submission.vars
 			  })
 			: await post(`serviceRequests?pageId=${submission.page._id}`, {
 					title: submission.page.name,
@@ -221,30 +227,65 @@
 							{moment(submission.createdOn).format('MMM DD, YYYY (dddd)')}
 						</div>
 					</div>
+				</div>
+			{/if}
 
-					{#each submission.fields || [] as field}
-						<div class="flex items-center my-4">
+			{#if !submission._id || isSubmissionEdit}
+				<div class="flex items-center opacity-60 mt-16 text-sm">Required Fields</div>
+			{/if}
+			<div class="text-sm">
+				{#each submission.fields || [] as field}
+					<div class="flex items-start my-4">
+						<div>
 							<div class="flex items-center opacity-60 w-[170px]">
 								<Emoji
 									width={15}
-									emoji={field.emoji || 'feather:help-circle'}
+									emoji={field.emoji || 'feather:database'}
 									theme={parentPage.theme?.theme}
 									class="mr-2"
 								/>
 
 								<div>{field.title}</div>
 							</div>
-							<div class="text-sm">
-								{#if submission.vars}
-									{submission.vars[field.varName] || submission.vars[field.title]}
-								{:else}
-									Empty
-								{/if}
-							</div>
 						</div>
-					{/each}
-				</div>
-			{/if}
+						<div class="text-sm w-full">
+							{#if !submission._id || isSubmissionEdit}
+								{#if field.interactiveRenderType === 'textarea'}
+									<textarea
+										class="app-input w-full"
+										rows="3"
+										placeholder={field.placeholder || 'Start typing...'}
+										bind:value={submission.vars[field.varName || field.title]}
+									/>
+								{:else}
+									<input
+										class="app-input w-full"
+										placeholder={field.placeholder || 'Start typing...'}
+										bind:value={submission.vars[field.varName || field.title]}
+									/>
+								{/if}
+							{:else}
+								<div
+									class="cursor-pointer opacity-70 hover:opacity-100 transition"
+									on:click={() => {
+										submission.vars = submission.vars || {};
+										isSubmissionEdit = true;
+									}}
+								>
+									{#if submission.vars}
+										{submission.vars[field.varName] || submission.vars[field.title] || 'Empty'}
+									{:else}
+										Empty
+									{/if}
+								</div>
+							{/if}
+							{#if field.description}
+								<div class="mt-2 opacity-60">{field.description}</div>
+							{/if}
+						</div>
+					</div>
+				{/each}
+			</div>
 
 			<div class="flex items-center opacity-60 w-[170px] mt-16 text-sm">
 				<div>Description</div>
@@ -600,9 +641,15 @@
 			{/if}
 
 			{#if isSubmissionEdit}
-				<div class="mt-8">
-					<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
-				</div>
+				{#if $isAuthorized}
+					<div class="mt-8">
+						<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
+					</div>
+				{:else}
+					<div class="mt-16">
+						<RenderCustomerLoginForm {page} onLogin={() => {}} />
+					</div>
+				{/if}
 			{/if}
 
 			<!-- 
@@ -709,6 +756,10 @@
 					on:click={() => {
 						submission.page = servicePage;
 						submission.title = servicePage.name;
+
+						submission.fields = servicePage.heros[0].formSection.items.filter(
+							(i) => !i.isMustHaveField
+						);
 					}}
 				>
 					<div class="flex flex-col justify-between h-full">

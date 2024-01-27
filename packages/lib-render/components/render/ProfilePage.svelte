@@ -32,7 +32,7 @@
 	<div class="mb-[200px]">
 		<RenderSection {page} section={{ id: 'profile', title: 'Edit Profile' }} />
 
-		{#if $isAuthorized}
+		{#if $currentCustomer._id}
 			<div class="_section-item max-w-[500px] mx-auto">
 				<div class="flex justify-center w-full px-8 py-16 w-full">
 					<form class="w-full" on:submit|preventDefault={updateProfile}>
