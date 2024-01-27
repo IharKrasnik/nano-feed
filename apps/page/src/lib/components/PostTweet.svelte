@@ -19,12 +19,10 @@
 </script>
 
 <div class="flex items-start w-full">
-	<div>
-		<img
-			src={$currentUser.twitterData.profile_image_url}
-			class="w-[48px] h-[48px] shrink-0 rounded-full object-cover"
-		/>
-	</div>
+	<img
+		src={$currentUser.twitterData.profile_image_url}
+		class="w-[48px] h-[48px] shrink-0 rounded-full object-cover"
+	/>
 	<div class=" ml-3 w-full">
 		<div class="flex items-center">
 			<div class="font-semibold">

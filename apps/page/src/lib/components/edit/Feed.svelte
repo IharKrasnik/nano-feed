@@ -52,6 +52,12 @@
 	};
 
 	let updateFeedItem = async (feedItem) => {
+		feedItem.syncTo = [];
+
+		Object.keys(syncTo).forEach((accountId) => {
+			feedItem.syncTo.push($currentUser.socialProfiles.find((a) => a.accountId === accountId));
+		});
+
 		if (feedItem.scheduleOn && moment(feedItem.scheduleOn) < moment()) {
 			alert(`Publish date can't be before now`);
 			return;
@@ -87,6 +93,12 @@
 		await updateFeedItem($selectedFeedItem);
 		$selectedFeedItem = null;
 	};
+
+	let syncTo = {};
+
+	$currentUser.socialProfiles.forEach((socialProfile) => {
+		syncTo[socialProfile.accountId] = true;
+	});
 </script>
 
 {#if $selectedFeedItem}
@@ -132,6 +144,37 @@
 			<Button class="_secondary " onClick={publishNow}>Publish Now</Button>
 		</div>
 	</div>
+
+	<div class="_section">
+		<div class="font-semibold mb-1">Sync to profiles</div>
+		<div class="mb-2">Automatically publish to your social accounts</div>
+		{#each $currentUser.socialProfiles || [] as socialProfile}
+			<div class="w-full flex items-center  mb-2 mt-4">
+				<div class="mr-2">
+					<input type="checkbox" bind:checked={syncTo[socialProfile.accountId]} />
+				</div>
+				<div
+					class="flex items-center bg-[#fafafa] p-2 rounded-lg w-full"
+					in:fade={{ duration: 150 }}
+				>
+					<img
+						src={socialProfile.profile_image_url}
+						class="w-[30px] h-[30px] shrink-0 rounded-full object-cover"
+					/>
+					<div class="ml-3 w-full text-sm">
+						<div class="flex items-center">
+							<div class="font-semibold">
+								{socialProfile.name}
+							</div>
+						</div>
+						<div class="opacity-50">
+							@{socialProfile.username}
+						</div>
+					</div>
+				</div>
+			</div>
+		{/each}
+	</div>
 {:else}
 	<div
 		class="_section _info {isConnectingExpanded ? '' : 'cursor-pointer'}"
@@ -147,9 +190,9 @@
 			<div class="">
 				{#if !isConnectingExpanded}
 					<div class="flex p-2 px-4 rounded-lg cursor-pointer">
-						{#each $currentUser.twitterProfiles as twitterProfile}
+						{#each $currentUser.socialProfiles || [] as socialProfile}
 							<img
-								src={twitterProfile.profile_image_url}
+								src={socialProfile.profile_image_url}
 								class="w-[30px] h-[30px] shrink-0 rounded-full object-cover mr-[-10px]"
 							/>
 						{/each}
@@ -159,26 +202,26 @@
 		</div>
 
 		{#if isConnectingExpanded}
-			{#if $currentUser.twitterProfiles}
-				{#each $currentUser.twitterProfiles as twitterProfile}
+			{#if $currentUser.socialProfiles}
+				{#each $currentUser.socialProfiles || [] as socialProfile}
 					<div
 						class="flex items-center bg-[#fafafa] p-2 rounded-lg mb-2 mt-4"
 						in:fade={{ duration: 150 }}
 					>
 						<div>
 							<img
-								src={twitterProfile.profile_image_url}
+								src={socialProfile.profile_image_url}
 								class="w-[30px] h-[30px] shrink-0 rounded-full object-cover"
 							/>
 						</div>
 						<div class="ml-3 w-full text-sm">
 							<div class="flex items-center">
 								<div class="font-semibold">
-									{twitterProfile.name}
+									{socialProfile.name}
 								</div>
 							</div>
 							<div class="opacity-50">
-								@{twitterProfile.username}
+								@{socialProfile.username}
 							</div>
 						</div>
 					</div>
