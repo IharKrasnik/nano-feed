@@ -96,9 +96,11 @@
 
 	let syncTo = {};
 
-	$currentUser.socialProfiles.forEach((socialProfile) => {
-		syncTo[socialProfile.accountId] = true;
-	});
+	if ($currentUser.socialProfiles) {
+		$currentUser.socialProfiles.forEach((socialProfile) => {
+			syncTo[socialProfile.accountId] = true;
+		});
+	}
 </script>
 
 {#if $selectedFeedItem}
