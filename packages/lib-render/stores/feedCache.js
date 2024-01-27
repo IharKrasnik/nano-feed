@@ -30,6 +30,7 @@ export const fetchFeed = async ({
 	isExplore,
 	isWithUrlOnly = false,
 	isWithImageOnly = false,
+	isIncludeDrafts = false,
 	attachedToPageId
 } = {}) => {
 	// feedStore.update((st) => {
@@ -76,6 +77,10 @@ export const fetchFeed = async ({
 		query.attachedToPageId = attachedToPageId;
 	}
 
+	if (isIncludeDrafts) {
+		query.isIncludeDrafts = isIncludeDrafts;
+	}
+
 	let { results: feed, count } = await get('feed', query);
 
 	feedStore.update((st) => {
@@ -95,6 +100,7 @@ export const fetchFeed = async ({
 
 export const getFeed = async ({
 	cacheId,
+	isIncludeDrafts,
 	streamSlug,
 	streamId,
 	forceRefresh = false,
@@ -136,6 +142,7 @@ export const getFeed = async ({
 
 	return fetchFeed({
 		cacheId,
+		isIncludeDrafts,
 		sort,
 		perPage,
 		streamSlug,

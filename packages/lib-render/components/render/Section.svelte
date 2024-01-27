@@ -312,7 +312,7 @@
 
 {#if section.isShown}
 	<div
-		class="relative {section.bgImageUrl ? 'p-8' : ''} {section.renderType === 'callout'
+		class="relative {section.bgImageUrl ? 'p-8 mb-16' : ''} {section.renderType === 'callout'
 			? 'min-h-screen sm:min-h-min'
 			: ''} {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
@@ -398,7 +398,9 @@
 		{/if} -->
 
 		<div
-			class=" _section-container {section.isGlowing
+			class="{section.imgMaxWidth === 'full-screen' || section._isCtaFooter
+				? ''
+				: '_container-width mx-auto'}  _section-container {section.isGlowing
 				? `_glowing ${section.theme?.isOverrideGlowingColor ? '_override-glowing-color' : ''}
 	${section.theme?.glowingIntensity ? `_intensity` : ''}`
 				: ''} {section.className}  {section.theme?.isTransparent
@@ -534,12 +536,14 @@
 							<div class="my-8">
 								<RenderUrlWithBackground
 									class=""
-									urlImgMaxWidth={section.imgMaxWidth}
+									urlImgMaxWidth={section.imgMaxWidth === 'full-screen'
+										? '100vw'
+										: section.imgMaxWidth}
 									urlImgClass="{section.theme?.isTitleLeft ? '' : 'mx-auto'} {isGif(
 										section.imageUrl
 									)
 										? 'w-full object-cover'
-										: ''}"
+										: ''} {section.imgMaxWidth === 'full-screen' ? 'w-screen min-h-screen' : ''}"
 									imageUrl={section.imageUrl}
 									imageBackgroundUrl={section.imageBackgroundUrl}
 								/>
@@ -577,7 +581,7 @@
 				{:else if section.renderType === 'form'}
 					<RenderForm bind:section bind:page bind:isEdit />
 				{:else if section.items?.length}
-					<div class="w-full">
+					<div class="w-full _container-width mx-auto">
 						{#if section.renderType === 'carousel'}
 							{#if !section.carouselType || section.carouselType === 'vertical'}
 								<div

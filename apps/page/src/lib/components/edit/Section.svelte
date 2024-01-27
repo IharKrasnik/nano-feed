@@ -123,20 +123,6 @@
 	}
 </script>
 
-<!-- {#if isDatabaseModalShown}
-	<Modal
-		isShown
-		maxWidth={1200}
-		onClosed={() => {
-			isDatabaseModalShown = false;
-		}}
-	>
-		<div class="p-32 _editor">
-			<EditDatabase selectedStreamSlug={section.streamSlug} bind:page />
-		</div>
-	</Modal>
-{/if} -->
-
 {#if isShort}
 	<div>
 		<div

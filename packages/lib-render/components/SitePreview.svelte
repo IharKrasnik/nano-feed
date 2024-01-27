@@ -366,6 +366,7 @@
 																	/>
 																{/if}
 															{/if}
+
 															{#if $sectionToEdit && $sectionToEdit.id === section.id}
 																<div
 																	bind:this={editEl}
@@ -379,11 +380,7 @@
 																			name="arrow-down"
 																		/>
 																	</div>
-																	<div
-																		class="bg-site _container-width mx-auto {section.containerBgImageUrl
-																			? 'py-8'
-																			: ''}"
-																	>
+																	<div class="bg-site {section.containerBgImageUrl ? 'py-8' : ''}">
 																		<RenderSection
 																			bind:page
 																			bind:themeStyles={styles}
@@ -408,7 +405,9 @@
 																	class:grayscale={!!$sectionToEdit}
 																>
 																	<div
-																		class="bg-site _container-width mx-auto {section.containerBgImageUrl
+																		class="bg-site {section.imgMaxWidth === 'full-screen'
+																			? 'w-screen'
+																			: '_container-width'} mx-auto {section.containerBgImageUrl
 																			? 'py-8'
 																			: ''}"
 																	>

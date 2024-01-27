@@ -273,6 +273,16 @@ Benefit 3`}
 							>
 								Medium
 							</div>
+
+							<div
+								class="cursor-pointer"
+								on:click={() => {
+									section.imgMaxWidth = 'full-screen';
+								}}
+								class:font-bold={section.imgMaxWidth === 'full-screen'}
+							>
+								Full-Screen
+							</div>
 						</div>
 					{:else if item.id !== section.id && section.theme.imageAspectRatio}
 						{section.theme.imageAspectRatio === 'og'

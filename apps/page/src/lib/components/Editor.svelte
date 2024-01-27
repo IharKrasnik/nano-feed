@@ -71,7 +71,7 @@
 	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
 	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
 	import Settings from '$lib/components/Settings.svelte';
-	import EditDatabase from '$lib/components/edit/Database.svelte';
+	import EditDatabaseTab from '$lib/components/edit/DatabaseTab.svelte';
 	import EditGrowth from '$lib/components/edit/Growth.svelte';
 	import EditBlog from '$lib/components/edit/Blog.svelte';
 	import EditCustomers from '$lib/components/edit/Customers.svelte';
@@ -1693,7 +1693,11 @@
 											{:else}
 												<div class="mb-[70px]">
 													{#if $selectedTab === 'database'}
-														<EditDatabase bind:page bind:selectedStreamSlug bind:setPageAndDraft />
+														<EditDatabaseTab
+															bind:page
+															bind:selectedStreamSlug
+															bind:setPageAndDraft
+														/>
 													{:else if $selectedTab === 'growth'}
 														<EditGrowth bind:page bind:setPageAndDraft />
 													{:else if $selectedTab === 'blog'}

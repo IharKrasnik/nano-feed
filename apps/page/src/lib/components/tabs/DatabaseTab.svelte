@@ -1,7 +1,10 @@
 <script>
 	import RenderSection from 'lib-render/components/render//Section.svelte';
-	import RenderMomentumCollection from 'lib-render/components/render//MomentumCollection.svelte';
+	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
+	import RenderPostEditor from '$lib/components/PostEditor.svelte';
+
 	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
+	import selectedDatabaseTab from '$lib/stores/selectedDatabaseTab';
 
 	export let page;
 	export let streamSlug;
@@ -28,18 +31,22 @@
 	});
 </script>
 
-{#if streamSlug}
-	{#key streamSlug}
-		<div class="p-16 bg-background" style="{cssVarStyles}; color: var(--text-color);">
-			<RenderMomentumCollection
-				isUseCache
-				isEdit
-				bind:cacheId={streamSlug}
-				bind:page
-				section={getSection()}
-			/>
-		</div>
-	{/key}
+{#if $selectedDatabaseTab === 'data'}
+	{#if streamSlug}
+		{#key streamSlug}
+			<div class="p-16 bg-background" style="{cssVarStyles}; color: var(--text-color);">
+				<RenderMomentumCollection
+					isUseCache
+					isEdit
+					bind:cacheId={streamSlug}
+					bind:page
+					section={getSection()}
+				/>
+			</div>
+		{/key}
+	{/if}
+{:else if $selectedDatabaseTab === 'feed'}
+	<RenderPostEditor bind:page />
 {/if}
 
 <div class="px-8 py-16" />
