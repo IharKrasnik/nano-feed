@@ -13,7 +13,6 @@
 	import setPageVars from 'lib-render/helpers/setPageVars';
 	import addDefaultHero from 'lib-render/helpers/addDefaultHero';
 	import { v4 as uuidv4 } from 'uuid';
-
 	import striptags from 'striptags';
 
 	import PortfolioPage from 'lib-render/layouts/PortfolioPage.svelte';
