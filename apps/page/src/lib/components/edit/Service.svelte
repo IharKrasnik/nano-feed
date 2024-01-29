@@ -243,7 +243,7 @@
 		/>
 	{/if}
 
-	{#if page.metadata.isProxyService && page.proxyServicePage}
+	{#if page.metadata?.isProxyService && page.proxyServicePage}
 		<input class="w-full" bind:value={page.proxyServicePage._id} placeholder="Proxy Page Id" />
 	{:else}
 		<div class="_section">
