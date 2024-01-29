@@ -228,7 +228,7 @@
 {#each page.heros as hero (hero.id)}
 	<EditHero class="my-4" bind:hero bind:page isShowTips={page.heros?.length < 2} />
 
-	{#if $currentUser.isAdmin}
+	{#if $currentUser.isAdmin && page.metadata}
 		<ToggleGroup
 			class="mb-4"
 			bind:value={page.metadata.isProxyService}
