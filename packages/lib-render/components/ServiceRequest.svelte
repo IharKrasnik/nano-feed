@@ -98,6 +98,7 @@
 					description: submission.description,
 					files: submission.files,
 					pageId: submission.page._id,
+					vars: submission.vars,
 					metadata: submission.page.metadata
 			  });
 
@@ -218,11 +219,11 @@
 				</div>
 			{/if}
 
-			{#if !submission._id || isSubmissionEdit}
+			{#if (!submission._id || isSubmissionEdit) && (submission.fields.filter((f) => !f.isMustHaveField) || []).length}
 				<div class="flex items-center opacity-60 mt-16 text-sm">Required Fields</div>
 			{/if}
 			<div class="text-sm">
-				{#each submission.fields || [] as field}
+				{#each submission.fields.filter((f) => !f.isMustHaveField) || [] as field}
 					<div class="flex items-start my-4">
 						<div>
 							<div class="flex items-center opacity-60 w-[170px]">
@@ -279,7 +280,12 @@
 				<div>Description</div>
 			</div>
 			{#if isSubmissionEdit}
-				<ContentEditable class="p-4 mt-4 _bg-cta" bind:value={submission.description} />
+				<ContentEditable
+					placeholder={submission.fields.find((f) => f.interactiveRenderType === 'description')
+						?.interactivePlaceholder || 'Provide details about your request...'}
+					class="p-4 mt-4 _bg-cta"
+					bind:value={submission.description}
+				/>
 
 				<div class="flex items-center opacity-60 w-[170px] mt-16 mb-4">
 					<div>Attachments</div>
@@ -745,9 +751,9 @@
 						submission.page = servicePage;
 						submission.title = servicePage.name;
 
-						submission.fields = servicePage.heros[0].formSection.items.filter(
-							(i) => !i.isMustHaveField
-						);
+						submission.fields = (
+							servicePage.proxyServicePage || servicePage
+						).heros[0].formSection.items;
 					}}
 				>
 					<div class="flex flex-col justify-between h-full">

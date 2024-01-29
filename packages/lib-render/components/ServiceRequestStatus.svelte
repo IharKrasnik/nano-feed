@@ -11,23 +11,23 @@
 <div class={clazz}>
 	{#if submission._id}
 		{#if submission.isClosed}
-			<div class="{sizeClass} text-center color-accent bg-orange-300">Closed</div>
+			<div class="{sizeClass} text-center text-[#111111] bg-orange-300">Closed</div>
 		{:else if submission.isActivated}
 			{#if submission.isPaid}
-				<div class="{sizeClass} text-center color-accent  bg-accent">Completed</div>
+				<div class="{sizeClass} text-center text-[#111111]  bg-accent">Completed</div>
 			{:else if submission.reviews?.length}
 				{#if _.last(submission.reviews)?.isPending}
-					<div class="{sizeClass} text-center  color-accent bg-yellow-300">Under Review</div>
+					<div class="{sizeClass} text-center  text-[#111111] bg-yellow-300">Under Review</div>
 				{:else}
-					<div class="{sizeClass} text-center color-accent bg-orange-300">Changes Requested</div>
+					<div class="{sizeClass} text-center text-[#111111] bg-orange-300">Changes Requested</div>
 				{/if}
 			{:else}
-				<div class="{sizeClass} text-center color-accent  bg-yellow-300">Work in Progress</div>
+				<div class="{sizeClass} text-center text-[#111111]  bg-yellow-300">Work in Progress</div>
 			{/if}
 		{:else}
-			<div class="{sizeClass} text-center color-accent bg-gray-300">Draft</div>
+			<div class="{sizeClass} text-center text-[#111111] bg-gray-300">Draft</div>
 		{/if}
 	{:else}
-		<div class="{sizeClass} text-center color-accent bg-orange-300">Draft</div>
+		<div class="{sizeClass} text-center text-[#111111] bg-orange-300">Draft</div>
 	{/if}
 </div>

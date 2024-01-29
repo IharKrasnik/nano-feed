@@ -57,7 +57,7 @@
 	let getMessages = async () => {
 		let { results } = submission.chatRoom?._id
 			? await get(`customerMessages`, {
-					pageId: submission.page.parentPage?._id || submission.page._id,
+					pageId: submission.page._id || submission.page.parentPage?._id,
 					chatRoomId: submission.chatRoom._id
 			  })
 			: { results: [] };
@@ -121,7 +121,7 @@
 
 		let createdMessage = await post(`customerMessages`, {
 			...toCreate,
-			pageId: submission.page.parentPage?._id || submission.page._id,
+			pageId: submission.page._id || submission.page.parentPage?._id,
 			chatRoomId: submission.chatRoom._id
 		});
 
