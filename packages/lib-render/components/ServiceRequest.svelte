@@ -18,7 +18,7 @@
 	import FileInput from 'lib/components/FileInput.svelte';
 	import ServiceRequestStatus from 'lib-render/components/ServiceRequestStatus.svelte';
 	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
-	import servicePages, { refresh as refreshServicePages } from 'lib-render/stores/servicePages';
+	import servicePages from 'lib-render/stores/servicePages';
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
 	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
 
@@ -162,18 +162,6 @@
 			<div class="flex items-center">
 				<div class="text-3xl font-bold mb-2 shrink-0">
 					{submission.title || submission.page.name}
-					<!-- {:else if $servicePages} -->
-					<!-- <select
-						class="mb-2 w-full _bg-cta"
-						bind:value={submission.page}
-						on:change={() => {
-							debugger;
-						}}
-					>
-						{#each $servicePages as servicePage}
-							<option value={servicePage}>{servicePage.name}</option>
-						{/each}
-					</select> -->
 				</div>
 			</div>
 			{#if !submission._id && submission.page.heros && submission.page.heros[0].subtitle}

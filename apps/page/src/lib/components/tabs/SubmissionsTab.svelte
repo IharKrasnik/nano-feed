@@ -28,7 +28,7 @@
 </script>
 
 <PageContainer class="min-h-screen overflow-y-scroll" {page}>
-	<ServiceRequestsPage bind:page selectedSubmissionsTab="inbound" />
+	<ServiceRequestsPage bind:page bind:selectedSubmissionsTab />
 </PageContainer>
 <!-- 
 {#if $selectedSubmission}

@@ -35,6 +35,8 @@
 	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
 	import EditHero from '$lib/components/edit/Hero.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
+	import currentUser from 'lib/stores/currentUser';
 
 	let clazz = 'p-4';
 	export { clazz as class };
@@ -226,23 +228,42 @@
 {#each page.heros as hero (hero.id)}
 	<EditHero class="my-4" bind:hero bind:page isShowTips={page.heros?.length < 2} />
 
-	<div class="_section">
-		<div class="_title flex justify-between w-full">Service Request Form</div>
-
-		<EditInteractiveOptions
-			class="mt-4"
-			isRenderTypeLocked
-			bind:section={hero}
-			bind:sectionItem={hero}
-			isWithButton={false}
+	{#if $currentUser.isAdmin}
+		<ToggleGroup
+			class="mb-4"
+			bind:value={page.metadata.isProxyService}
+			onTabSelected={(tab) => {
+				if (tab.key) {
+					page.proxyServicePage = { _id: '' };
+				} else {
+					page.proxyServicePage = null;
+				}
+			}}
+			tabs={[{ name: 'Direct' }, { key: true, name: 'Proxy Service' }]}
 		/>
+	{/if}
 
-		{#if hero.interactiveRenderType === 'form'}
-			<div class="mt-4">
-				<EditSection bind:section={hero.formSection} isInnerSection />
-			</div>
-		{/if}
-	</div>
+	{#if page.metadata.isProxyService && page.proxyServicePage}
+		<input class="w-full" bind:value={page.proxyServicePage._id} placeholder="Proxy Page Id" />
+	{:else}
+		<div class="_section">
+			<div class="_title flex justify-between w-full">Service Request Form</div>
+
+			<EditInteractiveOptions
+				class="mt-4"
+				isRenderTypeLocked
+				bind:section={hero}
+				bind:sectionItem={hero}
+				isWithButton={false}
+			/>
+
+			{#if hero.interactiveRenderType === 'form'}
+				<div class="mt-4">
+					<EditSection bind:section={hero.formSection} isInnerSection />
+				</div>
+			{/if}
+		</div>
+	{/if}
 {/each}
 
 {#if page._id}

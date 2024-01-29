@@ -1,7 +1,7 @@
 <script>
 	import { get, post } from 'lib/api';
 	import { fly } from 'svelte/transition';
-	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized, loginCustomer } from 'lib/stores/currentCustomer';
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import trackForm from 'lib/services/trackForm';
 	import submissions from 'lib/stores/submissions';
@@ -30,17 +30,12 @@
 	let isShowLoginCode = false;
 	let loginCode = '';
 
-	let loginCustomer = async () => {
-		let { customer, token } = await post(
-			`customers/auth?pageId=${page._id || page.parentPage?._id}`,
-			{
-				email: $currentCustomer.email,
-				loginCode
-			}
-		);
-		$currentCustomer = customer;
-		Cookies.set('customer_access_token', token);
-		$isAuthorized = true;
+	let loginCustomerForm = async () => {
+		await loginCustomer({
+			email: $currentCustomer.email,
+			loginCode,
+			page
+		});
 	};
 
 	let submitForm = async () => {
@@ -76,7 +71,7 @@
 		});
 
 		if (section.isAuthRequired && section.items.length === 1) {
-			await loginCustomer();
+			await loginCustomerForm();
 
 			if (section.onSubmitted) {
 				section.onSubmitted();
@@ -86,7 +81,7 @@
 			isFormSubmitted = true;
 		} else {
 			if ((section.isAuthRequired || section.actionType === 'service_chat') && !$isAuthorized) {
-				await loginCustomer();
+				await loginCustomerForm();
 			}
 
 			trackForm({ sectionId: section.id, text: section.title || section.description });

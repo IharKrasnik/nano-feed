@@ -9,7 +9,7 @@
 	import subPages from 'lib/stores/subPages';
 	import selectedSubmission from 'lib-render/stores/selectedSubmission';
 	import formatSubmission from 'lib-render/helpers/formatSubmission';
-	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized, loginCustomer } from 'lib/stores/currentCustomer';
 	import { page as sveltePage } from '$app/stores';
 	import toDollars from 'lib/helpers/toDollars';
 	import Popup from 'lib-render/components/Popup.svelte';
@@ -37,8 +37,10 @@
 
 	let parentPage = page.parentPage || page;
 
-	if ($currentUser) {
-		refreshSubmissions({ page });
+	if (!$isAuthorized && $currentUser) {
+		loginCustomer({ page: { _id: '654e6776c712c70014d65d77' } }).then(async () => {
+			await refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
+		});
 	} else if ($isAuthorized) {
 		refreshSubmissionsOutbound({ customerId: $currentCustomer._id });
 	}
@@ -74,7 +76,11 @@
 
 	let startAddingRequest = async () => {
 		if (!$servicePages) {
-			await refreshServicePages({ parentPageId: (page.parentPage || page)._id });
+			await refreshServicePages(
+				$currentUser
+					? { parentPageId: '654e6776c712c70014d65d77' }
+					: { parentPageId: (page.parentPage || page)._id }
+			);
 		}
 
 		newSubmission = getDefaultSubmission();
@@ -158,25 +164,22 @@
 						<div />
 						<div class="text-sm opacity-70 font-semibold mb-4">To Do</div>
 
-						{#if !$currentUser}
-							<Button
-								class="mb-4 text-sm _transparent _app-section w-full  justify-start max-w-[300px]"
-								onClick={startAddingRequest}
-							>
-								<div class="flex items-center">
-									<div>
-										<FeatherIcon
-											theme={(page.parentPage || page).theme?.theme}
-											class="mr-1"
-											size={15}
-											name="plus"
-										/>
-									</div>
-									<div>Add Request</div>
+						<Button
+							class="mb-4 text-sm _transparent _app-section w-full  justify-start max-w-[300px]"
+							onClick={startAddingRequest}
+						>
+							<div class="flex items-center">
+								<div>
+									<FeatherIcon
+										theme={(page.parentPage || page).theme?.theme}
+										class="mr-1"
+										size={15}
+										name="plus"
+									/>
 								</div>
-								<!-- <input placeholder="New Request" type="text" class="w-full" /> -->
-							</Button>
-						{/if}
+								<div>Add Request</div>
+							</div>
+						</Button>
 
 						{#each (selectedSubmissionsTab === 'inbound' ? $submissions : $submissionsOutbound).filter((s) => !s.isActivated && !s.isClosed) as submission}
 							<ServiceRequestCard bind:submission />
