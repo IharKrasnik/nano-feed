@@ -21,6 +21,7 @@
 	import servicePages from 'lib-render/stores/servicePages';
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
 	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
+	import { goto } from '$app/navigation';
 
 	export let submission;
 	export let page;
