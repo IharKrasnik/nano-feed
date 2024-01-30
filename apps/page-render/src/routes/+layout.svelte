@@ -49,7 +49,8 @@
 			$sveltePage.params.subPageSlug !== prevSlug) ||
 		($sveltePage.params.feedItemSlug && $sveltePage.params.feedItemSlug !== prevSlug) ||
 		($sveltePage.params.articleSlug && $sveltePage.params.articleSlug !== prevSlug) ||
-		($sveltePage.url.href.includes('/app') && prevAppUrl !== $sveltePage.url.href)
+		(($sveltePage.url.href.includes('/app') || prevAppUrl?.includes('/app')) &&
+			prevAppUrl !== $sveltePage.url.href)
 	) {
 		prevSlug =
 			$sveltePage.params.articleSlug ||

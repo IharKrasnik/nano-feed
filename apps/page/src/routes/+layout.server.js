@@ -40,6 +40,8 @@ export async function load({ url, params, session, cookies }) {
 
 		extend = {
 			page: {
+				_id: 'service_chat',
+				slug: 'slug',
 				renderType: 'service_chat',
 				parentPage,
 				theme: {},

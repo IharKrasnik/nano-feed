@@ -252,223 +252,221 @@
 />
 
 <!-- <div style="background: url('/dark_gradient.svg');"> -->
-{#key page.slug}
-	{#if page.theme?.layoutType === 'portfolio' || page.parentPage?.theme?.layoutType === 'portfolio'}
-		<PortfolioPage bind:page />
-	{:else}
-		<div class={page.interactiveAnswers ? 'pb-16' : ''} bind:this={previewEl}>
-			<div
-				class="relative color-site min-h-screen"
-				style="{cssVarStyles}; font-family: var(--text-font);"
-			>
-				<!-- {#if page.isSectionsCloneable}
+{#if page.theme?.layoutType === 'portfolio' || page.parentPage?.theme?.layoutType === 'portfolio'}
+	<PortfolioPage bind:page />
+{:else}
+	<div class={page.interactiveAnswers ? 'pb-16' : ''} bind:this={previewEl}>
+		<div
+			class="relative color-site min-h-screen"
+			style="{cssVarStyles}; font-family: var(--text-font);"
+		>
+			<!-- {#if page.isSectionsCloneable}
 					<div class="fixed w-[400px] h-screen p-4 bg-accent top-0" style="z-index: 100">
 						Clone this page
 					</div>
 				{/if} -->
 
-				{#if page.interactiveAnswers}
-					{#if scrollY > 100}
+			{#if page.interactiveAnswers}
+				{#if scrollY > 100}
+					<div
+						class="fixed  {(page.parentPage || page).theme?.theme === 'dark'
+							? 'bg-black/70'
+							: 'bg-white/70'} backdrop-blur w-full w-screen z-10 py-2 bottom-0"
+						style="z-index: 40;"
+						in:slide={{ duration: 150 }}
+					>
 						<div
-							class="fixed  {(page.parentPage || page).theme?.theme === 'dark'
-								? 'bg-black/70'
-								: 'bg-white/70'} backdrop-blur w-full w-screen z-10 py-2 bottom-0"
-							style="z-index: 40;"
-							in:slide={{ duration: 150 }}
+							class="_container-width mx-auto flex items-center justify-center sm:justify-between"
 						>
-							<div
-								class="_container-width mx-auto flex items-center justify-center sm:justify-between"
-							>
-								<div class="hidden sm:block text-lg opacity-70">
-									<a href="/blog" class="_link">Blog</a> / {page.activeHero?.title || ''}
-								</div>
-								<div class="opacity-70 hover:opacity-100 transition">
-									<RenderInteractiveOptions
-										class="w-full justify-center"
-										trackId={`${page._id}`}
-										isNoLabel
-										bind:isEdit
-										bind:isEmbed
-										bind:sectionItem={page}
-										bind:page
-									/>
-								</div>
+							<div class="hidden sm:block text-lg opacity-70">
+								<a href="/blog" class="_link">Blog</a> / {page.activeHero?.title || ''}
+							</div>
+							<div class="opacity-70 hover:opacity-100 transition">
+								<RenderInteractiveOptions
+									class="w-full justify-center"
+									trackId={`${page._id}`}
+									isNoLabel
+									bind:isEdit
+									bind:isEmbed
+									bind:sectionItem={page}
+									bind:page
+								/>
 							</div>
 						</div>
-					{/if}
-				{/if}
-
-				{#if isMounted}
-					<div
-						class=" relative bg-site z-20 w-full {clazz}"
-						style="z-index: 32;"
-						in:fade={{ duration: 150 }}
-					>
-						{#if !isSectionsCloneable && !isNoHeaderFooter}
-							{#if page.name || page.parentPage?._id}
-								<RenderHeader bind:isEmbed bind:page bind:isEdit />
-							{/if}
-						{/if}
-						{#if !isLoading}
-							{#if page.renderType === 'service_chat'}
-								<RenderServiceRequestsPage {page} />
-							{:else if page.renderType === 'edit_profile'}
-								<RenderProfilePage {page} />
-							{:else}
-								<div class="overflow-y-hidden">
-									{#if page.activeHero}
-										<div
-											class="sticky bg-site {$sectionToEdit &&
-											$sectionToEdit.id !== page.activeHero?.formSection?.id
-												? 'opacity-30 grayscale'
-												: ''}"
-										>
-											<RenderHero
-												bind:hero={page.activeHero}
-												bind:page
-												bind:isEmbed
-												bind:isEdit
-												bind:isCloneable={isSectionsCloneable}
-											/>
-										</div>
-									{/if}
-
-									<div
-										class="sticky _root bg-site overflow-hidden {isEdit
-											? 'max-h-full overflow-y-auto'
-											: ''}"
-										style="background: none;"
-									>
-										{#if !isAboveTheFold}
-											{#if page.sections?.length}
-												<div
-													in:fade={{ delay: page.activeHero?.title ? 900 : 0 }}
-													class="relative  z-10 {page.streamSlug ? '' : ''}"
-													style="z-index: 40;"
-												>
-													{#each page.sections || [] as section, i}
-														<div class="relative">
-															{#if section.containerBgImageUrl}
-																<RenderUrl
-																	url={section.containerBgImageUrl}
-																	class={'absolute left-0 top-0 w-screen h-full'}
-																	imgClass={'w-full h-full object-cover'}
-																	style="z-index: 0;"
-																/>
-
-																{#if !section.theme?.isNotContainerBgImageDimmed}
-																	<div
-																		class="absolute top-0 left-0 w-screen h-full z-1"
-																		style="background-color: {page.theme?.theme === 'dark'
-																			? 'rgba(0,0,0,0.7)'
-																			: 'rgba(255,255,255,.7)'}; z-index: 1;"
-																	/>
-																{/if}
-															{/if}
-
-															{#if $sectionToEdit && $sectionToEdit.id === section.id}
-																<div
-																	bind:this={editEl}
-																	style="scroll-margin-top: 60px;"
-																	class="relative z-10"
-																>
-																	<div
-																		class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
-																	>
-																		<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
-																			name="arrow-down"
-																		/>
-																	</div>
-																	<div class="bg-site {section.containerBgImageUrl ? 'py-8' : ''}">
-																		<RenderSection
-																			bind:page
-																			bind:themeStyles={styles}
-																			bind:section={$sectionToEdit}
-																			bind:isEdit
-																			{onInsert}
-																		/>
-																	</div>
-																	<div
-																		class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
-																	>
-																		<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
-																			name="arrow-up"
-																		/>
-																	</div>
-																</div>
-																{focusEditEl() || ''}
-															{:else}
-																<div
-																	class="relative z-10 overflow-y-hidden"
-																	class:opacity-30={!!$sectionToEdit}
-																	class:grayscale={!!$sectionToEdit}
-																>
-																	<div
-																		class="bg-site {section.imgMaxWidth === 'full-screen'
-																			? isEdit
-																				? 'w-full'
-																				: 'w-screen'
-																			: '_container-width'} mx-auto {section.containerBgImageUrl
-																			? 'py-8'
-																			: ''}"
-																	>
-																		<RenderSection
-																			bind:page
-																			bind:section
-																			bind:themeStyles={styles}
-																			bind:isEdit
-																			bind:isCloneable={isSectionsCloneable}
-																			{onInsert}
-																			style={false && page.theme?.isZebra && i % 2 === 0
-																				? page.theme?.theme === 'dark'
-																					? `background-color: ${lighten(
-																							styles['background-color'],
-																							0.01
-																					  )};`
-																					: `background-color: ${darken(
-																							styles['background-color'],
-																							0.08
-																					  )};`
-																				: ''}
-																		/>
-																	</div>
-																</div>
-															{/if}
-														</div>
-													{/each}
-												</div>
-											{/if}
-										{/if}
-									</div>
-
-									{#if isMountedDelayed && !isNoHeaderFooter && (page.activeHero?.title || page.ctaFooter?.title) && page.sections?.filter((s) => s.isShown)?.length}
-										<div
-											class="overflow-hidden"
-											class:hidden={$sveltePage.url.pathname === '/blog'}
-											bind:this={$ctaFooterEl}
-											class:opacity-30={!!$sectionToEdit}
-											class:grayscale={!!$sectionToEdit}
-										>
-											<RenderCTA
-												bind:isCtaHidden={page.ctaFooter.isHidden}
-												{page}
-												section={page.ctaFooter}
-											/>
-										</div>
-									{/if}
-								</div>
-							{/if}
-						{/if}
 					</div>
 				{/if}
+			{/if}
 
-				{#if !isNoBadge && !page.parentPage?.isNoBadge && !page.isNoBadge}
-					<PageBadge theme={page.theme?.theme || 'light'} />
-				{/if}
-			</div>
+			{#if isMounted}
+				<div
+					class=" relative bg-site z-20 w-full {clazz}"
+					style="z-index: 32;"
+					in:fade={{ duration: 150 }}
+				>
+					{#if !isSectionsCloneable && !isNoHeaderFooter}
+						{#if page.name || page.parentPage?._id}
+							<RenderHeader bind:isEmbed bind:page bind:isEdit />
+						{/if}
+					{/if}
+					{#if !isLoading}
+						{#if page.renderType === 'service_chat'}
+							<RenderServiceRequestsPage {page} />
+						{:else if page.renderType === 'edit_profile'}
+							<RenderProfilePage {page} />
+						{:else}
+							<div class="overflow-y-hidden">
+								{#if page.activeHero}
+									<div
+										class="sticky bg-site {$sectionToEdit &&
+										$sectionToEdit.id !== page.activeHero?.formSection?.id
+											? 'opacity-30 grayscale'
+											: ''}"
+									>
+										<RenderHero
+											bind:hero={page.activeHero}
+											bind:page
+											bind:isEmbed
+											bind:isEdit
+											bind:isCloneable={isSectionsCloneable}
+										/>
+									</div>
+								{/if}
+
+								<div
+									class="sticky _root bg-site overflow-hidden {isEdit
+										? 'max-h-full overflow-y-auto'
+										: ''}"
+									style="background: none;"
+								>
+									{#if !isAboveTheFold}
+										{#if page.sections?.length}
+											<div
+												in:fade={{ delay: page.activeHero?.title ? 900 : 0 }}
+												class="relative  z-10 {page.streamSlug ? '' : ''}"
+												style="z-index: 40;"
+											>
+												{#each page.sections || [] as section, i}
+													<div class="relative">
+														{#if section.containerBgImageUrl}
+															<RenderUrl
+																url={section.containerBgImageUrl}
+																class={'absolute left-0 top-0 w-screen h-full'}
+																imgClass={'w-full h-full object-cover'}
+																style="z-index: 0;"
+															/>
+
+															{#if !section.theme?.isNotContainerBgImageDimmed}
+																<div
+																	class="absolute top-0 left-0 w-screen h-full z-1"
+																	style="background-color: {page.theme?.theme === 'dark'
+																		? 'rgba(0,0,0,0.7)'
+																		: 'rgba(255,255,255,.7)'}; z-index: 1;"
+																/>
+															{/if}
+														{/if}
+
+														{#if $sectionToEdit && $sectionToEdit.id === section.id}
+															<div
+																bind:this={editEl}
+																style="scroll-margin-top: 60px;"
+																class="relative z-10"
+															>
+																<div
+																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																>
+																	<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
+																		name="arrow-down"
+																	/>
+																</div>
+																<div class="bg-site {section.containerBgImageUrl ? 'py-8' : ''}">
+																	<RenderSection
+																		bind:page
+																		bind:themeStyles={styles}
+																		bind:section={$sectionToEdit}
+																		bind:isEdit
+																		{onInsert}
+																	/>
+																</div>
+																<div
+																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																>
+																	<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
+																		name="arrow-up"
+																	/>
+																</div>
+															</div>
+															{focusEditEl() || ''}
+														{:else}
+															<div
+																class="relative z-10 overflow-y-hidden"
+																class:opacity-30={!!$sectionToEdit}
+																class:grayscale={!!$sectionToEdit}
+															>
+																<div
+																	class="bg-site {section.imgMaxWidth === 'full-screen'
+																		? isEdit
+																			? 'w-full'
+																			: 'w-screen'
+																		: '_container-width'} mx-auto {section.containerBgImageUrl
+																		? 'py-8'
+																		: ''}"
+																>
+																	<RenderSection
+																		bind:page
+																		bind:section
+																		bind:themeStyles={styles}
+																		bind:isEdit
+																		bind:isCloneable={isSectionsCloneable}
+																		{onInsert}
+																		style={false && page.theme?.isZebra && i % 2 === 0
+																			? page.theme?.theme === 'dark'
+																				? `background-color: ${lighten(
+																						styles['background-color'],
+																						0.01
+																				  )};`
+																				: `background-color: ${darken(
+																						styles['background-color'],
+																						0.08
+																				  )};`
+																			: ''}
+																	/>
+																</div>
+															</div>
+														{/if}
+													</div>
+												{/each}
+											</div>
+										{/if}
+									{/if}
+								</div>
+
+								{#if isMountedDelayed && !isNoHeaderFooter && (page.activeHero?.title || page.ctaFooter?.title) && page.sections?.filter((s) => s.isShown)?.length}
+									<div
+										class="overflow-hidden"
+										class:hidden={$sveltePage.url.pathname === '/blog'}
+										bind:this={$ctaFooterEl}
+										class:opacity-30={!!$sectionToEdit}
+										class:grayscale={!!$sectionToEdit}
+									>
+										<RenderCTA
+											bind:isCtaHidden={page.ctaFooter.isHidden}
+											{page}
+											section={page.ctaFooter}
+										/>
+									</div>
+								{/if}
+							</div>
+						{/if}
+					{/if}
+				</div>
+			{/if}
+
+			{#if !isNoBadge && !page.parentPage?.isNoBadge && !page.isNoBadge}
+				<PageBadge theme={page.theme?.theme || 'light'} />
+			{/if}
 		</div>
-	{/if}
-{/key}
+	</div>
+{/if}
 
 <!-- {#if page?.activeHero?.theme?.bgPattern === 'stars'}
 	<Background />

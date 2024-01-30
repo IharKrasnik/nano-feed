@@ -71,7 +71,7 @@
 		<div class="flex flex-grow py-4 sm:py-0">
 			<a
 				class="flex items-center shrink-0 _logo"
-				href="{isEdit ? pageUrl : ''}/"
+				href="{isEdit ? pageUrl : ''}/?pageSlug=momentum"
 				target={isEdit ? '_blank' : null}
 				data-sveltekit-preload-data={isEdit ? null : 'hover'}
 				on:click={() => {

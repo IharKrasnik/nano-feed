@@ -1839,19 +1839,21 @@
 												{/if}
 
 												{#if $sectionToPreview}
-													<SitePreview
-														isNoVars
-														isEmbed
-														noStickyHeader={true}
-														isNoBadge={true}
-														isEdit
-														page={{
-															name: page.name,
-															logo: page.logo,
-															theme: page.theme,
-															sections: [$sectionToPreview]
-														}}
-													/>
+													{#key page._id}
+														<SitePreview
+															isNoVars
+															isEmbed
+															noStickyHeader={true}
+															isNoBadge={true}
+															isEdit
+															page={{
+																name: page.name,
+																logo: page.logo,
+																theme: page.theme,
+																sections: [$sectionToPreview]
+															}}
+														/>
+													{/key}
 												{:else}
 													<SitePreview
 														isNoVars
