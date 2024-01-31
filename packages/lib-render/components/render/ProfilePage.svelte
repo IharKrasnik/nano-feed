@@ -1,6 +1,6 @@
 <script>
 	import _ from 'lodash';
-	import { put } from 'lib/api';
+	import { get, put } from 'lib/api';
 	import { page as sveltePage } from '$app/stores';
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
@@ -14,7 +14,7 @@
 	let customerEditData = _.pick($currentCustomer, ['fullName', 'avatarUrl', 'email']);
 
 	let refreshCurrentCustomer = async () => {
-		$currentCustomer = await put(`customers/current?pageId=${page.parentPage._id}`);
+		$currentCustomer = await get(`customers/current?pageId=${page.parentPage._id}`);
 	};
 
 	if ($isAuthorized) {
