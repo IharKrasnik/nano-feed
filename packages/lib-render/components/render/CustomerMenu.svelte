@@ -7,7 +7,7 @@
 
 	let logout = () => {
 		Cookies.remove('customer_access_token');
-		$currentCustomer = null;
+		$currentCustomer = {};
 		goto('/');
 	};
 </script>

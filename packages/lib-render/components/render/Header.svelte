@@ -125,7 +125,7 @@
 								: `${isEdit ? pageUrl : ''}${
 										link.pageSlug || link.slug ? `/${link.pageSlug || link.slug}` : link.url
 								  }`
-						}`}
+						}?pageSlug=clipwing.pro`}
 						target={isEdit ? '_blank' : null}
 						data-sveltekit-preload-data={isEdit ? null : 'hover'}
 						on:click={() => {
