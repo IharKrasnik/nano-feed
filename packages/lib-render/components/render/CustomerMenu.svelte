@@ -1,6 +1,6 @@
 <script>
 	import _ from 'lodash';
-	import currentCustomer from 'lib/stores/currentCustomer';
+	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
 	import CustomerAvatar from 'lib-render/components/CustomerAvatar.svelte';
 	import Cookies from 'js-cookie';
 	import { goto } from '$app/navigation';
@@ -12,7 +12,7 @@
 	};
 </script>
 
-{#if $currentCustomer}
+{#if $isAuthorized}
 	<div class="relative group ml-4 border border-accent rounded-full">
 		<CustomerAvatar customer={$currentCustomer} size={34} />
 
