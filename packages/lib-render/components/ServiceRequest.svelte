@@ -14,6 +14,7 @@
 	import { fade } from 'svelte/transition';
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
+	import Modal from 'lib/components/Modal.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import ServiceRequestStatus from 'lib-render/components/ServiceRequestStatus.svelte';
@@ -34,13 +35,17 @@
 	let isSubmissionEdit = !submission._id;
 	let isMenuShown = false;
 
+	let isStripeModalShown = false;
+	let stripeUrl;
+
 	let activateRequest = async () => {
-		try {
-			let result = await post(`serviceRequests/${submission._id}/activate`);
+		let result = await post(`serviceRequests/${submission._id}/activate`);
+
+		if (result.submission) {
 			submission = result.submission;
-		} catch (err) {
+		} else {
 			let { url } = await post(`customers/payment-methods?successUrl=${document.location.href}`);
-			goto(url);
+			stripeUrl = url;
 		}
 	};
 
@@ -380,24 +385,39 @@
 								<div class="text-lg font-semibold">Activate Request</div>
 								<div class="mt-1 mb-4 opacity-50">The request is currently inactive</div>
 
+								{#if stripeUrl}
+									<div>Add your card to activate the request</div>
+								{/if}
 								<div class="grid grid-cols-2 gap-4 mt-4">
 									<div class="rounded _border-theme p-4">
-										<div class="w-full flex">
-											<Button class="app-button" onClick={activateRequest}>Activate Request</Button>
-										</div>
+										{#if stripeUrl}
+											<a href={stripeUrl} on:click={() => (stripeUrl = null)} target="_blank">
+												<button class="app-button mt-2">Add Card</button>
+											</a>
 
-										{#if $currentUser}
-											<div class="text-sm mt-2 opacity-80">
-												Customer will be notified that request is in progress
-											</div>
-										{:else if submission.metadata?.activateAmount}
 											<div class="text-sm mt-2">
-												Pay {toDollars(submission.metadata?.activateAmount || 0)}
+												Secure checkout via Stripe. You won't be charged yet
 											</div>
-										{:else if submission.metadata?.payType === 'on-activation'}
-											<div class="text-sm mt-2">
-												Pay {toDollars(submission.metadata?.fullAmount || 0)}
+										{:else}
+											<div class="w-full flex">
+												<Button class="app-button" onClick={activateRequest}
+													>Activate Request</Button
+												>
 											</div>
+
+											{#if $currentUser}
+												<div class="text-sm mt-2 opacity-80">
+													Customer will be notified that request is in progress
+												</div>
+											{:else if submission.metadata?.activateAmount}
+												<div class="text-sm mt-2">
+													Pay {toDollars(submission.metadata?.activateAmount || 0)}
+												</div>
+											{:else if submission.metadata?.payType === 'on-activation'}
+												<div class="text-sm mt-2">
+													Pay {toDollars(submission.metadata?.fullAmount || 0)}
+												</div>
+											{/if}
 										{/if}
 									</div>
 									<div class="rounded _border-theme p-4">
