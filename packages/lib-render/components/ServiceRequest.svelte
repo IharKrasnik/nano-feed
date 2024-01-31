@@ -23,6 +23,8 @@
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
 	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
 	import { goto } from '$app/navigation';
+	import autofocus from 'lib/use/autofocus';
+	import { showSuccessMessage } from 'lib/services/toast';
 
 	export let submission;
 	export let page;
@@ -160,6 +162,21 @@
 		submission = updatedSubmission;
 
 		isRequestingChanges = false;
+	};
+
+	let isPromocodeEdit = false;
+
+	let promocode = '';
+
+	let applyPromocode = async () => {
+		let result = await post(`serviceRequests/${submission._id}/promocode`, {
+			promocode
+		});
+
+		submission = result.submission;
+
+		showSuccessMessage('Promocode applied! Your request is activated now.');
+		isPromocodeEdit = false;
 	};
 </script>
 
@@ -435,6 +452,33 @@
 											<div class="text-sm mt-2">Cancel your request</div>
 										{/if}
 									</div>
+									{#if isPromocodeEdit}
+										<div>
+											<input
+												placeholder="PROMOCODE"
+												class="app-input"
+												use:autofocus
+												bind:value={promocode}
+											/>
+
+											<div class="flex items-center gap-2 mt-4">
+												<button class="app-button" on:click={applyPromocode}
+													>Apply Promo-Code</button
+												>
+												<button
+													class="app-button _alternative"
+													on:click={() => (isPromocodeEdit = false)}>Cancel</button
+												>
+											</div>
+										</div>
+									{:else}
+										<div
+											class="text-sm opacity-70 underline cursor-pointer"
+											on:click={() => (isPromocodeEdit = true)}
+										>
+											I have a promocode
+										</div>
+									{/if}
 								</div>
 							</div>
 						{/if}
