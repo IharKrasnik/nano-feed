@@ -7,6 +7,7 @@
 	import submissions from 'lib/stores/submissions';
 	import submissionsOutbound from 'lib/stores/submissionsOutbound';
 	import Cookies from 'js-cookie';
+	import toDollars from 'lib/helpers/toDollars';
 
 	export let section;
 	export let page;
@@ -223,8 +224,23 @@
 				{/if}
 
 				{#if !section.submission}
-					<button class="_primary mt-4" type="submit">{section.callToActionText || 'Submit'}</button
-					>
+					<div class="w-full">
+						<button class="w-full _primary mt-4" type="submit"
+							>{section.callToActionText || 'Submit'}</button
+						>
+
+						<div class="text-sm w-full text-center mt-3">
+							Price: <span class="font-semibold"
+								>{page.metadata?.fullAmount ? toDollars(page.metadata.fullAmount) : 'Free'}</span
+							>
+
+							{#if page.metadata.payType === 'prepayment'}
+								<div class="opacity-70">
+									Pay {toDollars(page.metadata.activateAmount)} to activate
+								</div>
+							{/if}
+						</div>
+					</div>
 				{/if}
 			{/if}
 		</form>
@@ -244,7 +260,11 @@
 {/if}
 
 {#if section.actionType === 'service_chat'}
-	<div class="text-sm mt-4 w-full text-center">Once submitted you'll be redirected to the chat</div>
+	<div class="text-sm mt-4 w-full text-center">
+		Once submitted you'll be redirected to the <a class="underline" href="/app/requests"
+			>requests board</a
+		>
+	</div>
 {/if}
 
 {#if section.actionSuccessSection && ((isEdit && section.actionType === 'success') || isFormSubmitted)}

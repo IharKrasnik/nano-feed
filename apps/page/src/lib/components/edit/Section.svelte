@@ -463,7 +463,7 @@
 				<div class="w-full mb-2">
 					<select bind:value={section.actionType} class="w-full">
 						<option value="success">Show thank you message</option>
-						<option value="service_chat">Redirect to service chat</option>
+						<option value="service_chat">Redirect to the service board</option>
 						<option value="url">Redirect to URL</option>
 					</select>
 				</div>
