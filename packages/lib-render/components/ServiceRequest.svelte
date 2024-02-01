@@ -343,7 +343,7 @@
 				</div>
 			{:else}
 				<div
-					class="cursor-pointer my-4  hover:_bg-cta"
+					class="cursor-pointer my-4  hover:_bg-cta whitespace-pre"
 					on:click={() => {
 						isSubmissionEdit = true;
 					}}
