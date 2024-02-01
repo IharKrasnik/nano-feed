@@ -234,7 +234,7 @@
 								>{page.metadata?.fullAmount ? toDollars(page.metadata.fullAmount) : 'Free'}</span
 							>
 
-							{#if page.metadata.payType === 'prepayment'}
+							{#if page.metadata?.payType === 'prepayment'}
 								<div class="opacity-70">
 									Pay {toDollars(page.metadata.activateAmount)} to activate
 								</div>
