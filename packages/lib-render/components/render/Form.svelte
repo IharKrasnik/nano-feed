@@ -49,9 +49,10 @@
 				return;
 			}
 
-			await post(`customers/auth/login-token?pageId=${page._id || page.parentPage?._id}`, {
+			await post(`customers/auth/login-token?pageId=${page.parentPage?._id || page._id}`, {
 				email: $currentCustomer.email
 			});
+
 			isShowLoginCode = true;
 			return;
 		}
@@ -228,18 +229,19 @@
 						<button class="w-full _primary mt-4" type="submit"
 							>{section.callToActionText || 'Submit'}</button
 						>
+						{#if section.actionType === 'service_chat'}
+							<div class="text-sm w-full text-center mt-3">
+								Price: <span class="font-semibold"
+									>{page.metadata?.fullAmount ? toDollars(page.metadata.fullAmount) : 'Free'}</span
+								>
 
-						<div class="text-sm w-full text-center mt-3">
-							Price: <span class="font-semibold"
-								>{page.metadata?.fullAmount ? toDollars(page.metadata.fullAmount) : 'Free'}</span
-							>
-
-							{#if page.metadata?.payType === 'prepayment'}
-								<div class="opacity-70">
-									Pay {toDollars(page.metadata.activateAmount)} to activate
-								</div>
-							{/if}
-						</div>
+								{#if page.metadata?.payType === 'prepayment'}
+									<div class="opacity-70">
+										Pay {toDollars(page.metadata.activateAmount)} to activate
+									</div>
+								{/if}
+							</div>
+						{/if}
 					</div>
 				{/if}
 			{/if}
