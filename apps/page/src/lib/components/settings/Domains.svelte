@@ -4,26 +4,27 @@
 	import { showSuccessMessage } from 'lib/services/toast';
 
 	export let page;
+	let parentPage = page.parentPage || page;
 
 	let newDomainUrl;
 
 	let addDomain = async () => {
-		let domains = await post(`pages/${page._id}/domains`, {
+		let domains = await post(`pages/${parentPage._id}/domains`, {
 			_isIde: true,
 			url: newDomainUrl
 		});
 
 		newDomainUrl = null;
 
-		page.domains = domains;
+		parentPage.domains = domains;
 	};
 
 	let domainToEdit = null;
 
 	let refreshDomainStatus = async (domain) => {
-		let { isConfigured } = await get(`pages/${page._id}/domains/${domain.url}`);
+		let { isConfigured } = await get(`pages/${parentPage._id}/domains/${domain.url}`);
 
-		page.domains = page.domains.map((d) => {
+		parentPage.domains = parentPage.domains.map((d) => {
 			if (d.url === domain.url) {
 				d.isConfigured = isConfigured;
 				return d;
@@ -43,7 +44,7 @@
 </div>
 
 <div class="mt-8">
-	{#each page.domains || [] as domain}
+	{#each parentPage.domains || [] as domain}
 		<div class="p-2 mb-2 _section">
 			<div class="flex w-full justify-between items-center">
 				<div class="flex">
