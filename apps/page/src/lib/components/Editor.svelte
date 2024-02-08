@@ -1109,7 +1109,7 @@
 
 									{#if !$sectionToEdit}
 										<div>
-											{#if $selectedTab === 'editor' && page.name && !$sectionToEdit}
+											{#if $selectedTab === 'editor' && page.name}
 												{#if page._id}
 													<ToggleGroup
 														class="mb-4"
@@ -1690,39 +1690,34 @@
 														<hr class="my-8" />
 													{/if}
 												{/if}
-											{:else}
-												<div class="mb-[70px]">
-													{#if $selectedTab === 'database'}
-														<EditDatabaseTab
-															bind:page
-															bind:selectedStreamSlug
-															bind:setPageAndDraft
-														/>
-													{:else if $selectedTab === 'growth'}
-														<EditGrowth bind:page bind:setPageAndDraft />
-													{:else if $selectedTab === 'blog'}
-														<EditBlog bind:setPageAndDraft bind:page />
-													{:else if $selectedTab === 'analytics'}
-														<EditCustomers bind:selectedChatRoom bind:page bind:selectedCustomer />
-													{:else if $selectedTab === 'messaging'}
-														<EditMessaging
-															bind:page
-															bind:selectedNewsletter
-															bind:selectedChatRoom
-															bind:selectedCustomer
-														/>
-													{:else if $selectedTab === 'requests'}
-														<EditSubmissions bind:selectedSubmissionsTab bind:page />
-													{:else if $selectedTab === 'newsletter'}
-														<EditNewsletter bind:page />
-														<EditWelcomeEmail bind:page />
-													{:else if $selectedTab === 'blog'}{:else if $selectedTab === 'settings'}
-														<EditWebsiteSettings bind:page />
-													{/if}
-												</div>
-											{/if}
+											{:else}{/if}
 										</div>
 									{/if}
+									<div class="mb-[70px]">
+										{#if $selectedTab === 'database'}
+											<EditDatabaseTab bind:page bind:selectedStreamSlug bind:setPageAndDraft />
+										{:else if $selectedTab === 'growth'}
+											<EditGrowth bind:page bind:setPageAndDraft />
+										{:else if $selectedTab === 'blog'}
+											<EditBlog bind:setPageAndDraft bind:page />
+										{:else if $selectedTab === 'analytics'}
+											<EditCustomers bind:selectedChatRoom bind:page bind:selectedCustomer />
+										{:else if $selectedTab === 'messaging'}
+											<EditMessaging
+												bind:page
+												bind:selectedNewsletter
+												bind:selectedChatRoom
+												bind:selectedCustomer
+											/>
+										{:else if $selectedTab === 'requests'}
+											<EditSubmissions bind:selectedSubmissionsTab bind:page />
+										{:else if $selectedTab === 'newsletter'}
+											<EditNewsletter bind:page />
+											<EditWelcomeEmail bind:page />
+										{:else if $selectedTab === 'blog'}{:else if $selectedTab === 'settings'}
+											<EditWebsiteSettings bind:page />
+										{/if}
+									</div>
 									<div class="pb-[1000px]" />
 								</div>
 

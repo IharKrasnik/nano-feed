@@ -1065,7 +1065,7 @@
 							{/each}
 						{:else}
 							<div
-								class="gap-4 sm:gap-4 {section.columns > 1
+								class="gap-4 {section.isMasonryGrid ? 'sm:gap-6' : 'sm:gap-4'} {section.columns > 1
 									? 'items-stretch-or-not'
 									: ''} {section.carousel
 									? 'flex overflow-x-auto sm:grid'
@@ -1076,8 +1076,10 @@
 								{#each section.items || [] as item, i}
 									{#if item.isShown || _.isUndefined(item.isShown)}
 										<div
-											class=" break-inside-avoid mb-2 sm:col-span-{item.colSpan ||
-												1} sm:row-span-{item.rowSpan || 1} {section.renderType === 'carousel'
+											class=" break-inside-avoid {section.isMasonryGrid
+												? 'mb-6'
+												: 'mb-2'} sm:col-span-{item.colSpan || 1} sm:row-span-{item.rowSpan ||
+												1} {section.renderType === 'carousel'
 												? `min-w-[300px] sm:min-w-0 cursor-pointer`
 												: ''}"
 											class:pt-16={section.isFunkyGrid && i === 1}
