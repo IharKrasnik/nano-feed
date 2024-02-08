@@ -123,7 +123,6 @@ export async function load({ url, params, session, cookies }) {
 				isServer: true
 			});
 		}
-
 		let metatags = getPageMetaTags({ page });
 
 		extend = {
