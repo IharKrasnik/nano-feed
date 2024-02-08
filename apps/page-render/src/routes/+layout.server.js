@@ -33,7 +33,7 @@ export async function load({ url, params, session, cookies }) {
 	//
 	let extend = {};
 
-	if (url.href.includes('app')) {
+	if (url.href.includes('/app')) {
 		let parentPage = await get(`pages/bySlug`, {
 			slug: pageSlug
 		});
@@ -122,6 +122,7 @@ export async function load({ url, params, session, cookies }) {
 				parentPageSlug: subPageSlug ? pageSlug : '',
 				isServer: true
 			});
+			console.log('page', extend.page);
 		}
 		let metatags = getPageMetaTags({ page });
 
