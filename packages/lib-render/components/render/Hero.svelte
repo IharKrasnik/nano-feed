@@ -166,10 +166,11 @@
 			<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
 		{/if}
 		<div
-			class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {(hero.theme
+			class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {((hero.theme
 				?.isVertical ||
 				(page.sections?.length && !hero.demoUrl && !hero.theme.isFullScreen)) &&
-			hero.theme?.bgPattern !== 'cursors'
+				hero.theme?.bgPattern !== 'cursors') ||
+			page.renderType === 'service'
 				? ''
 				: 'min-h-screen sm:h-screen'} {hero.theme?.bgPattern === 'canvas' ? 'max-w-max' : ''}"
 			style=""
@@ -194,7 +195,9 @@
 									hero.demoUrl ? '' : page.renderType === 'article' ? '' : 'sm:max-w-[900px]'
 							  } items-center`
 							: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-										{hero.theme?.isLeft ? 'sm:text-left' : ''}"
+										{hero.theme?.isLeft ? 'sm:text-left' : ''} {hero.demoUrl && !hero.theme?.isVertical
+							? 'sm:mr-8'
+							: ''} "
 					>
 						{#if isMounted}
 							{#if hero.embedAboveHtml}
