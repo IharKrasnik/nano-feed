@@ -379,7 +379,7 @@
 						? '_link'
 						: ''} cursor-pointer {sectionItem.interactiveRenderType === 'link'
 						? 'w-full'
-						: ''} {clazz?.includes('w-full') ? '' : 'sm:w-auto'} {urlClass}"
+						: 'sm:w-auto w-full'} {clazz?.includes('w-full') ? '' : 'sm:w-auto'} {urlClass}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					class:heatmap={$heatmap}
 					data-heatmap-clicks-count={$heatmap
