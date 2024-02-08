@@ -30,7 +30,7 @@ export let isAuthorized = writable(!!Cookies.get('customer_access_token'));
 
 export let loginCustomer = async ({ email, loginCode, page } = {}) => {
 	let { customer, token } = await post(
-		`customers/auth?pageId=${page._id || page.parentPage?._id}`,
+		`customers/auth?pageId=${page.parentPage?._id || page._id}`,
 		{
 			email,
 			loginCode

@@ -377,7 +377,9 @@
 				<a
 					class="shrink-0 {sectionItem.isUrlLink
 						? '_link'
-						: ''} cursor-pointer w-full {clazz?.includes('w-full') ? '' : 'sm:w-auto'} {urlClass}"
+						: ''} cursor-pointer {sectionItem.interactiveRenderType === 'link'
+						? 'w-full'
+						: ''} {clazz?.includes('w-full') ? '' : 'sm:w-auto'} {urlClass}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					class:heatmap={$heatmap}
 					data-heatmap-clicks-count={$heatmap
