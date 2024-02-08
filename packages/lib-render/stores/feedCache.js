@@ -82,6 +82,7 @@ export const fetchFeed = async ({
 	}
 
 	let { results: feed, count } = await get('feed', query);
+	feed = _.uniqBy(feed, (f) => f._id);
 
 	feedStore.update((st) => {
 		st[cacheId] = {

@@ -92,7 +92,6 @@
 	};
 
 	$: if ($feedCache[cacheId]?.feed || filterTag) {
-		console.log('render cacheId', cacheId);
 		databaseSection.items = $feedCache[cacheId].feed
 			.filter((item) => {
 				if (!filterTag) {
@@ -113,7 +112,8 @@
 					logoUrl,
 					url,
 					tagsStr,
-					meta
+					meta,
+					syncPage
 				}) => {
 					return {
 						id: _id,
@@ -132,7 +132,11 @@
 									? `/blog/post/${meta.pageSlug}`
 									: `/${meta.pageSlug}`
 								: ''),
-						tagsStr
+						tagsStr,
+						meta,
+						syncPage,
+						isService:
+							syncPage?.renderType === 'service' || section?.streamSlug.includes('-services')
 					};
 				}
 			);

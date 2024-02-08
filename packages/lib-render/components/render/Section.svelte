@@ -861,7 +861,7 @@
 												? 'col-span-12'
 												: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
 									
-									{item.theme?.isReversedImage ? 'order-last' : ''}
+									{item.theme?.isReversedImage || item.syncPage?.renderType === 'service' ? 'order-last' : ''}
 									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
 										>
 											<div>
@@ -1039,14 +1039,20 @@
 														  12
 												}`} 
 									
-									{item.theme?.isReversedImage || section.renderType === 'changelog' ? 'order-first' : ''}"
+									{item.theme?.isReversedImage ||
+												section.renderType === 'changelog' ||
+												item.syncPage?.renderType === 'service'
+													? 'order-first'
+													: ''}"
 											>
 												<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
 
 												<RenderUrlWithBackground
 													aspectRatio={section.theme?.imageAspectRatio ||
 														item.theme?.imageAspectRatio}
-													urlImgClass="object-cover {item.theme?.isReversedImage
+													urlImgClass="object-cover {item.theme?.isReversedImage ||
+													section.renderType === 'changelog' ||
+													item.syncPage?.renderType === 'service'
 														? 'rounded-l-lg'
 														: 'rounded-r-lg'}"
 													imageUrl={item.imageUrl}
@@ -1434,7 +1440,9 @@
 													{#if !section.carousel && item.imageUrl}
 														<div
 															class="{section.pricing ? 'order-none-off' : 'order-none-off'} {item
-																.theme?.isReversedImage
+																.theme?.isReversedImage ||
+															section.renderType === 'changelog' ||
+															item.isService
 																? 'order-first'
 																: ''}
 															{section.columns === 1 && i % 2 === 0 ? 'sm:order-last-off' : ''} {section.isShowSource
@@ -1452,7 +1460,9 @@
 																	? 'w-full object-cover'
 																	: ''} {section.isShowSource || (!item.title && !item.description)
 																	? 'rounded-lg'
-																	: item.theme?.isReversedImage
+																	: item.theme?.isReversedImage ||
+																	  section.renderType === 'changelog' ||
+																	  item.isService
 																	? 'rounded-t-lg'
 																	: 'rounded-b-lg'}
 																 {section.theme?.isScrollImageOnHover
@@ -1477,6 +1487,21 @@
 																: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl '}"
 															url={item.imageUrl}
 														/> -->
+														</div>
+													{/if}
+
+													{#if item.syncPage?.metadata?.fullAmount}
+														<hr class="w-full  opacity-30" />
+
+														<div class="flex items-end p-4 sm:px-8">
+															<h3 class="text-2xl font-bold ">
+																{toDollars(item.syncPage?.metadata?.fullAmount)}
+															</h3>
+															{#if item.syncPage?.metadata?.payPer && item.syncPage?.metadata?.payPer !== 'one-time'}
+																<div class="ml-2 opacity-50">
+																	/ {item.syncPage?.metadata?.payPer}
+																</div>
+															{/if}
 														</div>
 													{/if}
 

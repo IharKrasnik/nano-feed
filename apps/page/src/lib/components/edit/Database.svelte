@@ -532,25 +532,32 @@
 			on:consider={handleDndConsider}
 			on:finalize={handleDndFinalize}
 		>
-			{#each $feedCache[cacheId || activeStream.slug]?.feed?.filter((feedItem) => {
-				if (!searchStr) {
-					return true;
-				}
-
-				if (feedItem.title) {
-					if (feedItem.title.toLowerCase().includes(searchStr.toLowerCase())) {
+			{#each $feedCache[cacheId || activeStream.slug]?.feed
+				?.filter((feedItem) => {
+					if (!searchStr) {
 						return true;
 					}
-				}
 
-				if (feedItem.content) {
-					if (feedItem.content.toLowerCase().includes(searchStr.toLowerCase())) {
-						return true;
+					if (feedItem.title) {
+						if (feedItem.title.toLowerCase().includes(searchStr.toLowerCase())) {
+							return true;
+						}
 					}
-				}
 
-				return false;
-			}) as feedItem (feedItem._id + feedItem.id)}
+					if (feedItem.content) {
+						if (feedItem.content.toLowerCase().includes(searchStr.toLowerCase())) {
+							return true;
+						}
+					}
+
+					return false;
+				})
+				.map((feedItem) => {
+					if (!feedItem.id) {
+						feedItem.id = feedItem._id || uuidv4();
+					}
+					return feedItem;
+				}) as feedItem (feedItem.id)}
 				<EditFeedItem
 					bind:feedItem
 					bind:setPageAndDraft
