@@ -348,6 +348,7 @@
 								placeholder="myemail@gmail.com"
 								bind:value={emailAddress}
 								class="_input _email-input w-full"
+								type="email"
 								style=""
 							/>
 							{#if sectionItem.callToActionText?.length < 14}
