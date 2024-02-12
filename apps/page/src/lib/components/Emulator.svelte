@@ -543,7 +543,6 @@
 				>
 					<div class="mb-2 text-sm font-medium">What's your 1-line pitch?</div>
 					<input
-						autofocus
 						placeholder="Launch in seconds"
 						bind:value={$pageTitle}
 						on:keypress={(e) => {
