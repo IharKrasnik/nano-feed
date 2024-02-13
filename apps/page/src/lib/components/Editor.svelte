@@ -180,6 +180,14 @@
 		isShowHeatmap = true;
 	};
 
+	let editorPanelEl;
+	let prevSelectedTab;
+
+	$: if (editorPanelEl && $selectedTab !== prevSelectedTab) {
+		prevSelectedTab = $selectedTab;
+		editorPanelEl.scrollTop = 0;
+	}
+
 	let refreshPageConversionStats = async () => {
 		try {
 			if (!page._id || !$currentUser) {
@@ -1063,6 +1071,7 @@
 					{#key $sectionToEdit?.id}
 						<div
 							class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] overflow-x-hidden pt-0 h-screen overflow-y-scroll bg-white"
+							bind:this={editorPanelEl}
 						>
 							<div class="w-full mr-4" style="max-width: 100vw;">
 								<div
