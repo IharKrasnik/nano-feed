@@ -33,7 +33,7 @@
 
 <Popup isShown position="right" isClickOutsideClose={false} bind:page {onClosed}>
 	{#if submission && $servicePages}
-		<div class="p-16 mb-[300px]">
+		<div class="p-4 mb-[300px]">
 			{#key submission._id}
 				<ServiceRequest bind:page bind:submission />
 			{/key}

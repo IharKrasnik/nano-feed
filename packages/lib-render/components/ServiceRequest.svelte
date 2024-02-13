@@ -183,7 +183,7 @@
 </script>
 
 {#if submission.page}
-	<div class="flex justify-between">
+	<div class="flex justify-between p-8">
 		<div class="w-full">
 			<div class="flex items-center">
 				<div class="text-3xl font-bold mb-2 shrink-0">
@@ -813,15 +813,19 @@
 		</div>
 	{/if}
 {:else}
-	<div class="mt-4">
-		<div class="font-semibold w-full text-center text-2xl mb-2 pt-8">Add New Request</div>
-		<div class="w-full text-center mb-8 opacity-50 text-lg">
+	<div class="mt-4 px-4 sm:px-8">
+		<div class="font-semibold w-full text-left text-2xl mb-2 ">Add New Request</div>
+		<div class="w-full text-left mb-8 opacity-50 text-lg">
 			Choose a service and fill your request
 		</div>
-		<div class="flex gap-8 justify-center flex-wrap">
+		<div
+			class="grid  gap-4  {$servicePages?.length > 4
+				? 'sm:grid-cols-3'
+				: 'sm:grid-cols-2 sm:gap-8'} "
+		>
 			{#each $servicePages || [] as servicePage}
 				<div
-					class="_app-section text-left mb-2 cursor-pointer  w-[300px] transition hover:translate-y-[-10px]"
+					class="_app-section w-full text-left mb-2 cursor-pointer  transition hover:translate-y-[-10px]"
 					on:click={() => {
 						submission.page = servicePage;
 						submission.title = servicePage.name;

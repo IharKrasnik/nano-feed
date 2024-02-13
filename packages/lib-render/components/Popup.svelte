@@ -133,12 +133,24 @@
 		width: calc(100% - 32px);
 	}
 
-	.popup-content.position-right {
-		top: 50%;
-		right: 0;
-		transform: translateX(0%) translateY(-50%);
-		width: calc(100% - 32px);
-		height: 100vw;
+	@media (min-width: 640px) {
+		.popup-content.position-right {
+			top: 50%;
+			right: 0;
+			transform: translateX(0%) translateY(-50%);
+			width: calc(100% - 32px);
+			height: 100vh;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.popup-content.position-right {
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			padding: 16px;
+		}
 	}
 
 	.position-right ._popup-contents {
