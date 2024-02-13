@@ -9,7 +9,6 @@ let getDomain = (href) => {
 	let res = /:\/\/([^\/]+)/.exec(href);
 	return (res && res[1]) || href;
 };
-
 export async function load({ url, params, session, cookies }) {
 	let currentDomain = getDomain(url.href);
 
