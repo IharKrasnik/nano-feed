@@ -18,6 +18,7 @@
 	import trackForm from 'lib/services/trackForm';
 	import trackInteractiveAnswer from 'lib/services/trackInteractiveAnswer';
 	import RenderForm from 'lib-render/components/render/Form.svelte';
+	import SubmissionPopup from 'lib-render/components/render/SubmissionPopup.svelte';
 
 	export let page;
 
@@ -36,6 +37,8 @@
 
 	export let isEdit;
 	export let isEmbed;
+
+	let isSubmissionPopupShown = false;
 
 	let isUrlLoading = false;
 	let isUrl2Loading = false;
@@ -237,6 +240,15 @@
 	};
 </script>
 
+{#if isSubmissionPopupShown}
+	<SubmissionPopup
+		bind:page
+		onClosed={() => {
+			isSubmissionPopupShown = false;
+		}}
+	/>
+{/if}
+
 {#if popupEmbedUrl}
 	<Popup {page} maxWidth={0} isShown onClosed={() => (popupEmbedUrl = null)}
 		><RenderUrl isAutoplay url={popupEmbedUrl} /></Popup
@@ -405,6 +417,12 @@
 							url: sectionItem.url,
 							text: sectionItem.callToActionText
 						});
+
+						if (sectionItem.url === '/app/requests') {
+							evt.preventDefault();
+							isSubmissionPopupShown = true;
+							return;
+						}
 
 						if (sectionItem.onUrlClick) {
 							evt.preventDefault();

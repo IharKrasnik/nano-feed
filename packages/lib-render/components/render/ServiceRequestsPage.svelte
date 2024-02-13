@@ -27,7 +27,6 @@
 	import SubmissionPopup from 'lib-render/components/render/SubmissionPopup.svelte';
 
 	import submissions, { refresh as refreshSubmissions } from 'lib/stores/submissions';
-	import servicePages, { refresh as refreshServicePages } from 'lib-render/stores/servicePages';
 
 	import submissionsOutbound, {
 		refresh as refreshSubmissionsOutbound
@@ -66,63 +65,17 @@
 
 	let isRequestAdding = false;
 
-	let getDefaultSubmission = () => {
-		return {
-			title: '',
-			description: '',
-			page: null
-		};
-	};
-	let newSubmission;
-
 	let startAddingRequest = async () => {
-		if (!$servicePages) {
-			await refreshServicePages(
-				$currentUser
-					? { parentPageId: '654e6776c712c70014d65d77' }
-					: { parentPageId: (page.parentPage || page)._id }
-			);
-		}
-
-		newSubmission = getDefaultSubmission();
 		isRequestAdding = true;
-	};
-
-	let createRequest = async () => {
-		let { submission } = await post(`serviceRequests?pageId=${parentPage._id}`, {
-			title: newSubmission.page.name,
-			description: newSubmission.description,
-			pageId: newSubmission.page._id,
-			metadata: newSubmission.page.metadata
-		});
-
-		if (selectedSubmissionsTab === 'outbound') {
-			$submissionsOutbound = [submission, ...$submissionsOutbound];
-		} else {
-			$submissions = [submission, ...$submissions];
-		}
-		$selectedSubmission = submission;
-
-		newSubmission = getDefaultSubmission();
 	};
 </script>
 
 <div class="pt-[80px]">
 	<div class="flex justify-center w-full">
 		<div>
-			{#if $selectedSubmission}
+			{#if $selectedSubmission || isRequestAdding}
 				<SubmissionPopup
 					bind:submission={$selectedSubmission}
-					bind:page
-					onClosed={() => {
-						$selectedSubmission = null;
-						isRequestAdding = false;
-					}}
-				/>
-			{/if}
-			{#if isRequestAdding}
-				<SubmissionPopup
-					bind:submission={newSubmission}
 					bind:page
 					onClosed={() => {
 						$selectedSubmission = null;
