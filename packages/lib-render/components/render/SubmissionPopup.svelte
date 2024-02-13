@@ -45,7 +45,11 @@
 				<div
 					on:click={() => {
 						if (submission?.page) {
-							submission = {};
+							submission = {
+								title: '',
+								description: '',
+								page: null
+							};
 						} else {
 							isShown = false;
 							onClosed();
