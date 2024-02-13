@@ -24,6 +24,7 @@
 	import ServiceRequest from 'lib-render/components/ServiceRequest.svelte';
 	import ServiceRequestCard from 'lib-render/components/ServiceRequestCard.svelte';
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
+	import SubmissionPopup from 'lib-render/components/render/SubmissionPopup.svelte';
 
 	import submissions, { refresh as refreshSubmissions } from 'lib/stores/submissions';
 	import servicePages, { refresh as refreshServicePages } from 'lib-render/stores/servicePages';
@@ -85,7 +86,6 @@
 
 		newSubmission = getDefaultSubmission();
 		isRequestAdding = true;
-		// isRequestAdding = true;
 	};
 
 	let createRequest = async () => {
@@ -110,50 +110,25 @@
 <div class="pt-[80px]">
 	<div class="flex justify-center w-full">
 		<div>
-			{#if $selectedSubmission || isRequestAdding}
-				<Popup
-					isShown
-					position="right"
-					isClickOutsideClose={false}
+			{#if $selectedSubmission}
+				<SubmissionPopup
+					bind:submission={$selectedSubmission}
 					bind:page
 					onClosed={() => {
 						$selectedSubmission = null;
 						isRequestAdding = false;
 					}}
-				>
-					<div class="p-16 mb-[300px]">
-						{#if isRequestAdding}
-							<ServiceRequest bind:page bind:submission={newSubmission} />
-						{:else}
-							{#key $selectedSubmission._id}
-								<ServiceRequest bind:page bind:submission={$selectedSubmission} />
-							{/key}
-						{/if}
-
-						<!-- {#if $servicePages}
-												<select class="mb-2 w-full text-lg _bg-cta" bind:value={newSubmission.page}>
-													{#each $servicePages as servicePage}
-														<option value={servicePage}>{servicePage.name}</option>
-													{/each}
-												</select>
-
-												<ContentEditable
-													class="text-lg _bg-cta p-4 min-h-[200px]"
-													placeholder="Task Description..."
-													bind:value={newSubmission.description}
-												/>
-											{/if}
-
-											<Button onClick={createRequest} class="mt-8">Submit Request</Button>
-											<div class="text-sm font-semibold mt-2">
-												{#if newSubmission.page?.metadata?.fullAmount}
-													Price: {toDollars(newSubmission.page?.metadata.fullAmount)}
-												{:else}
-													Free
-												{/if}
-											</div> -->
-					</div>
-				</Popup>
+				/>
+			{/if}
+			{#if isRequestAdding}
+				<SubmissionPopup
+					bind:submission={newSubmission}
+					bind:page
+					onClosed={() => {
+						$selectedSubmission = null;
+						isRequestAdding = false;
+					}}
+				/>
 			{/if}
 
 			<div class="w-[900px] mx-auto">

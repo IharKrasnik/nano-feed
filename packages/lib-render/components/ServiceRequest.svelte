@@ -14,6 +14,7 @@
 	import { fade } from 'svelte/transition';
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
+	import { default as usePlaceholder } from 'lib/use/placeholder';
 	import Modal from 'lib/components/Modal.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
@@ -25,6 +26,7 @@
 	import { goto } from '$app/navigation';
 	import autofocus from 'lib/use/autofocus';
 	import { showSuccessMessage } from 'lib/services/toast';
+	import striptags from 'striptags';
 
 	export let submission;
 	export let page;
@@ -188,9 +190,9 @@
 					{submission.title || submission.page.name}
 				</div>
 			</div>
-			{#if !submission._id && submission.page.heros && submission.page.heros[0].subtitle}
+			{#if !submission._id && submission.page.heros && submission.page.heros[0]?.subtitle}
 				<div class="opacity-60 mt-3 text-lg">
-					{submission.page.heros[0].subtitle}
+					{@html striptags(submission.page.heros[0].subtitle || '')}
 				</div>
 				<div>
 					<a
@@ -303,12 +305,20 @@
 				<div>Description</div>
 			</div>
 			{#if isSubmissionEdit}
-				<ContentEditable
+				<div
+					class="p-4 mt-4 _bg-cta outline-none min-h-[100px]"
+					contenteditable
+					use:usePlaceholder={submission.fields.find(
+						(f) => f.interactiveRenderType === 'description'
+					)?.interactivePlaceholder || 'Provide details about your request...'}
+					bind:innerHTML={submission.description}
+				/>
+				<!-- <ContentEditable
 					placeholder={submission.fields.find((f) => f.interactiveRenderType === 'description')
 						?.interactivePlaceholder || 'Provide details about your request...'}
 					class="p-4 mt-4 _bg-cta"
 					bind:value={submission.description}
-				/>
+				/> -->
 
 				<div class="flex items-center opacity-60 w-[170px] mt-16 mb-4">
 					<div>Attachments</div>
@@ -811,7 +821,7 @@
 		<div class="flex gap-8 justify-center flex-wrap">
 			{#each $servicePages || [] as servicePage}
 				<div
-					class="_app-section text-left  mb-2 cursor-pointer  w-[300px] transition hover:translate-y-[-10px]"
+					class="_app-section text-left mb-2 cursor-pointer  w-[300px] transition hover:translate-y-[-10px]"
 					on:click={() => {
 						submission.page = servicePage;
 						submission.title = servicePage.name;
@@ -823,10 +833,10 @@
 				>
 					<div class="flex flex-col justify-between h-full">
 						<div class="h-full">
-							<div class="font-semibold">{servicePage.name}</div>
+							<div class="font-semibold mb-2">{servicePage.name}</div>
 
 							<div class="opacity-60">
-								{servicePage.heros[0].subtitle}
+								{@html striptags((servicePage.heros && servicePage.heros[0])?.subtitle || '')}
 							</div>
 							{#if servicePage.metadata?.coverImageUrl}
 								<img

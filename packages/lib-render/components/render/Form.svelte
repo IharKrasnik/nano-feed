@@ -250,7 +250,7 @@
 {/if}
 
 {#if !section.submission}
-	{#if section.ctaExplainer && !isFormSubmitted}
+	{#if section.ctaExplainer && !isFormSubmitted && !isShowLoginCode}
 		<div class="text-sm mt-2 w-full text-center">{section.ctaExplainer}</div>
 	{/if}
 {/if}
