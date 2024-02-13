@@ -1,16 +1,18 @@
 /** Dispatch event on click outside of node */
-export default (node) => {
+export default (node, isEnabled = true) => {
 	const handleClick = (event) => {
-		if (node && !node.contains(event.target) && !event.defaultPrevented) {
-			node.dispatchEvent(new CustomEvent('clickOutside', node));
+		if (isEnabled) {
+			if (node && !node.contains(event.target) && !event.defaultPrevented) {
+				node.dispatchEvent(new CustomEvent('clickOutside', node));
+			}
 		}
 	};
 
-	document.addEventListener('click', handleClick, true);
+	document.addEventListener('mouseup', handleClick, true);
 
 	return {
 		destroy() {
-			document.removeEventListener('click', handleClick, true);
+			document.removeEventListener('mouseup', handleClick, true);
 		}
 	};
 };

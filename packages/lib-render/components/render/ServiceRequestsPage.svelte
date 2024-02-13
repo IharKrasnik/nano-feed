@@ -114,6 +114,7 @@
 				<Popup
 					isShown
 					position="right"
+					isClickOutsideClose={false}
 					bind:page
 					onClosed={() => {
 						$selectedSubmission = null;

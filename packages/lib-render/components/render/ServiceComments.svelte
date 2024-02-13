@@ -19,6 +19,7 @@
 	import linkifyHtml from 'linkify-html';
 	import CustomerAvatar from 'lib-render/components/CustomerAvatar.svelte';
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
+	import usePlaceholder from 'lib/use/placeholder';
 
 	export let page;
 	let parentPage = page.parentPage || page;
@@ -125,7 +126,9 @@
 			chatRoomId: submission.chatRoom._id
 		});
 
-		messages = [createdMessage, ...messages.filter((m) => m._id)];
+		if (createdMessage?._id) {
+			messages = [createdMessage, ...messages.filter((m) => m._id)];
+		}
 	};
 
 	let chatEl;
@@ -158,10 +161,12 @@
 				{#if isCanSendMessage}
 					<div class="w-full flex gap-0 items-center justify-between" style="border-radius: 0;">
 						<div class="w-full flex items-start" on:submit|preventDefault={sendMessage}>
-							<ContentEditable
-								class="w-full _bg-cta p-4 rounded-lg"
-								placeholder="Write a comment..."
-								bind:value={newMessage.messageHTML}
+							<div
+								class="w-full _bg-cta p-4 rounded-lg min-h-[100px] outline-none"
+								contenteditable
+								use:usePlaceholder={'Write a comment...'}
+								data-placeholder={'Write a comment...'}
+								bind:innerHTML={newMessage.messageHTML}
 							/>
 
 							<label for="new-file" class="ml-4 p-2 cursor-pointer opacity-70 hover:opacity-100">

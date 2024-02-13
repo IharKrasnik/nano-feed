@@ -279,7 +279,7 @@
 					<div class="w-full" class:hidden={!page._id} target="_blank">
 						<button
 							class="_small _secondary _promo"
-							style="background-color: #1d60ff;"
+							style="background-color: #1d60ff; color: #f6f5f4;"
 							on:click={async () => {
 								await selectServicePage({
 									pageId: '6596f017956c1a001596c7ad',

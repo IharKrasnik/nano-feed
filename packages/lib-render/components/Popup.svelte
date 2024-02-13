@@ -12,12 +12,17 @@
 	export let maxWidth = position === 'center' ? 1080 : 900;
 	export let zIndex = 2000;
 	export let onClosed = () => {};
+	export let isClickOutsideClose = true;
 
 	export let page;
 
 	const closePopup = () => {
-		isShown = false;
-		onClosed();
+		if (!isClickOutsideClose) {
+			if (confirm('Close request popup?')) {
+				isShown = false;
+				onClosed();
+			}
+		}
 	};
 
 	const handleKeydown = (evt) => {
@@ -65,9 +70,21 @@
 					style={maxWidth ? `max-width: ${maxWidth}px;` : ''}
 				>
 					{#if isClosable}
-						<div class="_cross" on:click={closePopup}>
-							<CrossSvg />
-						</div>
+						{#if position === 'center'}
+							<div class="_cross" on:click={closePopup}>
+								<CrossSvg />
+							</div>
+						{:else}
+							<div
+								class="__d absolute w-[25px] top-[20px] left-0 cursor-pointer z-10"
+								style="transform: translateX(-100%); {page.theme?.theme === 'light'
+									? 'stroke: #111111;'
+									: 'stroke: #ffffff;'}"
+								on:click={closePopup}
+							>
+								<CrossSvg />
+							</div>
+						{/if}
 					{/if}
 					<div class="_popup-contents" style="{cssVarStyles}; color: var(--text-color);">
 						<slot />

@@ -454,23 +454,23 @@
 								<div class="_section">
 									<div class="font-semibold mb-4">Buttons Radius</div>
 									<button
-										class="border rounded-[2px] mr-2 px-6"
+										class="_transparent border rounded-[2px] mr-2 px-6"
 										on:click={() => setButtonRadius('2px')}
 										>{#if page.theme.buttonRadius === '2px'}✅{/if} No
 										<div class="text-xs">2px</div></button
 									>
 									<button
-										class="border rounded-[8px] mr-2 px-6"
+										class="_transparent border rounded-[8px] mr-2 px-6"
 										on:click={() => setButtonRadius('8px')}
 										>{#if page.theme.buttonRadius === '8px'}✅{/if} SM
 										<div class="text-xs">8px</div></button
 									><button
-										class="border rounded-[16px] mr-2 px-6"
+										class="_transparent border rounded-[16px] mr-2 px-6"
 										on:click={() => setButtonRadius('16px')}
 										>{#if page.theme.buttonRadius === '16px'}✅{/if} MD
 										<div class="text-xs">16px</div></button
 									><button
-										class="border rounded-[24px] mr-2 px-6"
+										class="_transparent border rounded-[24px] mr-2 px-6"
 										on:click={() => setButtonRadius('24px')}
 										>{#if !page.theme.buttonRadius || page.theme.buttonRadius === '24px'}✅{/if} LG
 										<div class="text-xs">24px</div></button
@@ -482,24 +482,24 @@
 										<div class="font-bold mb-4">Container Size</div>
 										<div class="flex gap-4">
 											<button
-												class="border rounded-[8px]"
+												class="_transparent border rounded-[8px]"
 												on:click={() => setContainerWidth('900px')}
 												>{#if page.theme.containerWidth === '900px'}✅{/if} SM
 												<div class="text-xs">900px</div></button
 											><button
-												class="border rounded-[8px]"
+												class="_transparent border rounded-[8px]"
 												on:click={() => setContainerWidth('1080px')}
 												>{#if page.theme.containerWidth === '1080px'}✅{/if}MD
 												<div class="text-xs">1080px</div></button
 											><button
-												class="border rounded-[8px]"
+												class="_transparent border rounded-[8px]"
 												on:click={() => setContainerWidth('1200px')}
 												>{#if !page.theme.containerWidth || page.theme.containerWidth === '1200px'}✅{/if}
 												LG
 												<div class="text-xs">1200px</div></button
 											>
 											<button
-												class="border rounded-[8px]"
+												class="_transparent border rounded-[8px]"
 												on:click={() => setContainerWidth('1280px')}
 												>{#if page.theme.containerWidth === '1280px'}✅{/if} XL
 												<div class="text-xs">1280px</div></button
