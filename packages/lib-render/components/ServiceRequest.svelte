@@ -183,401 +183,163 @@
 </script>
 
 {#if submission.page}
-	<div class="flex justify-between p-8">
-		<div class="w-full">
-			<div class="flex items-center">
-				<div class="text-3xl font-bold mb-2 shrink-0">
-					{submission.title || submission.page.name}
+	<div class="p-2 sm:p-8">
+		<div>
+			<div class="w-full">
+				<div class="flex items-center">
+					<div class="text-3xl font-bold mb-2 shrink-0">
+						{submission.title || submission.page.name}
+					</div>
 				</div>
-			</div>
-			{#if !submission._id && submission.page.heros && submission.page.heros[0]?.subtitle}
-				<div class="opacity-60 mt-3 text-lg">
-					{@html striptags(submission.page.heros[0].subtitle || '')}
-				</div>
-				<div>
-					<a
-						href={getPageUrl({ page: submission.page })}
-						target="_blank"
-						class="flex items-center opacity-70 hover:opacity-100 mt-4"
-					>
-						<FeatherIcon
-							class="mr-2"
-							size={16}
-							name="help-circle"
-							theme={parentPage.theme?.theme}
-						/> See Service Page
-					</a>
-				</div>
-			{/if}
-			{#if !isSubmissionEdit}
-				<div class="text-sm">
-					{#if $currentUser}
+				{#if !submission._id && submission.page.heros && submission.page.heros[0]?.subtitle}
+					<div class="opacity-60 mt-3 text-lg">
+						{@html striptags(submission.page.heros[0].subtitle || '')}
+					</div>
+					<div>
+						<a
+							href={getPageUrl({ page: submission.page })}
+							target="_blank"
+							class="flex items-center opacity-70 hover:opacity-100 mt-4"
+						>
+							<FeatherIcon
+								class="mr-2"
+								size={16}
+								name="help-circle"
+								theme={parentPage.theme?.theme}
+							/> See Service Page
+						</a>
+					</div>
+				{/if}
+				{#if !isSubmissionEdit}
+					<div class="text-sm">
+						{#if $currentUser}
+							<div class="flex items-center my-4">
+								<div class="flex items-center opacity-60 w-[170px]">
+									<FeatherIcon class="mr-2" size={15} name="user" theme={parentPage.theme?.theme} />
+									<div>Customer</div>
+								</div>
+								<div class="flex items-center text-sm">
+									<CustomerAvatar class="mr-2" size={15} customer={submission.customer} />
+									{submission.customer.fullName || submission.customer.email || 'Anonymous'}
+								</div>
+							</div>
+						{/if}
 						<div class="flex items-center my-4">
 							<div class="flex items-center opacity-60 w-[170px]">
-								<FeatherIcon class="mr-2" size={15} name="user" theme={parentPage.theme?.theme} />
-								<div>Customer</div>
+								<FeatherIcon class="mr-2" size={15} name="loader" theme={parentPage.theme?.theme} />
+								<div>Status</div>
 							</div>
-							<div class="flex items-center text-sm">
-								<CustomerAvatar class="mr-2" size={15} customer={submission.customer} />
-								{submission.customer.fullName || submission.customer.email || 'Anonymous'}
+							<div class="text-xs">
+								<ServiceRequestStatus {submission} />
 							</div>
 						</div>
-					{/if}
-					<div class="flex items-center my-4">
-						<div class="flex items-center opacity-60 w-[170px]">
-							<FeatherIcon class="mr-2" size={15} name="loader" theme={parentPage.theme?.theme} />
-							<div>Status</div>
-						</div>
-						<div class="text-xs">
-							<ServiceRequestStatus {submission} />
-						</div>
-					</div>
-					<div class="flex items-center my-4">
-						<div class="flex items-center opacity-60 w-[170px]">
-							<FeatherIcon class="mr-2" size={15} name="calendar" theme={parentPage.theme?.theme} />
-							<div>Submitted On</div>
-						</div>
-						<div class="text-sm">
-							{moment(submission.createdOn).format('MMM DD, YYYY (dddd)')}
-						</div>
-					</div>
-				</div>
-			{/if}
-
-			{#if (!submission._id || isSubmissionEdit) && ((submission.fields || []).filter((f) => !f.isMustHaveField) || []).length}
-				<div class="flex items-center opacity-60 mt-16 text-sm">Required Fields</div>
-			{/if}
-			<div class="text-sm">
-				{#each (submission.fields || []).filter((f) => !f.isMustHaveField) || [] as field}
-					<div class="flex items-start my-4">
-						<div>
+						<div class="flex items-center my-4">
 							<div class="flex items-center opacity-60 w-[170px]">
-								<Emoji
-									width={15}
-									emoji={field.emoji || 'feather:database'}
-									theme={parentPage.theme?.theme}
+								<FeatherIcon
 									class="mr-2"
+									size={15}
+									name="calendar"
+									theme={parentPage.theme?.theme}
 								/>
-
-								<div>{field.title}</div>
+								<div>Submitted On</div>
+							</div>
+							<div class="text-sm">
+								{moment(submission.createdOn).format('MMM DD, YYYY (dddd)')}
 							</div>
 						</div>
-						<div class="text-sm w-full">
-							{#if !submission._id || isSubmissionEdit}
-								{#if field.interactiveRenderType === 'textarea'}
-									<textarea
-										class="app-input w-full"
-										rows="3"
-										placeholder={field.placeholder || 'Start typing...'}
-										bind:value={submission.vars[field.varName || field.title]}
-									/>
-								{:else}
-									<input
-										class="app-input w-full"
-										placeholder={field.placeholder || 'Start typing...'}
-										bind:value={submission.vars[field.varName || field.title]}
-									/>
-								{/if}
-							{:else}
-								<div
-									class="cursor-pointer opacity-70 hover:opacity-100 transition"
-									on:click={() => {
-										submission.vars = submission.vars || {};
-										isSubmissionEdit = true;
-									}}
-								>
-									{#if submission.vars}
-										{submission.vars[field.varName] || submission.vars[field.title] || 'Empty'}
-									{:else}
-										Empty
-									{/if}
-								</div>
-							{/if}
-							{#if field.description}
-								<div class="mt-2 opacity-60">{field.description}</div>
-							{/if}
-						</div>
 					</div>
-				{/each}
-			</div>
+				{/if}
 
-			<div class="flex items-center opacity-60 w-[170px] mt-16 text-sm">
-				<div>Description</div>
-			</div>
-			{#if isSubmissionEdit}
-				<div
-					class="p-4 mt-4 _bg-cta outline-none min-h-[100px]"
-					contenteditable
-					use:usePlaceholder={submission.fields.find(
-						(f) => f.interactiveRenderType === 'description'
-					)?.interactivePlaceholder || 'Provide details about your request...'}
-					bind:innerHTML={submission.description}
-				/>
-				<!-- <ContentEditable
+				{#if (!submission._id || isSubmissionEdit) && ((submission.fields || []).filter((f) => !f.isMustHaveField) || []).length}
+					<div class="flex items-center opacity-60 mt-16 text-sm">Required Fields</div>
+				{/if}
+				<div class="text-sm">
+					{#each (submission.fields || []).filter((f) => !f.isMustHaveField) || [] as field}
+						<div class="flex items-start my-4">
+							<div>
+								<div class="flex items-center opacity-60 w-[170px]">
+									<Emoji
+										width={15}
+										emoji={field.emoji || 'feather:database'}
+										theme={parentPage.theme?.theme}
+										class="mr-2"
+									/>
+
+									<div>{field.title}</div>
+								</div>
+							</div>
+							<div class="text-sm w-full">
+								{#if !submission._id || isSubmissionEdit}
+									{#if field.interactiveRenderType === 'textarea'}
+										<textarea
+											class="app-input w-full"
+											rows="3"
+											placeholder={field.placeholder || 'Start typing...'}
+											bind:value={submission.vars[field.varName || field.title]}
+										/>
+									{:else}
+										<input
+											class="app-input w-full"
+											placeholder={field.placeholder || 'Start typing...'}
+											bind:value={submission.vars[field.varName || field.title]}
+										/>
+									{/if}
+								{:else}
+									<div
+										class="cursor-pointer opacity-70 hover:opacity-100 transition"
+										on:click={() => {
+											submission.vars = submission.vars || {};
+											isSubmissionEdit = true;
+										}}
+									>
+										{#if submission.vars}
+											{submission.vars[field.varName] || submission.vars[field.title] || 'Empty'}
+										{:else}
+											Empty
+										{/if}
+									</div>
+								{/if}
+								{#if field.description}
+									<div class="mt-2 opacity-60">{field.description}</div>
+								{/if}
+							</div>
+						</div>
+					{/each}
+				</div>
+
+				<div class="flex items-center opacity-60 w-[170px] mt-16 text-sm">
+					<div>Description</div>
+				</div>
+				{#if isSubmissionEdit}
+					<div
+						class="p-4 mt-4 _bg-cta outline-none min-h-[100px]"
+						contenteditable
+						use:usePlaceholder={submission.fields.find(
+							(f) => f.interactiveRenderType === 'description'
+						)?.interactivePlaceholder || 'Provide details about your request...'}
+						bind:innerHTML={submission.description}
+					/>
+					<!-- <ContentEditable
 					placeholder={submission.fields.find((f) => f.interactiveRenderType === 'description')
 						?.interactivePlaceholder || 'Provide details about your request...'}
 					class="p-4 mt-4 _bg-cta"
 					bind:value={submission.description}
 				/> -->
 
-				<div class="flex items-center opacity-60 w-[170px] mt-16 mb-4">
-					<div>Attachments</div>
-				</div>
-				{#each submission.files || [] as file}
-					<div class="w-full flex items-center">
-						<FileInput
-							class="app-input w-full mb-2"
-							bind:url={file.url}
-							theme={parentPage.theme?.theme}
-						/>
-						<div
-							class="ml-2 opacity-70 hover:opacity-100 cursor-pointer"
-							on:click={() => {
-								submission.files = submission.files.filter((f) => f !== file);
-							}}
-						>
-							<FeatherIcon size={20} name="trash-2" theme={parentPage.theme?.theme} />
-						</div>
+					<div class="flex items-center opacity-60 w-[170px] mt-16 mb-4">
+						<div>Attachments</div>
 					</div>
-				{/each}
-
-				<div
-					class="inline-flex cursor-pointer mt-4 mb-4 _border-theme p-2 text-sm rounded"
-					on:click={() => {
-						submission.files = submission.files || [];
-						submission.files = [{ url: '' }, ...submission.files];
-					}}
-				>
-					📂
-					<div class="ml-2">Add Attachment</div>
-				</div>
-			{:else}
-				<div
-					class="cursor-pointer my-4  hover:_bg-cta whitespace-pre"
-					on:click={() => {
-						isSubmissionEdit = true;
-					}}
-				>
-					{@html submission.description || 'No Description'}
-				</div>
-			{/if}
-
-			{#if submission.files?.length && !isSubmissionEdit}
-				<div class="flex justify-start mt-8">
 					{#each submission.files || [] as file}
-						<a href={isSubmissionEdit ? '' : file.url} target={isSubmissionEdit ? null : '_blank'}>
-							<div class="group relative {isSubmissionEdit ? '' : 'cursor-pointer'}">
-								{#if isSubmissionEdit}
-									<div
-										class="group-hover:block hidden cursor-pointer absolute left-0 top-0 w-full h-full z-10 backdrop-blur"
-										on:click={() => {
-											submission.files = submission.files.filter((f) => f !== file);
-										}}
-									>
-										<!-- <div
-									class="w-[30px] h-[30px] flex items-center justify-center border-2 _border-theme rounded-full"
-								/> -->
-									</div>
-								{/if}
-								<RenderUrl class="w-auto" imgClass="max-h-[100px] w-auto mr-4" url={file.url} />
-							</div>
-						</a>
-					{/each}
-				</div>
-			{/if}
-
-			{#if submission._id && !isSubmissionEdit}
-				<div class="flex items-center opacity-60 w-[170px] mt-16 mb-8 text-sm">
-					<div>Deliverables</div>
-				</div>
-				{#if submission.deliverables?.length}
-					{#each submission.deliverables as deliverable}
-						<div class="overflow-x-hidden ">
-							<a
-								href={deliverable.url}
-								target="_blank"
-								class="_bg-cta p-4 block mb-2 cursor-click text-lg truncate opacity-80 hover:opacity-100"
-							>
-								{deliverable.url}
-							</a>
-						</div>
-						<!-- <a href={deliverable.url} target="_blank">
-					<RenderUrl class="max-h-[200px] w-auto" url={deliverable.url} />
-				</a> -->
-					{/each}
-				{:else}
-					{#if !isSubmissionEdit && !submission.isActivated}
-						{#if submission.metadata?.payType === 'on-activation' || submission.metadata?.payType === 'prepayment' || $currentUser}
-							<div class="_app-section mt-8 ">
-								<div class="text-lg font-semibold">Activate Request</div>
-								<div class="mt-1 mb-4 opacity-50">The request is currently inactive</div>
-
-								{#if stripeUrl}
-									<div>Add your card to activate the request</div>
-								{/if}
-								<div class="grid grid-cols-2 gap-4 mt-4">
-									<div class="rounded _border-theme p-4">
-										{#if stripeUrl}
-											<a href={stripeUrl} on:click={() => (stripeUrl = null)} target="_blank">
-												<button class="app-button mt-2">Add Card</button>
-											</a>
-
-											<div class="text-sm mt-2">
-												Secure checkout via Stripe. You won't be charged yet
-											</div>
-										{:else}
-											<div class="w-full flex">
-												<Button class="app-button" onClick={activateRequest}
-													>Activate Request</Button
-												>
-											</div>
-
-											{#if $currentUser}
-												<div class="text-sm mt-2 opacity-80">
-													Customer will be notified that request is in progress
-												</div>
-											{:else if submission.metadata?.activateAmount}
-												<div class="text-sm mt-2">
-													Pay {toDollars(submission.metadata?.activateAmount || 0)}
-												</div>
-											{:else if submission.metadata?.payType === 'on-activation'}
-												<div class="text-sm mt-2">
-													Pay {toDollars(submission.metadata?.fullAmount || 0)}
-												</div>
-											{/if}
-										{/if}
-									</div>
-									<div class="rounded _border-theme p-4">
-										<div class="w-full flex">
-											<Button class="app-button _alternative" onClick={closeRequest}
-												>Close Request</Button
-											>
-										</div>
-
-										{#if $currentUser}
-											<div class="text-sm mt-2 opacity-80">
-												Customer will be notified that request is closed
-											</div>
-										{:else}
-											<div class="text-sm mt-2">Cancel your request</div>
-										{/if}
-									</div>
-									{#if isPromocodeEdit}
-										<div>
-											<input
-												placeholder="PROMOCODE"
-												class="app-input"
-												use:autofocus
-												bind:value={promocode}
-											/>
-
-											<div class="flex items-center gap-2 mt-4">
-												<button class="app-button" on:click={applyPromocode}
-													>Apply Promo-Code</button
-												>
-												<button
-													class="app-button _alternative"
-													on:click={() => (isPromocodeEdit = false)}>Cancel</button
-												>
-											</div>
-										</div>
-									{:else}
-										<div
-											class="text-sm opacity-70 underline cursor-pointer"
-											on:click={() => (isPromocodeEdit = true)}
-										>
-											I have a promocode
-										</div>
-									{/if}
-								</div>
-							</div>
-						{/if}
-					{/if}
-
-					{#if submission.isActivated || !submission.metadata?.fullAmount}
-						<div class="opacity-80 mt-4">Work in progress...</div>
-						{#if !$currentUser}
-							<div class="opacity-80">
-								You will be notified via email {$currentCustomer.email || ''} once ready to review
-							</div>
-						{/if}
-					{/if}
-				{/if}
-			{/if}
-
-			{#if !isRequestingChanges && !submission.isClosed && !submission.isPaid && _.last(submission.reviews)?.isPending && !$currentUser}
-				<div class="_app-section mt-8 mb-4">
-					<div class="text-lg font-semibold">Review the work</div>
-					<div class="mt-1 opacity-50">Please review the deliverables and update the request</div>
-					<div class="grid grid-cols-2 gap-4 mt-4">
-						<div class="rounded _border-theme p-4">
-							<div class="w-full flex">
-								<Button class="app-button" onClick={completeRequest}>Approve & Close</Button>
-							</div>
-							{#if submission.metadata?.fullAmount}
-								<div class="text-sm mt-2 opacity-70">
-									{#if submission.metadata?.payType === 'on-activation'}
-										Mark request as completed
-									{:else}
-										Pay {toDollars(
-											submission.metadata?.fullAmount - (submission.metadata?.activateAmount || 0)
-										)}
-									{/if}
-								</div>
-							{/if}
-						</div>
-						<div class="rounded _border-theme p-4">
-							<div class="w-full flex">
-								<button
-									class="app-button _alternative"
-									on:click={() => (isRequestingChanges = true)}>Request Changes</button
-								>
-							</div>
-
-							{#if submission.metadata.revisionsCount}
-								<div class="text-sm mt-2 opacity-70">
-									You have {submission.metadata.revisionsCount - submission.reviews.length + 1} revisions
-									left
-								</div>
-							{:else}
-								<div class="text-sm mt-2 opacity-70">Ask for the changes</div>
-							{/if}
-						</div>
-					</div>
-				</div>
-			{/if}
-
-			{#if isRequestingChanges}
-				<div class="_app-section mt-8 mb-12">
-					<div class="text-lg font-semibold">Request Changes</div>
-
-					<div class="mt-1 opacity-50">Send a message with your change request</div>
-
-					<div class="mt-12 font-semibold">Message</div>
-					<div class="opacity-50 mt-1 mb-2">
-						Please be specific about what exactly you don't like and need to change
-					</div>
-					<ContentEditable
-						class="p-4 _bg-cta rounded mt-4"
-						placeholder="Please review the work!"
-						bind:value={changeRequest.messageHTML}
-					/>
-
-					<div class="mt-12 font-semibold">Attachments</div>
-
-					{#each changeRequest.attachments || [] as attachment}
-						<div class="flex items-center">
+						<div class="w-full flex items-center">
 							<FileInput
-								bind:url={attachment.url}
-								class="app-input w-full mb-2 mt-2"
+								class="app-input w-full mb-2"
+								bind:url={file.url}
 								theme={parentPage.theme?.theme}
 							/>
 							<div
 								class="ml-2 opacity-70 hover:opacity-100 cursor-pointer"
 								on:click={() => {
-									changeRequest.attachments = changeRequest.attachments.filter(
-										(a) => a !== attachment
-									);
+									submission.files = submission.files.filter((f) => f !== file);
 								}}
 							>
 								<FeatherIcon size={20} name="trash-2" theme={parentPage.theme?.theme} />
@@ -585,143 +347,390 @@
 						</div>
 					{/each}
 
-					<button
-						class="app-button _alternative mt-4 "
+					<div
+						class="inline-flex cursor-pointer mt-4 mb-4 _border-theme p-2 text-sm rounded"
 						on:click={() => {
-							changeRequest.attachments = [{ url: '' }, ...changeRequest.attachments];
+							submission.files = submission.files || [];
+							submission.files = [{ url: '' }, ...submission.files];
 						}}
-						><FeatherIcon
-							size={16}
-							class="mr-2"
-							name="paperclip"
-							theme={parentPage.theme?.theme}
-						/>Add {changeRequest.attachments?.length ? 'Another' : ''} File</button
 					>
-
-					<hr class="my-12 opacity-50" />
-
-					<div class="flex items-center gap-4">
-						<Button onClick={requestChanges} class="app-button">Request Changes</Button>
-						<button
-							on:click={() => {
-								isRequestingChanges = false;
-							}}
-							class="app-button _alternative "
-							>Cancel Review
-						</button>
+						📂
+						<div class="ml-2">Add Attachment</div>
 					</div>
-					{#if submission.metadata.revisionsCount}
-						<div class="text-sm mt-4">
-							{#if submission.metadata.revisionsCount - submission.reviews.length + 1 > 1}
-								You have {submission.metadata.revisionsCount - submission.reviews.length + 1} revisions
-								left
-							{:else}
-								This is your last revision. You have no additional reviews left.
+				{:else}
+					<div
+						class="cursor-pointer my-4  hover:_bg-cta whitespace-pre"
+						on:click={() => {
+							isSubmissionEdit = true;
+						}}
+					>
+						{@html submission.description || 'No Description'}
+					</div>
+				{/if}
+
+				{#if submission.files?.length && !isSubmissionEdit}
+					<div class="flex justify-start mt-8">
+						{#each submission.files || [] as file}
+							<a
+								href={isSubmissionEdit ? '' : file.url}
+								target={isSubmissionEdit ? null : '_blank'}
+							>
+								<div class="group relative {isSubmissionEdit ? '' : 'cursor-pointer'}">
+									{#if isSubmissionEdit}
+										<div
+											class="group-hover:block hidden cursor-pointer absolute left-0 top-0 w-full h-full z-10 backdrop-blur"
+											on:click={() => {
+												submission.files = submission.files.filter((f) => f !== file);
+											}}
+										>
+											<!-- <div
+									class="w-[30px] h-[30px] flex items-center justify-center border-2 _border-theme rounded-full"
+								/> -->
+										</div>
+									{/if}
+									<RenderUrl class="w-auto" imgClass="max-h-[100px] w-auto mr-4" url={file.url} />
+								</div>
+							</a>
+						{/each}
+					</div>
+				{/if}
+
+				{#if submission._id && !isSubmissionEdit}
+					<div class="flex items-center opacity-60 w-[170px] mt-16 mb-8 text-sm">
+						<div>Deliverables</div>
+					</div>
+					{#if submission.deliverables?.length}
+						{#each submission.deliverables as deliverable}
+							<div class="overflow-x-hidden ">
+								<a
+									href={deliverable.url}
+									target="_blank"
+									class="_bg-cta p-4 block mb-2 cursor-click text-lg truncate opacity-80 hover:opacity-100"
+								>
+									{deliverable.url}
+								</a>
+							</div>
+							<!-- <a href={deliverable.url} target="_blank">
+					<RenderUrl class="max-h-[200px] w-auto" url={deliverable.url} />
+				</a> -->
+						{/each}
+					{:else}
+						{#if !isSubmissionEdit && !submission.isActivated}
+							{#if submission.metadata?.payType === 'on-activation' || submission.metadata?.payType === 'prepayment' || $currentUser}
+								<div class="_app-section mt-8 ">
+									<div class="text-lg font-semibold">Activate Request</div>
+									<div class="mt-1 mb-4 opacity-50">The request is currently inactive</div>
+
+									{#if stripeUrl}
+										<div>Add your card to activate the request</div>
+									{/if}
+									<div class="grid sm:grid-cols-2 gap-4 mt-4">
+										<div class="rounded _border-theme p-4">
+											{#if stripeUrl}
+												<a href={stripeUrl} on:click={() => (stripeUrl = null)} target="_blank">
+													<button class="app-button mt-2">Add Card</button>
+												</a>
+
+												<div class="text-sm mt-2">
+													Secure checkout via Stripe. You won't be charged yet
+												</div>
+											{:else}
+												<div class="w-full flex">
+													<Button class="app-button" onClick={activateRequest}
+														>Activate Request</Button
+													>
+												</div>
+
+												{#if $currentUser}
+													<div class="text-sm mt-2 opacity-80">
+														Customer will be notified that request is in progress
+													</div>
+												{:else if submission.metadata?.activateAmount}
+													<div class="text-sm mt-2">
+														Pay {toDollars(submission.metadata?.activateAmount || 0)}
+													</div>
+												{:else if submission.metadata?.payType === 'on-activation'}
+													<div class="text-sm mt-2">
+														Pay {toDollars(submission.metadata?.fullAmount || 0)}
+													</div>
+												{/if}
+											{/if}
+										</div>
+										<div class="rounded _border-theme p-4">
+											<div class="w-full flex">
+												<Button class="app-button _alternative" onClick={closeRequest}
+													>Close Request</Button
+												>
+											</div>
+
+											{#if $currentUser}
+												<div class="text-sm mt-2 opacity-80">
+													Customer will be notified that request is closed
+												</div>
+											{:else}
+												<div class="text-sm mt-2">Cancel your request</div>
+											{/if}
+										</div>
+										{#if isPromocodeEdit}
+											<div>
+												<input
+													placeholder="PROMOCODE"
+													class="app-input"
+													use:autofocus
+													bind:value={promocode}
+												/>
+
+												<div class="flex items-center gap-2 mt-4">
+													<button class="app-button" on:click={applyPromocode}
+														>Apply Promo-Code</button
+													>
+													<button
+														class="app-button _alternative"
+														on:click={() => (isPromocodeEdit = false)}>Cancel</button
+													>
+												</div>
+											</div>
+										{:else}
+											<div
+												class="text-sm opacity-70 underline cursor-pointer"
+												on:click={() => (isPromocodeEdit = true)}
+											>
+												I have a promocode
+											</div>
+										{/if}
+									</div>
+								</div>
 							{/if}
-						</div>
+						{/if}
+
+						{#if submission.isActivated || !submission.metadata?.fullAmount}
+							<div class="opacity-80 mt-4">Work in progress...</div>
+							{#if !$currentUser}
+								<div class="opacity-80">
+									You will be notified via email {$currentCustomer.email || ''} once ready to review
+								</div>
+							{/if}
+						{/if}
 					{/if}
-				</div>
-			{/if}
+				{/if}
 
-			{#if $currentUser && !submission.isClosed && !isSubmissionEdit}
-				<div class="_app-section mt-8 mb-12">
-					<div class="text-lg font-semibold">Submit work for review</div>
+				{#if !isRequestingChanges && !submission.isClosed && !submission.isPaid && _.last(submission.reviews)?.isPending && !$currentUser}
+					<div class="_app-section mt-8 mb-4">
+						<div class="text-lg font-semibold">Review the work</div>
+						<div class="mt-1 opacity-50">Please review the deliverables and update the request</div>
+						<div class="grid grid-cols-2 gap-4 mt-4">
+							<div class="rounded _border-theme p-4">
+								<div class="w-full flex">
+									<Button class="app-button" onClick={completeRequest}>Approve & Close</Button>
+								</div>
+								{#if submission.metadata?.fullAmount}
+									<div class="text-sm mt-2 opacity-70">
+										{#if submission.metadata?.payType === 'on-activation'}
+											Mark request as completed
+										{:else}
+											Pay {toDollars(
+												submission.metadata?.fullAmount - (submission.metadata?.activateAmount || 0)
+											)}
+										{/if}
+									</div>
+								{/if}
+							</div>
+							<div class="rounded _border-theme p-4">
+								<div class="w-full flex">
+									<button
+										class="app-button _alternative"
+										on:click={() => (isRequestingChanges = true)}>Request Changes</button
+									>
+								</div>
 
-					<div class="mt-1 opacity-50">
-						Notify the customer that the work is ready for review.
-						<div>
-							If you're unsure about the requirements, use the comments below to clarify your
-							questions.
+								{#if submission.metadata.revisionsCount}
+									<div class="text-sm mt-2 opacity-70">
+										You have {submission.metadata.revisionsCount - submission.reviews.length + 1} revisions
+										left
+									</div>
+								{:else}
+									<div class="text-sm mt-2 opacity-70">Ask for the changes</div>
+								{/if}
+							</div>
 						</div>
 					</div>
+				{/if}
 
-					{#if !isSubmittingForReviewInProgress}
-						<button
-							on:click={() => (isSubmittingForReviewInProgress = true)}
-							class="app-button mt-4">Submit For Review</button
-						>
-					{/if}
+				{#if isRequestingChanges}
+					<div class="_app-section mt-8 mb-12">
+						<div class="text-lg font-semibold">Request Changes</div>
 
-					{#if isSubmittingForReviewInProgress}
+						<div class="mt-1 opacity-50">Send a message with your change request</div>
+
 						<div class="mt-12 font-semibold">Message</div>
 						<div class="opacity-50 mt-1 mb-2">
-							This message is sent to the comments. Friendly notify customer about your work.
-							Clarify your specific concerns, if you have any.
+							Please be specific about what exactly you don't like and need to change
 						</div>
 						<ContentEditable
 							class="p-4 _bg-cta rounded mt-4"
 							placeholder="Please review the work!"
-							bind:value={newReview.messageHTML}
+							bind:value={changeRequest.messageHTML}
 						/>
 
-						<div class="mt-12 font-semibold">Deliverables</div>
-						<div class="opacity-50 mt-1 mb-2">
-							Add at least 1 file or URL. Customers approve your work based on the files that you've
-							delivered.
-						</div>
-						{#each newReview.deliverables || [] as deliverable}
+						<div class="mt-12 font-semibold">Attachments</div>
+
+						{#each changeRequest.attachments || [] as attachment}
 							<div class="flex items-center">
 								<FileInput
-									bind:url={deliverable.url}
-									class="app-input w-full mb-2"
+									bind:url={attachment.url}
+									class="app-input w-full mb-2 mt-2"
 									theme={parentPage.theme?.theme}
 								/>
 								<div
 									class="ml-2 opacity-70 hover:opacity-100 cursor-pointer"
 									on:click={() => {
-										newReview.deliverables = newReview.deliverables.filter(
-											(d) => d !== deliverable
+										changeRequest.attachments = changeRequest.attachments.filter(
+											(a) => a !== attachment
 										);
-										if (!newReview.deliverables.length) {
-											newReview.deliverables = [{ url: '' }];
-										}
 									}}
 								>
 									<FeatherIcon size={20} name="trash-2" theme={parentPage.theme?.theme} />
 								</div>
 							</div>
 						{/each}
+
 						<button
-							class="app-button _alternative mt-4"
+							class="app-button _alternative mt-4 "
 							on:click={() => {
-								newReview.deliverables = [{ url: '' }, ...newReview.deliverables];
+								changeRequest.attachments = [{ url: '' }, ...changeRequest.attachments];
 							}}
 							><FeatherIcon
 								size={16}
 								class="mr-2"
 								name="paperclip"
 								theme={parentPage.theme?.theme}
-							/>Add Another Deliverable</button
+							/>Add {changeRequest.attachments?.length ? 'Another' : ''} File</button
 						>
 
 						<hr class="my-12 opacity-50" />
 
 						<div class="flex items-center gap-4">
-							<Button onClick={submitForReview} class="app-button">Submit For Review</Button>
+							<Button onClick={requestChanges} class="app-button">Request Changes</Button>
 							<button
 								on:click={() => {
-									isSubmittingForReviewInProgress = false;
+									isRequestingChanges = false;
 								}}
-								class="app-button _alternative ">Cancel Review</button
-							>
+								class="app-button _alternative "
+								>Cancel Review
+							</button>
 						</div>
-					{/if}
-				</div>
-			{/if}
-
-			{#if isSubmissionEdit}
-				{#if $isAuthorized}
-					<div class="mt-8">
-						<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
-					</div>
-				{:else}
-					<div class="mt-16">
-						<RenderCustomerLoginForm {page} onLogin={() => {}} />
+						{#if submission.metadata.revisionsCount}
+							<div class="text-sm mt-4">
+								{#if submission.metadata.revisionsCount - submission.reviews.length + 1 > 1}
+									You have {submission.metadata.revisionsCount - submission.reviews.length + 1} revisions
+									left
+								{:else}
+									This is your last revision. You have no additional reviews left.
+								{/if}
+							</div>
+						{/if}
 					</div>
 				{/if}
-			{/if}
 
-			<!-- 
+				{#if $currentUser && !submission.isClosed && !isSubmissionEdit}
+					<div class="_app-section mt-8 mb-12">
+						<div class="text-lg font-semibold">Submit work for review</div>
+
+						<div class="mt-1 opacity-50">
+							Notify the customer that the work is ready for review.
+							<div>
+								If you're unsure about the requirements, use the comments below to clarify your
+								questions.
+							</div>
+						</div>
+
+						{#if !isSubmittingForReviewInProgress}
+							<button
+								on:click={() => (isSubmittingForReviewInProgress = true)}
+								class="app-button mt-4">Submit For Review</button
+							>
+						{/if}
+
+						{#if isSubmittingForReviewInProgress}
+							<div class="mt-12 font-semibold">Message</div>
+							<div class="opacity-50 mt-1 mb-2">
+								This message is sent to the comments. Friendly notify customer about your work.
+								Clarify your specific concerns, if you have any.
+							</div>
+							<ContentEditable
+								class="p-4 _bg-cta rounded mt-4"
+								placeholder="Please review the work!"
+								bind:value={newReview.messageHTML}
+							/>
+
+							<div class="mt-12 font-semibold">Deliverables</div>
+							<div class="opacity-50 mt-1 mb-2">
+								Add at least 1 file or URL. Customers approve your work based on the files that
+								you've delivered.
+							</div>
+							{#each newReview.deliverables || [] as deliverable}
+								<div class="flex items-center">
+									<FileInput
+										bind:url={deliverable.url}
+										class="app-input w-full mb-2"
+										theme={parentPage.theme?.theme}
+									/>
+									<div
+										class="ml-2 opacity-70 hover:opacity-100 cursor-pointer"
+										on:click={() => {
+											newReview.deliverables = newReview.deliverables.filter(
+												(d) => d !== deliverable
+											);
+											if (!newReview.deliverables.length) {
+												newReview.deliverables = [{ url: '' }];
+											}
+										}}
+									>
+										<FeatherIcon size={20} name="trash-2" theme={parentPage.theme?.theme} />
+									</div>
+								</div>
+							{/each}
+							<button
+								class="app-button _alternative mt-4"
+								on:click={() => {
+									newReview.deliverables = [{ url: '' }, ...newReview.deliverables];
+								}}
+								><FeatherIcon
+									size={16}
+									class="mr-2"
+									name="paperclip"
+									theme={parentPage.theme?.theme}
+								/>Add Another Deliverable</button
+							>
+
+							<hr class="my-12 opacity-50" />
+
+							<div class="flex items-center gap-4">
+								<Button onClick={submitForReview} class="app-button">Submit For Review</Button>
+								<button
+									on:click={() => {
+										isSubmittingForReviewInProgress = false;
+									}}
+									class="app-button _alternative ">Cancel Review</button
+								>
+							</div>
+						{/if}
+					</div>
+				{/if}
+
+				{#if isSubmissionEdit}
+					{#if $isAuthorized}
+						<div class="mt-8">
+							<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
+						</div>
+					{:else}
+						<div class="mt-16">
+							<RenderCustomerLoginForm {page} onLogin={() => {}} />
+						</div>
+					{/if}
+				{/if}
+
+				<!-- 
 		<div class="text-lg mb-4 opacity-70">
 			Chat with
 			{#if $currentUser}
@@ -730,90 +739,58 @@
 				{submission.page.parentPage.name}
 			{/if}
 		</div> -->
+			</div>
 		</div>
 
-		<div>
-			{#if submission.isClosed || submission.isPaid}{:else}
-				<div class="cursor-pointer relative" on:click={() => (isMenuShown = !isMenuShown)}>
-					<FeatherIcon theme={(page.parentPage || page)?.theme?.theme} name="more-horizontal" />
+		{#if submission.isActivated || !submission.metadata?.activateAmount}
+			{#if submission.metadata?.fullAmount && submission.isActivated && !submission.isPaid}{:else if submission.isClosed || submission.isPaid}
+				<div class="_app-section mt-12">
+					<div class="text-lg font-bold mb-2">Feedback</div>
 
-					{#if isMenuShown}
-						<div
-							class="absolute right-0 top-0 min-w-[150px] "
-							style="transform:translateY(100%);"
-							use:clickOutside
-							on:clickOutside={() => (isMenuShown = false)}
-						>
-							{#if submission._id}
-								<div
-									class="p-2 _border-accent rounded hover:bg-accent transition"
-									on:click={closeRequest}
-								>
-									Close Request
-								</div>
-							{:else}
-								<div
-									class="p-2 _border-accent rounded hover:bg-accent transition"
-									on:click={() => {
-										submission.page = null;
-									}}
-								>
-									Choose Different Service
-								</div>
-							{/if}
+					{#if submission.customerFeedback}
+						<div class="flex items-start mt-4">
+							<CustomerAvatar class="mr-2" customer={submission.customer} />
+
+							<div class="_bg-cta inline-flex rounded p-4 min-w-[400px]">
+								{submission.customerFeedback.message}
+							</div>
 						</div>
+					{:else if !$currentUser && (submission.isPaid || submission.isClosed)}
+						<div class="mb-1">Please leave your feedback on the service</div>
+						<div class="mt-8  _app-section flex items-start">
+							<CustomerAvatar class="shrink-0 mr-4" customer={$currentCustomer} />
+							<textarea
+								bind:value={feedback.message}
+								placeholder="I loved it!..."
+								class="w-full"
+								rows="3"
+							/>
+
+							<Button class="shrink-0 ml-4 app-button" onClick={submitFeedback}
+								>Send Feedback</Button
+							>
+						</div>
+					{:else}
+						<div class="opacity-80 ">No Feedback</div>
 					{/if}
 				</div>
 			{/if}
-		</div>
-	</div>
+		{/if}
 
-	{#if submission.isActivated || !submission.metadata?.activateAmount}
-		{#if submission.metadata?.fullAmount && submission.isActivated && !submission.isPaid}{:else if submission.isClosed || submission.isPaid}
-			<div class="_app-section mt-12">
-				<div class="text-lg font-bold mb-2">Feedback</div>
-
-				{#if submission.customerFeedback}
-					<div class="flex items-start mt-4">
-						<CustomerAvatar class="mr-2" customer={submission.customer} />
-
-						<div class="_bg-cta inline-flex rounded p-4 min-w-[400px]">
-							{submission.customerFeedback.message}
-						</div>
-					</div>
-				{:else if !$currentUser && (submission.isPaid || submission.isClosed)}
-					<div class="mb-1">Please leave your feedback on the service</div>
-					<div class="mt-8  _app-section flex items-start">
-						<CustomerAvatar class="shrink-0 mr-4" customer={$currentCustomer} />
-						<textarea
-							bind:value={feedback.message}
-							placeholder="I loved it!..."
-							class="w-full"
-							rows="3"
-						/>
-
-						<Button class="shrink-0 ml-4 app-button" onClick={submitFeedback}>Send Feedback</Button>
-					</div>
-				{:else}
-					<div class="opacity-80 ">No Feedback</div>
-				{/if}
+		{#if !isSubmissionEdit}
+			<div class="text-sm opacity-70 mt-16">Comments (sent to email)</div>
+			<div class="mt-8">
+				<RenderServiceComments
+					isCanSendMessage={!_.last(submission.reviews)?.isPending}
+					class="w-full"
+					bind:submission
+					bind:page
+				/>
 			</div>
 		{/if}
-	{/if}
-
-	{#if !isSubmissionEdit}
-		<div class="text-sm opacity-70 mt-16">Comments (sent to email)</div>
-		<div class="mt-8">
-			<RenderServiceComments
-				isCanSendMessage={!_.last(submission.reviews)?.isPending}
-				class="w-full"
-				bind:submission
-				bind:page
-			/>
-		</div>
-	{/if}
+	</div>
 {:else}
-	<div class="mt-4 px-4 sm:px-8">
+	<div class="mt-4 sm:px-8">
 		<div class="font-semibold w-full text-left text-2xl mb-2 ">Add New Request</div>
 		<div class="w-full text-left mb-8 opacity-50 text-lg">
 			Choose a service and fill your request
@@ -869,3 +846,37 @@
 		</div>
 	</div>
 {/if}
+<!-- <div>
+	{#if submission.isClosed || submission.isPaid}{:else}
+		<div class="cursor-pointer relative" on:click={() => (isMenuShown = !isMenuShown)}>
+			<FeatherIcon theme={(page.parentPage || page)?.theme?.theme} name="more-horizontal" />
+
+			{#if isMenuShown}
+				<div
+					class="absolute right-0 top-0 min-w-[150px] "
+					style="transform:translateY(100%);"
+					use:clickOutside
+					on:clickOutside={() => (isMenuShown = false)}
+				>
+					{#if submission._id}
+						<div
+							class="p-2 _border-accent rounded hover:bg-accent transition"
+							on:click={closeRequest}
+						>
+							Close Request
+						</div>
+					{:else}
+						<div
+							class="p-2 _border-accent rounded hover:bg-accent transition"
+							on:click={() => {
+								submission.page = null;
+							}}
+						>
+							Choose Different Service
+						</div>
+					{/if}
+				</div>
+			{/if}
+		</div>
+	{/if}
+</div> -->
