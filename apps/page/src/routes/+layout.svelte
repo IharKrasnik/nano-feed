@@ -120,7 +120,7 @@
 <div id="popup-portal" />
 {#if !$isUserLoading}
 	<div class="relative" style="	">
-		{#if !$sveltePage.url.href.includes('/emulator') && !$sveltePage.url.href.includes('/repurpose')}
+		{#if !$sveltePage.url.href.includes('/emulator') && !$sveltePage.url.href.includes('/repurpose') && !$sveltePage.url.href.includes('/code')}
 			{#if !$sveltePage.url.href.includes('/page-templates') && !$sveltePage.url.href.includes('/ide') && $sveltePage.data.pageSlug}
 				<Page />
 				{#if browser}

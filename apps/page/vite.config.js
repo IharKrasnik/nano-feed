@@ -3,10 +3,30 @@ import fs from 'fs';
 
 /** @type {import('vite').UserConfig} */
 const config = {
-	plugins: [sveltekit(), rawFonts(['.ttf'])],
+	plugins: [
+		sveltekit(),
+		rawFonts(['.ttf']),
+		{
+			name: 'add-cors',
+
+			configureServer(server) {
+				server.middlewares.use((_req, res, next) => {
+					res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+					res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+					res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+					next();
+				});
+			}
+		}
+	],
 	server: {
 		host: true,
-		port: process.env.PORT || 5177
+		port: process.env.PORT || 5177,
+
+		headers: {
+			'Cross-Origin-Embedder-Policy': 'require-corp',
+			'Cross-Origin-Opener-Policy': 'same-origin'
+		}
 	},
 	build: {
 		minify: 'esbuild'
