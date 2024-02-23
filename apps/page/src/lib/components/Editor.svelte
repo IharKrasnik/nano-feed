@@ -1754,16 +1754,16 @@
 										<div
 											class=""
 											style={$selectedTab === 'editor'
-												? 'height: calc(100vh - 120px); overflow-y: auto;}'
+												? 'height: calc(100vh - 132px); overflow-y: auto;}'
 												: ''}
 											in:fade
 										>
 											{#if $selectedTab === 'editor' && !$isInsertPopupShown}
 												{#if page?._id}
 													<div
-														class="absolute top-0 left-8 right-8 pt-3  text-xs flex  items-center justify-between"
+														class="absolute top-1 left-8 right-8  text-xs flex  items-center justify-between"
 													>
-														<div class="flex">
+														<div class="flex pt-2">
 															<div class="opacity-70 ">
 																<a
 																	target="_blank"
@@ -1778,7 +1778,7 @@
 																>
 															</div>
 														</div>
-														<div class="flex items-center justify-center">
+														<div class="flex items-center justify-center pt-2">
 															<div
 																class="flex py-0 mr-2 px-2 items-center  bg-green-400 cursor-pointer opacity-70 hover:opacity-100 transition rounded-full"
 																use:tooltip
