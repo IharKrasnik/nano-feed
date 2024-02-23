@@ -28,7 +28,7 @@
 		</div>
 		<div>
 			<div class="font-bold">Website Settings</div>
-			<div class="opacity-80 mt-1">Manage Domains, Momentum Badge, Analytics</div>
+			<div class="opacity-70 mt-1">Manage Domains, Momentum Badge, Analytics</div>
 		</div>
 	</div>
 </div>
@@ -46,7 +46,7 @@
 
 	<div class="">
 		<div class="font-bold">Header and Footer</div>
-		<div class="opacity-80 mt-1">Links to display on every page</div>
+		<div class="opacity-70 mt-1">Links to display on every page</div>
 	</div>
 </div>
 
@@ -83,7 +83,7 @@
 
 	<div class="">
 		<div class="font-bold">Plans & Billing</div>
-		<div class="opacity-80 mt-1">Upgrade and manage your Momentum plan</div>
+		<div class="opacity-70 mt-1">Upgrade and manage your Momentum plan</div>
 	</div>
 </div>
 

@@ -31,7 +31,7 @@
 </script>
 
 <div class="bg-white">
-	<div class="max-w-[1000px] mx-auto pt-8">
+	<div class="max-w-[1100px] mx-auto p-8">
 		{#if $selectedSettingsTab === 'settings'}
 			{#if $selectedSettingsPage}
 				{#key $selectedSettingsPage?._id}

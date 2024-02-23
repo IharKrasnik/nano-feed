@@ -1695,7 +1695,7 @@
 						<div
 							class="relative w-screen sm:w-full ml-[100%] sm:ml-[400px] _preview mx-4 {$selectedTab ===
 							'editor'
-								? 'p-8'
+								? 'p-8 pt-10'
 								: 'p-0'} bg-[#e5e5e5] overflow-hidden"
 							class:hidden={page.slug === '_slug'}
 							style={$selectedTab === 'editor' ? 'height: calc(100vh - 60px);' : ''}
@@ -1761,13 +1761,13 @@
 											{#if $selectedTab === 'editor' && !$isInsertPopupShown}
 												{#if page?._id}
 													<div
-														class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
+														class="absolute mt-2 left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
 													>
 														<div class="flex">
 															<div class="opacity-70 ">
 																<a
 																	target="_blank"
-																	class="flex py-0 mt-1 px-2 items-center bg-green-400/20 hover:bg-green-400 transition rounded-full"
+																	class="flex py-0 px-2 items-center bg-green-400/20 hover:bg-green-400 transition rounded-full"
 																	href={getPageUrl({ page })}
 																>
 																	<FeatherIcon size={10} name="globe" class="mr-2" />
@@ -1778,7 +1778,7 @@
 																>
 															</div>
 														</div>
-														<div class="flex items-center justify-center mt-1">
+														<div class="flex items-center justify-center">
 															<div
 																class="flex py-0 mr-2 px-2 items-center  bg-green-400 cursor-pointer opacity-70 hover:opacity-100 transition rounded-full"
 																use:tooltip
@@ -1864,6 +1864,7 @@
 													<SitePreview
 														isNoVars
 														isEmbed
+														class="px-4"
 														noStickyHeader={true}
 														isNoBadge={true}
 														isEdit
