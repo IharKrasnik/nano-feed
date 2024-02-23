@@ -1761,7 +1761,7 @@
 											{#if $selectedTab === 'editor' && !$isInsertPopupShown}
 												{#if page?._id}
 													<div
-														class="absolute mt-2 left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
+														class="absolute top-0 left-8 right-8 pt-3  text-xs flex  items-center justify-between"
 													>
 														<div class="flex">
 															<div class="opacity-70 ">
