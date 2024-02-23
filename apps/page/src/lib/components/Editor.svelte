@@ -198,7 +198,7 @@
 				page.parentPage
 					? (async function () {
 							let parentPageStats = await get(
-								isDev
+								isDev && false
 									? `pages/${page.parentPage._id}/conversions`
 									: `pages/${page.parentPage._id}/conversions-optimised`,
 								{},
@@ -215,7 +215,9 @@
 					: null,
 				(async function () {
 					let stats = await get(
-						isDev ? `pages/${page._id}/conversions` : `pages/${page._id}/conversions-optimised`,
+						isDev && false
+							? `pages/${page._id}/conversions`
+							: `pages/${page._id}/conversions-optimised`,
 						{
 							...(page.parentPage ? { parentPageId: page.parentPage._id } : {})
 						},
@@ -224,7 +226,7 @@
 						}
 					);
 
-					page.totalUniqueViews = page.parentPage.totalUniqueViews = stats.totalVisitorsCount;
+					page.totalUniqueViews = stats.totalVisitorsCount;
 					page.totalUniqueClicksCount = stats.uniqueClicksCount;
 					page.totalSignupsCount = stats.totalSubmissionsCount;
 
@@ -604,12 +606,14 @@
 	}
 
 	let getConversionColor = (conversion) => {
-		if (conversion < 5) {
-			return 'border-red-300';
+		if (!conversion || conversion === '0.00') {
+			return 'bg-gray-300';
+		} else if (conversion < 5) {
+			return 'bg-red-300';
 		} else if (conversion < 10) {
-			return 'border-orange-300';
+			return 'bg-orange-300';
 		} else {
-			return 'border-green-300';
+			return 'bg-green-300';
 		}
 	};
 
@@ -998,7 +1002,7 @@
 								? 'border-green-300'
 								: 'border-gray-300'} {onlineUsersCount
 								? 'bg-green-300/10'
-								: 'bg-gray-300/10'} transition px-2 py-1 rounded-lg"
+								: 'bg-gray-300/10'} transition px-4 py-1 rounded-full"
 						>
 							<div class="flex justify-between items-center w-full">
 								<div class="flex items-center">
@@ -1008,12 +1012,6 @@
 											: 'bg-gray-600 opacity-30'} w-[8px] h-[8px] rounded-full mr-2"
 									/>
 									{onlineUsersCount || 0} users online
-								</div>
-								<div
-									class="ml-2 opacity-80 hover:opacity-100 transition cursor-pointer _bare "
-									on:click={getOnlineCount}
-								>
-									<FeatherIcon name="refresh-cw" class="opacity-50" color="#333" size="15" />
 								</div>
 							</div>
 						</div>
@@ -1195,59 +1193,7 @@
 															{#if page._id}
 																<!-- <div class="_section mt-4" style="margin-bottom: 0;">
 															<div class="font-bold mb-2 opacity-80">Page performance</div>
-															<div
-																class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border-gray-300 border px-4 py-2 rounded-lg mt-4 cursor-pointer hover:bg-[#f1f1f1]"
-																on:click={() => ($selectedTab = 'growth')}
-															>
-																<div class="border-gray-300 text-sm font-semibold opacity-300">
-																	Unique Views
-																</div>
-																<div class="ml-2 font-bold">
-																	{page.totalUniqueViews || 0}
-																</div>
-															</div>
-
-															{#if conversions?.forms}
-																<div
-																	class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer  hover:bg-[#f1f1f1]  {getConversionColor(
-																		conversions.forms
-																	)}"
-																	on:click={() => ($selectedTab = 'analytics')}
-																>
-																	<div class="border-gray-300 text-sm font-semibold opacity-300">
-																		Forms Conversion Rate
-																	</div>
-																	<div class="ml-2 font-bold">
-																		{conversions.forms}%
-																	</div>
-																</div>
-																<div class="text-sm semibold text-right mt-2">Target: 10%</div>
-															{/if}
-
-															{#if conversions?.clicks && !conversions?.forms}
-																<div
-																	class="flex w-full shrink-0 justify-between items-center bg-gray-300/10 border px-4 py-2 rounded-lg mt-4 cursor-pointer hover:bg-[#f1f1f1] {getConversionColor(
-																		conversions.clicks
-																	)}"
-																	on:click={() => ($selectedTab = 'analytics')}
-																>
-																	<div class="text-sm font-semibold">Clicks Conversion Rate</div>
-																	<div class="ml-2 font-bold">
-																		{conversions.clicks}%
-																	</div>
-																</div>
-																<div class="text-sm semibold text-right mt-2">Target: 30%</div>
-															{/if}
-
-															{#if !conversions?.clicks && !conversions?.forms}
-																<div
-																	on:click={() => ($selectedTab = 'analytics')}
-																	class="flex justify-between items-center border-gray-300 bg-gray-300/10 text-sm font-semibold opacity-300 px-4 py-2 mt-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-[#f1f1f1]"
-																>
-																	<div class="">Conversion Rate</div>
-																	<div class="ml-2 font-bold opacity-30">N/A%</div>
-																</div>
-															{/if}
+															
 														</div> -->
 															{/if}
 														</div>
@@ -1293,6 +1239,11 @@
 																>
 																	<div class="font-bold">{subPage.name}</div>
 																	<div class="">/{subPage.slug}</div>
+
+																	<!-- <div class="flex items-center mt-2">
+																		<FeatherIcon size="15" name="eye" class="mr-1" />
+																		{subPage.totalUniqueViews}
+																	</div> -->
 																</div>
 															{/each}
 														{:else if $selectedEditorTab === 'blog'}
@@ -1812,32 +1763,83 @@
 													<div
 														class="absolute left-8 right-8 text-xs top-1 left-8 flex  items-center justify-between"
 													>
-														<div class="opacity-70 ">
-															<a
-																target="_blank"
-																class="flex py-0 mt-1 px-2 items-center bg-green-400/20 hover:bg-green-400 transition rounded-full"
-																href={getPageUrl({ page })}
-															>
-																<FeatherIcon size={10} name="globe" class="mr-2" />
+														<div class="flex">
+															<div class="opacity-70 ">
+																<a
+																	target="_blank"
+																	class="flex py-0 mt-1 px-2 items-center bg-green-400/20 hover:bg-green-400 transition rounded-full"
+																	href={getPageUrl({ page })}
+																>
+																	<FeatherIcon size={10} name="globe" class="mr-2" />
 
-																{getPageUrl({ page })
-																	.replace('https://', '')
-																	.replace('www.', '')}</a
-															>
+																	{getPageUrl({ page })
+																		.replace('https://', '')
+																		.replace('www.', '')}</a
+																>
+															</div>
 														</div>
-														<div class="flex justify-center">
-															<input
-																class="mr-2"
-																type="checkbox"
-																bind:checked={isShowHeatmap}
-																on:change={() => {
-																	if (isShowHeatmap) {
-																		refreshHeatmap();
-																	} else {
-																		$heatmap = null;
-																	}
-																}}
-															/> Show Heatmap
+														<div class="flex items-center justify-center">
+															<div
+																class="flex py-0 mr-2 px-2 items-center  bg-green-400 cursor-pointer opacity-70 hover:opacity-100 transition rounded-full"
+																use:tooltip
+																title="Total Unique Views"
+																on:click={() => ($selectedTab = 'growth')}
+															>
+																<FeatherIcon size={10} name="eye" class="mr-2" />
+
+																<div class="">
+																	{page.totalUniqueViews || 0}
+																</div>
+															</div>
+
+															{#if conversions?.forms}
+																<div
+																	class="flex  shrink-0 justify-between items-center px-2 py-0 rounded-lg  cursor-pointer opacity-70 hover:opacity-100   {getConversionColor(
+																		conversions.forms
+																	)}"
+																	use:tooltip
+																	title="Form Conversion Rate (target 10%+)"
+																	on:click={() => ($selectedTab = 'analytics')}
+																>
+																	<FeatherIcon size={10} name="check-circle" class="mr-1" />
+
+																	<div class="ml-2 font-bold">
+																		{conversions.forms}%
+																	</div>
+																</div>
+															{/if}
+
+															{#if conversions?.clicks}
+																<div
+																	class="flex  shrink-0 justify-between items-center px-2 py-0 rounded-lg  cursor-pointer opacity-70 hover:opacity-100   {getConversionColor(
+																		conversions.clicks
+																	)} ml-2"
+																	use:tooltip
+																	title="Click Conversion Rate (target 30%+)"
+																	on:click={() => ($selectedTab = 'analytics')}
+																>
+																	<FeatherIcon size={10} name="mouse-pointer" class="mr-1" />
+
+																	<div class="ml-2 font-bold">
+																		{conversions.clicks}%
+																	</div>
+																</div>
+															{/if}
+
+															<div class="flex items-center ml-4">
+																<input
+																	class="mr-2"
+																	type="checkbox"
+																	bind:checked={isShowHeatmap}
+																	on:change={() => {
+																		if (isShowHeatmap) {
+																			refreshHeatmap();
+																		} else {
+																			$heatmap = null;
+																		}
+																	}}
+																/> Show Heatmap
+															</div>
 														</div>
 													</div>
 												{/if}
@@ -1902,7 +1904,7 @@
 								{/key}
 							{/if}
 
-							{#if page._id && !$sectionToEdit}
+							{#if page._id && $selectedTab === 'editor' && !$sectionToEdit}
 								<div class="hidden sm:block">
 									<MomentumWidget bind:page />
 								</div>
