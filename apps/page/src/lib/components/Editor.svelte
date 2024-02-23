@@ -1778,7 +1778,7 @@
 																>
 															</div>
 														</div>
-														<div class="flex items-center justify-center">
+														<div class="flex items-center justify-center mt-1">
 															<div
 																class="flex py-0 mr-2 px-2 items-center  bg-green-400 cursor-pointer opacity-70 hover:opacity-100 transition rounded-full"
 																use:tooltip
