@@ -20,8 +20,8 @@
 
 <div class="max-w-[712px] mx-auto w-full">
 	<div class="flex items-center my-4 mt-8 {clazz} w-full">
-		<Avatar user={page.creator} size="20px" class="mr-2" />
-		<b class="mx-1">{page.creator?.fullName}</b>
+		<Avatar user={page.author || page.creator} size="20px" class="mr-2" />
+		<b class="mx-1">{(page.author || page.creator)?.fullName}</b>
 		<div class="px-1 opacity-70">/</div>
 		<div class="opacity-70">
 			{moment(page.publishedOn || page.createdOn).format('MMM DD, YYYY')}
