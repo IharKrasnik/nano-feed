@@ -31,7 +31,7 @@
 		<div class="opacity-70 flex items-center mt-2">
 			<FeatherIcon size="15" class="mr-2" name="eye" theme={page.theme?.theme} />
 			<div>
-				{page.totalViewsCount || 0} views
+				{page.totalViewsCount || 0 + (page.initialViewsCount || 0)} views
 			</div>
 		</div>
 	</div>
