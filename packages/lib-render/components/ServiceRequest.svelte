@@ -177,7 +177,13 @@
 
 		submission = result.submission;
 
-		showSuccessMessage('Promocode applied! Your request is activated now.');
+		showSuccessMessage(
+			`Promocode applied! ${
+				submission.isActivated
+					? 'Your request is activated now.'
+					: `The discounted price is ${toDollars(submission.metadata.fullAmount)}`
+			}`
+		);
 		isPromocodeEdit = false;
 	};
 </script>
