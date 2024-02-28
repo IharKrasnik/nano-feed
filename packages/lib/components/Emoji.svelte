@@ -23,7 +23,9 @@
 		}
 	}
 
-	let stylesStr = `--emoji-width: ${width}px; --emoji-height: ${height}px;`;
+	let stylesStr = `${width ? `--emoji-width: ${width}px;` : ''} ${
+		height ? `--emoji-height: ${height}px;` : ''
+	}`;
 </script>
 
 <div

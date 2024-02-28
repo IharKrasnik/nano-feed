@@ -198,7 +198,7 @@
 				: ''}
 			on:click={() => setTag(null)}
 		>
-			All tags
+			All Tags
 		</div>
 
 		{#each $feedCache[cacheId]?.tags as tag}

@@ -93,7 +93,12 @@
 					: ''}
 			>
 				{#if parentPage.logo || page?.logo}
-					<Emoji width="25" class="mr-2 rounded" emoji={parentPage.logo} />
+					<Emoji
+						width={parentPage.theme.logoSize === 'auto' ? 'auto' : 25}
+						height={32}
+						class="mr-2 rounded"
+						emoji={parentPage.logo}
+					/>
 
 					{#if !page.theme?.isHidePageName}
 						<span class="font-medium text-base {page.theme?.heroBgImage ? 'light-colors' : ''}">

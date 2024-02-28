@@ -103,8 +103,10 @@
 <div class="_editor">
 	<div class="w-full flex justify-between items-center mb-8">
 		<div>
-			<div class="text-lg font-bold">Automations & Triggers</div>
-			<div class="mt-1">Send data to third-party tools on selected Momentum events</div>
+			<div class="text-xl font-bold">Automations & Triggers</div>
+			<div class="mt-1 text-lg opacity-70">
+				Send data to third-party tools on selected Momentum events
+			</div>
 		</div>
 		<button class="_primary _small" on:click={addNewTrigger}>Add New Trigger</button>
 	</div>

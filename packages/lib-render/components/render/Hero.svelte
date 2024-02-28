@@ -89,6 +89,15 @@
 				"
 	>
 		{#if hero.bgImageUrl}
+			{#if page.activeHero?.theme?.bgGradient?.type === 'custom'}
+				<div
+					class="absolute _gradient left-0 top-0 {isEdit ? 'w-full' : 'w-screen'} h-full "
+					style="mask-image: linear-gradient(to top,transparent 3%, var(--background-color) 35%); z-index: 1;"
+				>
+					{@html page.activeHero?.theme?.bgGradient?.customHTML}
+				</div>
+			{/if}
+
 			{#if !hero.theme.isNotBgImageDimmed}
 				<div
 					class="absolute top-0 left-0 {isEdit ? 'w-full' : 'w-screen'} h-full z-1"
@@ -102,6 +111,7 @@
 				class="absolute left-0 top-0 {isEdit
 					? 'w-full'
 					: 'w-screen'} h-full opacity-90 overflow-hidden z-0"
+				isLazy={false}
 				isAutoplay={!isEdit}
 				imgClass="{isEdit ? 'w-full' : 'w-screen'} h-full {hero.theme?.bgImageObjectFit ===
 				'contain'
@@ -110,6 +120,7 @@
 					? 'object-none'
 					: 'object-cover'} overflow-hidden"
 				url={hero.bgImageUrl}
+				maxWidth={hero.theme.bgImageLimitWidth}
 			/>
 		{/if}
 		{#if isCloneable}
@@ -162,8 +173,12 @@
 				src="https://thumbs.dreamstime.com/b/beautiful-view-garden-sky-realistic-photo-beautiful-view-garden-sky-photo-photo-was-originally-taken-me-259322267.jpg?w=992"
 			/> -->
 
-		{#if page.activeHero?.theme?.bgGradient?.type}
-			<Gradients bind:page gradientType={page.activeHero?.theme?.bgGradient.type} />
+		{#if page.activeHero?.theme?.bgGradient?.type && page.activeHero?.theme?.bgGradient?.type !== 'custom'}
+			<Gradients
+				bind:page
+				gradientType={page.activeHero?.theme?.bgGradient.type}
+				customHTML={page.activeHero?.theme?.bgGradient?.customHTML}
+			/>
 		{/if}
 		<div
 			class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {((hero.theme
@@ -394,7 +409,7 @@
 	._social-proof img {
 		width: 50px;
 		height: 50px;
-		border: 1px var(--text-color) solid;
+		border: 2px var(--background-color) solid;
 	}
 
 	._social-proof._small img {
@@ -419,5 +434,9 @@
 	._subtitle {
 		margin-bottom: 40px;
 		font-family: var(--subtitle-font);
+	}
+
+	:global(._gradient svg) {
+		@apply w-full h-full;
 	}
 </style>

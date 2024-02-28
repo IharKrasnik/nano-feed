@@ -151,6 +151,10 @@
 			label: 'Radial'
 		},
 		{
+			key: 'custom',
+			label: 'Custom (HTML/SVG)'
+		},
+		{
 			key: null,
 			label: 'None'
 		}
@@ -297,6 +301,22 @@
 
 								<div class="flex text-sm mt-4 font-normal items-center">
 									<input
+										bind:checked={hero.theme.isBgImageLimitWidth}
+										class="mr-2"
+										type="checkbox"
+									/>
+
+									Limit width
+								</div>
+
+								{#if hero.theme.isBgImageLimitWidth}
+									<div class="flex items-center  mt-2">
+										<input bind:value={hero.theme.bgImageLimitWidth} type="number" class="mr-2" /> px
+									</div>
+								{/if}
+
+								<div class="flex text-sm mt-4 font-normal items-center">
+									<input
 										bind:checked={hero.theme.isNotBgImageDimmed}
 										class="mr-2"
 										type="checkbox"
@@ -411,6 +431,14 @@
 									{bgGradient.label}</button
 								>
 							{/each}
+
+							{#if hero.theme.bgGradient.type === 'custom'}
+								<textarea
+									class="w-full"
+									bind:value={hero.theme.bgGradient.customHTML}
+									placeholder="SVG or HTML"
+								/>
+							{/if}
 						</div>
 					</div>
 

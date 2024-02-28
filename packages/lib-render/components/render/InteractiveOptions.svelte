@@ -446,7 +446,7 @@
 						{sectionItem.callToActionText || 'Learn More →'}
 					{:else}
 						<button
-							class="relative overflow-hidden w-full shadow hover:shadow-md hover:shadow-white/50 shadow-white/50 flex justify-center items-center {size
+							class="relative overflow-hidden w-full shadow hover:shadow-md  flex justify-center items-center {size
 								? `_is${size}`
 								: ''}"
 							style="--tw-shadow-color: var(--accent-color) !important;"
@@ -554,7 +554,7 @@
 <style>
 	button._ishuge {
 		font-size: 20px;
-		padding: 16px 32px;
+		padding: 12px 24px;
 
 		border-radius: var(--button-huge-radius);
 	}

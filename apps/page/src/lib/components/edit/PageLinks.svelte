@@ -3,11 +3,14 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import { v4 as uuidv4 } from 'uuid';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import RenderHeader from 'lib-render/components/render/Header.svelte';
 	import RenderFooter from 'lib-render/components/render/Footer.svelte';
 	import PageContainer from 'lib-render/components/PageContainer.svelte';
 	import allPages from 'lib-render/stores/allPages';
 	import pageDraft from 'lib-render/stores/pageDraft';
+	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import { put, del } from 'lib/api';
 
 	export let page;
 	export let isShown = true;
@@ -71,35 +74,68 @@
 			...parentPage.links
 		];
 	};
+
+	let updateSettings = async () => {
+		await put(`pages/${parentPage._id}/nav-settings`, {
+			links: parentPage.links,
+			icon: parentPage.icon
+		});
+	};
 </script>
 
 {#if page && isShown}
 	<div class="_editor">
 		<div class="flex w-full justify-between items-center  mb-8">
 			<div>
-				<div class="text-lg font-bold mb-1">Website Header & Footer</div>
-				<div class="">Edit the links and styles of your header and footer</div>
+				<div class="text-xl font-bold mb-1">Website Header & Footer</div>
+				<div class="mt-1 text-lg opacity-70">
+					Edit the links and styles of your header and footer
+				</div>
 			</div>
+			<div><button class="primary" on:click={updateSettings}>Save Changes</button></div>
+		</div>
+
+		<div class="font-bold mb-2">Logo Styles</div>
+
+		<div class="flex items-center gap-4">
+			<div class="_section flex items-center">
+				Logo <EmojiPicker
+					theme={parentPage.theme?.theme}
+					class="ml-4"
+					bind:icon={parentPage.logo}
+				/>
+				<div class="flex items-center h-full ml-6">
+					<input class="mr-2" type="checkbox" bind:checked={parentPage.theme.isHidePageName} />
+					Hide brand name near logo
+				</div>
+			</div>
+			<div class="ml-6 flex items-center _section">
+				<div class="shrink-0 mr-2">Logo Size</div>
+				<ToggleGroup
+					bind:value={parentPage.theme.logoSize}
+					tabs={[{ name: 'Square' }, { key: 'auto', name: 'Auto' }]}
+				/>
+			</div>
+		</div>
+
+		<div class="w-full flex justify-between mb-2 mt-6">
+			<div class="font-bold mb-2">Links</div>
 			<div>
 				<button class="_primary _small" on:click={addLink}>Add New Link</button>
 			</div>
 		</div>
 
-		<div class="_section flex items-center gap-4">
-			<div class="font-bold">Header Styles</div>
-			<div>
-				<input class="mr-2" type="checkbox" bind:checked={parentPage.theme.isHidePageName} />
-				Hide brand name near logo
-			</div>
-			<div class="ml-4">
-				Align links
+		<div class="flex items-center _section">
+			<div class="shrink-0 mr-4">Align Links</div>
 
-				<select class="ml-2" bind:value={parentPage.theme.headerAlign}>
-					<option value="right">Right</option>
-					<option value="left">Left</option>
-					<option value="center">Center</option>
-				</select>
-			</div>
+			<ToggleGroup
+				bind:value={parentPage.theme.headerAlign}
+				tabs={[
+					{ key: 'left', name: 'Left' },
+					{ key: 'center', name: 'Center' },
+					{ key: 'right', name: 'Right' }
+				]}
+			/>
 		</div>
 
 		<div class="mt-8">
