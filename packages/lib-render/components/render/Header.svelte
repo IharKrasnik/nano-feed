@@ -94,7 +94,7 @@
 			>
 				{#if parentPage.logo || page?.logo}
 					<Emoji
-						width={parentPage.theme.logoSize === 'auto' ? 'auto' : 25}
+						width={parentPage.theme.logoSize === 'auto' ? 'auto' : 32}
 						height={32}
 						class="mr-2 rounded"
 						emoji={parentPage.logo}
