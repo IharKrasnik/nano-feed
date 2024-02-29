@@ -109,7 +109,7 @@
 					{/if}
 
 					{#if section.interactiveRenderType}
-						<div class="mt-4">
+						<div class="mt-12">
 							<RenderInteractiveOptions
 								bind:sectionItem={section}
 								parentSectionId={section.id}

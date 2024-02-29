@@ -1,7 +1,7 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import clickOutside from 'lib/use/clickOutside';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileCodeInput from 'lib/components/FileCodeInput.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import feather from 'feather-icons/dist/icons.json';
@@ -19,6 +19,8 @@
 	export let isNoCustom = false;
 	export let defaultIcon;
 	export let onUpdated = () => {};
+	export let isWithSize = false;
+	export let size = 'normal';
 
 	let isUseBgColor = !!bgColor;
 	let isUseColor = !color;
@@ -30,11 +32,20 @@
 	export let theme = 'light';
 
 	let url =
-		icon?.startsWith('http') || icon?.startsWith('feather:') || icon?.startsWith('<svg')
+		icon?.startsWith('http') ||
+		icon?.startsWith('feather:') ||
+		icon?.startsWith('<svg') ||
+		icon?.startsWith('$code')
 			? icon
 			: null;
 
-	$: if (url && (url.startsWith('http') || url.startsWith('feather:') || url.startsWith('<svg'))) {
+	$: if (
+		url &&
+		(url.startsWith('http') ||
+			url.startsWith('feather:') ||
+			url.startsWith('<svg') ||
+			url.startsWith('$code'))
+	) {
 		icon = url;
 		isEmojiPickerShown = false;
 	}
@@ -67,21 +78,6 @@
 			style="z-index: 100;"
 			in:fly={{ y: 50, duration: 150 }}
 		>
-			{#if !isNoCustom}
-				<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede]">
-					<h3 class="font-bold mb-2">Custom Logo</h3>
-					<FileInput
-						{theme}
-						class="w-full"
-						bind:url
-						on:fileUploaded={({ detail }) => {
-							console.log('detail', detail);
-							return onUpdated(detail.url);
-						}}
-					/>
-				</div>
-			{/if}
-
 			<div
 				class="{theme === 'light'
 					? 'bg-white'
@@ -100,7 +96,7 @@
 					on:click={() => (selectedTab = 'feather')}
 					class:_selected={selectedTab === 'feather'}
 				>
-					<FeatherIcon class="mr-2" size="15" name="feather" /> Mono Icon
+					<FeatherIcon class="mr-2" size="15" name="feather" /> Mono
 				</div>
 
 				<div
@@ -109,8 +105,8 @@
 					class:_selected={selectedTab === 'more'}
 				>
 					<svg
-						width="20"
-						height="20"
+						width="15"
+						height="15"
 						class="mr-2"
 						viewBox="0 0 215 200"
 						fill="none"
@@ -150,7 +146,15 @@
 						/>
 					</svg>
 
-					More Icons
+					More
+				</div>
+
+				<div
+					class="flex items-center pb-2"
+					on:click={() => (selectedTab = 'code')}
+					class:_selected={selectedTab === 'code'}
+				>
+					<FeatherIcon class="mr-2" size="15" name="globe" /> Custom
 				</div>
 			</div>
 
@@ -169,7 +173,7 @@
 					class="w-full _section min-w-[345px] min-h-[200px] {theme === 'light'
 						? 'bg-white'
 						: 'bg-black'}"
-					style="border-radius: 0;"
+					style="border-radius: 0; margin-bottom: 0;"
 				>
 					<div class="font-bold mb-2">Monochrome SVG Icons</div>
 
@@ -211,7 +215,7 @@
 			{:else if selectedTab === 'more'}
 				<div
 					class="_section min-w-[345px] min-h-[200px] {theme === 'light' ? 'bg-white' : 'bg-black'}"
-					style="border-radius: 0;"
+					style="border-radius: 0;margin-bottom: 0;"
 				>
 					{#each customIcons as category}
 						<div class="font-bold mb-4">{category.name}</div>
@@ -232,6 +236,26 @@
 						</div>
 					{/each}
 				</div>
+			{:else if selectedTab === 'code'}
+				{#if !isNoCustom}
+					<div
+						class="min-w-[345px] py-2 h-full {theme === 'light' ? 'bg-white' : 'bg-black'}"
+						style="border-radius: 0;"
+					>
+						<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 ">
+							<h3 class="font-bold mb-2">Custom Logo</h3>
+							<FileCodeInput
+								{theme}
+								class="w-full"
+								bind:url
+								onFileUploaded={({ detail }) => {
+									console.log('detail', detail);
+									return onUpdated(detail.url);
+								}}
+							/>
+						</div>
+					</div>
+				{/if}
 			{/if}
 
 			{#if icon}

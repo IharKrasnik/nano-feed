@@ -443,15 +443,20 @@
 					>
 						{#if section.emoji}
 							<div
-								class="{emojiStyle[1]} {page.theme?.isTitlesLeft || section.theme?.isTitleLeft
+								class="mb-6 {page.theme?.isTitlesLeft || section.theme?.isTitleLeft
 									? `sm:absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
-									: ''} {page.theme?.isTitlesHuge ? 'text-[70px]' : ''}"
+									: ''} "
 							>
 								<Emoji
 									bind:color={section.iconColor}
 									bind:bgColor={section.emojiBgColor}
 									theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 									bind:emoji={section.emoji}
+									width={section.emojiSize === 'huge'
+										? 75
+										: section.emojiSize === 'auto'
+										? 'auto'
+										: 55}
 								/>
 							</div>
 						{/if}
@@ -467,12 +472,12 @@
 								<h2
 									class="_section-title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
-										? 'sm:text-6xl font-medium'
+										? 'sm:text-5xl font-medium'
 										: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||
-									section.theme?.isTitleLeft ||
-									section.renderType === 'article'
-										? 'sm:max-w-[712px] sm:mx-auto'
-										: 'sm:max-w-[768px] sm:mx-auto'}"
+									section.theme?.isTitleLeft
+										? ''
+										: 'sm:mx-auto'}
+									{section.renderType === 'article' ? 'sm:max-w-[712px]' : 'sm:max-w-[768px]'}"
 								>
 									<ContentEditableIf
 										class="mb-2"
@@ -485,11 +490,10 @@
 								<h3
 									class="mb-8 {page.theme.isTitlesHuge || section.theme?.isHugeTitle
 										? 'text-xl leading-8'
-										: 'text-lg font-medium'} whitespace-pre-wrap {section.renderType === 'article'
-										? 'opacity-90 sm:max-w-[712px]'
-										: `opacity-70 ${page.theme.isTitlesLeft || section.theme?.isTitleLeft}`
-										? 'sm:max-w-[712px] sm:mx-auto'
-										: 'sm:max-w-[592px] sm:mx-auto'}"
+										: 'text-lg font-medium'} whitespace-pre-wrap
+										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-90' : `sm:max-w-[768px] opacity-70`}
+										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'sm:mx-auto'}
+										"
 								>
 									{#if isEdit && page.renderType === 'article'}
 										<ContentEditable

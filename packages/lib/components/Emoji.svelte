@@ -36,7 +36,7 @@
 		  }`
 		: ''}
 >
-	<div class="{clazz} flex" style={stylesStr}>
+	<div class="{clazz} flex" style="{stylesStr}; {height ? `font-size: ${height}px;` : ''}">
 		{#if emoji?.startsWith('http')}
 			{#key emoji}
 				<img
@@ -49,14 +49,20 @@
 			{/key}
 		{:else if emoji?.startsWith('feather:')}
 			<FeatherIcon class="inline" name={emoji.replace('feather:', '')} {color} size={width} />
-		{:else if emoji?.startsWith('<svg')}
+		{:else if emoji?.startsWith('<svg') || emoji?.startsWith('$code')}
 			<div
 				class="_svg inline-block"
 				style={width === 'auto'
-					? `max-height: ${height}px;`
+					? height === 'auto'
+						? ''
+						: `max-height: ${height}px;`
 					: `max-width: ${width}px; max-height: ${height}px;`}
 			>
-				{@html emoji}
+				{#if emoji?.startsWith('$code')}
+					{@html emoji.replace('$code', '')}
+				{:else}
+					{@html emoji}
+				{/if}
 			</div>
 		{:else}
 			{emoji || '✨'}
