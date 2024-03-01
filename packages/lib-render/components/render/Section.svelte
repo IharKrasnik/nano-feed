@@ -57,8 +57,11 @@
 	export let style = null;
 
 	const headerTextStyle = (item) => {
-		if (item.theme?.isHugeTitle) {
+		if (item.theme?.titleSize === 'huge') {
 			let defaultSize = 'text-3xl sm:text-4xl';
+			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
+		} else if (item.theme?.titleSize === 'small') {
+			let defaultSize = 'text-lg sm:text-xl';
 			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
 		}
 
@@ -1069,13 +1072,17 @@
 							{/each}
 						{:else}
 							<div
-								class="gap-4 {section.isMasonryGrid ? 'sm:gap-6' : 'sm:gap-4'} {section.columns > 1
-									? 'items-stretch-or-not'
-									: ''} {section.carousel
+								class=" {section.theme?.columnsGap === 'big'
+									? 'sm:gap-12 gap-8'
+									: section.theme?.columnsGap === 'huge'
+									? 'sm:gap-20 gap-8'
+									: 'gap-8'}  {section.columns > 1 ? 'items-stretch-or-not' : ''} {section.carousel
 									? 'flex overflow-x-auto sm:grid'
 									: ''} {section.isMasonryGrid
 									? `sm:columns-${section.columns}`
-									: `grid sm:grid-cols-${section.columns}`}"
+									: `grid sm:grid-cols-${section.columns}`} {section.items[0]?.theme?.isTransparent
+									? 'mt-8'
+									: ''}"
 							>
 								{#each section.items || [] as item, i}
 									{#if item.isShown || _.isUndefined(item.isShown)}
@@ -1096,8 +1103,9 @@
 													? '_bg-image'
 													: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.isFeatured
 													? '_highlighted'
-													: ''} {item.theme?.isTransparent ? '_transparent' : ''} {item.url &&
-												!item.interactiveRenderType
+													: ''} {section.theme?.isItemsTransparent || item.theme?.isTransparent
+													? '_transparent'
+													: ''} {item.url && !item.interactiveRenderType
 													? '_interactive'
 													: ''} h-full {$heatmap ? '' : 'overflow-hidden'}"
 												on:click={() => {

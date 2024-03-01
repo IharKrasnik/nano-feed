@@ -165,7 +165,7 @@
 
 				{#if section.columns > 1 && sectionItem.id === section.id}
 					<div class="my-2">
-						<input class="mr-2" type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
+						<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
 						{#if section.isMasonryGrid}
 							<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
 						{/if}
@@ -187,31 +187,39 @@
 
 				{#if sectionItem.id !== section.id && section.columns > 1}
 					<div class="_section">
-						<ToggleGroup
-							class="mb-2"
-							bind:value={sectionItem.renderType}
-							tabs={[
-								{
-									key: '',
-									name: 'Default'
-								},
-								{
-									key: 'testimonial',
-									name: 'Testimonial'
-								}
-							]}
-						/>
+						<div>
+							<div class="mb-1 text-sm font-medium mb-1">Item Type</div>
+							<ToggleGroup
+								class="mb-2"
+								bind:value={sectionItem.renderType}
+								tabs={[
+									{
+										key: '',
+										name: 'Default'
+									},
+									{
+										key: 'testimonial',
+										name: 'Testimonial'
+									}
+								]}
+							/>
+						</div>
+
+						<div>
+							<div class="mb-1 text-sm font-medium mb-1">Title Size</div>
+							<ToggleGroup
+								class="mb-2"
+								tabs={[
+									{ key: undefined, name: 'Default' },
+									{ key: 'small', name: 'Small' },
+									{ key: 'huge', name: 'Huge' }
+								]}
+								bind:value={sectionItem.theme.titleSize}
+							/>
+						</div>
+
 						<div class="flex">
 							<div class="my-2">
-								<input
-									class=""
-									disabled={sectionItem.renderType}
-									type="checkbox"
-									bind:checked={sectionItem.theme.isHugeTitle}
-								/> Huge Title
-							</div>
-
-							<div class="ml-2 my-2">
 								<input
 									class=""
 									disabled={sectionItem.renderType}
@@ -220,7 +228,6 @@
 								/> Inline Title
 							</div>
 						</div>
-
 						{#if sectionItem.emoji}
 							<div class="my-2">
 								<input
@@ -267,6 +274,27 @@
 						Scroll image on hover
 						<div class="text-xs mt-1">Useful for long screenshots of websites or portfolio</div>
 					{/if}
+				{/if}
+
+				{#if section.id === sectionItem.id && section.renderType !== 'callout'}
+					<div class="mb-2 font-semibold mt-6">Gap between columns</div>
+					<ToggleGroup
+						tabs={[
+							{
+								key: undefined,
+								name: 'Normal'
+							},
+							{
+								key: 'big',
+								name: 'Big'
+							},
+							{
+								key: 'huge',
+								name: 'Huge'
+							}
+						]}
+						bind:value={sectionItem.theme.columnsGap}
+					/>
 				{/if}
 			</div>
 
