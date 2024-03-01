@@ -615,7 +615,7 @@
 																	sectionItemId: item.id,
 																	linkId: item.id
 															  })
-															: ''}
+															: null}
 														on:click={() => selectCarouselItem(item)}
 													>
 														<ContentEditableIf
@@ -636,7 +636,7 @@
 															sectionId: section.id,
 															linkId: 'arrow_prev'
 													  })
-													: ''}
+													: null}
 												on:click={() => {
 													selectPreviousItem();
 												}}
@@ -657,7 +657,7 @@
 															sectionId: section.id,
 															linkId: 'arrow_next'
 													  })
-													: ''}
+													: null}
 												on:click={() => {
 													selectNextItem();
 												}}
@@ -713,7 +713,7 @@
 														sectionId: section.id,
 														linkId: 'arrow_prev'
 												  })
-												: ''}
+												: null}
 											on:click={() => {
 												selectPreviousItem();
 											}}
@@ -732,7 +732,7 @@
 														sectionId: section.id,
 														linkId: 'arrow_next'
 												  })
-												: ''}
+												: null}
 											on:click={() => {
 												selectNextItem();
 											}}
@@ -763,7 +763,7 @@
 																	sectionItemId: item.id,
 																	linkId: item.id
 															  })
-															: ''}
+															: null}
 													>
 														<ContentEditableIf
 															class="_item-title mb-2"
@@ -1135,7 +1135,7 @@
 															sectionItemId: item.id,
 															linkId: item.id
 													  })
-													: ''}
+													: null}
 												style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
 											>
 												{#if item.theme?.bgPattern}

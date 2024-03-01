@@ -292,8 +292,10 @@
 							</div>
 						{/if}
 
-						{#if hero.ctaHtml}
-							{@html hero.ctaHtml}
+						{#if hero.ctaHtml && (!hero.theme?.ctaHtmlPosition || hero.theme?.ctaHtmlPosition === 'above')}
+							<div in:fly={{ y: 25, delay: 500, duration: 900 }}>
+								{@html hero.ctaHtml}
+							</div>
 						{/if}
 
 						{#if hero.interactiveRenderType}
@@ -324,6 +326,12 @@
 							</div>
 						{/if}
 
+						{#if hero.ctaHtml && hero.theme?.ctaHtmlPosition === 'below'}
+							<div in:fly={{ y: 25, delay: 500, duration: 900 }}>
+								{@html hero.ctaHtml}
+							</div>
+						{/if}
+
 						{#if page.renderType === 'article'}
 							<RenderArticleHeader
 								class={(hero.theme.isLeft || hero.demoUrl) && !hero?.theme.isVertical
@@ -333,7 +341,7 @@
 							/>
 						{/if}
 						{#if isMounted && hero.socialProof}
-							<div class="py-4 mt-16">
+							<div class="py-4 mt-16" in:fly={{ y: 25, delay: 900, duration: 900 }}>
 								<div
 									class="_social-proof _dense _small {hero.socialProof.className ||
 										''} flex justify-center  {(hero.demoUrl && !hero.theme?.isVertical) ||
