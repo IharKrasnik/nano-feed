@@ -9,7 +9,6 @@
 	import currentPage from 'lib-render/stores/currentPage';
 	import { browser } from '$app/environment';
 	import Emoji from 'lib/components/Emoji.svelte';
-
 	import { page as sveltePage } from '$app/stores';
 	import { onMount, onDestroy } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';

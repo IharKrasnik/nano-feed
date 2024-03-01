@@ -432,7 +432,7 @@
 								>
 							{/each}
 
-							{#if hero.theme.bgGradient.type === 'custom'}
+							{#if hero.theme.bgGradient?.type === 'custom'}
 								<textarea
 									class="w-full"
 									bind:value={hero.theme.bgGradient.customHTML}
@@ -443,13 +443,24 @@
 					</div>
 
 					<div class="_section">
-						<div class="font-semibold">Embed Component (HTML)</div>
-						<div class="text-sm  mb-2">The Custom component to show above the title</div>
+						<div class="font-semibold">Custom above HTML</div>
+						<div class="text-sm  mb-2">Use for announcements, updates or additional info</div>
 
 						<textarea
 							class="w-full"
 							placeholder="<div>Hello World</div>"
 							bind:value={hero.embedAboveHtml}
+						/>
+					</div>
+
+					<div class="_section">
+						<div class="font-semibold">Custom call-to-action HTML</div>
+						<div class="text-sm  mb-2">Make advanced call-to-actions</div>
+
+						<textarea
+							class="w-full"
+							placeholder="<button>Hello World</button>"
+							bind:value={hero.ctaHtml}
 						/>
 					</div>
 

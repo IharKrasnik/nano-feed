@@ -291,6 +291,11 @@
 								{/each}
 							</div>
 						{/if}
+
+						{#if hero.ctaHtml}
+							{@html hero.ctaHtml}
+						{/if}
+
 						{#if hero.interactiveRenderType}
 							<div
 								class={hero.interactiveRenderType === 'form'
