@@ -103,7 +103,7 @@
 					{/if}
 				</div>
 			</div>
-			<div class="text-sm mt-2">
+			<div class="text-sm mt-2 opacity-80">
 				{moment(submission.createdOn).format('MMM DD HH:mm')}
 			</div>
 		</div>

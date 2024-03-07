@@ -14,11 +14,11 @@
 >
 	{@html striptags(chatRoom.lastMessageHTML || '')}
 
-	<div class="mt-4 text-sm">
-		<div class="text-sm mb-2" class:text-orange-700={!chatRoom.customers}>
+	<div class="flex justify-between items-center mt-4 text-sm opacity-80">
+		{moment(chatRoom.lastMessageSentOn).format('MMM DD, HH:mm')}
+
+		<div class="text-sm" class:text-orange-700={!chatRoom.customers}>
 			{chatRoom.customers ? chatRoom.customers[0]?.email || '' : 'chat with yourself'}
 		</div>
-
-		{moment(chatRoom.lastMessageSentOn).format('MMM DD, HH:mm')}
 	</div>
 </div>

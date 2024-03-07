@@ -668,7 +668,6 @@
 
 	let selectedCustomer;
 	let selectedChatRoom;
-	let selectedNewsletter;
 
 	let onlineUsersCount = -1;
 
@@ -1663,12 +1662,7 @@
 										{:else if $selectedTab === 'analytics'}
 											<EditCustomers bind:selectedChatRoom bind:page bind:selectedCustomer />
 										{:else if $selectedTab === 'messaging'}
-											<EditMessaging
-												bind:page
-												bind:selectedNewsletter
-												bind:selectedChatRoom
-												bind:selectedCustomer
-											/>
+											<EditMessaging bind:page bind:selectedChatRoom bind:selectedCustomer />
 										{:else if $selectedTab === 'requests'}
 											<EditSubmissions bind:selectedSubmissionsTab bind:page />
 										{:else if $selectedTab === 'newsletter'}
@@ -1878,11 +1872,7 @@
 											{:else if $selectedTab === 'analytics'}
 												<AnalyticsTab bind:page bind:selectedCustomer bind:selectedChatRoom />
 											{:else if $selectedTab === 'messaging'}
-												<MessagingTab
-													bind:page
-													bind:selectedNewsletter
-													bind:chatRoom={selectedChatRoom}
-												/>
+												<MessagingTab bind:page bind:chatRoom={selectedChatRoom} />
 											{:else if $selectedTab === 'audience'}
 												<AudienceTab bind:page />
 											{:else if $selectedTab === 'blog'}

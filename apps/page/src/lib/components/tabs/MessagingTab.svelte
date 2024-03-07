@@ -11,10 +11,11 @@
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import currentUser from 'lib/stores/currentUser';
 	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
+	import selectedBroadcastEmail from '$lib/stores/selectedBroadcastEmail';
+	import getPercentage from 'lib/helpers/getPercentage';
 
 	export let page;
 	export let chatRoom;
-	export let selectedNewsletter;
 
 	let cssVarStyles;
 	let styles;
@@ -79,8 +80,79 @@
 		</div>
 	{:else if chatRoom}
 		<ChatRoomTab {page} {chatRoom} />
-	{:else if selectedNewsletter}
+	{:else if $selectedBroadcastEmail}
 		<div class="w-full">
+			{#if $selectedBroadcastEmail._id && $selectedBroadcastEmail.stats}
+				<div class=" w-full max-w-[800px] mx-auto mt-8">
+					<div class="text-lg mb-1 font-bold">Newsletter Stats</div>
+					{#if $selectedBroadcastEmail._id}
+						<div class=" mb-4">
+							Sent on {moment($selectedBroadcastEmail.createdOn).format('MMM DD, YYYY hh:mm a')}
+						</div>
+					{/if}
+
+					<div class="grid grid-cols-3 gap-4">
+						<div class="_section">
+							<div class="text-sm opacity-80">Recipients</div>
+
+							<div class="text-lg  font-medium">
+								{$selectedBroadcastEmail.totalEmailsCount}
+							</div>
+						</div>
+						<div class="_section">
+							<div class="text-sm opacity-80">Seen</div>
+
+							<div class="flex gap-4 items-center">
+								<div class="text-lg  font-medium">
+									{$selectedBroadcastEmail.stats.uniqueOpensCount}
+								</div>
+								<div class="text-lg  font-medium opacity-50">
+									({getPercentage(
+										$selectedBroadcastEmail.stats.uniqueOpensCount,
+										$selectedBroadcastEmail.totalEmailsCount
+									)})
+								</div>
+							</div>
+						</div>
+						<div class="_section">
+							<div class="text-sm opacity-80">Clicked</div>
+
+							<div class="flex gap-4 items-center">
+								<div class="text-lg  font-medium">
+									{$selectedBroadcastEmail.stats.uniqueClicksCount}
+								</div>
+
+								{#if $selectedBroadcastEmail.stats.uniqueClicksCount}
+									<div class="text-lg font-medium opacity-50">
+										({getPercentage(
+											$selectedBroadcastEmail.stats.uniqueClicksCount,
+											$selectedBroadcastEmail.totalEmailsCount
+										)})
+									</div>
+								{/if}
+							</div>
+						</div>
+
+						<!-- <div class="_section">
+							<div class="text-sm opacity-80">Spam Reports</div>
+
+							<div class="font-medium">
+								{getPercentage(
+									$selectedBroadcastEmail.stats.spamComplaintsCount,
+									$selectedBroadcastEmail.totalEmailsCount
+								)}
+							</div>
+						</div> -->
+					</div>
+					<div class="text-sm opacity-70">
+						Unsubscribed: {$selectedBroadcastEmail.stats.unsubscribedCount}
+					</div>
+					<div class="text-sm opacity-70">
+						Spam Complaints: {$selectedBroadcastEmail.stats.spamComplaintsCount}
+					</div>
+				</div>
+			{/if}
+
 			<div class="border p-8 w-full max-w-[800px] mx-auto mt-8">
 				<div>
 					<span class="font-semibold">
@@ -88,18 +160,18 @@
 					</span>
 					<span class="opacity-80">(info@mmntm.build)</span>
 				</div>
-				<div class="text-lg mt-2 font-bold">{selectedNewsletter.subject}</div>
+				<div class="text-lg mt-2 font-bold">{$selectedBroadcastEmail.subject}</div>
 				<hr class="_border-theme my-4" />
 				<div class="mt-2">
-					{@html selectedNewsletter.html || ''}
+					{@html $selectedBroadcastEmail.html || ''}
 				</div>
-				{#if selectedNewsletter.imageUrl}
-					<RenderUrl class="mt-4 rounded-lg" url={selectedNewsletter.imageUrl} />
+				{#if $selectedBroadcastEmail.imageUrl}
+					<RenderUrl class="mt-4 rounded-lg" url={$selectedBroadcastEmail.imageUrl} />
 				{/if}
 
-				{#if selectedNewsletter.callToAction.title}
+				{#if $selectedBroadcastEmail.callToAction?.title}
 					<div class="cursor-pointer bg-black text-white inline-block rounded px-8 py-2 mt-8">
-						{selectedNewsletter.callToAction.title}
+						{$selectedBroadcastEmail.callToAction?.title}
 					</div>
 				{/if}
 			</div>

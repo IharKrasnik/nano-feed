@@ -19,33 +19,42 @@
 	export let selectedCustomer;
 	export let selectedChatRoom;
 
-	let customers = [];
-
 	let selectedCustomerTab = 'all';
 
 	let isCustomersLoading = false;
 
 	let chatRooms = [];
 
+	let pageNum = 1;
+
+	let customersPaged = {};
+
 	let loadCustomers = async () => {
-		let customerResult;
 		isCustomersLoading = true;
 
 		if (selectedCustomerTab === 'customers') {
-			customerResult = await get(`customers`, {
+			customersPaged = await get(`customers`, {
 				pageId: parentPage._id,
-				isWithEmail: true
+				isWithEmail: true,
+				page: pageNum++,
+				perPage: 20
 			});
 		} else if (selectedCustomerTab === 'visitors') {
-			customerResult = await get(`customers`, {
+			customersPaged = await get(`customers`, {
 				pageId: parentPage._id,
-				isNoEmail: true
+				isNoEmail: true,
+				page: pageNum++,
+				perPage: 20
 			});
 		} else {
-			customerResult = await get(`customers`, { pageId: parentPage._id });
+			customersPaged = await get(`customers`, {
+				pageId: parentPage._id,
+				page: pageNum++,
+				perPage: 20
+			});
 		}
 
-		customers = customerResult.results.map((c) => {
+		customersPaged.results.forEach((c) => {
 			c.isCollapsed = true;
 			return c;
 		});
@@ -61,7 +70,8 @@
 				`customers/${customer._id}?pageId=${parentPage._id || page._id}`,
 				customer
 			);
-			customers = customers.map((c) => {
+
+			customersPaged.results = customers.map((c) => {
 				if (c._id === updatedCustomer._id) {
 					updatedCustomer.isCollapsed = true;
 					return updatedCustomer;
@@ -73,7 +83,8 @@
 			newCustomers = newCustomers.filter((c) => c.email !== newCustomer.email);
 			newCustomer.isCollapsed = true;
 
-			customers = [newCustomer, ...customers];
+			customersPaged.results = [newCustomer, ...customersPaged.results];
+			customersPaged.count++;
 		}
 
 		showSuccessMessage('Customer saved');
@@ -88,7 +99,11 @@
 
 		showSuccessMessage(`Saved ${createdCustomers.length} customers`);
 
-		customers = [...createdCustomers.map((c) => ({ ...c, isCollapsed: true })), ...customers];
+		customersPaged.results = [
+			...createdCustomers.map((c) => ({ ...c, isCollapsed: true })),
+			...customersPaged.results
+		];
+		customersPaged.count += createdCustomers.length;
 		newCustomers = [];
 	};
 
@@ -228,24 +243,19 @@
 			class="my-4"
 			tabs={[
 				{
-					key: 'all',
-					isSelected: selectedCustomerTab === 'all',
-					name: 'All'
-				},
-				{
 					key: 'customers',
 					isSelected: selectedCustomerTab === 'customers',
 					name: 'With Email'
 				},
-
 				{
-					key: 'visitors',
-					isSelected: selectedCustomerTab === 'visitors',
-					name: 'Anonymous'
+					key: 'all',
+					isSelected: selectedCustomerTab === 'all',
+					name: 'All'
 				}
 			]}
 			onTabSelected={(tab) => {
 				selectedCustomerTab = tab.key;
+				pageNum = 1;
 				loadCustomers();
 			}}
 		/>
@@ -253,11 +263,13 @@
 
 	{#if isCustomersLoading}
 		<Loader />
-	{:else if customers?.length}
+	{:else if customersPaged.results?.length}
+		<div class="font-medium mb-2">{customersPaged.count} customers</div>
+
 		{#if selectedCustomer}
 			<EditCustomer customer={selectedCustomer} {saveCustomer} />
 		{:else}
-			{#each customers as customer}
+			{#each customersPaged.results as customer}
 				<EditCustomer {customer} isCollapsed onSelected={() => selectCustomer(customer)} />
 			{/each}
 		{/if}

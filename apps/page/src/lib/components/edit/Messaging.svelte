@@ -21,11 +21,10 @@
 	} from '$lib/stores/allTriggers';
 
 	import selectedTrigger from '$lib/stores/selectedTrigger';
+	import selectedBroadcastEmail from '$lib/stores/selectedBroadcastEmail';
 
 	export let page;
 	export let selectedChatRoom;
-	export let selectedNewsletter;
-	export let selectedCustomer;
 
 	let parentPage = page.parentPage || page;
 
@@ -139,14 +138,11 @@ See you!
 
 		if ($selectedTrigger._id) {
 			updatedTrigger = await put(
-				`triggers/${$selectedTrigger._id}?pageId=${page.parentPage?._id || page._id}`,
+				`triggers/${$selectedTrigger._id}?pageId=${parentPage._id}`,
 				$selectedTrigger
 			);
 		} else {
-			updatedTrigger = await post(
-				`triggers?pageId=${page.parentPage?._id || page._id}`,
-				$selectedTrigger
-			);
+			updatedTrigger = await post(`triggers?pageId=${parentPage._id}`, $selectedTrigger);
 		}
 
 		showSuccessMessage('Trigger saved');
@@ -159,7 +155,7 @@ See you!
 
 	let loadChatRooms = async () => {
 		let chatRoomsResults = await get('customerChatRooms', {
-			pageId: page._id
+			pageId: parentPage._id
 		});
 
 		chatRooms = chatRoomsResults.results;
@@ -172,7 +168,7 @@ See you!
 	};
 
 	let sendTestEmail = async ({ triggerAction }) => {
-		await post(`triggers/test-email?pageId=${page.parentPage?._id || page._id}`, {
+		await post(`triggers/test-email?pageId=${parentPage._id}`, {
 			subject: triggerAction.data.subject,
 			messageHTML: triggerAction.data.messageHTML,
 			imageUrl: triggerAction.data.imageUrl,
@@ -196,7 +192,7 @@ See you!
 	let broadcastEmails = [];
 
 	let refreshBroadcastEmails = async () => {
-		broadcastEmails = (await get(`pages/${page._id}/broadcast-emails-new`, {})).results;
+		broadcastEmails = (await get(`pages/${parentPage._id}/broadcast-emails-new`, {})).results;
 	};
 
 	refreshBroadcastEmails();
@@ -204,12 +200,12 @@ See you!
 	let isBroadcastTestSent = false;
 
 	let sendTestBroadcastEmail = async () => {
-		if (selectedNewsletter.subject && selectedNewsletter.html) {
-			await post(`pages/${page._id}/broadcast-email/test`, {
-				subject: selectedNewsletter.subject,
-				html: selectedNewsletter.html,
-				callToAction: selectedNewsletter.callToAction,
-				imageUrl: selectedNewsletter.imageUrl
+		if ($selectedBroadcastEmail.subject && $selectedBroadcastEmail.html) {
+			await post(`pages/${parentPage._id}/broadcast-email/test`, {
+				subject: $selectedBroadcastEmail.subject,
+				html: $selectedBroadcastEmail.html,
+				callToAction: $selectedBroadcastEmail.callToAction,
+				imageUrl: $selectedBroadcastEmail.imageUrl
 			});
 
 			isBroadcastTestSent = true;
@@ -219,18 +215,18 @@ See you!
 	};
 
 	let sendBroadcastEmail = async () => {
-		let { customerIds } = await post(`pages/${page._id}/broadcast-emails`, {
-			subject: selectedNewsletter.subject,
-			html: selectedNewsletter.html,
-			callToAction: selectedNewsletter.callToAction,
-			imageUrl: selectedNewsletter.imageUrl
+		let { customerIds } = await post(`pages/${parentPage._id}/broadcast-emails`, {
+			subject: $selectedBroadcastEmail.subject,
+			html: $selectedBroadcastEmail.html,
+			callToAction: $selectedBroadcastEmail.callToAction,
+			imageUrl: $selectedBroadcastEmail.imageUrl
 		});
 
 		broadcastEmails = [
 			{
-				subject: selectedNewsletter.subject,
+				subject: $selectedBroadcastEmail.subject,
 				customerIds,
-				html: selectedNewsletter.html,
+				html: $selectedBroadcastEmail.html,
 				createdOn: new Date()
 			},
 			...(broadcastEmails || [])
@@ -238,7 +234,7 @@ See you!
 
 		showSuccessMessage(`Newsletter was sent to ${customerIds.length} customers`);
 
-		selectedNewsletter = null;
+		$selectedBroadcastEmail = null;
 	};
 
 	let selectedMessagingTab = '';
@@ -257,7 +253,7 @@ See you!
 	};
 </script>
 
-{#if selectedNewsletter}
+{#if $selectedBroadcastEmail}
 	<BackTo
 		to={'Messaging'}
 		onClick={() => {
@@ -265,8 +261,8 @@ See you!
 				$selectedTrigger.isEdit = false;
 			}
 			$selectedTrigger = null;
-			selectedNewsletter = null;
-			selectedMessagingTab = 'chats';
+			selectedMessagingTab = $selectedBroadcastEmail ? 'newsletters' : 'chats';
+			$selectedBroadcastEmail = null;
 		}}
 	/>
 {/if}
@@ -283,7 +279,7 @@ See you!
 	/>
 {/if}
 
-{#if !selectedNewsletter && !$selectedTrigger}
+{#if !$selectedBroadcastEmail && !$selectedTrigger}
 	<ToggleGroup
 		bind:value={selectedMessagingTab}
 		class="mb-8"
@@ -306,26 +302,51 @@ See you!
 
 {#if selectedMessagingTab === 'newsletters'}
 	<div class="flex items-center w-full justify-between mb-4">
-		<div class="font-bold text-lg ">Newsletters</div>
+		{#if broadcastEmails?.length && !$selectedBroadcastEmail}
+			<div class="font-bold text-lg ">Newsletters</div>
 
-		{#if broadcastEmails?.length && !selectedNewsletter}
 			<button
 				class="_secondary _small"
 				on:click={() => {
 					selectedChatRoom = null;
-					selectedNewsletter = { ...newBroadcastEmail };
+					$selectedBroadcastEmail = { ...newBroadcastEmail };
 				}}>Send new</button
 			>
 		{/if}
 	</div>
 
-	{#if broadcastEmails?.length && !selectedNewsletter}
+	{#if broadcastEmails?.length && !$selectedBroadcastEmail}
 		{#each broadcastEmails as broadcastEmail}
-			<div class="_section">
-				<div>{broadcastEmail.subject}</div>
+			<div
+				class="_section cursor-pointer"
+				on:click={() => {
+					$selectedBroadcastEmail = { ...broadcastEmail };
+				}}
+			>
+				<div class="font-medium mb-2 truncate">{broadcastEmail.subject}</div>
+				<div class="_line-clamp-2 opacity-80">{@html striptags(broadcastEmail.html, [], ' ')}</div>
+				<div class="flex w-full justify-between items-center mt-3">
+					<div class="text-sm  opacity-80">
+						{moment(broadcastEmail.createdOn).format('MMM DD HH:mm')}
+					</div>
+					<div class="flex items-center">
+						<div class="text-sm flex items-center">
+							<FeatherIcon size="15" class="mr-1" name="eye" />
+							{broadcastEmail.stats?.uniqueOpensCount
+								? Math.ceil(
+										(broadcastEmail.stats?.uniqueOpensCount / broadcastEmail.totalEmailsCount) * 100
+								  )
+								: 0}%
+						</div>
+						<div class="text-sm flex items-center ml-3">
+							<FeatherIcon size="15" class="mr-1" name="mail" />
+							{broadcastEmail.totalEmailsCount}
+						</div>
+					</div>
+				</div>
 			</div>
 		{/each}
-	{:else if !selectedNewsletter}
+	{:else if !$selectedBroadcastEmail}
 		<div class="_section _info">
 			<div class="font-bold mb-2">No newsletters yet</div>
 			<div>
@@ -336,7 +357,7 @@ See you!
 					class="_primary _small"
 					on:click={() => {
 						selectedChatRoom = null;
-						selectedNewsletter = { ...newBroadcastEmail };
+						$selectedBroadcastEmail = { ...newBroadcastEmail };
 					}}>Send first newsletter</button
 				>
 			</div>
@@ -509,14 +530,14 @@ See you!
 	{/if}
 {/if}
 
-{#if selectedNewsletter}
+{#if $selectedBroadcastEmail && !$selectedBroadcastEmail._id}
 	<div class="_section">
 		<div class=" mb-2 font-bold">Email Subject</div>
 
 		<input
 			placeholder="{moment().format('MMMM')} Update 🔥"
 			class="w-full"
-			bind:value={selectedNewsletter.subject}
+			bind:value={$selectedBroadcastEmail.subject}
 		/>
 
 		<div class="_section bg-[#f1f1f1] text-sm mt-2 mb-4">
@@ -527,7 +548,7 @@ See you!
 
 		<div
 			class="w-full p-4 bg-[#f6f5f5] min-h-[200px] rounded-xl"
-			bind:innerHTML={selectedNewsletter.html}
+			bind:innerHTML={$selectedBroadcastEmail.html}
 			contenteditable
 			use:placeholder={'Hi! Here are some new features to make your life easier:'}
 			use:contenteditable
@@ -552,7 +573,7 @@ See you!
 				<input
 					class="w-full"
 					placeholder="Join discovery call"
-					bind:value={selectedNewsletter.callToAction.title}
+					bind:value={$selectedBroadcastEmail.callToAction.title}
 				/>
 			</div>
 			<div class="ml-4 w-full">
@@ -561,14 +582,14 @@ See you!
 					class="w-full"
 					type="text"
 					placeholder="https://cal.com/igor-krasnik-7uhewy/30min"
-					bind:value={selectedNewsletter.callToAction.url}
+					bind:value={$selectedBroadcastEmail.callToAction.url}
 				/>
 			</div>
 		</div>
 
 		<div class="mt-4 mb-2 font-bold">Image (optional)</div>
 		<div class="text-sm mt-2 mb-4">Add a friendly photo or product demo to the end of email.</div>
-		<FileInput class="w-full" bind:url={selectedNewsletter.imageUrl} />
+		<FileInput class="w-full" bind:url={$selectedBroadcastEmail.imageUrl} />
 
 		<div class="mt-8">
 			<Button class="_primary _small" onClick={sendTestBroadcastEmail}>Send test email</Button>

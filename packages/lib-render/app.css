@@ -523,6 +523,12 @@ a[href] {
 	font-weight: bold;
 }
 
+._line-clamp-2 {
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
 ._line-clamp-4 {
 	overflow: hidden;
 	display: -webkit-box;
