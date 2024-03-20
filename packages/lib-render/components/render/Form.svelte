@@ -232,7 +232,10 @@
 						{#if section.actionType === 'service_chat'}
 							<div class="text-sm w-full text-center mt-3">
 								Price: <span class="font-semibold"
-									>{page.metadata?.fullAmount ? toDollars(page.metadata.fullAmount) : 'Free'}</span
+									>{page.metadata?.fullAmount
+										? toDollars(page.metadata.fullAmount)
+										: 'Free'}{#if page.metadata.payPer && page.metadata.payPer !== 'one-time'}
+										/{page.metadata.payPer}{/if}</span
 								>
 
 								{#if page.metadata?.payType === 'prepayment'}
