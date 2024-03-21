@@ -10,6 +10,14 @@
 	import toDollars from 'lib/helpers/toDollars';
 
 	export let section;
+
+	if (!section) {
+		section = {
+			renderType: 'form',
+			items: []
+		};
+	}
+
 	export let page;
 	export let isEdit;
 	export let isEmbed;
