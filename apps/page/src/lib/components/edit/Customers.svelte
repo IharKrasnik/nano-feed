@@ -19,7 +19,7 @@
 	export let selectedCustomer;
 	export let selectedChatRoom;
 
-	let selectedCustomerTab = 'all';
+	let selectedCustomerTab = 'customers';
 
 	let isCustomersLoading = false;
 
@@ -35,22 +35,22 @@
 		if (selectedCustomerTab === 'customers') {
 			customersPaged = await get(`customers`, {
 				pageId: parentPage._id,
-				isWithEmail: true,
-				page: pageNum++,
-				perPage: 20
+				isWithEmail: true
+				// page: pageNum++,
+				// perPage: 20
 			});
 		} else if (selectedCustomerTab === 'visitors') {
 			customersPaged = await get(`customers`, {
 				pageId: parentPage._id,
-				isNoEmail: true,
-				page: pageNum++,
-				perPage: 20
+				isNoEmail: true
+				// page: pageNum++,
+				// perPage: 20
 			});
 		} else {
 			customersPaged = await get(`customers`, {
-				pageId: parentPage._id,
-				page: pageNum++,
-				perPage: 20
+				pageId: parentPage._id
+				// page: pageNum++,
+				// perPage: 20
 			});
 		}
 
@@ -264,7 +264,9 @@
 	{#if isCustomersLoading}
 		<Loader />
 	{:else if customersPaged.results?.length}
-		<div class="font-medium mb-2">{customersPaged.count} customers</div>
+		<div class="font-medium mb-2">
+			{customersPaged.count || customersPaged.results.length} customers
+		</div>
 
 		{#if selectedCustomer}
 			<EditCustomer customer={selectedCustomer} {saveCustomer} />
