@@ -485,7 +485,7 @@
 								/>
 							{/if}
 							{#if sectionItem.interactiveRenderType === 'form'}
-								{sectionItem.formSection.callToActionText || 'Submit'}
+								{sectionItem.formSection?.callToActionText || 'Submit'}
 							{:else}
 								{sectionItem.callToActionText || 'Learn More →'}
 							{/if}
@@ -551,7 +551,7 @@
 			</div>
 		{:else if sectionItem.interactiveRenderType === 'form'}
 			{#if isHeader}
-				<button>{sectionItem.formSection.callToAction || 'Submit'}</button>
+				<button>{sectionItem.formSection?.callToAction || 'Submit'}</button>
 			{:else}
 				<RenderForm bind:isEdit bind:isEmbed bind:section={sectionItem.formSection} bind:page />
 			{/if}
