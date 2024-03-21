@@ -381,7 +381,7 @@
 					{/if}
 				</div>
 			{/if}
-		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
+		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links' || (sectionItem.interactiveRenderType === 'form' && isHeader)}
 			<div
 				class="flex flex-col sm:flex-row w-full gap-6 items-center {clazz?.includes('mx-auto')
 					? 'mx-auto'
@@ -436,6 +436,23 @@
 							return;
 						}
 
+						if (sectionItem.interactiveRenderType === 'form' && isHeader) {
+							let form = document.getElementById('header-cta');
+
+							if (form) {
+								let input =
+									form.getElementsByTagName('input')[0] || form.getElementsByTagName('textarea')[0];
+
+								if (input) {
+									input.focus();
+									input.scrollIntoView({
+										block: 'center',
+										inline: 'nearest'
+									});
+								}
+							}
+						}
+
 						if (isUrlEmbeddable(sectionItem.url)) {
 							evt.preventDefault();
 							popupEmbedUrl = sectionItem.url;
@@ -467,7 +484,11 @@
 									emoji={sectionItem.urlIcon}
 								/>
 							{/if}
-							{sectionItem.callToActionText || 'Learn More →'}
+							{#if sectionItem.interactiveRenderType === 'form'}
+								{sectionItem.formSection.callToActionText || 'Submit'}
+							{:else}
+								{sectionItem.callToActionText || 'Learn More →'}
+							{/if}
 						</button>
 					{/if}
 				</a>
@@ -529,7 +550,11 @@
 				{/if}
 			</div>
 		{:else if sectionItem.interactiveRenderType === 'form'}
-			<RenderForm bind:isEdit bind:isEmbed bind:section={sectionItem.formSection} bind:page />
+			{#if isHeader}
+				<button>{sectionItem.formSection.callToAction || 'Submit'}</button>
+			{:else}
+				<RenderForm bind:isEdit bind:isEmbed bind:section={sectionItem.formSection} bind:page />
+			{/if}
 		{/if}
 	</div>
 

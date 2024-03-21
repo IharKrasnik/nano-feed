@@ -1674,12 +1674,6 @@
 									</div>
 									<div class="pb-[1000px]" />
 								</div>
-
-								<!-- {#if page._id}
-							<div class="pb-16">
-								<MomentumHub bind:page />
-							</div>
-						{/if} -->
 							</div>
 						</div>
 						<!-- END EDITOR -->

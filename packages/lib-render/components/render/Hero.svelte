@@ -187,7 +187,9 @@
 				hero.theme?.bgPattern !== 'cursors') ||
 			page.renderType === 'service'
 				? ''
-				: 'min-h-screen sm:h-screen'} {hero.theme?.bgPattern === 'canvas' ? 'max-w-max' : ''}"
+				: `min-h-screen ${isEdit ? '' : 'sm:h-screen'}`} {hero.theme?.bgPattern === 'canvas'
+				? 'max-w-max'
+				: ''}"
 			style=""
 		>
 			<div
@@ -280,7 +282,7 @@
 								in:fade={{ delay: 300, duration: 600 }}
 							>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
-									<div class="flex items-center  mb-2">
+									<div class="flex items-center mb-2">
 										<div class="mr-2 rounded-full p-1 _bg-opposite flex">
 											<Emoji color={page.theme?.buttonColor} emoji="feather:check" width={15} />
 										</div>
@@ -300,6 +302,7 @@
 
 						{#if hero.interactiveRenderType}
 							<div
+								id="header-cta"
 								class={hero.interactiveRenderType === 'form'
 									? 'w-full'
 									: hero.theme.isLeft
@@ -361,7 +364,9 @@
 
 						{#if hero.keyFeaturesStr && !hero.theme.isLeft}
 							<div
-								class="my-8 mt-12 opacity-80 flex flex-wrap justify-center sm:justify-start gap-4 items-center"
+								class="my-8 mt-12 opacity-80 flex flex-wrap justify-center {hero.demoUrl
+									? 'sm:justify-start'
+									: ''} gap-4 items-center"
 							>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center mb-2 shrink-0">
