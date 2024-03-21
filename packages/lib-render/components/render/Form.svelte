@@ -18,6 +18,10 @@
 		};
 	}
 
+	if (!section.items) {
+		section.items = [];
+	}
+
 	export let page;
 	export let isEdit;
 	export let isEmbed;
