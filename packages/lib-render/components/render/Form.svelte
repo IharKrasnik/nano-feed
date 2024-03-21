@@ -8,14 +8,21 @@
 	import submissionsOutbound from 'lib/stores/submissionsOutbound';
 	import Cookies from 'js-cookie';
 	import toDollars from 'lib/helpers/toDollars';
+	import { v4 as uuidv4 } from 'uuid';
 
 	export let section;
+	export let submission;
 
 	if (!section) {
 		section = {
+			id: uuidv4(),
 			renderType: 'form',
 			items: []
 		};
+
+		if (submission) {
+			section.items = submission.items || [];
+		}
 	}
 
 	if (!section.items) {
@@ -24,17 +31,15 @@
 
 	export let page;
 	export let isEdit;
-	export let isEmbed;
 	export let handleSubmit = null;
 
 	let formData = {};
 
 	section.items.forEach((item) => {
 		if (item.varName === 'email' || item.varName === 'name') {
-			formData[item.id] = (section?.submission && section.submission[item.varName]) || '';
+			formData[item.id] = (section?.submission && submission[item.varName]) || '';
 		} else {
-			formData[item.id] =
-				(section?.submission?.vars && section.submission.vars[item.varName]) || '';
+			formData[item.id] = (section?.submission?.vars && submission.vars[item.varName]) || '';
 		}
 	});
 
@@ -69,18 +74,49 @@
 			return;
 		}
 
-		let postData = { vars: {}, sectionId: section.id, customer: $currentCustomer };
+		let postData = {
+			vars: {},
+			items: [],
+			sectionId: section.id,
+			customer: $currentCustomer
+		};
 
 		section.items.forEach(({ id, title, varName, interactiveRenderType }) => {
 			if (interactiveRenderType === 'email') {
 				postData.email = $currentCustomer.email;
+				postData.items.push({ id, title, varName, interactiveRenderType, value: postData.email });
 			} else if (interactiveRenderType === 'name') {
 				postData.fullName = $currentCustomer.fullName;
+				postData.items.push({
+					id,
+					title,
+					varName,
+					interactiveRenderType,
+
+					value: postData.fullName
+				});
 			} else if (interactiveRenderType === 'description') {
 				postData.description = formData.description;
 				postData.title = postData.title || page.name;
+
+				postData.items.push({
+					id,
+					title,
+					varName,
+					interactiveRenderType,
+
+					value: postData.description
+				});
 			} else {
 				postData.vars[varName || title] = formData[id];
+
+				postData.items.push({
+					id,
+					title,
+					varName,
+					interactiveRenderType,
+					value: formData[id]
+				});
 			}
 		});
 
@@ -167,12 +203,12 @@
 							</div>
 
 							{#if formField.interactiveRenderType === 'name'}
-								{#if section.submission}
+								{#if submission}
 									<input
 										class="w-full _transparent"
 										type="text"
 										disabled
-										value={section.submission.fullName}
+										value={formField.value || submission.fullName}
 									/>
 								{:else}
 									<input
@@ -189,32 +225,61 @@
 									bind:value={formData.description}
 								/>
 							{:else if formField.interactiveRenderType === 'text'}
-								<input
-									class="w-full _transparent"
-									placeholder={formField.interactivePlaceholder || 'Type your message...'}
-									type="text"
-									bind:value={formData[formField.id]}
-								/>
+								{#if submission}
+									<input
+										class="w-full _transparent"
+										placeholder={formField.interactivePlaceholder || 'Type your message...'}
+										type="text"
+										disabled
+										value={formField.value}
+									/>
+								{:else}
+									<input
+										class="w-full _transparent"
+										placeholder={formField.interactivePlaceholder || 'Type your message...'}
+										type="text"
+										bind:value={formData[formField.id]}
+									/>
+								{/if}
 							{:else if formField.interactiveRenderType === 'url'}
-								<input
-									class="w-full _transparent"
-									placeholder={formField.interactivePlaceholder || 'https://www.mywebsite.com'}
-									type="url"
-									bind:value={formData[formField.id]}
-								/>
+								{#if submission}
+									<input
+										class="w-full _transparent"
+										placeholder={formField.interactivePlaceholder || 'https://www.mywebsite.com'}
+										type="url"
+										disabled
+										value={formField.value}
+									/>
+								{:else}
+									<input
+										class="w-full _transparent"
+										placeholder={formField.interactivePlaceholder || 'https://www.mywebsite.com'}
+										type="url"
+										bind:value={formData[formField.id]}
+									/>
+								{/if}
 							{:else if formField.interactiveRenderType === 'textarea'}
-								<textarea
-									class="w-full _transparent"
-									placeholder={formField.interactivePlaceholder || 'Type your message...'}
-									bind:value={formData[formField.id]}
-								/>
+								{#if submission}
+									<textarea
+										disabled
+										class="w-full _transparent"
+										placeholder={formField.interactivePlaceholder || 'Type your message...'}
+										bind:value={formField.value}
+									/>
+								{:else}
+									<textarea
+										class="w-full _transparent"
+										placeholder={formField.interactivePlaceholder || 'Type your message...'}
+										bind:value={formData[formField.id]}
+									/>
+								{/if}
 							{:else if formField.interactiveRenderType === 'email'}
-								{#if section.submission}
+								{#if submission}
 									<input
 										class="w-full _transparent"
 										type="email"
 										disabled
-										value={section.submission.email}
+										value={formField.value || submission.email}
 									/>
 								{:else}
 									<input
@@ -227,16 +292,11 @@
 							{/if}
 						</div>
 					{/each}
-				{:else if section.submission && section.submission.email}
-					<input
-						class="w-full _transparent"
-						type="email"
-						disabled
-						bind:value={section.submission.email}
-					/>
+				{:else if submission?.email}
+					<input class="w-full _transparent" type="email" disabled bind:value={submission.email} />
 				{/if}
 
-				{#if !section.submission}
+				{#if !submission}
 					<div class="w-full">
 						<button class="w-full _primary mt-4" type="submit"
 							>{section.callToActionText || 'Submit'}</button
@@ -264,7 +324,7 @@
 	</div>
 {/if}
 
-{#if !section.submission}
+{#if !submission}
 	{#if section.ctaExplainer && !isFormSubmitted && !isShowLoginCode}
 		<div class="text-sm mt-2 w-full text-center">{section.ctaExplainer}</div>
 	{/if}

@@ -737,7 +737,7 @@
 						isWithButton={false}
 					/>
 
-					{#if hero.interactiveRenderType === 'form'}
+					{#if hero.interactiveRenderType === 'form' && hero.formSection}
 						<div class="mt-4">
 							<EditSection bind:section={hero.formSection} isInnerSection />
 						</div>

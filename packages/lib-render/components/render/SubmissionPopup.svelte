@@ -4,6 +4,7 @@
 	import Popup from 'lib-render/components/Popup.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 	import ServiceRequest from 'lib-render/components/ServiceRequest.svelte';
+	import RenderForm from 'lib-render/components/render/Form.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	export let page;
@@ -65,7 +66,11 @@
 			</div>
 
 			{#key submission._id}
-				<ServiceRequest bind:page bind:submission />
+				{#if submission.page?.renderType === 'service'}
+					<ServiceRequest bind:page bind:submission />
+				{:else}
+					<RenderForm bind:submission />
+				{/if}
 			{/key}
 		</div>
 	{:else}
