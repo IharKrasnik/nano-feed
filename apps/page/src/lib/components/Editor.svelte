@@ -946,7 +946,7 @@
 							</div>
 
 							<select
-								class="w-full bg-[#f1f1f1]"
+								class="w-full bg-[#f1f1f1] max-w-[300px]"
 								bind:value={pageSlug}
 								on:change={(evt) => {
 									let slug = evt.target.value;
@@ -1059,7 +1059,6 @@
 				</div>
 			{/if}
 		</div>
-
 		<div class="h-[60px]" />
 		{#if $sveltePage.url.href.includes('/ide/claim')}{:else}
 			<div class="relative">

@@ -75,7 +75,7 @@
 
 	let enableBlog = async () => {
 		if (!parentPage.streams?.blog) {
-			await getEmbeddedStreamSlug({ page, streamType: 'blog' });
+			await getEmbeddedStreamSlug({ page: parentPage, streamType: 'blog' });
 		}
 
 		let blogPage = await post('pages', {
