@@ -212,56 +212,58 @@
 		</div>
 	{/if}
 
-	<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
-		<div class="font-bold mb-2">Render this section as...</div>
+	{#if !section.isInnerSection}
+		<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
+			<div class="font-bold mb-2">Render this section as...</div>
 
-		<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
-			<option value="grid">Default Grid Section</option>
-			<option value="callout">Callout</option>
-			<option value="stepper">1-2-3 Stepper</option>
-			<option value="testimonials">Testimonials</option>
-			<option value="pricing">Pricing</option>
-			<option value="carousel">Carousel Menu</option>
-			<option value="faq">FAQ</option>
-			<option value="article">Article</option>
-			<option value="changelog">Changelog</option>
-			<option value="form">Form</option>
-			<option value="comments">Comments</option>
-			<option value="embedCode">HTML Code Embed</option>
-			<!-- <option value="service_chat">Service Chat</option> -->
-		</select>
-
-		{#if section.renderType === 'carousel'}
-			<select class="w-full my-4" bind:value={section.carouselType}>
-				<option value="vertical">Vertical</option>
-				<option value="horizontal">Horizontal</option>
+			<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
+				<option value="grid">Default Grid Section</option>
+				<option value="callout">Callout</option>
+				<option value="stepper">1-2-3 Stepper</option>
+				<option value="testimonials">Testimonials</option>
+				<option value="pricing">Pricing</option>
+				<option value="carousel">Carousel Menu</option>
+				<option value="faq">FAQ</option>
+				<option value="article">Article</option>
+				<option value="changelog">Changelog</option>
+				<option value="form">Form</option>
+				<option value="comments">Comments</option>
+				<option value="embedCode">HTML Code Embed</option>
+				<!-- <option value="service_chat">Service Chat</option> -->
 			</select>
 
-			<div class="flex items-center mt-2 justify-between">
-				<div class="text-xs flex gap-2 items-center">
-					<div
-						class="cursor-pointer"
-						on:click={() => {
-							section.maxWidth = 0;
-						}}
-						class:font-bold={!section.maxWidth}
-					>
-						Stretch
-					</div>
+			{#if section.renderType === 'carousel'}
+				<select class="w-full my-4" bind:value={section.carouselType}>
+					<option value="vertical">Vertical</option>
+					<option value="horizontal">Horizontal</option>
+				</select>
 
-					<div
-						class="cursor-pointer"
-						on:click={() => {
-							section.maxWidth = 600;
-						}}
-						class:font-bold={section.maxWidth === 600}
-					>
-						Medium
+				<div class="flex items-center mt-2 justify-between">
+					<div class="text-xs flex gap-2 items-center">
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								section.maxWidth = 0;
+							}}
+							class:font-bold={!section.maxWidth}
+						>
+							Stretch
+						</div>
+
+						<div
+							class="cursor-pointer"
+							on:click={() => {
+								section.maxWidth = 600;
+							}}
+							class:font-bold={section.maxWidth === 600}
+						>
+							Medium
+						</div>
 					</div>
 				</div>
-			</div>
-		{/if}
-	</div>
+			{/if}
+		</div>
+	{/if}
 
 	{#if !section.isInnerSection}
 		<div class="_section rounded-xl" style="padding:0;">

@@ -162,14 +162,15 @@
 						</div>
 					{/if}
 				{/if}
-
-				{#if section.columns > 1 && sectionItem.id === section.id}
-					<div class="my-2">
-						<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
-						{#if section.isMasonryGrid}
-							<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
-						{/if}
-					</div>
+				{#if section.renderType === 'grid' || section.renderType === 'pricing'}
+					{#if section.columns > 1 && sectionItem.id === section.id}
+						<div class="my-2">
+							<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
+							{#if section.isMasonryGrid}
+								<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
+							{/if}
+						</div>
+					{/if}
 				{/if}
 
 				{#if (sectionItem !== section || sectionItem.renderType === 'callout') && sectionItem.imageUrl}
