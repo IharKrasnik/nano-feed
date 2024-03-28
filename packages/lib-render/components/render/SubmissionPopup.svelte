@@ -66,7 +66,7 @@
 			</div>
 
 			{#key submission._id}
-				{#if submission.page?.renderType === 'service'}
+				{#if !submission._id || submission.page?.renderType === 'service'}
 					<ServiceRequest bind:page bind:submission />
 				{:else}
 					<RenderForm bind:submission />
