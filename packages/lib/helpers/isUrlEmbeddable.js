@@ -1,4 +1,5 @@
 export default (url = '') => {
+	return false;
 	return (
 		url.includes('substack.com/embed') ||
 		url.includes('tally.so/r') ||

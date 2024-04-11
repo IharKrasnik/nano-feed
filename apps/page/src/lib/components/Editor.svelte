@@ -1,8 +1,6 @@
 <script>
 	import _ from 'lodash';
 	import { isDev } from 'lib/env';
-	import moment from 'moment-timezone';
-	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
 
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
@@ -11,10 +9,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { slide, fly, scale, fade } from 'svelte/transition';
 	import autofocus from 'lib/use/autofocus';
-	import { goto } from '$app/navigation';
 	import { page as sveltePage } from '$app/stores';
-
-	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
 
 	import { get, post, put } from 'lib/api';
 
@@ -24,12 +19,8 @@
 
 	import EditHero from '$lib/components/edit/Hero.svelte';
 	import EditSection from '$lib/components/edit/Section.svelte';
-	import EditFAQ from '$lib/components/edit/FAQ.svelte';
-	import EditPricing from '$lib/components/edit/Pricing.svelte';
 	import EditWelcomeEmail from '$lib/components/edit/WelcomeEmail.svelte';
 	import EditNewsletter from '$lib/components/edit/Newsletter.svelte';
-	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
-	import EditPost from 'lib/components/post/EditPost.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 	import EditCTA from '$lib/components/edit/CallToAction.svelte';
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
