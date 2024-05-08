@@ -5,23 +5,23 @@
 
 	let resolver = new RichTextResolver();
 
-	// onMount(() => {
-	// 	document.querySelectorAll('[data-url]').forEach((twitterObj) => {
-	// 		if (twitterObj.getAttribute('data-loaded')) {
-	// 			return;
-	// 		}
+	onMount(() => {
+		document.querySelectorAll('[data-url]').forEach((twitterObj) => {
+			if (twitterObj.getAttribute('data-loaded')) {
+				return;
+			}
 
-	// 		twttr.widgets.createTweet(
-	// 			twitterObj.getAttribute('data-url').split('status/')[1],
-	// 			twitterObj,
-	// 			{
-	// 				conversation: 'none',
-	// 				theme: 'dark'
-	// 			}
-	// 		);
-	// 		twitterObj.setAttribute('data-loaded', true);
-	// 	});
-	// });
+			twttr.widgets.createTweet(
+				twitterObj.getAttribute('data-url').split('status/')[1],
+				twitterObj,
+				{
+					conversation: 'none',
+					theme: 'dark'
+				}
+			);
+			twitterObj.setAttribute('data-loaded', true);
+		});
+	});
 </script>
 
 <div>
