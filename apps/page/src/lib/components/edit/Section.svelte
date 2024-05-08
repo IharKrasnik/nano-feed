@@ -1,28 +1,20 @@
 <script>
 	import _ from 'lodash';
-	import tooltip from 'lib/use/tooltip';
-	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
-	import { fly } from 'svelte/transition';
 
-	import { get, put } from 'lib/api';
+	import { put } from 'lib/api';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
-	import Modal from 'lib/components/Modal.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 
-	import Button from 'lib/components/Button.svelte';
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
-	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
-	import sectionClipboard from '$lib/stores/sectionClipboard';
-	import { getFeed } from 'lib-render/stores/feedCache';
 
-	import childStreams, { refreshChildStreams } from 'lib/stores/childStreams';
+	import childStreams from 'lib/stores/childStreams';
 	import { dndzone } from 'svelte-dnd-action';
 
 	import striptags from 'striptags';
@@ -224,13 +216,17 @@
 				<option value="pricing">Pricing</option>
 				<option value="carousel">Carousel Menu</option>
 				<option value="faq">FAQ</option>
-				<option value="article">Article</option>
+				<option value="article">Paragraph</option>
 				<option value="changelog">Changelog</option>
 				<option value="form">Form</option>
 				<option value="comments">Comments</option>
 				<option value="embedCode">HTML Code Embed</option>
 				<!-- <option value="service_chat">Service Chat</option> -->
 			</select>
+
+			{#if section.renderType === 'article'}
+				<input type="checkbox" bind:checked={section.isRichText} /> Is Rich-Text Article
+			{/if}
 
 			{#if section.renderType === 'carousel'}
 				<select class="w-full my-4" bind:value={section.carouselType}>
@@ -265,7 +261,7 @@
 		</div>
 	{/if}
 
-	{#if !section.isInnerSection}
+	{#if !section.isInnerSection && !section.isRichText}
 		<div class="_section rounded-xl" style="padding:0;">
 			<div class="flex justify-between items-center">
 				<div class="_title p-4" style="margin: 0;">Section</div>
@@ -394,51 +390,55 @@
 			</div>
 		{/if}
 
-		<div class="w-full flex justify-between mt-8">
-			<div class="mb-4 font-bold">
-				{section.renderType === 'form' ? 'Form Fields' : 'Section Items'}
+		{#if !section.isRichText}
+			<div class="w-full flex justify-between mt-8">
+				<div class="mb-4 font-bold">
+					{section.renderType === 'form' ? 'Form Fields' : 'Section Items'}
+				</div>
+				<div>
+					{#if section.renderType !== 'form'}
+						<input
+							type="checkbox"
+							bind:checked={section.isUseDb}
+							on:change={(evt) => {
+								if (!evt.target.checked) {
+									section.streamSlug = null;
+								}
+							}}
+						/> Attach to database
+					{/if}
+				</div>
 			</div>
-			<div>
-				{#if section.renderType !== 'form'}
-					<input
-						type="checkbox"
-						bind:checked={section.isUseDb}
-						on:change={(evt) => {
-							if (!evt.target.checked) {
-								section.streamSlug = null;
-							}
-						}}
-					/> Attach to database
-				{/if}
-			</div>
-		</div>
-		<hr class="mt-4 mb-8" />
 
-		{#if section.items?.length}
-			<div
-				use:dndzone={{ items: section.items, flipDurationMs: 300 }}
-				on:consider={handleDndConsider}
-				on:finalize={handleDndFinalize}
-			>
-				{#each section.items || [] as item (item.id)}
-					<div class="_section cursor-auto">
-						<EditSectionItem class="p-0" bind:page bind:section bind:item />
-					</div>
-				{/each}
-			</div>
+			<hr class="mt-4 mb-8" />
+
+			{#if section.items?.length}
+				<div
+					use:dndzone={{ items: section.items, flipDurationMs: 300 }}
+					on:consider={handleDndConsider}
+					on:finalize={handleDndFinalize}
+				>
+					{#each section.items || [] as item (item.id)}
+						<div class="_section cursor-auto">
+							<EditSectionItem class="p-0" bind:page bind:section bind:item />
+						</div>
+					{/each}
+				</div>
+			{/if}
+
+			{#if !section.isUseDb && !section.streamSlug}
+				<button
+					class="_secondary _small  w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
+					on:click={addNewItem}
+					>Add {section.renderType === 'article'
+						? 'Subparagraph'
+						: section.renderType === 'form'
+						? 'Form Field'
+						: 'Section Item'}</button
+				>
+			{/if}
 		{/if}
 
-		{#if !section.isUseDb && !section.streamSlug}
-			<button
-				class="_secondary _small  w-full p-4 flex justify-center cursor-pointer text-[#8B786D]"
-				on:click={addNewItem}
-				>Add {section.renderType === 'article'
-					? 'Subparagraph'
-					: section.renderType === 'form'
-					? 'Form Field'
-					: 'Section Item'}</button
-			>
-		{/if}
 		<div>
 			<div class="p-4" />
 		</div>

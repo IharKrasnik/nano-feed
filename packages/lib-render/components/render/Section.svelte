@@ -8,17 +8,16 @@
 	import RenderFAQ from 'lib-render/components/render/FAQ.svelte';
 	import refreshConditionsTimestamp from 'lib-render/stores/refreshConditionsTimestamp';
 	import heatmap, { getHeatmapClicksCount } from 'lib-render/stores/heatmap';
+
 	import { browser } from '$app/environment';
 	import { v4 as uuidv4 } from 'uuid';
 	import { showSuccessMessage } from 'lib/services/toast';
 
-	import Avatar from 'lib/components/Avatar.svelte';
 	import RenderTestimonials from 'lib-render/components/render/Testimonials.svelte';
 	import RenderMomentumFeed from 'lib-render/components/render/MomentumFeed.svelte';
 	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
 	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
 	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
-	import RenderNewsletter from 'lib-render/components/render/Newsletter.svelte';
 	import RenderForm from 'lib-render/components/render/Form.svelte';
 	import RenderStepper from 'lib-render/components/render/Stepper.svelte';
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
@@ -27,6 +26,8 @@
 
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
+	import ContentEditor from 'lib/components/ContentEditor.svelte';
+	import RenderEditorContent from 'lib/components/RenderEditorContent.svelte';
 	import ArticleAuthorLabel from 'lib-render/components/render/ArticleAuthorLabel.svelte';
 	import SourceLogo from 'lib/components/SourceLogo.svelte';
 
@@ -37,6 +38,7 @@
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import trackClick from 'lib/services/trackClick';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import isContentEditorLoaded from 'lib/stores/isContentEditorLoaded';
 
 	export let section;
 	let clazz;
@@ -88,14 +90,6 @@
 		3: 'text-xl',
 		4: 'text-lg _text-line-height',
 		12: 'text-lg _text-line-height'
-	};
-
-	let focusEmailInput = () => {
-		let inputs = document.getElementsByClassName('_email-input');
-		let input = inputs[0];
-
-		input.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-		input.focus();
 	};
 
 	let carouselKey;
@@ -573,6 +567,16 @@
 					{#if browser && section.customCodeHTML}
 						{@html section.customCodeHTML}
 					{/if}
+				{:else if section.isRichText}
+					{#if isEdit}
+						<ContentEditor bind:section bind:page />
+					{:else}
+						<div class="_editor-content">
+							<RenderEditorContent content={section.editorValue} />
+						</div>
+					{/if}
+				{:else if section.renderType === 'article' && section.isRichText && $sectionToEdit && $sectionToEdit.id === section.id}
+					<ContentEditor bind:section bind:page />
 				{:else if section.renderType === 'faq'}
 					<RenderFAQ bind:section bind:page bind:isEdit />
 				{:else if section.renderType === 'comments'}

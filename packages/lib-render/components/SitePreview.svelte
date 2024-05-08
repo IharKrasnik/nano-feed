@@ -13,38 +13,24 @@
 	import setPageVars from 'lib-render/helpers/setPageVars';
 	import addDefaultHero from 'lib-render/helpers/addDefaultHero';
 	import { v4 as uuidv4 } from 'uuid';
-	import striptags from 'striptags';
 
 	import PortfolioPage from 'lib-render/layouts/PortfolioPage.svelte';
 	import getPageCssStyles from 'lib-render/services/getPageCssStyles';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
 	import RenderHero from 'lib-render/components/render/Hero.svelte';
-	import Header from 'lib-render/components/render/Header.svelte';
-	import Background from 'lib-render/components/render/Background.svelte';
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import RenderCTA from 'lib-render/components/render/CallToAction.svelte';
-	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import RenderHeader from 'lib-render/components/render/Header.svelte';
 	import RenderServiceRequestsPage from 'lib-render/components/render/ServiceRequestsPage.svelte';
 	import RenderProfilePage from 'lib-render/components/render/ProfilePage.svelte';
 
-	import trackClick from 'lib/services/trackClick';
-
-	import Emoji from 'lib/components/Emoji.svelte';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import ctaFooterEl from 'lib-render/stores/ctaFooterEl';
 
-	import feedLastUpdatedOn from 'lib-render/stores/feedLastUpdatedOn';
-
-	import TwitterIcon from 'lib/icons/twitter.svelte';
 	import PageBadge from 'lib-render/components/PageBadge.svelte';
-	import LinkedInIcon from 'lib/icons/linkedin.svelte';
 	import iframeResize from 'iframe-resizer/js/iframeResizer';
-	import heatmap, { getHeatmapClicksCount } from 'lib-render/stores/heatmap';
-
-	import { STREAM_URL, PAGE_URL } from 'lib/env';
 
 	let clazz = '';
 
@@ -83,21 +69,6 @@
 
 	export let maxHeight;
 
-	let grid = {
-		title: '',
-		description: '',
-		columns: '',
-
-		items: [
-			{
-				title: '',
-				description: '',
-				icon: '',
-				imageUrl: ''
-			}
-		]
-	};
-
 	export let isNoVars = false;
 	let isMounted = false;
 	let isMountedDelayed = false;
@@ -113,14 +84,6 @@
 	let email;
 
 	let inputEl;
-
-	const onButtonClick = () => {
-		inputEl.focus();
-	};
-
-	let resize = () => {
-		iframeResize({ log: true }, '#iframeResize');
-	};
 
 	let scrollY;
 
@@ -179,7 +142,7 @@
 	let focusEditEl = () => {
 		setTimeout(() => {
 			try {
-				editEl.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+				// editEl.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 			} catch (err) {
 				console.error(err);
 			}
@@ -214,15 +177,6 @@
 			localStorage.visitsCount = 1;
 		}
 	}
-
-	let isSubmitted;
-
-	let varTemplatesBig = {
-		title: page.title,
-		subtitle: page.subtitle,
-		description: page.title,
-		ctaExplainer: page.ctaExplainer || ''
-	};
 
 	if (browser && !page.activeHero) {
 		if (!page.heros) {
@@ -301,7 +255,7 @@
 				<div
 					class=" relative bg-site z-20 w-full {clazz}"
 					style="z-index: 32;"
-					in:fade={{ duration: 150 }}
+					in:fade={{ duration: isMountedDelayed ? 0 : 150 }}
 				>
 					{#if !isSectionsCloneable && !isNoHeaderFooter}
 						{#if page.name || page.parentPage?._id}
@@ -341,11 +295,13 @@
 									{#if !isAboveTheFold}
 										{#if page.sections?.length}
 											<div
-												in:fade={{ delay: page.activeHero?.title ? 900 : 0 }}
+												in:fade={{
+													delay: page.activeHero?.title && !isMountedDelayed ? 900 : 0
+												}}
 												class="relative  z-10 {page.streamSlug ? '' : ''}"
 												style="z-index: 40;"
 											>
-												{#each page.sections || [] as section, i}
+												{#each page.sections || [] as section, i (section.id)}
 													<div class="relative">
 														{#if section.containerBgImageUrl}
 															<RenderUrl
@@ -364,7 +320,6 @@
 																/>
 															{/if}
 														{/if}
-
 														{#if $sectionToEdit && $sectionToEdit.id === section.id}
 															<div
 																bind:this={editEl}

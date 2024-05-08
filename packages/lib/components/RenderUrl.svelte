@@ -97,6 +97,21 @@
 	};
 
 	let iframeEl;
+
+	let embedEl;
+
+	if (url && (url.includes('twitter.com') || url.includes('x.com'))) {
+		setTimeout(() => {
+			twttr.widgets.createTweet(
+				url.split('status/')[1],
+				embedEl, // parent element where tweet will go
+				{
+					conversation: 'none',
+					theme: 'dark' // tweet theme
+				}
+			);
+		});
+	}
 </script>
 
 <div class="h-[600px] hidden" />
@@ -118,6 +133,12 @@
 					{:else}
 						<LoomIcon class="w-[45px] opacity-50" />
 					{/if}
+				{:else if url.includes('twitter.com') || url.includes('x.com')}
+					<div bind:this={embedEl} data-url={url} class="w-full flex justify-center">
+						<blockquote class="twitter-tweet" data-conversation="none">
+							<a href={url} />
+						</blockquote>
+					</div>
 				{:else if url.includes('youtube.com') || url.includes('youtu.be')}
 					{#if !isFilesOnly}
 						<iframe

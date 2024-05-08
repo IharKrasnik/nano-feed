@@ -75,7 +75,6 @@
 			{/if}
 		</div>
 	{/if}
-
 	{#if section.type === 'momentum_feed'}
 		<RenderMomentumFeed bind:blog bind:streamSlug={blog.streamSlug} />
 	{:else if section.items?.length}

@@ -18,6 +18,8 @@ export const BRAND_URL = dev ? 'http://localhost:5173' : 'https://brand.mmntm.bu
 
 export const PAGE_URL = dev ? 'https://mmntm.page' : 'https://mmntm.page';
 
+export const EDITOR_URL = dev ? 'http://localhost:5173' : 'https://editor.momentum.page';
+
 export const IDE_URL = dev ? 'http://localhost:5177/ide' : 'https://momentum.page/ide';
 
 export const POST_URL = dev ? 'http://localhost:5179' : 'https://mmntm.blog';

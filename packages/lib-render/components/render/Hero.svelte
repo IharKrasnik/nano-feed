@@ -196,7 +196,10 @@
 				bind:this={$aboveTheFoldEl}
 				class="{hero.theme?.bgImage ? 'light-colors' : ''} {hero.theme?.isVertical
 					? ''
-					: ''} h-full py-16 sm:py-24 {!hero.testimonials?.length ? `flex items-center` : ''}"
+					: ''} h-full  {page.renderType === 'article' ? 'pt-16 sm:pt-24' : 'py-16 sm:py-24'} {!hero
+					.testimonials?.length
+					? `flex items-center`
+					: ''}"
 				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 			>
 				<div

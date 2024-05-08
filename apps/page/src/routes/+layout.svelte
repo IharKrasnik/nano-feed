@@ -4,19 +4,15 @@
 
 	import Page from 'lib-render/components/Page.svelte';
 	import Editor from '$lib/components/Editor.svelte';
-	import { get } from 'lib/api';
 	import { API_URL } from 'lib/env';
 	import currentPage from 'lib-render/stores/currentPage';
 	import { browser } from '$app/environment';
-	import Emoji from 'lib/components/Emoji.svelte';
 	import { page as sveltePage } from '$app/stores';
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
 
-	import currentUser, { isLoading as isUserLoading } from 'lib/stores/currentUser';
-	import Dock from 'lib/components/Dock.svelte';
+	import { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
-	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 
 	import 'lazysizes';
 	// import a plugin 1
@@ -80,6 +76,8 @@
 	<meta name="twitter:description" content={$sveltePage.data.ogDescription} />
 	<meta name="twitter:card" content="summary_large_image" />
 
+	<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 	<meta
 		name="twitter:image"
 		content={$sveltePage.data.ogImage ||
@@ -115,6 +113,7 @@
 </svelte:head>
 
 <SvelteToast />
+
 <div id="modal-portal" />
 <div id="popup-portal" />
 {#if !$isUserLoading}

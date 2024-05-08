@@ -1,5 +1,6 @@
 <script>
 	import _ from 'lodash';
+	import slug from 'slug';
 	import { isDev } from 'lib/env';
 	import { onDestroy } from 'svelte';
 
@@ -393,12 +394,9 @@
 					page.streamSlug = stream.slug;
 				}
 
-				page.slug = `${page.name.trim().toLowerCase().replace(' ', '-')}/$data.slug`;
+				page.slug = `${slug(page.name)}/$data.slug`;
 			} else if (page.isInDir) {
-				page.slug = `${page.dirName.trim().toLowerCase().replace(' ', '-')}/${page.name
-					.trim()
-					.replace(' ', '-')
-					.toLowerCase()}`;
+				page.slug = `${slug(page.dirName)}/${slug(page.name)}`;
 			}
 		}
 
@@ -534,6 +532,10 @@
 			type,
 			renderType: page.renderType === 'article' ? 'article' : 'grid'
 		};
+
+		if (page.renderType === 'article') {
+			// newSection.isRichText = true;
+		}
 
 		if (type === 'benefits') {
 		} else if (type === 'interactive-question') {
@@ -1055,7 +1057,8 @@
 			<div class="relative">
 				<div class="flex relative">
 					<!-- EDITOR-->
-					{#key $sectionToEdit?.id}
+					<!-- {#key $sectionToEdit?.id} -->
+					{#key page._id}
 						<div
 							class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] overflow-x-hidden pt-0 h-screen overflow-y-scroll bg-white"
 							bind:this={editorPanelEl}
