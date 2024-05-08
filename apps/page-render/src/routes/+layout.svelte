@@ -115,8 +115,6 @@
 	{:else}
 		<link rel="icon" href="/logo.svg" />
 	{/if}
-
-	<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </svelte:head>
 
 <SvelteToast />
