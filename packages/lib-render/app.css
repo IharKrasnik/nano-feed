@@ -149,6 +149,7 @@ body {
 
 ._editor-content p {
 	@apply my-2;
+	min-height: 16px;
 }
 
 ._editor-content h2,
@@ -162,6 +163,16 @@ body {
 
 ._editor-content h3 {
 	@apply text-xl font-bold mb-2 mt-4;
+}
+
+._editor-content ul {
+	list-style: disc;
+	list-style-position: outside;
+	padding-left: 28px;
+}
+
+._editor-content ul li {
+	margin-top: 16px;
 }
 
 ._section-container._callout {

@@ -18,7 +18,7 @@ const isEmailLinkType = type => type === 'email'
 
 export default {
   nodes: {
-    horizontal_rule(node) {
+    horizontalRule(node) {
       return {
         singleTag: 'hr'
       }
@@ -28,7 +28,7 @@ export default {
         tag: 'blockquote'
       }
     },
-    bullet_list(node) {
+    bulletList(node) {
       return {
         tag: 'ul'
       }
@@ -44,7 +44,7 @@ export default {
         ]
       }
     },
-    hard_break(node) {
+    hardBreak(node) {
       return {
         singleTag: 'br'
       }
@@ -62,12 +62,12 @@ export default {
         }]
       }
     },
-    list_item(node) {
+    listItem(node) {
       return {
         tag: 'li'
       }
     },
-    ordered_list(node) {
+    orderedList(node) {
       return {
         tag: 'ol'
       }
