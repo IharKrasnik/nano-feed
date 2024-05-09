@@ -116,6 +116,7 @@
 					<option value="link">Click 1 Link</option>
 					<option value="links">Click Few Links</option>
 					<option value="email">Submit Email</option>
+					<option value="input">Text Input</option>
 					<option value="form">Submit Form</option>
 					<option value="single_choice">Community Single Choice</option>
 					<option value="multiple_choice">Community Multiple Choice</option>
@@ -125,7 +126,7 @@
 			</select>
 		{/if}
 
-		{#if section?.renderType === 'form' && ['text', 'textarea', 'email', 'description'].includes(sectionItem.interactiveRenderType)}
+		{#if section?.renderType === 'form' && ['text', 'textarea', 'email', 'description', 'input'].includes(sectionItem.interactiveRenderType)}
 			<div class="mb-2 mt-4">
 				<div class="text-sm opacity-70 mb-2">Placeholder</div>
 				<input
@@ -191,7 +192,19 @@
 				<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
 				<input class="w-full" bind:value={sectionItem.url2} {placeholder} type="url" />
 			{/if}
-		{:else if sectionItem.interactiveRenderType === 'email'}
+		{:else if sectionItem.interactiveRenderType === 'email' || sectionItem.interactiveRenderType === 'input'}
+			{#if sectionItem.interactiveRenderType === 'input'}
+				<div class="mb-2 mt-4">
+					<div class="shrink-0 text-sm mb-2 opacity-70">Input Placeholder</div>
+					<input
+						class="w-full"
+						bind:value={sectionItem.inputPlaceholder}
+						placeholder="Start Typing..."
+						type="text"
+					/>
+				</div>
+			{/if}
+
 			<div class="mb-2 mt-4">
 				<div class="shrink-0 text-sm mb-2 opacity-70">Button text</div>
 				<input
@@ -255,7 +268,7 @@
 			</div>
 		{/if}
 
-		{#if ['email', 'link', 'links'].includes(sectionItem.interactiveRenderType) && section?.renderType !== 'form'}
+		{#if ['email', 'input', 'link', 'links'].includes(sectionItem.interactiveRenderType) && section?.renderType !== 'form'}
 			<div class="flex items-center font-normal text-sm mb-2 mt-4 w-full">
 				<div class="shrink-0  opacity-70">Explainer:</div>
 
@@ -267,12 +280,15 @@
 				/>
 			</div>
 
-			{#if sectionItem.interactiveRenderType === 'email'}
+			{#if sectionItem.interactiveRenderType === 'email' || sectionItem.interactiveRenderType === 'input'}
 				<div class="font-normal opacity-70 text-sm mb-2 mt-2">Once submitted...</div>
 
 				<div class="w-full mb-2">
 					<select bind:value={sectionItem.actionType} class="w-full">
-						<option value="success">Show thank you message</option>
+						{#if sectionItem.interactiveRenderType === 'email'}
+							<option value="success">Show thank you message</option>
+						{/if}
+
 						<option value="url">Redirect to URL</option>
 					</select>
 				</div>

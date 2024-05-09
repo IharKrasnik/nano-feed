@@ -209,6 +209,7 @@
 	};
 
 	let emailAddress = $currentCustomer.email;
+	let inputValue;
 
 	let submitEmail = async () => {
 		isResetEmail = false;
@@ -218,11 +219,25 @@
 
 		let submission = await post(`pages/${page._id}/submissions`, { email: emailAddress });
 
-		if (page.actionUrl) {
+		if (sectionItem.actionUrl) {
 			setTimeout(() => {
-				window.location.href = page.actionUrl?.startsWith('/')
-					? `${page.actionUrl}`
-					: page.actionUrl;
+				window.location.href = sectionItem.actionUrl?.startsWith('/')
+					? `${sectionItem.actionUrl}`
+					: sectionItem.actionUrl;
+			}, 0);
+		}
+	};
+
+	let submitTextInput = async () => {
+		trackForm({ sectionId: sectionItem.id, text: sectionItem.callToActionText });
+
+		if (sectionItem.actionUrl) {
+			setTimeout(() => {
+				window.location.href = sectionItem.actionUrl?.startsWith('/')
+					? `${sectionItem.actionUrl}`
+					: sectionItem.actionUrl +
+					  (sectionItem.actionUrl.includes('?') ? `&` : '?') +
+					  `text=${inputValue}`;
 			}, 0);
 		}
 	};
@@ -374,7 +389,55 @@
 					</div>
 					{#if sectionItem.callToActionText?.length >= 14}
 						<button
+							on:click={submitEmail}
 							type="submit"
+							class=" shrink-0 px-16 py-4 text-center justify-center sm:h-full sm:ml-4 mt-4 sm:mt-0 w-full sm:w-auto"
+							>{sectionItem.callToActionText || 'Subscribe'}</button
+						>
+					{/if}
+				</div>
+			{/if}
+		{:else if sectionItem.interactiveRenderType === 'input'}
+			{#if isHeader}
+				<a
+					class="shrink-0 ring-1 button"
+					href={sectionItem.actionUrl}
+					style="--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
+						? 'var(--accent-color-lighter)'
+						: 'var(--accent-color-darker)'};"
+					type="submit">{sectionItem.callToActionText || 'Subscribe'}</a
+				>
+			{:else}
+				<div class="flex flex-col sm:flex-row items-center w-full sm:w-auto">
+					<div
+						class="_input_container {sectionItem.callToActionText?.length >= 14
+							? ''
+							: '_long'} _border w-full"
+					>
+						<form
+							class="w-full flex flex-col sm:flex-row gap-4"
+							on:submit|preventDefault={submitTextInput}
+						>
+							<input
+								placeholder={sectionItem.inputPlaceholder || 'Start typing...'}
+								bind:value={inputValue}
+								class="_input _cta _cta-input w-full"
+								type="email"
+								style=""
+							/>
+							{#if sectionItem.callToActionText?.length < 14}
+								<button
+									type="submit"
+									class="_input_button px-16 text-center justify-center sm:absolute "
+									>{sectionItem.callToActionText || 'Subscribe'}</button
+								>
+							{/if}
+						</form>
+					</div>
+					{#if sectionItem.callToActionText?.length >= 14}
+						<button
+							type="submit"
+							on:click={submitTextInput}
 							class=" shrink-0 px-16 py-4 text-center justify-center sm:h-full sm:ml-4 mt-4 sm:mt-0 w-full sm:w-auto"
 							>{sectionItem.callToActionText || 'Subscribe'}</button
 						>
