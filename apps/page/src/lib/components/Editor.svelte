@@ -28,7 +28,6 @@
 	import Insert from '$lib/components/edit/Insert.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
-	import PostPreview from 'lib/components/post/PostPreview.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
 
