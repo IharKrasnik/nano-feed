@@ -6,20 +6,21 @@
 	let resolver = new RichTextResolver();
 
 	onMount(() => {
-		document.querySelectorAll('[data-url]').forEach((twitterObj) => {
-			if (twitterObj.getAttribute('data-loaded')) {
+		document.querySelectorAll('._embed').forEach((embedObj) => {
+			if (embedObj.getAttribute('data-loaded')) {
 				return;
 			}
 
-			twttr.widgets.createTweet(
-				twitterObj.getAttribute('data-url').split('status/')[1],
-				twitterObj,
-				{
+			let url = embedObj.getAttribute('data-url');
+
+			if (url.includes('twitter.com') || url.includes('x.com')) {
+				twttr.widgets.createTweet(url.split('status/')[1], embedObj, {
 					conversation: 'none',
 					theme: 'dark'
-				}
-			);
-			twitterObj.setAttribute('data-loaded', true);
+				});
+			}
+
+			embedObj.setAttribute('data-loaded', true);
 		});
 	});
 </script>
