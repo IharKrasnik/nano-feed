@@ -279,7 +279,7 @@ body {
 	color: var(--text-color-opposite);
 }
 
-._section-item._interactive {
+._section-item._interactive:not(._transparent) {
 	@apply transition shadow-md shadow-black/10;
 }
 
