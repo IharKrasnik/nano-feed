@@ -23,7 +23,7 @@ import {
 
 try {
 	onExit.register();
-} catch (err) {}
+} catch (err) { }
 
 window.mwave = {
 	sendTrackEvent,
@@ -82,91 +82,94 @@ function getCookie(c_name) {
 
 const init =
 	(initialUserData, handlers = defaultHandlers) =>
-	() => {
-		const userData = { ...initialUserData };
+		() => {
+			const userData = { ...initialUserData };
 
-		return calcIdentificator()
-			.then((visitorId) => {
-				userData.visitorId = visitorId;
-				setCookie('wave_fingerprint', visitorId);
-				window.WAVE_FINGERPRINT = visitorId;
+			return calcIdentificator()
+				.then((visitorId) => {
+					userData.visitorId = visitorId;
+					setCookie('wave_fingerprint', visitorId);
+					window.WAVE_FINGERPRINT = visitorId;
 
-				return fetch('https://api.ipify.org')
-					.then((res) => res.text())
-					.then((data) => {
-						const payload = {
-							os: getOS(),
-							browserName: getBrowserName(),
-							deviceType: getDeviceType(),
-							connectionType: getConnectionType(),
-							ipAddress: data,
+					let searchQuery = window.location.search;
 
-							referrerUrl: document.referrer
-						};
+					return fetch('https://api.ipify.org')
+						.then((res) => res.text())
+						.then((data) => {
+							const payload = {
+								os: getOS(),
+								browserName: getBrowserName(),
+								deviceType: getDeviceType(),
+								connectionType: getConnectionType(),
+								ipAddress: data,
 
-						const session = JSON.parse(
-							localStorage.getItem(`wave_session_${window.WAVE_SUBPROJECT_ID || ''}`)
-						);
-						const TEN_MINUTES_MS = 1 * 60 * 1000;
-
-						if (
-							session &&
-							session.sessionId &&
-							new Date() - new Date(session.updatedOn) < TEN_MINUTES_MS
-						) {
-							return {
-								sessionId: session.sessionId
+								referrerUrl: document.referrer,
+								searchQuery
 							};
-						}
 
-						return sendData('waveSessions/init', {
-							visitorId,
-							domain: window.location.hostname,
-							url: window.location.href,
-							payload,
-							projectId: userData.projectId,
+							const session = JSON.parse(
+								localStorage.getItem(`wave_session_${window.WAVE_SUBPROJECT_ID || ''}`)
+							);
+							const TEN_MINUTES_MS = 1 * 60 * 1000;
 
-							...(window.MWAVE_CONFIG
-								? {
+							if (
+								session &&
+								session.sessionId &&
+								new Date() - new Date(session.updatedOn) < TEN_MINUTES_MS
+							) {
+								return {
+									sessionId: session.sessionId
+								};
+							}
+
+							return sendData('waveSessions/init', {
+								visitorId,
+								domain: window.location.hostname,
+								url: window.location.href,
+								payload,
+								projectId: userData.projectId,
+
+								...(window.MWAVE_CONFIG
+									? {
 										subProjectId: window.MWAVE_CONFIG?.subProjectId,
 										pageId: window.MWAVE_CONFIG?.pageId
-								  }
-								: {})
+									}
+									: {})
+							});
 						});
-					});
-			})
-			.then(({ sessionId }) => {
-				if (sessionId) {
-					const setSession = () => {
-						localStorage.setItem(
-							'wave_session',
-							JSON.stringify({
-								sessionId,
-								updatedOn: new Date()
-							})
-						);
+				})
+				.then(({ sessionId }) => {
+					if (sessionId) {
+						const setSession = () => {
+							localStorage.setItem(
+								'wave_session',
+								JSON.stringify({
+									sessionId,
+									updatedOn: new Date()
+								})
+							);
+						};
+
+						setSession();
+						window.WAVE_SESSION_ID = sessionId;
+						setInterval(setSession, 10 * 1000);
+
+						userData.sessionId = sessionId;
+
+						registerHandlers(userData, handlers);
+						window.WAVE_USER_DATA = userData;
+						trackerMutationObserver.init(userData);
+						handleLocationChange(userData);
+					} else if (process.env.BUILD === 'dev') {
+						console.error('Something went wrong, sessionId not setted:', sessionId); // eslint-disable-line
+					}
+				})
+				.then(() => {
+					return {
+						userData
 					};
-
-					setSession();
-					window.WAVE_SESSION_ID = sessionId;
-					setInterval(setSession, 10 * 1000);
-
-					userData.sessionId = sessionId;
-
-					registerHandlers(userData, handlers);
-					window.WAVE_USER_DATA = userData;
-					trackerMutationObserver.init(userData);
-					handleLocationChange(userData);
-				} else if (process.env.BUILD === 'dev') {
-					console.error('Something went wrong, sessionId not setted:', sessionId); // eslint-disable-line
-				}
-			})
-			.then(() => {
-				return {
-					userData
-				};
-			});
-	};
+				});
+		};
 
 export default {
 	init
