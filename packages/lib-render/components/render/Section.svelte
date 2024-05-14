@@ -991,6 +991,23 @@
 														</div>
 													{/if}
 
+													{#if item.syncPage?.metadata?.fullAmount}
+														<hr class="w-full my-6 opacity-20" />
+
+														<div class="flex items-end mt-6 mb-4">
+															<div class="text-2xl font-bold mr-2">
+																{item.syncPage?.metadata?.fullAmount
+																	? toDollars(item.syncPage?.metadata?.fullAmount)
+																	: 'Free'}
+															</div>
+															{#if item.syncPage?.metadata?.payPer}
+																<div class="opacity-70 text-lg">
+																	/ {item.syncPage?.metadata?.payPer}
+																</div>
+															{/if}
+														</div>
+													{/if}
+
 													{#if item.pricing?.benefitsStr}
 														<div class="mt-4 mb-8">
 															{#each item.pricing.benefitsStr.split('\n') as benefit}
@@ -1061,7 +1078,7 @@
 												<RenderUrlWithBackground
 													aspectRatio={section.theme?.imageAspectRatio ||
 														item.theme?.imageAspectRatio}
-													urlImgClass="object-cover {item.theme?.isReversedImage ||
+													urlImgClass="mx-auto object-cover {item.theme?.isReversedImage ||
 													section.renderType === 'changelog' ||
 													item.syncPage?.renderType === 'service'
 														? 'rounded-l-lg'

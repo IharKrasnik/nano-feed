@@ -14,7 +14,6 @@
 			);
 		}
 	};
-
 	// selectedTab.subscribe(refreshUrl);
 	// selectedEditorTab.subscribe(refreshUrl);
 	// selectedGrowthTab.subscribe(refreshUrl);
