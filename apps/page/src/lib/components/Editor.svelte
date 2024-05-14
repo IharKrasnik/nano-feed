@@ -33,11 +33,6 @@
 
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
-	import WaveSingleStat from 'lib/components/wave/SingleStat.svelte';
-	import BackTo from '$lib/components/BackTo.svelte';
-	import FileInput from 'lib/components/FileInput.svelte';
-	import MomentumHub from 'lib/components/MomentumHub.svelte';
-	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
 
 	import contenteditable from 'lib/use/contenteditable';
 
@@ -54,8 +49,6 @@
 	import GrowthTab from '$lib/components/tabs/GrowthTab.svelte';
 	import EditWebsiteSettingsTab from '$lib/components/tabs/WebsiteSettingsTab.svelte';
 	import NewPage from '$lib/components/NewPage.svelte';
-
-	import SignupForm from '$lib/components/signup-form.svelte';
 
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import ColorPicker from '$lib/components/ColorPicker.svelte';

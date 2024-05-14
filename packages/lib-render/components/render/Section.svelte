@@ -872,7 +872,7 @@
 												? 'col-span-12'
 												: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
 									
-									{item.theme?.isReversedImage || item.syncPage?.renderType === 'service' ? 'order-last' : ''}
+									{item.theme?.isReversedImage ? 'order-last' : ''}
 									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
 										>
 											<div>
@@ -1067,11 +1067,7 @@
 														  12
 												}`} 
 									
-									{item.theme?.isReversedImage ||
-												section.renderType === 'changelog' ||
-												item.syncPage?.renderType === 'service'
-													? 'order-first'
-													: ''}"
+									{item.theme?.isReversedImage || section.renderType === 'changelog' ? 'order-first' : ''}"
 											>
 												<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
 
