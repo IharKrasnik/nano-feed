@@ -1075,8 +1075,7 @@
 													aspectRatio={section.theme?.imageAspectRatio ||
 														item.theme?.imageAspectRatio}
 													urlImgClass="mx-auto object-cover {item.theme?.isReversedImage ||
-													section.renderType === 'changelog' ||
-													item.syncPage?.renderType === 'service'
+													section.renderType === 'changelog'
 														? 'rounded-l-lg'
 														: 'rounded-r-lg'}"
 													imageUrl={item.imageUrl}
