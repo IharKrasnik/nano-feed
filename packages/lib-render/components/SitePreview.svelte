@@ -304,7 +304,11 @@
 												style="z-index: 40;"
 											>
 												{#each page.sections || [] as section, i (section.id)}
-													<div class="relative">
+													<div
+														class="relative {page.activeHero.theme?.isPullBottom && i === 0
+															? 'mb-[100px]'
+															: ''}"
+													>
 														{#if section.containerBgImageUrl}
 															<RenderUrl
 																url={section.containerBgImageUrl}
