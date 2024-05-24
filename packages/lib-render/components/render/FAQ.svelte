@@ -55,7 +55,7 @@
 							/>
 						</div>
 					</div>
-					<div class:hidden={!faq.isExpanded} class="mt-2 mb-8" in:fade={{ duration: 150 }}>
+					<div class:hidden={!faq.isExpanded} class="mt-2 mb-8 p-2" in:fade={{ duration: 150 }}>
 						{@html faq.description}
 					</div>
 				{/each}
