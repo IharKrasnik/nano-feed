@@ -21,30 +21,33 @@
 		<div class="flex justify-center">
 			<div class="max-w-[600px] w-full my-8 p-4">
 				{#each section.items as faq}
-					<div class="flex justify-between py-2">
+					<div
+						class="flex justify-between p-2 cursor-pointer {(page.parentPage || page).theme
+							?.theme === 'dark'
+							? 'hover:bg-white/5'
+							: 'hover:bg-black/5'} transition"
+						class:heatmap={$heatmap}
+						data-heatmap-clicks-count={$heatmap
+							? getHeatmapClicksCount({
+									sectionId: section.id,
+									sectionItemId: faq.id
+							  })
+							: ''}
+						on:click={() => {
+							faq.isExpanded = !faq.isExpanded;
+
+							trackClick({
+								pageId: page?._id,
+								sectionId: section.id,
+								sectionItemId: faq.id,
+								text: faq.isExpanded ? '+' : '-'
+							});
+						}}
+					>
 						<div class="text-xl font-bold">
 							{@html faq.title}
 						</div>
-						<div
-							class="cursor-pointer opacity-80 hover:opacity-100 transition"
-							class:heatmap={$heatmap}
-							data-heatmap-clicks-count={$heatmap
-								? getHeatmapClicksCount({
-										sectionId: section.id,
-										sectionItemId: faq.id
-								  })
-								: ''}
-							on:click={() => {
-								faq.isExpanded = !faq.isExpanded;
-
-								trackClick({
-									pageId: page?._id,
-									sectionId: section.id,
-									sectionItemId: faq.id,
-									text: faq.isExpanded ? '+' : '-'
-								});
-							}}
-						>
+						<div class="cursor-pointer opacity-80 hover:opacity-100 transition">
 							<FeatherIcon
 								theme={page.theme?.theme}
 								size="30"
