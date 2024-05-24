@@ -313,7 +313,7 @@
 			? 'min-h-screen sm:min-h-min'
 			: ''} {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
-			: ''} "
+			: ''}"
 	>
 		{#if isCloneable}
 			<div

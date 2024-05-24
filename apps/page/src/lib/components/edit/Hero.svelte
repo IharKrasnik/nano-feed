@@ -266,7 +266,11 @@
 								<input bind:checked={hero.theme.isFullScreen} class="mr-2" type="checkbox" /> Full Screen
 								Height
 							</div>
-							<div class="flex shrink-0 font-normal items-center">
+							<div class="flex shrink-0 font-normal items-center mb-2 mt-4">
+								<input type="checkbox" class="mr-2" bind:checked={hero.theme.isPullBottom} /> Pull Bottom
+								Section
+							</div>
+							<div class="flex shrink-0 font-normal items-cente mb-2 mt-4r">
 								<input bind:checked={hero.theme.isLeft} class="mr-2" type="checkbox" /> Left Aligned
 							</div>
 

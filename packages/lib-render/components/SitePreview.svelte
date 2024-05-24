@@ -274,6 +274,8 @@
 										class="sticky bg-site {$sectionToEdit &&
 										$sectionToEdit.id !== page.activeHero?.formSection?.id
 											? 'opacity-30 grayscale'
+											: ''}  {page.activeHero.theme?.isPullBottom
+											? 'mb-[-100px] sm:mb-[-200px]'
 											: ''}"
 									>
 										<RenderHero
