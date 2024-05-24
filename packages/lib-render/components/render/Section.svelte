@@ -313,23 +313,7 @@
 			? 'min-h-screen sm:min-h-min'
 			: ''} {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
-			: ''} {isEdit && $sectionToEdit?.id !== section.id && !section.isDatabase && !isFooter
-			? 'cursor-pointer hover:border-8 border-purple-300'
-			: ''}"
-		on:click={() => {
-			if (isEdit) {
-				if ($sectionToEdit) {
-					page.sections = page.sections.map((s) => {
-						if (s.id === $sectionToEdit.id) {
-							return { ...$sectionToEdit };
-						} else {
-							return s;
-						}
-					});
-				}
-				$sectionToEdit = section;
-			}
-		}}
+			: ''} "
 	>
 		{#if isCloneable}
 			<div

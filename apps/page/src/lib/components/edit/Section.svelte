@@ -514,12 +514,14 @@
 		/>
 	{/if}
 
-	{#if section.streamSettings?.limit}
+	<hr class="mt-4 mb-8" />
+
+	{#if true || section.streamSettings?.limit}
 		{section.footer ? '' : (section.footer = { id: uuidv4() }) && ''}
 
 		<div class="_section rounded-xl" style="padding:0;">
 			<div class="flex justify-between items-center">
-				<div class="_title p-4" style="margin: 0;">Footer</div>
+				<div class="_title p-4" style="margin: 0;">Section Footer</div>
 			</div>
 
 			<hr class="border-[#8B786D] opacity-30" />

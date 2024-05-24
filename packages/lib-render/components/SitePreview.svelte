@@ -142,7 +142,7 @@
 	let focusEditEl = () => {
 		setTimeout(() => {
 			try {
-				// editEl.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
+				editEl.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 			} catch (err) {
 				console.error(err);
 			}
@@ -341,6 +341,15 @@
 																		bind:isEdit
 																		{onInsert}
 																	/>
+
+																	{#if $sectionToEdit.footer && ($sectionToEdit.footer.title || $sectionToEdit.footer.description || $sectionToEdit.footer.interactiveRenderType)}
+																		<RenderSection
+																			bind:section={$sectionToEdit.footer}
+																			isFooter
+																			bind:page
+																			bind:themeStyles={styles}
+																		/>
+																	{/if}
 																</div>
 																<div
 																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
@@ -353,9 +362,28 @@
 															{focusEditEl() || ''}
 														{:else}
 															<div
-																class="relative z-10 overflow-y-hidden"
+																class="relative z-10 overflow-y-hidden {isEdit &&
+																$sectionToEdit?.id !== section.id &&
+																!section.isDatabase &&
+																!section.isFooter
+																	? 'cursor-pointer hover:border-8 border-purple-300'
+																	: ''}"
 																class:opacity-30={!!$sectionToEdit}
 																class:grayscale={!!$sectionToEdit}
+																on:click={() => {
+																	if (isEdit) {
+																		if ($sectionToEdit) {
+																			page.sections = page.sections.map((s) => {
+																				if (s.id === $sectionToEdit.id) {
+																					return { ...$sectionToEdit };
+																				} else {
+																					return s;
+																				}
+																			});
+																		}
+																		$sectionToEdit = section;
+																	}
+																}}
 															>
 																<div
 																	class="bg-site {section.imgMaxWidth === 'full-screen'
@@ -385,6 +413,15 @@
 																				  )};`
 																			: ''}
 																	/>
+
+																	{#if section.footer && (section.footer.title || section.footer.description || section.footer.interactiveRenderType)}
+																		<RenderSection
+																			bind:section={section.footer}
+																			isFooter
+																			bind:page
+																			bind:themeStyles={styles}
+																		/>
+																	{/if}
 																</div>
 															</div>
 														{/if}
