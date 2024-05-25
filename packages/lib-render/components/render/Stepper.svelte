@@ -22,7 +22,7 @@
 			<div
 				class="flex relative sm:w-[50%] sm:pt-8 {i % 2
 					? 'sm:pl-8'
-					: 'sm:pr-8'} mb-8 justify-center {page.renderType === 'article'
+					: 'sm:pr-8'} mb-24 sm:mb-8 justify-center {page.renderType === 'article'
 					? 'text-left'
 					: 'text-center'} {i % 2
 					? 'sm:ml-[50%] sm:justify-start sm:text-left'
@@ -38,13 +38,13 @@
 				</div>
 				<div class="w-full">
 					<ContentEditableIf
-						class="text-xl mb-4 font-bold"
+						class="_item-title text-xl mb-4 font-bold"
 						bind:innerHTML={step.title}
 						condition={isEdit}
 					/>
 					{#if step.description}
 						<ContentEditableIf
-							class="mt-4 opacity-90"
+							class="_item-description opacity-70 mt-4"
 							bind:innerHTML={step.description}
 							condition={isEdit}
 						/>

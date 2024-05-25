@@ -19,10 +19,10 @@
 {#if section.items?.length}
 	<div class="sticky bg-site z-20">
 		<div class="flex justify-center">
-			<div class="max-w-[600px] w-full my-8 p-4">
+			<div class="max-w-[600px] w-full my-8 sm:p-4">
 				{#each section.items as faq}
 					<div
-						class="flex justify-between p-2 cursor-pointer {(page.parentPage || page).theme
+						class="flex justify-between p-2 cursor-pointer  {(page.parentPage || page).theme
 							?.theme === 'dark'
 							? 'hover:bg-white/5'
 							: 'hover:bg-black/5'} transition"
@@ -44,7 +44,7 @@
 							});
 						}}
 					>
-						<div class="text-xl font-bold">
+						<div class="text-xl _item-title font-bold">
 							{@html faq.title}
 						</div>
 						<div class="cursor-pointer opacity-80 hover:opacity-100 transition">
@@ -55,7 +55,11 @@
 							/>
 						</div>
 					</div>
-					<div class:hidden={!faq.isExpanded} class="mt-2 mb-8 p-2" in:fade={{ duration: 150 }}>
+					<div
+						class:hidden={!faq.isExpanded}
+						class="mt-2 mb-8 p-2 _item-description"
+						in:fade={{ duration: 150 }}
+					>
 						{@html faq.description}
 					</div>
 				{/each}

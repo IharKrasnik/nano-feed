@@ -6,6 +6,7 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import feather from 'feather-icons/dist/icons.json';
 	import customIcons from 'lib/constants/customIcons';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 
 	let isEmojiPickerShown = false;
 
@@ -19,8 +20,7 @@
 	export let isNoCustom = false;
 	export let defaultIcon;
 	export let onUpdated = () => {};
-	export let isWithSize = false;
-	export let size = 'normal';
+	export let sizePx;
 
 	let isUseBgColor = !!bgColor;
 	let isUseColor = !color;
@@ -47,7 +47,6 @@
 			url.startsWith('$code'))
 	) {
 		icon = url;
-		isEmojiPickerShown = false;
 	}
 
 	let selectedTab = 'emoji';
@@ -164,7 +163,6 @@
 					on:emoji-click={(evt) => {
 						icon = evt.detail.unicode;
 						url = null;
-						isEmojiPickerShown = false;
 						onUpdated(icon);
 					}}
 				/>
@@ -187,7 +185,6 @@
 								class="flex flex-col justify-center items-center p-4"
 								on:click={() => {
 									url = `feather:${featherIconName}`;
-									isEmojiPickerShown = false;
 								}}
 							>
 								<FeatherIcon size="20" name={featherIconName} />
@@ -227,7 +224,6 @@
 									style="--emoji-width: 55px; --emoji-height: 55px;"
 									on:click={() => {
 										url = icon;
-										isEmojiPickerShown = false;
 									}}
 								>
 									{@html icon}
@@ -257,6 +253,41 @@
 					</div>
 				{/if}
 			{/if}
+
+			<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede] ">
+				<div class="text-sm mb-2 font-semibold">Size (px)</div>
+
+				<input type="number" bind:value={sizePx} />
+
+				<div class="flex gap-2 text-sm mt-2">
+					<div
+						class:font-bold={!sizePx}
+						class="cursor-pointer"
+						on:click={() => (sizePx = undefined)}
+					>
+						Default
+					</div>
+
+					{#if !sizePx || sizePx === 120 || sizePx === 160}
+						<div
+							class:font-bold={sizePx === 120}
+							class="cursor-pointer"
+							on:click={() => (sizePx = 120)}
+						>
+							Big
+						</div>
+						<div
+							class:font-bold={sizePx === 160}
+							class="cursor-pointer"
+							on:click={() => (sizePx = 160)}
+						>
+							Huge
+						</div>
+					{:else}
+						<div class="font-bold">Custom</div>
+					{/if}
+				</div>
+			</div>
 
 			{#if icon}
 				<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede] ">

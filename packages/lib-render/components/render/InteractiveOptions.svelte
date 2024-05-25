@@ -271,7 +271,11 @@
 {/if}
 
 {#if sectionItem}
-	<div class="{clazz} flex flex-wrap">
+	<div
+		class="{clazz} flex flex-wrap {clazz?.includes('justify-')
+			? ''
+			: 'justify-center sm:[justify-content:normal]'}"
+	>
 		{#if sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice'}
 			{#each sectionItem.interactiveAnswers as answer}
 				<div
@@ -446,16 +450,16 @@
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links' || (sectionItem.interactiveRenderType === 'form' && isHeader)}
 			<div
-				class="flex flex-col sm:flex-row w-full gap-6 items-center {clazz?.includes('mx-auto')
+				class="flex flex-row flex-wrap gap-4 sm:gap-6 items-center {clazz?.includes('mx-auto')
 					? 'mx-auto'
-					: ''} {clazz?.includes('w-full') ? '' : 'sm:w-auto'}"
+					: ''} {clazz?.includes('w-full') ? 'w-full' : 'sm:w-auto'}"
 			>
 				<a
 					class="shrink-0 {sectionItem.isUrlLink
 						? '_link'
 						: ''} cursor-pointer {sectionItem.interactiveRenderType === 'link'
-						? 'w-full'
-						: 'sm:w-auto w-full'} {clazz?.includes('w-full') ? '' : 'sm:w-auto'} {urlClass}"
+						? ''
+						: 'sm:w-auto'} {clazz?.includes('w-full') ? 'w-full' : 'sm:w-auto'} {urlClass}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					class:heatmap={$heatmap}
 					data-heatmap-clicks-count={$heatmap
@@ -526,9 +530,9 @@
 						{sectionItem.callToActionText || 'Learn More →'}
 					{:else}
 						<button
-							class="relative overflow-hidden w-full shadow hover:shadow-md  flex justify-center items-center {size
+							class="relative overflow-hidden shadow hover:shadow-md  flex justify-center items-center {size
 								? `_is${size}`
-								: ''}"
+								: ''} {clazz?.includes('w-full') ? 'w-full' : ''}"
 							style="--tw-shadow-color: var(--accent-color) !important;"
 							class:_alternative={sectionItem.isUrlAlternative ||
 								(sectionItem.pricing && !sectionItem.isFeatured)}
@@ -558,7 +562,7 @@
 
 				{#if sectionItem.interactiveRenderType === 'links' && !isHeader}
 					<a
-						class="shrink-0 w-full sm:w-auto cursor-pointer {url2Class} {sectionItem.isUrl2Link
+						class="shrink-0 sm:w-auto cursor-pointer {url2Class} {sectionItem.isUrl2Link
 							? '_link'
 							: ''}"
 						class:heatmap={$heatmap}
@@ -596,7 +600,7 @@
 							{sectionItem.callToActionText2 || 'Learn More →'}
 						{:else}
 							<button
-								class="w-full flex items-center justify-center {size ? `_is${size}` : ''}"
+								class="flex items-center justify-center {size ? `_is${size}` : ''}"
 								class:_alternative={!sectionItem.isUrlLink || sectionItem.isUrl2Alternative}
 							>
 								{#if sectionItem.url2Icon}
@@ -623,7 +627,7 @@
 
 	{#if !isHeader && sectionItem.ctaExplainer}
 		<div
-			class="text-sm mt-4 {clazz?.includes('w-full')
+			class="text-sm opacity-80 mt-4 {clazz?.includes('w-full')
 				? 'w-full text-center'
 				: 'max-w-[400px]'} {clazz?.includes('mx-auto') ? 'mx-auto' : ''}"
 		>
@@ -651,6 +655,18 @@
 		font-size: 18px;
 		padding: 12px 24px;
 		border-radius: var(--button-large-radius);
+	}
+
+	@media (max-width: 640px) {
+		button._ishuge {
+			font-size: 18px;
+			padding: 12px 24px;
+		}
+
+		button._islarge {
+			font-size: 16px;
+			padding: 12px 16px;
+		}
 	}
 
 	@media (min-width: 640px) {

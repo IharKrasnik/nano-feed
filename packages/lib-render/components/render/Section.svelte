@@ -309,9 +309,7 @@
 
 {#if section.isShown}
 	<div
-		class="relative {section.bgImageUrl ? 'p-8 mb-16' : ''} {section.renderType === 'callout'
-			? 'min-h-screen sm:min-h-min'
-			: ''} {isCloneable
+		class="relative {section.bgImageUrl ? 'p-8 mb-16 mx-2 sm:mx-0' : ''}   {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
 			: ''}"
 	>
@@ -433,11 +431,7 @@
 									bind:bgColor={section.emojiBgColor}
 									theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 									bind:emoji={section.emoji}
-									width={section.emojiSize === 'huge'
-										? 75
-										: section.emojiSize === 'auto'
-										? 'auto'
-										: 55}
+									width={section.emojiSizePx || 'auto'}
 								/>
 							</div>
 						{/if}
@@ -469,7 +463,8 @@
 							{/if}
 							{#if section.description}
 								<h3
-									class="mb-8 {page.theme.isTitlesHuge || section.theme?.isHugeTitle
+									class="_section-description mb-8 {page.theme.isTitlesHuge ||
+									section.theme?.isHugeTitle
 										? 'text-xl leading-8'
 										: 'text-lg font-medium'} whitespace-pre-wrap
 										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-90' : `sm:max-w-[768px] opacity-70`}
@@ -878,7 +873,8 @@
 																bind:color={item.iconColor}
 																bind:bgColor={item.emojiBgColor}
 																class="rounded-full text-2xl"
-																width={30}
+																width={item.emojiSizePx || 30}
+																mobileWidth={26}
 																theme={page.parentPage?.theme?.theme ||
 																	page?.theme?.theme ||
 																	'light'}
@@ -922,7 +918,7 @@
 
 													{#if section.renderType !== 'pricing'}
 														<ContentEditableIf
-															class="_item-description whitespace-pre-wrap"
+															class="_item-description opacity-80 whitespace-pre-wrap"
 															bind:innerHTML={item.description}
 															condition={isEdit}
 														/>
@@ -1001,7 +997,7 @@
 																			page?.theme?.theme ||
 																			'light'}
 																		emoji={section.benefitsEmoji || '✅'}
-																		class="mr-2 opacity-70"
+																		class="mr-2 opacity-80"
 																	/>
 																	{benefit}
 																</div>
@@ -1073,10 +1069,10 @@
 						{:else}
 							<div
 								class=" {section.theme?.columnsGap === 'big'
-									? 'sm:gap-12 gap-8'
+									? 'sm:gap-12 gap-4'
 									: section.theme?.columnsGap === 'huge'
-									? 'sm:gap-20 gap-8'
-									: 'gap-8'}  {section.columns > 1 ? 'items-stretch-or-not' : ''} {section.carousel
+									? 'sm:gap-20 gap-4'
+									: 'gap-4'}  {section.columns > 1 ? 'items-stretch-or-not' : ''} {section.carousel
 									? 'flex overflow-x-auto sm:grid'
 									: ''} {section.isMasonryGrid
 									? `sm:columns-${section.columns}`
@@ -1204,7 +1200,7 @@
 																? 'sm:pr-8'
 																: page?.theme?.containerWidth === 900
 																? 'p-4'
-																: 'p-8'} text-left self-center order-none-off {section.columns ==
+																: 'px-6 py-5 sm:px-8 sm:py-6'} text-left self-center order-none-off {section.columns ==
 																1 && i % 2 === 1
 																? 'sm:order-last-off'
 																: ''} {section.columns === 1 &&
@@ -1252,16 +1248,19 @@
 																			<div
 																				class="{emojiStyle[section.columns]} _section-img mr-2 mb-4"
 																			>
-																				<Emoji
-																					bind:emoji={item.emoji}
-																					bind:color={item.iconColor}
-																					bind:bgColor={item.emojiBgColor}
-																					class="text-2xl"
-																					width={30}
-																					theme={page.parentPage?.theme?.theme ||
-																						page?.theme?.theme ||
-																						'light'}
-																				/>
+																				{#key item.emojiSizePx}
+																					<Emoji
+																						bind:emoji={item.emoji}
+																						bind:color={item.iconColor}
+																						bind:bgColor={item.emojiBgColor}
+																						class="text-2xl"
+																						width={item.emojiSizePx || 30}
+																						mobileWidth={26}
+																						theme={page.parentPage?.theme?.theme ||
+																							page?.theme?.theme ||
+																							'light'}
+																					/>
+																				{/key}
 																			</div>
 																		{/if}
 
@@ -1270,7 +1269,7 @@
 																				class="flex {item.description
 																					? page?.theme?.containerWidth
 																						? 'mb-2'
-																						: 'mb-4'
+																						: 'mb-2 sm:mb-4'
 																					: ''} {section.columns < 3
 																					? 'flex-col items-start'
 																					: 'items-center'}"
@@ -1344,7 +1343,7 @@
 																					condition={isEdit}
 																				/><span class="hidden sm:inline">&nbsp;</span
 																				>{/if}<ContentEditableIf
-																				class="sm:inline inline {section.isDatabase
+																				class="opacity-80 sm:inline inline {section.isDatabase
 																					? '_line-clamp-4 hover:line-clamp-5'
 																					: ''}"
 																				bind:innerHTML={item.description}
@@ -1385,7 +1384,7 @@
 
 																	{#if item.pricing}
 																		<div class="flex items-end mt-4 mb-4">
-																			<div class="text-5xl font-bold mr-2">
+																			<div class="text-3xl sm:text-4xl font-bold mr-2">
 																				{item.pricing.amount
 																					? toDollars(item.pricing.amount * 100)
 																					: 'Free'}
@@ -1403,7 +1402,7 @@
 																		{#if item.pricing.benefitsStr}
 																			<div class="mb-4">
 																				{#each item.pricing.benefitsStr.split('\n') as benefit}
-																					<div class="my-2 flex items-center">
+																					<div class="my-1 sm:my-2 flex items-center">
 																						<Emoji
 																							theme={page.parentPage?.theme?.theme ||
 																								page?.theme?.theme ||
@@ -1436,7 +1435,7 @@
 																						section.interactiveRenderType === 'multiple_choice')
 																						? 'justify-center'
 																						: 'justify-start'
-																				} ${item.pricing ? 'w-full' : ''}`}
+																				} __d2 ${item.pricing ? 'w-full' : ''}`}
 																				size={item.pricing ? 'large' : 'normal'}
 																				bind:sectionItem={item}
 																				parentSectionId={section.id}

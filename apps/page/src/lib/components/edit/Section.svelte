@@ -532,6 +532,7 @@
 					isWithGrid={false}
 					isWithLabel
 					isWithInteractive
+					isSectionFooter
 					onRemove={null}
 					bind:page
 					bind:section

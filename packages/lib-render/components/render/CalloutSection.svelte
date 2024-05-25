@@ -58,9 +58,9 @@
         <Emoji bind:emoji={section.emoji} />
         {/if} -->
 					{#if section.label}
-						<div class="text-xl mb-4">
+						<div class="text-sm font-medium mb-4">
 							<ContentEditableIf
-								class="_color-accent opacity-80"
+								class="opacity-50"
 								bind:innerHTML={section.label}
 								condition={isEdit}
 							/>
@@ -68,7 +68,7 @@
 					{/if}
 
 					{#if section.title}
-						<div class="text-4xl font-bold mb-4">
+						<div class="text-3xl sm:text-4xl font-semibold mb-4">
 							<ContentEditableIf bind:innerHTML={section.title} condition={isEdit} />
 						</div>
 					{/if}

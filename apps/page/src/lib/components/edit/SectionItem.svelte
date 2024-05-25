@@ -22,6 +22,7 @@
 	export let isWithGrid = true;
 	export let isWithLabel = false;
 	export let isWithSettings = true;
+	export let isSectionFooter = false;
 
 	export let item;
 	export let section;
@@ -117,7 +118,7 @@
 					bind:icon={item.emoji}
 					bind:color={item.iconColor}
 					bind:bgColor={item.emojiBgColor}
-					bind:size={item.emojiSize}
+					bind:sizePx={item.emojiSizePx}
 				/>
 			{/if}
 
@@ -125,7 +126,7 @@
 				<EditInteractiveOptions class=" mt-4" bind:section bind:sectionItem={item} />
 			{/if}
 
-			{#if (isWithSettings && section.renderType !== 'form' && section.renderType !== 'carousel' && section.renderType !== 'callout') || section.id === item.id || item.isActionSuccessSection}
+			{#if (isWithSettings && !isSectionFooter && section.renderType !== 'form' && section.renderType !== 'carousel' && section.renderType !== 'callout') || section.id === item.id || item.isActionSuccessSection}
 				<EditSectionSettings bind:page bind:section bind:sectionItem={item} />
 			{/if}
 
@@ -169,7 +170,7 @@
 						bind:value={item.tagsStr}
 					/>
 				</div>
-			{:else if section.renderType !== 'form'}
+			{:else if section.renderType !== 'form' && !isSectionFooter}
 				<div
 					class="text-xs opacity-70 hover:opacity-100 text-underline cursor-pointer"
 					on:click={() => {
@@ -237,7 +238,7 @@ Benefit 3`}
 			<EditInteractiveOptions class="" bind:section bind:sectionItem={item} isWithButton={false} />
 		</div>
 	{:else if section.renderType !== 'form' || item.isActionSuccessSection}
-		{#if item.id === section.id || section.renderType !== 'callout'}
+		{#if item.id === section.id || (section.renderType !== 'callout' && !isSectionFooter)}
 			<div class="relative flex justify-between items-center">
 				<FileInput
 					class="w-full"

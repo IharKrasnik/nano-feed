@@ -235,7 +235,7 @@
 									? page.renderType === 'article'
 										? 'sm:max-w-[712px]'
 										: page.activeHero?.theme?.titleSize === 'giant'
-										? 'sm:max-w-[1100px]'
+										? '_giant sm:max-w-[1100px]'
 										: 'sm:max-w-[912px]'
 									: ''}"
 								style={hero.title ? '' : 'opacity: 20%;'}
@@ -260,9 +260,9 @@
 						{#if hero.subtitle}
 							<h2
 								class="_subtitle opacity-80 {hero.theme?.titleSize === 'huge'
-									? 'text-xl'
-									: 'text-xl'} {hero.theme?.titleSize === 'giant'
-									? 'text-3xl'
+									? 'sm:text-xl'
+									: 'sm:text-xl'} {hero.theme?.titleSize === 'giant'
+									? 'sm:text-3xl'
 									: ''} whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
 									? page.renderType === 'article'
 										? 'max-w-[712px]'
@@ -316,12 +316,12 @@
 								<RenderInteractiveOptions
 									class={hero.theme.isLeft || (hero.demoUrl && !hero.theme.isVertical)
 										? ''
-										: `max-w-[600px] mx-auto justify-center ${
+										: `max-w-[600px] mx-auto ${
 												hero.interactiveRenderType === 'form'
 													? 'w-full'
 													: hero.theme.isLeft
-													? 'w-full'
-													: 'w-full sm:w-auto'
+													? ''
+													: 'sm:w-auto'
 										  }`}
 									size={hero.theme.titleSize === 'huge' ? 'huge' : 'large'}
 									bind:page
@@ -347,7 +347,7 @@
 							/>
 						{/if}
 						{#if isMounted && hero.socialProof}
-							<div class="py-4 mt-16" in:fly={{ y: 25, delay: 900, duration: 900 }}>
+							<div class="py-4 mt-8 sm:mt-16" in:fly={{ y: 25, delay: 900, duration: 900 }}>
 								<div
 									class="_social-proof _dense _small {hero.socialProof.className ||
 										''} flex justify-center  {(hero.demoUrl && !hero.theme?.isVertical) ||
@@ -359,7 +359,7 @@
 										<img class="rounded-full" src={logo.url} />
 									{/each}
 								</div>
-								<div class="text-sm mt-4 opacity-80 max-w-[400px]">
+								<div class="text-sm mt-2 opacity-80 max-w-[400px]">
 									{@html hero.socialProof.title || ''}
 								</div>
 							</div>

@@ -275,7 +275,7 @@
 										$sectionToEdit.id !== page.activeHero?.formSection?.id
 											? 'opacity-30 grayscale'
 											: ''}  {page.activeHero.theme?.isPullBottom
-											? 'mb-[-100px] sm:mb-[-200px]'
+											? 'mb-[-100px] sm:mb-[-150px]'
 											: ''}"
 									>
 										<RenderHero
@@ -306,8 +306,13 @@
 												{#each page.sections || [] as section, i (section.id)}
 													<div
 														class="relative {page.activeHero.theme?.isPullBottom && i === 0
-															? 'mb-[100px]'
+															? 'mb-[48px] sm:mb-[96px]'
 															: ''}"
+														style={section.theme?.isOverrideColors
+															? $sectionToEdit?.id === section.id
+																? `background-color: ${$sectionToEdit.theme?.backgroundColor};`
+																: `background-color: ${section.theme?.backgroundColor};`
+															: ''}
 													>
 														{#if section.containerBgImageUrl}
 															<RenderUrl
@@ -373,9 +378,10 @@
 																!section.isDatabase &&
 																!section.isFooter
 																	? 'cursor-pointer hover:border-8 border-purple-300'
-																	: ''}"
+																	: ''} "
 																class:opacity-30={!!$sectionToEdit}
 																class:grayscale={!!$sectionToEdit}
+																class:my-16={section.bgImageUrl && i !== 0}
 																on:click={() => {
 																	if (isEdit) {
 																		if ($sectionToEdit) {

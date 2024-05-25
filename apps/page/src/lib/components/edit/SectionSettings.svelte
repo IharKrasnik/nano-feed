@@ -397,7 +397,7 @@
 
 			<div class="font-normal text-sm opacity-70 mb-2">Background color and image</div>
 
-			{#if sectionItem.id !== section.id}
+			{#if true || sectionItem.id !== section.id}
 				<input
 					class="mr-2 my-2"
 					type="checkbox"

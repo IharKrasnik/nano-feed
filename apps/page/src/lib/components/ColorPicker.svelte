@@ -28,7 +28,7 @@
 
 	let labelFonts = ['Inter', 'Space Grotesk', 'Fraunces'];
 
-	let textFonts = ['Inter', 'Montserrat', 'Poppins'];
+	let textFonts = ['Inter', 'Montserrat', 'Poppins', 'Space Grotesk'];
 
 	if (page.theme && !page.theme.titleFont) {
 		page.theme.titleFont = titleFonts[0];

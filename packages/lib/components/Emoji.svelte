@@ -4,6 +4,7 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	export let emoji;
 	export let width = 25;
+	export let mobileWidth = width;
 	export let height = width;
 
 	export let bgColor = null;
@@ -23,9 +24,9 @@
 		}
 	}
 
-	let stylesStr = `${width ? `--emoji-width: ${width}px;` : ''} ${
-		height ? `--emoji-height: ${height}px;` : ''
-	}`;
+	let stylesStr = `${
+		width ? `--emoji-width: ${width}px; --emoji-mobile-width: ${mobileWidth}px;` : ''
+	} ${height ? `--emoji-height: ${height}px;` : ''}`;
 </script>
 
 <div
@@ -36,7 +37,7 @@
 		  }`
 		: ''}
 >
-	<div class="{clazz} flex" style="{stylesStr}; {height ? `font-size: ${height}px;` : ''}">
+	<div class="{clazz} _emoji flex" style="{stylesStr};}">
 		{#if emoji?.startsWith('http')}
 			{#key emoji}
 				<img
@@ -74,5 +75,21 @@
 	:global(._svg svg) {
 		width: var(--emoji-width);
 		height: var(--emoji-height);
+	}
+
+	._emoji {
+		font-size: var(--emoji-height);
+		line-height: 1;
+	}
+
+	@media (max-width: 640px) {
+		._emoji {
+			font-size: var(--emoji-mobile-width);
+		}
+
+		:global(._svg svg) {
+			max-width: 26px;
+			max-height: 26px;
+		}
 	}
 </style>
