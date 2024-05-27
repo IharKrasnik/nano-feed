@@ -59,7 +59,6 @@
 			$currentPage._refreshTimestamp = +new Date();
 		}
 	}
-
 	if (browser) {
 		window.WAVE_API_URL = API_URL;
 	}

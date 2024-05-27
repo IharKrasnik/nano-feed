@@ -1074,7 +1074,9 @@
 									? 'sm:gap-12 gap-4'
 									: section.theme?.columnsGap === 'huge'
 									? 'sm:gap-20 gap-4'
-									: 'gap-4'}  {section.columns > 1 ? 'items-stretch-or-not' : ''} {section.carousel
+									: 'gap-4'}  {section.columns > 1
+									? 'items-stretch-or-not'
+									: ''}  {section.renderType === 'carousel'
 									? 'flex overflow-x-auto sm:grid'
 									: ''} {section.isMasonryGrid
 									? `sm:columns-${section.columns}`

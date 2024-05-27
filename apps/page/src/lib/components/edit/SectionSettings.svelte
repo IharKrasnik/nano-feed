@@ -230,25 +230,33 @@
 						</div>
 					{/if}
 
-					{#if sectionItem.id === section.id && section.renderType !== 'callout'}
+					{#if section.columns > 1 && section.renderType !== 'callout'}
 						<ToggleGroup
 							tabs={[
 								{
 									key: 'left',
 									name: 'Left',
 									icon: 'feather:align-left',
-									isSelected: sectionItem.theme.isTitleLeft
+									isSelected:
+										section.id === sectionItem.id
+											? sectionItem.theme.isTitleLeft
+											: !sectionItem.theme.align || sectionItem.theme?.align === 'left'
 								},
 								{
 									key: 'center',
 									name: 'Center ',
 									icon: 'feather:align-center',
-									isSelected: !sectionItem.theme.isTitleLeft
+									isSelected:
+										section.id === sectionItem.id
+											? !sectionItem.theme.isTitleLeft
+											: sectionItem.theme?.align === 'center'
 								}
 							]}
 							onTabSelected={(tab) => {
 								sectionItem.theme.isTitleLeft = tab.key === 'left';
+								sectionItem.theme.align = tab.key;
 							}}
+							class={section.id === sectionItem.id ? '' : 'my-4'}
 						/>
 					{/if}
 
@@ -568,12 +576,7 @@
 
 				{#if true || sectionItem.id !== section.id}
 					<div class="mb-4 mt-4">
-						<input
-							disabled={sectionItem.theme.isTransparent}
-							bind:checked={sectionItem.theme.isOppositeColors}
-							class="mr-2"
-							type="checkbox"
-						/>
+						<input bind:checked={sectionItem.theme.isOppositeColors} class="mr-2" type="checkbox" />
 
 						Use opposite text color
 					</div>

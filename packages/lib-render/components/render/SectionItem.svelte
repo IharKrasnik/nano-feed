@@ -210,7 +210,12 @@
 									</div>
 								{:else}
 									{#if item.emoji && !item.theme?.isIconLeft}
-										<div class="{emojiStyle[section.columns]} _section-img mr-2 mb-4">
+										<div
+											class="{emojiStyle[section.columns]} _section-img mr-2 mb-4 {item.theme
+												?.align === 'center'
+												? 'text-center'
+												: ''}"
+										>
 											{#key item.emojiSizePx}
 												<Emoji
 													bind:emoji={item.emoji}
@@ -246,7 +251,12 @@
 													/>
 												</div>
 											{/if}
-											<h2 class="{headerTextStyle(item)[section.columns]} _item-title">
+											<h2
+												class="{headerTextStyle(item)[section.columns]} _item-title w-full {item
+													.theme?.align === 'center'
+													? 'text-center'
+													: ''}"
+											>
 												<ContentEditableIf
 													class=""
 													bind:innerHTML={item.title}
@@ -267,7 +277,9 @@
 									<h3
 										class="{descriptionStyle[
 											section.columns
-										]} _item-description whitespace-pre-wrap "
+										]} _item-description whitespace-pre-wrap  {item.theme?.align === 'center'
+											? 'text-center'
+											: ''}"
 									>
 										{#if item.title && item.theme?.isInlineTitle}
 											{#if item.emoji && item.theme.isIconLeft}
@@ -294,7 +306,11 @@
 								{/if}
 
 								{#if item.tagsStr}
-									<div class="my-4 mt-6 flex flex-wrap gap-2">
+									<div
+										class="my-4 mt-6 flex flex-wrap gap-2 __d {item?.theme?.align === 'center'
+											? 'justify-center'
+											: ''}"
+									>
 										{#each item.tagsStr.split(',') as tag}
 											<div
 												class="flex items-center px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-1 {getEmojiTheme(
