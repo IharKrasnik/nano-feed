@@ -25,7 +25,11 @@
 	}
 
 	let stylesStr = `${
-		width ? `--emoji-width: ${width}px; --emoji-mobile-width: ${mobileWidth}px;` : ''
+		width
+			? `--emoji-width: ${
+					width === 'auto' ? 'auto' : `${width}px`
+			  }; --emoji-mobile-width: ${mobileWidth}px;`
+			: ''
 	} ${height ? `--emoji-height: ${height}px;` : ''}`;
 </script>
 
@@ -49,7 +53,9 @@
 				/>
 			{/key}
 		{:else if emoji?.startsWith('feather:')}
-			<FeatherIcon class="inline" name={emoji.replace('feather:', '')} {color} size={width} />
+			<div class="_svg">
+				<FeatherIcon class="inline" name={emoji.replace('feather:', '')} {color} size={width} />
+			</div>
 		{:else if emoji?.startsWith('<svg') || emoji?.startsWith('$code')}
 			<div
 				class="_svg inline-block"

@@ -53,7 +53,9 @@
 			{/if}
 
 			{#if section.title}
-				<h2 class="_section-title sm:text-4xl text-3xl font-bold mb-4 sm:max-w-[750px] sm:mx-auto">
+				<h2
+					class="_section-title sm:text-5xl text-3xl font-medium mb-4 sm:max-w-[750px] sm:mx-auto"
+				>
 					{@html section.title}
 				</h2>
 			{/if}
@@ -111,13 +113,13 @@
 									</div>
 								{/if}
 
-								{#if item.title}
+								<!-- {#if item.title}
 									<h2
 										class="{headerTextStyle(item)[section.columns]} _section-title font-bold mb-4"
 									>
 										{@html item.title}
 									</h2>
-								{/if}
+								{/if} -->
 								{#if item.description}
 									<h3 class="{descriptionStyle[section.columns]} whitespace-pre-wrap">
 										{@html item.description}

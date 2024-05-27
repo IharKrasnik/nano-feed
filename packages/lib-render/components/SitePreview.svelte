@@ -25,6 +25,7 @@
 	import RenderHeader from 'lib-render/components/render/Header.svelte';
 	import RenderServiceRequestsPage from 'lib-render/components/render/ServiceRequestsPage.svelte';
 	import RenderProfilePage from 'lib-render/components/render/ProfilePage.svelte';
+	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
 
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import ctaFooterEl from 'lib-render/stores/ctaFooterEl';
@@ -308,7 +309,7 @@
 														class="relative {page.activeHero.theme?.isPullBottom && i === 0
 															? 'mb-[48px] sm:mb-[96px]'
 															: ''}"
-														style={section.theme?.isOverrideColors
+														style={section.theme?.backgroundColor
 															? $sectionToEdit?.id === section.id
 																? `background-color: ${$sectionToEdit.theme?.backgroundColor};`
 																: `background-color: ${section.theme?.backgroundColor};`
@@ -338,11 +339,20 @@
 																class="relative z-10"
 															>
 																<div
-																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																	class="relative p-2 my-16 bg-gray-200 text-center flex gap-4 items-center justify-center text-black"
 																>
-																	<FeatherIcon name="arrow-down" /> edit section<FeatherIcon
+																	<FeatherIcon name="arrow-down" /> Edit Section<FeatherIcon
 																		name="arrow-down"
 																	/>
+
+																	<div class="absolute right-0" style="z-index: 20;">
+																		<div
+																			class="cursor-pointer bg-purple-300 hover:bg-purple-200 rounded-full w-[30px] h-[30px] flex justify-center items-center m-4"
+																			on:click={() => ($selectedSectionItem = $sectionToEdit)}
+																		>
+																			⚙️
+																		</div>
+																	</div>
 																</div>
 																<div class="bg-site {section.containerBgImageUrl ? 'py-8' : ''}">
 																	<RenderSection
@@ -363,9 +373,9 @@
 																	{/if}
 																</div>
 																<div
-																	class="p-2 my-16 bg-green-200 text-center flex gap-4 items-center justify-center text-black"
+																	class="p-2 my-16 bg-gray-200 text-center flex gap-4 items-center justify-center text-black text-normal"
 																>
-																	<FeatherIcon name="arrow-up" /> edit section<FeatherIcon
+																	<FeatherIcon name="arrow-up" /> Edit Section<FeatherIcon
 																		name="arrow-up"
 																	/>
 																</div>
@@ -377,7 +387,7 @@
 																$sectionToEdit?.id !== section.id &&
 																!section.isDatabase &&
 																!section.isFooter
-																	? 'cursor-pointer hover:border-8 border-purple-300'
+																	? 'cursor-pointer hover:outline-8 hover:outline outline-purple-300 hover:mx-8'
 																	: ''} "
 																class:opacity-30={!!$sectionToEdit}
 																class:grayscale={!!$sectionToEdit}

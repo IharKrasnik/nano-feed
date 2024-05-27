@@ -23,6 +23,7 @@
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import RenderCalloutSection from 'lib-render/components/render/CalloutSection.svelte';
 	import RenderComments from 'lib-render/components/render/CommentsSection.svelte';
+	import RenderSectionItem from 'lib-render/components/render/SectionItem.svelte';
 
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
@@ -38,7 +39,7 @@
 	import currentCustomer from 'lib/stores/currentCustomer';
 	import trackClick from 'lib/services/trackClick';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
-	import isContentEditorLoaded from 'lib/stores/isContentEditorLoaded';
+	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
 
 	export let section;
 	let clazz;
@@ -60,10 +61,10 @@
 
 	const headerTextStyle = (item) => {
 		if (item.theme?.titleSize === 'huge') {
-			let defaultSize = 'text-3xl sm:text-4xl';
+			let defaultSize = 'text-xl sm:text-2xl';
 			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
 		} else if (item.theme?.titleSize === 'small') {
-			let defaultSize = 'text-lg sm:text-xl';
+			let defaultSize = 'text-sm sm:text-base';
 			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
 		}
 
@@ -391,7 +392,7 @@
 				? clazz
 				: section.renderType === 'article'
 				? 'sm:pb-16'
-				: `${section.items?.length ? `${isFooter ? '' : 'py-8 sm:py-16'}` : 'py-8 sm:py-16'}`}
+				: `${isFooter ? 'pb-8 sm:pb-16' : 'py-8 sm:py-16'}`}
 					{section.renderType === 'changelog' ? 'sm:w-[600px] mx-auto' : ''}
 					
 					"
@@ -442,14 +443,15 @@
 							</div>
 						{/if}
 
-						<div class="mb-8 {section.description ? 'sm:mb-12' : ''}">
+						<div class="mb-8 {section.description ? `${isFooter ? 'sm:mb-8' : 'sm:mb-12'}` : ''}">
 							{#if section.title}
 								<h2
 									class="_section-title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
-										? 'sm:text-5xl font-medium'
-										: 'sm:text-4xl font-semibold'} {page.theme.isTitlesLeft ||
-									section.theme?.isTitleLeft
+										? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-6xl font-medium'}`
+										: `${
+												isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-semibold'
+										  }`} {page.theme.isTitlesLeft || section.theme?.isTitleLeft
 										? ''
 										: 'sm:mx-auto'}
 									{section.renderType === 'article' ? 'sm:max-w-[712px]' : 'sm:max-w-[768px]'}"
@@ -504,7 +506,7 @@
 										? 'justify-start'
 										: 'justify-center mx-auto'} mb-8"
 									bind:sectionItem={section}
-									size="large"
+									size={isFooter ? 'normal' : 'large'}
 									bind:page
 									bind:isEdit
 									bind:isEmbed
@@ -809,7 +811,7 @@
 									</div>
 								</div>
 							{/if}
-						{:else if section.columns === 1}
+						{:else if section.columns === 1 && !section.isFlexGrid}
 							{#each section.items as item}
 								<div class="flex justify-between">
 									<div
@@ -822,18 +824,18 @@
 											: 'w-full'} relative items-center {section.renderType === 'article' ||
 										section.streamSlug?.includes('-blog')
 											? '_article mb-8'
-											: 'mb-4 sm:mb-8'}
+											: 'mb-8 sm:mb-8'}
 							{section.renderType === 'changelog'
 											? '_transparent _no-padding sm:w-[600px] mx-auto'
+											: section.isFlexGrid
+											? 'flex justify-center'
 											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.isFeatured
 											? '_highlighted'
 											: ''} {item.theme?.isTransparent ? '_transparent' : ''} {item.theme
 											?.isOppositeColors
 											? '_bg-opposite'
 											: ''}"
-										style={item.theme?.isOverrideColors
-											? `background-color: ${item.theme?.backgroundColor};`
-											: ''}
+										style={`background-color: ${item.theme?.backgroundColor || 'none'};`}
 									>
 										{#if section.renderType === 'changelog'}
 											<div
@@ -975,13 +977,13 @@
 														<hr class="w-full my-6 opacity-20" />
 
 														<div class="flex items-end mt-6 mb-4">
-															<div class="text-2xl font-bold mr-2">
+															<div class="text-base sm:text-xl font-bold mr-2">
 																{item.syncPage?.metadata?.fullAmount
 																	? toDollars(item.syncPage?.metadata?.fullAmount)
 																	: 'Free'}
 															</div>
 															{#if item.syncPage?.metadata?.payPer}
-																<div class="opacity-70 text-lg">
+																<div class="opacity-70 text-sm sm:text-lg">
 																	/ {item.syncPage?.metadata?.payPer}
 																</div>
 															{/if}
@@ -1076,468 +1078,44 @@
 									? 'flex overflow-x-auto sm:grid'
 									: ''} {section.isMasonryGrid
 									? `sm:columns-${section.columns}`
-									: `grid sm:grid-cols-${section.columns}`} {section.items[0]?.theme?.isTransparent
+									: section.isFlexGrid
+									? `flex justify-center ${section.isFlexWrap ? 'flex-wrap' : ''}`
+									: `grid sm:grid-cols-${section.columns} `} {section.items[0]?.theme?.isTransparent
 									? 'mt-8'
 									: ''}"
 							>
-								{#each section.items || [] as item, i}
-									{#if item.isShown || _.isUndefined(item.isShown)}
-										<div
-											class=" break-inside-avoid {section.isMasonryGrid
-												? 'mb-6'
-												: 'mb-2'} sm:col-span-{item.colSpan || 1} sm:row-span-{item.rowSpan ||
-												1} {section.renderType === 'carousel'
-												? `min-w-[300px] sm:min-w-0 cursor-pointer`
-												: ''}"
-											class:pt-16={section.isFunkyGrid && i === 1}
-										>
-											<a
-												href={item.url && !item.interactiveRenderType ? item.url : null}
-												target={item.url?.startsWith('http') ? '_blank' : ''}
-												id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
-												class="_section-item group block relative {item.bgImageUrl
-													? '_bg-image'
-													: ''} rounded-lg sm:rounded-xl  {item.className || ''} {item.isFeatured
-													? '_highlighted'
-													: ''} {section.theme?.isItemsTransparent || item.theme?.isTransparent
-													? '_transparent'
-													: ''} {item.url && !item.interactiveRenderType
-													? '_interactive'
-													: ''} h-full {$heatmap ? '' : 'overflow-hidden'}"
-												on:click={() => {
-													if (section.carousel) {
-														selectCarouselItem(item);
-													}
-
-													if (item.feedItemId) {
-														post(`feed/${item.feedItemId}/view?pageId=${page._id}`);
-
-														trackClick({
-															pageId: page?._id,
-															sectionId: section.id,
-															sectionItemId: item.feedItemId,
-															isFeedItem: true,
-															linkId: item.feedItemId,
-															url: item.url,
-															text: item.title || item.description
-														});
-													} else {
-														trackClick({
-															pageId: page?._id,
-															sectionId: section.id,
-															sectionItemId: item.id,
-															linkId: item.id,
-															url: item.url,
-															text: item.title || item.description
-														});
-													}
-												}}
-												class:heatmap={$heatmap && section.linkType === 'interactive'}
-												data-heatmap-clicks-count={$heatmap && section.linkType === 'interactive'
-													? getHeatmapClicksCount({
-															sectionId: section.id,
-															sectionItemId: item.id,
-															linkId: item.id
-													  })
-													: null}
-												style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
-											>
-												{#if item.theme?.bgPattern}
-													<div
-														class="absolute top-0 left-0 w-full h-full pattern-size-4 rounded-xl pattern-{item
-															.theme.bgPattern} {page.theme?.theme === 'dark'
-															? 'pattern-white pattern-bg-black'
-															: 'pattern-black pattern-bg-white'} [mask-image:radial-gradient(52%_85%_at_top_center,white,transparent)]"
-														style="opacity: 0.1;"
-													/>
-												{/if}
-
-												{#if item.bgImageUrl}
-													<RenderUrl
-														url={item.bgImageUrl}
-														imgClass={'absolute left-0 top-0 w-full h-full object-cover rounded-xl'}
-														style="z-index: 0;"
-													/>
-
-													{#if !item.theme?.isNotBgImageDimmed}
-														<div
-															class="absolute top-0 left-0 w-full h-full rounded-xl"
-															style="background-color: {page.theme?.theme === 'dark'
-																? 'rgba(0,0,0,0.85)'
-																: 'rgba(255,255,255,.85)'}; z-index: 1;"
-														/>
-													{/if}
-												{/if}
-
-												<div
-													class="flex flex-col relative z-10 justify-between {section.columns > 1
-														? 'h-full'
-														: ''} grid-cols-1 {section.columns > 1
-														? 'block'
-														: 'grid'} sm:grid-cols-{section.columns === 1 &&
-													item.imageUrl &&
-													section.items.length > 1
-														? 2
-														: ''} w-full {section.columns > 1
-														? `${section.carousel ? 'shadow-md' : ''} rounded-2xl`
-														: ''}  {section.columns > 1
-														? 'items-stretch'
-														: 'items-center'} content-start {item.theme?.isOppositeColors
-														? '_bg-opposite'
-														: ''}"
-													style="{section.columns === 1 &&
-													section.items.length === 1 &&
-													!item.imageUrl
-														? 'margin-bottom: -64px;'
-														: ''} {item.theme?.isOverrideColors
-														? `background-color: ${item.theme?.backgroundColor || 'none'};`
-														: ''}"
-												>
-													{#if item.title || item.description}
-														<div
-															class="flex w-full h-full flex-col justify-between {item.theme
-																?.isTransparent
-																? 'sm:pr-8'
-																: page?.theme?.containerWidth === 900
-																? 'p-4'
-																: 'px-6 py-5 sm:px-8 sm:py-6'} text-left self-center order-none-off {section.columns ==
-																1 && i % 2 === 1
-																? 'sm:order-last-off'
-																: ''} {section.columns === 1 &&
-																(!item.imageUrl || section.items.length === 1) &&
-																'mx-auto'}"
-															class:order-last-off={i % 2 === 0}
-														>
-															<div class="max-w-[600px]">
-																{#if item.title || item.emoji}
-																	{#if item.renderType === 'testimonial'}
-																		<div class="flex items-center mb-3">
-																			<div class="mr-2">
-																				<Emoji
-																					bind:emoji={item.emoji}
-																					bind:color={item.iconColor}
-																					bind:bgColor={item.emojiBgColor}
-																					class="rounded-full text-3xl"
-																					width={48}
-																					theme={page.parentPage?.theme?.theme ||
-																						page?.theme?.theme ||
-																						'light'}
-																				/>
-																			</div>
-																			<div>
-																				<h2 class="_item-description" style="font-weight: bold;">
-																					<ContentEditableIf
-																						class=""
-																						bind:innerHTML={item.title}
-																						condition={isEdit}
-																					/>
-																				</h2>
-																				{#if item.label}
-																					<div class="opacity-70 _item-description">
-																						<ContentEditableIf
-																							class=""
-																							bind:innerHTML={item.label}
-																							condition={isEdit}
-																						/>
-																					</div>
-																				{/if}
-																			</div>
-																		</div>
-																	{:else}
-																		{#if item.emoji && !item.theme?.isIconLeft}
-																			<div
-																				class="{emojiStyle[section.columns]} _section-img mr-2 mb-4"
-																			>
-																				{#key item.emojiSizePx}
-																					<Emoji
-																						bind:emoji={item.emoji}
-																						bind:color={item.iconColor}
-																						bind:bgColor={item.emojiBgColor}
-																						class="text-2xl"
-																						width={item.emojiSizePx || 30}
-																						mobileWidth={26}
-																						theme={page.parentPage?.theme?.theme ||
-																							page?.theme?.theme ||
-																							'light'}
-																					/>
-																				{/key}
-																			</div>
-																		{/if}
-
-																		{#if !item.theme?.isInlineTitle}
-																			<div
-																				class="flex {item.description
-																					? page?.theme?.containerWidth
-																						? 'mb-2'
-																						: 'mb-2 sm:mb-4'
-																					: ''} {section.columns < 3
-																					? 'flex-col items-start'
-																					: 'items-center'}"
-																			>
-																				{#if item.emoji && item.theme?.isIconLeft}
-																					<div
-																						class="{emojiStyle[
-																							section.columns
-																						]} flex _section-img mr-2"
-																					>
-																						<Emoji
-																							bind:emoji={item.emoji}
-																							bind:color={item.iconColor}
-																							bind:bgColor={item.emojiBgColor}
-																							class="text-xl"
-																							width={25}
-																							theme={page.parentPage?.theme?.theme ||
-																								page?.theme?.theme ||
-																								'light'}
-																						/>
-																					</div>
-																				{/if}
-																				<h2
-																					class="{headerTextStyle(item)[
-																						section.columns
-																					]} _item-title"
-																				>
-																					<ContentEditableIf
-																						class=""
-																						bind:innerHTML={item.title}
-																						condition={isEdit}
-																					/>
-																				</h2>
-																			</div>
-																		{/if}
-																	{/if}
-
-																	{#if isShowAuthor}
-																		<div>
-																			<ArticleAuthorLabel
-																				isWithAuthor={false}
-																				class="my-2"
-																				bind:page
-																			/>
-																		</div>
-																	{/if}
-
-																	{#if item.description && !item.pricing}
-																		<h3
-																			class="{descriptionStyle[
-																				section.columns
-																			]} _item-description whitespace-pre-wrap "
-																		>
-																			{#if item.title && item.theme?.isInlineTitle}
-																				{#if item.emoji && item.theme.isIconLeft}
-																					<Emoji
-																						width={16}
-																						bind:emoji={item.emoji}
-																						bind:color={item.iconColor}
-																						bind:bgColor={item.emojiBgColor}
-																						class="sm:inline mb-1 sm:mb-0"
-																						theme={page.parentPage?.theme?.theme ||
-																							page?.theme?.theme ||
-																							'light'}
-																					/>{/if}<ContentEditableIf
-																					class="_inline_title sm:inline mb-1 sm:mb-0 font-medium"
-																					style="color: {page.theme?.theme === 'dark'
-																						? '#ffffff'
-																						: '#111111'};"
-																					bind:innerHTML={item.title}
-																					condition={isEdit}
-																				/><span class="hidden sm:inline">&nbsp;</span
-																				>{/if}<ContentEditableIf
-																				class="opacity-80 sm:inline inline {section.isDatabase
-																					? '_line-clamp-4 hover:line-clamp-5'
-																					: ''}"
-																				bind:innerHTML={item.description}
-																				condition={isEdit}
-																			/>
-																		</h3>
-																	{/if}
-
-																	{#if item.tagsStr}
-																		<div class="my-4 mt-6 flex flex-wrap gap-2">
-																			{#each item.tagsStr.split(',') as tag}
-																				<div
-																					class="flex items-center px-3 py-1 text-sm opacity-80 rounded-full inline ring ring-1 {getEmojiTheme(
-																						{ item }
-																					) === 'dark'
-																						? 'ring-zinc-700'
-																						: 'ring-zinc-200'} bg-black"
-																					style={page.parentPage?.theme?.theme ||
-																					page.theme?.theme === 'dark'
-																						? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
-																						: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
-																				>
-																					{#if !section.isDatabase}
-																						{#key item.theme}
-																							<Emoji
-																								class="block mr-2"
-																								theme={getEmojiTheme({ item })}
-																								width={14}
-																								emoji={item.emoji || 'feather:check'}
-																							/>
-																						{/key}
-																					{/if}
-																					{tag}
-																				</div>
-																			{/each}
-																		</div>
-																	{/if}
-
-																	{#if item.pricing}
-																		<div class="flex items-end mt-4 mb-4">
-																			<div class="text-3xl sm:text-4xl font-bold mr-2">
-																				{item.pricing.amount
-																					? toDollars(item.pricing.amount * 100)
-																					: 'Free'}
-																			</div>
-																			{#if item.pricing.amount}
-																				<div class="text-lg">
-																					/{item.pricing.per}
-																				</div>
-																			{/if}
-																		</div>
-																		<div class="mb-8 opacity-70">
-																			{@html item.description}
-																		</div>
-
-																		{#if item.pricing.benefitsStr}
-																			<div class="mb-4">
-																				{#each item.pricing.benefitsStr.split('\n') as benefit}
-																					<div class="my-1 sm:my-2 flex items-center">
-																						<Emoji
-																							theme={page.parentPage?.theme?.theme ||
-																								page?.theme?.theme ||
-																								'light'}
-																							emoji={section.benefitsEmoji || '✅'}
-																							class="mr-2 opacity-70"
-																						/>
-																						{benefit}
-																					</div>
-																				{/each}
-																			</div>
-																		{:else if item.pricing.benefits}
-																			<div class="mb-4">
-																				{#each item.pricing.benefits as benefit}
-																					<div class="my-2">
-																						<span class="inline-block mr-1">✅</span>
-																						{benefit.name}
-																					</div>
-																				{/each}
-																			</div>
-																		{/if}
-																	{/if}
-
-																	{#if item.interactiveRenderType}
-																		<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
-																			<RenderInteractiveOptions
-																				class={`${
-																					section.columns === 1 &&
-																					(section.interactiveRenderType === 'single_choice' ||
-																						section.interactiveRenderType === 'multiple_choice')
-																						? 'justify-center'
-																						: 'justify-start'
-																				} __d2 ${item.pricing ? 'w-full' : ''}`}
-																				size={item.pricing ? 'large' : 'normal'}
-																				bind:sectionItem={item}
-																				parentSectionId={section.id}
-																				bind:page
-																				itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-																				bind:isEdit
-																				bind:isEmbed
-																			/>
-																		</div>
-																	{/if}
-																{/if}
-															</div>
-														</div>
-													{/if}
-													{#if !section.carousel && item.imageUrl}
-														<div
-															class="{section.pricing ? 'order-none-off' : 'order-none-off'} {item
-																.theme?.isReversedImage ||
-															section.renderType === 'changelog' ||
-															item.isService
-																? 'order-first'
-																: ''}
-															{section.columns === 1 && i % 2 === 0 ? 'sm:order-last-off' : ''} {section.isShowSource
-																? 'px-4'
-																: ''}"
-														>
-															<RenderUrlWithBackground
-																aspectRatio={section.theme?.imageAspectRatio ||
-																	item.theme?.imageAspectRatio}
-																urlImgClass="w-full object-cover h-auto {section.imageClass ||
-																	''}  mx-auto {section.columns === 1 ? '' : ''}  {section.items
-																	.length === 1
-																	? ''
-																	: ''} {isGif(item.imageUrl)
-																	? 'w-full object-cover'
-																	: ''} {section.isShowSource || (!item.title && !item.description)
-																	? 'rounded-lg'
-																	: item.theme?.isReversedImage ||
-																	  section.renderType === 'changelog' ||
-																	  item.isService
-																	? 'rounded-t-lg'
-																	: 'rounded-b-lg'}
-																 {section.theme?.isScrollImageOnHover
-																	? 'transition-all ease-in-out duration-1000 object-top group-hover:object-bottom'
-																	: ''}
-																"
-																imageUrl={item.imageUrl}
-																imageBackgroundUrl={item.imageBackgroundUrl}
-															/>
-															<!-- <RenderUrl
-															urlClass={`${section.imageClass || ''} ${getAspectClass(
-																item.theme?.imageAspectRatio
-															)}`}
-															isIframeFallback={false}
-															urlImgClass="w-full {section.imageClass || ''} {getAspectClass(
-																item.theme?.imageAspectRatio
-															)} object-cover mx-auto {section.columns === 1 ? '' : ''}  {section
-																.items.length === 1
-																? ''
-																: ''} {isGif(item.imageUrl)
-																? 'w-full object-cover'
-																: ''} {section.isShowSource ? 'rounded-lg' : 'rounded-b-xl '}"
-															url={item.imageUrl}
-														/> -->
-														</div>
-													{/if}
-
-													{#if item.syncPage?.metadata?.fullAmount}
-														<hr class="w-full  opacity-30" />
-
-														<div class="flex items-end p-4 sm:px-8">
-															<h3 class="text-2xl font-bold ">
-																{toDollars(item.syncPage?.metadata?.fullAmount)}
-															</h3>
-															{#if item.syncPage?.metadata?.payPer && item.syncPage?.metadata?.payPer !== 'one-time'}
-																<div class="ml-2 opacity-50">
-																	/ {item.syncPage?.metadata?.payPer}
-																</div>
-															{/if}
-														</div>
-													{/if}
-
-													{#if section.isShowSource}
-														<div class="px-4 pb-4 {item.imageUrl ? 'pt-4' : ''}">
-															<hr class="mb-4 opacity-30" />
-
-															<div class="flex justify-between items-center text-sm opacity-80">
-																{moment(item.publishedOn || item.createdOn).format('MMM DD, YYYY')}
-
-																<div>
-																	<SourceLogo
-																		theme={page?.theme?.theme || 'light'}
-																		bind:url={item.url}
-																	/>
-																</div>
-															</div>
-														</div>
-													{/if}
-												</div>
-											</a>
-										</div>
-									{/if}
+								{#each section.items || [] as item, i (item.id)}
+									{#key $selectedSectionItem?.id}
+										{#if $selectedSectionItem?.id === item.id}
+											<RenderSectionItem
+												bind:section
+												bind:page
+												bind:item={$selectedSectionItem}
+												bind:isShowAuthor
+												bind:isEdit
+												{selectCarouselItem}
+												{getEmojiTheme}
+												{descriptionStyle}
+												{headerTextStyle}
+												{emojiStyle}
+												{i}
+											/>
+										{:else}
+											<RenderSectionItem
+												bind:section
+												bind:page
+												bind:isEdit
+												bind:item
+												bind:isShowAuthor
+												{selectCarouselItem}
+												{getEmojiTheme}
+												{descriptionStyle}
+												{headerTextStyle}
+												{emojiStyle}
+												{i}
+											/>
+										{/if}
+									{/key}
 								{/each}
 							</div>
 						{/if}

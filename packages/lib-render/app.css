@@ -16,6 +16,10 @@ body {
 	@apply rounded-lg p-4 mb-4 _border-section;
 }
 
+._editor ._section {
+	background-color: white;
+}
+
 ._section._clickable {
 	@apply transition;
 }
@@ -579,7 +583,8 @@ a[href] {
 }
 
 ._item-title {
-	font-weight: 500;
+	/* font-weight: 500; */
+	font-weight: 700;
 	font-size: var(--section-title-font-size);
 	line-height: var(--section-title-line-height);
 	/* margin-bottom: 16px; */
@@ -778,7 +783,7 @@ button._alternative:hover {
 }
 
 ._editor-title {
-	color: #3d2400;
+	color: #3e2809;
 }
 
 .heatmap {

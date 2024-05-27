@@ -31,7 +31,7 @@
 		<div
 			class="cursor-pointer rounded text-sm  px-4 py-1 w-full text-center {tab.isSelected
 				? 'border border-[#8b786d]'
-				: '_border-section transition opacity-50 hover:opacity-100'}"
+				: '_border-section transition opacity-50 hover:opacity-100'} bg-white"
 			on:click={() => {
 				selectTab(tab);
 			}}

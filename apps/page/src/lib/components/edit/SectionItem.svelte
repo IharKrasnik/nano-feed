@@ -11,7 +11,7 @@
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import clickOutside from 'lib/use/clickOutside';
-	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
 	import contenteditable from 'lib/use/contenteditable';
 	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
 

@@ -416,7 +416,7 @@
 					<div
 						class="_input_container {sectionItem.callToActionText?.length >= 14
 							? ''
-							: '_long'} _border w-full"
+							: ''} _border w-full"
 					>
 						<form
 							class="w-full flex flex-col sm:flex-row gap-4"
@@ -450,7 +450,9 @@
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links' || (sectionItem.interactiveRenderType === 'form' && isHeader)}
 			<div
-				class="flex flex-row flex-wrap gap-4 sm:gap-6 items-center {clazz?.includes('mx-auto')
+				class="flex flex-row flex-wrap justify-center gap-4 sm:gap-6 items-center {clazz?.includes(
+					'mx-auto'
+				)
 					? 'mx-auto'
 					: ''} {clazz?.includes('w-full') ? 'w-full' : 'sm:w-auto'}"
 			>
@@ -459,7 +461,9 @@
 						? '_link'
 						: ''} cursor-pointer {sectionItem.interactiveRenderType === 'link'
 						? ''
-						: 'sm:w-auto'} {clazz?.includes('w-full') ? 'w-full' : 'sm:w-auto'} {urlClass}"
+						: 'sm:w-auto'} {clazz?.includes('w-full') ? 'w-full' : 'sm:w-auto'} {urlClass} {size
+						? `_is${size}`
+						: '_isnormal'}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
 					class:heatmap={$heatmap}
 					data-heatmap-clicks-count={$heatmap
@@ -530,9 +534,11 @@
 						{sectionItem.callToActionText || 'Learn More →'}
 					{:else}
 						<button
-							class="relative overflow-hidden shadow hover:shadow-md  flex justify-center items-center {size
-								? `_is${size}`
-								: ''} {clazz?.includes('w-full') ? 'w-full' : ''}"
+							class="relative overflow-hidden shadow hover:shadow-md  flex justify-center items-center {clazz?.includes(
+								'w-full'
+							)
+								? 'w-full'
+								: ''}"
 							style="--tw-shadow-color: var(--accent-color) !important;"
 							class:_alternative={sectionItem.isUrlAlternative ||
 								(sectionItem.pricing && !sectionItem.isFeatured)}
@@ -564,7 +570,7 @@
 					<a
 						class="shrink-0 sm:w-auto cursor-pointer {url2Class} {sectionItem.isUrl2Link
 							? '_link'
-							: ''}"
+							: ''} {size ? `_is${size}` : ''}"
 						class:heatmap={$heatmap}
 						data-heatmap-clicks-count={$heatmap
 							? getHeatmapClicksCount({
@@ -644,28 +650,52 @@
 {/if}
 
 <style>
-	button._ishuge {
+	a._isnormal {
+		font-size: 16px;
+	}
+	a._islarge {
+		font-size: 18px;
+	}
+
+	a._ishuge {
+		font-size: 20px;
+	}
+
+	a._islarge button {
+		font-size: 18px;
+		padding: 12px 24px;
+		border-radius: var(--button-large-radius);
+	}
+
+	a._ishuge button {
 		font-size: 20px;
 		padding: 12px 24px;
 
 		border-radius: var(--button-huge-radius);
 	}
 
-	button._islarge {
-		font-size: 18px;
-		padding: 12px 24px;
-		border-radius: var(--button-large-radius);
-	}
-
 	@media (max-width: 640px) {
-		button._ishuge {
-			font-size: 18px;
-			padding: 12px 24px;
+		._link._isnormal {
+			font-size: 16px;
 		}
 
-		button._islarge {
+		a._isnormal {
 			font-size: 16px;
-			padding: 12px 16px;
+		}
+
+		a._islarge {
+			font-size: 16px;
+		}
+
+		a._ishuge {
+			font-size: 18px;
+		}
+
+		a._ishuge button,
+		a._islarge button,
+		a._isnormal button {
+			padding: 12px 20px;
+			font-size: 16px;
 		}
 	}
 

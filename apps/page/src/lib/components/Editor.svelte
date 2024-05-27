@@ -8,7 +8,7 @@
 
 	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
-	import { slide, fly, scale, fade } from 'svelte/transition';
+	import { slide, fly, fade } from 'svelte/transition';
 	import autofocus from 'lib/use/autofocus';
 	import { page as sveltePage } from '$app/stores';
 
@@ -26,6 +26,7 @@
 	import EditCTA from '$lib/components/edit/CallToAction.svelte';
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
 	import Insert from '$lib/components/edit/Insert.svelte';
+	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
@@ -93,6 +94,7 @@
 	import selectedTrigger from '$lib/stores/selectedTrigger';
 	import selectedSubmission from 'lib-render/stores/selectedSubmission';
 	import * as socketIoService from 'lib/socketIoService';
+	import BackTo from '$lib/components/BackTo.svelte';
 
 	//
 	onMount(async () => {
@@ -166,9 +168,15 @@
 
 	let editorPanelEl;
 	let prevSelectedTab;
+	let prevSelectedSection;
 
 	$: if (editorPanelEl && $selectedTab !== prevSelectedTab) {
 		prevSelectedTab = $selectedTab;
+		editorPanelEl.scrollTop = 0;
+	}
+
+	$: if (editorPanelEl && $sectionToEdit !== prevSelectedSection) {
+		prevSelectedSection = $sectionToEdit;
 		editorPanelEl.scrollTop = 0;
 	}
 
@@ -1049,7 +1057,8 @@
 					<!-- {#key $sectionToEdit?.id} -->
 					{#key page._id}
 						<div
-							class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] overflow-x-hidden pt-0 h-screen overflow-y-scroll bg-white"
+							class="_editor fixed left-0 top-[60px] sm:left-auto w-screen min:w-auto sm:max-w-[400px] overflow-x-hidden pt-0 h-screen overflow-y-scroll"
+							style="background: #f6f5f4;"
 							bind:this={editorPanelEl}
 						>
 							<div class="w-full mr-4" style="max-width: 100vw;">
@@ -1067,7 +1076,7 @@
 									{/if}
 
 									{#if $sectionToEdit && $selectedTab === 'editor'}
-										<div class="bg-white pl-0 z-40 min-h-screen">
+										<div class="pl-0 z-40 min-h-screen">
 											<div
 												class="flex items-center cursor-pointer text-[#8B786D] mb-4"
 												on:click={() => {
@@ -1459,7 +1468,7 @@
 
 																{#if page._id}
 																	<div
-																		class="bg-white rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
+																		class="rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
 																	>
 																		<div class="flex items-center">
 																			<div class="text-lg font-bold  _editor-title">

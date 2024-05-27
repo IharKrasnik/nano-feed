@@ -68,7 +68,7 @@
 					{/if}
 
 					{#if section.title}
-						<div class="text-3xl sm:text-4xl font-semibold mb-4">
+						<div class="_section-title text-3xl sm:text-5xl font-semibold mb-4">
 							<ContentEditableIf bind:innerHTML={section.title} condition={isEdit} />
 						</div>
 					{/if}
@@ -109,7 +109,7 @@
 					{/if}
 
 					{#if section.interactiveRenderType}
-						<div class="mt-12">
+						<div class="mt-4 mb-8 sm:mb-0 sm:mt-12">
 							<RenderInteractiveOptions
 								bind:sectionItem={section}
 								parentSectionId={section.id}

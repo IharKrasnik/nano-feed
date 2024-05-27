@@ -513,7 +513,7 @@
 						{@html striptags(hero.title || '')}
 					</div>
 					{#if hero.subtitle}
-						<div class="mt-1 truncate">
+						<div class="opacity-70 mt-1 truncate">
 							{@html striptags(hero.subtitle || '')}
 						</div>
 					{/if}

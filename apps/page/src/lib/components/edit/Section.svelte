@@ -5,11 +5,16 @@
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
+
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
+	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
+	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
+	import BackTo from '$lib/components/BackTo.svelte';
 
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
@@ -113,6 +118,14 @@
 	if (section.streamSlug) {
 		section.isUseDb = true;
 	}
+
+	$: if ($selectedSectionItem) {
+		let editEl = document.getElementById(`section-edit-${$selectedSectionItem.id}`);
+
+		if (editEl) {
+			editEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+		}
+	}
 </script>
 
 {#if isShort}
@@ -129,32 +142,34 @@
 			}}
 		>
 			{#if section.title}
-				<div>
+				<div class="mb-1">
 					<b>{@html striptags(section.title || '')}</b>
 				</div>
 			{/if}
-			<div class="overflow-hidden _line-clamp-4">
-				{@html striptags(section.description || '')}
-			</div>
-			{#if section.renderType === 'testimonials'}
-				<div>
-					{@html striptags((section.testimonials || []).map((f) => f.name).join(', '))}
-				</div>
-			{:else if section.type === 'faq'}
-				<div>
-					{@html striptags((section.faqs || []).map((f) => f.question).join(', '))}
-				</div>
-			{:else if section.items}
+			<div class="opacity-80">
 				<div class="overflow-hidden _line-clamp-4">
-					{@html section.items.map((item) => striptags(item.title || '')).join('<br/>')}
-				</div>
-				{#if section.callToActionText}
-					<div class="mt-2">
-						{section.callToActionText}
-					</div>
-				{/if}
-			{/if}
+					{@html striptags(section.description || '')}
 
+					{#if section.items}
+						{@html section.items.map((item) => striptags(item.title || '')).join('<br/>')}
+					{/if}
+
+					{#if section.renderType === 'testimonials'}
+						<div class="overflow-hidden _line-clamp-4">
+							{@html striptags((section.testimonials || []).map((f) => f.name).join(', '))}
+						</div>
+					{:else if section.type === 'faq'}
+						<div class="overflow-hidden _line-clamp-4">
+							{@html striptags((section.faqs || []).map((f) => f.question).join(', '))}
+						</div>
+					{/if}
+					{#if section.callToActionText}
+						<div class="mt-2">
+							{section.callToActionText}
+						</div>
+					{/if}
+				</div>
+			</div>
 			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.streamSlug || ['testimonials', 'pricing', 'form', 'carousel', 'stepper', 'article'].includes(section.renderType)}
 				<div class="mt-2 p-2 bg-slate-200/20 rounded opacity-90">
 					{#if section.renderType === 'embedCode'}
@@ -204,60 +219,25 @@
 		</div>
 	{/if}
 
-	{#if !section.isInnerSection}
-		<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
-			<div class="font-bold mb-2">Render this section as...</div>
+	{#if $selectedSectionItem?.id === section.id}
+		<div
+			class="fixed top-[60px] bg-white left-0 h-screen w-[400px] p-4 overflow-y-scroll pb-[200px] "
+			style="z-index: 100;"
+		>
+			<BackTo
+				to="Section Content"
+				onClick={() => {
+					$selectedSectionItem = null;
+				}}
+			/>
 
-			<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
-				<option value="grid">Default Grid Section</option>
-				<option value="callout">Callout</option>
-				<option value="stepper">1-2-3 Stepper</option>
-				<option value="testimonials">Testimonials</option>
-				<option value="pricing">Pricing</option>
-				<option value="carousel">Carousel Menu</option>
-				<option value="faq">FAQ</option>
-				<option value="article">Paragraph</option>
-				<option value="changelog">Changelog</option>
-				<option value="form">Form</option>
-				<option value="comments">Comments</option>
-				<option value="embedCode">HTML Code Embed</option>
-				<!-- <option value="service_chat">Service Chat</option> -->
-			</select>
-
-			{#if section.renderType === 'article'}
-				<input type="checkbox" bind:checked={section.isRichText} /> Is Rich-Text Article
-			{/if}
-
-			{#if section.renderType === 'carousel'}
-				<select class="w-full my-4" bind:value={section.carouselType}>
-					<option value="vertical">Vertical</option>
-					<option value="horizontal">Horizontal</option>
-				</select>
-
-				<div class="flex items-center mt-2 justify-between">
-					<div class="text-xs flex gap-2 items-center">
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								section.maxWidth = 0;
-							}}
-							class:font-bold={!section.maxWidth}
-						>
-							Stretch
-						</div>
-
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								section.maxWidth = 600;
-							}}
-							class:font-bold={section.maxWidth === 600}
-						>
-							Medium
-						</div>
-					</div>
-				</div>
-			{/if}
+			<EditSectionSettings
+				bind:section
+				bind:sectionItem={section}
+				isShown
+				isWithButton={false}
+				bind:page
+			/>
 		</div>
 	{/if}
 
@@ -291,65 +271,7 @@
 					// section = null;
 					// onEditEnded(section);
 				}}
-			>
-				{#if section.renderType === 'grid' || section.renderType === 'pricing'}
-					<hr class="mt-4 border-[#8B786D] opacity-30" />
-					<div class="bg-white  my-4">
-						<div class="relative mt-4">
-							<div class="px-4 flex items-center">
-								<div
-									class="cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									class:aspect-square={section.columns !== 1}
-									class:px-4={section.columns === 1}
-									on:click={() => (section.columns = 1)}
-								>
-									1
-									{#if section.columns === 1}column{/if}
-								</div>
-
-								<div
-									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									on:click={() => (section.columns = 2)}
-									class:aspect-square={section.columns !== 2}
-									class:px-4={section.columns === 2}
-								>
-									2
-									{#if section.columns === 2}columns{/if}
-								</div>
-
-								<div
-									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									class:aspect-square={section.columns !== 3}
-									class:px-4={section.columns === 3}
-									on:click={() => (section.columns = 3)}
-								>
-									3
-									{#if section.columns === 3}columns{/if}
-								</div>
-
-								<div
-									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									class:aspect-square={section.columns !== 4}
-									class:px-4={section.columns === 4}
-									on:click={() => (section.columns = 4)}
-								>
-									4
-									{#if section.columns === 4}columns{/if}
-								</div>
-								<div
-									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									class:aspect-square={section.columns !== 12}
-									class:px-4={section.columns === 12}
-									on:click={() => (section.columns = 12)}
-								>
-									12
-									{#if section.columns === 12}columns{/if}
-								</div>
-							</div>
-						</div>
-					</div>
-				{/if}
-			</div>
+			/>
 		</div>
 	{/if}
 
@@ -390,6 +312,143 @@
 			</div>
 		{/if}
 
+		{#if section.renderType === 'grid' || section.renderType === 'pricing'}
+			<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
+				<div class="bg-white">
+					<div class="font-bold mb-2">Layout</div>
+
+					<ToggleGroup
+						class="mb-4"
+						tabs={[
+							{
+								key: 'grid',
+								isSelected: section.columns > 1 && !section.isFlexGrid,
+								name: 'Grid'
+							},
+							{
+								key: 'rows',
+								isSelected: section.columns === 1,
+								name: 'Rows'
+							},
+							{
+								key: 'flex',
+								name: 'Fluid',
+								isSelected: section.isFlexGrid
+							}
+						]}
+						onTabSelected={(tab) => {
+							if (tab.key === 'grid') {
+								section.isFlexGrid = false;
+
+								if (!section.columns || section.columns === 1) {
+									section.columns = 2;
+								}
+							} else if (tab.key === 'rows') {
+								section.isFlexGrid = false;
+
+								if (section.columns !== 1) {
+									section.columns = 1;
+								}
+							} else if (tab.key === 'flex') {
+								section.isFlexGrid = true;
+								if (section.columns === 1) {
+									section.columns = 2;
+								}
+							}
+						}}
+					/>
+
+					<div class="relative mt-4">
+						{#if section.columns > 1 && !section.isFlexGrid}
+							<div class="flex items-center">
+								<div
+									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									on:click={() => (section.columns = 2)}
+									class:aspect-square={section.columns !== 2}
+									class:px-4={section.columns === 2}
+								>
+									2
+									{#if section.columns === 2}columns{/if}
+								</div>
+
+								<div
+									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									class:aspect-square={section.columns !== 3}
+									class:px-4={section.columns === 3}
+									on:click={() => (section.columns = 3)}
+								>
+									3
+									{#if section.columns === 3}columns{/if}
+								</div>
+
+								<div
+									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									class:aspect-square={section.columns !== 4}
+									class:px-4={section.columns === 4}
+									on:click={() => (section.columns = 4)}
+								>
+									4
+									{#if section.columns === 4}columns{/if}
+								</div>
+								<div
+									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+									class:aspect-square={section.columns !== 12}
+									class:px-4={section.columns === 12}
+									on:click={() => (section.columns = 12)}
+								>
+									12
+									{#if section.columns === 12}columns{/if}
+								</div>
+							</div>
+
+							{#if section.renderType === 'grid' || section.renderType === 'pricing'}
+								{#if section.columns > 1}
+									<div class="mb-2 mt-4">
+										<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
+										{#if section.isMasonryGrid}
+											<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
+										{/if}
+									</div>
+								{/if}
+							{/if}
+						{/if}
+
+						{#if section.isFlexGrid}
+							<div class="mb-2 mt-4">
+								<div class="flex justify-between">
+									<div>
+										<div class="font-semibold mb-1 text-sm mt-2">Min item width (px)</div>
+										<input
+											type="number"
+											style="max-width: 130px;"
+											bind:value={section.minWidthPx}
+										/>
+									</div>
+									<div>
+										<div class="font-semibold mb-1 text-sm mt-2">Max item width (px)</div>
+										<input
+											type="number"
+											style="max-width: 130px;"
+											bind:value={section.maxWidthPx}
+										/>
+									</div>
+								</div>
+
+								{#if section.isMasonryGrid}
+									<input class="ml-2" type="checkbox" bind:checked={section.maxWidthPx} /> Funky
+								{/if}
+
+								<div>
+									<input class="mt-2" type="checkbox" bind:checked={section.isFlexWrap} /> Move items
+									to the next line
+								</div>
+							</div>
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/if}
+
 		{#if !section.isRichText}
 			<div class="w-full flex justify-between mt-8">
 				<div class="mb-4 font-bold">
@@ -419,7 +478,35 @@
 					on:finalize={handleDndFinalize}
 				>
 					{#each section.items || [] as item (item.id)}
-						<div class="_section cursor-auto">
+						<!-- This weird repetitions needed in order for editor bindings to work. Otherwise editor updates are not reflected  -->
+						{#if $selectedSectionItem?.id === item.id}
+							<div
+								class="fixed top-[60px] bg-white left-0 h-screen w-[400px] p-4 overflow-y-scroll pb-[200px] "
+								style="z-index: 100;"
+							>
+								<BackTo
+									to="Section Content"
+									onClick={() => {
+										$selectedSectionItem = null;
+									}}
+								/>
+
+								<EditSectionSettings
+									bind:section
+									bind:sectionItem={item}
+									isShown
+									isWithButton={false}
+									bind:page
+								/>
+							</div>
+						{/if}
+
+						<div
+							class="_section cursor-auto  {$selectedSectionItem?.id === item.id
+								? '!border-2 !border-purple-300'
+								: ''}"
+							id={`section-edit-${item.id}`}
+						>
 							<EditSectionItem class="p-0" bind:page bind:section bind:item />
 						</div>
 					{/each}
