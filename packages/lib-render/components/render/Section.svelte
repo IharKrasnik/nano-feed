@@ -886,14 +886,14 @@
 
 													{#if item.url && !item.interactiveRenderType}
 														<a
-															class="_item-title block mb-4"
+															class="_item-title _big block mb-4"
 															href={item.url || ''}
 															target={item.url?.startsWith('http') ? '_blank' : ''}
 														>
 															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
 														</a>
 													{:else}
-														<div class="_item-title mb-4">
+														<div class="_item-title _big mb-4">
 															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
 														</div>
 													{/if}

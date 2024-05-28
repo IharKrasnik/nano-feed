@@ -587,9 +587,16 @@ a[href] {
 ._item-title {
 	/* font-weight: 500; */
 	font-weight: 700;
-	font-size: var(--section-title-font-size);
 	line-height: var(--section-title-line-height);
 	/* margin-bottom: 16px; */
+}
+
+._item-title:not(._big) {
+	font-size: var(--section-title-font-size);
+}
+
+._item-title._big {
+	@apply sm:text-3xl text-lg;
 }
 
 @media (max-width: 640px) {
