@@ -853,7 +853,7 @@
 												? 'col-span-12'
 												: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
 									
-									{item.theme?.isReversedImage ? 'order-last' : ''}
+									{section.theme?.areImagesReversed || item.theme?.isReversedImage ? 'order-last' : ''}
 									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
 										>
 											<div>
@@ -904,7 +904,8 @@
 															aspectRatio={section.theme?.imageAspectRatio ||
 																item.theme?.imageAspectRatio}
 															class="my-4"
-															urlImgClass="object-cover {item.theme?.isReversedImage
+															urlImgClass="object-cover {section.theme?.areImagesReversed ||
+															item.theme?.isReversedImage
 																? 'rounded-l-lg'
 																: 'rounded-r-lg'}"
 															imageUrl={item.imageUrl}
@@ -914,7 +915,7 @@
 
 													{#if isShowAuthor}
 														<div>
-															<!-- <ArticleAuthorLabel isWithAuthor={false} class={`my-2 `} bind:page /> -->
+															<!-- <ArticleAuthorLabel class={`my-2 `} bind:page /> -->
 														</div>
 													{/if}
 
@@ -1049,14 +1050,19 @@
 														  12
 												}`} 
 									
-									{item.theme?.isReversedImage || section.renderType === 'changelog' ? 'order-first' : ''}"
+									{section.theme?.areImagesReversed ||
+												item.theme?.isReversedImage ||
+												section.renderType === 'changelog'
+													? 'order-first'
+													: ''}"
 											>
 												<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
 
 												<RenderUrlWithBackground
 													aspectRatio={section.theme?.imageAspectRatio ||
 														item.theme?.imageAspectRatio}
-													urlImgClass="mx-auto object-cover {item.theme?.isReversedImage ||
+													urlImgClass="mx-auto object-cover {section.theme?.areImagesReversed ||
+													item.theme?.isReversedImage ||
 													section.renderType === 'changelog'
 														? 'rounded-l-lg'
 														: 'rounded-r-lg'}"

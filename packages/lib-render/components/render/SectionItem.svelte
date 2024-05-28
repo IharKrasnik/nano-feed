@@ -267,12 +267,6 @@
 									{/if}
 								{/if}
 
-								{#if isShowAuthor}
-									<div>
-										<ArticleAuthorLabel isWithAuthor={false} class="my-2" bind:page />
-									</div>
-								{/if}
-
 								{#if item.description && !item.pricing}
 									<h3
 										class="{descriptionStyle[
@@ -296,9 +290,9 @@
 												bind:innerHTML={item.title}
 												condition={isEdit}
 											/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
-											class="opacity-80 sm:inline inline {section.isDatabase
+											class="opacity-80  {section.isDatabase
 												? '_line-clamp-4 hover:line-clamp-5'
-												: ''}"
+												: 'sm:inline inline'}"
 											bind:innerHTML={item.description}
 											condition={isEdit}
 										/>
@@ -377,34 +371,40 @@
 										</div>
 									{/if}
 								{/if}
-
-								{#if item.interactiveRenderType}
-									<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
-										<RenderInteractiveOptions
-											class={`${
-												section.columns === 1 &&
-												(section.interactiveRenderType === 'single_choice' ||
-													section.interactiveRenderType === 'multiple_choice')
-													? 'justify-center'
-													: 'justify-start'
-											} ${item.pricing ? 'w-full' : ''}`}
-											size={item.pricing ? 'large' : 'normal'}
-											bind:sectionItem={item}
-											parentSectionId={section.id}
-											bind:page
-											itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-											bind:isEdit
-											bind:isEmbed
-										/>
-									</div>
-								{/if}
 							{/if}
 						</div>
+						{#if item.interactiveRenderType}
+							<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
+								<RenderInteractiveOptions
+									class={`${
+										section.columns === 1 &&
+										(section.interactiveRenderType === 'single_choice' ||
+											section.interactiveRenderType === 'multiple_choice')
+											? 'justify-center'
+											: 'justify-start'
+									} ${item.pricing ? 'w-full' : ''}`}
+									size={item.pricing ? 'large' : 'normal'}
+									bind:sectionItem={item}
+									parentSectionId={section.id}
+									bind:page
+									itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+									bind:isEdit
+									bind:isEmbed
+								/>
+							</div>
+						{/if}
+
+						{#if isShowAuthor}
+							<div class="_item-description mt-4">
+								<ArticleAuthorLabel class="my-2" bind:page />
+							</div>
+						{/if}
 					</div>
 				{/if}
 				{#if !section.carousel && item.imageUrl}
 					<div
-						class="{item.theme?.isReversedImage ||
+						class="{section.theme?.areImagesReversed ||
+						item.theme?.isReversedImage ||
 						section.renderType === 'changelog' ||
 						item.isService
 							? `order-first ${item.theme?.isTransparent ? 'mb-4' : ''}`
@@ -421,7 +421,8 @@
 								: ''} {isGif(item.imageUrl) ? 'w-full object-cover' : ''} {section.isShowSource ||
 							(!item.title && !item.description)
 								? 'rounded-lg'
-								: item.theme?.isReversedImage ||
+								: section.theme?.areImagesReversed ||
+								  item.theme?.isReversedImage ||
 								  section.renderType === 'changelog' ||
 								  item.isService
 								? 'rounded-t-lg'

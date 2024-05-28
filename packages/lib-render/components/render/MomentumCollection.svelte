@@ -1,5 +1,5 @@
 <script>
-	import { STREAM_URL, PAGE_URL } from 'lib/env';
+	import { STREAM_URL, PAGE_URL, BRAND_URL } from 'lib/env';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderSection from 'lib-render/components/render/Section.svelte';
 	import Loader from 'lib/components/Loader.svelte';
@@ -93,6 +93,7 @@
 	};
 
 	$: if ($feedCache[cacheId]?.feed || filterTag) {
+		debugger;
 		databaseSection.items = $feedCache[cacheId].feed
 			.filter((item) => {
 				if (!filterTag) {
@@ -124,7 +125,11 @@
 						source,
 						title,
 						description: content,
-						imageUrl: attachments && attachments[0] && attachments[0].url,
+						imageUrl:
+							(attachments && attachments[0] && attachments[0].url) ||
+							(section.streamSlug.includes('-blog') && meta
+								? `${BRAND_URL}/og.png?pageId=${meta.pageId}`
+								: null),
 						emoji: logoUrl,
 						url:
 							url ||

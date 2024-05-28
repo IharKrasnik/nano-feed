@@ -318,7 +318,7 @@
 					{/if}
 
 					{#if section.id === sectionItem.id && section.renderType !== 'callout'}
-						<div class="mb-2 font-semibold mt-6">Section images aspect ratio</div>
+						<div class="mb-2 font-semibold mt-6">Items images aspect ratio</div>
 
 						<ToggleGroup
 							tabs={[
@@ -340,6 +340,27 @@
 								}
 							]}
 							bind:value={sectionItem.theme.imageAspectRatio}
+						/>
+
+						<div class="mb-2 font-semibold mt-6">Items Image position</div>
+
+						<ToggleGroup
+							tabs={[
+								{
+									key: 'after',
+									name: 'Content | Image',
+									isSelected: !sectionItem.theme.areImagesReversed
+								},
+								{
+									key: 'before',
+									name: 'Image | Content',
+									isSelected: sectionItem.theme.areImagesReversed
+								}
+							]}
+							onTabSelected={(tab) => {
+								sectionItem.theme.areImagesReversed = tab.key === 'before';
+							}}
+							bind:value={sectionItem.theme.areImagesReversed}
 						/>
 
 						{#if sectionItem.theme?.imageAspectRatio}

@@ -78,7 +78,7 @@ export default (page) => {
 				: '48px',
 
 		'section-title-font-size': page.theme?.containerWidth <= 900 ? '20px' : '20px',
-		'section-title-line-height': page.theme?.containerWidth ? '1.6' : '1.3',
+		'section-title-line-height': '1.3',
 
 		'input-background': page.theme?.inputBackground || 'var(--section-background-color)',
 		'input-color': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',

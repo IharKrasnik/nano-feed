@@ -13,8 +13,8 @@
 
 <div class={clazz.includes('flex') ? clazz : 'flex items-center'}>
 	{#if isWithAuthor}
-		<Avatar user={page.creator} size="20px" class="mr-2" />
-		<b class="mx-1">{page.creator?.fullName}</b>
+		<Avatar user={page.author || page.creator} size="36px" class="mr-2" />
+		<div class="mx-1">{page.author || page.creator?.fullName}</div>
 		<div class="px-1 opacity-70">/</div>
 	{/if}
 	<div class="opacity-70">

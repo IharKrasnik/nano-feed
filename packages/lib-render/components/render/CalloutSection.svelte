@@ -50,7 +50,7 @@
 		{/if}
 		<div
 			class="relative z-10 sm:col-span-{section.innerColSpan || (section.imageUrl ? 6 : 12)}
-  {section.theme?.isReversedImage ? 'order-last' : ''}
+  {section.theme?.areImagesReversed ? 'order-last' : ''}
   {(!section.innerColSpan || section.innerColSpan === 12) && section.imageUrl ? 'mb-8' : ''}"
 		>
 			<div>

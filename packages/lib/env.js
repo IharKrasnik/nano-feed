@@ -14,7 +14,7 @@ export const API_URL = 'https://api.momentum.page';
 
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
 
-export const BRAND_URL = dev ? 'http://localhost:5173' : 'https://brand.mmntm.build';
+export const BRAND_URL = dev ? 'https://brand.mmntm.build' || 'http://localhost:5173' : 'https://brand.mmntm.build';
 
 export const PAGE_URL = dev ? 'https://mmntm.page' : 'https://mmntm.page';
 

@@ -98,8 +98,11 @@
 					streamSlug: parentPage.streams.blog.slug,
 					title: 'Latest articles',
 					subtitle: '',
-					theme: {},
-					columns: 1,
+					theme: {
+						areImagesReversed: true,
+						imageAspectRatio: 'og'
+					},
+					columns: 2,
 					items: []
 				}
 			],

@@ -291,7 +291,7 @@ body {
 }
 
 ._section-item._interactive:hover {
-	border: 1px var(--accent-color) solid;
+	border: 1px var(--accent-color) solid !important;
 }
 
 ._section-item._borderless {
