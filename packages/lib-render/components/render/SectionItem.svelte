@@ -248,7 +248,7 @@
 														bind:color={item.iconColor}
 														bind:bgColor={item.emojiBgColor}
 														class="text-xl"
-														width={25}
+														width={20}
 														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 													/>
 												</div>

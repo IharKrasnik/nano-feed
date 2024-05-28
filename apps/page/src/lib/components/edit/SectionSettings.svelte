@@ -299,7 +299,7 @@
 										tabs={[
 											{ key: undefined, name: 'Default' },
 											{ key: 'small', name: 'Small' },
-											{ key: 'huge', name: 'Huge' }
+											{ key: 'large', name: 'Large' }
 										]}
 										bind:value={sectionItem.theme.titleSize}
 									/>
@@ -561,7 +561,7 @@
 						}}
 					/>
 
-					{#if section.id !== sectionItem.id}
+					{#if section.renderType === 'callout' || section.id !== sectionItem.id}
 						<div
 							class="w-[35px] rounded-full border-4 border-black cursor-pointer"
 							class:border-green-400={sectionItem.theme.isTransparent}
@@ -594,6 +594,110 @@
 						}}
 					/>
 				</div>
+
+				{#if sectionItem.renderType === 'callout'}
+					<div class="font-normal text-sm opacity-70 mb-2 mt-4">Callout section background</div>
+
+					<div class="flex gap-2">
+						<label
+							class="relative"
+							on:click={() => {
+								sectionItem.theme.isTransparent = false;
+							}}
+						>
+							<div
+								class="w-[35px] h-[35px] flex justify-center items-center cursor-pointer border-4 border-[#f6f5f4] rounded-full"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="icon icon-tabler icon-tabler-color-picker opacity-80"
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="#2c3e50"
+									fill="none"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+									<path d="M11 7l6 6" />
+									<path
+										d="M4 16l11.7 -11.7a1 1 0 0 1 1.4 0l2.6 2.6a1 1 0 0 1 0 1.4l-11.7 11.7h-4v-4z"
+									/>
+								</svg>
+								<input
+									type="color"
+									style="width:0; height:0;"
+									bind:value={sectionItem.theme.calloutBgColor}
+								/>
+							</div>
+						</label>
+
+						{#if sectionItem.theme?.calloutBgColor}
+							<div
+								style="background-color: {sectionItem.theme?.calloutBgColor};"
+								class:border-green-300={!sectionItem.theme.isCalloutTransparent}
+								class:border-[#f6f5f4]={sectionItem.theme.isCalloutTransparent}
+								class="w-[35px] h-[35px] flex justify-center items-center cursor-pointer border-4 border rounded-full "
+								on:click={() => {
+									sectionItem.theme.isCalloutTransparent = false;
+								}}
+							/>
+						{/if}
+
+						<div
+							class="w-[35px] h-[35px] rounded-full border border-[#f6f5f4] cursor-pointer"
+							class:border-green-400={!sectionItem.theme.isCalloutTransparent &&
+								!sectionItem.theme?.calloutBgColor &&
+								!(page.parentPage || page).theme?.sectionBackgroundColor}
+							style="background-color: {(page.parentPage || page).theme?.sectionBackgroundColor ||
+								((page.parentPage || page).theme?.theme === 'dark'
+									? hexToRgba('#161619', 0.85)
+									: hexToRgba('#f6f5f4', 0.85))};"
+							on:click={() => {
+								sectionItem.theme.isCalloutTransparent = false;
+								sectionItem.theme.calloutBgColor =
+									(page.parentPage || page).theme?.theme === 'dark'
+										? hexToRgba('#161619', 0.85)
+										: hexToRgba('#f6f5f4', 0.85);
+							}}
+						/>
+
+						{#if section.renderType === 'callout' || section.id !== sectionItem.id}
+							<div
+								class="w-[35px] rounded-full border-4 border-black cursor-pointer"
+								class:border-green-400={sectionItem.theme.isCalloutTransparent}
+								class:border-[#f6f5f4]={!sectionItem.theme.isCalloutTransparent}
+								on:click={() => {
+									sectionItem.theme.isCalloutTransparent = true;
+								}}
+								style="background-image: url('https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1716758994699-image.png');"
+							/>
+						{/if}
+
+						<div
+							class="w-[35px] h-[35px] rounded-full border border-black cursor-pointer border-4  border-[#f6f5f4]"
+							style="background-color: #f6f5f4;"
+							class:border-green-400={!sectionItem.theme?.isCalloutTransparent &&
+								sectionItem.theme.calloutBgColor === '#f6f5f4'}
+							on:click={() => {
+								sectionItem.theme.isCalloutTransparent = false;
+								sectionItem.theme.calloutBgColor = '#f6f5f4';
+							}}
+						/>
+						<div
+							class="w-[35px] h-[35px] rounded-full border border-black cursor-pointer border-4 border-[#f6f5f4]"
+							style="background-color: #111111;"
+							class:border-green-400={!sectionItem.theme?.isCalloutTransparent &&
+								sectionItem.theme.calloutBgColor === '#111111'}
+							on:click={() => {
+								sectionItem.theme.isCalloutTransparent = false;
+								sectionItem.theme.calloutBgColor = '#111111';
+							}}
+						/>
+					</div>
+				{/if}
 
 				{#if true || sectionItem.id !== section.id}
 					<div class="mb-4 mt-4">
@@ -672,53 +776,53 @@
 					{/if}
 				{/if}
 			</div>
-
-			{#if section._isCtaFooter}
-				<div class="_section">
-					<div class="_title">Bottom image</div>
-
-					<FileInput
-						bind:isSearching={isBottomImageSearching}
-						isCanSearch
-						class="w-full"
-						theme="light"
-						bind:url={sectionItem.bottomImageUrl}
-					/>
-				</div>
-			{/if}
-
-			<div class="_section">
-				<div class="mb-1 font-bold">Copy</div>
-				<div class="opacity-70 text-sm mb-3">Copy section to a different page or website</div>
-				<button
-					class="_small _secondary w-full flex justify-center items-center mr-2"
-					on:click={() => {
-						$sectionClipboard = JSON.stringify(section);
-						showSuccessMessage('Copied section. Click Insert→From Clipboard to paste.');
-					}}><FeatherIcon size="15" class="mr-2" name="copy" /> Copy Section</button
-				>
-			</div>
-
-			{#if section.id === sectionItem.id}
-				<div class="_section">
-					<div class="mb-1 font-bold">Visibility</div>
-					<div class="opacity-70 text-sm mb-3">Hide and show sections</div>
-
-					<ToggleGroup
-						bind:value={sectionItem.isHidden}
-						tabs={[
-							{
-								key: false,
-								name: 'visible'
-							},
-							{
-								key: true,
-								name: 'hidden'
-							}
-						]}
-					/>
-				</div>
-			{/if}
 		</div>
+
+		{#if section._isCtaFooter}
+			<div class="_section">
+				<div class="_title">Bottom image</div>
+
+				<FileInput
+					bind:isSearching={isBottomImageSearching}
+					isCanSearch
+					class="w-full"
+					theme="light"
+					bind:url={sectionItem.bottomImageUrl}
+				/>
+			</div>
+		{/if}
+
+		<div class="_section">
+			<div class="mb-1 font-bold">Copy</div>
+			<div class="opacity-70 text-sm mb-3">Copy section to a different page or website</div>
+			<button
+				class="_small _secondary w-full flex justify-center items-center mr-2"
+				on:click={() => {
+					$sectionClipboard = JSON.stringify(section);
+					showSuccessMessage('Copied section. Click Insert→From Clipboard to paste.');
+				}}><FeatherIcon size="15" class="mr-2" name="copy" /> Copy Section</button
+			>
+		</div>
+
+		{#if section.id === sectionItem.id}
+			<div class="_section">
+				<div class="mb-1 font-bold">Visibility</div>
+				<div class="opacity-70 text-sm mb-3">Hide and show sections</div>
+
+				<ToggleGroup
+					bind:value={sectionItem.isHidden}
+					tabs={[
+						{
+							key: false,
+							name: 'visible'
+						},
+						{
+							key: true,
+							name: 'hidden'
+						}
+					]}
+				/>
+			</div>
+		{/if}
 	</div>
 {/if}

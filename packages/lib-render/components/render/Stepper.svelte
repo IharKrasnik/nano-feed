@@ -38,7 +38,7 @@
 				</div>
 				<div class="w-full">
 					<ContentEditableIf
-						class="_item-title text-xl mb-4 font-bold"
+						class="_item-title _large text-xl mb-4 font-bold"
 						bind:innerHTML={step.title}
 						condition={isEdit}
 					/>

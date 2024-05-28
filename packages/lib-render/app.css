@@ -591,12 +591,16 @@ a[href] {
 	/* margin-bottom: 16px; */
 }
 
-._item-title:not(._big) {
+._item-title:not(._big):not(._large):not(._small) {
 	font-size: var(--section-title-font-size);
 }
 
 ._item-title._big {
 	@apply sm:text-3xl text-lg;
+}
+
+._item-title._large {
+	@apply sm:text-2xl text-lg;
 }
 
 @media (max-width: 640px) {

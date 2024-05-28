@@ -25,11 +25,12 @@
 	<div
 		class="_section-item relative overflow-hidden w-full relative items-center {section.containerBgImageUrl
 			? ''
-			: 'mb-4 sm:mb-8'} grid sm:grid-cols-12 {section.className || ''} {section.theme?.isTransparent
+			: 'mb-4 sm:mb-8'} grid sm:grid-cols-12 {section.className || ''} {section.theme
+			?.isCalloutTransparent
 			? '_transparent'
 			: ''} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
-		style={section.theme?.isOverrideColors
-			? `background-color: ${section.theme?.backgroundColor};`
+		style={section.theme?.calloutBgColor
+			? `background-color: ${section.theme?.calloutBgColor};`
 			: ''}
 	>
 		{#if section.bgImageUrl}
@@ -54,7 +55,13 @@
   {(!section.innerColSpan || section.innerColSpan === 12) && section.imageUrl ? 'mb-8' : ''}"
 		>
 			<div>
-				<div class="_borderless p-4 sm:p-8 col-span-1">
+				<div
+					class="_borderless {section.theme?.isCalloutTransparent
+						? `${
+								section.theme?.isReversedImage ? 'pr-0 pl-4 sm:pl-8' : 'pl-0 pr-4 sm:pr-8'
+						  } py-4 sm:py-8`
+						: 'p-4 sm:p-8'} col-span-1"
+				>
 					<!-- {#if section.emoji !== '✨'}
         <Emoji bind:emoji={section.emoji} />
         {/if} -->
@@ -110,7 +117,7 @@
 					{/if}
 
 					{#if section.interactiveRenderType}
-						<div class="mt-4 mb-8 sm:mb-0 sm:mt-12">
+						<div class="mt-4 mb-8 sm:mb-0 sm:mt-12}">
 							<RenderInteractiveOptions
 								bind:sectionItem={section}
 								parentSectionId={section.id}
@@ -133,7 +140,7 @@
 					: 12 - (section.title || section.description ? section.innerColSpan || 6 : 0) || 12
 			}`} 
   
-  {section.theme?.isReversedImage}"
+  {section.theme?.isReversedImage ? 'order-first' : ''}"
 		>
 			<RenderUrlWithBackground
 				aspectRatio={section.theme?.imageAspectRatio || section.theme?.imageAspectRatio}

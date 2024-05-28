@@ -60,11 +60,11 @@
 	export let style = null;
 
 	const headerTextStyle = (item) => {
-		if (item.theme?.titleSize === 'huge') {
-			let defaultSize = 'text-xl sm:text-2xl';
+		if (item.theme?.titleSize === 'large') {
+			let defaultSize = '_large text-xl sm:text-2xl';
 			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
 		} else if (item.theme?.titleSize === 'small') {
-			let defaultSize = 'text-sm sm:text-base';
+			let defaultSize = '_small text-sm sm:text-sm';
 			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
 		}
 
@@ -816,7 +816,9 @@
 								<div class="flex justify-between">
 									<div
 										class="_section-item {item.theme?.maxWidth
-											? item.theme.maxWidth === '50p'
+											? item.theme.maxWidth === '75p'
+												? 'sm:w-[75%] sm:mx-auto'
+												: item.theme.maxWidth === '50p'
 												? 'sm:w-[50%] sm:mx-auto'
 												: item.theme.maxWidth === '33p'
 												? 'sm:w-[33%] sm:mx-auto'
@@ -862,7 +864,6 @@
 														? 'sm:px-0'
 														: ' _borderless p-4 sm:p-8'}
 													{section.renderType === 'changelog' ? '_transparent _no-padding' : ''}
-													
 													col-span-1"
 												>
 													<!-- {#if item.emoji !== '✨'}
