@@ -68,7 +68,7 @@ body {
 
 ._section._highlighted,
 ._section-item._highlighted {
-	border: 1px var(--accent-color) solid !important;
+	border: 2px var(--accent-color) solid !important;
 }
 
 ._section._info {
