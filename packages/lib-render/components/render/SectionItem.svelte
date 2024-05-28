@@ -299,6 +299,28 @@
 									</h3>
 								{/if}
 
+								<!-- For every section besides pricing render buttons near text -->
+								{#if item.interactiveRenderType && section.renderType !== 'pricing'}
+									<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
+										<RenderInteractiveOptions
+											class={`${
+												section.columns === 1 &&
+												(section.interactiveRenderType === 'single_choice' ||
+													section.interactiveRenderType === 'multiple_choice')
+													? 'justify-center'
+													: 'justify-start'
+											} ${item.pricing ? 'w-full' : ''}`}
+											size={item.pricing ? 'large' : 'normal'}
+											bind:sectionItem={item}
+											parentSectionId={section.id}
+											bind:page
+											itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+											bind:isEdit
+											bind:isEmbed
+										/>
+									</div>
+								{/if}
+
 								{#if item.tagsStr}
 									<div
 										class="my-4 mt-6 flex flex-wrap gap-2 __d {item?.theme?.align === 'center'
@@ -373,7 +395,9 @@
 								{/if}
 							{/if}
 						</div>
-						{#if item.interactiveRenderType}
+
+						<!-- For pricing only render buttons between item -->
+						{#if item.interactiveRenderType && section.renderType === 'pricing'}
 							<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
 								<RenderInteractiveOptions
 									class={`${
@@ -393,6 +417,7 @@
 								/>
 							</div>
 						{/if}
+						<!--End-->
 
 						{#if isShowAuthor}
 							<div class="_item-description mt-4">
