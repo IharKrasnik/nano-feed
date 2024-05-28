@@ -6,6 +6,7 @@
 	export { clazz as class };
 	export let url;
 	export let theme;
+	export let isNoSwitcher = false;
 	export let onFileUploaded = () => {};
 
 	let code = url?.startsWith('$code') ? url.replace('$code', '') : '';
@@ -17,14 +18,16 @@
 	let tab = url?.startsWith('$code') ? 'code' : 'file';
 </script>
 
-<ToggleGroup
-	class="mb-2"
-	bind:value={tab}
-	tabs={[
-		{ key: 'file', name: 'File or URL' },
-		{ key: 'code', name: 'Code' }
-	]}
-/>
+{#if !isNoSwitcher}
+	<ToggleGroup
+		class="mb-2"
+		bind:value={tab}
+		tabs={[
+			{ key: 'file', name: 'File or URL' },
+			{ key: 'code', name: 'Code' }
+		]}
+	/>
+{/if}
 
 {#if tab === 'file'}
 	<FileInput theme class={clazz} bind:url on:fileUploaded={onFileUploaded} />

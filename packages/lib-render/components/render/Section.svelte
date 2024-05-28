@@ -469,7 +469,7 @@
 									section.theme?.isHugeTitle
 										? 'text-xl leading-8'
 										: 'text-lg font-medium'} whitespace-pre-wrap
-										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-90' : `sm:max-w-[768px] opacity-70`}
+										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-80' : `sm:max-w-[768px] opacity-70`}
 										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'sm:mx-auto'}
 										"
 								>
@@ -976,7 +976,7 @@
 													{#if item.syncPage?.metadata?.fullAmount}
 														<hr class="w-full my-6 opacity-20" />
 
-														<div class="flex items-end mt-6 mb-4">
+														<div class="flex items-end mt-6 mb-4 ">
 															<div class="text-base sm:text-xl font-bold mr-2">
 																{item.syncPage?.metadata?.fullAmount
 																	? toDollars(item.syncPage?.metadata?.fullAmount)

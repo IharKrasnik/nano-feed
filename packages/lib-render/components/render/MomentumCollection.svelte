@@ -54,6 +54,7 @@
 				perPage: 100
 			});
 		}
+
 		isLoading = false;
 	};
 

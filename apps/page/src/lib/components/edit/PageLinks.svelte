@@ -2,6 +2,7 @@
 	import _ from 'lodash';
 	import { dndzone } from 'svelte-dnd-action';
 	import { v4 as uuidv4 } from 'uuid';
+	import Button from 'lib/components/Button.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import RenderHeader from 'lib-render/components/render/Header.svelte';
@@ -11,6 +12,7 @@
 	import pageDraft from 'lib-render/stores/pageDraft';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import { put, del } from 'lib/api';
+	import { showSuccessMessage } from 'lib/services/toast';
 
 	export let page;
 	export let isShown = true;
@@ -77,9 +79,13 @@
 
 	let updateSettings = async () => {
 		await put(`pages/${parentPage._id}/nav-settings`, {
+			theme: parentPage.theme,
 			links: parentPage.links,
-			icon: parentPage.icon
+			logo: parentPage.logo,
+			faviconUrl: parentPage.faviconUrl
 		});
+
+		showSuccessMessage('Page settings updated');
 	};
 </script>
 
@@ -92,7 +98,7 @@
 					Edit the links and styles of your header and footer
 				</div>
 			</div>
-			<div><button class="primary" on:click={updateSettings}>Save Changes</button></div>
+			<div><Button class="_primary _small" onClick={updateSettings}>Save Changes</Button></div>
 		</div>
 
 		<div class="font-bold mb-2">Logo Styles</div>
@@ -114,6 +120,17 @@
 				<ToggleGroup
 					bind:value={parentPage.theme.logoSize}
 					tabs={[{ name: 'Square' }, { key: 'auto', name: 'Auto' }]}
+				/>
+			</div>
+
+			<div class="_section flex items-center">
+				Favicon <EmojiPicker
+					isCustomOnly
+					isNoSize
+					isNoCode
+					isNoBackgroundColor
+					class="ml-4"
+					bind:icon={parentPage.faviconUrl}
 				/>
 			</div>
 		</div>

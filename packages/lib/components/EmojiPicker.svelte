@@ -18,6 +18,10 @@
 	export let bgColor = null;
 	export let color = null;
 	export let isNoCustom = false;
+	export let isCustomOnly = false;
+	export let isNoCode = false;
+	export let isNoSize = false;
+	export let isNoBackgroundColor = false;
 	export let defaultIcon;
 	export let onUpdated = () => {};
 	export let sizePx;
@@ -49,7 +53,7 @@
 		icon = url;
 	}
 
-	let selectedTab = 'emoji';
+	let selectedTab = isCustomOnly ? 'code' : 'emoji';
 
 	let featherIconNames = Object.keys(feather);
 
@@ -73,7 +77,7 @@
 	</div>
 	{#if isEmojiPickerShown}
 		<div
-			class="absolute top-0 mt-16 shadow-lg shadow-black/30 rounded-lg overflow-hidden"
+			class="absolute top-0 mt-16 shadow-lg shadow-black/30 rounded-lg overflow-hidden min-w-[350px]"
 			style="z-index: 100;"
 			in:fly={{ y: 50, duration: 150 }}
 		>
@@ -82,71 +86,73 @@
 					? 'bg-white'
 					: 'bg-black'} flex gap-4 py-4 bg-[#fafafa] border px-2"
 			>
-				<div
-					class="pb-2"
-					on:click={() => (selectedTab = 'emoji')}
-					class:_selected={selectedTab === 'emoji'}
-				>
-					✨ Emoji
-				</div>
-
-				<div
-					class="flex items-center pb-2"
-					on:click={() => (selectedTab = 'feather')}
-					class:_selected={selectedTab === 'feather'}
-				>
-					<FeatherIcon class="mr-2" size="15" name="feather" /> Mono
-				</div>
-
-				<div
-					class="flex items-center pb-2"
-					on:click={() => (selectedTab = 'more')}
-					class:_selected={selectedTab === 'more'}
-				>
-					<svg
-						width="15"
-						height="15"
-						class="mr-2"
-						viewBox="0 0 215 200"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
+				{#if !isCustomOnly}
+					<div
+						class="pb-2"
+						on:click={() => (selectedTab = 'emoji')}
+						class:_selected={selectedTab === 'emoji'}
 					>
-						<path
-							d="M211.975 26.2798H28.408V197H211.975V26.2798Z"
-							fill="#FFE600"
-							stroke="#161616"
-							stroke-width="5.38266"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-						<path
-							d="M146.12 58.576L186.567 104.983V3H3V55.9564L87.0471 137.62L146.12 58.576Z"
-							fill="#4966FF"
-							stroke="#161616"
-							stroke-width="5.38266"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-						<path
-							d="M146.12 58.5761L87.0471 137.62L3 55.9565V173.729H186.567V104.984L146.12 58.5761Z"
-							fill="#FF6B57"
-							stroke="#161616"
-							stroke-width="5.38266"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-						<path
-							d="M79.4073 68.7851C91.0318 68.7851 100.455 60.0211 100.455 49.2102C100.455 38.3993 91.0318 29.6353 79.4073 29.6353C67.7829 29.6353 58.3594 38.3993 58.3594 49.2102C58.3594 60.0211 67.7829 68.7851 79.4073 68.7851Z"
-							fill="#FFE600"
-							stroke="#161616"
-							stroke-width="5.38266"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
+						✨ Emoji
+					</div>
 
-					More
-				</div>
+					<div
+						class="flex items-center pb-2"
+						on:click={() => (selectedTab = 'feather')}
+						class:_selected={selectedTab === 'feather'}
+					>
+						<FeatherIcon class="mr-2" size="15" name="feather" /> Mono
+					</div>
+
+					<div
+						class="flex items-center pb-2"
+						on:click={() => (selectedTab = 'more')}
+						class:_selected={selectedTab === 'more'}
+					>
+						<svg
+							width="15"
+							height="15"
+							class="mr-2"
+							viewBox="0 0 215 200"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M211.975 26.2798H28.408V197H211.975V26.2798Z"
+								fill="#FFE600"
+								stroke="#161616"
+								stroke-width="5.38266"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								d="M146.12 58.576L186.567 104.983V3H3V55.9564L87.0471 137.62L146.12 58.576Z"
+								fill="#4966FF"
+								stroke="#161616"
+								stroke-width="5.38266"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								d="M146.12 58.5761L87.0471 137.62L3 55.9565V173.729H186.567V104.984L146.12 58.5761Z"
+								fill="#FF6B57"
+								stroke="#161616"
+								stroke-width="5.38266"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								d="M79.4073 68.7851C91.0318 68.7851 100.455 60.0211 100.455 49.2102C100.455 38.3993 91.0318 29.6353 79.4073 29.6353C67.7829 29.6353 58.3594 38.3993 58.3594 49.2102C58.3594 60.0211 67.7829 68.7851 79.4073 68.7851Z"
+								fill="#FFE600"
+								stroke="#161616"
+								stroke-width="5.38266"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+
+						More
+					</div>
+				{/if}
 
 				<div
 					class="flex items-center pb-2"
@@ -242,6 +248,7 @@
 							<h3 class="font-bold mb-2">Custom Logo</h3>
 							<FileCodeInput
 								{theme}
+								isNoSwitcher={isCustomOnly}
 								class="w-full"
 								bind:url
 								onFileUploaded={({ detail }) => {
@@ -254,60 +261,64 @@
 				{/if}
 			{/if}
 
-			<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede] ">
-				<div class="text-sm mb-2 font-semibold">Size (px)</div>
-
-				<input type="number" bind:value={sizePx} />
-
-				<div class="flex gap-2 text-sm mt-2">
-					<div
-						class:font-bold={!sizePx}
-						class="cursor-pointer"
-						on:click={() => (sizePx = undefined)}
-					>
-						Default
-					</div>
-
-					{#if !sizePx || sizePx === 120 || sizePx === 160}
-						<div
-							class:font-bold={sizePx === 120}
-							class="cursor-pointer"
-							on:click={() => (sizePx = 120)}
-						>
-							Big
-						</div>
-						<div
-							class:font-bold={sizePx === 160}
-							class="cursor-pointer"
-							on:click={() => (sizePx = 160)}
-						>
-							Huge
-						</div>
-					{:else}
-						<div class="font-bold">Custom</div>
-					{/if}
-				</div>
-			</div>
-
-			{#if icon}
+			{#if !isNoSize}
 				<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede] ">
-					<input
-						type="checkbox"
-						bind:checked={isUseBgColor}
-						on:change={(evt) => {
-							if (!isUseBgColor) {
-								bgColor = null;
-							}
-						}}
-					/>
-					Add background color
-					{#if isUseBgColor}
-						<div class="mt-2">
-							<input type="color" bind:value={bgColor} />
+					<div class="text-sm mb-2 font-semibold">Size (px)</div>
+
+					<input type="number" bind:value={sizePx} />
+
+					<div class="flex gap-2 text-sm mt-2">
+						<div
+							class:font-bold={!sizePx}
+							class="cursor-pointer"
+							on:click={() => (sizePx = undefined)}
+						>
+							Default
 						</div>
-					{/if}
+
+						{#if !sizePx || sizePx === 120 || sizePx === 160}
+							<div
+								class:font-bold={sizePx === 120}
+								class="cursor-pointer"
+								on:click={() => (sizePx = 120)}
+							>
+								Big
+							</div>
+							<div
+								class:font-bold={sizePx === 160}
+								class="cursor-pointer"
+								on:click={() => (sizePx = 160)}
+							>
+								Huge
+							</div>
+						{:else}
+							<div class="font-bold">Custom</div>
+						{/if}
+					</div>
 				</div>
 			{/if}
+			{#if !isNoBackgroundColor}
+				{#if icon}
+					<div class="{theme === 'light' ? 'bg-white' : 'bg-black'} p-4 border border-[#e0dede] ">
+						<input
+							type="checkbox"
+							bind:checked={isUseBgColor}
+							on:change={(evt) => {
+								if (!isUseBgColor) {
+									bgColor = null;
+								}
+							}}
+						/>
+						Add background color
+						{#if isUseBgColor}
+							<div class="mt-2">
+								<input type="color" bind:value={bgColor} />
+							</div>
+						{/if}
+					</div>
+				{/if}
+			{/if}
+
 			{#if icon}
 				<div
 					class="{theme === 'light'

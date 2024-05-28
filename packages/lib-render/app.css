@@ -154,6 +154,7 @@ body {
 ._editor-content p {
 	@apply my-2;
 	min-height: 16px;
+	opacity: .8;
 }
 
 ._editor-content h2,
@@ -162,7 +163,8 @@ body {
 }
 
 ._editor-content h2 {
-	@apply text-3xl sm:text-4xl font-semibold mb-4 sm:mb-6 mt-8;
+	@apply text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 mt-8;
+	line-height: 1.4;
 }
 
 ._editor-content h3 {
@@ -262,8 +264,8 @@ body {
 ._section-item:not(.bg_image):not(._article):not(._transparent),
 ._section-item:not(.bg_image):not(._article):not(._transparent)>.flex {
 	text-align: left;
-	box-shadow: inset 0 1px 0 0 hsla(0, 0%, 100%, .05);
-	/* border: 1px rgba(0, 0, 0, 0.1) solid; */
+	/* box-shadow: inset 0 1px 0 0 hsla(0, 0%, 100%, .05); */
+	border: 1px rgba(255, 255, 255, 0.1) solid;
 	@apply rounded-xl;
 }
 
@@ -840,6 +842,15 @@ button._alternative:hover {
 
 ._section-title {
 	font-family: var(--title-font) !important;
+}
+
+.article ._section-title {
+	@apply text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 mt-8;
+	line-height: 1.4;
+}
+
+.article ._section-description {
+	font-weight: normal;
 }
 
 

@@ -308,7 +308,7 @@
 													<div
 														class="relative {page.activeHero.theme?.isPullBottom && i === 0
 															? 'mb-[48px] sm:mb-[96px]'
-															: ''}"
+															: ''} {section.containerBgImageUrl ? 'my-16 sm:my-32' : ''}"
 														style={section.theme?.backgroundColor
 															? $sectionToEdit?.id === section.id
 																? `background-color: ${$sectionToEdit.theme?.backgroundColor};`

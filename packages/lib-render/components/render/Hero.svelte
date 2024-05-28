@@ -208,9 +208,11 @@
 						: 'text-center items-center'}"
 				>
 					<div
-						class="{hero.demoUrl || hero.theme?.isLeft
+						class="{hero.demoUrl || hero.theme?.isLeft || page.renderType === 'article'
 							? `w-full text-center ${
-									hero.theme?.isVertical ? 'flex flex-col items-center mb-8' : 'sm:text-left'
+									hero.theme?.isVertical && page.renderType !== 'article'
+										? 'flex flex-col items-center mb-8'
+										: 'sm:text-left'
 							  }  ${
 									hero.demoUrl ? '' : page.renderType === 'article' ? '' : 'sm:max-w-[900px]'
 							  } items-center`
@@ -233,7 +235,7 @@
 									: ''} _hero-title 
 											{!hero.demoUrl || hero.theme?.isVertical
 									? page.renderType === 'article'
-										? 'sm:max-w-[712px]'
+										? 'sm:max-w-[1200px]'
 										: page.activeHero?.theme?.titleSize === 'giant'
 										? '_giant sm:max-w-[1100px]'
 										: 'sm:max-w-[912px]'
@@ -265,10 +267,10 @@
 									? 'sm:text-3xl'
 									: ''} whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
 									? page.renderType === 'article'
-										? 'max-w-[712px]'
+										? 'max-w-[880px]'
 										: 'max-w-[650px]'
 									: page.renderType === 'article'
-									? 'max-w-[712px]'
+									? 'max-w-[1000px]'
 									: 'max-w-[600px]'}"
 								in:fly={{ y: 25, duration: 1000 }}
 							>
@@ -340,7 +342,8 @@
 
 						{#if page.renderType === 'article'}
 							<RenderArticleHeader
-								class={(hero.theme.isLeft || hero.demoUrl) && !hero?.theme.isVertical
+								class={'justify-start' ||
+								((hero.theme.isLeft || hero.demoUrl) && !hero?.theme.isVertical)
 									? 'justify-start'
 									: 'justify-center'}
 								{page}
@@ -355,7 +358,7 @@
 										? 'inline-flex'
 										: 'w-full'}"
 								>
-									{#each (isEdit ? hero.socialProof.logos : _.shuffle(hero.socialProof.logos)).filter((l) => l.url) as logo}
+									{#each (isEdit ? hero.socialProof.logos : hero.theme?.isShuffleSocialProof ? _.shuffle(hero.socialProof.logos) : hero.socialProof.logos).filter((l) => l.url) as logo}
 										<img class="rounded-full" src={logo.url} />
 									{/each}
 								</div>
@@ -410,8 +413,8 @@
 									class={hero.theme?.isVertical ? 'mt-8' : ''}
 									imageBackgroundUrl={hero.demoBackgroundUrl}
 									urlClass="relative w-full flex justify-end"
-									urlImgMaxWidth={hero.imgMaxWidth || 0}
-									urlImgClass="{hero.imgMaxWidth
+									urlImgMaxWidth={page.renderType === 'article' ? 0 : hero.imgMaxWidth || 0}
+									urlImgClass="{hero.imgMaxWidth && page.renderType !== 'article'
 										? `rounded-lg mx-auto`
 										: 'w-full rounded-xl'} object-cover"
 								/>
