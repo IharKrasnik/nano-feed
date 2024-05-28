@@ -446,7 +446,7 @@
 						<div class="mb-8 {section.description ? `${isFooter ? 'sm:mb-8' : 'sm:mb-12'}` : ''}">
 							{#if section.title}
 								<h2
-									class="_section-title text-3xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
+									class="_section-title text-2xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
 										? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-6xl font-medium'}`
 										: `${
