@@ -93,7 +93,7 @@
 	};
 
 	$: if ($feedCache[cacheId]?.feed || filterTag) {
-		debugger;
+		console.log('settings items');
 		databaseSection.items = $feedCache[cacheId].feed
 			.filter((item) => {
 				if (!filterTag) {
@@ -190,6 +190,7 @@
 		class="flex w-full {section.theme?.isTitleLeft
 			? ''
 			: 'sm:justify-center'} gap-3 mt-4 mb-8 overflow-x-scroll sm:overflow-visible sm:flex-wrap max-w-screen"
+		style="z-index: 1"
 	>
 		<div
 			class="px-4 py-1 opacity-80 t rounded-full cursor-pointer shrink-0 _tag bg-zinc-900 ring-1 ring-zinc-800 {filterTag
