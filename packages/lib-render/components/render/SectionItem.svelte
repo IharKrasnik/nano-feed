@@ -167,8 +167,10 @@
 							? 'sm:pr-8'
 							: page?.theme?.containerWidth === 900
 							? 'p-4'
-							: 'px-6 py-5 sm:px-8 sm:py-6'} text-left self-center order-none-off {section.columns ==
-							1 && i % 2 === 1
+							: `px-6 py-5 ${
+									section.columns > 3 ? 'sm:px-5' : section.columns > 2 ? 'sm:px-6' : 'sm:px-8'
+							  } sm:py-6`} text-left self-center order-none-off {section.columns == 1 &&
+						i % 2 === 1
 							? 'sm:order-last-off'
 							: ''} {section.columns === 1 &&
 							(!item.imageUrl || section.items.length === 1) &&
