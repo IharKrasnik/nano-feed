@@ -292,7 +292,7 @@
 												bind:innerHTML={item.title}
 												condition={isEdit}
 											/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
-											class="opacity-80  {section.isDatabase
+											class="opacity-70  {section.isDatabase
 												? '_line-clamp-4 hover:line-clamp-5'
 												: 'sm:inline inline'}"
 											bind:innerHTML={item.description}

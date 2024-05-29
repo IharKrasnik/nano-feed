@@ -261,7 +261,7 @@
 
 						{#if hero.subtitle}
 							<h2
-								class="_subtitle opacity-80 {hero.theme?.titleSize === 'huge'
+								class="_subtitle opacity-70 {hero.theme?.titleSize === 'huge'
 									? 'sm:text-xl'
 									: 'sm:text-xl'} {hero.theme?.titleSize === 'giant'
 									? 'sm:text-3xl'

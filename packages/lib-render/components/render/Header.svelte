@@ -196,7 +196,7 @@
 			<div class="sm:hidden" on:click={toggleMenu}>
 				<FeatherIcon theme={page.theme?.theme} name="menu" />
 			</div>
-			<div class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1 font-semibold">
+			<div class="shrink-0 hidden md:flex gap-6 items-center text-sm py-1">
 				{#if !page.parentPage}
 					{#if page.activeHero}
 						<RenderInteractiveOptions
@@ -238,29 +238,34 @@
 		style="z-index: 150;"
 		class="left-0 top-[66px] fixed w-screen h-screen overflow-y-auto bg-background p-4"
 	>
-		{#if page.activeHero}
-			<RenderInteractiveOptions
-				bind:sectionItem={page.activeHero}
-				bind:page
-				bind:isEdit
-				bind:isEmbed
-			/>
-		{:else if page.parentPage && page.parentPage.heros?.length}
-			<RenderInteractiveOptions
-				size="small"
-				sectionItem={page.parentPage.heros[0]}
-				{page}
-				bind:isEdit
-				bind:isEmbed
-			/>
-		{/if}
-
-		<div class="flex flex-col mt-8">
+		<div class="flex flex-col ">
 			{#each (parentPage.links || []).filter((l) => !l.isHidden && l.isShowInHeader) as link}
-				<a class="block py-4 border-b border-white/20 shrink-0" href={link.url || `/${link.slug}`}
-					>{link.name}</a
+				<a
+					class="block py-4 border-b {(page.parentPage || page).theme?.theme === 'dark'
+						? 'border-white/20'
+						: 'border-dark/20'} shrink-0"
+					href={link.url || `/${link.slug}`}>{link.name}</a
 				>
 			{/each}
+
+			<div class="mt-8">
+				{#if page.activeHero}
+					<RenderInteractiveOptions
+						bind:sectionItem={page.activeHero}
+						bind:page
+						bind:isEdit
+						bind:isEmbed
+					/>
+				{:else if page.parentPage && page.parentPage.heros?.length}
+					<RenderInteractiveOptions
+						size="small"
+						sectionItem={page.parentPage.heros[0]}
+						{page}
+						bind:isEdit
+						bind:isEmbed
+					/>
+				{/if}
+			</div>
 		</div>
 	</div>
 {/if}

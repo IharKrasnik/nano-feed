@@ -629,11 +629,13 @@ a._item-title:hover {
 }
 
 ._color-item-description {
-	color: var(--section-description-text-color);
+	/* color: var(--section-description-text-color); */
+	opacity: .7;
 }
 
 ._color-item-description-opposite {
-	color: var(--section-description-text-color-opposite);
+	/* color: var(--section-description-text-color-opposite); */
+	opacity: .7;
 }
 
 ._color-accent {
@@ -721,7 +723,6 @@ button[type='submit'] {
 	background-color: var(--accent-color);
 
 	font-size: 16px;
-	font-weight: 600;
 	@apply transition;
 }
 
