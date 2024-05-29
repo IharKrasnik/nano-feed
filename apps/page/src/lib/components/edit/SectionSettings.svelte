@@ -192,7 +192,7 @@
 							</div>
 						</div>
 
-						{#if section.columns === 1 || section.renderType === 'callout'}
+						{#if section.columns === 1 && section.renderType === 'grid'}
 							<div class="_section">
 								<div class="font-bold mb-2">Max Width</div>
 
@@ -561,17 +561,16 @@
 						}}
 					/>
 
-					{#if section.renderType === 'callout' || section.id !== sectionItem.id}
-						<div
-							class="w-[35px] rounded-full border-4 border-black cursor-pointer"
-							class:border-green-400={sectionItem.theme.isTransparent}
-							class:border-[#f6f5f4]={!sectionItem.theme.isTransparent}
-							on:click={() => {
-								sectionItem.theme.isTransparent = true;
-							}}
-							style="background-image: url('https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1716758994699-image.png');"
-						/>
-					{/if}
+					<div
+						class="w-[35px] rounded-full border-4 border-black cursor-pointer"
+						class:border-green-400={!sectionItem.theme.backgroundColor}
+						class:border-[#f6f5f4]={!sectionItem.theme.backgroundColor}
+						on:click={() => {
+							sectionItem.theme.isTransparent = true;
+							sectionItem.theme.backgroundColor = null;
+						}}
+						style="background-image: url('https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1716758994699-image.png');"
+					/>
 
 					<div
 						class="w-[35px] h-[35px] rounded-full border border-black cursor-pointer border-4  border-[#f6f5f4]"
@@ -667,10 +666,11 @@
 						{#if section.renderType === 'callout' || section.id !== sectionItem.id}
 							<div
 								class="w-[35px] rounded-full border-4 border-black cursor-pointer"
-								class:border-green-400={sectionItem.theme.isCalloutTransparent}
-								class:border-[#f6f5f4]={!sectionItem.theme.isCalloutTransparent}
+								class:border-green-400={!sectionItem.theme.calloutBgColor}
+								class:border-[#f6f5f4]={sectionItem.theme.calloutBgColor}
 								on:click={() => {
 									sectionItem.theme.isCalloutTransparent = true;
+									sectionItem.theme.calloutBgColor = null;
 								}}
 								style="background-image: url('https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1716758994699-image.png');"
 							/>

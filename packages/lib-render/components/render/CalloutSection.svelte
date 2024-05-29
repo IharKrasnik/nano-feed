@@ -26,9 +26,9 @@
 		class="_section-item relative overflow-hidden w-full relative items-center {section.containerBgImageUrl
 			? ''
 			: 'mb-4 sm:mb-8'} grid sm:grid-cols-12 {section.className || ''} {section.theme
-			?.isCalloutTransparent
-			? '_transparent'
-			: ''} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
+			?.calloutBgColor
+			? ''
+			: '_transparent'} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 		style={section.theme?.calloutBgColor
 			? `background-color: ${section.theme?.calloutBgColor};`
 			: ''}
@@ -122,6 +122,7 @@
 								bind:sectionItem={section}
 								parentSectionId={section.id}
 								bind:page
+								size="large"
 								itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
 								bind:isEdit
 								bind:isEmbed

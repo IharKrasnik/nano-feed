@@ -552,7 +552,7 @@
 							{/if}
 							{#if sectionItem.urlIcon}
 								<Emoji
-									width={size === 'small' ? 15 : 22}
+									width={size === 'small' ? 16 : 17}
 									class="mr-2 rounded-full"
 									emoji={sectionItem.urlIcon}
 								/>
@@ -612,7 +612,7 @@
 								{#if sectionItem.url2Icon}
 									<Emoji
 										class="mr-2 rounded-full"
-										width={size === 'small' ? 15 : 22}
+										width={size === 'small' ? 16 : 17}
 										emoji={sectionItem.url2Icon}
 									/>
 								{/if}
@@ -653,6 +653,7 @@
 	a._isnormal {
 		font-size: 16px;
 	}
+
 	a._islarge {
 		font-size: 18px;
 	}
@@ -666,8 +667,8 @@
 	}
 
 	a._islarge button {
-		font-size: 18px;
-		padding: 12px 24px;
+		font-size: 17px;
+		padding: 12px 20px;
 		border-radius: var(--button-large-radius);
 	}
 

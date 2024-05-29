@@ -1149,7 +1149,7 @@
 	.button {
 		display: inline-block;
 		border-radius: var(--button-radius);
-		padding: 8px 16px;
+		padding: 8px 12px;
 		font-size: 18px;
 
 		color: var(--button-color);

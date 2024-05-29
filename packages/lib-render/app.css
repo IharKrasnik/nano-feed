@@ -715,13 +715,13 @@ button,
 .button,
 button[type='submit'] {
 	border-radius: var(--button-radius);
-	padding: 8px 16px;
+	padding: 8px 12px;
 	cursor: pointer;
 
 	background-color: var(--accent-color);
 
-	font-size: 15px;
-	font-weight: 500;
+	font-size: 16px;
+	font-weight: 600;
 	@apply transition;
 }
 
@@ -778,6 +778,10 @@ button._alternative {
 
 ._bg-opposite button._alternative {
 	color: var(--text-color-opposite);
+}
+
+._alternative._islarge {
+	font-weight: 500;
 }
 
 button._alternative:hover {
