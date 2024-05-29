@@ -851,6 +851,13 @@ button._alternative:hover {
 	font-family: var(--title-font) !important;
 }
 
+@layer utilities {
+	.text-4-5xl {
+		font-size: 2.75rem;
+		line-height: 1.1;
+	}
+}
+
 ._section-title {
 	font-family: var(--title-font) !important;
 }

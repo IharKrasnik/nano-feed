@@ -448,9 +448,9 @@
 								<h2
 									class="_section-title text-2xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
-										? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-6xl font-medium'}`
+										? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-medium'}`
 										: `${
-												isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-semibold'
+												isFooter ? 'sm:text-xl font-semibold' : 'sm:text-4-5xl font-semibold'
 										  }`} {page.theme.isTitlesLeft || section.theme?.isTitleLeft
 										? ''
 										: 'sm:mx-auto'}
