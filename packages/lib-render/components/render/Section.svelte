@@ -312,7 +312,7 @@
 	<div
 		class="relative {section.bgImageUrl ? 'p-8 mb-16 mx-2 sm:mx-0' : ''}   {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
-			: ''}"
+			: ''} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 	>
 		{#if isCloneable}
 			<div
@@ -400,7 +400,10 @@
 				? `--glowing-color: ${section.theme.glowingColor};`
 				: ''} {section.theme?.glowingIntensity
 				? `--glowing-opacity: ${getGlowingOpacity()};`
-				: ''} {section.bottomImageUrl ? 'padding-bottom: 0 !important;' : ''} {style || ''} "
+				: ''} {section.bottomImageUrl ? 'padding-bottom: 0 !important;' : ''} {style || ''} {section
+				.theme?.backgroundColor
+				? `background-color: ${section.theme?.backgroundColor};`
+				: ``}"
 		>
 			{#if section.renderType === 'callout'}
 				<RenderCalloutSection bind:page bind:section bind:isEdit bind:isEmbed />

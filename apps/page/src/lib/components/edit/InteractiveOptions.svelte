@@ -16,6 +16,7 @@
 	export let isWithButton = true;
 	export let options = [];
 	export let isRenderTypeLocked = false;
+	export let isCtaFooter = false;
 
 	export let placeholder = 'https://myurl.com';
 	export let isShown = !isWithButton;
@@ -96,7 +97,11 @@
 						<option value={option.value}>{option.text}</option>
 					{/each}
 				{:else if sectionItem.isActionSuccessSection}
-					<option value="">No interaction</option>
+					{#if isCtaFooter}
+						<option value="">Hero Default Action</option>
+					{:else}
+						<option value="">No interaction</option>
+					{/if}
 					<option value="link">Click 1 Link</option>
 					<option value="links">Click Few Links</option>
 					<option value="single_choice">Community Single Choice</option>
@@ -112,7 +117,11 @@
 					<option value="url">URL</option>
 					<option value="textarea">Long Text</option>
 				{:else}
-					<option value="">{sectionItem.url ? 'Open URL on click' : 'No interaction'}</option>
+					{#if isCtaFooter}
+						<option value="">Hero Default Action</option>
+					{:else}
+						<option value="">{sectionItem.url ? 'Open URL on click' : 'No interaction'}</option>
+					{/if}
 					<option value="link">Click 1 Link</option>
 					<option value="links">Click Few Links</option>
 					<option value="email">Submit Email</option>

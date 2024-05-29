@@ -1,44 +1,18 @@
 <script>
 	import _ from 'lodash';
-	import moment from 'moment-timezone';
-	import { browser } from '$app/environment';
-	import { ConfettiExplosion } from 'svelte-confetti-explosion';
-	import { onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
-	import { slide, fly, scale, fade } from 'svelte/transition';
-	import autofocus from 'lib/use/autofocus';
-	import { goto } from '$app/navigation';
-	import { page as sveltePage } from '$app/stores';
 
-	import { GOOGLE_LOGIN_URL, PAGE_URL, STREAM_URL } from 'lib/env';
+	import { fade } from 'svelte/transition';
 
-	import { get, post, put } from 'lib/api';
+	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
+	import EditSection from '$lib/components/edit/Section.svelte';
+	import ctaFooterEl from 'lib-render/stores/ctaFooterEl';
 
-	import loginWithGoogle from 'lib/helpers/loginWithGoogle';
 	import striptags from 'striptags';
 
-	import EditFAQ from '$lib/components/edit/FAQ.svelte';
-	import EditPricing from '$lib/components/edit/Pricing.svelte';
-	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
-	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
-	import Modal from 'lib/components/Modal.svelte';
-	import BackArrowSvg from '$lib/icons/BackArrow.svelte';
-
-	import Button from 'lib/components/Button.svelte';
-	import Loader from 'lib/components/Loader.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
-	import WaveSingleStat from 'lib/components/wave/SingleStat.svelte';
-	import WaveDashboard from 'lib/components/wave/Dashboard.svelte';
-	import FileInput from 'lib/components/FileInput.svelte';
-	import MomentumHub from 'lib/components/MomentumHub.svelte';
-	import SupportTwitter from 'lib/components/SupportTwitter.svelte';
 
-	import tooltip from 'lib/use/tooltip';
-	import clickOutside from 'lib/use/clickOutside';
 	import contenteditable from 'lib/use/contenteditable';
-
-	import currentUser from 'lib/stores/currentUser';
-	import pageDraft from 'lib-render/stores/pageDraft';
 
 	let clazz = '';
 	export { clazz as class };
@@ -50,6 +24,8 @@
 
 	$: if (!page.ctaFooter) {
 		page.ctaFooter = {
+			id: uuidv4(),
+			_isCtaFooter: true,
 			title: '',
 			subtitle: ''
 		};
@@ -63,6 +39,7 @@
 			: 'py-4'} flex items-center justify-between cursor-pointer {clazz}"
 		on:click={() => {
 			isCollapsed = !isCollapsed;
+			$ctaFooterEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}}
 	>
 		<div class="overflow-x-hidden font-bold">
@@ -110,5 +87,35 @@
 				data-placeholder="Guide them to action"
 			/>
 		</div>
+
+		{#if page.renderType !== 'service'}
+			<div class="_section">
+				<div class="_title flex justify-between w-full">Call To Action</div>
+
+				<EditInteractiveOptions
+					class="mt-4"
+					bind:section={page.ctaFooter}
+					bind:sectionItem={page.ctaFooter}
+					isWithButton={false}
+					isCtaFooter
+				/>
+
+				{#if page.ctaFooter.interactiveRenderType === 'form'}
+					{(page.ctaFooter.formSection = page.ctaFooter.formSection || {
+						id: uuidv4(),
+						renderType: 'form',
+						items: []
+					}) && ''}
+
+					{(page.ctaFooter.formSection.items = page.ctaFooter.formSection.items || []) && ''}
+
+					{#if page.ctaFooter.formSection}
+						<div class="mt-4">
+							<EditSection bind:section={page.ctaFooter.formSection} isInnerSection />
+						</div>
+					{/if}
+				{/if}
+			</div>
+		{/if}
 	</div>
 {/if}

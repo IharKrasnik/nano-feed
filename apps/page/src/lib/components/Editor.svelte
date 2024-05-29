@@ -1546,6 +1546,8 @@
 																		>
 																			{#if page.ctaFooter}
 																				<EditSectionSettings
+																					isPopup
+																					isCtaFooter
 																					bind:page
 																					bind:section={page.ctaFooter}
 																					bind:sectionItem={page.ctaFooter}

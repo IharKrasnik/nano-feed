@@ -15,37 +15,60 @@
 
 {#if section}
 	{#if !isCtaHidden}
-		<RenderSection
-			class={`${
-				section.theme?.isFullScreen ? 'min-h-screen' : 'relative sm:py-32  overflow-hidden'
-			}  _bg-cta z-0 p-4 sm:p-8 w-full text-center max-h-[100%] z-0 bottom-0 flex flex-col justify-center min-h-screen sm:min-h-0`}
-			page={{ ...page, theme: { ...page.theme, isTitlesLeft: false } }}
-			section={{
-				...section,
-				...page.activeHero,
-				_isHero: false,
-				_isCtaFooter: true,
-				title: section.title || page.activeHero.title,
-				description: section.description || '',
-				subtitle: '',
-				theme: {
-					...section.theme,
-					isTitleLeft: false
-				},
-				isShown: true,
-				interactiveRenderType:
-					page.activeHero?.interactiveRenderType || (page.renderType === 'article' ? 'email' : ''),
+		{#if page.ctaFooter.interactiveRenderType}
+			<RenderSection
+				class={`${
+					section.theme?.isFullScreen ? 'min-h-screen' : 'relative sm:py-32  overflow-hidden'
+				}  _bg-cta z-0 p-4 sm:p-8 w-full text-center max-h-[100%] z-0 bottom-0 flex flex-col justify-center min-h-screen sm:min-h-0`}
+				page={{ ...page, theme: { ...page.theme, isTitlesLeft: false } }}
+				section={{
+					...page.ctaFooter,
+					_isHero: false,
+					_isCtaFooter: true,
+					title: section.title || page.activeHero.title,
+					description: section.description || '',
+					subtitle: '',
+					theme: {
+						...section.theme,
+						isTitleLeft: false
+					},
+					isShown: true
+				}}
+			/>
+		{:else}
+			<RenderSection
+				class={`${
+					section.theme?.isFullScreen ? 'min-h-screen' : 'relative sm:py-32  overflow-hidden'
+				}  _bg-cta z-0 p-4 sm:p-8 w-full text-center max-h-[100%] z-0 bottom-0 flex flex-col justify-center min-h-screen sm:min-h-0`}
+				page={{ ...page, theme: { ...page.theme, isTitlesLeft: false } }}
+				section={{
+					...page.activeHero,
+					...page.ctaFooter,
+					_isHero: false,
+					_isCtaFooter: true,
+					title: section.title || page.activeHero.title,
+					description: section.description || '',
+					subtitle: '',
+					theme: {
+						...page.ctaFooter?.theme,
+						isTitleLeft: false
+					},
+					isShown: true,
+					interactiveRenderType:
+						page.activeHero?.interactiveRenderType ||
+						(page.renderType === 'article' ? 'email' : ''),
 
-				callToActionText:
-					page.renderType === 'article' && !page.activeHero.interactiveRenderType
-						? 'Subscribe'
-						: page.activeHero?.callToActionText || '',
-				ctaExplainer:
-					page.renderType === 'article' && !page.activeHero.interactiveRenderType
-						? 'Get blog updates to your email'
-						: page.activeHero?.ctaExplainer || ''
-			}}
-		/>
+					callToActionText:
+						page.renderType === 'article' && !page.activeHero.interactiveRenderType
+							? 'Subscribe'
+							: page.activeHero?.callToActionText || '',
+					ctaExplainer:
+						page.renderType === 'article' && !page.activeHero.interactiveRenderType
+							? 'Get blog updates to your email'
+							: page.activeHero?.ctaExplainer || ''
+				}}
+			/>
+		{/if}
 	{/if}
 
 	<div

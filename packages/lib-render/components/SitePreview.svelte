@@ -192,7 +192,8 @@
 
 	if (!page.ctaFooter) {
 		page.ctaFooter = {
-			id: uuidv4()
+			id: uuidv4(),
+			_isCtaFooter: true
 		};
 	}
 </script>
@@ -465,7 +466,7 @@
 										<RenderCTA
 											bind:isCtaHidden={page.ctaFooter.isHidden}
 											{page}
-											section={page.ctaFooter}
+											bind:section={page.ctaFooter}
 										/>
 									</div>
 								{/if}
