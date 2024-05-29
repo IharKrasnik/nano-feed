@@ -771,9 +771,13 @@ button._islarge {}
 
 button._alternative {
 	background: none;
-	outline: 1px var(--accent-color) solid;
+	outline: 2px var(--accent-color) solid;
 	color: var(--text-color);
 	@apply transition;
+}
+
+._bg-opposite button._alternative {
+	color: var(--text-color-opposite);
 }
 
 button._alternative:hover {
@@ -854,7 +858,7 @@ button._alternative:hover {
 @layer utilities {
 	.text-4-5xl {
 		font-size: 2.75rem;
-		line-height: 1.1;
+		line-height: 1.08;
 	}
 }
 

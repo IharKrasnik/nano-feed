@@ -570,7 +570,7 @@
 					<a
 						class="shrink-0 sm:w-auto cursor-pointer {url2Class} {sectionItem.isUrl2Link
 							? '_link'
-							: ''} {size ? `_is${size}` : ''}"
+							: ''} {size ? `_is${size}` : '_isnormal'}"
 						class:heatmap={$heatmap}
 						data-heatmap-clicks-count={$heatmap
 							? getHeatmapClicksCount({
@@ -655,6 +655,10 @@
 	}
 	a._islarge {
 		font-size: 18px;
+	}
+
+	._isnormal._link {
+		font-size: 16px;
 	}
 
 	a._ishuge {

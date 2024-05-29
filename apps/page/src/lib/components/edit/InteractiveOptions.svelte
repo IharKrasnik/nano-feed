@@ -175,7 +175,7 @@
 						{sectionItem.isUrl2Link ? 'Link 2' : 'Button 2'} text
 					</div>
 					<div>
-						<input type="checkbox" bind:checked={sectionItem.isUrl2Button} />
+						<input type="checkbox" bind:checked={sectionItem.isUrl2Link} />
 						is link
 					</div>
 				</div>
