@@ -59,8 +59,8 @@ export default (page) => {
 		'accent-color': accentColor,
 		'accent-color-darker': darken(accentColor, 0.5),
 		'accent-color-lighter': lighten(accentColor, 0.5),
-		'section-background-color':
-			page.theme?.sectionBackgroundColor ||
+		'section-item-background-color':
+			page.theme?.sectionItemBackgroundColor ||
 			(page.theme?.theme === 'dark' ? hexToRGBA('#161619', 0.85) : hexToRGBA('#f6f5f4', 0.85)),
 		// (page.theme?.theme === 'dark'
 		// 	? hexToRGBA(darken(page.theme?.accentColor, 0.993), 0.8)
@@ -80,7 +80,7 @@ export default (page) => {
 		'section-title-font-size': page.theme?.containerWidth <= 900 ? '18px' : '18px',
 		'section-title-line-height': '1.3',
 
-		'input-background': page.theme?.inputBackground || 'var(--section-background-color)',
+		'input-background': page.theme?.inputBackground || 'var(--section-item-background-color)',
 		'input-color': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
 		'button-color': page.theme?.buttonColor || '#fff',
 		'input-container-border-width': page.theme?.isInputBorder ? '0px' : '1px 1px 1px 1px',

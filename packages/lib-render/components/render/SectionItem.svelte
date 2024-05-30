@@ -103,7 +103,12 @@
 						linkId: item.id
 				  })
 				: null}
-			style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px;"
+			style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px; {`background-color: ${
+				section.theme?.backgroundColor ||
+				page.theme?.sectionItemBackgroundColor ||
+				page.parentPage?.theme?.sectionItemBackgroundColor ||
+				'none'
+			};`}"
 		>
 			{#if isEdit && $sectionToEdit?.id === section.id}
 				<div class="hidden group-hover:block absolute right-0" style="z-index: 20;">

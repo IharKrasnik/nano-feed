@@ -309,13 +309,17 @@
 												{#each page.sections || [] as section, i (section.id)}
 													<div
 														class="relative {page.activeHero?.theme?.isPullBottom && i === 0
-															? 'mb-[48px] sm:mb-[96px]'
+															? 'pb-[48px] sm:pb-[96px]'
 															: ''} {section.containerBgImageUrl ? 'my-16 sm:my-32' : ''}"
 														style={section.theme?.backgroundColor
 															? $sectionToEdit?.id === section.id
 																? `background-color: ${$sectionToEdit.theme?.backgroundColor};`
 																: `background-color: ${section.theme?.backgroundColor};`
-															: ''}
+															: `background-color: ${
+																	page.theme?.sectionBackgroundColor ||
+																	page.parentPage?.theme?.sectionBackgroundColor ||
+																	'none'
+															  }`}
 													>
 														{#if section.containerBgImageUrl}
 															<RenderUrl
@@ -494,7 +498,7 @@
 	}
 
 	:global(.bg-section) {
-		background-color: var(--section-background-color);
+		background-color: var(--section-item-background-color);
 		border: 1px rgba(0, 0, 0, 0.1) solid;
 	}
 

@@ -12,7 +12,7 @@ export let updateStylesFromTheme = (theme) => {
 		'background-color': theme?.backgroundColor || '#ffffff',
 		'text-color': theme?.textColor || '#111',
 		'accent-color': theme?.accentColor || '#000',
-		'section-background-color': theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)',
+		'section-item-background-color': theme?.sectionBackgroundColor || 'rgb(128, 127, 128, 0.05)',
 		'header-background-color': theme?.headerBackgroundColor || '#ffffff',
 		'header-text-color': theme?.headerTextColor || '#ffffff',
 		'input-background': theme?.inputBackground || '#f5f5f5',

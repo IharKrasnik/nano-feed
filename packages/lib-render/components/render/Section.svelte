@@ -409,10 +409,13 @@
 				? `--glowing-color: ${section.theme.glowingColor};`
 				: ''} {section.theme?.glowingIntensity
 				? `--glowing-opacity: ${getGlowingOpacity()};`
-				: ''} {section.bottomImageUrl ? 'padding-bottom: 0 !important;' : ''} {style || ''} {section
-				.theme?.backgroundColor
-				? `background-color: ${section.theme?.backgroundColor};`
-				: ``}"
+				: ''} {section.bottomImageUrl ? 'padding-bottom: 0 !important;' : ''} {style ||
+				''} {`background-color: ${
+				section.theme?.backgroundColor ||
+				page.theme?.sectionBackgroundColor ||
+				page.parentPage?.theme?.sectionBackgroundColor ||
+				'none'
+			};`}"
 		>
 			{#if section.renderType === 'callout'}
 				<RenderCalloutSection bind:page bind:section bind:isEdit bind:isEmbed />
@@ -849,7 +852,12 @@
 											?.isOppositeColors
 											? '_bg-opposite'
 											: ''}"
-										style={`background-color: ${item.theme?.backgroundColor || 'none'};`}
+										style={`background-color: ${
+											item.theme?.backgroundColor ||
+											page.theme?.sectionBackgroundColor ||
+											page.parentPage?.theme?.sectionBackgroundColor ||
+											'none'
+										};`}
 									>
 										{#if section.renderType === 'changelog'}
 											<div

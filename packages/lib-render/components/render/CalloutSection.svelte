@@ -29,9 +29,12 @@
 			?.calloutBgColor
 			? ''
 			: '_transparent'} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
-		style={section.theme?.calloutBgColor
-			? `background-color: ${section.theme?.calloutBgColor};`
-			: ''}
+		style={`background-color: ${
+			section.theme?.calloutBgColor ||
+			page.theme?.sectionItemBackgroundColor ||
+			page.parentPage?.theme?.sectionItemBackgroundColor ||
+			'none'
+		};`}
 	>
 		{#if section.bgImageUrl}
 			<RenderUrl

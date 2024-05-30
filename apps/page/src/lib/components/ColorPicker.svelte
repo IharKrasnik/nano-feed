@@ -396,6 +396,36 @@
 											</div>
 										</div>
 									</div>
+
+									<!-- <div class="_section">
+										<div class="shrink-0">
+											<div class="text-sm font-bold">Section Background Color</div>
+											<div class="flex items-center justify-between w-full">
+												<input
+													type="color"
+													id="head"
+													name="head"
+													class="mr-4"
+													bind:value={page.theme.sectionBackgroundColor}
+												/>
+											</div>
+										</div>
+									</div> -->
+
+									<div class="_section">
+										<div class="shrink-0">
+											<div class="text-sm font-bold">Section Items Background Color</div>
+											<div class="flex items-center justify-between w-full">
+												<input
+													type="color"
+													id="head"
+													name="head"
+													class="mr-4"
+													bind:value={page.theme.sectionItemBackgroundColor}
+												/>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 
