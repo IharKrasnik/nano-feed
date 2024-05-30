@@ -278,7 +278,7 @@
 	{#if section.renderType === 'embedCode'}
 		<div class="_section">
 			<div class="font-bold mb-4">Custom Code</div>
-			<div class="text-sm mb-2">Custom HTML Code</div>
+			<div class="text-sm mb-2">Custom HTML Code (no script tags)</div>
 
 			<textarea
 				placeholder="<div>Hello World</div>"
@@ -286,6 +286,16 @@
 				rows="8"
 				bind:value={section.customCodeHTML}
 			/>
+
+			<div class="mt-4">
+				<div class="text-sm mb-2">Custom JavaScript</div>
+
+				<textarea
+					class="w-full"
+					placeholder="let el = document.getElementById('my-id');"
+					bind:value={section.customScriptJs}
+				/>
+			</div>
 
 			<div class="mt-4">
 				<div class="text-sm mb-2">3rd-party script URL</div>

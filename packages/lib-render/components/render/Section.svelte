@@ -235,10 +235,19 @@
 
 	let submitForm = () => {};
 
-	if (browser && section.thirdPartyScriptUrl) {
-		eval(
-			`var d=document;var s=d.createElement("script"); s.src="${section.thirdPartyScriptUrl}";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);`
-		);
+	if (browser) {
+		if (section.thirdPartyScriptUrl) {
+			eval(
+				`var d=document;var s=d.createElement("script"); s.src="${section.thirdPartyScriptUrl}";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);`
+			);
+		}
+
+		if (section.customScriptJs) {
+			console.log('section.customScriptJs', section.customScriptJs);
+			eval(
+				`var d=document;var s=d.createElement("script"); s.innerHTML=\`\${section.customScriptJs}\`;s.async=1;d.getElementsByTagName("head")[0].appendChild(s);`
+			);
+		}
 	}
 
 	let getGlowingOpacity = () => {
