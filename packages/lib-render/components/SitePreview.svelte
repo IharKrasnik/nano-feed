@@ -271,12 +271,13 @@
 							<RenderProfilePage {page} />
 						{:else}
 							<div class="overflow-y-hidden">
+								{(page.activeHero = page.activeHero || page.heros[0]) && ''}
 								{#if page.activeHero}
 									<div
 										class="sticky bg-site {$sectionToEdit &&
 										$sectionToEdit.id !== page.activeHero?.formSection?.id
 											? 'opacity-30 grayscale'
-											: ''}  {page.activeHero.theme?.isPullBottom
+											: ''}  {page.activeHero?.theme?.isPullBottom
 											? 'mb-[-100px] sm:mb-[-150px]'
 											: ''}"
 									>
@@ -307,7 +308,7 @@
 											>
 												{#each page.sections || [] as section, i (section.id)}
 													<div
-														class="relative {page.activeHero.theme?.isPullBottom && i === 0
+														class="relative {page.activeHero?.theme?.isPullBottom && i === 0
 															? 'mb-[48px] sm:mb-[96px]'
 															: ''} {section.containerBgImageUrl ? 'my-16 sm:my-32' : ''}"
 														style={section.theme?.backgroundColor
