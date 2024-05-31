@@ -453,7 +453,7 @@
 						{/if}
 
 						{#if section.label}
-							<div class="text-sm mb-4 opacity-50 _section-label" style="font-weight: 500;">
+							<div class="text-sm mb-4 _section-label" style="font-weight: 500;">
 								<ContentEditableIf class="" bind:innerHTML={section.label} condition={isEdit} />
 							</div>
 						{/if}
@@ -484,7 +484,7 @@
 									section.theme?.isHugeTitle
 										? 'text-xl leading-8'
 										: 'text-lg font-medium'} whitespace-pre-wrap
-										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-80' : `sm:max-w-[768px] opacity-70`}
+										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-80' : `sm:max-w-[768px]`}
 										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'sm:mx-auto'}
 										"
 								>

@@ -42,6 +42,7 @@ export default (page) => {
 		'background-color': page.theme?.backgroundColor || '#ffffff',
 		'background-color-opposite': page.theme?.theme === 'dark' ? '#f6f5f4' : '#222222',
 		'text-color-opposite': page.theme?.theme === 'dark' ? '#111111' : '#f6f5f4',
+		'text-color-default': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
 		// 'background-color-alternative':
 		// 	page.theme?.theme === 'dark'
 		// 		? hexToRGBA(lighten(page.theme?.backgroundColor, 0.5), 0.1)
@@ -67,7 +68,7 @@ export default (page) => {
 		// 	: hexToRGBA(lighten(page.theme?.accentColor, 0.9), 0.5)),
 
 		'section-description-text-color':
-			page.theme?.theme === 'dark' ? 'rgba(255,255,255, .7)' : 'rgba(0,0,0, .7)',
+			page.theme?.textColor ? page.theme?.textColor : page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
 		'section-description-text-color-opposite':
 			page.theme?.theme === 'dark' ? 'rgba(0,0,0, .7)' : 'rgba(255,255,255, .7)',
 		'title-font-size':
@@ -84,7 +85,8 @@ export default (page) => {
 		'input-color': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
 		'button-color': page.theme?.buttonColor || '#fff',
 		'input-container-border-width': page.theme?.isInputBorder ? '0px' : '1px 1px 1px 1px',
-		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px'
+		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px',
+
 	};
 	styles['accent-color-darker'] = darken(styles['accent-color'], 0.6);
 	styles['accent-color-darker-lg'] = darken(styles['accent-color'], 0.8);

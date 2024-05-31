@@ -23,9 +23,9 @@
 
 <div class="flex justify-between">
 	<div
-		class="_section-item relative overflow-hidden w-full relative items-center {section.containerBgImageUrl
+		class="_section-item relative overflow-hidden w-full relative {section.containerBgImageUrl
 			? ''
-			: 'mb-4 sm:mb-8'} grid sm:grid-cols-12 {section.className || ''} {section.theme
+			: 'mb-4 sm:mb-8'} grid items-start sm:grid-cols-12 {section.className || ''} {section.theme
 			?.calloutBgColor
 			? ''
 			: '_transparent'} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
@@ -53,7 +53,8 @@
 			{/if}
 		{/if}
 		<div
-			class="relative z-10 sm:col-span-{section.innerColSpan || (section.imageUrl ? 6 : 12)}
+			class="relative z-10 self-center sm:col-span-{section.innerColSpan ||
+				(section.imageUrl ? 6 : 12)}
   {section.theme?.areImagesReversed ? 'order-last' : ''}
   {(!section.innerColSpan || section.innerColSpan === 12) && section.imageUrl ? 'mb-8' : ''}"
 		>
@@ -69,12 +70,8 @@
         <Emoji bind:emoji={section.emoji} />
         {/if} -->
 					{#if section.label}
-						<div class="text-sm font-medium mb-4">
-							<ContentEditableIf
-								class="opacity-50"
-								bind:innerHTML={section.label}
-								condition={isEdit}
-							/>
+						<div class="text-sm font-medium mb-4 _section-label">
+							<ContentEditableIf bind:innerHTML={section.label} condition={isEdit} />
 						</div>
 					{/if}
 
@@ -86,15 +83,13 @@
 
 					{#if section.description}
 						<ContentEditableIf
-							class="text-lg whitespace-pre-wrap my-4 {section.theme?.isOppositeColors
-								? '_color-item-description-opposite'
-								: '_color-item-description'}"
+							class="_section-description text-lg whitespace-pre-wrap my-4 sm:pr-24"
 							bind:innerHTML={section.description}
 							condition={isEdit}
 						/>
 					{/if}
 
-					{#if section.items?.length}
+					{#if section.items?.length && !section.theme.areItemsGrid}
 						<div class="my-8">
 							{#each section.items as item}
 								<div class="flex {item.title ? 'items-start' : 'items-center'} my-3">
@@ -102,17 +97,14 @@
 										<Emoji
 											class="inline mr-2"
 											theme={getEmojiTheme()}
+											width={20}
 											emoji={item.emoji || 'feather:check'}
 										/>
 									{/key}
-									<div class="text-base mt-[3px]">
+									<div class="text-base mt-[1px]">
 										{#if item.title}
 											<span class="font-medium">{@html item.title || ''}</span>
-										{/if}<span
-											class={section.theme?.isOppositeColors
-												? '_color-item-description-opposite'
-												: '_color-item-description'}>{@html item.description || ''}</span
-										>
+										{/if}<span class="_item-description">{@html item.description || ''}</span>
 									</div>
 								</div>
 							{/each}
@@ -122,6 +114,7 @@
 					{#if section.interactiveRenderType}
 						<div class="mt-4 mb-8 sm:mb-0 sm:mt-12}">
 							<RenderInteractiveOptions
+								class="justify-start {section.theme?.areItemsGrid ? 'mb-16' : ''}"
 								bind:sectionItem={section}
 								parentSectionId={section.id}
 								bind:page
@@ -130,6 +123,40 @@
 								bind:isEdit
 								bind:isEmbed
 							/>
+						</div>
+					{/if}
+
+					{#if section.items?.length && section.theme.areItemsGrid}
+						<div class="my-8 grid grid-cols-2 gap-4">
+							{#each section.items as item}
+								<div
+									class="_section-item px-4 py-4 sm:px-6 sm:py-6 flex flex-col  {item.title
+										? 'items-start'
+										: 'items-center'}"
+								>
+									{#key item.theme}
+										<Emoji
+											class="inline-block mr-2"
+											theme={getEmojiTheme()}
+											width={24}
+											color={(page?.parentPage || page)?.theme?.accentColor}
+											emoji={item.emoji || 'feather:check'}
+										/>
+									{/key}
+									<div>
+										<div class="mt-2 inline-block">
+											{#if item.title}
+												<span class="text-base font-medium _item-title _small"
+													>{@html item.title || ''}</span
+												>
+											{/if}
+										</div>
+									</div>
+									<div class="_item-description text-base mt-2">
+										{@html item.description || ''}
+									</div>
+								</div>
+							{/each}
 						</div>
 					{/if}
 				</div>
@@ -148,9 +175,7 @@
 		>
 			<RenderUrlWithBackground
 				aspectRatio={section.theme?.imageAspectRatio || section.theme?.imageAspectRatio}
-				urlImgClass="object-cover {section.theme?.isReversedImage
-					? 'rounded-l-lg'
-					: 'rounded-r-lg'}"
+				urlImgClass="object-cover rounded-lg"
 				imageUrl={section.imageUrl}
 				imageBackgroundUrl={section.imageBackgroundUrl}
 			/>

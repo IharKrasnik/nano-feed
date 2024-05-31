@@ -59,11 +59,11 @@
 		{:else if emoji?.startsWith('<svg') || emoji?.startsWith('$code')}
 			<div
 				class="_svg inline-block"
-				style={width === 'auto'
+				style="{width === 'auto'
 					? height === 'auto'
 						? ''
 						: `max-height: ${height}px;`
-					: `max-width: ${width}px; max-height: ${height}px;`}
+					: `max-width: ${width}px; max-height: ${height}px;`}; {color ? `color: ${color};` : ''}"
 			>
 				{#if emoji?.startsWith('$code')}
 					{@html emoji.replace('$code', '')}

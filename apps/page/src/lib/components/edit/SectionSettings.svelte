@@ -201,6 +201,10 @@
 												{
 													key: '4',
 													name: '4x8'
+												},
+												{
+													key: '5',
+													name: '5x7'
 												}
 											]}
 										/>
@@ -422,6 +426,31 @@
 					{/if}
 
 					<div class="my-4">
+						{#if section.renderType === 'callout'}
+							<div class="_section my-4">
+								<div class="mb-2 font-bold">Items Settings</div>
+
+								<ToggleGroup
+									tabs={[
+										{
+											key: 'inline',
+											icon: 'feather:list',
+											name: 'Inline',
+											isSelected: !section.theme.areItemsGrid
+										},
+										{
+											key: 'grid',
+											icon: 'feather:grid',
+											name: 'Cards',
+											isSelected: section.theme.areItemsGrid
+										}
+									]}
+									onTabSelected={(tab) => {
+										section.theme.areItemsGrid = tab.key === 'grid';
+									}}
+								/>
+							</div>
+						{/if}
 						{#if section === sectionItem}
 							<div class="_section my-4">
 								<div class="mb-2 font-bold">Glowing</div>

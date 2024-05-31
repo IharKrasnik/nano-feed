@@ -23,12 +23,13 @@
 		'Cabin',
 		'Fraunces',
 		'Montserrat',
-		'Space Grotesk'
+		'Space Grotesk',
+		'Bricolage Grotesque'
 	];
 
 	let labelFonts = ['Inter', 'Space Grotesk', 'Fraunces'];
 
-	let textFonts = ['Inter', 'Montserrat', 'Poppins', 'Space Grotesk'];
+	let textFonts = ['Inter', 'Montserrat', 'DM Sans', 'Poppins', 'Space Grotesk'];
 
 	if (page.theme && !page.theme.titleFont) {
 		page.theme.titleFont = titleFonts[0];

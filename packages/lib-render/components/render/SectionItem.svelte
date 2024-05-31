@@ -205,7 +205,7 @@
 												/>
 											</h2>
 											{#if item.label}
-												<div class="opacity-70 _item-description">
+												<div class="_item-description">
 													<ContentEditableIf
 														class=""
 														bind:innerHTML={item.label}
@@ -297,9 +297,9 @@
 												bind:innerHTML={item.title}
 												condition={isEdit}
 											/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
-											class="opacity-70  {section.isDatabase
+											class={section.isDatabase
 												? '_line-clamp-4 hover:line-clamp-5'
-												: 'sm:inline inline'}"
+												: 'sm:inline inline'}
 											bind:innerHTML={item.description}
 											condition={isEdit}
 										/>
@@ -383,7 +383,7 @@
 													<Emoji
 														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 														emoji={section.benefitsEmoji || '✅'}
-														class="mr-2 opacity-70"
+														class="mr-2"
 													/>
 													{benefit}
 												</div>

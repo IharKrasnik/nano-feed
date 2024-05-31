@@ -335,7 +335,7 @@
 		{:else if sectionItem.interactiveRenderType === 'email'}
 			{#if isHeader}
 				<button
-					class="shrink-0 ring-1"
+					class="shrink-0 ring-1 _small"
 					on:click={() => {
 						let emailInput = document.getElementsByClassName('_email-input')[0];
 						if (emailInput) {
@@ -461,7 +461,9 @@
 						? '_link'
 						: ''} cursor-pointer {sectionItem.interactiveRenderType === 'link'
 						? ''
-						: 'sm:w-auto'} {clazz?.includes('w-full') ? 'w-full' : 'sm:w-auto'} {urlClass} {size
+						: 'sm:w-auto'} {clazz?.includes('w-full') ? 'w-full' : 'sm:w-auto'} {urlClass} {isHeader
+						? '_issmall'
+						: size
 						? `_is${size}`
 						: '_isnormal'}"
 					target={sectionItem.url?.startsWith('http') ? '_blank' : ''}
@@ -552,7 +554,7 @@
 							{/if}
 							{#if sectionItem.urlIcon}
 								<Emoji
-									width={size === 'small' ? 16 : 17}
+									width={size === 'small' || isHeader ? 13 : 17}
 									class="mr-2 rounded-full"
 									emoji={sectionItem.urlIcon}
 								/>
@@ -612,7 +614,7 @@
 								{#if sectionItem.url2Icon}
 									<Emoji
 										class="mr-2 rounded-full"
-										width={size === 'small' ? 16 : 17}
+										width={size === 'small' || isHeader ? 13 : 17}
 										emoji={sectionItem.url2Icon}
 									/>
 								{/if}
@@ -668,15 +670,28 @@
 
 	a._islarge button {
 		font-size: 17px;
+		font-weight: 500;
 		padding: 12px 20px;
 		border-radius: var(--button-large-radius);
 	}
 
+	a._isnormal button {
+		font-size: 16px;
+		font-weight: 500;
+		padding: 12px 20px;
+	}
+
 	a._ishuge button {
-		font-size: 20px;
+		font-size: 18px;
+		font-weight: 500;
 		padding: 12px 24px;
 
 		border-radius: var(--button-huge-radius);
+	}
+
+	a._issmall button {
+		font-size: 13px;
+		font-weight: 500;
 	}
 
 	@media (max-width: 640px) {
