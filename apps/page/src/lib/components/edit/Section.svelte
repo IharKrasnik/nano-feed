@@ -445,7 +445,7 @@
 								</div>
 
 								{#if section.isMasonryGrid}
-									<input class="ml-2" type="checkbox" bind:checked={section.maxWidthPx} /> Funky
+									<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
 								{/if}
 
 								<div>

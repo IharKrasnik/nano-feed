@@ -20,7 +20,7 @@
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
 
-	let clazz;
+	let clazz = '';
 	export { clazz as class };
 
 	export let section;
@@ -42,7 +42,7 @@
 
 {#if item.isShown || _.isUndefined(item.isShown)}
 	<div
-		class=" break-inside-avoid {section.isMasonryGrid
+		class="{clazz} break-inside-avoid {section.isMasonryGrid
 			? 'mb-6'
 			: 'mb-2'} sm:col-span-{item.colSpan || 1} sm:row-span-{item.rowSpan ||
 			1} {section.renderType === 'carousel'
@@ -108,7 +108,7 @@
 				page.theme?.sectionItemBackgroundColor ||
 				page.parentPage?.theme?.sectionItemBackgroundColor ||
 				'none'
-			};`}"
+			};`}  {item.renderType === 'tag' ? 'border-radius: 50px;' : ''}"
 		>
 			{#if isEdit && $sectionToEdit?.id === section.id}
 				<div class="hidden group-hover:block absolute right-0" style="z-index: 20;">
@@ -172,10 +172,11 @@
 							? 'sm:pr-8'
 							: page?.theme?.containerWidth === 900
 							? 'p-4'
-							: `px-6 py-5 ${
+							: `px-6 ${item.renderType === 'tag' ? 'py-4' : 'py-5'} ${
 									section.columns > 3 ? 'sm:px-5' : section.columns > 2 ? 'sm:px-6' : 'sm:px-8'
-							  } sm:py-6`} text-left self-center order-none-off {section.columns == 1 &&
-						i % 2 === 1
+							  } ${
+									item.renderType === 'tag' ? 'sm:py-4' : 'sm:py-6'
+							  }`} text-left self-center order-none-off {section.columns == 1 && i % 2 === 1
 							? 'sm:order-last-off'
 							: ''} {section.columns === 1 &&
 							(!item.imageUrl || section.items.length === 1) &&
@@ -216,7 +217,7 @@
 										</div>
 									</div>
 								{:else}
-									{#if item.emoji && !item.theme?.isIconLeft}
+									{#if item.emoji && !item.theme?.isIconLeft && item.renderType !== 'tag'}
 										<div
 											class="{emojiStyle[section.columns]} _section-img mr-2 mb-4 {item.theme
 												?.align === 'center'
@@ -246,14 +247,18 @@
 													: 'mb-2 sm:mb-4'
 												: ''} {section.columns < 3 ? 'flex-col items-start' : 'items-center'}"
 										>
-											{#if item.emoji && item.theme?.isIconLeft}
+											{#if item.emoji && (item.theme?.isIconLeft || item.renderType === 'tag')}
 												<div class="{emojiStyle[section.columns]} flex _section-img mr-2">
 													<Emoji
 														bind:emoji={item.emoji}
 														bind:color={item.iconColor}
 														bind:bgColor={item.emojiBgColor}
 														class="text-xl"
-														width={20}
+														width={item.theme?.emojiSizePx || item.theme?.titleSize === 'small'
+															? 16
+															: item.theme?.titleSize === 'large'
+															? 28
+															: 20}
 														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 													/>
 												</div>
@@ -274,32 +279,35 @@
 									{/if}
 								{/if}
 
-								{#if item.description && !item.pricing}
+								{#if (item.description || item.title || item.icon) && !item.pricing}
 									<h3
-										class="{descriptionStyle[
-											section.columns
-										]} _item-description whitespace-pre-wrap  {item.theme?.align === 'center'
+										class="{descriptionStyle[section.columns]}  whitespace-pre-wrap  {item.theme
+											?.align === 'center'
 											? 'text-center'
 											: ''}"
 									>
 										{#if item.title && item.theme?.isInlineTitle}
-											{#if item.emoji && item.theme.isIconLeft}
+											{#if item.emoji && (item.theme.isIconLeft || item.renderType === 'tag')}
 												<Emoji
-													width={16}
 													bind:emoji={item.emoji}
 													bind:color={item.iconColor}
 													bind:bgColor={item.emojiBgColor}
-													class="sm:inline mb-1 sm:mb-0"
+													class="text-xl"
+													width={item.theme?.emojiSizePx || item.theme?.titleSize === 'small'
+														? 16
+														: item.theme?.titleSize === 'large'
+														? 28
+														: 20}
 													theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 												/>{/if}<ContentEditableIf
-												class="_inline_title sm:inline mb-1 sm:mb-0 font-medium"
+												class="_inline_title _item-title sm:inline mb-1 sm:mb-0 font-medium"
 												style="color: {page.theme?.theme === 'dark' ? '#ffffff' : '#111111'};"
 												bind:innerHTML={item.title}
 												condition={isEdit}
 											/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
-											class={section.isDatabase
+											class="_item-description {section.isDatabase
 												? '_line-clamp-4 hover:line-clamp-5'
-												: 'sm:inline inline'}
+												: 'sm:inline inline'}"
 											bind:innerHTML={item.description}
 											condition={isEdit}
 										/>
@@ -330,7 +338,7 @@
 
 								{#if item.tagsStr}
 									<div
-										class="my-4 mt-6 flex flex-wrap gap-2 __d {item?.theme?.align === 'center'
+										class="my-4 mt-6 flex flex-wrap gap-2 {item?.theme?.align === 'center'
 											? 'justify-center'
 											: ''}"
 									>
@@ -351,7 +359,7 @@
 															class="block mr-2"
 															theme={getEmojiTheme({ item })}
 															width={14}
-															emoji={item.emoji || 'feather:check'}
+															emoji={'feather:check'}
 														/>
 													{/key}
 												{/if}
@@ -367,7 +375,7 @@
 											{item.pricing.amount ? toDollars(item.pricing.amount * 100) : 'Free'}
 										</div>
 										{#if item.pricing.amount}
-											<div class="text-lg">
+											<div class="text-lg opacity-70">
 												/{item.pricing.per}
 											</div>
 										{/if}
@@ -377,12 +385,12 @@
 									</div>
 
 									{#if item.pricing.benefitsStr}
-										<div class="mb-4">
+										<div class="mb-4 _section-description">
 											{#each item.pricing.benefitsStr.split('\n') as benefit}
 												<div class="my-1 sm:my-2 flex items-center">
 													<Emoji
 														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-														emoji={section.benefitsEmoji || '✅'}
+														emoji={section.benefitsEmoji || 'feather:check'}
 														class="mr-2"
 													/>
 													{benefit}

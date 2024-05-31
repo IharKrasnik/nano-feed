@@ -81,7 +81,11 @@
 		<RenderMomentumFeed bind:blog bind:streamSlug={blog.streamSlug} />
 	{:else if section.items?.length}
 		<div class="w-full {clazz}">
-			<div class="sm:columns-{section.columns} gap-4 {section.columns > 1 ? 'items-start' : ''}">
+			<div
+				class="sm:columns-{section.columns} {section.isFlexGrid && section.isFlexWrap
+					? 'gap-2'
+					: 'gap-4'} {section.columns > 1 ? 'items-start' : ''}"
+			>
 				{#each section.items || [] as item, i}
 					<div class="mb-8" style="-webkit-column-break-inside: avoid;">
 						<div

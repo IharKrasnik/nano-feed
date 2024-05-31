@@ -389,7 +389,7 @@
 		<div
 			class="{section.imgMaxWidth === 'full-screen' || section._isCtaFooter
 				? ''
-				: '_container-width mx-auto'}  _section-container {section.isGlowing
+				: '_container-width mx-auto overflow-x-scroll'}  _section-container {section.isGlowing
 				? `_glowing ${section.theme?.isOverrideGlowingColor ? '_override-glowing-color' : ''}
 	${section.theme?.glowingIntensity ? `_intensity` : ''}`
 				: ''} {section.className}  {section.theme?.isTransparent
@@ -592,7 +592,7 @@
 				{:else if section.renderType === 'form'}
 					<RenderForm bind:section bind:page bind:isEdit />
 				{:else if section.items?.length}
-					<div class="w-full _container-width mx-auto">
+					<div class="w-full _container-width mx-auto overflow-x-scroll">
 						{#if section.renderType === 'carousel'}
 							{#if !section.carouselType || section.carouselType === 'vertical'}
 								<div
@@ -845,7 +845,9 @@
 							{section.renderType === 'changelog'
 											? '_transparent _no-padding sm:w-[600px] mx-auto'
 											: section.isFlexGrid
-											? 'flex justify-center'
+											? `flex justify-start ${section.theme?.isTitleLeft} ${
+													section.theme?.isTitleLeft ? '' : 'sm:justify-center'
+											  } overflow-x-scroll`
 											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.isFeatured
 											? '_highlighted'
 											: ''} {item.theme?.isTransparent ? '_transparent' : ''} {item.theme
@@ -1013,7 +1015,7 @@
 													{/if}
 
 													{#if item.pricing?.benefitsStr}
-														<div class="mt-4 mb-8">
+														<div class="mt-4 mb-8 _section-description">
 															{#each item.pricing.benefitsStr.split('\n') as benefit}
 																<div class="my-2 flex items-center">
 																	<Emoji
@@ -1098,20 +1100,24 @@
 						{:else}
 							<div
 								class=" {section.theme?.columnsGap === 'big'
-									? 'sm:gap-12 gap-4'
+									? 'sm:gap-12'
 									: section.theme?.columnsGap === 'huge'
-									? 'sm:gap-20 gap-4'
-									: 'gap-4'}  {section.columns > 1
+									? 'sm:gap-20'
+									: ''} {section.isFlexGrid && section.isFlexWrap
+									? 'gap-2'
+									: 'gap-4'} {section.columns > 1
 									? 'items-stretch-or-not'
 									: ''}  {section.renderType === 'carousel'
 									? 'flex overflow-x-auto sm:grid'
 									: ''} {section.isMasonryGrid
 									? `sm:columns-${section.columns}`
 									: section.isFlexGrid
-									? `flex justify-center ${section.isFlexWrap ? 'flex-wrap' : ''}`
-									: `grid sm:grid-cols-${section.columns} `} {section.items[0]?.theme?.isTransparent
-									? 'mt-8'
-									: ''}"
+									? `flex justify-start ${section.theme?.isTitleLeft} ${
+											section.theme?.isTitleLeft ? '' : 'sm:justify-center'
+									  } ${section.isFlexWrap ? 'flex-wrap' : ''} overflow-x-scroll`
+									: `${section.theme?.isMobileInline ? 'flex sm:grid' : 'grid'} sm:grid-cols-${
+											section.columns
+									  } `} {section.items[0]?.theme?.isTransparent ? 'mt-8' : ''}"
 							>
 								{#each section.items || [] as item, i (item.id)}
 									{#key $selectedSectionItem?.id}
@@ -1120,6 +1126,9 @@
 												bind:section
 												bind:page
 												bind:item={$selectedSectionItem}
+												class="{$selectedSectionItem.isFlexGrid
+													? 'min-w-[70%] sm:min-w-0'
+													: ''} {section.theme?.isMobileInline ? 'min-w-[90%] sm:min-w-0' : ''}"
 												bind:isShowAuthor
 												bind:isEdit
 												{selectCarouselItem}
@@ -1135,6 +1144,10 @@
 												bind:page
 												bind:isEdit
 												bind:item
+												class="{section.isFlexGrid ? 'min-w-[70%] sm:min-w-0' : ''} {section.theme
+													?.isMobileInline
+													? 'min-w-[90%] sm:min-w-0'
+													: ''}"
 												bind:isShowAuthor
 												{selectCarouselItem}
 												{getEmojiTheme}

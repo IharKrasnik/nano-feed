@@ -295,6 +295,10 @@
 											{
 												key: 'testimonial',
 												name: 'Testimonial'
+											},
+											{
+												key: 'tag',
+												name: 'Tag'
 											}
 										]}
 									/>
@@ -307,7 +311,7 @@
 											disabled={sectionItem.renderType}
 											type="checkbox"
 											bind:checked={sectionItem.theme.isInlineTitle}
-										/> Inline Title
+										/> Inline Title and Description
 									</div>
 								</div>
 
@@ -413,6 +417,17 @@
 								]}
 								bind:value={sectionItem.theme.columnsGap}
 							/>
+						{/if}
+
+						{#if section.id === sectionItem.id}
+							<div class="flex mt-2">
+								<input
+									type="checkbox"
+									class="mr-2"
+									bind:checked={sectionItem.theme.isMobileInline}
+								/>
+								<div>Show items horizontally on mobile</div>
+							</div>
 						{/if}
 					</div>
 

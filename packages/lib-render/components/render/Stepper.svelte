@@ -52,7 +52,9 @@
 					{/if}
 					{#if step.interactiveRenderType}
 						<RenderInteractiveOptions
-							class="{`${i % 2 ? 'justify-start' : 'justify-end'}`} mt-4 mb-8"
+							class="{`${
+								i % 2 ? 'justify-center sm:justify-start' : 'justify-center sm:justify-end'
+							}`} mt-4 mb-8"
 							size={'normal'}
 							bind:sectionItem={step}
 							parentSectionId={section.id}
