@@ -319,7 +319,7 @@
 
 {#if section.isShown}
 	<div
-		class="relative {section.bgImageUrl ? 'p-8 mb-16 mx-2 sm:mx-0' : ''}   {isCloneable
+		class="relative {section.bgImageUrl ? 'sm:p-8 mb-16 mx-2 sm:mx-0' : ''}   {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
 			: ''} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 	>

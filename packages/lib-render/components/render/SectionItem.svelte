@@ -66,7 +66,7 @@
 				? '_interactive'
 				: ''} h-full {$heatmap ? '' : 'overflow-hidden'} {isEdit
 				? 'hover:outline outline-4 outline-purple-200'
-				: ''} "
+				: ''}  {item.renderType === 'tag' ? '_item-tag' : ''}"
 			on:click={() => {
 				if (section.carousel) {
 					selectCarouselItem(item);
@@ -108,7 +108,7 @@
 				page.theme?.sectionItemBackgroundColor ||
 				page.parentPage?.theme?.sectionItemBackgroundColor ||
 				'none'
-			};`}  {item.renderType === 'tag' ? 'border-radius: 50px;' : ''}"
+			};`} "
 		>
 			{#if isEdit && $sectionToEdit?.id === section.id}
 				<div class="hidden group-hover:block absolute right-0" style="z-index: 20;">

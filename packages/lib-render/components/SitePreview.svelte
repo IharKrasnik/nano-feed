@@ -310,7 +310,7 @@
 													<div
 														class="relative {page.activeHero?.theme?.isPullBottom && i === 0
 															? 'pb-[48px] sm:pb-[96px]'
-															: ''} {section.containerBgImageUrl ? 'my-16 sm:my-32' : ''}"
+															: ''} {section.containerBgImageUrl ? 'py-16 sm:py-32' : ''}"
 														style={section.theme?.backgroundColor
 															? $sectionToEdit?.id === section.id
 																? `background-color: ${$sectionToEdit.theme?.backgroundColor};`

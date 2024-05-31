@@ -127,7 +127,7 @@
 					{/if}
 
 					{#if section.items?.length && section.theme.areItemsGrid}
-						<div class="my-8 grid grid-cols-2 gap-4">
+						<div class="my-8 grid grid-cols-2 gap-3 sm:gap-4">
 							{#each section.items as item}
 								<div
 									class="_section-item px-4 py-4 sm:px-6 sm:py-6 flex flex-col  {item.title
@@ -152,7 +152,7 @@
 											{/if}
 										</div>
 									</div>
-									<div class="_item-description text-base mt-2">
+									<div class="_item-description text-sm sm:text-base mt-2">
 										{@html item.description || ''}
 									</div>
 								</div>
