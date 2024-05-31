@@ -1,6 +1,7 @@
 <script>
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
 	import RenderUrlWithBackground from 'lib/components/RenderUrlWithBackground.svelte';
+	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
 
 	export let page;
 	export let section;
@@ -47,6 +48,17 @@
 							class="_item-description opacity-70 mt-4"
 							bind:innerHTML={step.description}
 							condition={isEdit}
+						/>
+					{/if}
+					{#if step.interactiveRenderType}
+						<RenderInteractiveOptions
+							class="{`${i % 2 ? 'justify-start' : 'justify-end'}`} mt-4 mb-8"
+							size={'normal'}
+							bind:sectionItem={step}
+							parentSectionId={section.id}
+							bind:page
+							itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+							bind:isEdit
 						/>
 					{/if}
 					{#if step.imageUrl}
