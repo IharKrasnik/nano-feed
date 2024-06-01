@@ -117,7 +117,7 @@
 					bind:icon={item.emoji}
 					bind:color={item.iconColor}
 					bind:bgColor={item.emojiBgColor}
-					bind:sizePx={item.emojiSizePx}
+					bind:sizePx={item.theme.emojiSizePx}
 				/>
 			{/if}
 

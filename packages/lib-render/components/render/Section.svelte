@@ -447,7 +447,7 @@
 									bind:bgColor={section.emojiBgColor}
 									theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 									bind:emoji={section.emoji}
-									width={section.emojiSizePx || 'auto'}
+									width={section.theme?.emojiSizePx || 'auto'}
 								/>
 							</div>
 						{/if}
@@ -829,7 +829,7 @@
 						{:else if section.columns === 1 && !section.isFlexGrid}
 							{#each section.items as item}
 								<div class="flex justify-between">
-									<div
+									<a
 										class="_section-item {item.theme?.maxWidth
 											? item.theme.maxWidth === '75p'
 												? 'sm:w-[75%] sm:mx-auto'
@@ -853,6 +853,8 @@
 											: ''} {item.theme?.isTransparent ? '_transparent' : ''} {item.theme
 											?.isOppositeColors
 											? '_bg-opposite'
+											: ''} {item.url && !item.interactiveRenderType
+											? ' hover:opacity-80 hover:!_border-accent'
 											: ''}"
 										style={`background-color: ${
 											item.theme?.backgroundColor ||
@@ -860,6 +862,8 @@
 											page.parentPage?.theme?.sectionBackgroundColor ||
 											'none'
 										};`}
+										href={item.interactiveRenderType ? null : item.url}
+										target={item.url?.startsWith('http') ? '_blank' : ''}
 									>
 										{#if section.renderType === 'changelog'}
 											<div
@@ -898,7 +902,7 @@
 																bind:color={item.iconColor}
 																bind:bgColor={item.emojiBgColor}
 																class="rounded-full text-2xl"
-																width={item.emojiSizePx || 30}
+																width={item.theme?.emojiSizePx || 30}
 																mobileWidth={26}
 																theme={page.parentPage?.theme?.theme ||
 																	page?.theme?.theme ||
@@ -907,19 +911,22 @@
 														</div>
 													{/if}
 
-													{#if item.url && !item.interactiveRenderType}
+													<div class="_item-title _large mb-4">
+														<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+													</div>
+													<!-- {#if item.url && !item.interactiveRenderType}
 														<a
-															class="_item-title _big block mb-4"
+															class="_item-title _large block mb-4"
 															href={item.url || ''}
 															target={item.url?.startsWith('http') ? '_blank' : ''}
 														>
 															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
 														</a>
 													{:else}
-														<div class="_item-title _big mb-4">
+														<div class="_item-title _large mb-4">
 															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
 														</div>
-													{/if}
+													{/if} -->
 
 													{#if section.renderType === 'changelog'}
 														<RenderUrlWithBackground
@@ -997,23 +1004,6 @@
 														</div>
 													{/if}
 
-													{#if item.syncPage?.metadata?.fullAmount}
-														<hr class="w-full my-6 opacity-20" />
-
-														<div class="flex items-end mt-6 mb-4 ">
-															<div class="text-base sm:text-xl font-bold mr-2">
-																{item.syncPage?.metadata?.fullAmount
-																	? toDollars(item.syncPage?.metadata?.fullAmount)
-																	: 'Free'}
-															</div>
-															{#if item.syncPage?.metadata?.payPer}
-																<div class="opacity-70 text-sm sm:text-lg">
-																	/ {item.syncPage?.metadata?.payPer}
-																</div>
-															{/if}
-														</div>
-													{/if}
-
 													{#if item.pricing?.benefitsStr}
 														<div class="mt-4 mb-8 _section-description">
 															{#each item.pricing.benefitsStr.split('\n') as benefit}
@@ -1051,6 +1041,23 @@
 																bind:isEdit
 																bind:isEmbed
 															/>
+														</div>
+													{/if}
+
+													{#if item.syncPage?.metadata?.fullAmount}
+														<hr class="w-full my-6 opacity-20" />
+
+														<div class="flex items-end mt-6 mb-4 ">
+															<div class="text-base sm:text-xl font-bold mr-2">
+																{item.syncPage?.metadata?.fullAmount
+																	? toDollars(item.syncPage?.metadata?.fullAmount)
+																	: 'Free'}
+															</div>
+															{#if item.syncPage?.metadata?.payPer}
+																<div class="opacity-70 text-sm sm:text-lg">
+																	/ {item.syncPage?.metadata?.payPer}
+																</div>
+															{/if}
 														</div>
 													{/if}
 
@@ -1094,7 +1101,7 @@
 												/>
 											</div>
 										{/if}
-									</div>
+									</a>
 								</div>
 							{/each}
 						{:else}

@@ -224,14 +224,14 @@
 												? 'text-center'
 												: ''}"
 										>
-											{#key item.emojiSizePx}
+											{#key item.theme?.emojiSizePx}
 												<Emoji
 													bind:emoji={item.emoji}
 													bind:color={item.iconColor}
 													bind:bgColor={item.emojiBgColor}
 													class="text-2xl"
 													width={'auto'}
-													height={item.emojiSizePx || 30}
+													height={item.theme?.emojiSizePx || 30}
 													mobileWidth={26}
 													theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 												/>
@@ -245,7 +245,10 @@
 												? page?.theme?.containerWidth
 													? 'mb-2'
 													: 'mb-2 sm:mb-4'
-												: ''} {section.columns < 3 ? 'flex-col items-start' : 'items-center'}"
+												: ''} {section.columns < 3 ? 'flex-col items-start' : 'items-center'} {item
+												.theme?.align === 'center'
+												? 'justify-center'
+												: ''}"
 										>
 											{#if item.emoji && (item.theme?.isIconLeft || item.renderType === 'tag')}
 												<div class="{emojiStyle[section.columns]} flex _section-img mr-2">
@@ -254,7 +257,9 @@
 														bind:color={item.iconColor}
 														bind:bgColor={item.emojiBgColor}
 														class="text-xl"
-														width={item.theme?.emojiSizePx || item.theme?.titleSize === 'small'
+														width={item.theme?.emojiSizePx
+															? item.theme?.emojiSizePx
+															: item.theme?.titleSize === 'small'
 															? 16
 															: item.theme?.titleSize === 'large'
 															? 28
@@ -263,12 +268,7 @@
 													/>
 												</div>
 											{/if}
-											<h2
-												class="{headerTextStyle(item)[section.columns]} _item-title w-full {item
-													.theme?.align === 'center'
-													? 'text-center'
-													: ''}"
-											>
+											<h2 class="{headerTextStyle(item)[section.columns]} _item-title ">
 												<ContentEditableIf
 													class=""
 													bind:innerHTML={item.title}

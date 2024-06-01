@@ -366,7 +366,7 @@
 								bind:value={sectionItem.theme.imageAspectRatio}
 							/>
 
-							<div class="mb-2 font-semibold mt-6">Items Image position</div>
+							<div class="mb-2 font-semibold mt-6">Items image position</div>
 
 							<ToggleGroup
 								tabs={[
