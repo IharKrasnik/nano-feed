@@ -94,6 +94,24 @@
 						text: item.title || item.description
 					});
 				}
+
+				if (isEdit) {
+					setTimeout(() => {
+						let editEl = document.getElementById(`section-edit-${item.id}`);
+						if (editEl) {
+							editEl.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+							editEl.classList.add('!outline-purple-300');
+							editEl.classList.add('!outline-2');
+							editEl.classList.add('!outline');
+
+							setTimeout(() => {
+								editEl.classList.remove('!outline-purple-300');
+								editEl.classList.remove('!outline-2');
+								editEl.classList.remove('!outline');
+							}, 1000);
+						}
+					});
+				}
 			}}
 			class:heatmap={$heatmap && section.linkType === 'interactive'}
 			data-heatmap-clicks-count={$heatmap && section.linkType === 'interactive'
@@ -245,10 +263,7 @@
 												? page?.theme?.containerWidth
 													? 'mb-2'
 													: 'mb-2 sm:mb-4'
-												: ''} {section.columns < 3 ? 'flex-col items-start' : 'items-center'} {item
-												.theme?.align === 'center'
-												? 'justify-center'
-												: ''}"
+												: ''} items-center {item.theme?.align === 'center' ? 'justify-center' : ''}"
 										>
 											{#if item.emoji && (item.theme?.isIconLeft || item.renderType === 'tag')}
 												<div class="{emojiStyle[section.columns]} flex _section-img mr-2">
@@ -270,7 +285,7 @@
 											{/if}
 											<h2 class="{headerTextStyle(item)[section.columns]} _item-title ">
 												<ContentEditableIf
-													class=""
+													class={item.theme?.align === 'center' ? 'text-center' : ''}
 													bind:innerHTML={item.title}
 													condition={isEdit}
 												/>

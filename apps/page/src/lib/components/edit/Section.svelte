@@ -118,14 +118,6 @@
 	if (section.streamSlug) {
 		section.isUseDb = true;
 	}
-
-	$: if ($selectedSectionItem) {
-		let editEl = document.getElementById(`section-edit-${$selectedSectionItem.id}`);
-
-		if (editEl) {
-			editEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-		}
-	}
 </script>
 
 {#if isShort}
@@ -430,7 +422,7 @@
 										<div class="font-semibold mb-1 text-sm mt-2">Min item width (px)</div>
 										<input
 											type="number"
-											style="max-width: 130px;"
+											style="max-width: 140px;"
 											bind:value={section.minWidthPx}
 										/>
 									</div>
@@ -438,7 +430,7 @@
 										<div class="font-semibold mb-1 text-sm mt-2">Max item width (px)</div>
 										<input
 											type="number"
-											style="max-width: 130px;"
+											style="max-width: 140px;"
 											bind:value={section.maxWidthPx}
 										/>
 									</div>
