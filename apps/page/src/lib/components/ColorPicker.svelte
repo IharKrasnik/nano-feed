@@ -424,6 +424,16 @@
 													class="mr-4"
 													bind:value={page.theme.sectionItemBackgroundColor}
 												/>
+												{#if page.theme.sectionItemBackgroundColor}
+													<div
+														class="_text-link text-sm cursor-pointer"
+														on:click={() => {
+															page.theme.sectionItemBackgroundColor = null;
+														}}
+													>
+														Reset
+													</div>
+												{/if}
 											</div>
 										</div>
 									</div>

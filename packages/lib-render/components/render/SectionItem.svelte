@@ -4,6 +4,7 @@
 	import { post } from 'lib/api';
 	import RenderUrlWithBackground from 'lib/components/RenderUrlWithBackground.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import { getThemeValue } from 'lib-render/helpers/getThemeValue';
 
 	import heatmap, { getHeatmapClicksCount } from 'lib-render/stores/heatmap';
 
@@ -49,24 +50,34 @@
 			? `min-w-[300px] sm:min-w-0 cursor-pointer`
 			: ''} {$selectedSectionItem?.id === item.id ? 'outline outline-4 outline-purple-300' : ''}"
 		class:pt-16={section.isFunkyGrid && i === 1}
-		style="{section.isFlexGrid && section.maxWidthPx
-			? `max-width: ${section.maxWidthPx}px;`
-			: ''} {section.isFlexGrid && section.minWidthPx ? `min-width: ${section.minWidthPx}px;` : ''}"
+		style="{section.isFlexGrid && (section.maxWidthPx || section.theme?.itemsMaxWidthPx)
+			? `max-width: ${section.maxWidthPx || section.theme.itemsMaxWidthPx}px;`
+			: ''} {section.isFlexGrid && (section.minWidthPx || section.theme?.itemsMinWidthPx)
+			? `min-width: ${section.minWidthPx || section.theme.itemsMinWidthPx}px;`
+			: ''} {section.theme?.itemsMinHeightPx
+			? `min-height: ${section.theme.itemsMinHeightPx}px;`
+			: ''} {section.theme?.itemsMaxHeightPx
+			? `max-height: ${section.theme.itemsMaxHeightPx}px;`
+			: ''} "
 	>
 		<a
 			href={item.url && !item.interactiveRenderType ? item.url : null}
 			target={item.url?.startsWith('http') ? '_blank' : ''}
 			id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
-			class="_section-item group block relative {item.bgImageUrl
+			class="_section-item group block relative {item.bgImageUrl || section.theme?.itemsBgImageUrl
 				? '_bg-image'
 				: ''}  {item.className || ''} {item.isFeatured ? '_highlighted' : ''} {section.theme
-				?.isItemsTransparent || item.theme?.isTransparent
+				?.areItemsTransparent || item.theme?.isTransparent
 				? '_transparent'
 				: 'rounded-lg sm:rounded-xl'} {item.url && !item.interactiveRenderType
 				? '_interactive'
 				: ''} h-full {$heatmap ? '' : 'overflow-hidden'} {isEdit
 				? 'hover:outline outline-4 outline-purple-200'
-				: ''}  {item.renderType === 'tag' ? '_item-tag' : ''}"
+				: ''} {item?.theme?.isNoPadding || section.theme?.areItemsNoPadding
+				? '_borderlesss'
+				: ''} {item.renderType === 'tag' || section.theme?.itemsRenderType === 'tag'
+				? '_item-tag'
+				: ''}"
 			on:click={() => {
 				if (section.carousel) {
 					selectCarouselItem(item);
@@ -122,9 +133,11 @@
 				  })
 				: null}
 			style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px; {`background-color: ${
-				section.theme?.backgroundColor ||
-				page.theme?.sectionItemBackgroundColor ||
-				page.parentPage?.theme?.sectionItemBackgroundColor ||
+				(!item.theme?.isTransparent &&
+					!section.theme?.areItemsTransparent &&
+					(section.theme?.backgroundColor ||
+						page.theme?.sectionItemBackgroundColor ||
+						page.parentPage?.theme?.sectionItemBackgroundColor)) ||
 				'none'
 			};`} "
 		>
@@ -149,14 +162,14 @@
 				/>
 			{/if}
 
-			{#if item.bgImageUrl}
+			{#if item.bgImageUrl || section.theme?.itemsBgImageUrl}
 				<RenderUrl
-					url={item.bgImageUrl}
+					url={item.bgImageUrl || section.theme?.itemsBgImageUrl}
 					imgClass={'absolute left-0 top-0 w-full h-full object-cover rounded-xl'}
 					style="z-index: 0;"
 				/>
 
-				{#if !item.theme?.isNotBgImageDimmed}
+				{#if !item.theme?.isNotBgImageDimmed && !section.theme?.areNotItemsBgImageDimmed}
 					<div
 						class="absolute top-0 left-0 w-full h-full rounded-xl"
 						style="background-color: {page.theme?.theme === 'dark'
@@ -168,7 +181,7 @@
 
 			<div
 				class="{item.theme
-					?.backgroundColor} flex flex-col relative z-10 justify-between {section.columns > 1
+					?.backgroundColor} flex flex-col  relative z-10 justify-between {section.columns > 1
 					? 'h-full'
 					: ''} grid-cols-1 {section.columns > 1
 					? 'block'
@@ -177,39 +190,58 @@
 					: ''} w-full {section.columns > 1
 					? `${section.carousel ? 'shadow-md' : ''} rounded-2xl`
 					: ''}  {section.columns > 1 ? 'items-stretch' : 'items-center'} content-start {item.theme
-					?.isOppositeColors
+					?.isOppositeColors ||
+				section.theme?.areItemsOppositeColors ||
+				((item.theme?.isTransparent || section.theme?.areItemsTransparent) &&
+					(section.theme?.isOppositeColors || section.theme?.areItemsOppositeColors))
 					? '_bg-opposite'
 					: ''}"
 				style="{section.columns === 1 && section.items.length === 1 && !item.imageUrl
 					? 'margin-bottom: -64px;'
-					: ''} background-color: {item.theme?.backgroundColor || 'none'};"
+					: ''} background-color: {(!item.theme?.isTransparent &&
+					!section.theme?.areItemsTransparent &&
+					(item.theme?.backgroundColor ||
+						section.theme?.itemsBackgroundColor ||
+						getThemeValue(page, 'sectionItemBackgroundColor'))) ||
+					'none'};"
 			>
-				{#if item.title || item.description || item.emoji}
+				{#if item.title || item.description || item.emoji || section.theme?.itemsDefaultEmoji}
 					<div
-						class="flex w-full h-full flex-col justify-between {item.theme?.isTransparent
+						class="flex w-full h-full flex-col  {(item.theme?.isNoPadding ||
+							section.theme?.areItemsNoPadding) &&
+						(item.theme?.isTransparent || section.theme?.areItemsTransparent)
 							? 'sm:pr-8'
 							: page?.theme?.containerWidth === 900
 							? 'p-4'
-							: `px-6 ${item.renderType === 'tag' ? 'py-4' : 'py-5'} ${
+							: `px-6 ${
+									item.renderType === 'tag' || section.theme?.itemsRenderType === 'tag'
+										? 'py-4'
+										: 'py-5'
+							  } ${
 									section.columns > 3 ? 'sm:px-5' : section.columns > 2 ? 'sm:px-6' : 'sm:px-8'
 							  } ${
-									item.renderType === 'tag' ? 'sm:py-4' : 'sm:py-6'
+									item.renderType === 'tag' || section.theme?.itemsRenderType === 'tag'
+										? 'sm:py-4'
+										: 'sm:py-6'
 							  }`} text-left self-center order-none-off {section.columns == 1 && i % 2 === 1
 							? 'sm:order-last-off'
 							: ''} {section.columns === 1 &&
 							(!item.imageUrl || section.items.length === 1) &&
-							'mx-auto'}"
+							'mx-auto'}
+							{(section.theme?.itemsVerticalAlign && `justify-${section.theme?.itemsVerticalAlign}`) ||
+							'justify-between'}
+							"
 						class:order-last-off={i % 2 === 0}
 					>
 						<div class="max-w-[600px]">
-							{#if item.title || item.emoji}
-								{#if item.renderType === 'testimonial'}
+							{#if item.title || item.emoji || section.theme?.itemsDefaultEmoji}
+								{#if item.renderType === 'testimonial' || section.theme?.itemsRenderType === 'testimonial'}
 									<div class="flex items-center mb-3">
 										<div class="mr-2">
 											<Emoji
-												bind:emoji={item.emoji}
-												bind:color={item.iconColor}
-												bind:bgColor={item.emojiBgColor}
+												emoji={item.emoji || section.theme?.itemsDefaultEmoji}
+												color={item.iconColor || section.theme?.itemsIconColor}
+												bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
 												class="rounded-full text-3xl"
 												width={48}
 												theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
@@ -235,21 +267,21 @@
 										</div>
 									</div>
 								{:else}
-									{#if item.emoji && !item.theme?.isIconLeft && item.renderType !== 'tag'}
+									{#if (item.emoji || section.theme?.itemsDefaultEmoji) && !item.theme?.isIconLeft && !section.theme?.areIconsLeft && item.renderType !== 'tag' && section.theme?.itemsRenderType !== 'tag'}
 										<div
 											class="{emojiStyle[section.columns]} _section-img mr-2 mb-4 {item.theme
-												?.align === 'center'
+												?.align === 'center' || section.theme?.itemsAlign === 'center'
 												? 'text-center'
 												: ''}"
 										>
-											{#key item.theme?.emojiSizePx}
+											{#key item.theme?.emojiSizePx + section.theme?.itemsEmojiSizePx}
 												<Emoji
-													bind:emoji={item.emoji}
-													bind:color={item.iconColor}
-													bind:bgColor={item.emojiBgColor}
+													emoji={item.emoji || section.theme?.itemsDefaultEmoji}
+													color={item.iconColor || section.theme?.itemsIconColor}
+													bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
 													class="text-2xl"
 													width={'auto'}
-													height={item.theme?.emojiSizePx || 30}
+													height={item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx || 30}
 													mobileWidth={26}
 													theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 												/>
@@ -257,35 +289,45 @@
 										</div>
 									{/if}
 
-									{#if !item.theme?.isInlineTitle}
+									{#if !item.theme?.isInlineTitle && !section.theme?.areInlineTitles}
 										<div
 											class="flex {item.description
 												? page?.theme?.containerWidth
 													? 'mb-2'
 													: 'mb-2 sm:mb-4'
-												: ''} items-center {item.theme?.align === 'center' ? 'justify-center' : ''}"
+												: ''} items-center {item.theme?.align === 'center' ||
+											section.theme?.itemsAlign === 'center'
+												? 'justify-center'
+												: ''}"
 										>
-											{#if item.emoji && (item.theme?.isIconLeft || item.renderType === 'tag')}
+											{#if (item.emoji || section.theme?.itemsDefaultEmoji) && (item.theme?.isIconLeft || section.theme?.areIconsLeft || item.renderType === 'tag')}
 												<div class="{emojiStyle[section.columns]} flex _section-img mr-2">
-													<Emoji
-														bind:emoji={item.emoji}
-														bind:color={item.iconColor}
-														bind:bgColor={item.emojiBgColor}
-														class="text-xl"
-														width={item.theme?.emojiSizePx
-															? item.theme?.emojiSizePx
-															: item.theme?.titleSize === 'small'
-															? 16
-															: item.theme?.titleSize === 'large'
-															? 28
-															: 20}
-														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-													/>
+													{#key item.theme?.emojiSizePx + section.theme?.itemsEmojiSizePx}
+														<Emoji
+															emoji={item.emoji || section.theme?.itemsDefaultEmoji}
+															color={item.iconColor || section.theme?.itemsIconColor}
+															bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
+															class="text-xl"
+															width={item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx
+																? item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx
+																: item.theme?.titleSize === 'small' ||
+																  section.theme?.itemsTitleSize === 'small'
+																? 16
+																: item.theme?.titleSize === 'large' ||
+																  section.theme?.itemsTitleSize === 'large'
+																? 28
+																: 20}
+															theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+														/>
+													{/key}
 												</div>
 											{/if}
 											<h2 class="{headerTextStyle(item)[section.columns]} _item-title ">
 												<ContentEditableIf
-													class={item.theme?.align === 'center' ? 'text-center' : ''}
+													class={item.theme?.align === 'center' ||
+													section.theme?.itemsAlign === 'center'
+														? 'text-center'
+														: ''}
 													bind:innerHTML={item.title}
 													condition={isEdit}
 												/>
@@ -297,26 +339,30 @@
 								{#if (item.description || item.title || item.icon) && !item.pricing}
 									<h3
 										class="{descriptionStyle[section.columns]}  whitespace-pre-wrap  {item.theme
-											?.align === 'center'
+											?.align === 'center' || section.theme?.itemsAlign === 'center'
 											? 'text-center'
 											: ''}"
 									>
-										{#if item.title && item.theme?.isInlineTitle}
-											{#if item.emoji && (item.theme.isIconLeft || item.renderType === 'tag')}
-												<Emoji
-													bind:emoji={item.emoji}
-													bind:color={item.iconColor}
-													bind:bgColor={item.emojiBgColor}
-													class="text-xl"
-													width={item.theme?.emojiSizePx || item.theme?.titleSize === 'small'
-														? 16
-														: item.theme?.titleSize === 'large'
-														? 28
-														: 20}
-													theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-												/>{/if}<ContentEditableIf
+										{#if item.title && (item.theme?.isInlineTitle || section.theme?.areInlineTitles)}
+											{#if (item.emoji || section.theme?.itemsDefaultEmoji) && (item.theme.isIconLeft || section.theme?.areIconsLeft || item.renderType === 'tag')}
+												{#key item.theme?.emojiSizePx + section.theme?.itemsEmojiSizePx}
+													<Emoji
+														emoji={item.emoji || section.theme?.itemsDefaultEmoji}
+														color={item.iconColor || section.theme?.itemsIconColor}
+														bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
+														class="text-xl"
+														width={item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx
+															? item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx
+															: item.theme?.titleSize === 'small' ||
+															  section.theme?.itemsTitleSize === 'small'
+															? 16
+															: item.theme?.titleSize === 'large' ||
+															  section.theme?.itemsTitleSize === 'large'
+															? 28
+															: 20}
+														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+													/>{/key}{/if}<ContentEditableIf
 												class="_inline_title _item-title sm:inline mb-1 sm:mb-0 font-medium"
-												style="color: {page.theme?.theme === 'dark' ? '#ffffff' : '#111111'};"
 												bind:innerHTML={item.title}
 												condition={isEdit}
 											/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
@@ -334,9 +380,11 @@
 									<div class={page?.theme?.containerWidth ? 'py-4' : 'py-4'}>
 										<RenderInteractiveOptions
 											class={`${
-												section.columns === 1 &&
-												(section.interactiveRenderType === 'single_choice' ||
-													section.interactiveRenderType === 'multiple_choice')
+												(section.columns === 1 &&
+													(section.interactiveRenderType === 'single_choice' ||
+														section.interactiveRenderType === 'multiple_choice')) ||
+												item.theme?.align === 'center' ||
+												section.theme?.itemsAlign === 'center'
 													? 'justify-center'
 													: 'justify-start'
 											} ${item.pricing ? 'w-full' : ''}`}
@@ -353,7 +401,8 @@
 
 								{#if item.tagsStr}
 									<div
-										class="my-4 mt-6 flex flex-wrap gap-2 {item?.theme?.align === 'center'
+										class="my-4 mt-6 flex flex-wrap gap-2 {item?.theme?.align === 'center' ||
+										section.theme?.itemsAlign === 'center'
 											? 'justify-center'
 											: ''}"
 									>
@@ -462,8 +511,10 @@
 						item.theme?.isReversedImage ||
 						section.renderType === 'changelog' ||
 						item.isService
-							? `order-first ${item.theme?.isTransparent ? 'mb-4' : ''}`
-							: `${item.theme?.isTransparent ? 'mt-4' : ''}`}
+							? `order-first ${
+									item.theme?.isTransparent || section.theme?.areItemsTransparent ? 'mb-4' : ''
+							  }`
+							: `${item.theme?.isTransparent || section.theme?.areItemsTransparent ? 'mt-4' : ''}`}
 															{section.columns === 1 && i % 2 === 0 ? 'sm:order-last-off' : ''} {section.isShowSource
 							? 'px-4'
 							: ''}"

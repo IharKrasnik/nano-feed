@@ -60,14 +60,13 @@
 	export let style = null;
 
 	const headerTextStyle = (item) => {
-		if (item.theme?.titleSize === 'large') {
+		if (item.theme?.titleSize === 'large' || section.theme?.itemsTitleSize === 'large') {
 			let defaultSize = '_large text-xl sm:text-2xl';
 			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
-		} else if (item.theme?.titleSize === 'small') {
+		} else if (item.theme?.titleSize === 'small' || section.theme?.itemsTitleSize === 'small') {
 			let defaultSize = '_small text-sm sm:text-sm';
 			return { 1: defaultSize, 2: defaultSize, 3: defaultSize, 4: defaultSize, 12: defaultSize };
 		}
-
 		return {
 			1: item.imageUrl ? 'text-lg' : 'sm:text-4xl text-3xl',
 			2: 'text-lg',
@@ -272,7 +271,7 @@
 	let getEmojiTheme = ({ item = null } = {}) => {
 		let pageTheme = page.parentPage?.theme?.theme || page.theme?.theme || 'light';
 
-		if (section.theme?.isOppositeColors || item?.theme?.isOppositeColors) {
+		if (section.theme?.areItemsOppositeColors || item?.theme?.isOppositeColors) {
 			return pageTheme === 'light' ? 'dark' : 'light';
 		}
 
@@ -321,7 +320,7 @@
 	<div
 		class="relative {section.bgImageUrl ? 'sm:p-8 mb-16 mx-2 sm:mx-0' : ''}   {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
-			: ''} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
+			: ''}"
 	>
 		{#if isCloneable}
 			<div
@@ -403,8 +402,7 @@
 				? 'sm:pb-16'
 				: `${isFooter ? 'pb-8 sm:pb-16' : 'py-8 sm:py-16'}`}
 					{section.renderType === 'changelog' ? 'sm:w-[600px] mx-auto' : ''}
-					
-					"
+					{section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 			style="z-index: 10; {section.theme?.isOverrideGlowingColor
 				? `--glowing-color: ${section.theme.glowingColor};`
 				: ''} {section.theme?.glowingIntensity
@@ -432,24 +430,24 @@
 						section.renderType === 'article' ||
 						section.renderType === 'changelog'
 							? 'sm:text-left'
-							: 'text-center'}
-						
-						"
+							: 'text-center'} "
 					>
 						{#if section.emoji}
-							<div
-								class="mb-6 {page.theme?.isTitlesLeft || section.theme?.isTitleLeft
-									? `sm:absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
-									: ''} "
-							>
-								<Emoji
-									bind:color={section.iconColor}
-									bind:bgColor={section.emojiBgColor}
-									theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-									bind:emoji={section.emoji}
-									width={section.theme?.emojiSizePx || 'auto'}
-								/>
-							</div>
+							{#key section.theme?.emojiSizePx}
+								<div
+									class="mb-6 {page.theme?.isTitlesLeft || section.theme?.isTitleLeft
+										? `sm:absolute right-12 ${section.descripton ? 'top-30' : 'top-19'}`
+										: ''} "
+								>
+									<Emoji
+										bind:color={section.iconColor}
+										bind:bgColor={section.emojiBgColor}
+										theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+										bind:emoji={section.emoji}
+										width={section.theme?.emojiSizePx || 60}
+									/>
+								</div>
+							{/key}
 						{/if}
 
 						{#if section.label}
@@ -858,8 +856,8 @@
 											: ''}"
 										style={`background-color: ${
 											item.theme?.backgroundColor ||
-											page.theme?.sectionBackgroundColor ||
-											page.parentPage?.theme?.sectionBackgroundColor ||
+											page.theme?.sectionItemBackgroundColor ||
+											page.parentPage?.theme?.sectionItemBackgroundColor ||
 											'none'
 										};`}
 										href={item.interactiveRenderType ? null : item.url}

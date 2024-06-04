@@ -16,6 +16,10 @@ body {
 	@apply rounded-lg p-4 mb-4 _border-section;
 }
 
+._editor ._text-link {
+	color: #8B786D;
+}
+
 ._editor ._section {
 	background-color: white;
 	scroll-margin-top: 10px;
@@ -211,9 +215,7 @@ body {
 
 ._section-item._transparent {
 	background: none !important;
-	border: none !important;
 }
-
 
 ._translate-x-full-reverse {
 	--tw-translate-x: -100%;
@@ -221,6 +223,9 @@ body {
 
 ._section-item._transparent>.flex {
 	background: none !important;
+}
+
+._section-item._borderlesss {
 	border: none !important;
 }
 
@@ -309,7 +314,6 @@ body {
 }
 
 ._bg-opposite {
-	background: var(--background-color-opposite);
 	color: var(--text-color-opposite);
 }
 
@@ -619,6 +623,25 @@ a[href] {
 		/* margin-bottom: 16px; */
 }
 
+._bg-opposite ._item-title {
+	color: var(--text-color-opposite)
+}
+
+._bg-opposite ._section-item:not(._transparent) ._item-title {
+	color: var(--text-color-default);
+}
+
+._section-item._bg-opposite ._item-title {
+	color: var(--text-color-opposite);
+}
+
+._bg-opposite ._section-item:not(._transparent) ._item-description {
+	color: var(--section-description-text-color);
+}
+
+._section-item._bg-opposite ._item-description {
+	color: var(--text-color-opposite);
+}
 
 ._item-title:not(._big):not(._large):not(._small) {
 	font-size: var(--section-title-font-size);
@@ -668,6 +691,10 @@ a._item-title:hover {
 	font-weight: 400;
 	font-size: 16px;
 	color: var(--section-description-text-color);
+}
+
+._bg-opposite ._item-description {
+	color: var(--text-color-opposite);
 }
 
 ._color-item-description {
@@ -912,6 +939,10 @@ button._alternative:hover {
 ._section-title {
 	font-family: var(--title-font) !important;
 	color: var(--text-color-default);
+}
+
+._bg-opposite ._section-description {
+	color: var(--text-color-opposite);
 }
 
 ._bg-opposite ._section-title {

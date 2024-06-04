@@ -38,7 +38,7 @@
 			}}
 		>
 			{#if tab.icon}
-				<div class="mr-2">
+				<div class="mr-2 flex items-center h-full">
 					<Emoji width={15} emoji={tab.icon} />
 				</div>
 			{/if}

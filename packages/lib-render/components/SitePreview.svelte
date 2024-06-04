@@ -370,12 +370,22 @@
 																	/>
 
 																	{#if $sectionToEdit.footer && ($sectionToEdit.footer.title || $sectionToEdit.footer.description || $sectionToEdit.footer.interactiveRenderType)}
-																		<RenderSection
-																			bind:section={$sectionToEdit.footer}
-																			isFooter
-																			bind:page
-																			bind:themeStyles={styles}
-																		/>
+																		<div
+																			class:_bg-opposite={$sectionToEdit.theme?.isOppositeColors}
+																			style={`background-color: ${
+																				$sectionToEdit.theme?.backgroundColor ||
+																				page.theme?.sectionBackgroundColor ||
+																				page.parentPage?.theme?.sectionBackgroundColor ||
+																				'none'
+																			};`}
+																		>
+																			<RenderSection
+																				bind:section={$sectionToEdit.footer}
+																				isFooter
+																				bind:page
+																				bind:themeStyles={styles}
+																			/>
+																		</div>
 																	{/if}
 																</div>
 																<div
@@ -443,12 +453,22 @@
 																	/>
 
 																	{#if section.footer && (section.footer.title || section.footer.description || section.footer.interactiveRenderType)}
-																		<RenderSection
-																			bind:section={section.footer}
-																			isFooter
-																			bind:page
-																			bind:themeStyles={styles}
-																		/>
+																		<div
+																			class:_bg-opposite={section.theme?.isOppositeColors}
+																			style={`background-color: ${
+																				section.theme?.backgroundColor ||
+																				page.theme?.sectionBackgroundColor ||
+																				page.parentPage?.theme?.sectionBackgroundColor ||
+																				'none'
+																			};`}
+																		>
+																			<RenderSection
+																				bind:section={section.footer}
+																				isFooter
+																				bind:page
+																				bind:themeStyles={styles}
+																			/>
+																		</div>
 																	{/if}
 																</div>
 															</div>

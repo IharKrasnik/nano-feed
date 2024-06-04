@@ -18,7 +18,7 @@
 
 	import clickOutside from 'lib/use/clickOutside';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
-
+	import sectionTypesDictionary from '$lib/helpers/sectionTypesDictionary';
 	import childStreams from 'lib/stores/childStreams';
 	import { dndzone } from 'svelte-dnd-action';
 
@@ -235,8 +235,16 @@
 
 	{#if !section.isInnerSection && !section.isRichText}
 		<div class="_section rounded-xl" style="padding:0;">
-			<div class="flex justify-between items-center">
-				<div class="_title p-4" style="margin: 0;">Section</div>
+			<div class="flex items-center">
+				<div class="_title p-4 mr-4" style="margin: 0;">Section</div>
+				<div
+					class="text-sm  cursor-pointer _text-link"
+					on:click={() => {
+						$selectedSectionItem = section;
+					}}
+				>
+					{sectionTypesDictionary[section.renderType]}
+				</div>
 			</div>
 
 			<hr class="border-[#8B786D] opacity-30" />
@@ -311,143 +319,6 @@
 					<EmojiPicker class="mr-2" defaultIcon="✅" bind:icon={section.benefitsEmoji} /> Benefits icon
 				</div>
 				<div class="mt-2">This icon is used to show benefits</div>
-			</div>
-		{/if}
-
-		{#if section.renderType === 'grid' || section.renderType === 'pricing'}
-			<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
-				<div class="bg-white">
-					<div class="font-bold mb-2">Layout</div>
-
-					<ToggleGroup
-						class="mb-4"
-						tabs={[
-							{
-								key: 'grid',
-								isSelected: section.columns > 1 && !section.isFlexGrid,
-								name: 'Grid'
-							},
-							{
-								key: 'rows',
-								isSelected: section.columns === 1,
-								name: 'Rows'
-							},
-							{
-								key: 'flex',
-								name: 'Fluid',
-								isSelected: section.isFlexGrid
-							}
-						]}
-						onTabSelected={(tab) => {
-							if (tab.key === 'grid') {
-								section.isFlexGrid = false;
-
-								if (!section.columns || section.columns === 1) {
-									section.columns = 2;
-								}
-							} else if (tab.key === 'rows') {
-								section.isFlexGrid = false;
-
-								if (section.columns !== 1) {
-									section.columns = 1;
-								}
-							} else if (tab.key === 'flex') {
-								section.isFlexGrid = true;
-								if (section.columns === 1) {
-									section.columns = 2;
-								}
-							}
-						}}
-					/>
-
-					<div class="relative mt-4">
-						{#if section.columns > 1 && !section.isFlexGrid}
-							<div class="flex items-center">
-								<div
-									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									on:click={() => (section.columns = 2)}
-									class:aspect-square={section.columns !== 2}
-									class:px-4={section.columns === 2}
-								>
-									2
-									{#if section.columns === 2}columns{/if}
-								</div>
-
-								<div
-									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									class:aspect-square={section.columns !== 3}
-									class:px-4={section.columns === 3}
-									on:click={() => (section.columns = 3)}
-								>
-									3
-									{#if section.columns === 3}columns{/if}
-								</div>
-
-								<div
-									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									class:aspect-square={section.columns !== 4}
-									class:px-4={section.columns === 4}
-									on:click={() => (section.columns = 4)}
-								>
-									4
-									{#if section.columns === 4}columns{/if}
-								</div>
-								<div
-									class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
-									class:aspect-square={section.columns !== 12}
-									class:px-4={section.columns === 12}
-									on:click={() => (section.columns = 12)}
-								>
-									12
-									{#if section.columns === 12}columns{/if}
-								</div>
-							</div>
-
-							{#if section.renderType === 'grid' || section.renderType === 'pricing'}
-								{#if section.columns > 1}
-									<div class="mb-2 mt-4">
-										<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
-										{#if section.isMasonryGrid}
-											<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
-										{/if}
-									</div>
-								{/if}
-							{/if}
-						{/if}
-
-						{#if section.isFlexGrid}
-							<div class="mb-2 mt-4">
-								<div class="flex justify-between">
-									<div>
-										<div class="font-semibold mb-1 text-sm mt-2">Min item width (px)</div>
-										<input
-											type="number"
-											style="max-width: 140px;"
-											bind:value={section.minWidthPx}
-										/>
-									</div>
-									<div>
-										<div class="font-semibold mb-1 text-sm mt-2">Max item width (px)</div>
-										<input
-											type="number"
-											style="max-width: 140px;"
-											bind:value={section.maxWidthPx}
-										/>
-									</div>
-								</div>
-
-								{#if section.isMasonryGrid}
-									<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
-								{/if}
-
-								<div>
-									<input class="mt-2" type="checkbox" bind:checked={section.isFlexWrap} /> Move items
-									to the next line
-								</div>
-							</div>
-						{/if}
-					</div>
-				</div>
 			</div>
 		{/if}
 

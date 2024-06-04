@@ -6,9 +6,12 @@
 	import sectionClipboard from '$lib/stores/sectionClipboard';
 	import { showSuccessMessage } from 'lib/services/toast';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
-	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import sectionTypesDictionary from '$lib/helpers/sectionTypesDictionary';
 	import hexToRgba from 'lib/helpers/hexToRgba';
-
+	import EditSectionItemsSettings from '$lib/components/edit/SectionItemsSettings.svelte';
+	import SectionColorPicker from '$lib/components/edit/SectionColorPicker.svelte';
+	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
+	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	export let section;
 	export let sectionItem;
 	export let isPopup = false;
@@ -19,6 +22,7 @@
 
 	export let isShown = false;
 	export let isWithButton = true;
+	let isItemsSettingsCollapsed = true;
 
 	let show = () => {
 		if (isPopup) {
@@ -76,6 +80,20 @@
 {/if}
 
 {#if sectionItem && section && (!isWithButton || isShown)}
+	{#if sectionItem.id !== section.id}
+		<div
+			class="_section cursor-pointer"
+			on:click={() => {
+				$selectedSectionItem = section;
+			}}
+		>
+			<div class="font-bold">Parent Section</div>
+		</div>
+		<div class="opacity-80 mt-8 mb-2">
+			This is inner items settings. To change item style go to parent section settings
+		</div>
+	{/if}
+
 	<div class=" _editor">
 		<div
 			class={isWithButton
@@ -92,25 +110,30 @@
 				}
 			}}
 		>
+			<!-- <div class="flex gap-2 items-center mb-4 relative">
+				{#if (sectionItem.renderType !== 'form' && sectionItem.renderType !== 'carousel') || sectionItem.isActionSuccessSection}
+					<EmojiPicker
+						bind:icon={sectionItem.emoji}
+						bind:color={sectionItem.iconColor}
+						bind:bgColor={sectionItem.emojiBgColor}
+						bind:sizePx={sectionItem.theme.emojiSizePx}
+					/>
+				{/if}
+
+				{#if sectionItem.renderType !== 'form' && (sectionItem.renderType !== 'callout' || section.id === sectionItem.id)}
+					<EditInteractiveOptions class=" mt-4" bind:section bind:sectionItem />
+				{/if}
+			</div> -->
+
 			{#if !isCtaFooter}
 				{#if sectionItem.id === section.id}
 					<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
 						<div class="font-bold mb-2">Render this section as...</div>
 
 						<select class="block w-full mt-2 mb-2" bind:value={section.renderType}>
-							<option value="grid">Default Grid Section</option>
-							<option value="callout">Callout</option>
-							<option value="stepper">1-2-3 Stepper</option>
-							<option value="testimonials">Testimonials</option>
-							<option value="pricing">Pricing</option>
-							<option value="carousel">Carousel Menu</option>
-							<option value="faq">FAQ</option>
-							<option value="article">Paragraph</option>
-							<option value="changelog">Changelog</option>
-							<option value="form">Form</option>
-							<option value="comments">Comments</option>
-							<option value="embedCode">HTML Code Embed</option>
-							<!-- <option value="service_chat">Service Chat</option> -->
+							{#each Object.keys(sectionTypesDictionary) as key}
+								<option value={key}>{sectionTypesDictionary[key]}</option>
+							{/each}
 						</select>
 
 						{#if section.renderType === 'article'}
@@ -149,6 +172,7 @@
 						{/if}
 					</div>
 				{/if}
+
 				<div class="w-full py-4">
 					<div class="_section">
 						<div class="mb-4 font-bold">Alignment</div>
@@ -243,14 +267,7 @@
 							{/if}
 						{/if}
 
-						{#if (sectionItem !== section || sectionItem.renderType === 'callout') && sectionItem.imageUrl}
-							<div class="my-2">
-								<input type="checkbox" bind:checked={sectionItem.theme.isReversedImage} /> Reverse Image
-								Position
-							</div>
-						{/if}
-
-						{#if section.columns > 1 && section.renderType !== 'callout'}
+						{#if section.id === sectionItem.id && section.renderType !== 'callout'}
 							<ToggleGroup
 								tabs={[
 									{
@@ -280,165 +297,189 @@
 							/>
 						{/if}
 
-						{#if sectionItem.id !== section.id && section.columns > 1}
-							<div class="_section">
-								<div>
-									<div class="mb-1 text-sm font-medium mb-1">Item Type</div>
-									<ToggleGroup
-										class="mb-2"
-										bind:value={sectionItem.renderType}
-										tabs={[
-											{
-												key: '',
-												name: 'Default'
-											},
-											{
-												key: 'testimonial',
-												name: 'Testimonial'
-											},
-											{
-												key: 'tag',
-												name: 'Tag'
-											}
-										]}
-									/>
-								</div>
-
-								<div class="flex">
-									<div class="my-2">
-										<input
-											class=""
-											disabled={sectionItem.renderType}
-											type="checkbox"
-											bind:checked={sectionItem.theme.isInlineTitle}
-										/> Inline Title and Description
-									</div>
-								</div>
-
-								{#if !sectionItem.theme.isInlineTitle}
-									<div>
-										<div class="mb-1 text-sm font-medium mb-1">Title Size</div>
-										<ToggleGroup
-											class="mb-2"
-											tabs={[
-												{ key: undefined, name: 'Default' },
-												{ key: 'small', name: 'Small' },
-												{ key: 'large', name: 'Large' }
-											]}
-											bind:value={sectionItem.theme.titleSize}
-										/>
-									</div>
+						{#if (sectionItem !== section || sectionItem.renderType === 'callout') && sectionItem.imageUrl}
+							<div class="my-2">
+								{#if section?.theme?.areImagesReversed}
+									<input type="checkbox" disabled checked /> Reverse Image Position
+								{:else}
+									<input type="checkbox" bind:checked={sectionItem.theme.isReversedImage} /> Reverse
+									Image Position
 								{/if}
-								{#if sectionItem.emoji}
-									<div class="my-2">
-										<input
-											type="checkbox"
-											disabled={sectionItem.renderType}
-											bind:checked={sectionItem.theme.isIconLeft}
-										/> Show Icon Near Title
-									</div>
-								{/if}
-							</div>
-						{/if}
-
-						{#if section.id === sectionItem.id && section.renderType !== 'callout'}
-							<div class="mb-2 font-semibold mt-6">Items images aspect ratio</div>
-
-							<ToggleGroup
-								tabs={[
-									{
-										key: 'og',
-										name: 'OG'
-									},
-									{
-										key: 'image',
-										name: '4x3'
-									},
-									{
-										key: 'square',
-										name: '1x1'
-									},
-									{
-										key: '',
-										name: 'Auto'
-									}
-								]}
-								bind:value={sectionItem.theme.imageAspectRatio}
-							/>
-
-							<div class="mb-2 font-semibold mt-6">Items image position</div>
-
-							<ToggleGroup
-								tabs={[
-									{
-										key: 'after',
-										name: 'Content | Image',
-										isSelected: !sectionItem.theme.areImagesReversed
-									},
-									{
-										key: 'before',
-										name: 'Image | Content',
-										isSelected: sectionItem.theme.areImagesReversed
-									}
-								]}
-								onTabSelected={(tab) => {
-									sectionItem.theme.areImagesReversed = tab.key === 'before';
-								}}
-								bind:value={sectionItem.theme.areImagesReversed}
-							/>
-
-							{#if sectionItem.theme?.imageAspectRatio}
-								<input
-									class="mt-6"
-									type="checkbox"
-									bind:checked={sectionItem.theme.isScrollImageOnHover}
-								/>
-								Scroll image on hover
-								<div class="text-xs mt-1">Useful for long screenshots of websites or portfolio</div>
-							{/if}
-						{/if}
-
-						{#if section.id === sectionItem.id && section.renderType !== 'callout'}
-							<div class="mb-2 font-semibold mt-6">Gap between columns</div>
-							<ToggleGroup
-								tabs={[
-									{
-										key: undefined,
-										name: 'Normal'
-									},
-									{
-										key: 'big',
-										name: 'Big'
-									},
-									{
-										key: 'huge',
-										name: 'Huge'
-									}
-								]}
-								bind:value={sectionItem.theme.columnsGap}
-							/>
-						{/if}
-
-						{#if section.id === sectionItem.id}
-							<div class="flex mt-2">
-								<input
-									type="checkbox"
-									class="mr-2"
-									bind:checked={sectionItem.theme.isMobileInline}
-								/>
-								<div>Show items horizontally on mobile</div>
 							</div>
 						{/if}
 					</div>
 
-					{#if sectionItem.id !== section.id}
+					{#if (sectionItem.id === section.id && section.renderType === 'grid') || section.renderType === 'pricing'}
+						<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
+							<div class="bg-white">
+								<div class="font-bold mb-2">Layout</div>
+
+								<ToggleGroup
+									class="mb-4"
+									tabs={[
+										{
+											key: 'grid',
+											isSelected: section.columns > 1 && !section.isFlexGrid,
+											name: 'Grid'
+										},
+										{
+											key: 'rows',
+											isSelected: section.columns === 1,
+											name: 'Rows'
+										},
+										{
+											key: 'flex',
+											name: 'Fluid',
+											isSelected: section.isFlexGrid
+										}
+									]}
+									onTabSelected={(tab) => {
+										if (tab.key === 'grid') {
+											section.isFlexGrid = false;
+
+											if (!section.columns || section.columns === 1) {
+												section.columns = 2;
+											}
+										} else if (tab.key === 'rows') {
+											section.isFlexGrid = false;
+
+											if (section.columns !== 1) {
+												section.columns = 1;
+											}
+										} else if (tab.key === 'flex') {
+											section.isFlexGrid = true;
+											if (section.columns === 1) {
+												section.columns = 2;
+											}
+										}
+									}}
+								/>
+
+								<div class="relative mt-4">
+									{#if section.columns > 1 && !section.isFlexGrid}
+										<div class="flex items-center">
+											<div
+												class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+												on:click={() => (section.columns = 2)}
+												class:aspect-square={section.columns !== 2}
+												class:px-4={section.columns === 2}
+											>
+												2
+												{#if section.columns === 2}columns{/if}
+											</div>
+
+											<div
+												class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+												class:aspect-square={section.columns !== 3}
+												class:px-4={section.columns === 3}
+												on:click={() => (section.columns = 3)}
+											>
+												3
+												{#if section.columns === 3}columns{/if}
+											</div>
+
+											<div
+												class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+												class:aspect-square={section.columns !== 4}
+												class:px-4={section.columns === 4}
+												on:click={() => (section.columns = 4)}
+											>
+												4
+												{#if section.columns === 4}columns{/if}
+											</div>
+											<div
+												class="aspect-square cursor-pointer bg-section h-[37px] flex justify-center items-center rounded-xl mr-2"
+												class:aspect-square={section.columns !== 12}
+												class:px-4={section.columns === 12}
+												on:click={() => (section.columns = 12)}
+											>
+												12
+												{#if section.columns === 12}columns{/if}
+											</div>
+										</div>
+
+										{#if section.renderType === 'grid' || section.renderType === 'pricing'}
+											{#if section.columns > 1}
+												<div class="mb-2 mt-4">
+													<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry
+													Grid
+													{#if section.isMasonryGrid}
+														<input
+															class="ml-2"
+															type="checkbox"
+															bind:checked={section.isFunkyGrid}
+														/> Funky
+													{/if}
+												</div>
+											{/if}
+										{/if}
+									{/if}
+
+									{#if section.isFlexGrid}
+										<div class="mb-2 mt-4">
+											{#if section.isMasonryGrid}
+												<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
+											{/if}
+
+											<div>
+												<input class="mt-2" type="checkbox" bind:checked={section.isFlexWrap} /> Move
+												items to the next line if not fit
+											</div>
+										</div>
+									{/if}
+								</div>
+							</div>
+						</div>
+					{/if}
+
+					{#if section.id === sectionItem.id && section.renderType === 'grid'}
+						<div class="_section my-4 !p-6">
+							<div
+								class="flex items-center justify-between w-full {isItemsSettingsCollapsed
+									? 'opacity-60 hover:opacity-100 py-2 cursor-pointer'
+									: ''}"
+								on:click={() => (isItemsSettingsCollapsed = !isItemsSettingsCollapsed)}
+							>
+								<div class="flex items-center">
+									<FeatherIcon size={20} name="grid" />
+									<div class="font-bold ml-2">Inner items appearance</div>
+								</div>
+
+								<div
+									class="flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100"
+								>
+									<div class="flex items-center opacity-50 hover:opacity-100 cursor-pointer">
+										{#if isItemsSettingsCollapsed}
+											<FeatherIcon size="20" name="chevron-down" color="#333" />
+										{:else}
+											<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse
+										{/if}
+									</div>
+								</div>
+							</div>
+
+							{#if !isItemsSettingsCollapsed}
+								<div class="mt-4">
+									<EditSectionItemsSettings bind:page bind:section bind:sectionItem />
+								</div>
+							{/if}
+						</div>
+					{/if}
+
+					<!-- {#if section.id !== sectionItem.id}
+						<div class="_section my-4">
+							<div class="font-bold">Item appearance</div>
+
+							Inherited from section settings
+						</div>
+
 						<div class="_section my-4">
 							<div class="mb-2 font-bold">Style</div>
 
 							<input type="checkbox" bind:checked={sectionItem.isFeatured} /> Is Featured
 							<div class="text-sm opacity-70">Feature specific section for focus</div>
 						</div>
-					{/if}
+					{/if} -->
 
 					<div class="my-4">
 						{#if section.renderType === 'callout'}
@@ -466,194 +507,26 @@
 								/>
 							</div>
 						{/if}
-						{#if section === sectionItem}
-							<div class="_section my-4">
-								<div class="mb-2 font-bold">Glowing</div>
-
-								<div class="my-2">
-									<input type="checkbox" bind:checked={sectionItem.isGlowing} /> Section Is Glowing
-
-									{#if sectionItem.isGlowing}
-										<div class="font-normal opacity-70 mb-4 mt-2">Glowing color</div>
-
-										<div class="flex items-center">
-											{#if sectionItem.theme?.isOverrideGlowingColor}
-												<input
-													type="color"
-													id="head"
-													name="head"
-													class="mr-4"
-													bind:value={sectionItem.theme.glowingColor}
-												/>
-											{:else}
-												<div
-													class="w-[30px] h-[30px] rounded-full border border-black mr-4 blur"
-													style="background-color: {sectionItem.theme.glowingColor};"
-												/>
-											{/if}
-											<div>
-												<input
-													bind:checked={sectionItem.theme.isOverrideGlowingColor}
-													class="mr-2"
-													type="checkbox"
-													on:change={() => {
-														if (
-															!sectionItem.theme.glowingColor ||
-															!sectionItem.theme.isOverrideGlowingColor
-														) {
-															sectionItem.theme.glowingColor = (
-																page.parentPage?.theme || page.theme
-															)?.accentColor;
-														}
-													}}
-												/>
-
-												Override color
-											</div>
-										</div>
-
-										<div class="mt-8">
-											<div class="mb-2 opacity-70">Intensity</div>
-
-											<div class="flex gap-2 flex-wrap">
-												<div
-													class="border cursor-pointer p-2"
-													on:click={() => (sectionItem.theme.glowingIntensity = 'sm')}
-												>
-													{!sectionItem.theme.glowingIntensity ||
-													sectionItem.theme.glowingIntensity === 'sm'
-														? '✅ '
-														: ''}
-													Small
-												</div>
-												<div
-													class="border cursor-pointer p-2"
-													on:click={() => (sectionItem.theme.glowingIntensity = 'lg')}
-												>
-													{sectionItem.theme.glowingIntensity === 'lg' ? '✅ ' : ''}
-													Large
-												</div>
-												<div
-													class="border cursor-pointer p-2"
-													on:click={() => (sectionItem.theme.glowingIntensity = 'xl')}
-												>
-													{sectionItem.theme.glowingIntensity === 'xl' ? '✅ ' : ''}
-													Huge
-												</div>
-											</div>
-										</div>
-									{/if}
-								</div>
-							</div>
-						{/if}
 					</div>
 				</div>
 			{/if}
 
 			<div class="_section mb-2">
-				<div class="font-semibold mb-2">Background</div>
+				<div class="font-semibold mb-2">
+					{section.id === sectionItem.id ? 'Section' : 'Section Item'} Background
+				</div>
 
 				<div class="font-normal text-sm opacity-70 mb-2">Background color and image</div>
 
-				<div class="flex gap-2">
-					<label
-						class="relative"
-						on:click={() => {
-							sectionItem.theme.isTransparent = false;
-						}}
-					>
-						<div
-							class="w-[35px] h-[35px] flex justify-center items-center cursor-pointer border-4 border-[#f6f5f4] rounded-full"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="icon icon-tabler icon-tabler-color-picker opacity-80"
-								width="20"
-								height="20"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="#2c3e50"
-								fill="none"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							>
-								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-								<path d="M11 7l6 6" />
-								<path
-									d="M4 16l11.7 -11.7a1 1 0 0 1 1.4 0l2.6 2.6a1 1 0 0 1 0 1.4l-11.7 11.7h-4v-4z"
-								/>
-							</svg>
-							<input
-								type="color"
-								style="width:0; height:0;"
-								bind:this={backgroundColorEl}
-								bind:value={sectionItem.theme.backgroundColor}
-							/>
-						</div>
-					</label>
-
-					{#if sectionItem.theme?.backgroundColor}
-						<div
-							style="background-color: {sectionItem.theme?.backgroundColor};"
-							class:border-green-300={!sectionItem.theme.isTransparent}
-							class:border-[#f6f5f4]={sectionItem.theme.isTransparent}
-							class="w-[35px] h-[35px] flex justify-center items-center cursor-pointer border-4 border rounded-full "
-							on:click={() => {
-								sectionItem.theme.isTransparent = false;
-							}}
-						/>
-					{/if}
-
-					<div
-						class="w-[35px] h-[35px] rounded-full border border-[#f6f5f4] cursor-pointer"
-						class:border-green-400={!sectionItem.theme.isTransparent &&
-							!sectionItem.theme?.backgroundColor &&
-							!(page.parentPage || page).theme?.sectionBackgroundColor}
-						style="background-color: {(page.parentPage || page).theme?.sectionBackgroundColor ||
-							((page.parentPage || page).theme?.theme === 'dark'
-								? hexToRgba('#161619', 0.85)
-								: hexToRgba('#f6f5f4', 0.85))};"
-						on:click={() => {
-							sectionItem.theme.isTransparent = false;
-							sectionItem.theme.backgroundColor =
-								(page.parentPage || page).theme?.theme === 'dark'
-									? hexToRgba('#161619', 0.85)
-									: hexToRgba('#f6f5f4', 0.85);
-						}}
-					/>
-
-					<div
-						class="w-[35px] rounded-full border-4 border-black cursor-pointer"
-						class:border-green-400={!sectionItem.theme.backgroundColor}
-						class:border-[#f6f5f4]={!sectionItem.theme.backgroundColor}
-						on:click={() => {
-							sectionItem.theme.isTransparent = true;
-							sectionItem.theme.backgroundColor = null;
-						}}
-						style="background-image: url('https://ship-app-assets.fra1.digitaloceanspaces.com/stream/rec4sLfwGXzHxLy54/1716758994699-image.png');"
-					/>
-
-					<div
-						class="w-[35px] h-[35px] rounded-full border border-black cursor-pointer border-4  border-[#f6f5f4]"
-						style="background-color: #f6f5f4;"
-						class:border-green-400={!sectionItem.theme?.isTransparent &&
-							sectionItem.theme.backgroundColor === '#f6f5f4'}
-						on:click={() => {
-							sectionItem.theme.isTransparent = false;
-							sectionItem.theme.backgroundColor = '#f6f5f4';
-						}}
-					/>
-					<div
-						class="w-[35px] h-[35px] rounded-full border border-black cursor-pointer border-4 border-[#f6f5f4]"
-						style="background-color: #111111;"
-						class:border-green-400={!sectionItem.theme?.isTransparent &&
-							sectionItem.theme.backgroundColor === '#111111'}
-						on:click={() => {
-							sectionItem.theme.isTransparent = false;
-							sectionItem.theme.backgroundColor = '#111111';
-						}}
-					/>
-				</div>
+				<SectionColorPicker
+					bind:page
+					bind:sectionItem
+					themeKeys={{
+						backgroundColor: 'backgroundColor',
+						isTransparent: 'isTransparent',
+						isOppositeColors: 'isOppositeColors'
+					}}
+				/>
 
 				{#if sectionItem.renderType === 'callout'}
 					<div class="font-normal text-sm opacity-70 mb-2 mt-4">Callout section background</div>
@@ -710,8 +583,9 @@
 							class="w-[35px] h-[35px] rounded-full border border-[#f6f5f4] cursor-pointer"
 							class:border-green-400={!sectionItem.theme.isCalloutTransparent &&
 								!sectionItem.theme?.calloutBgColor &&
-								!(page.parentPage || page).theme?.sectionBackgroundColor}
-							style="background-color: {(page.parentPage || page).theme?.sectionBackgroundColor ||
+								!(page.parentPage || page).theme?.sectionItemBackgroundColor}
+							style="background-color: {(page.parentPage || page).theme
+								?.sectionItemBackgroundColor ||
 								((page.parentPage || page).theme?.theme === 'dark'
 									? hexToRgba('#161619', 0.85)
 									: hexToRgba('#f6f5f4', 0.85))};"
@@ -757,14 +631,6 @@
 								sectionItem.theme.calloutBgColor = '#111111';
 							}}
 						/>
-					</div>
-				{/if}
-
-				{#if true || sectionItem.id !== section.id}
-					<div class="mb-4 mt-4">
-						<input bind:checked={sectionItem.theme.isOppositeColors} class="mr-2" type="checkbox" />
-
-						Use opposite text color
 					</div>
 				{/if}
 
@@ -837,6 +703,87 @@
 							</div>
 						{/if}
 					{/if}
+				{/if}
+
+				{#if section === sectionItem}
+					<div class="_section my-4">
+						<div class="mb-2 font-bold">Glowing</div>
+
+						<div class="my-2">
+							<input type="checkbox" bind:checked={sectionItem.isGlowing} /> Section Is Glowing
+
+							{#if sectionItem.isGlowing}
+								<div class="font-normal opacity-70 mb-4 mt-2">Glowing color</div>
+
+								<div class="flex items-center">
+									{#if sectionItem.theme?.isOverrideGlowingColor}
+										<input
+											type="color"
+											id="head"
+											name="head"
+											class="mr-4"
+											bind:value={sectionItem.theme.glowingColor}
+										/>
+									{:else}
+										<div
+											class="w-[30px] h-[30px] rounded-full border border-black mr-4 blur"
+											style="background-color: {sectionItem.theme.glowingColor};"
+										/>
+									{/if}
+									<div>
+										<input
+											bind:checked={sectionItem.theme.isOverrideGlowingColor}
+											class="mr-2"
+											type="checkbox"
+											on:change={() => {
+												if (
+													!sectionItem.theme.glowingColor ||
+													!sectionItem.theme.isOverrideGlowingColor
+												) {
+													sectionItem.theme.glowingColor = (
+														page.parentPage?.theme || page.theme
+													)?.accentColor;
+												}
+											}}
+										/>
+
+										Override color
+									</div>
+								</div>
+
+								<div class="mt-8">
+									<div class="mb-2 opacity-70">Intensity</div>
+
+									<div class="flex gap-2 flex-wrap">
+										<div
+											class="border cursor-pointer p-2"
+											on:click={() => (sectionItem.theme.glowingIntensity = 'sm')}
+										>
+											{!sectionItem.theme.glowingIntensity ||
+											sectionItem.theme.glowingIntensity === 'sm'
+												? '✅ '
+												: ''}
+											Small
+										</div>
+										<div
+											class="border cursor-pointer p-2"
+											on:click={() => (sectionItem.theme.glowingIntensity = 'lg')}
+										>
+											{sectionItem.theme.glowingIntensity === 'lg' ? '✅ ' : ''}
+											Large
+										</div>
+										<div
+											class="border cursor-pointer p-2"
+											on:click={() => (sectionItem.theme.glowingIntensity = 'xl')}
+										>
+											{sectionItem.theme.glowingIntensity === 'xl' ? '✅ ' : ''}
+											Huge
+										</div>
+									</div>
+								</div>
+							{/if}
+						</div>
+					</div>
 				{/if}
 			</div>
 
