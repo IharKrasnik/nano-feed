@@ -541,7 +541,7 @@
 								: ''}
 																"
 							imageUrl={item.imageUrl}
-							imageBackgroundUrl={item.imageBackgroundUrl}
+							imageBackgroundUrl={item.imageBackgroundUrl || section.theme?.itemsImageBackgroundUrl}
 						/>
 					</div>
 				{/if}

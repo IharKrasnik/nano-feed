@@ -7,6 +7,14 @@
 	export let page;
 	export let section;
 	export let sectionItem;
+
+	let imageBackgrounds = [
+		'https://images.unsplash.com/photo-1618556450994-a6a128ef0d9d?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+		'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+		'https://images.unsplash.com/photo-1614852206758-0caebadbba66?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+		'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+		'https://images.unsplash.com/photo-1635776064096-4e12cce9ead4?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+	];
 </script>
 
 <div>
@@ -182,11 +190,33 @@
 			]}
 			bind:value={sectionItem.theme.imageAspectRatio}
 		/>
+
 		{#if sectionItem.theme?.imageAspectRatio}
 			<input class="mt-6" type="checkbox" bind:checked={sectionItem.theme.isScrollImageOnHover} />
 			Scroll image on hover
 			<div class="text-xs mt-1">Useful for long screenshots of websites or portfolio</div>
 		{/if}
+
+		<div class="font-semibold mt-4 text-sm mb-2">Default background for images</div>
+
+		<FileInput
+			isCanSearch
+			class="w-full"
+			theme="light"
+			bind:url={sectionItem.theme.itemsImageBackgroundUrl}
+		/>
+
+		<div class="mt-2 flex gap-1">
+			{#each imageBackgrounds as imageBackground}
+				<img
+					src={imageBackground}
+					class="w-[20px] h-[20px] rounded-full cursor-pointer"
+					on:click={() => {
+						sectionItem.theme.itemsImageBackgroundUrl = imageBackground;
+					}}
+				/>
+			{/each}
+		</div>
 
 		<div class="mb-2 font-semibold mt-6 text-sm">Gap between columns</div>
 		<ToggleGroup
