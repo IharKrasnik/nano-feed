@@ -258,7 +258,9 @@
 
 	let refreshPage = async () => {
 		if (page._id) {
-			let updatedPage = await get(`pages/${page._id}`);
+			let updatedPage = await get(`pages/${page._id}`, {
+				isId: true
+			});
 
 			if (page.isDirty) {
 				if (updatedPage.lastPublishedOn > page.lastPublishedOn) {
