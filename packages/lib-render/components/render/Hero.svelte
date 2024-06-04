@@ -217,7 +217,7 @@
 									hero.demoUrl ? '' : page.renderType === 'article' ? '' : 'sm:max-w-[900px]'
 							  } items-center`
 							: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
-										{hero.theme?.isLeft ? 'sm:text-left' : ''} {hero.demoUrl && !hero.theme?.isVertical
+										{hero.theme?.isLeft ? 'text-center sm:text-left' : ''} {hero.demoUrl && !hero.theme?.isVertical
 							? 'sm:mr-8'
 							: ''} "
 					>
@@ -278,9 +278,10 @@
 							</h2>
 						{/if}
 
-						{#if hero.keyFeaturesStr && hero.theme.isLeft}
+						{#if hero.keyFeaturesStr}
 							<div
-								class="my-8 opacity-80 hidden  {hero.theme.isLeft ||
+								class="{hero.theme?.isVertical ? 'mt-4 mb-16' : 'my-8'} opacity-80 hidden  {hero
+									.theme.isLeft ||
 								(hero.demoUrl && !hero.theme.isVertical)
 									? 'sm:block'
 									: 'sm:flex gap-4'}"
@@ -375,7 +376,7 @@
 							</div>
 						{/if}
 
-						{#if hero.keyFeaturesStr && !hero.theme.isLeft}
+						<!-- {#if hero.keyFeaturesStr && !hero.theme.isLeft}
 							<div
 								class="my-8 mt-12 opacity-80 flex flex-wrap justify-center {hero.demoUrl
 									? 'sm:justify-start'
@@ -400,7 +401,7 @@
 									</div>
 								{/each}
 							</div>
-						{/if}
+						{/if} -->
 					</div>
 
 					{#if hero.demoUrl}
