@@ -314,6 +314,7 @@ body {
 }
 
 ._bg-opposite {
+	background: var(--text-color);
 	color: var(--text-color-opposite);
 }
 

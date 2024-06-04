@@ -288,8 +288,15 @@
 							>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
 									<div class="flex items-center mb-2">
-										<div class="mr-2 rounded-full p-1 _bg-opposite flex">
-											<Emoji color={page.theme?.buttonColor} emoji="feather:check" width={15} />
+										<div class="mr-2 rounded-full flex _bg-opposite p-1">
+											{#key page.theme?.backgroundColor}
+												<Emoji
+													theme={page.theme?.theme}
+													isOppositeColors
+													emoji="feather:check"
+													width={15}
+												/>
+											{/key}
 										</div>
 										<div>
 											{keyFeature}
@@ -380,7 +387,12 @@
 											class="mr-2 rounded-full p-1 flex _bg-opposite"
 											style="background-color: var(--accent-color);"
 										>
-											<Emoji color={page.theme?.buttonColor} emoji="feather:check" width={15} />
+											<Emoji
+												theme={page.theme?.theme}
+												emoji="feather:check"
+												width={15}
+												isOppositeColors
+											/>
 										</div>
 										<div>
 											{keyFeature}
