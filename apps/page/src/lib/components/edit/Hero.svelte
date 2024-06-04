@@ -19,9 +19,6 @@
 	import striptags from 'striptags';
 
 	import EditSection from '$lib/components/edit/Section.svelte';
-	import EditFAQ from '$lib/components/edit/FAQ.svelte';
-	import EditPricing from '$lib/components/edit/Pricing.svelte';
-	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import BackArrowSvg from '$lib/icons/BackArrow.svelte';

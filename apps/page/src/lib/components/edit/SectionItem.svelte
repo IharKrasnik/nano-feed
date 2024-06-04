@@ -112,20 +112,22 @@
 >
 	<div class="relative flex justify-between items-center mb-4">
 		<div class="flex items-center w-full">
-			{#if (section.renderType !== 'form' && section.renderType !== 'carousel') || item.isActionSuccessSection}
-				<EmojiPicker
-					bind:icon={item.emoji}
-					bind:color={item.iconColor}
-					bind:bgColor={item.emojiBgColor}
-					bind:sizePx={item.theme.emojiSizePx}
-				/>
+			{#if !_.includes(['carousel', 'form', 'faq'], section.renderType) || item.isActionSuccessSection}
+				{#if item.theme}
+					<EmojiPicker
+						bind:icon={item.emoji}
+						bind:color={item.iconColor}
+						bind:bgColor={item.emojiBgColor}
+						bind:sizePx={item.theme.emojiSizePx}
+					/>
+				{/if}
 			{/if}
 
-			{#if isWithUrl && section.renderType !== 'form' && (section.renderType !== 'callout' || section.id === item.id)}
+			{#if isWithUrl && section.renderType !== 'form' && (!_.includes(['callout', 'faq'], section.renderType) || section.id === item.id)}
 				<EditInteractiveOptions class=" mt-4" bind:section bind:sectionItem={item} />
 			{/if}
 
-			{#if (isWithSettings && !isSectionFooter && section.renderType !== 'form' && section.renderType !== 'carousel' && section.renderType !== 'callout' && section.renderType !== 'stepper') || section.id === item.id || item.isActionSuccessSection}
+			{#if (isWithSettings && !isSectionFooter && !_.includes(['carousel', 'form', 'callout', 'stepper', 'faq'], section.renderType)) || section.id === item.id || item.isActionSuccessSection}
 				<EditSectionSettings bind:page bind:section bind:sectionItem={item} />
 			{/if}
 
@@ -146,7 +148,12 @@
 	</div>
 
 	<div class="flex w-full items-center mb-4 font-medium">
-		<div contenteditable bind:innerHTML={item.title} data-placeholder="Title" use:contenteditable />
+		<div
+			contenteditable
+			bind:innerHTML={item.title}
+			use:contenteditable
+			data-placeholder={section.renderType === 'faq' ? 'Question' : 'Title'}
+		/>
 	</div>
 
 	<div
@@ -154,10 +161,10 @@
 		contenteditable
 		use:contenteditable
 		bind:innerHTML={item.description}
-		data-placeholder="Description"
+		data-placeholder={section.renderType === 'faq' ? 'Answer' : 'Description'}
 	/>
 
-	{#if item.id !== section.id && section.renderType !== 'callout'}
+	{#if item.id !== section.id && !_.includes(['callout', 'faq'], section.renderType)}
 		<div class="mb-4">
 			{#if isAddingTags || item.tagsStr}
 				<div class="flex items-center mt-2">
@@ -236,7 +243,7 @@ Benefit 3`}
 			<div class="mb-2 font-bold">Interaction</div>
 			<EditInteractiveOptions class="" bind:section bind:sectionItem={item} isWithButton={false} />
 		</div>
-	{:else if section.renderType !== 'form' || item.isActionSuccessSection}
+	{:else if !_.includes(['form', 'faq'], section.renderType) || item.isActionSuccessSection}
 		{#if item.id === section.id || (section.renderType !== 'callout' && !isSectionFooter)}
 			<div class="relative flex justify-between items-center">
 				<FileInput

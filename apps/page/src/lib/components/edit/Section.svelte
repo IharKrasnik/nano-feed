@@ -5,10 +5,7 @@
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 
-	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
-
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
-	import EditFAQ from '$lib/components/edit/FAQ.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
 	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -162,13 +159,13 @@
 					{/if}
 				</div>
 			</div>
-			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.streamSlug || ['testimonials', 'pricing', 'form', 'carousel', 'stepper', 'article'].includes(section.renderType)}
+			{#if ['pricing', 'faq', 'testimonials', 'benefits'].includes(section.type) || section.streamSlug || ['testimonials', 'pricing', 'form', 'carousel', 'stepper', 'article', 'faq'].includes(section.renderType)}
 				<div class="mt-2 p-2 bg-slate-200/20 rounded opacity-90">
 					{#if section.renderType === 'embedCode'}
 						<FeatherIcon name="code" /> Custom Code
 					{:else if section.renderType === 'pricing'}
 						🤑 Pricing
-					{:else if section.type === 'faq'}
+					{:else if section.renderType === 'faq'}
 						⁉️ FAQ
 					{:else if section.renderType === 'testimonials'}
 						💚 Testimonials
@@ -193,7 +190,7 @@
 						🔢 Stepper
 					{:else if section.renderType === 'article'}
 						📄 Article
-					{:else if section.type === 'benefits'}
+					{:else if section.renderType === 'benefits'}
 						<div class="text-lg font-bold" />
 					{/if}
 				</div>
@@ -308,8 +305,8 @@
 				/>
 			</div>
 		</div>
-	{:else if section.renderType === 'comments'}{:else if section.renderType === 'faq'}
-		<EditFAQ bind:section />
+	{:else if section.renderType === 'comments'}
+		<!-- <EditFAQ bind:section /> -->
 	{:else if section.renderType === 'testimonials'}
 		<EditTestimonials bind:section />
 	{:else}
