@@ -17,6 +17,7 @@
 	{#if !isCtaHidden}
 		{#if page.ctaFooter.interactiveRenderType}
 			<RenderSection
+				isFooter
 				class={`${
 					section.theme?.isFullScreen ? 'min-h-screen' : 'relative sm:py-32  overflow-hidden'
 				}  _bg-cta z-0 p-4 sm:p-8 w-full text-center max-h-[100%] z-0 bottom-0 flex flex-col justify-center min-h-screen sm:min-h-0`}
@@ -37,6 +38,7 @@
 			/>
 		{:else}
 			<RenderSection
+				isFooter
 				class={`${
 					section.theme?.isFullScreen ? 'min-h-screen' : 'relative sm:py-32  overflow-hidden'
 				}  _bg-cta z-0 p-4 sm:p-8 w-full text-center max-h-[100%] z-0 bottom-0 flex flex-col justify-center min-h-screen sm:min-h-0`}
