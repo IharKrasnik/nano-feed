@@ -9,18 +9,22 @@
 
 	export let bgColor = null;
 	export let color;
+	export let isOppositeColors;
 
 	export let theme;
 
+	let darkColor = '#333333';
+	let lightColor = '#f6f5f4';
+
 	if (theme && !color) {
 		if (theme === 'dark') {
-			color = '#f6f5f4';
+			color = isOppositeColors ? darkColor : lightColor;
 		} else {
-			color = '#333333';
+			color = isOppositeColors ? lightColor : darkColor;
 		}
 	} else {
 		if (!color) {
-			color = '#333333';
+			color = darkColor;
 		}
 	}
 

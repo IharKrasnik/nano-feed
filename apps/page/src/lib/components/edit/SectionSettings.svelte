@@ -339,7 +339,7 @@
 						{/if}
 					</div>
 
-					{#if (sectionItem.id === section.id && section.renderType === 'grid') || section.renderType === 'pricing'}
+					{#if sectionItem.id === section.id && (section.renderType === 'grid' || section.renderType === 'pricing')}
 						<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
 							<div class="bg-white">
 								<div class="font-bold mb-2">Layout</div>

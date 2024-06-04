@@ -125,7 +125,7 @@
 				<EditInteractiveOptions class=" mt-4" bind:section bind:sectionItem={item} />
 			{/if}
 
-			{#if (isWithSettings && !isSectionFooter && section.renderType !== 'form' && section.renderType !== 'carousel' && section.renderType !== 'callout') || section.id === item.id || item.isActionSuccessSection}
+			{#if (isWithSettings && !isSectionFooter && section.renderType !== 'form' && section.renderType !== 'carousel' && section.renderType !== 'callout' && section.renderType !== 'stepper') || section.id === item.id || item.isActionSuccessSection}
 				<EditSectionSettings bind:page bind:section bind:sectionItem={item} />
 			{/if}
 

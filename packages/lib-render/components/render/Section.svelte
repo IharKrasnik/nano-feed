@@ -1010,6 +1010,8 @@
 																		theme={page.parentPage?.theme?.theme ||
 																			page?.theme?.theme ||
 																			'light'}
+																		isOppositeColors={item.theme?.isOppositeColors ||
+																			section.theme?.areItemsOppositeColors}
 																		emoji={section.benefitsEmoji || '✅'}
 																		class="mr-2 opacity-80"
 																	/>

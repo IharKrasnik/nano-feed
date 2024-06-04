@@ -457,6 +457,8 @@
 														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 														emoji={section.benefitsEmoji || 'feather:check'}
 														class="mr-2"
+														isOppositeColors={item.theme?.isOppositeColors ||
+															section.theme?.areItemsOppositeColors}
 													/>
 													{benefit}
 												</div>
