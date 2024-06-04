@@ -278,15 +278,16 @@
 
 		<div class="text-sm mb-2">Choose icon, size color, background color</div>
 		<div>
-			<div class="shrink-0">
+			<div class="shrink-0 flex items-center">
 				<EmojiPicker
 					bind:icon={sectionItem.theme.itemsDefaultEmoji}
 					bind:color={sectionItem.theme.itemsIconColor}
 					bind:bgColor={sectionItem.theme.itemsEmojiBgColor}
 					bind:sizePx={sectionItem.theme.itemsEmojiSizePx}
 				/>
+				<div class="font-semibold ml-2 text-sm">Default Icon</div>
 			</div>
-			<hr class="my-2 opacity-50" />
+			<hr class="my-3 opacity-50" />
 			<div class="flex gap-2 items-center mt-2">
 				<div class="text-sm font-semibold">Icon Background Color</div>
 				<div class="flex items-center ">
@@ -309,10 +310,6 @@
 				</div>
 			</div>
 
-			<div class="mt-4">
-				<input type="checkbox" bind:checked={sectionItem.theme.areIconsLeft} /> Show Icon Left From Title
-			</div>
-
 			<div class="flex gap-2 items-center mt-2">
 				<div class="text-sm font-semibold">Color (SVG, Text)</div>
 				<input type="color" bind:value={sectionItem.theme.itemsIconColor} />
@@ -324,6 +321,9 @@
 					style="max-width: 150px;"
 					bind:value={sectionItem.theme.itemsEmojiSizePx}
 				/>
+			</div>
+			<div class="mt-4">
+				<input type="checkbox" bind:checked={sectionItem.theme.areIconsLeft} /> Show Icon Left From Title
 			</div>
 		</div>
 	</div>

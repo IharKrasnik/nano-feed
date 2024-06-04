@@ -82,16 +82,14 @@
 {#if sectionItem && section && (!isWithButton || isShown)}
 	{#if sectionItem.id !== section.id}
 		<div
-			class="_section cursor-pointer"
+			class="_section cursor-pointer mt-6"
 			on:click={() => {
 				$selectedSectionItem = section;
 			}}
 		>
-			<div class="font-bold">Parent Section</div>
+			<div class="font-bold">Parent Section Settings</div>
 		</div>
-		<div class="opacity-80 mt-8 mb-2">
-			This is inner items settings. To change item style go to parent section settings
-		</div>
+		<div class="opacity-60 mt-8 mb-2">Down below is settings for inner section item</div>
 	{/if}
 
 	<div class=" _editor">
@@ -267,7 +265,7 @@
 							{/if}
 						{/if}
 
-						{#if section.id === sectionItem.id && section.renderType !== 'callout'}
+						{#if section.renderType !== 'callout'}
 							<ToggleGroup
 								tabs={[
 									{
@@ -295,6 +293,38 @@
 								}}
 								class={section.id === sectionItem.id ? '' : 'my-4'}
 							/>
+						{/if}
+
+						{#if section.id !== sectionItem.id && section.renderType === 'grid'}
+							<ToggleGroup
+								tabs={[
+									{
+										key: 'start',
+										name: 'Top',
+										icon: '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.89949 9.49998C3.89949 9.72089 3.7204 9.89997 3.49949 9.89997C3.27857 9.89997 3.09949 9.72089 3.09949 9.49998L3.09949 2.46566L1.78233 3.78282C1.62612 3.93903 1.37285 3.93903 1.21664 3.78282C1.06043 3.62661 1.06043 3.37334 1.21664 3.21713L3.21664 1.21713C3.29166 1.14212 3.3934 1.09998 3.49949 1.09998C3.60557 1.09998 3.70732 1.14212 3.78233 1.21713L5.78233 3.21713C5.93854 3.37334 5.93854 3.62661 5.78233 3.78282C5.62612 3.93903 5.37285 3.93903 5.21664 3.78282L3.89949 2.46566L3.89949 9.49998ZM8.49998 1.99998C8.22383 1.99998 7.99998 2.22383 7.99998 2.49998C7.99998 2.77612 8.22383 2.99998 8.49998 2.99998H14.5C14.7761 2.99998 15 2.77612 15 2.49998C15 2.22383 14.7761 1.99998 14.5 1.99998H8.49998ZM8.49998 4.99998C8.22383 4.99998 7.99998 5.22383 7.99998 5.49998C7.99998 5.77612 8.22383 5.99998 8.49998 5.99998H14.5C14.7761 5.99998 15 5.77612 15 5.49998C15 5.22383 14.7761 4.99998 14.5 4.99998H8.49998ZM7.99998 8.49998C7.99998 8.22383 8.22383 7.99998 8.49998 7.99998H14.5C14.7761 7.99998 15 8.22383 15 8.49998C15 8.77612 14.7761 8.99998 14.5 8.99998H8.49998C8.22383 8.99998 7.99998 8.77612 7.99998 8.49998Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>',
+										isSelected:
+											!sectionItem.theme?.verticalAlign ||
+											sectionItem.theme?.verticalAlign === 'start'
+									},
+									{
+										key: 'center',
+										name: 'Middle',
+										icon: '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.49949 14.9C3.7204 14.9 3.89949 14.7209 3.89949 14.5L3.89949 10.4657L5.21664 11.7829C5.37285 11.9391 5.62612 11.9391 5.78233 11.7829C5.93854 11.6267 5.93854 11.3734 5.78233 11.2172L3.78233 9.21718C3.70732 9.14217 3.60557 9.10002 3.49949 9.10002C3.3934 9.10002 3.29166 9.14217 3.21664 9.21718L1.21664 11.2172C1.06043 11.3734 1.06043 11.6267 1.21664 11.7829C1.37285 11.9391 1.62612 11.9391 1.78233 11.7829L3.09949 10.4657L3.09949 14.5C3.09949 14.7209 3.27857 14.9 3.49949 14.9ZM7.99998 10.5C7.99998 10.7762 8.22383 11 8.49998 11H14.5C14.7761 11 15 10.7762 15 10.5C15 10.2239 14.7761 10 14.5 10H8.49998C8.22383 10 7.99998 10.2239 7.99998 10.5ZM7.99998 7.50002C7.99998 7.77617 8.22383 8.00002 8.49998 8.00002H14.5C14.7761 8.00002 15 7.77617 15 7.50002C15 7.22388 14.7761 7.00002 14.5 7.00002H8.49998C8.22383 7.00002 7.99998 7.22388 7.99998 7.50002ZM8.49998 5.00002C8.22383 5.00002 7.99998 4.77617 7.99998 4.50002C7.99998 4.22388 8.22383 4.00002 8.49998 4.00002H14.5C14.7761 4.00002 15 4.22388 15 4.50002C15 4.77617 14.7761 5.00002 14.5 5.00002H8.49998ZM3.89949 0.500025C3.89949 0.279111 3.7204 0.100025 3.49949 0.100025C3.27857 0.100025 3.09949 0.279111 3.09949 0.500025L3.09949 4.53434L1.78233 3.21718C1.62612 3.06097 1.37285 3.06097 1.21664 3.21718C1.06043 3.37339 1.06043 3.62666 1.21664 3.78287L3.21664 5.78287C3.29166 5.85788 3.3934 5.90002 3.49949 5.90002C3.60557 5.90002 3.70732 5.85788 3.78233 5.78287L5.78233 3.78287C5.93854 3.62666 5.93854 3.37339 5.78233 3.21718C5.62612 3.06097 5.37285 3.06097 5.21664 3.21718L3.89949 4.53434L3.89949 0.500025Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>',
+										isSelected: sectionItem.theme?.verticalAlign === 'center'
+									},
+									{
+										key: 'end',
+										name: 'Bottom',
+										icon: '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.89949 5.50002C3.89949 5.27911 3.7204 5.10003 3.49949 5.10003C3.27857 5.10003 3.09949 5.27911 3.09949 5.50002L3.09949 12.5343L1.78233 11.2172C1.62612 11.061 1.37285 11.061 1.21664 11.2172C1.06043 11.3734 1.06043 11.6267 1.21664 11.7829L3.21664 13.7829C3.29166 13.8579 3.3934 13.9 3.49949 13.9C3.60557 13.9 3.70732 13.8579 3.78233 13.7829L5.78233 11.7829C5.93854 11.6267 5.93854 11.3734 5.78233 11.2172C5.62612 11.061 5.37285 11.061 5.21664 11.2172L3.89949 12.5343L3.89949 5.50002ZM8.49998 13C8.22383 13 7.99998 12.7762 7.99998 12.5C7.99998 12.2239 8.22383 12 8.49998 12H14.5C14.7761 12 15 12.2239 15 12.5C15 12.7762 14.7761 13 14.5 13H8.49998ZM8.49998 10C8.22383 10 7.99998 9.77617 7.99998 9.50002C7.99998 9.22388 8.22383 9.00002 8.49998 9.00002H14.5C14.7761 9.00002 15 9.22388 15 9.50002C15 9.77617 14.7761 10 14.5 10H8.49998ZM7.99998 6.50002C7.99998 6.77617 8.22383 7.00002 8.49998 7.00002H14.5C14.7761 7.00002 15 6.77617 15 6.50002C15 6.22388 14.7761 6.00002 14.5 6.00002H8.49998C8.22383 6.00002 7.99998 6.22388 7.99998 6.50002Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>',
+										isSelected: sectionItem.theme?.verticalAlign === 'end'
+									}
+								]}
+								onTabSelected={(tab) => {
+									sectionItem.theme.verticalAlign = tab.key;
+								}}
+								class="mt-4"
+							/>
+							<div class="text-sm mt-2">This will override parent section default alignment</div>
 						{/if}
 
 						{#if (sectionItem !== section || sectionItem.renderType === 'callout') && sectionItem.imageUrl}
@@ -440,9 +470,12 @@
 									: ''}"
 								on:click={() => (isItemsSettingsCollapsed = !isItemsSettingsCollapsed)}
 							>
-								<div class="flex items-center">
-									<FeatherIcon size={20} name="grid" />
-									<div class="font-bold ml-2">Inner items appearance</div>
+								<div class="flex items-start">
+									<FeatherIcon class="mt-1" size={25} name="grid" />
+									<div class="ml-2">
+										<div class="font-bold">Inner items appearance</div>
+										<div class="text-sm">Default styles applied to each inner section item</div>
+									</div>
 								</div>
 
 								<div
@@ -452,14 +485,14 @@
 										{#if isItemsSettingsCollapsed}
 											<FeatherIcon size="20" name="chevron-down" color="#333" />
 										{:else}
-											<FeatherIcon class="mr-2" size="15" name="eye-off" /> Collapse
+											<FeatherIcon class="mr-2" size="15" name="eye-off" />
 										{/if}
 									</div>
 								</div>
 							</div>
 
 							{#if !isItemsSettingsCollapsed}
-								<div class="mt-4">
+								<div class="mt-8">
 									<EditSectionItemsSettings bind:page bind:section bind:sectionItem />
 								</div>
 							{/if}

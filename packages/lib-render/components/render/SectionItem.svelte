@@ -228,7 +228,8 @@
 							: ''} {section.columns === 1 &&
 							(!item.imageUrl || section.items.length === 1) &&
 							'mx-auto'}
-							{(section.theme?.itemsVerticalAlign && `justify-${section.theme?.itemsVerticalAlign}`) ||
+							{((item.theme?.verticalAlign || section.theme?.itemsVerticalAlign) &&
+							`justify-${item.theme?.verticalAlign || section.theme?.itemsVerticalAlign}`) ||
 							'justify-between'}
 							"
 						class:order-last-off={i % 2 === 0}
