@@ -452,7 +452,7 @@
 									{#if item.pricing.benefitsStr}
 										<div class="mb-4 _section-description">
 											{#each item.pricing.benefitsStr.split('\n') as benefit}
-												<div class="my-1 sm:my-2 flex items-center">
+												<div class="my-1 sm:my-2 flex items-start">
 													<Emoji
 														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 														emoji={section.benefitsEmoji || 'feather:check'}
