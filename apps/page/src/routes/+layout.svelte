@@ -138,6 +138,7 @@
 		<slot />
 	</div>
 {/if}
+
 <!-- 
 <div class:sm:hidden={!($currentUser && !$sveltePage.data.pageSlug && !$sectionToEdit)}>
 	{#if !$sveltePage.url.href.includes('/emulator')}

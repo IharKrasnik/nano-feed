@@ -358,7 +358,7 @@
 								class="w-full sticky z-20 pb-[200px] bg-site"
 								src="{STREAM_URL}/{blog.streamSlug}/embed?theme={blog.theme?.sectionTheme ||
 									'light'}&limit=15&isViewAll=true&bgColor={$styles[
-									'section-background-color'
+									'section-item-background-color'
 								].replace('#', '%23')}"
 							/>
 						{/key}

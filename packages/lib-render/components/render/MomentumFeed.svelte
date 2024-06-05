@@ -19,7 +19,7 @@
 		class="w-full sticky z-20 bg-site"
 		src="{STREAM_URL}/{page.streams?.hub?.slug || page.streamSlug || ''}/embed?theme={page.theme
 			?.sectionTheme || 'light'}&limit=9&isViewAll=true&bgColor={themeStyles[
-			'section-background-color'
-		].replace('#', '%23')}"
+			'section-item-background-color'
+		]?.replace('#', '%23')}"
 	/>
 {/key}
