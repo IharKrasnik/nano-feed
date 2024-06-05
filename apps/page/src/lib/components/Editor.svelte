@@ -288,7 +288,8 @@
 		'dirName',
 		'links',
 		'lastPublishedOn',
-		'isDirty'
+		'isDirty',
+		'metadata'
 	];
 
 	let isPageResetting = false;
