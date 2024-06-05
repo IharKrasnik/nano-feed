@@ -464,7 +464,7 @@
 						</div>
 					{/if}
 
-					{#if section.id === sectionItem.id && section.renderType === 'grid'}
+					{#if section.id === sectionItem.id && _.includes(['grid', 'pricing'], section.renderType)}
 						<div class="_section my-4 !p-6">
 							<div
 								class="flex items-center justify-between w-full {isItemsSettingsCollapsed
