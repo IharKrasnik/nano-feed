@@ -1,4 +1,6 @@
 <script>
+	import _ from 'lodash';
+
 	import clickOutside from 'lib/use/clickOutside';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -499,7 +501,7 @@
 						</div>
 					{/if}
 
-					<!-- {#if section.id !== sectionItem.id}
+					{#if section.id !== sectionItem.id && _.includes(['grid', 'pricing'], section.renderType)}
 						<div class="_section my-4">
 							<div class="font-bold">Item appearance</div>
 
@@ -512,7 +514,7 @@
 							<input type="checkbox" bind:checked={sectionItem.isFeatured} /> Is Featured
 							<div class="text-sm opacity-70">Feature specific section for focus</div>
 						</div>
-					{/if} -->
+					{/if}
 
 					<div class="my-4">
 						{#if section.renderType === 'callout'}
