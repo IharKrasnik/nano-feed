@@ -336,13 +336,13 @@
 	</div>
 {/if}
 
-{#if section.actionType === 'service_chat'}
+<!-- {#if section.actionType === 'service_chat'}
 	<div class="text-sm mt-4 w-full text-center">
 		Once submitted you'll be redirected to the <a class="underline" href="/app/requests"
 			>requests board</a
 		>
 	</div>
-{/if}
+{/if} -->
 
 {#if section.actionSuccessSection && ((isEdit && section.actionType === 'success') || isFormSubmitted)}
 	<div in:fly={{ y: 50, duration: 150 }}>
