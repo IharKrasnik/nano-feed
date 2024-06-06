@@ -1955,11 +1955,11 @@
 								{/key}
 							{/if}
 
-							{#if page._id && $selectedTab === 'editor' && !$sectionToEdit}
+							<!-- {#if page._id && $selectedTab === 'editor' && !$sectionToEdit}
 								<div class="hidden sm:block">
 									<MomentumWidget bind:page />
 								</div>
-							{/if}
+							{/if} -->
 						</div>
 
 						<!-- END PREVIEW -->
