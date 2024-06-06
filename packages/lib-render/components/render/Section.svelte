@@ -390,7 +390,7 @@
 		<div
 			class="{section.imgMaxWidth === 'full-screen' || section._isCtaFooter
 				? ''
-				: '_container-width mx-auto overflow-x-scroll'}  _section-container {section.isGlowing
+				: '_container-width mx-auto overflow-x-auto'}  _section-container {section.isGlowing
 				? `_glowing ${section.theme?.isOverrideGlowingColor ? '_override-glowing-color' : ''}
 	${section.theme?.glowingIntensity ? `_intensity` : ''}`
 				: ''} {section.className}  {section.theme?.isTransparent
@@ -592,7 +592,7 @@
 				{:else if section.renderType === 'form'}
 					<RenderForm bind:section bind:page bind:isEdit />
 				{:else if section.items?.length}
-					<div class="w-full _container-width mx-auto overflow-x-scroll">
+					<div class="w-full _container-width mx-auto overflow-x-auto">
 						{#if section.renderType === 'carousel'}
 							{#if !section.carouselType || section.carouselType === 'vertical'}
 								<div
@@ -847,7 +847,7 @@
 											: section.isFlexGrid
 											? `flex justify-start ${section.theme?.isTitleLeft} ${
 													section.theme?.isTitleLeft ? '' : 'sm:justify-center'
-											  } overflow-x-scroll`
+											  } overflow-x-auto`
 											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.isFeatured
 											? '_highlighted'
 											: ''} {item.theme?.isTransparent ? '_transparent' : ''} {item.theme
@@ -1123,7 +1123,7 @@
 									: section.isFlexGrid
 									? `flex justify-start ${section.theme?.isTitleLeft} ${
 											section.theme?.isTitleLeft ? '' : 'sm:justify-center'
-									  } ${section.isFlexWrap ? 'flex-wrap' : ''} overflow-x-scroll`
+									  } ${section.isFlexWrap ? 'flex-wrap' : ''} overflow-x-auto`
 									: `${section.theme?.isMobileInline ? 'flex sm:grid' : 'grid'} sm:grid-cols-${
 											section.columns
 									  } `} {section.items[0]?.theme?.isTransparent ? 'mt-8' : ''}"
