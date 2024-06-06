@@ -280,16 +280,19 @@
 
 						{#if hero.keyFeaturesStr}
 							<div
-								class="{hero.theme?.isVertical ? 'mt-4 mb-16' : 'my-8'} opacity-80 hidden  {hero
-									.theme.isLeft ||
+								class="{hero.theme?.isVertical
+									? 'mt-4 mb-16'
+									: 'my-8'} opacity-80 flex flex-col items-center {hero.theme.isLeft ||
 								(hero.demoUrl && !hero.theme.isVertical)
 									? 'sm:block'
-									: 'sm:flex gap-4'}"
+									: 'sm:flex sm:flex-row gap-4'}"
 								in:fade={{ delay: 300, duration: 600 }}
 							>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
-									<div class="flex items-center mb-2">
-										<div class="mr-2 rounded-full flex _bg-opposite p-1">
+									<div class="block sm:flex items-center mb-2">
+										<div
+											class="mr-2 rounded-full inline-flex _bg-opposite w-[25px] h-[25px] p-1 mt-[-2px]"
+										>
 											{#key page.theme?.backgroundColor}
 												<Emoji
 													theme={page.theme?.theme}
@@ -299,7 +302,7 @@
 												/>
 											{/key}
 										</div>
-										<div>
+										<div class="inline ">
 											{keyFeature}
 										</div>
 									</div>
@@ -376,7 +379,7 @@
 							</div>
 						{/if}
 
-						<!-- {#if hero.keyFeaturesStr && !hero.theme.isLeft}
+						<!-- {#if hero.keyFeaturesStr}
 							<div
 								class="my-8 mt-12 opacity-80 flex flex-wrap justify-center {hero.demoUrl
 									? 'sm:justify-start'
