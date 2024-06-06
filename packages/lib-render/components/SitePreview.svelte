@@ -480,7 +480,7 @@
 									{/if}
 								</div>
 
-								{#if isMountedDelayed && !isNoHeaderFooter && (page.activeHero?.title || page.ctaFooter?.title) && page.sections?.filter((s) => s.isShown)?.length}
+								{#if isMountedDelayed && !isNoHeaderFooter && (page.parentPage || page.activeHero?.title || page.ctaFooter?.title) && page.sections?.filter((s) => s.isShown)?.length}
 									<div
 										class="overflow-hidden"
 										class:hidden={$sveltePage.url.pathname === '/blog'}
@@ -489,7 +489,8 @@
 										class:grayscale={!!$sectionToEdit}
 									>
 										<RenderCTA
-											bind:isCtaHidden={page.ctaFooter.isHidden}
+											isCtaHidden={page.ctaFooter.isHidden ||
+												(!page.activeHero?.title && !page.ctaFooter?.title)}
 											{page}
 											bind:section={page.ctaFooter}
 										/>
