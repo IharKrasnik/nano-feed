@@ -296,7 +296,7 @@
 											{#key page.theme?.backgroundColor}
 												<Emoji
 													theme={page.theme?.theme}
-													isOppositeColors
+													isOppositeColors={true}
 													emoji="feather:check"
 													width={15}
 												/>
