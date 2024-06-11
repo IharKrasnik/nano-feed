@@ -18,7 +18,7 @@ export const BRAND_URL = dev ? 'https://brand.mmntm.build' || 'http://localhost:
 
 export const PAGE_URL = dev ? 'https://mmntm.page' : 'https://mmntm.page';
 
-export const EDITOR_URL = dev ? 'http://localhost:5173' : 'https://editor.momentum.page';
+export const EDITOR_URL = dev ? 'https://editor.momentum.page' : 'https://editor.momentum.page';
 
 export const IDE_URL = dev ? 'http://localhost:5177/ide' : 'https://momentum.page/ide';
 

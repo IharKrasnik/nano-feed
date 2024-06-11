@@ -1260,7 +1260,7 @@
 																	createPage={async (newPage) => {
 																		setPageAndDraft(newPage);
 																		isPageResetting = true;
-																		await publishPage({ isDraft: true });
+																		await publishPage({});
 																		isPageResetting = false;
 																	}}
 																/>
