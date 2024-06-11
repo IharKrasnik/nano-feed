@@ -24,7 +24,7 @@
 		}
 	} else {
 		if (!color) {
-			color = lightColor;
+			color = isOppositeColors ? darkColor : lightColor;
 		}
 	}
 

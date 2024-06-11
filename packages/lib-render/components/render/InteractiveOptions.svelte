@@ -557,6 +557,7 @@
 									width={size === 'small' || isHeader ? 13 : 17}
 									class="mr-2 rounded-full"
 									emoji={sectionItem.urlIcon}
+									isOppositeColors
 								/>
 							{/if}
 							{#if sectionItem.interactiveRenderType === 'form'}
