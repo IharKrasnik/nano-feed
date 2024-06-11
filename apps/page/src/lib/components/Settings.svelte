@@ -1,12 +1,9 @@
 <script>
 	import { get, post, del } from 'lib/api';
-	import currentUser from 'lib/stores/currentUser';
 	import Button from 'lib/components/Button.svelte';
-	import EditDomains from '$lib/components/settings/Domains.svelte';
 	import EditOpenGraph from '$lib/components/settings/OpenGraph.svelte';
+	import EditPageName from '$lib/components/settings/PageName.svelte';
 	import EditCustomCode from '$lib/components/settings/CustomCode.svelte';
-	import PageBadge from '$lib/components/PageBadge.svelte';
-	import WaveIndicator from 'lib/components/wave/WaveIndicator.svelte';
 	import subPages from 'lib/stores/subPages';
 	import allPages from 'lib-render/stores/allPages';
 
@@ -31,6 +28,9 @@
 <div class="_editor">
 	<h2 class="text-2xl font-bold mb-2">Page Settings</h2>
 	<div class="mb-4">{page.name}</div>
+	<hr class="my-8 border-[#8B786D] opacity-30" />
+
+	<EditPageName bind:page />
 	<hr class="my-8 border-[#8B786D] opacity-30" />
 
 	<EditOpenGraph bind:page />
