@@ -24,7 +24,7 @@
 		}
 	} else {
 		if (!color) {
-			color = darkColor;
+			color = lightColor;
 		}
 	}
 
