@@ -390,7 +390,7 @@
 		<div
 			class="{section.imgMaxWidth === 'full-screen' || section._isCtaFooter
 				? ''
-				: '_container-width mx-auto overflow-x-auto'}  _section-container {section.isGlowing
+				: ''}  _section-container {section.isGlowing
 				? `_glowing ${section.theme?.isOverrideGlowingColor ? '_override-glowing-color' : ''}
 	${section.theme?.glowingIntensity ? `_intensity` : ''}`
 				: ''} {section.className}  {section.theme?.isTransparent
