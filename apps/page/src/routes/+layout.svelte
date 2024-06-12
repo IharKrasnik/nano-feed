@@ -75,7 +75,7 @@
 	<meta name="twitter:description" content={$sveltePage.data.ogDescription} />
 	<meta name="twitter:card" content="summary_large_image" />
 
-	<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+	<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 	<meta
 		name="twitter:image"
