@@ -1,5 +1,6 @@
 <script>
 	let isHover = false;
+	import { fly } from 'svelte/transition';
 
 	export let isFixed = true;
 
@@ -7,6 +8,7 @@
 </script>
 
 <a
+	in:fly={{ y: 50, duration: 400, delay: 1300 }}
 	href="https://momentum.page"
 	target="_blank"
 	class=" block flex {isFixed

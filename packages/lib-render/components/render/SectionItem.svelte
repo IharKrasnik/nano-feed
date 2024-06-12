@@ -250,13 +250,13 @@
 											/>
 										</div>
 										<div>
-											<h2 class="_item-description" style="font-weight: bold;">
+											<h3 class="_item-description" style="font-weight: bold;">
 												<ContentEditableIf
 													class=""
 													bind:innerHTML={item.title}
 													condition={isEdit}
 												/>
-											</h2>
+											</h3>
 											{#if item.label}
 												<div class="_item-description">
 													<ContentEditableIf
@@ -324,7 +324,7 @@
 													{/key}
 												</div>
 											{/if}
-											<h2 class="{headerTextStyle(item)[section.columns]} _item-title ">
+											<h3 class="{headerTextStyle(item)[section.columns]} _item-title ">
 												<ContentEditableIf
 													class={item.theme?.align === 'center' ||
 													section.theme?.itemsAlign === 'center'
@@ -333,13 +333,13 @@
 													bind:innerHTML={item.title}
 													condition={isEdit}
 												/>
-											</h2>
+											</h3>
 										</div>
 									{/if}
 								{/if}
 
 								{#if (item.description || item.title || item.icon) && !item.pricing}
-									<h3
+									<div
 										class="{descriptionStyle[section.columns]}  whitespace-pre-wrap  {item.theme
 											?.align === 'center' || section.theme?.itemsAlign === 'center'
 											? 'text-center'
@@ -374,7 +374,7 @@
 											bind:innerHTML={item.description}
 											condition={isEdit}
 										/>
-									</h3>
+									</div>
 								{/if}
 
 								<!-- For every section besides pricing render buttons near text -->
@@ -551,9 +551,9 @@
 					<hr class="w-full  opacity-30" />
 
 					<div class="flex items-end p-4 sm:px-8">
-						<h3 class="text-2xl font-bold ">
+						<div class="text-2xl font-bold ">
 							{toDollars(item.syncPage?.metadata?.fullAmount)}
-						</h3>
+						</div>
 						{#if item.syncPage?.metadata?.payPer && item.syncPage?.metadata?.payPer !== 'one-time'}
 							<div class="ml-2 opacity-50">
 								/ {item.syncPage?.metadata?.payPer}

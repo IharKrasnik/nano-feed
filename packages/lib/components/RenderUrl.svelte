@@ -1,5 +1,8 @@
 <script>
 	import _ from 'lodash';
+	import * as he from 'he';
+
+	import { browser } from '$app/environment';
 	import LoomIcon from 'lib/icons/loom.svelte';
 	import YouTubeIcon from 'lib/icons/youtube.svelte';
 	import VimeoIcon from 'lib/icons/vimeo.svelte';
@@ -18,7 +21,7 @@
 	export let style = '';
 
 	export { clazz as class };
-	export let isLazy = true;
+	export let isLazy = false;
 	export let url;
 	export let imgClass = '';
 	export let isIframeFallback = true;
@@ -37,7 +40,7 @@
 	};
 
 	let getAltName = () => {
-		return _.last(url.split('/')).split('?')[0];
+		return decodeURIComponent(_.last(url.split('/')).split('?')[0]);
 	};
 
 	let isFile;
@@ -126,9 +129,10 @@
 				{#if url.includes('loom.com')}
 					{#if !isFilesOnly}
 						<iframe
-							class="lazyload {imgClass}"
+							class="{isLazy && 'lazyload'} {imgClass}"
 							style="width: 100%; aspect-ratio: 536/300;"
-							data-src={url.replace('share/', 'embed/')}
+							data-src={isLazy ? url.replace('share/', 'embed/') : null}
+							src={isLazy ? null : url.replace('share/', 'embed/')}
 						/>
 					{:else}
 						<LoomIcon class="w-[45px] opacity-50" />
@@ -202,7 +206,11 @@
 				{:else if url.includes('.jpg') || url.includes('.jpeg') || url.includes('.gif') || url.includes('png') || url.includes('webp') || url.includes('unsplash.com') || url.includes('giphy.com') || url.includes('image')}
 					{#key url}
 						{#if isLazy}
-							<img class="{imgClass} lazyload" data-src={url} alt={getAltName()} />
+							{#if browser}
+								<img class="{imgClass} lazyload" data-src={url} alt={getAltName()} />
+							{:else}
+								<img class={imgClass} src={url} alt={getAltName()} />
+							{/if}
 						{:else}
 							<img class={imgClass} src={url} alt={getAltName()} />
 						{/if}

@@ -1,8 +1,5 @@
 <script>
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import { get } from 'lib/api';
 	import currentPage from 'lib-render/stores/currentPage';
 
 	import SitePreview from 'lib-render/components/SitePreview.svelte';

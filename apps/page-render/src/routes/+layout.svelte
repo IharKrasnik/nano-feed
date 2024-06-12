@@ -12,7 +12,7 @@
 	import isUrl from 'lib/helpers/isUrl';
 
 	import { SvelteToast } from '@zerodevx/svelte-toast';
-	import sectionToEdit from 'lib-render/stores/sectionToEdit';
+	import pageContainerEl from 'lib-render/stores/pageContainerEl';
 
 	import 'lazysizes';
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
@@ -128,7 +128,7 @@
 
 <div id="popup-portal" />
 
-<div class="relative" style="	">
+<div class="relative" style="	" bind:this={$pageContainerEl}>
 	<Page />
 	{#if browser}
 		<script defer src="https://wave.mmntm.build/wave.js"></script>

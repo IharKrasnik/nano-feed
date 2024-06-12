@@ -1,5 +1,6 @@
 <script>
 	import _ from 'lodash';
+	import { browser } from '$app/environment';
 
 	import { onMount } from 'svelte';
 	import { fly, fade } from 'svelte/transition';
@@ -15,7 +16,6 @@
 	import Background from 'lib-render/components/render/Background.svelte';
 	import hexToRgba from 'lib/helpers/hexToRgba';
 	import Emulator from 'lib-render/components/Emulator.svelte';
-	import Popup from 'lib-render/components/Popup.svelte';
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import typewriter from 'lib-render/use/typewriter';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -221,13 +221,13 @@
 							? 'sm:mr-8'
 							: ''} "
 					>
-						{#if isMounted}
-							{#if hero.embedAboveHtml}
-								<div class="mb-4" in:fly={{ y: -25, duration: 800 }}>
-									{@html hero.embedAboveHtml}
-								</div>
-							{/if}
+						{#if hero.embedAboveHtml}
+							<div class="mb-4" in:fly={{ y: -25, duration: 500 }} class:opacity-0={!isMounted}>
+								{@html hero.embedAboveHtml}
+							</div>
+						{/if}
 
+						{#if (hero.title || isEdit) && (!isEdit || isMounted)}
 							<h1
 								class="{page.theme?.isGradientTitle
 									? `bg-gradient-to-br ${getHeroGradientColor()}
@@ -241,7 +241,6 @@
 										: 'sm:max-w-[912px]'
 									: ''}"
 								style={hero.title ? '' : 'opacity: 20%;'}
-								in:fly={{ y: 25, duration: 1000 }}
 							>
 								{#if hero.title}
 									{#if hero.theme?.isAnimatedTitle}
@@ -259,7 +258,7 @@
 							</h1>
 						{/if}
 
-						{#if hero.subtitle}
+						{#if hero.subtitle && (!isEdit || isMounted)}
 							<h2
 								class="_subtitle {hero.theme?.titleSize === 'huge'
 									? 'sm:text-xl'
@@ -272,7 +271,6 @@
 									: page.renderType === 'article'
 									? 'max-w-[1000px]'
 									: 'max-w-[600px]'}"
-								in:fly={{ y: 25, duration: 1000 }}
 							>
 								{@html hero.subtitle}
 							</h2>
@@ -286,6 +284,7 @@
 								(hero.demoUrl && !hero.theme.isVertical)
 									? 'sm:block'
 									: 'sm:flex sm:flex-row gap-4'}"
+								class:opacity-0={!isMounted}
 								in:fade={{ delay: 300, duration: 600 }}
 							>
 								{#each hero.keyFeaturesStr.split('\n') as keyFeature}
@@ -311,7 +310,7 @@
 						{/if}
 
 						{#if hero.ctaHtml && (!hero.theme?.ctaHtmlPosition || hero.theme?.ctaHtmlPosition === 'above')}
-							<div in:fly={{ y: 25, delay: 500, duration: 900 }}>
+							<div in:fly={{ y: 25, duration: 900 }} class:opacity-0={!isMounted}>
 								{@html hero.ctaHtml}
 							</div>
 						{/if}
@@ -319,12 +318,11 @@
 						{#if hero.interactiveRenderType}
 							<div
 								id="header-cta"
-								class={hero.interactiveRenderType === 'form'
+								class="{hero.interactiveRenderType === 'form'
 									? 'w-full'
 									: hero.theme.isLeft
 									? 'w-full'
-									: 'w-full sm:w-auto'}
-								in:fly={{ y: 25, delay: 500, duration: 900 }}
+									: 'w-full sm:w-auto'} "
 							>
 								<RenderInteractiveOptions
 									class={hero.theme.isLeft || (hero.demoUrl && !hero.theme.isVertical)
@@ -360,8 +358,13 @@
 								{page}
 							/>
 						{/if}
-						{#if isMounted && hero.socialProof}
-							<div class="py-4 mt-8 sm:mt-16" in:fly={{ y: 25, delay: 900, duration: 900 }}>
+
+						{#if hero.socialProof}
+							<div
+								class="py-4 mt-8 sm:mt-16"
+								class:opacity-0={!isMounted}
+								in:fly={{ y: 25, duration: 500 }}
+							>
 								<div
 									class="_social-proof _dense _small {hero.socialProof.className ||
 										''} flex justify-center  {(hero.demoUrl && !hero.theme?.isVertical) ||
@@ -369,8 +372,8 @@
 										? 'inline-flex'
 										: 'w-full'}"
 								>
-									{#each (isEdit ? hero.socialProof.logos : hero.theme?.isShuffleSocialProof ? _.shuffle(hero.socialProof.logos) : hero.socialProof.logos).filter((l) => l.url) as logo}
-										<img class="rounded-full" src={logo.url} />
+									{#each (isEdit ? hero.socialProof.logos : hero.theme?.isShuffleSocialProof ? _.shuffle(hero.socialProof.logos) : hero.socialProof.logos).filter((l) => l.url) as logo, i}
+										<img class="rounded-full" src={logo.url} alt="Avatar of user {i + 1}" />
 									{/each}
 								</div>
 								<div class="text-sm mt-2 opacity-80 max-w-[400px]">
@@ -412,7 +415,6 @@
 							class="relative  w-full {page.renderType === 'article'
 								? 'mt-0'
 								: 'mt-16'} sm:mt-0 {hero.theme?.isVertical ? '' : 'sm:ml-8 sm:max-w-[600px]'}"
-							in:fly={{ y: 25, delay: 1000, duration: 900 }}
 							on:click={() => {
 								// if (hero.demoUrl.includes('/emulator-full')) {
 								// 	isDemoPopupShown = true;

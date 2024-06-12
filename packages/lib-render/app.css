@@ -688,6 +688,10 @@ a._item-title:hover {
 	opacity: .7;
 }
 
+._subtitle.opacity-0 {
+	opacity: 0;
+}
+
 ._item-description {
 	font-weight: 400;
 	font-size: 16px;

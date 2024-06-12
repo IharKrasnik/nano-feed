@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import _ from 'lodash';
 import { writable } from 'svelte/store';
 import { get, post } from 'lib/api';
@@ -92,7 +93,11 @@ export const fetchFeed = async ({
 			totalCount: count
 		};
 		st.updatedOn = new Date();
-		localStorage[getCacheKey(cacheId)] = JSON.stringify(st[cacheId]);
+
+		if (browser) {
+			localStorage[getCacheKey(cacheId)] = JSON.stringify(st[cacheId]);
+		}
+
 		return st;
 	});
 
@@ -114,7 +119,7 @@ export const getFeed = async ({
 	perPage
 }) => {
 	if (!streamSettings && !forceRefresh) {
-		let cachedFeed = JSON.parse(localStorage[getCacheKey()] || 'null');
+		let cachedFeed = browser ? JSON.parse(localStorage[getCacheKey()] || 'null') : null;
 
 		if (cachedFeed) {
 			return cachedFeed;

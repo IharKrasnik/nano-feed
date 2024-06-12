@@ -53,7 +53,6 @@
 
 		<RenderUrl
 			{isIframeFallback}
-			isLazy={false}
 			class={`${urlClass} relative`}
 			url={imageUrl}
 			imgClass={`${urlImgClass} ${imageBackgroundUrl ? 'rounded-lg' : getAspectClass(aspectRatio)}`}

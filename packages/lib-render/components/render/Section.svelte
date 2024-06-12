@@ -242,7 +242,6 @@
 		}
 
 		if (section.customScriptJs) {
-			console.log('section.customScriptJs', section.customScriptJs);
 			eval(
 				`var d=document;var s=d.createElement("script"); s.innerHTML=\`\${section.customScriptJs}\`;s.async=1;d.getElementsByTagName("head")[0].appendChild(s);`
 			);
@@ -460,7 +459,7 @@
 
 						<div class="mb-8 {section.description ? `${isFooter ? 'sm:mb-8' : 'sm:mb-12'}` : ''}">
 							{#if section.title}
-								<h2
+								<h3
 									class="_section-title text-2xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
 										? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-medium'}`
@@ -476,10 +475,10 @@
 										bind:innerHTML={section.title}
 										condition={isEdit}
 									/>
-								</h2>
+								</h3>
 							{/if}
 							{#if section.description}
-								<h3
+								<div
 									class="_section-description mb-8 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
 										? 'text-xl leading-8'
@@ -502,7 +501,7 @@
 											condition={isEdit}
 										/>
 									{/if}
-								</h3>
+								</div>
 							{/if}
 						</div>
 

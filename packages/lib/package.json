@@ -16,6 +16,7 @@
     "country-code-lookup": "^0.0.22",
     "feather-icons": "^4.29.1",
     "file-selector": "^0.6.0",
+    "he": "^1.2.0",
     "hotkeys-js": "^3.10.1",
     "linkify-html": "^4.1.3",
     "lodash": "^4.17.21",
