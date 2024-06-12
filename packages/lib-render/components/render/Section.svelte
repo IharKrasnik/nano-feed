@@ -829,7 +829,10 @@
 						{:else if section.columns === 1 && !section.isFlexGrid}
 							{#each section.items as item}
 								<div class="flex justify-between">
-									<a
+									<svelte:element
+										this={item.interactiveRenderType || !item.url ? 'div' : 'a'}
+										href={item.interactiveRenderType || !item.url ? null : item.url}
+										target={item.url?.startsWith('http') ? '_blank' : null}
 										class="_section-item {item.theme?.maxWidth
 											? item.theme.maxWidth === '75p'
 												? 'sm:w-[75%] sm:mx-auto'
@@ -862,8 +865,6 @@
 											page.parentPage?.theme?.sectionItemBackgroundColor ||
 											'none'
 										};`}
-										href={item.interactiveRenderType ? null : item.url}
-										target={item.url?.startsWith('http') ? '_blank' : ''}
 									>
 										{#if section.renderType === 'changelog'}
 											<div
@@ -1103,7 +1104,7 @@
 												/>
 											</div>
 										{/if}
-									</a>
+									</svelte:element>
 								</div>
 							{/each}
 						{:else}

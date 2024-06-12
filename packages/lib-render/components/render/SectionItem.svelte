@@ -60,9 +60,10 @@
 			? `max-height: ${section.theme.itemsMaxHeightPx}px;`
 			: ''} "
 	>
-		<a
+		<svelte:element
+			this={item.url && !item.interactiveRenderType ? 'a' : 'div'}
 			href={item.url && !item.interactiveRenderType ? item.url : null}
-			target={item.url?.startsWith('http') ? '_blank' : ''}
+			target={item.url?.startsWith('http') ? '_blank' : null}
 			id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
 			class="_section-item group block relative {item.bgImageUrl || section.theme?.itemsBgImageUrl
 				? '_bg-image'
@@ -575,6 +576,6 @@
 					</div>
 				{/if}
 			</div>
-		</a>
+		</svelte:element>
 	</div>
 {/if}
