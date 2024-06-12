@@ -21,7 +21,7 @@
 	export let style = '';
 
 	export { clazz as class };
-	export let isLazy = false;
+	export let isLazy = true;
 	export let url;
 	export let imgClass = '';
 	export let isIframeFallback = true;
@@ -206,11 +206,7 @@
 				{:else if url.includes('.jpg') || url.includes('.jpeg') || url.includes('.gif') || url.includes('png') || url.includes('webp') || url.includes('unsplash.com') || url.includes('giphy.com') || url.includes('image')}
 					{#key url}
 						{#if isLazy}
-							{#if browser}
-								<img class="{imgClass} lazyload" data-src={url} alt={getAltName()} />
-							{:else}
-								<img class={imgClass} src={url} alt={getAltName()} />
-							{/if}
+							<img class="{imgClass} lazyload" data-src={url} alt={getAltName()} />
 						{:else}
 							<img class={imgClass} src={url} alt={getAltName()} />
 						{/if}

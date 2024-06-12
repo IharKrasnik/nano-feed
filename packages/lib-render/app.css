@@ -1023,3 +1023,8 @@ button._alternative:hover {
 		display: none;
 	}
 }
+
+img.lazyload:not(.lazyloaded) {
+	aspect-ratio: 1200/630;
+	opacity: 0;
+}
