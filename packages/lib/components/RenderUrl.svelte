@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import LoomIcon from 'lib/icons/loom.svelte';
 	import YouTubeIcon from 'lib/icons/youtube.svelte';
 	import VimeoIcon from 'lib/icons/vimeo.svelte';
@@ -6,7 +7,6 @@
 	import TallyIcon from 'lib/icons/tally.svelte';
 	import TypeformIcon from 'lib/icons/typeform.svelte';
 	import SenjaIcon from 'lib/icons/senja.svelte';
-	import iframeResize from 'iframe-resizer/js/iframeResizer';
 	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
 	import { v4 as uuidv4 } from 'uuid';
 
@@ -34,6 +34,10 @@
 
 	let isServiceUrl = () => {
 		return url.startsWith('$');
+	};
+
+	let getAltName = () => {
+		return _.last(url.split('/')).split('?')[0];
 	};
 
 	let isFile;
@@ -198,9 +202,9 @@
 				{:else if url.includes('.jpg') || url.includes('.jpeg') || url.includes('.gif') || url.includes('png') || url.includes('webp') || url.includes('unsplash.com') || url.includes('giphy.com') || url.includes('image')}
 					{#key url}
 						{#if isLazy}
-							<img class="{imgClass} lazyload" data-src={url} />
+							<img class="{imgClass} lazyload" data-src={url} alt={getAltName()} />
 						{:else}
-							<img class={imgClass} src={url} />
+							<img class={imgClass} src={url} alt={getAltName()} />
 						{/if}
 					{/key}
 				{:else if !isFilesOnly && url.includes('producthunt.com')}
