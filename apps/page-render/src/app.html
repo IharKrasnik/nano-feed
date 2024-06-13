@@ -6,6 +6,12 @@
 	<!-- <title>Page by Momentum</title> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+	<script>
+		window.WAVE_TRACK_FORMS = true;
+	</script>
+
+	%sveltekit.head%
+
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -18,15 +24,9 @@
 			rel="stylesheet" type="text/css" />
 	</noscript>
 
-	<script async src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-	<script async src="https://unpkg.com/feather-icons"></script>
-	<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-	<script>
-		window.WAVE_TRACK_FORMS = true;
-	</script>
-
-	%sveltekit.head%
+	<script defer src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+	<script defer src="https://unpkg.com/feather-icons"></script>
+	<script defer src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </head>
 
 <body class="bg-site">

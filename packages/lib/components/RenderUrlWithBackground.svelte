@@ -10,6 +10,7 @@
 	export let isIframeFallback;
 	export let aspectRatio;
 	export let isHoverScroll = false;
+	export let isLazy = true;
 
 	export let urlClass = '';
 	export let urlImgClass = '';
@@ -47,12 +48,14 @@
 					? 'sm:rounded-b-xl'
 					: urlImgClass.includes('rounded-t')
 					? 'sm:rounded-t-xl'
-					: 'rounded-xl'}"
-				src={imageBackgroundUrl}
+					: 'rounded-xl'} {isLazy ? 'lazyload' : ''}"
+				src={isLazy ? null : imageBackgroundUrl}
+				data-src={isLazy ? imageBackgroundUrl : null}
 			/>{/if}
 
 		<RenderUrl
 			{isIframeFallback}
+			{isLazy}
 			class={`${urlClass} relative`}
 			url={imageUrl}
 			imgClass={`${urlImgClass} ${imageBackgroundUrl ? 'rounded-lg' : getAspectClass(aspectRatio)}`}
