@@ -433,8 +433,6 @@
 			}
 		}
 
-		page.isDraft = isDraft;
-
 		if (!isNewPage && page.creator && !$currentUser) {
 			return showErrorMessage('Please log in to update the page.');
 		}
@@ -469,6 +467,7 @@
 				}
 			}
 
+			page.isDraft = isDraft;
 			page = await (isNewPage ? post : put)(`pages${page._id ? `/${page._id}` : ''}`, page);
 			isNewerPageAvailable = false;
 			isContinueEditingPage = false;
@@ -1682,11 +1681,16 @@
 																			<div>
 																				{#if page.name}
 																					{#if page.renderType === 'article'}
-																						<Button class="_primary" onClick={publishPage}>
+																						<Button
+																							class="_primary"
+																							onClick={() => publishPage({ isDraft: false })}
+																						>
 																							Publish Article</Button
 																						>
 																					{:else}
-																						<Button class="_primary" onClick={publishPage}
+																						<Button
+																							class="_primary"
+																							onClick={() => publishPage({ isDraft: false })}
 																							>Publish Page</Button
 																						>
 																					{/if}
