@@ -9,7 +9,12 @@ const config = {
 		port: process.env.PORT || 5177
 	},
 	build: {
-		minify: 'esbuild'
+		minify: 'esbuild',
+		rollupOptions: {
+			output: {
+				manualChunks: undefined
+			}
+		}
 	}
 };
 
