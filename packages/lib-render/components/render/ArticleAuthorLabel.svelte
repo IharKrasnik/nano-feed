@@ -1,6 +1,7 @@
 <script>
 	export let page;
 	export let author;
+	export let publishedOn;
 
 	let clazz = '';
 
@@ -20,6 +21,6 @@
 		<div class="px-1 opacity-70">/</div>
 	{/if}
 	<div class="opacity-70">
-		{moment(page.publishedOn || page.createdOn).format('MMM DD, YYYY')}
+		{moment(publishedOn || page.publishedOn || page.createdOn).format('MMM DD, YYYY')}
 	</div>
 </div>
