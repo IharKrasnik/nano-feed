@@ -10,6 +10,7 @@
 	export let bgColor = null;
 	export let color;
 	export let isOppositeColors;
+	export let alt = 'icon';
 
 	export let theme;
 
@@ -54,6 +55,7 @@
 						: ''}"
 					style="width: {width === 'auto' ? 'auto' : `${width}px`}; height: {height}px;"
 					src={emoji}
+					{alt}
 				/>
 			{/key}
 		{:else if emoji?.startsWith('feather:')}

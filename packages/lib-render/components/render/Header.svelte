@@ -97,6 +97,7 @@
 						width={parentPage.theme.logoSize === 'auto' ? 'auto' : 32}
 						height={32}
 						class="mr-3 rounded"
+						alt="Logo"
 						emoji={parentPage.logo}
 					/>
 

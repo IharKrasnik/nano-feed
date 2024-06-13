@@ -11,6 +11,7 @@
 	<img
 		src={user.avatarUrl}
 		class="{clazz} rounded-full"
+		alt="User pic of {user.fullName}"
 		style="width: {size}; height: {size}; {style};"
 	/>
 {/if}
