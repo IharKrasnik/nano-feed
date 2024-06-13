@@ -1,4 +1,5 @@
 import RenderUrl from 'lib/components/RenderUrl.svelte';
+import { browser } from '$app/environment';
 
 const pick = function (attrs, allowed) {
   if (!attrs) {
@@ -78,12 +79,21 @@ export default {
       }
     },
     social_embed(node) {
-      const divEl = document.createElement('div');
+      if (browser) {
+        const divEl = document.createElement('div');
 
-      new RenderUrl({ target: divEl, props: { url: node.attrs.src } });
+        // for some reason 2 times needed to instantiate RenderUrl; first call throws error, but then it's fine
+        try {
+          new RenderUrl({ target: divEl, props: { url: node.attrs.src } });
+        } catch (err) {
+          new RenderUrl({ target: divEl, props: { url: node.attrs.src } });
+        }
 
-      return {
-        html: divEl.innerHTML,
+        return {
+          html: divEl.innerHTML,
+        }
+      } else {
+        return { html: '' }
       }
     }
   },

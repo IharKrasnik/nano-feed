@@ -43,6 +43,9 @@ class RichTextResolver {
       data.content.forEach((node) => {
         html += this.renderNode(node)
       })
+
+      console.log('render', html);
+
       return html
     }
 

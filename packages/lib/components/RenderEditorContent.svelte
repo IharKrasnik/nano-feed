@@ -3,28 +3,39 @@
 	import RichTextResolver from 'lib-render/helpers/editor/renderHtml';
 	import { onMount } from 'svelte';
 
-	let resolver = new RichTextResolver();
+	let resolver;
 
+	resolver = new RichTextResolver();
+
+	let isMounted = false;
 	onMount(() => {
-		document.querySelectorAll('._embed').forEach((embedObj) => {
-			if (embedObj.getAttribute('data-loaded')) {
-				return;
-			}
+		isMounted = true;
 
-			let url = embedObj.getAttribute('data-url');
+		setTimeout(() => {
+			document.querySelectorAll('._embed').forEach((embedObj) => {
+				if (embedObj.getAttribute('data-loaded')) {
+					return;
+				}
 
-			if (url.includes('twitter.com') || url.includes('x.com')) {
-				twttr.widgets.createTweet(url.split('status/')[1], embedObj, {
-					conversation: 'none',
-					theme: 'dark'
-				});
-			}
+				let url = embedObj.getAttribute('data-url');
 
-			embedObj.setAttribute('data-loaded', true);
+				if (url.includes('twitter.com') || url.includes('x.com')) {
+					twttr.widgets.createTweet(url.split('status/')[1], embedObj, {
+						conversation: 'none',
+						theme: 'dark'
+					});
+				}
+
+				embedObj.setAttribute('data-loaded', true);
+			});
 		});
 	});
 </script>
 
 <div>
-	{@html resolver.render(content.json)}
+	{#if resolver}
+		{#key isMounted}
+			{@html resolver.render(content.json)}
+		{/key}
+	{/if}
 </div>
