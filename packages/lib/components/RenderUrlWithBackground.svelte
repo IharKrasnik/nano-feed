@@ -1,4 +1,5 @@
 <script>
+	import _ from 'lodash';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 
 	let clazz;
@@ -24,6 +25,9 @@
 			return 'aspect-square w-full';
 		}
 		return '';
+	};
+	let getAltName = (url) => {
+		return decodeURIComponent(_.last(url.split('/')).split('?')[0]);
 	};
 </script>
 
@@ -51,6 +55,7 @@
 					: 'rounded-xl'} {isLazy ? 'lazyload' : ''}"
 				src={isLazy ? null : imageBackgroundUrl}
 				data-src={isLazy ? imageBackgroundUrl : null}
+				alt="Background {getAltName(imageBackgroundUrl)}"
 			/>{/if}
 
 		<RenderUrl

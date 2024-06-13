@@ -43,7 +43,11 @@
 				<div class="text-sm flex items-center mt-2">
 					{#if item.imageUrl}
 						<div class="mr-4 mb-4 sm:mb-0">
-							<img src={item.imageUrl} class="w-[50px] h-[50px] object-cover rounded-full" />
+							<img
+								alt="Testimonial user avatar"
+								src={item.imageUrl}
+								class="w-[50px] h-[50px] object-cover rounded-full"
+							/>
 						</div>
 					{/if}
 
