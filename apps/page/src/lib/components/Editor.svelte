@@ -289,7 +289,8 @@
 		'links',
 		'lastPublishedOn',
 		'isDirty',
-		'metadata'
+		'metadata',
+		'logo'
 	];
 
 	let isPageResetting = false;

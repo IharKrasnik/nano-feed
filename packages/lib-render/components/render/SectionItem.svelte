@@ -246,6 +246,7 @@
 												bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
 												class="rounded-full text-3xl"
 												width={48}
+												alt={'Testimonial user avatar'}
 												theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 											/>
 										</div>
