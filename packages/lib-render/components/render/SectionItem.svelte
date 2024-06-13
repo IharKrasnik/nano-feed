@@ -504,7 +504,7 @@
 
 						{#if isShowAuthor}
 							<div class="_item-description mt-4">
-								<ArticleAuthorLabel class="my-2" bind:page />
+								<ArticleAuthorLabel author={item.creator} class="my-2" bind:page />
 							</div>
 						{/if}
 					</div>

@@ -115,11 +115,13 @@
 					url,
 					tagsStr,
 					meta,
-					syncPage
+					syncPage,
+					creator
 				}) => {
 					return {
 						id: _id,
 						feedItemId: _id,
+						creator,
 						createdOn,
 						publishedOn,
 						source,

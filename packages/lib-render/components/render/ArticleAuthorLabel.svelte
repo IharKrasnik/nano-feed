@@ -1,5 +1,7 @@
 <script>
 	export let page;
+	export let author;
+
 	let clazz = '';
 
 	export { clazz as class };
@@ -13,8 +15,8 @@
 
 <div class={clazz.includes('flex') ? clazz : 'flex items-center'}>
 	{#if isWithAuthor}
-		<Avatar user={page.author || page.creator} size="36px" class="mr-2" />
-		<div class="mx-1">{page.author || page.creator?.fullName}</div>
+		<Avatar user={author || page.author || page.creator} size="36px" class="mr-2" />
+		<div class="mx-1">{(author || page.author || page.creator).fullName}</div>
 		<div class="px-1 opacity-70">/</div>
 	{/if}
 	<div class="opacity-70">
