@@ -194,23 +194,22 @@
 			_isCtaFooter: true
 		};
 	}
+	let getCanonicalUrl = () => {
+		let domain = (page.parentPage || page).domains?.filter((d) => d.isConfigured)[0];
+
+		if (!domain) {
+			domain = { url: `${(page.parentPage || page).slug}.mmntm.page` };
+		}
+
+		return `https://${domain?.url || ''}${
+			$sveltePage.url.pathname === '/' ? '' : $sveltePage.url.pathname
+		}`;
+	};
 </script>
 
 <svelte:head>
-	<link
-		rel="canonical"
-		href={(() => {
-			let domain = (page.parentPage || page).domains?.filter((d) => d.isConfigured)[0];
-
-			if (!domain) {
-				domain = { url: `${(page.parentPage || page).slug}.mmntm.page` };
-			}
-
-			return `https://${domain?.url || ''}${
-				$sveltePage.url.pathname === '/' ? '' : $sveltePage.url.pathname
-			}`;
-		})()}
-	/>
+	<link rel="canonical" href={getCanonicalUrl()} />
+	<meta name="og:url" content={getCanonicalUrl()} />
 </svelte:head>
 
 <svelte:window bind:scrollY />

@@ -76,12 +76,15 @@
 	<title>{$sveltePage.data.ogTitle}</title>
 
 	<meta name="title" content={$sveltePage.data.ogTitle} />
+	<meta name="og:title" content={$sveltePage.data.ogTitle} />
 	<meta name="description" content={$sveltePage.data.ogDescription} />
 	<meta name="og:description" content={$sveltePage.data.ogDescription} />
 
 	<meta name="twitter:title" content={$sveltePage.data.ogTitle} />
 	<meta name="twitter:description" content={$sveltePage.data.ogDescription} />
 	<meta name="twitter:card" content="summary_large_image" />
+
+	<meta property="og:type" content="website" />
 
 	<meta
 		name="twitter:image"
