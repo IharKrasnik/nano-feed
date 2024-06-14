@@ -17,6 +17,27 @@
 </script>
 
 {#if section.items?.length}
+	{@html `<script type="application/ld+json">
+	${JSON.stringify(
+		{
+			'@context': 'https://schema.org',
+			'@type': 'FAQPage',
+			mainEntity: section.items.map((item) => {
+				return {
+					'@type': 'Question',
+					name: item.title,
+					acceptedAnswer: {
+						'@type': 'Answer',
+						text: item.description
+					}
+				};
+			})
+		},
+		null,
+		2
+	)}
+</script>`}
+
 	<div class="sticky bg-site z-20">
 		<div class="flex justify-center">
 			<div class="max-w-[600px] w-full my-8 sm:p-4">
