@@ -197,11 +197,20 @@
 </script>
 
 <svelte:head>
-	<!-- <style>
-		body {
-			background-color: {page.theme?.backgroundColor || 'white'};
-		}
-	</style> -->
+	<link
+		rel="canonical"
+		href={(() => {
+			let domain = (page.parentPage || page).domains?.filter((d) => d.isConfigured)[0];
+
+			if (!domain) {
+				domain = { url: `${(page.parentPage || page).slug}.mmntm.page` };
+			}
+
+			return `https://${domain?.url || ''}${
+				$sveltePage.url.pathname === '/' ? '' : $sveltePage.url.pathname
+			}`;
+		})()}
+	/>
 </svelte:head>
 
 <svelte:window bind:scrollY />
