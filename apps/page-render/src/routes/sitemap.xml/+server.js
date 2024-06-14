@@ -13,12 +13,12 @@ let getXml = ({
 	currentDomain
 }) => `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 ${sitemap.rules
-	.map(
-		(rule) => `<url><loc>https://${currentDomain}${rule.loc}</loc>
+		.map(
+			(rule) => `<url><loc>https://${currentDomain}${rule.loc === '/' ? '' : rule.loc}</loc>
 <lastmod>${moment(rule.lastmod).format('YYYY-MM-DD')}</lastmod>
 </url>`
-	)
-	.join('')}
+		)
+		.join('')}
 </urlset>`;
 
 export const GET = async ({ url, params, session, cookies }) => {
