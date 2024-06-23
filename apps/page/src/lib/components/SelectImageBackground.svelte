@@ -7,11 +7,11 @@
 	export let onSelected = (url) => {};
 
 	let backgrounds = [
-		'https://images.unsplash.com/photo-1618556450994-a6a128ef0d9d?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-		'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-		'https://images.unsplash.com/photo-1614852206758-0caebadbba66?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-		'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-		'https://images.unsplash.com/photo-1635776064096-4e12cce9ead4?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+		'https://momentumpage.b-cdn.net/1718379439548-image.png',
+		'https://momentumpage.b-cdn.net/1718379455270-image.png',
+		'https://momentumpage.b-cdn.net/1718379466765-image.png',
+		'https://momentumpage.b-cdn.net/1718379511743-photo-1635776062127-d379bfcba9f8.jpeg',
+		'https://momentumpage.b-cdn.net/1718379540308-photo-1635776064096-4e12cce9ead4.avif'
 	];
 
 	let selectBackground = (background) => {
