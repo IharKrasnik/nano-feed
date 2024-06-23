@@ -521,10 +521,9 @@
 	<Background />
 {/if} -->
 <style>
-	:global(.bg-site) {
-		/* background-color: var(--background-color, white); */
-		background-color: transparent;
-	}
+	/* :global(body) {
+		 background-color: var(--background-color, white);
+	} */
 
 	:global(.bg-section) {
 		background-color: var(--section-item-background-color);

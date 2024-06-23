@@ -125,16 +125,26 @@
 	{/if}
 </svelte:head>
 
-<SvelteToast />
+<body
+	style={$currentPage
+		? `background-color: ${
+				($currentPage.parentPage || $currentPage).theme?.backgroundColor || 'white'
+		  };`
+		: null}
+>
+	<div style="display: contents">
+		<SvelteToast />
 
-<div id="modal-portal" />
+		<div id="modal-portal" />
 
-<div id="popup-portal" />
+		<div id="popup-portal" />
 
-<div class="relative" style="	" bind:this={$pageContainerEl}>
-	<Page />
-	{#if browser}
-		<script defer src="https://wave.mmntm.build/wave.js"></script>
-	{/if}
-	<slot />
-</div>
+		<div class="relative" style="	" bind:this={$pageContainerEl}>
+			<Page />
+			{#if browser}
+				<script defer src="https://wave.mmntm.build/wave.js"></script>
+			{/if}
+			<slot />
+		</div>
+	</div>
+</body>
