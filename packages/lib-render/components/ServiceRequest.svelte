@@ -25,7 +25,7 @@
 	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
 	import { goto } from '$app/navigation';
 	import autofocus from 'lib/use/autofocus';
-	import { showSuccessMessage } from 'lib/services/toast';
+	import { showErrorMessage, showSuccessMessage } from 'lib/services/toast';
 	import striptags from 'striptags';
 
 	export let submission;
@@ -93,7 +93,20 @@
 
 	let descriptionEditEl;
 
+	const validateEmail = (email) => {
+		return String(email)
+			.toLowerCase()
+			.match(
+				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			);
+	};
+
 	let saveRequest = async () => {
+		if (!validateEmail($currentCustomer.email)) {
+			showErrorMessage('Please enter valid email');
+			return;
+		}
+
 		let isNew = !submission._id;
 
 		submission = submission._id
@@ -273,6 +286,8 @@
 						<div class="text-sm w-full">
 							<input
 								class="app-input w-full"
+								type="email"
+								required
 								placeholder={'my@email.com'}
 								bind:value={$currentCustomer.email}
 							/>
@@ -425,7 +440,7 @@
 					</div>
 				{/if}
 
-				{#if isSubmissionEdit && $isAuthorized}
+				{#if isSubmissionEdit}
 					<div class="mt-8">
 						<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
 					</div>
