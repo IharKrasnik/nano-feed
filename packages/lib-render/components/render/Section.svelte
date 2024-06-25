@@ -317,7 +317,7 @@
 
 {#if section.isShown}
 	<div
-		class="relative {section.bgImageUrl && !isFooter
+		class="relative {section.bgImageUrl && !isFooter && !section._isCtaFooter
 			? 'sm:p-8 mb-16 mx-2 sm:mx-0'
 			: ''}   {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
