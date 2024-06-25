@@ -2,13 +2,11 @@
 	import 'lib-render/app.css';
 	import '../app.css';
 	import Page from 'lib-render/components/Page.svelte';
-	import { get } from 'lib/api';
 	import { API_URL } from 'lib/env';
 	import currentPage from 'lib-render/stores/currentPage';
 	import { browser } from '$app/environment';
-	import Emoji from 'lib/components/Emoji.svelte';
 	import { page as sveltePage } from '$app/stores';
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
 
 	import { SvelteToast } from '@zerodevx/svelte-toast';

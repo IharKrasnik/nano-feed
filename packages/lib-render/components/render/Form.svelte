@@ -49,12 +49,22 @@
 	let loginCode = '';
 
 	let loginCustomerForm = async () => {
-		await loginCustomer({
-			email: $currentCustomer.email,
-			loginCode,
-			page
-		});
+		try {
+			await loginCustomer({
+				email: $currentCustomer.email,
+				loginCode,
+				page
+			});
+		} catch (err) {
+			if (loginCode === 'SKIP_LOGIN_CODE') {
+				isShowLoginCode = true;
+				loginCode = '';
+			}
+			throw err;
+		}
 	};
+
+	let validateLoginCode;
 
 	let submitForm = async () => {
 		if (
@@ -66,12 +76,21 @@
 				return;
 			}
 
-			await post(`customers/auth/login-token?pageId=${page.parentPage?._id || page._id}`, {
-				email: $currentCustomer.email
-			});
+			let { isCanSkipLoginCode } = await post(
+				`customers/auth/login-token?pageId=${page.parentPage?._id || page._id}`,
+				{
+					email: $currentCustomer.email,
+					isForceLoginCode: section.isForceLoginCode || false
+				}
+			);
 
-			isShowLoginCode = true;
-			return;
+			if (isCanSkipLoginCode) {
+				loginCode = 'SKIP_LOGIN_CODE';
+			} else {
+				loginCode = '';
+				isShowLoginCode = true;
+				return;
+			}
 		}
 
 		let postData = {

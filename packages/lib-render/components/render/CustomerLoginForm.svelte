@@ -1,10 +1,8 @@
 <script>
 	let clazz = '';
-	import { get, post } from 'lib/api';
-	import currentCustomer from 'lib/stores/currentCustomer';
 	import RenderForm from 'lib-render/components/render/Form.svelte';
-	import Cookies from 'js-cookie';
 
+	export let isForceLoginCode = false;
 	export { clazz as class };
 	export let page;
 	export let onLogin = () => {};
@@ -16,6 +14,7 @@
 		section={{
 			id: 'login',
 			isAuthRequired: true,
+			isForceLoginCode,
 			onSubmitted: onLogin,
 			items: [
 				{
@@ -23,8 +22,8 @@
 					title: 'Email'
 				}
 			],
-			callToActionText: 'Log In →',
-			ctaExplainer: 'Send 4-digits code to your email'
+			callToActionText: 'Continue →',
+			ctaExplainer: ''
 		}}
 	/>
 </div>

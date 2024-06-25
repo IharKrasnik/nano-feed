@@ -202,7 +202,7 @@
 						{@html striptags(submission.page.heros[0].subtitle || '')}
 					</div>
 					<div>
-						<a
+						<!-- <a
 							href={getPageUrl({ page: submission.page })}
 							target="_blank"
 							class="flex items-center opacity-70 hover:opacity-100 mt-4"
@@ -213,7 +213,7 @@
 								name="help-circle"
 								theme={parentPage.theme?.theme}
 							/> See Service Page
-						</a>
+						</a> -->
 					</div>
 				{/if}
 				{#if !isSubmissionEdit}
@@ -252,6 +252,30 @@
 							<div class="text-sm">
 								{moment(submission.createdOn).format('MMM DD, YYYY (dddd)')}
 							</div>
+						</div>
+					</div>
+				{/if}
+
+				{#if isSubmissionEdit}
+					<div class="flex items-start my-4">
+						<div>
+							<div class="flex items-center opacity-60 w-[170px]">
+								<Emoji
+									width={15}
+									emoji={'feather:mail'}
+									theme={parentPage.theme?.theme}
+									class="mr-2"
+								/>
+
+								<div>Email</div>
+							</div>
+						</div>
+						<div class="text-sm w-full">
+							<input
+								class="app-input w-full"
+								placeholder={'my@email.com'}
+								bind:value={$currentCustomer.email}
+							/>
 						</div>
 					</div>
 				{/if}
@@ -398,6 +422,12 @@
 								</div>
 							</a>
 						{/each}
+					</div>
+				{/if}
+
+				{#if isSubmissionEdit && $isAuthorized}
+					<div class="mt-8">
+						<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
 					</div>
 				{/if}
 
@@ -724,18 +754,6 @@
 					</div>
 				{/if}
 
-				{#if isSubmissionEdit}
-					{#if $isAuthorized}
-						<div class="mt-8">
-							<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
-						</div>
-					{:else}
-						<div class="mt-16">
-							<RenderCustomerLoginForm {page} onLogin={() => {}} />
-						</div>
-					{/if}
-				{/if}
-
 				<!-- 
 		<div class="text-lg mb-4 opacity-70">
 			Chat with
@@ -798,9 +816,7 @@
 {:else}
 	<div class="mt-4 sm:px-8">
 		<div class="font-semibold w-full text-left text-2xl mb-2 ">Add New Request</div>
-		<div class="w-full text-left mb-8 opacity-50 text-lg">
-			Choose a service and fill your request
-		</div>
+		<div class="w-full text-left mb-8 opacity-50 text-lg">Choose a service</div>
 		<div
 			class="grid  gap-4  {$servicePages?.length > 4
 				? 'sm:grid-cols-3'

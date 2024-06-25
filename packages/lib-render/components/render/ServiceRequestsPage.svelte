@@ -1,29 +1,17 @@
 <script>
 	import _ from 'lodash';
-	import moment from 'moment-timezone';
-	import { slide, fly, scale, fade } from 'svelte/transition';
-	import { get, post, put, del } from 'lib/api';
-	import pageDraft from 'lib-render/stores/pageDraft';
-	import allPages from 'lib-render/stores/allPages';
+	import { browser } from '$app/environment';
+
+	import { get } from 'lib/api';
 	import currentUser from 'lib/stores/currentUser';
-	import subPages from 'lib/stores/subPages';
 	import selectedSubmission from 'lib-render/stores/selectedSubmission';
-	import formatSubmission from 'lib-render/helpers/formatSubmission';
 	import currentCustomer, { isAuthorized, loginCustomer } from 'lib/stores/currentCustomer';
 	import { page as sveltePage } from '$app/stores';
-	import toDollars from 'lib/helpers/toDollars';
-	import Popup from 'lib-render/components/Popup.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
-	import RenderForm from 'lib-render/components/render/Form.svelte';
 	import Button from 'lib/components/Button.svelte';
-	import Loader from 'lib/components/Loader.svelte';
-	import SitePreview from 'lib-render/components/SitePreview.svelte';
-	import PageContainer from 'lib-render/components/PageContainer.svelte';
-	import ServiceRequest from 'lib-render/components/ServiceRequest.svelte';
 	import ServiceRequestCard from 'lib-render/components/ServiceRequestCard.svelte';
-	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import SubmissionPopup from 'lib-render/components/render/SubmissionPopup.svelte';
 
 	import submissions, { refresh as refreshSubmissions } from 'lib/stores/submissions';
@@ -48,9 +36,11 @@
 	export let submissionId = $sveltePage.params.requestId;
 
 	let getCurrentSubmission = async () => {
-		$selectedSubmission =
-			$submissionsOutbound.find((s) => s._id === $sveltePage.params.requestId) ||
-			(await get(`serviceRequests/${submissionId}`));
+		if (browser) {
+			$selectedSubmission =
+				$submissionsOutbound?.find((s) => s._id === $sveltePage.params.requestId) ||
+				(await get(`serviceRequests/${submissionId}`));
+		}
 	};
 
 	let prevRequestId = $sveltePage.params.requestId;
@@ -139,6 +129,7 @@
 	{#if $isAuthorized || $currentUser}{:else}
 		<div class="flex items-center justify-center mt-16 w-full sm:w-auto">
 			<RenderCustomerLoginForm
+				isForceLoginCode={true}
 				{page}
 				onLogin={() => {
 					refreshSubmissionsOutbound({ customerId: $currentCustomer._id });

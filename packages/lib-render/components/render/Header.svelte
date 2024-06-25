@@ -1,6 +1,8 @@
 <script>
 	import trackClick from 'lib/services/trackClick';
-	import { fly } from 'svelte/transition';
+	import { post } from 'lib/api';
+	import { fly, slide } from 'svelte/transition';
+	import Button from 'lib/components/Button.svelte';
 	import heatmap, { getHeatmapClicksCount } from 'lib-render/stores/heatmap';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -9,7 +11,10 @@
 	import { page as sveltePage } from '$app/stores';
 	import { browser } from '$app/environment';
 	import getPageUrl from 'lib-render/helpers/getPageUrl';
-	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
+	import currentCustomer, {
+		isAuthorized as isCustomerAuthorized
+	} from 'lib/stores/currentCustomer';
+	import { showSuccessMessage } from 'lib/services/toast';
 
 	export let page;
 	export let isEdit;
@@ -62,6 +67,30 @@
 
 	let pageUrl = getPageUrl({ page });
 	//1
+
+	let isShowLoginCode = false;
+	let loginCode = '';
+
+	let sendLoginCode = async () => {
+		await post(`customers/auth/login-token?pageId=${parentPage._id}`, {
+			email: $currentCustomer.email,
+			isForceLoginCode: true
+		});
+		isShowLoginCode = true;
+	};
+
+	let verifyEmail = async () => {
+		let { customer } = await post(`customers/verify-email?pageId=${parentPage._id}`, {
+			loginCode
+		});
+
+		showSuccessMessage(`Email ${customer.email} has been verified`);
+		$currentCustomer.email = customer.email;
+		$currentCustomer.isEmailVerified = true;
+
+		loginCode = '';
+		isShowLoginCode = false;
+	};
 </script>
 
 <div
@@ -226,12 +255,56 @@
 			</div>
 		</div>
 
-		{#if $isAuthorized && !isEdit}
+		{#if $isCustomerAuthorized && !isEdit}
 			<RenderCustomerMenu />
 		{/if}
 	</div>
 </div>
 
+{#if $isCustomerAuthorized && !$currentCustomer.isEmailVerified && ($sveltePage.url.href.includes('/app') || $sveltePage.url.href.includes('/services'))}
+	{#if isShowLoginCode}
+		<div class="fixed left-0 w-screen h-screen backdrop-blur bg-black/50" style="z-index: 100" />
+	{/if}
+	<div
+		class="fixed bottom-0 left-0 w-full transition-height border-t-4 border-orange-400  p-4 {isShowLoginCode
+			? 'min-h-[350px] flex items-center'
+			: ''}"
+		style="z-index: 101;"
+		in:fly={{ y: -25, duration: 150 }}
+	>
+		<div class="w-full text-center  flex justify-center items-center">
+			{#if isShowLoginCode}
+				<div>
+					<div class="font-semibold text-left ">Login Code</div>
+					<div class="text-sm mb-2 opacity-80 text-left">
+						Code sent to {$currentCustomer.email}
+					</div>
+					<div class="w-[300px] mt-4">
+						<input
+							style="width: 300px;"
+							class="text-black"
+							bind:value={loginCode}
+							placeholder="1312"
+						/>
+						<Button class="mt-4 w-full" onClick={verifyEmail}>Verify email</Button>
+
+						<div
+							class="cursor-pointer text-underline mt-4 text-sm opacity-80 hover:opacity-100 transition"
+							on:click={() => (isShowLoginCode = false)}
+						>
+							Reset
+						</div>
+					</div>
+				</div>
+			{:else}
+				<div class="flex items-center">
+					Please verify your email
+					<Button class="ml-4" onClick={sendLoginCode}>Send code</Button>
+				</div>
+			{/if}
+		</div>
+	</div>
+{/if}
 {#if isMenuOpen}
 	<div
 		in:fly={{ y: 350, duration: 250 }}
