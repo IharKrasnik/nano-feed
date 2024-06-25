@@ -210,6 +210,10 @@
 	let inputValue;
 
 	let submitEmail = async () => {
+		if (!emailAddress) {
+			return;
+		}
+
 		isResetEmail = false;
 		$currentCustomer.email = emailAddress;
 
