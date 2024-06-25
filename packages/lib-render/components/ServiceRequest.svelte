@@ -177,8 +177,6 @@
 			$submissionsOutbound = [submission, ...$submissionsOutbound];
 			window.location.href = `/app/requests/${submission._id}`;
 		}
-
-		isSubmissionEdit = false;
 	};
 
 	let isSubmittingForReviewInProgress = false;
