@@ -909,7 +909,7 @@
 		>
 			{#each $servicePages || [] as servicePage}
 				<div
-					class="_app-section w-full text-left mb-2 cursor-pointer  transition hover:translate-y-[-10px]"
+					class="_app-section w-full text-left mb-2 cursor-pointer  transition hover:translate-y-[-10px] group"
 					on:click={() => {
 						submission.page = servicePage;
 						submission.title = servicePage.name;
@@ -919,19 +919,20 @@
 						).heros[0].formSection.items;
 					}}
 				>
-					<div class="flex flex-col justify-between h-full">
+					<div class="flex flex-col justify-between h-full ">
 						<div class="h-full">
+							{#if servicePage.metadata?.coverImageUrl}
+								<img
+									class="mb-4 w-full h-auto object-cover aspect-og rounded-lg grayscale group-hover:grayscale-0 transition"
+									src={servicePage.metadata.coverImageUrl}
+								/>
+							{/if}
+
 							<div class="font-semibold mb-2">{servicePage.name}</div>
 
 							<div class="opacity-60">
 								{@html striptags((servicePage.heros && servicePage.heros[0])?.subtitle || '')}
 							</div>
-							{#if servicePage.metadata?.coverImageUrl}
-								<img
-									class="mt-4 w-full h-auto object-cover aspect-image"
-									src={servicePage.metadata.coverImageUrl}
-								/>
-							{/if}
 						</div>
 
 						<div style="justify-self: flex-end;">
