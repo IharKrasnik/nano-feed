@@ -105,11 +105,7 @@
 
 		<div class="flex items-center gap-4">
 			<div class="_section flex items-center">
-				Logo <EmojiPicker
-					theme={parentPage.theme?.theme}
-					class="ml-4"
-					bind:icon={parentPage.logo}
-				/>
+				Logo <EmojiPicker class="ml-4" bind:icon={parentPage.logo} />
 				<div class="flex items-center h-full ml-6">
 					<input class="mr-2" type="checkbox" bind:checked={parentPage.theme.isHidePageName} />
 					Hide brand name near logo
