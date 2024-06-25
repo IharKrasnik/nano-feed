@@ -2,7 +2,6 @@
 	import _ from 'lodash';
 	import moment from 'moment';
 	import currentUser from 'lib/stores/currentUser';
-	import clickOutside from 'lib/use/clickOutside';
 	import submissionsOutbound from 'lib/stores/submissionsOutbound';
 	import submissions from 'lib/stores/submissions';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
@@ -11,22 +10,20 @@
 	import RenderServiceComments from 'lib-render/components/render/ServiceComments.svelte';
 	import toDollars from 'lib/helpers/toDollars';
 	import CustomerAvatar from 'lib-render/components/CustomerAvatar.svelte';
-	import { fade } from 'svelte/transition';
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import { default as usePlaceholder } from 'lib/use/placeholder';
-	import Modal from 'lib/components/Modal.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import FileInput from 'lib/components/FileInput.svelte';
 	import ServiceRequestStatus from 'lib-render/components/ServiceRequestStatus.svelte';
-	import currentCustomer, { isAuthorized } from 'lib/stores/currentCustomer';
+	import currentCustomer, {
+		isAuthorized as isCustomerAuthorized
+	} from 'lib/stores/currentCustomer';
 	import servicePages from 'lib-render/stores/servicePages';
-	import getPageUrl from 'lib-render/helpers/getPageUrl';
-	import RenderCustomerLoginForm from 'lib-render/components/render/CustomerLoginForm.svelte';
-	import { goto } from '$app/navigation';
 	import autofocus from 'lib/use/autofocus';
 	import { showErrorMessage, showSuccessMessage } from 'lib/services/toast';
 	import striptags from 'striptags';
+	import { loginCustomer } from 'lib/stores/currentCustomer';
 
 	export let submission;
 	export let page;
@@ -101,10 +98,59 @@
 			);
 	};
 
+	let loginCode = '';
+	let isShowLoginCode = false;
+
+	let loginCustomerForm = async () => {
+		try {
+			await loginCustomer({
+				email: $currentCustomer.email,
+				loginCode,
+				page
+			});
+
+			loginCode = '';
+			isShowLoginCode = false;
+		} catch (err) {
+			if (loginCode === 'SKIP_LOGIN_CODE') {
+				isShowLoginCode = true;
+				loginCode = '';
+			}
+		}
+	};
+
+	let login = async () => {
+		let { isCanSkipLoginCode } = await post(
+			`customers/auth/login-token?pageId=${page.parentPage?._id || page._id}`,
+			{
+				email: $currentCustomer.email,
+				isForceLoginCode: false
+			}
+		);
+
+		if (isCanSkipLoginCode) {
+			loginCode = 'SKIP_LOGIN_CODE';
+		} else {
+			loginCode = '';
+			isShowLoginCode = true;
+			return;
+		}
+
+		await loginCustomerForm();
+	};
+
 	let saveRequest = async () => {
 		if (!validateEmail($currentCustomer.email)) {
 			showErrorMessage('Please enter valid email');
 			return;
+		}
+
+		if (!$isCustomerAuthorized) {
+			await login();
+
+			if (isShowLoginCode) {
+				return;
+			}
 		}
 
 		let isNew = !submission._id;
@@ -270,7 +316,7 @@
 					</div>
 				{/if}
 
-				{#if isSubmissionEdit}
+				{#if isSubmissionEdit && !$isCustomerAuthorized}
 					<div class="flex items-start my-4">
 						<div>
 							<div class="flex items-center opacity-60 w-[170px]">
@@ -443,7 +489,30 @@
 
 				{#if isSubmissionEdit}
 					<div class="mt-8">
-						<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
+						{#if isShowLoginCode}
+							<div class="flex items-center opacity-60  mb-1">Login code</div>
+							<div class="text-sm mb-4 opacity-60">
+								Insert the code sent to {$currentCustomer.email}.
+								<span
+									class="underline cursor-pointer ml-1"
+									on:click={() => {
+										isShowLoginCode = false;
+									}}
+								>
+									Reset
+								</span>
+							</div>
+							<input class="app-input" placeholder="1312" type="text" bind:value={loginCode} />
+							<Button
+								onClick={async () => {
+									await loginCustomerForm();
+									await saveRequest();
+								}}
+								class="mt-4 app-button">Verify Email & Save Request</Button
+							>
+						{:else}
+							<Button onClick={saveRequest} class="mt-4 app-button">Save Request</Button>
+						{/if}
 					</div>
 				{/if}
 
