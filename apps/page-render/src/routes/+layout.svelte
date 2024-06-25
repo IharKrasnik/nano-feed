@@ -100,6 +100,10 @@
 		{@html $sveltePage.data.page.customCode}
 	{/if}
 
+	{#if $sveltePage.data?.page?.globalCode || $sveltePage.data?.page?.parentPage?.globalCode}
+		{@html $sveltePage.data?.page?.globalCode || $sveltePage.data?.page?.parentPage?.globalCode}
+	{/if}
+
 	{#if ($sveltePage.data.page?.parentPage || $sveltePage.data.page)?.faviconUrl}
 		<link
 			rel="icon"
