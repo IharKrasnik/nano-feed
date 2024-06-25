@@ -20,6 +20,8 @@
 		isAuthorized as isCustomerAuthorized
 	} from 'lib/stores/currentCustomer';
 	import servicePages from 'lib-render/stores/servicePages';
+	import CalendarLink from 'lib-render/components/CalendarLink.svelte';
+
 	import autofocus from 'lib/use/autofocus';
 	import { showErrorMessage, showSuccessMessage } from 'lib/services/toast';
 	import striptags from 'striptags';
@@ -952,6 +954,13 @@
 			{/each}
 		</div>
 	</div>
+	{#if parentPage.moreInfo?.calendarLink}
+		<div class="sm:mt-32 mt-16 sm:px-8">
+			<div class="font-semibold w-full text-left text-2xl mb-6">Have questions? Book a call</div>
+
+			<CalendarLink url={parentPage.moreInfo.calendarLink} />
+		</div>
+	{/if}
 {/if}
 <!-- <div>
 	{#if submission.isClosed || submission.isPaid}{:else}

@@ -6,6 +6,7 @@
 	import EditDomains from '$lib/components/settings/Domains.svelte';
 	import EditEditors from '$lib/components/settings/Editors.svelte';
 	import EditGlobalCode from '$lib/components/settings/GlobalCode.svelte';
+	import EditMoreInfo from '$lib/components/settings/MoreInfo.svelte';
 	import EditClaimCode from '$lib/components/settings/ClaimCode.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
@@ -101,6 +102,9 @@
 
 	<hr class="my-8 border-[#8B786D] opacity-30" />
 	<EditEditors bind:page />
+
+	<hr class="my-8 border-[#8B786D] opacity-30" />
+	<EditMoreInfo bind:page />
 
 	<!-- <hr class="my-8 border-[#8B786D] opacity-30" /> -->
 
