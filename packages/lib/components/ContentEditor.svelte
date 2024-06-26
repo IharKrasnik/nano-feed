@@ -50,7 +50,8 @@
 
 <div class=" w-full h-full">
 	<iframe
-		src="{EDITOR_URL}?sectionId={section.id}"
+		src="{EDITOR_URL}?sectionId={section.id}&theme={(page.parentPage || page).theme?.theme ||
+			'light'}"
 		class="bg-background"
 		bind:this={iframeEl}
 		style="
