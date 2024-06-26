@@ -8,6 +8,7 @@
 	resolver = new RichTextResolver();
 
 	let isMounted = false;
+
 	onMount(() => {
 		isMounted = true;
 
