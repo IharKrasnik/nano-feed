@@ -408,6 +408,7 @@
 														{focusEditEl() || ''}
 													{:else}
 														<div
+															id={section.metadata?.htmlId || null}
 															class="relative z-10 overflow-y-hidden {isEdit &&
 															$sectionToEdit?.id !== section.id &&
 															!section.isDatabase &&
