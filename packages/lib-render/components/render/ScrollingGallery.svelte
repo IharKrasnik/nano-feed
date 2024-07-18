@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	export let page;
 	export let section;
@@ -7,6 +7,8 @@
 	export let isEdit;
 
 	let carouselEl;
+
+	let scrollInterval;
 
 	onMount(() => {
 		let scrollWidth = carouselEl.scrollWidth;
@@ -17,9 +19,13 @@
 			} else {
 				carouselEl.scrollLeft += 1;
 			}
-			requestAnimationFrame(animateScroll);
 		};
-		requestAnimationFrame(animateScroll);
+
+		scrollInterval = setInterval(animateScroll, 20);
+	});
+
+	onDestroy(() => {
+		clearInterval(scrollInterval);
 	});
 </script>
 
