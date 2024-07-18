@@ -341,7 +341,7 @@
 						{/if}
 					</div>
 
-					{#if sectionItem.id === section.id && (section.renderType === 'grid' || section.renderType === 'pricing')}
+					{#if sectionItem.id === section.id && _.includes(['grid', 'pricing', 'scrollingGallery'], section.renderType)}
 						<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
 							<div class="bg-white">
 								<div class="font-bold mb-2">Layout</div>
@@ -464,7 +464,7 @@
 						</div>
 					{/if}
 
-					{#if section.id === sectionItem.id && _.includes(['grid', 'pricing'], section.renderType)}
+					{#if section.id === sectionItem.id && _.includes(['grid', 'pricing', 'scrollingGallery'], section.renderType)}
 						<div class="_section my-4 !p-6">
 							<div
 								class="flex items-center justify-between w-full {isItemsSettingsCollapsed

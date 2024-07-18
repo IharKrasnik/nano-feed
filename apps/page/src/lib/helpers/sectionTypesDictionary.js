@@ -2,6 +2,7 @@ export default {
   "grid": "Default Grid Section",
   "callout": "Callout",
   "stepper": "1-2-3 Stepper",
+  "scrollingGallery": "Scrolling Gallery",
   "testimonials": "Testimonials",
   "pricing": "Pricing",
   "carousel": "Carousel Menu",

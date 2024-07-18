@@ -20,6 +20,7 @@
 	import RenderServiceChat from 'lib-render/components/render/ServiceChat.svelte';
 	import RenderForm from 'lib-render/components/render/Form.svelte';
 	import RenderStepper from 'lib-render/components/render/Stepper.svelte';
+	import RenderScrollingGallery from 'lib-render/components/render/ScrollingGallery.svelte';
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import RenderCalloutSection from 'lib-render/components/render/CalloutSection.svelte';
 	import RenderComments from 'lib-render/components/render/CommentsSection.svelte';
@@ -414,7 +415,7 @@
 				page.theme?.sectionBackgroundColor ||
 				page.parentPage?.theme?.sectionBackgroundColor ||
 				'none'
-			};`}"
+			};${section.renderType === 'scrollingGallery' ? 'padding-left: 0; padding-right: 0;' : ''}`}"
 		>
 			{#if section.renderType === 'callout'}
 				<RenderCalloutSection bind:page bind:section bind:isEdit bind:isEmbed />
@@ -588,6 +589,8 @@
 				<RenderNewsletter bind:page bind:section bind:themeStyles /> -->
 				{:else if section.renderType === 'stepper'}
 					<RenderStepper bind:isEdit bind:page bind:section />
+				{:else if section.renderType === 'scrollingGallery'}
+					<RenderScrollingGallery bind:isEdit bind:page bind:section />
 				{:else if section.renderType === 'form'}
 					<RenderForm bind:section bind:page bind:isEdit />
 				{:else if section.items?.length}

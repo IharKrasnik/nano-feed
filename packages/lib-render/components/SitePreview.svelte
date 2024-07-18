@@ -434,7 +434,8 @@
 															}}
 														>
 															<div
-																class="bg-site {section.imgMaxWidth === 'full-screen'
+																class="bg-site {section.imgMaxWidth === 'full-screen' ||
+																section.renderType === 'scrollingGallery'
 																	? isEdit
 																		? 'w-full'
 																		: 'w-screen'
