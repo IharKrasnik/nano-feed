@@ -91,6 +91,13 @@
 	/>
 
 	<meta
+		name="image"
+		property="og:image"
+		content={$sveltePage.data.ogImage ||
+			'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
+	/>
+
+	<meta
 		prefix="og: http://ogp.me/ns#"
 		name="og:image"
 		content={$sveltePage.data.ogImage ||
