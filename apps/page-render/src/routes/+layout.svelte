@@ -74,7 +74,7 @@
 	<title>{$sveltePage.data.ogTitle}</title>
 
 	<meta name="title" content={$sveltePage.data.ogTitle} />
-	<meta name="og:title" content={$sveltePage.data.ogTitle} />
+	<meta prefix="og: http://ogp.me/ns#" name="og:title" content={$sveltePage.data.ogTitle} />
 	<meta name="description" content={$sveltePage.data.ogDescription} />
 	<meta name="og:description" content={$sveltePage.data.ogDescription} />
 
@@ -82,7 +82,7 @@
 	<meta name="twitter:description" content={$sveltePage.data.ogDescription} />
 	<meta name="twitter:card" content="summary_large_image" />
 
-	<meta property="og:type" content="website" />
+	<meta prefix="og: http://ogp.me/ns#" property="og:type" content="website" />
 
 	<meta
 		name="twitter:image"
@@ -91,6 +91,7 @@
 	/>
 
 	<meta
+		prefix="og: http://ogp.me/ns#"
 		name="og:image"
 		content={$sveltePage.data.ogImage ||
 			'https://assets.website-files.com/636cf54cf20a6ac090f7deb0/63773738962ed74d59268fbc_open-graph.png'}
