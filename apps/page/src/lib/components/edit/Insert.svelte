@@ -51,9 +51,9 @@
 		// selectDefaultTemplate();
 	}
 
-	let saveSection = (newSectionCode) => {
+	let saveSection = (sectionCode) => {
 		try {
-			let newSection = JSON.parse(newSectionCode);
+			let newSection = JSON.parse(sectionCode);
 			newSection.id = uuidv4();
 			if (newSection.items) {
 				_.each(newSection.items, (i) => {
@@ -289,7 +289,8 @@
 				bind:value={newSectionCode}
 			/>
 
-			<button class="_primary _small mt-4" on:click={saveSection}>Save</button>
+			<button class="_primary _small mt-4" on:click={() => saveSection(newSectionCode)}>Save</button
+			>
 		</div>
 	</Modal>
 {/if}
