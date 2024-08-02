@@ -206,7 +206,8 @@
 				<option value="one-time">One-Time</option>
 				<option value="week">Week</option>
 				<option value="month">Month</option>
-				<option value="Quarter">Quarter</option>
+				<option value="quarter">Quarter</option>
+				<option value="half-yearly">Half-Yearly</option>
 				<option value="year">Year</option>
 			</select>
 		</div>
