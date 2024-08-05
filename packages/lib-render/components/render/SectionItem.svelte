@@ -371,7 +371,7 @@
 											/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
 											class="_item-description {section.isDatabase
 												? '_line-clamp-4 hover:line-clamp-5'
-												: 'sm:inline inline'}"
+												: `${section.theme?.areInlineTitles ? 'inline' : 'inline-block'}`}"
 											bind:innerHTML={item.description}
 											condition={isEdit}
 										/>

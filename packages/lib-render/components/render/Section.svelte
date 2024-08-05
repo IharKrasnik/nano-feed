@@ -486,8 +486,8 @@
 								<div
 									class="_section-description mb-8 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
-										? 'text-xl leading-8'
-										: 'text-lg font-medium'} whitespace-pre-wrap
+										? '_huge'
+										: '_large'} whitespace-pre-wrap
 										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-80' : `sm:max-w-[768px]`}
 										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'sm:mx-auto'}
 										"
@@ -857,7 +857,13 @@
 											? `flex justify-start ${section.theme?.isTitleLeft} ${
 													section.theme?.isTitleLeft ? '' : 'sm:justify-center'
 											  } overflow-x-auto`
-											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.isFeatured
+											: `grid ${
+													section.theme?.columnsGap === 'big'
+														? 'sm:gap-20'
+														: section.theme?.columnsGap === 'huge'
+														? 'sm:gap-28'
+														: 'sm:gap-12'
+											  } sm:grid-cols-12 `} {item.className || ''} {item.isFeatured
 											? '_highlighted'
 											: ''} {item.theme?.isTransparent || section.theme?.areItemsTransparent
 											? '_transparent'
@@ -899,7 +905,11 @@
 												<div
 													class="{section.renderType === 'article'
 														? 'sm:px-0'
-														: ' _borderless p-4 sm:p-8'}
+														: ` _borderless p-4 ${
+																section.theme?.areItemsTransparent || item.theme?.isTransparent
+																	? `sm:pl-0 sm:pr-8 sm:py-8`
+																	: 'sm:p-8'
+														  }`}
 													{section.renderType === 'changelog' ? '_transparent _no-padding' : ''}
 													col-span-1"
 												>
@@ -922,7 +932,14 @@
 														</div>
 													{/if}
 
-													<div class="_item-title _large mb-4">
+													<div
+														class="_item-title {section.theme?.itemsTitleSize === 'large'
+															? '_big'
+															: section.theme?.itemsTitleSize === 'small'
+															? ''
+															: '_large'} 
+															mb-4"
+													>
 														<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
 													</div>
 													<!-- {#if item.url && !item.interactiveRenderType}
@@ -964,7 +981,10 @@
 
 													{#if section.renderType !== 'pricing'}
 														<ContentEditableIf
-															class="_item-description opacity-80 whitespace-pre-wrap"
+															class="_item-description whitespace-pre-wrap {section.theme
+																?.itemsTitleSize === 'large'
+																? '_large font-medium'
+																: ''}"
 															bind:innerHTML={item.description}
 															condition={isEdit}
 														/>
@@ -1046,7 +1066,7 @@
 													{/if}
 
 													{#if item.interactiveRenderType}
-														<div class="mt-4">
+														<div class="mt-4 pt-1">
 															<RenderInteractiveOptions
 																bind:sectionItem={item}
 																parentSectionId={section.id}

@@ -237,10 +237,12 @@
 			bind:value={sectionItem.theme.columnsGap}
 		/>
 
-		<div class="flex mt-4">
-			<input type="checkbox" class="mr-2" bind:checked={sectionItem.theme.isMobileInline} />
-			<div>Show items horizontally on mobile</div>
-		</div>
+		{#if sectionItem.columns > 1}
+			<div class="flex mt-4">
+				<input type="checkbox" class="mr-2" bind:checked={sectionItem.theme.isMobileInline} />
+				<div>Show items horizontally on mobile</div>
+			</div>
+		{/if}
 	</div>
 
 	<div class="_section">

@@ -667,32 +667,44 @@
 				<FileInput class="w-full" bind:url={hero.demoUrl} theme="light" isCanSearch />
 			</div>
 
-			{#if hero.demoUrl && hero.theme?.isVertical}
+			{#if hero.demoUrl}
 				<div class="flex items-center mt-2 justify-between">
 					<div class="text-xs flex gap-2 items-center">
 						<div
 							class="cursor-pointer"
 							on:click={() => {
 								hero.imgMaxWidth = 0;
+								delete hero.imgSize;
 							}}
-							class:font-bold={!hero.imgMaxWidth}
+							class:font-bold={!hero.imgMaxWidth && !hero.imgSize}
 						>
 							Stretch
 						</div>
 
-						<div
-							class="cursor-pointer"
-							on:click={() => {
-								if (page.renderType === 'article') {
-									hero.imgMaxWidth = 768;
-								} else {
-									hero.imgMaxWidth = 600;
-								}
-							}}
-							class:font-bold={hero.imgMaxWidth === 600 || hero.imgMaxWidth === 768}
-						>
-							Medium
-						</div>
+						{#if hero.theme?.isVertical}
+							<div
+								class="cursor-pointer"
+								on:click={() => {
+									if (page.renderType === 'article') {
+										hero.imgMaxWidth = 768;
+									} else {
+										hero.imgMaxWidth = 600;
+									}
+								}}
+								class:font-bold={hero.imgMaxWidth === 600 || hero.imgMaxWidth === 768}
+							>
+								Medium
+							</div>{:else}
+							<div
+								class="cursor-pointer"
+								on:click={() => {
+									hero.imgSize = 'medium';
+								}}
+								class:font-bold={hero.imgSize === 'medium'}
+							>
+								Medium
+							</div>
+						{/if}
 					</div>
 					<div
 						class="ml-4"

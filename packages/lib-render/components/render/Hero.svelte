@@ -219,7 +219,7 @@
 							: 'flex flex-col items-center w-full sm:w-auto mx-auto'}
 										{hero.theme?.isLeft ? 'text-center sm:text-left' : ''} {hero.demoUrl && !hero.theme?.isVertical
 							? 'sm:mr-8'
-							: ''} "
+							: ''} {hero.imgSize ? 'sm:min-w-[60%]' : ''} "
 					>
 						{#if hero.embedAboveHtml}
 							<div class="mb-4" in:fly={{ y: -25, duration: 500 }} class:opacity-0={!isMounted}>
@@ -428,7 +428,7 @@
 									bind:this={demoEl}
 									isLazy={false}
 									imageUrl={hero.demoUrl}
-									class={hero.theme?.isVertical ? 'mt-8' : ''}
+									class={`${hero.theme?.isVertical ? 'mt-8' : ''} `}
 									imageBackgroundUrl={hero.demoBackgroundUrl}
 									urlClass="relative w-full flex justify-end"
 									urlImgMaxWidth={page.renderType === 'article' ? 0 : hero.imgMaxWidth || 0}

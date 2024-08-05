@@ -25,10 +25,10 @@
 	<div
 		class="_section-item relative overflow-hidden w-full relative {section.containerBgImageUrl
 			? ''
-			: 'mb-4 sm:mb-8'} grid items-start sm:grid-cols-12 {section.className || ''} {section.theme
-			?.calloutBgColor
-			? ''
-			: '_transparent'} {section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
+			: 'mb-4 sm:mb-8'} grid sm:gap-12 items-start sm:grid-cols-12 {section.className ||
+			''} {section.theme?.calloutBgColor ? '' : '_transparent'} {section.theme?.isOppositeColors
+			? '_bg-opposite'
+			: ''}"
 		style={`background-color: ${
 			section.theme?.calloutBgColor ||
 			page.theme?.sectionItemBackgroundColor ||
@@ -83,7 +83,7 @@
 
 					{#if section.description}
 						<ContentEditableIf
-							class="_section-description text-lg whitespace-pre-wrap my-4 sm:pr-24"
+							class="_section-description _large font-medium whitespace-pre-wrap my-4 sm:pr-24"
 							bind:innerHTML={section.description}
 							condition={isEdit}
 						/>

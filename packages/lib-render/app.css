@@ -703,13 +703,21 @@ a._item-title:hover {
 }
 
 ._item-description {
-	font-weight: 400;
 	font-size: 16px;
 	color: var(--section-description-text-color);
 }
 
 ._bg-opposite ._item-description {
 	color: var(--text-color-opposite);
+}
+
+._item-description._large,
+._section-description._large {
+	@apply text-lg;
+}
+
+._item-description._huge {
+	@apply text-xl leading-8;
 }
 
 ._color-item-description {
@@ -923,6 +931,7 @@ button._alternative:hover {
 ._hero-title {
 	font-family: var(--title-font);
 	font-size: var(--title-font-size);
+	color: var(--text-color-default);
 
 	@apply font-bold;
 	line-height: var(--title-line-height, 1.2);
@@ -1004,6 +1013,7 @@ button._alternative:hover {
 
 ._section-description {
 	color: var(--section-description-text-color, auto);
+	font-size: 16px;
 }
 
 @media (max-width: 640px) {
@@ -1025,7 +1035,6 @@ button._alternative:hover {
 
 	._section-description {
 		font-weight: 400;
-		font-size: 16px;
 		line-height: 1.5;
 	}
 
