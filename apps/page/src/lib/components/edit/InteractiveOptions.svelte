@@ -71,68 +71,69 @@
 		on:clickOutside={() => (isWithButton ? close() : null)}
 	>
 		{#if !sectionItem.isMustHaveField && !isRenderTypeLocked}
-			<div class="font-normal text-sm opacity-70 mb-2">How users can interact?</div>
+			{#if options?.length !== 1}
+				<div class="font-normal text-sm opacity-70 mb-2">How users can interact?</div>
+				<select
+					class="w-full"
+					bind:value={sectionItem.interactiveRenderType}
+					on:change={() => {
+						if (sectionItem.interactiveRenderType === 'email') {
+							sectionItem.varName = 'email';
+						} else {
+							sectionItem.varName = '';
+						}
 
-			<select
-				class="w-full"
-				bind:value={sectionItem.interactiveRenderType}
-				on:change={() => {
-					if (sectionItem.interactiveRenderType === 'email') {
-						sectionItem.varName = 'email';
-					} else {
-						sectionItem.varName = '';
-					}
+						if (sectionItem.interactiveRenderType === 'single_choice') {
+							sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
+						}
 
-					if (sectionItem.interactiveRenderType === 'single_choice') {
-						sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '👎' }];
-					}
-
-					if (sectionItem.interactiveRenderType === 'multiple_choice') {
-						sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '🎉' }, { emoji: '💯' }];
-					}
-				}}
-			>
-				{#if options?.length}
-					{#each options as option}
-						<option value={option.value}>{option.text}</option>
-					{/each}
-				{:else if sectionItem.isActionSuccessSection}
-					{#if isCtaFooter}
-						<option value="">Hero Default Action</option>
+						if (sectionItem.interactiveRenderType === 'multiple_choice') {
+							sectionItem.interactiveAnswers = [{ emoji: '👍' }, { emoji: '🎉' }, { emoji: '💯' }];
+						}
+					}}
+				>
+					{#if options?.length}
+						{#each options as option}
+							<option value={option.value}>{option.text}</option>
+						{/each}
+					{:else if sectionItem.isActionSuccessSection}
+						{#if isCtaFooter}
+							<option value="">Hero Default Action</option>
+						{:else}
+							<option value="">No interaction</option>
+						{/if}
+						<option value="link">Click 1 Link</option>
+						<option value="links">Click Few Links</option>
+						<option value="single_choice">Community Single Choice</option>
+						<option value="multiple_choice">Community Multiple Choice</option>
+						<option value="short_answer">Community Answer</option>
+					{:else if section?.renderType === 'form'}
+						{#if !section.items?.includes((i) => {
+							return i.interactiveRenderType === 'email';
+						})}
+							<option value="email">Email </option>
+						{/if}
+						<option value="text">Short Text</option>
+						<option value="url">URL</option>
+						<option value="textarea">Long Text</option>
 					{:else}
-						<option value="">No interaction</option>
+						{#if isCtaFooter}
+							<option value="">Hero Default Action</option>
+						{:else}
+							<option value="">{sectionItem.url ? 'Open URL on click' : 'No interaction'}</option>
+						{/if}
+						<option value="link">Click 1 Link</option>
+						<option value="links">Click Few Links</option>
+						<option value="email">Submit Email</option>
+						<option value="input">Text Input</option>
+						<option value="form">Submit Form</option>
+						<option value="single_choice">Community Single Choice</option>
+						<option value="multiple_choice">Community Multiple Choice</option>
+						<option value="short_answer">Community Answer</option>
+						<!-- <option value="wave_analytics">See Public Web Analytics</option> -->
 					{/if}
-					<option value="link">Click 1 Link</option>
-					<option value="links">Click Few Links</option>
-					<option value="single_choice">Community Single Choice</option>
-					<option value="multiple_choice">Community Multiple Choice</option>
-					<option value="short_answer">Community Answer</option>
-				{:else if section?.renderType === 'form'}
-					{#if !section.items?.includes((i) => {
-						return i.interactiveRenderType === 'email';
-					})}
-						<option value="email">Email </option>
-					{/if}
-					<option value="text">Short Text</option>
-					<option value="url">URL</option>
-					<option value="textarea">Long Text</option>
-				{:else}
-					{#if isCtaFooter}
-						<option value="">Hero Default Action</option>
-					{:else}
-						<option value="">{sectionItem.url ? 'Open URL on click' : 'No interaction'}</option>
-					{/if}
-					<option value="link">Click 1 Link</option>
-					<option value="links">Click Few Links</option>
-					<option value="email">Submit Email</option>
-					<option value="input">Text Input</option>
-					<option value="form">Submit Form</option>
-					<option value="single_choice">Community Single Choice</option>
-					<option value="multiple_choice">Community Multiple Choice</option>
-					<option value="short_answer">Community Answer</option>
-					<!-- <option value="wave_analytics">See Public Web Analytics</option> -->
-				{/if}
-			</select>
+				</select>
+			{/if}
 		{/if}
 
 		{#if section?.renderType === 'form' && ['text', 'textarea', 'email', 'description', 'input'].includes(sectionItem.interactiveRenderType)}

@@ -9,6 +9,7 @@ export default {
   "faq": "FAQ",
   "article": "Paragraph",
   "changelog": "Changelog",
+  "table": "Table",
   "form": "Form",
   "comments": "Comments",
   "embedCode": "HTML Code Embed",

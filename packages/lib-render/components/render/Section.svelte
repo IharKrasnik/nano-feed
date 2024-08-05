@@ -14,6 +14,7 @@
 	import { showSuccessMessage } from 'lib/services/toast';
 
 	import RenderTestimonials from 'lib-render/components/render/Testimonials.svelte';
+	import RenderTable from 'lib-render/components/render/TableSection.svelte';
 	import RenderMomentumFeed from 'lib-render/components/render/MomentumFeed.svelte';
 	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
 	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
@@ -395,7 +396,7 @@
 	${section.theme?.glowingIntensity ? `_intensity` : ''}`
 				: ''} {section.className}  {section.theme?.isTransparent
 				? '_transparent'
-				: ''} {section.type} {section.renderType} 
+				: ''} {section.type} _section-{section.renderType} 
 				{section.bgImageUrl ? '_bg-image' : ''}
 				px-4 xl:px-0 
 				{clazz
@@ -583,6 +584,8 @@
 					<RenderComments bind:page bind:section />
 				{:else if section.renderType === 'testimonials'}
 					<RenderTestimonials bind:page bind:section />
+				{:else if section.renderType === 'table'}
+					<RenderTable bind:page bind:section />
 				{:else if section.streamSlug}
 					<RenderMomentumCollection bind:section bind:page bind:themeStyles bind:isEdit />
 				{:else if section.type === 'momentum_feed'}

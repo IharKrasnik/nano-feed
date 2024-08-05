@@ -123,7 +123,7 @@
 				{/if}
 			{/if}
 
-			{#if isWithUrl && section.renderType !== 'form' && (!_.includes(['callout', 'faq'], section.renderType) || section.id === item.id)}
+			{#if isWithUrl && section.renderType !== 'form' && section.renderType !== 'pricing' && (!_.includes(['callout', 'faq'], section.renderType) || section.id === item.id)}
 				<EditInteractiveOptions class=" mt-4" bind:section bind:sectionItem={item} />
 			{/if}
 
@@ -197,11 +197,7 @@
 	{/if}
 
 	{#if section.renderType === 'pricing' && item.pricing}
-		<div class="flex items-center">
-			<div class="mr-2">$</div>
-
-			<input class="mr-2" type="number" bind:value={item.pricing.amount} placeholder="29.99" />
-
+		{#if item.pricing.isSlider}
 			<select class="w-full" bind:value={item.pricing.per}>
 				<option value="one-time">One-Time</option>
 				<option value="week">Week</option>
@@ -210,7 +206,77 @@
 				<option value="half-yearly">Half-Yearly</option>
 				<option value="year">Year</option>
 			</select>
-		</div>
+
+			<div class="mt-4 text-sm opacity-70">{`{CreditsCount},{Price},{PaymentUrl}`}</div>
+
+			<textarea
+				class="w-full"
+				rows="6"
+				placeholder="100;$21.58;https://buy.stripe.com/12345&#10;200;$39.78;https://buy.stripe.com/23456"
+				bind:value={item.pricing.pricesStr}
+				on:change={(evt) => {
+					debugger;
+					item.pricing.prices = evt.target?.value.split('\n').map((lines) => {
+						let splits = lines.split(';');
+
+						return {
+							creditsAmount: parseInt(splits[0]),
+							amount: parseInt(splits[1].replace('$', '')) * 100,
+							link: splits[2].startsWith('http') ? splits[2] : null
+						};
+					});
+				}}
+			/>
+			<!-- 
+			{#each item.pricing.prices as price}
+				<input class="mr-2" type="number" bind:value={price.creditAmount} placeholder="" />
+
+				<div class="flex items-center w-full">
+					<div class="mr-2">$</div>
+
+					<div>
+						<input class="mr-2" type="number" bind:value={price.amount} placeholder="29.99" />
+					</div>
+				</div>
+			{/each} -->
+
+			<!-- <div class="flex justify-end">
+				<div
+					class="text-xs cursor-pointer mt-1 mb-[-16px]"
+					on:click={() => {
+						item.pricing.isSlider = !item.pricing.isSlider;
+					}}
+				>
+					add price slider
+				</div>
+			</div> -->
+		{:else}
+			<div class="flex items-center">
+				<div class="mr-2">$</div>
+
+				<div>
+					<input class="mr-2" type="number" bind:value={item.pricing.amount} placeholder="29.99" />
+				</div>
+				<select class="w-full" bind:value={item.pricing.per}>
+					<option value="one-time">One-Time</option>
+					<option value="week">Week</option>
+					<option value="month">Month</option>
+					<option value="quarter">Quarter</option>
+					<option value="half-yearly">Half-Yearly</option>
+					<option value="year">Year</option>
+				</select>
+			</div>
+			<div class="flex justify-end">
+				<div
+					class="text-xs cursor-pointer mt-1 mb-[-16px]"
+					on:click={() => {
+						item.pricing.isSlider = !item.pricing.isSlider;
+					}}
+				>
+					add price slider
+				</div>
+			</div>
+		{/if}
 
 		<div class="mt-4 text-sm mb-2">Benefits (separate by new line)</div>
 		<textarea
@@ -239,6 +305,15 @@ Benefit 3`}
 				{/each}
 			</div>
 		{/if}
+
+		<div class="_section mt-4">
+			<EditInteractiveOptions
+				bind:section
+				options={[{ value: 'link', text: 'Button' }]}
+				bind:sectionItem={item}
+				isWithButton={false}
+			/>
+		</div>
 	{:else if section.renderType === 'form' && item?.id !== section?.id}
 		<div class="_section  mt-4">
 			<div class="mb-2 font-bold">Interaction</div>

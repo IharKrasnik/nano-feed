@@ -7,6 +7,7 @@
 
 	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 	import EditTestimonials from '$lib/components/edit/Testimonials.svelte';
+	import EditTable from '$lib/components/edit/TableSection.svelte';
 	import EditDatabase from '$lib/components/edit/Database.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
@@ -309,6 +310,8 @@
 		<!-- <EditFAQ bind:section /> -->
 	{:else if section.renderType === 'testimonials'}
 		<EditTestimonials bind:section />
+	{:else if section.renderType === 'table'}
+		<EditTable bind:section bind:page />
 	{:else}
 		{#if section.renderType === 'pricing'}
 			<div class="_section rounded-xl p-4">
