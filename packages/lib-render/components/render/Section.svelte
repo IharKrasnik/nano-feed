@@ -402,7 +402,7 @@
 				? clazz
 				: section.renderType === 'article'
 				? 'sm:pb-16'
-				: `${isFooter ? 'pb-8 sm:pb-16' : `py-8 ${section.footer ? 'sm:pt-16' : 'sm:py-16'}`}`}
+				: `${isFooter ? 'pb-8 sm:pb-16 mt-[-32px]' : `py-8 sm:py-16`}`}
 					{section.renderType === 'changelog' ? 'sm:w-[600px] mx-auto' : ''}
 					{section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 			style="z-index: 10; {section.theme?.isOverrideGlowingColor
@@ -458,7 +458,11 @@
 							</div>
 						{/if}
 
-						<div class="mb-8 {section.description ? `${isFooter ? 'sm:mb-8' : 'sm:mb-12'}` : ''}">
+						<div
+							class="mb-8 {section.description
+								? `${isFooter ? 'sm:mt-[-32px] mt-[-16px] sm:mb-8' : 'sm:mb-12'}`
+								: ''}"
+						>
 							{#if section.title}
 								<h3
 									class="_section-title text-2xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
