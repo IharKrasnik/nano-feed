@@ -611,7 +611,7 @@ a[href] {
 
 ._link {
 	@apply transition underline underline-offset-4;
-	color: var(--accent-color);
+	color: var(--link-color);
 }
 
 ._link:hover {

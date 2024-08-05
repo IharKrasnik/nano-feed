@@ -437,6 +437,24 @@
 											</div>
 										</div>
 									</div>
+									<div class="_section">
+										<div class="shrink-0">
+											<div class="text-sm font-bold">Link Color</div>
+											<div class="flex items-center justify-between w-full">
+												<input type="color" class="mr-4" bind:value={page.theme.linkColor} />
+												{#if page.theme.linkColor}
+													<div
+														class="_text-link text-sm cursor-pointer"
+														on:click={() => {
+															page.theme.linkColor = null;
+														}}
+													>
+														Reset
+													</div>
+												{/if}
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 

@@ -60,6 +60,7 @@ export default (page) => {
 		'accent-color': accentColor,
 		'accent-color-darker': darken(accentColor, 0.5),
 		'accent-color-lighter': lighten(accentColor, 0.5),
+		'link-color': page.theme?.linkColor || accentColor,
 		'section-item-background-color':
 			page.theme?.sectionItemBackgroundColor ||
 			(page.theme?.theme === 'dark' ? hexToRGBA('#161619', 0.85) : hexToRGBA('#f6f5f4', 0.85)),

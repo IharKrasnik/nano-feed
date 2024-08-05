@@ -319,7 +319,7 @@
 {#if section.isShown}
 	<div
 		class="relative {section.bgImageUrl && !isFooter && !section._isCtaFooter
-			? 'sm:p-8 mb-16 mx-2 sm:mx-0'
+			? `sm:p-8 mb-16 mx-2 sm:mx-0`
 			: ''}   {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
 			: ''}"
@@ -402,7 +402,7 @@
 				? clazz
 				: section.renderType === 'article'
 				? 'sm:pb-16'
-				: `${isFooter ? 'pb-8 sm:pb-16' : 'py-8 sm:py-16'}`}
+				: `${isFooter ? 'pb-8 sm:pb-16' : `py-8 ${section.footer ? 'sm:pt-16' : 'sm:py-16'}`}`}
 					{section.renderType === 'changelog' ? 'sm:w-[600px] mx-auto' : ''}
 					{section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 			style="z-index: 10; {section.theme?.isOverrideGlowingColor
@@ -512,7 +512,7 @@
 								page.theme?.isTitlesLeft ||
 								section.theme?.isTitleLeft
 									? 'mb-32'
-									: 'sm:max-w-[600px] sm:mx-auto'} mt-8"
+									: 'sm:max-w-[600px] sm:mx-auto'} {isFooter ? '' : 'mt-8'}"
 							>
 								<RenderInteractiveOptions
 									class="{section.renderType === 'changelog' ||
@@ -818,7 +818,7 @@
 												{#key carouselKey}
 													<RenderUrlWithBackground
 														aspectRatio={selectedCarouselItem.aspectRatio}
-														urlImgClass="asobject-cover"
+														urlImgClass="object-cover"
 														imageUrl={selectedCarouselItem.imageUrl}
 														imageBackgroundUrl={selectedCarouselItem.imageBackgroundUrl}
 													/>
@@ -855,17 +855,21 @@
 											  } overflow-x-auto`
 											: 'grid sm:grid-cols-12 '} {item.className || ''} {item.isFeatured
 											? '_highlighted'
-											: ''} {item.theme?.isTransparent ? '_transparent' : ''} {item.theme
-											?.isOppositeColors
+											: ''} {item.theme?.isTransparent || section.theme?.areItemsTransparent
+											? '_transparent'
+											: ''} {item.theme?.isOppositeColors || section.theme?.areItemsOppositeColors
 											? '_bg-opposite'
 											: ''} {item.url && !item.interactiveRenderType
 											? ' hover:opacity-80 hover:!_border-accent'
 											: ''}"
 										style={`background-color: ${
-											item.theme?.backgroundColor ||
-											page.theme?.sectionItemBackgroundColor ||
-											page.parentPage?.theme?.sectionItemBackgroundColor ||
-											'none'
+											section.theme?.areItemsTransparent
+												? 'none'
+												: item.theme?.backgroundColor ||
+												  section.theme?.itemsBackgroundColor ||
+												  page.theme?.sectionItemBackgroundColor ||
+												  page.parentPage?.theme?.sectionItemBackgroundColor ||
+												  'none'
 										};`}
 									>
 										{#if section.renderType === 'changelog'}
@@ -885,7 +889,7 @@
 												: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
 									
 									{section.theme?.areImagesReversed || item.theme?.isReversedImage ? 'order-last' : ''}
-									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? 'mb-8' : ''}"
+									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? '' : ''}"
 										>
 											<div>
 												<div
@@ -937,8 +941,10 @@
 															aspectRatio={section.theme?.imageAspectRatio ||
 																item.theme?.imageAspectRatio}
 															class="my-4"
-															urlImgClass="object-cover {section.theme?.areImagesReversed ||
-															item.theme?.isReversedImage
+															urlImgClass="object-cover {item.theme?.isTransparent ||
+															section.theme?.areItemsTransparent
+																? 'rounded-lg'
+																: section.theme?.areImagesReversed || item.theme?.isReversedImage
 																? 'rounded-l-lg'
 																: 'rounded-r-lg'}"
 															imageUrl={item.imageUrl}
@@ -1096,9 +1102,12 @@
 												<RenderUrlWithBackground
 													aspectRatio={section.theme?.imageAspectRatio ||
 														item.theme?.imageAspectRatio}
-													urlImgClass="mx-auto object-cover {section.theme?.areImagesReversed ||
-													item.theme?.isReversedImage ||
-													section.renderType === 'changelog'
+													urlImgClass="mx-auto object-cover {item.theme?.isTransparent ||
+													section.theme?.areItemsTransparent
+														? 'rounded-lg'
+														: section.theme?.areImagesReversed ||
+														  item.theme?.isReversedImage ||
+														  section.renderType === 'changelog'
 														? 'rounded-l-lg'
 														: 'rounded-r-lg'}"
 													imageUrl={item.imageUrl}
