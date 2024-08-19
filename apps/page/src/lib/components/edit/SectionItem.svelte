@@ -215,7 +215,6 @@
 				placeholder="100;$21.58;https://buy.stripe.com/12345&#10;200;$39.78;https://buy.stripe.com/23456"
 				bind:value={item.pricing.pricesStr}
 				on:change={(evt) => {
-					debugger;
 					item.pricing.prices = evt.target?.value.split('\n').map((lines) => {
 						let splits = lines.split(';');
 

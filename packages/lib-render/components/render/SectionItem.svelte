@@ -20,6 +20,7 @@
 	import trackClick from 'lib/services/trackClick';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
+	import InteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
 
 	let clazz = '';
 	export { clazz as class };
@@ -41,7 +42,7 @@
 	export let isShowAuthor;
 </script>
 
-{#if item.isShown || _.isUndefined(item.isShown)}
+{#if item && (item.isShown || _.isUndefined(item.isShown))}
 	<div
 		class="{clazz} break-inside-avoid {section.isMasonryGrid
 			? 'mb-6'
@@ -142,6 +143,23 @@
 				'none'
 			};`} "
 		>
+			{#if item.interactiveOptions}
+				<div
+					class="hidden group-hover:flex absolute left-0 top-0 w-full h-full bg-black/50 items-center justify-center"
+					style="z-index: 11"
+				>
+					<RenderInteractiveOptions
+						direction="vertical"
+						size={item.pricing ? 'large' : 'normal'}
+						bind:sectionItem={item.interactiveOptions}
+						parentSectionId={section.id}
+						bind:page
+						itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+						bind:isEdit
+						bind:isEmbed
+					/>
+				</div>
+			{/if}
 			{#if isEdit && $sectionToEdit?.id === section.id}
 				<div class="hidden group-hover:block absolute right-0" style="z-index: 20;">
 					<div
@@ -545,8 +563,7 @@
 								: 'rounded-b-lg'}
 																 {section.theme?.isScrollImageOnHover
 								? 'transition-all ease-in-out duration-1000 object-top group-hover:object-bottom'
-								: ''}
-																"
+								: ''}  {item.interactiveOptions ? 'group-hover:scale-105 transition' : ''}"
 							imageUrl={item.imageUrl}
 							imageBackgroundUrl={item.imageBackgroundUrl || section.theme?.itemsImageBackgroundUrl}
 						/>

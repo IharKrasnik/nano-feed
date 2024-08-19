@@ -438,7 +438,7 @@
 																section.renderType === 'scrollingGallery'
 																	? isEdit
 																		? 'w-full'
-																		: 'w-screen'
+																		: 'w-full'
 																	: '_container-width'} mx-auto {section.containerBgImageUrl
 																	? 'py-8'
 																	: ''}"

@@ -31,6 +31,7 @@
 	export let streamSettings = null;
 	export let attachToPages = null;
 	export let cacheId;
+	export let isSortable = false;
 
 	let parentPage = page.parentPage || page;
 
@@ -125,7 +126,7 @@
 	};
 
 	$: if (activeStream?.slug) {
-		loadFeed();
+		// loadFeed();
 	}
 
 	let uploaderEl;
@@ -527,7 +528,8 @@
 			class="py-8"
 			use:dndzone={{
 				items: $feedCache[cacheId || activeStream.slug]?.feed,
-				flipDurationMs: 300
+				flipDurationMs: 300,
+				dragDisabled: !isSortable
 			}}
 			on:consider={handleDndConsider}
 			on:finalize={handleDndFinalize}
@@ -556,6 +558,7 @@
 					if (!feedItem.id) {
 						feedItem.id = feedItem._id || uuidv4();
 					}
+					feedItem.interactiveOptions = feedItem.interactiveOptions || {};
 					return feedItem;
 				}) as feedItem (feedItem.id)}
 				<EditFeedItem

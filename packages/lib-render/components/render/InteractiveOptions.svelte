@@ -25,6 +25,8 @@
 
 	export let isHeader = false;
 
+	export let direction = 'horizontal';
+
 	export let size;
 
 	export let parentSectionId;
@@ -44,6 +46,7 @@
 	let isCtaPopupShown = false;
 
 	import refreshConditionsTimestamp from 'lib-render/stores/refreshConditionsTimestamp';
+	import { showSuccessMessage } from 'lib/services/toast';
 
 	let clazz = '';
 	let shortAnswer = '';
@@ -255,6 +258,18 @@
 			}
 		});
 	};
+
+	if (sectionItem.urlInteractiveType === 'copy') {
+		sectionItem.onUrlClick = async () => {
+			await navigator.clipboard.write([
+				new ClipboardItem({
+					'text/html': new Blob([sectionItem.urlClipboardContent], { type: 'text/html' })
+				})
+			]);
+
+			showSuccessMessage('Copied to clipboard');
+		};
+	}
 </script>
 
 {#if isSubmissionPopupShown}
@@ -453,7 +468,9 @@
 				{/if}
 			{:else if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links' || (sectionItem.interactiveRenderType === 'form' && isHeader)}
 				<div
-					class="flex flex-row flex-wrap justify-center gap-4 sm:gap-6 items-center {clazz?.includes(
+					class="flex {direction === 'vertical'
+						? 'flex-col justify-center'
+						: 'flex-row'} items-center flex-wrap justify-center gap-4 sm:gap-6 {clazz?.includes(
 						'mx-auto'
 					)
 						? 'mx-auto'

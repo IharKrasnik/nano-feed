@@ -2,18 +2,12 @@
 	import moment from 'moment';
 	import _ from 'lodash';
 	import { get, post } from 'lib/api';
-	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
-	import Loader from 'lib/components/Loader.svelte';
 
 	import allPages from 'lib-render/stores/allPages';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import { goto } from '$app/navigation';
-	import subPages, { refreshSubPages } from 'lib/stores/subPages';
-	import MomentumWidget from 'lib/components/MomentumWidget.svelte';
-	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
-	import knowledgeBaseProjects from 'lib/stores/knowledgeBaseProjects';
 
 	import pricingPage from '$lib/stores/pricingPage';
 

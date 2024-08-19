@@ -925,20 +925,7 @@
 					</div>
 
 					<div
-						in:fade={{ delay: 150 }}
-						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
-						class:_selected={$selectedTab === 'requests'}
-						on:click={() => {
-							$selectedTab = 'requests';
-							$selectedSubmission = null;
-						}}
-					>
-						<FeatherIcon class="mr-2 _header-icon" size="20" name="check-square" color="#f6f5f4" />
-						Requests
-					</div>
-
-					<div
-						in:fade={{ delay: 225 }}
+						in:fade={{ delay: 125 }}
 						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
 						class:_selected={$selectedTab === 'database'}
 						on:click={() => {
@@ -950,7 +937,7 @@
 					</div>
 
 					<div
-						in:fade={{ delay: 375 }}
+						in:fade={{ delay: 300 }}
 						class="relative flex items-center p-1  cursor-pointer p-2 opacity-70 hover:opacity-100"
 						class:_selected={$selectedTab === 'messaging'}
 						on:click={() => {
@@ -966,6 +953,18 @@
 							color="#f6f5f4"
 						/>
 						Engage
+					</div>
+					<div
+						in:fade={{ delay: 375 }}
+						class="relative flex items-center p-1  cursor-pointer p-2  opacity-70 hover:opacity-100"
+						class:_selected={$selectedTab === 'requests'}
+						on:click={() => {
+							$selectedTab = 'requests';
+							$selectedSubmission = null;
+						}}
+					>
+						<FeatherIcon class="mr-2 _header-icon" size="20" name="check-square" color="#f6f5f4" />
+						Requests
 					</div>
 				{/if}
 			</div>

@@ -93,7 +93,6 @@
 	};
 
 	$: if ($feedCache[cacheId]?.feed || filterTag) {
-		console.log('settings items');
 		databaseSection.items = $feedCache[cacheId].feed
 			.filter((item) => {
 				if (!filterTag) {
@@ -113,6 +112,7 @@
 					attachments,
 					logoUrl,
 					url,
+					interactiveOptions = {},
 					tagsStr,
 					meta,
 					syncPage,
@@ -120,6 +120,7 @@
 				}) => {
 					return {
 						id: _id,
+						interactiveOptions,
 						feedItemId: _id,
 						creator,
 						createdOn,
@@ -148,6 +149,9 @@
 					};
 				}
 			);
+
+		console.log('settings items', databaseSection.items);
+
 		if (!isEdit) {
 			replaceVars();
 		}

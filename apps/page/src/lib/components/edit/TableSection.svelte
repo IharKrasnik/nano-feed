@@ -26,7 +26,6 @@ Feature 1,feather:check,feather:cross`;
 			});
 	};
 
-	debugger;
 	if (!rowsText) {
 		rowsText = DEFAULT_TEXT;
 		parseRows();

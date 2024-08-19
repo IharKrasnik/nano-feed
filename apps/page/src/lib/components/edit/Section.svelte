@@ -465,6 +465,7 @@
 	{#if section.isUseDb}
 		<EditDatabase
 			isWithButton={false}
+			isSortable={section.streamSettings.sortBy === 'order'}
 			cacheId={section.id}
 			bind:streamSettings={section.streamSettings}
 			bind:selectedStreamSlug={section.streamSlug}

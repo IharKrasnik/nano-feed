@@ -1174,7 +1174,7 @@
 												bind:section
 												bind:page
 												bind:item={$selectedSectionItem}
-												class="{$selectedSectionItem.isFlexGrid
+												class="{$selectedSectionItem?.isFlexGrid
 													? 'min-w-[70%] sm:min-w-0'
 													: ''} {section.theme?.isMobileInline ? 'min-w-[90%] sm:min-w-0' : ''}"
 												bind:isShowAuthor

@@ -1,5 +1,4 @@
 <script>
-	import RenderSection from 'lib-render/components/render//Section.svelte';
 	import RenderMomentumCollection from 'lib-render/components/render/MomentumCollection.svelte';
 	import RenderPostEditor from '$lib/components/PostEditor.svelte';
 

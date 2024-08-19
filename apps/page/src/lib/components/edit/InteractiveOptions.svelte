@@ -4,14 +4,13 @@
 	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly } from 'svelte/transition';
 
-	import isUrl from 'lib/helpers/isUrl';
 	import clickOutside from 'lib/use/clickOutside';
 
 	let clazz;
 	export { clazz as class };
 
 	export let sectionItem;
-	export let section;
+	export let section = null;
 
 	export let isWithButton = true;
 	export let options = [];
@@ -22,6 +21,7 @@
 	export let isShown = !isWithButton;
 
 	import { default as usePlaceholder } from 'lib/use/placeholder';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 
 	let show = () => {
 		isShown = true;
@@ -70,6 +70,8 @@
 		use:clickOutside
 		on:clickOutside={() => (isWithButton ? close() : null)}
 	>
+		<div class="font-medium mb-2 text-sm">Interaction</div>
+
 		{#if !sectionItem.isMustHaveField && !isRenderTypeLocked}
 			{#if options?.length !== 1}
 				<div class="font-normal text-sm opacity-70 mb-2">How users can interact?</div>
@@ -102,13 +104,13 @@
 						{:else}
 							<option value="">No interaction</option>
 						{/if}
-						<option value="link">Click 1 Link</option>
-						<option value="links">Click Few Links</option>
+						<option value="link">Click 1 Button</option>
+						<option value="links">Click Few Buttons</option>
 						<option value="single_choice">Community Single Choice</option>
 						<option value="multiple_choice">Community Multiple Choice</option>
 						<option value="short_answer">Community Answer</option>
 					{:else if section?.renderType === 'form'}
-						{#if !section.items?.includes((i) => {
+						{#if !section?.items?.includes((i) => {
 							return i.interactiveRenderType === 'email';
 						})}
 							<option value="email">Email </option>
@@ -122,8 +124,8 @@
 						{:else}
 							<option value="">{sectionItem.url ? 'Open URL on click' : 'No interaction'}</option>
 						{/if}
-						<option value="link">Click 1 Link</option>
-						<option value="links">Click Few Links</option>
+						<option value="link">Click 1 Button</option>
+						<option value="links">Click Few Buttons</option>
 						<option value="email">Submit Email</option>
 						<option value="input">Text Input</option>
 						<option value="form">Submit Form</option>
@@ -149,17 +151,21 @@
 		{/if}
 
 		{#if sectionItem.interactiveRenderType === 'link' || sectionItem.interactiveRenderType === 'links'}
-			<EmojiPicker class="mt-4" isNoCustom bind:icon={sectionItem.urlIcon} />
+			<EmojiPicker class="mt-4" bind:icon={sectionItem.urlIcon} />
 
 			<div class="flex items-center w-full justify-between mt-4 mb-2">
 				<div class="text-sm opacity-70">
 					{sectionItem.isUrlLink ? 'Link' : 'Button'} text
 				</div>
 
-				<div>
-					<input type="checkbox" bind:checked={sectionItem.isUrlLink} />
-					show as link
-				</div>
+				<ToggleGroup
+					size="tiny"
+					bind:value={sectionItem.isUrlLink}
+					tabs={[
+						{ name: 'Button', key: false },
+						{ name: 'Link', key: true }
+					]}
+				/>
 			</div>
 
 			<input
@@ -169,12 +175,46 @@
 				type="text"
 			/>
 
-			<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
+			<div class="flex justify-between items-center w-full">
+				<div class="text-sm opacity-70 mt-4 mb-2">
+					{#if sectionItem.urlInteractiveType === 'copy'}
+						Clipboard contents
+					{:else}
+						URL to open on click
+					{/if}
+				</div>
 
-			<div class="relative flex items-center">
-				<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
-				<FeatherIcon class="absolute right-4" size={15} color="#555555" name="globe" />
+				<ToggleGroup
+					bind:value={sectionItem.urlInteractiveType}
+					tabs={[
+						{ name: 'URL', key: undefined },
+						{ name: 'Copy', key: 'copy' }
+					]}
+					size="tiny"
+				/>
 			</div>
+
+			{#if sectionItem.urlInteractiveType === 'copy'}
+				<textarea
+					placeholder="Paste content of clipboard"
+					class="w-full"
+					on:paste={(e) => {
+						e.preventDefault();
+
+						// Get pasted data via clipboard API
+						const pastedData =
+							e.clipboardData.getData('text/html') || e.clipboardData.getData('text');
+
+						sectionItem.urlClipboardContent = pastedData;
+					}}
+					bind:value={sectionItem.urlClipboardContent}
+				/>
+			{:else}
+				<div class="relative flex items-center">
+					<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
+					<FeatherIcon class="absolute right-4" size={15} color="#555555" name="globe" />
+				</div>
+			{/if}
 
 			{#if sectionItem.interactiveRenderType === 'links'}
 				<hr class="my-8 opacity-70" />
@@ -199,7 +239,10 @@
 					/>
 				</div>
 
-				<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
+				<div class="flex justify-between w-full items-center">
+					<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
+					<ToggleGroup size="tiny" tabs={[{ name: 'URL' }, { name: 'Copy' }]} />
+				</div>
 				<input class="w-full" bind:value={sectionItem.url2} {placeholder} type="url" />
 			{/if}
 		{:else if sectionItem.interactiveRenderType === 'email' || sectionItem.interactiveRenderType === 'input'}
@@ -224,11 +267,11 @@
 					type="text"
 				/>
 			</div>
-		{:else if sectionItem.id !== section.id}
-			{#if section.renderType !== 'form'}
-				<div class="my-2">
+		{:else if sectionItem.id !== section?.id}
+			{#if section?.renderType !== 'form'}
+				<div class="my-2 flex justify-between w-full items-center">
 					<div class="text-sm opacity-70 mt-4 mb-2">URL to open on click</div>
-					<input class="w-full" bind:value={sectionItem.url} {placeholder} type="url" />
+					<ToggleGroup size="tiny" tabs={[{ name: 'URL' }, { name: 'Copy' }]} />
 				</div>
 			{/if}
 		{:else}
@@ -237,7 +280,6 @@
 					{#each sectionItem.interactiveAnswers as answer}
 						<div class="flex justify-between">
 							<EmojiPicker
-								isNoCustom
 								class="w-full p-2 bg-[#fafafa] my-2 text-center"
 								bind:icon={answer.emoji}
 							/>
