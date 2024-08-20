@@ -31,8 +31,6 @@
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
 	import ContentEditor from 'lib/components/ContentEditor.svelte';
 	import RenderEditorContent from 'lib/components/RenderEditorContent.svelte';
-	import ArticleAuthorLabel from 'lib-render/components/render/ArticleAuthorLabel.svelte';
-	import SourceLogo from 'lib/components/SourceLogo.svelte';
 
 	import Emoji from 'lib/components/Emoji.svelte';
 	import isGif from 'lib/helpers/isGif';
@@ -42,7 +40,6 @@
 	import trackClick from 'lib/services/trackClick';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
-
 	export let section;
 	let clazz;
 	export { clazz as class };

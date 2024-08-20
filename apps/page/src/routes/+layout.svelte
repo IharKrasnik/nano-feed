@@ -10,6 +10,7 @@
 	import { page as sveltePage } from '$app/stores';
 	import { onDestroy } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
+	import 'toolcool-range-slider';
 
 	import { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import { SvelteToast } from '@zerodevx/svelte-toast';

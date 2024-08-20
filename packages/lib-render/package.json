@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "toolcool-range-slider": "^4.0.28",
     "typed.js": "^2.1.0"
   }
 }

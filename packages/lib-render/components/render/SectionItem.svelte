@@ -20,7 +20,7 @@
 	import trackClick from 'lib/services/trackClick';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
-	import InteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
+	import RangeSlider from 'lib-render/components/RandgeSlider.svelte';
 
 	let clazz = '';
 	export { clazz as class };
@@ -465,6 +465,11 @@
 											</div>
 										{/if}
 									</div>
+
+									{#if item.pricing.prices}
+										<RangeSlider values={item.pricing.prices.map((p) => p.creditsAmount)} />
+									{/if}
+
 									<div class="mb-8 opacity-70">
 										{@html item.description}
 									</div>
