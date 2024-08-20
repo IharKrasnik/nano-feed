@@ -1,12 +1,12 @@
 <script>
 	import _ from 'lodash';
 
-	import { get } from 'lib/api';
-	import { fly } from 'svelte/transition';
+	import { post } from 'lib/api';
 	import autofocus from 'lib/use/autofocus';
 	import Loader from 'lib/components/Loader.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
+	import Button from 'lib/components/Button.svelte';
 
 	let isModalOpen = false;
 	let isLoading = false;
@@ -14,6 +14,23 @@
 	export let url = '';
 
 	let embedServices = [
+		{
+			key: '$svelte',
+			whenIncludes: '$svelte',
+			name: 'Svelte Component',
+			description: 'Code custom component',
+			placeholder: '',
+			fields: [
+				{
+					name: 'Svelte Component Code',
+					type: 'code',
+					varName: 'svelteCode',
+					value: '<div>Hello World</div>',
+					placeholder: '<div>Hello World</div>',
+					hint: 'Go to https://svelte.dev/repl and copy results here'
+				}
+			]
+		},
 		{
 			key: 'youtube',
 			whenIncludes: 'youtube.com',
@@ -148,7 +165,7 @@
 
 {#if isModalOpen}
 	<Modal isShown onClosed={() => close()} maxWidth={1000}>
-		<div>
+		<div class="_editor">
 			<div class="p-8">
 				<h2 class="font-bold text-xl mb-4">Embed Services</h2>
 
@@ -158,15 +175,27 @@
 							{#if selectedService.fields?.length}
 								{#each selectedService.fields as field}
 									<div class="text-sm font-bold mb-2">{field.name}</div>
-									<input
-										type="text"
-										class="w-full"
-										bind:value={field.value}
-										placeholder={field.placeholder}
-										on:input={() => {
-											updateUrl({ field });
-										}}
-									/>
+									{#if field.type === 'code'}
+										<textarea
+											class="w-full"
+											rows="6"
+											bind:value={field.value}
+											placeholder={field.placeholder}
+										/>
+									{:else}
+										<input
+											type="text"
+											class="w-full"
+											bind:value={field.value}
+											placeholder={field.placeholder}
+											on:input={() => {
+												updateUrl({ field });
+											}}
+										/>
+									{/if}
+									{#if field.hint}
+										<div class="text-sm">{field.hint}</div>
+									{/if}
 								{/each}
 							{:else}
 								<div class="text-sm font-bold mb-2">URL</div>
@@ -179,14 +208,34 @@
 								/>
 							{/if}
 
-							<div class="my-4 mb-8">
-								<button
-									class="_primary mr-2"
-									on:click={() => {
-										onSelected(url);
-										close();
-									}}>💾 Save</button
-								>
+							<div class="my-4 mb-8 flex items-center">
+								{#if selectedService.key === '$svelte'}
+									<Button
+										class="_primary mr-2"
+										onClick={async () => {
+											const { buildUrl, componentName } = await post(
+												'https://hive-668803db944bc2001292526f.paralect.co/svelte/web-component',
+												{
+													name: '',
+													code: selectedService.fields[0].value
+												}
+											);
+											url = `$svelte?buildJsSrc=${encodeURIComponent(
+												buildUrl
+											)}&componentName=${encodeURIComponent(componentName)}`;
+											onSelected(url);
+											close();
+										}}>Build & Save</Button
+									>
+								{:else}
+									<Button
+										class="_primary mr-2"
+										onClick={async () => {
+											onSelected(url);
+											close();
+										}}>💾 Save</Button
+									>
+								{/if}
 								<button class="_secondary mr-2" on:click={close}>Cancel</button>
 							</div>
 						</div>
@@ -216,7 +265,7 @@
 				<div class="mt-4 grid sm:grid-cols-3 gap-4">
 					{#each embedServices as service}
 						<div
-							class="p-4 _section cursor-pointer _clickable"
+							class="p-2 _section cursor-pointer _clickable"
 							class:_highlighted={url && service.isSelected}
 							on:click={() => {
 								selectedService = service;

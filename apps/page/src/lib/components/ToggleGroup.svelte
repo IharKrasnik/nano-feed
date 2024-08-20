@@ -33,7 +33,7 @@
 <div class=" flex  rounded {clazz} {size !== 'tiny' ? 'w-full justify-between gap-2' : 'gap-1'}">
 	{#each tabs as tab}
 		<div
-			class="cursor-pointer rounded {size === 'tiny'
+			class="flex items-center justify-center cursor-pointer rounded {size === 'tiny'
 				? 'px-2 py-0.5 text-xs'
 				: 'px-4 py-1 text-sm'}  w-full text-center {tab.isSelected
 				? 'border border-[#8b786d]'

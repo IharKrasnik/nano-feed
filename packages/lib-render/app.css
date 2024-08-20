@@ -819,13 +819,13 @@ button[type='submit'] {
 	@apply transition;
 }
 
-button:not(._transparent),
+button:not(._transparent):not(._secondary),
 .button:not(._transparent),
 button[type='submit']:not(._transparent) {
 	color: var(--button-color, #ffffff);
 }
 
-._editor button:not(._transparent) {
+._editor button:not(._transparent):not(._secondary) {
 	color: #f6f5f4;
 }
 

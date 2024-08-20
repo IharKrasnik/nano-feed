@@ -633,7 +633,7 @@
 		{/if}
 
 		<div class="_section">
-			<div class="flex justify-between  mb-2">
+			<div class="flex justify-between items-start  mb-2">
 				<div class="_title">
 					{#if page.renderType === 'article'}
 						Key image
@@ -655,7 +655,7 @@
 					{/if}
 				</div>
 
-				<div class="_title flex items-center">
+				<div class="text-sm flex items-center">
 					{#if hero.demoUrl}
 						<div>Vertical</div>
 						<input class="ml-2" type="checkbox" bind:checked={hero.theme.isVertical} />
@@ -664,7 +664,13 @@
 			</div>
 
 			<div class="flex items-center">
-				<FileInput class="w-full" bind:url={hero.demoUrl} theme="light" isCanSearch />
+				<FileInput
+					class="w-full"
+					bind:url={hero.demoUrl}
+					theme="light"
+					isCanSearch
+					isWithIntegrations
+				/>
 			</div>
 
 			{#if hero.demoUrl}
