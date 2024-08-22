@@ -76,7 +76,7 @@
 					{/if}
 
 					{#if section.title}
-						<div class="_section-title text-2xl sm:text-4-5xl font-semibold mb-4">
+						<div class="_section-title text-3-4xl sm:text-4-5xl font-semibold mb-4">
 							<ContentEditableIf bind:innerHTML={section.title} condition={isEdit} />
 						</div>
 					{/if}

@@ -214,6 +214,31 @@ body {
 	@apply rounded-xl;
 }
 
+@media (max-width: 640px) {
+	._section-item-container:not(._section-item-type-tag) {
+		width: 100%;
+	}
+
+	._section-item-container:not(._mobile-inline):not(._section-item-type-tag) {
+		min-width: 70%;
+	}
+}
+
+._section-item-container {
+	min-width: var(--min-width, auto);
+	min-height: var(--min-height, auto);
+
+	max-width: var(--max-width, auto);
+	max-height: var(--max-height, auto);
+}
+
+._section-item-type-tag {}
+
+._section-item-container._mobile-inline {
+	min-width: 90%;
+	@apply sm:min-w-0;
+}
+
 ._section-item._darker>.flex {
 	background: var(--accent-color-darker-xl) !important;
 	color: var(--button-color) !important;
@@ -672,11 +697,11 @@ a[href] {
 
 
 ._item-title._big {
-	@apply sm:text-3xl text-lg;
+	@apply sm:text-3xl text-2xl;
 }
 
 ._item-title._large {
-	@apply sm:text-2xl text-lg;
+	@apply sm:text-2xl text-2xl;
 }
 
 ._item-title._small {
@@ -685,8 +710,9 @@ a[href] {
 
 @media (max-width: 640px) {
 	._item-title:not(._small) {
-		font-size: 18px;
+		font-size: 20px;
 		font-weight: 700;
+		line-height: 1.4;
 	}
 }
 
@@ -725,7 +751,7 @@ a._item-title:hover {
 
 ._item-description._large,
 ._section-description._large {
-	@apply text-lg;
+	@apply sm:text-lg;
 }
 
 ._item-description._huge {
@@ -970,6 +996,11 @@ button._alternative:hover {
 }
 
 @layer utilities {
+	.text-3-4xl {
+		font-size: 2rem;
+		line-height: 1.08;
+	}
+
 	.text-4-5xl {
 		font-size: 2.75rem;
 		line-height: 1.08;

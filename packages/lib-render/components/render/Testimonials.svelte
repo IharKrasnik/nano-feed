@@ -6,10 +6,10 @@
 	export let page;
 </script>
 
-<div class="p-4 sm:p-8 w-full grid grid-cols-1 sm:gap-y-12 gap-y-4 sm:mx-auto">
+<div class="p-2 sm:p-8 w-full grid grid-cols-1 sm:gap-y-12 gap-y-4 sm:mx-auto">
 	{#each section.items || [] as item, i}
 		<div
-			class="_testimonial p-4 rounded-2xl w-full  mr-4 mb-4 sm:mb-0 "
+			class="_testimonial p-0 sm:p-4 rounded-2xl w-full  mr-4 mb-4 sm:mb-0 "
 			in:fly={{ x: -50, y: -50, duration: 150, delay: 150 * (i + 1) }}
 		>
 			{#if section.theme?.areItemsIncludeStars}
@@ -34,9 +34,9 @@
 					{@html item.description}
 				</div>
 
-				<div class="text-sm flex items-center mt-2">
+				<div class="text-sm flex items-center mt-4">
 					{#if item.emoji || item.imageUrl}
-						<div class="mr-4 mb-4 sm:mb-0">
+						<div class="mr-4 sm:mb-0">
 							<img
 								alt="Testimonial user avatar"
 								src={item.emoji || item.imageUrl}

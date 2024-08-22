@@ -413,7 +413,7 @@
 				? clazz
 				: section.renderType === 'article'
 				? 'sm:pb-16'
-				: `${isFooter ? 'pb-8 sm:pb-16 mt-[-32px]' : `py-8 sm:py-16`}`}
+				: `${isFooter ? 'pb-8 sm:pb-16 sm:mt-[-32px]' : `py-8 sm:py-16`}`}
 					{section.renderType === 'changelog' ? 'sm:w-[600px] mx-auto' : ''}
 					{section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 			style="z-index: 10; {section.theme?.isOverrideGlowingColor
@@ -476,15 +476,16 @@
 						>
 							{#if section.title}
 								<h3
-									class="_section-title text-2xl  {section.theme?.titleSize === 'small'
+									class="_section-title {section.theme?.titleSize === 'small'
 										? 'sm:text-lg text-lg font-semibold'
-										: page.theme.isTitlesHuge || section.theme?.isHugeTitle
-										? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-medium'}`
-										: `${
-												isFooter ? 'sm:text-xl font-semibold' : 'sm:text-4-5xl font-semibold'
-										  }`} {page.theme.isTitlesLeft || section.theme?.isTitleLeft
-										? ''
-										: 'sm:mx-auto'}
+										: `${isFooter ? 'text-2xl' : 'text-3-4xl'} ${
+												page.theme.isTitlesHuge || section.theme?.isHugeTitle
+													? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-medium'}`
+													: `${
+															isFooter ? 'sm:text-xl font-semibold' : 'sm:text-4-5xl font-semibold'
+													  }`
+										  }`} 
+										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'sm:mx-auto'}
 									{section.renderType === 'article' ? 'sm:max-w-[712px]' : 'sm:max-w-[768px]'} {section.description
 										? 'mb-4 sm:mb-6'
 										: 'mb-4 sm:mb-12'}"
@@ -498,12 +499,12 @@
 							{/if}
 							{#if section.description}
 								<div
-									class="_section-description mb-8 {page.theme.isTitlesHuge ||
+									class="_section-description  mb-8 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
 										? '_huge'
 										: '_large'} whitespace-pre-wrap
 										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-80' : `sm:max-w-[768px]`}
-										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'sm:mx-auto'}
+										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'max-w-[90%] sm:max-w-[100%] mx-auto'}
 										"
 								>
 									{#if isEdit && page.renderType === 'article'}
@@ -900,7 +901,7 @@
 												: 'w-full'} relative items-center {section.renderType === 'article' ||
 											section.streamSlug?.includes('-blog')
 												? '_article mb-8'
-												: 'mb-8 sm:mb-8'}
+												: 'mb-16  sm:mb-8'}
 							{section.renderType === 'changelog'
 												? '_transparent _no-padding sm:w-[600px] mx-auto'
 												: section.isFlexGrid
@@ -947,15 +948,16 @@
 												class="{section.renderType === 'changelog'
 													? 'col-span-12'
 													: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
-									
-									{section.theme?.areImagesReversed || item.theme?.isReversedImage ? 'order-last' : ''}
+									{section.theme?.areImagesReversed || item.theme?.isReversedImage
+													? 'sm:order-last'
+													: 'order-last sm:order-first'}
 									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? '' : ''}"
 											>
 												<div>
 													<div
 														class="{section.renderType === 'article'
 															? 'sm:px-0'
-															: ` _borderless p-4 ${
+															: ` _borderless p-0 sm:p-4 ${
 																	section.theme?.areItemsTransparent || item.theme?.isTransparent
 																		? `sm:pl-0 sm:pr-8 sm:py-8`
 																		: 'sm:p-8'
@@ -1120,9 +1122,9 @@
 																<RenderInteractiveOptions
 																	bind:sectionItem={item}
 																	parentSectionId={section.id}
-																	class={`${item.pricing ? 'w-full' : ''}`}
+																	class={`${item.pricing ? 'w-full' : 'justify-start'}`}
 																	bind:page
-																	itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																	itemClass={`${true ? 'p-2 mr-4 ' : 'p-4 mr-4'}`}
 																	bind:isEdit
 																	bind:isEmbed
 																/>
@@ -1184,7 +1186,7 @@
 															  item.theme?.isReversedImage ||
 															  section.renderType === 'changelog'
 															? 'rounded-l-lg'
-															: 'rounded-r-lg'}"
+															: 'rounded-r-lg'} mb-4 sm:mb-0"
 														imageUrl={item.imageUrl}
 														imageBackgroundUrl={item.imageBackgroundUrl}
 													/>
@@ -1217,49 +1219,47 @@
 											section.theme?.isTitleLeft
 												? 'justify-start'
 												: 'justify-center sm:justify-center'
-									  } ${section.isFlexWrap ? 'flex-wrap' : ''} items-center overflow-x-auto`
+									  } ${
+											section.isFlexWrap
+												? 'flex-wrap'
+												: `${section.theme?.isMobileInline ? '' : 'flex-wrap'} sm:flex-nowrap`
+									  } items-center overflow-x-auto`
 									: `${section.theme?.isMobileInline ? 'flex sm:grid' : 'grid'} sm:grid-cols-${
 											section.columns
-									  } `} {section.items[0]?.theme?.isTransparent ? 'mt-8' : ''}"
+									  } `} {section.items[0]?.theme?.isTransparent ? 'mt-8' : ''}
+										{section.theme?.itemsRenderType === 'tag' ? 'flex-wrap' : ''}"
 							>
 								{#each section.items.filter( (i) => (selectedPayPer ? i.pricing?.per === 'one-time' || i.pricing?.per === selectedPayPer : true) ) || [] as item, i (item.id)}
 									{#key $selectedSectionItem?.id}
-										{#if $selectedSectionItem?.id === item.id}
-											<RenderSectionItem
-												bind:section
-												bind:page
-												bind:item={$selectedSectionItem}
-												class="{$selectedSectionItem?.isFlexGrid
-													? 'min-w-[70%] sm:min-w-0'
-													: ''} {section.theme?.isMobileInline ? 'min-w-[90%] sm:min-w-0' : ''}"
-												bind:isShowAuthor
-												bind:isEdit
-												{selectCarouselItem}
-												{getEmojiTheme}
-												{descriptionStyle}
-												{headerTextStyle}
-												{emojiStyle}
-												{i}
-											/>
-										{:else}
-											<RenderSectionItem
-												bind:section
-												bind:page
-												bind:isEdit
-												bind:item
-												class="{section.isFlexGrid ? 'min-w-[70%] sm:min-w-0' : ''} {section.theme
-													?.isMobileInline
-													? 'min-w-[90%] sm:min-w-0'
-													: ''}"
-												bind:isShowAuthor
-												{selectCarouselItem}
-												{getEmojiTheme}
-												{descriptionStyle}
-												{headerTextStyle}
-												{emojiStyle}
-												{i}
-											/>
-										{/if}
+										<RenderSectionItem
+											bind:section
+											bind:page
+											item={selectedSectionItem?.id === item.id ? $selectedSectionItem : item}
+											class="_section-item-container _section-item-type-{item.renderType ||
+												section.theme?.itemsRenderType ||
+												'default'} {$selectedSectionItem?.isFlexGrid
+												? 'min-w-[70%] sm:min-w-0'
+												: ''} {section.theme?.isMobileInline ? '_mobile-inline' : ''}"
+											bind:isShowAuthor
+											bind:isEdit
+											{selectCarouselItem}
+											{getEmojiTheme}
+											{descriptionStyle}
+											{headerTextStyle}
+											{emojiStyle}
+											{i}
+											style="{section.isFlexGrid &&
+											(section.maxWidthPx || section.theme?.itemsMaxWidthPx)
+												? `--max-width: ${section.maxWidthPx || section.theme.itemsMaxWidthPx}px;`
+												: ''} {section.isFlexGrid &&
+											(section.minWidthPx || section.theme?.itemsMinWidthPx)
+												? `--min-width: ${section.minWidthPx || section.theme.itemsMinWidthPx}px;`
+												: ''} {section.theme?.itemsMinHeightPx
+												? `--min-height: ${section.theme.itemsMinHeightPx}px;`
+												: ''} {section.theme?.itemsMaxHeightPx
+												? `--max-height: ${section.theme.itemsMaxHeightPx}px;`
+												: ''} "
+										/>
 									{/key}
 								{/each}
 							</div>

@@ -24,6 +24,7 @@
 
 	let clazz = '';
 	export { clazz as class };
+	export let style = '';
 
 	export let section;
 	export let item;
@@ -44,22 +45,14 @@
 
 {#if item && (item.isShown || _.isUndefined(item.isShown))}
 	<div
-		class="{clazz} break-inside-avoid {section.isMasonryGrid
+		class="_root {clazz} break-inside-avoid {section.isMasonryGrid
 			? 'mb-6'
 			: 'mb-2'} sm:col-span-{item.colSpan || 1} sm:row-span-{item.rowSpan ||
 			1} {section.renderType === 'carousel'
 			? `min-w-[300px] sm:min-w-0 cursor-pointer`
 			: ''} {$selectedSectionItem?.id === item.id ? 'outline outline-4 outline-purple-300' : ''}"
 		class:pt-16={section.isFunkyGrid && i === 1}
-		style="{section.isFlexGrid && (section.maxWidthPx || section.theme?.itemsMaxWidthPx)
-			? `max-width: ${section.maxWidthPx || section.theme.itemsMaxWidthPx}px;`
-			: ''} {section.isFlexGrid && (section.minWidthPx || section.theme?.itemsMinWidthPx)
-			? `min-width: ${section.minWidthPx || section.theme.itemsMinWidthPx}px;`
-			: ''} {section.theme?.itemsMinHeightPx
-			? `min-height: ${section.theme.itemsMinHeightPx}px;`
-			: ''} {section.theme?.itemsMaxHeightPx
-			? `max-height: ${section.theme.itemsMaxHeightPx}px;`
-			: ''} "
+		{style}
 	>
 		<svelte:element
 			this={item.url && !item.interactiveRenderType ? 'a' : 'div'}
@@ -230,18 +223,12 @@
 							section.theme?.areItemsNoPadding) &&
 						(item.theme?.isTransparent || section.theme?.areItemsTransparent)
 							? 'sm:pr-8'
-							: page?.theme?.containerWidth === 900
-							? 'p-4'
-							: `px-6 ${
+							: `${
 									item.renderType === 'tag' || section.theme?.itemsRenderType === 'tag'
-										? 'py-4'
-										: 'py-5'
+										? 'px-2 sm:px-6 py-2 sm:py-4'
+										: 'px-6 py-5'
 							  } ${
 									section.columns > 3 ? 'sm:px-5' : section.columns > 2 ? 'sm:px-6' : 'sm:px-8'
-							  } ${
-									item.renderType === 'tag' || section.theme?.itemsRenderType === 'tag'
-										? 'sm:_py-4'
-										: 'sm:_py-6'
 							  }`} text-left self-center order-none-off {section.columns == 1 && i % 2 === 1
 							? 'sm:order-last-off'
 							: ''} {section.columns === 1 &&
