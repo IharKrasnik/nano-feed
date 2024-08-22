@@ -12,6 +12,7 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
+	import EditSectionItemsSettings from '$lib/components/edit/SectionItemsSettings.svelte';
 	import BackTo from '$lib/components/BackTo.svelte';
 
 	import clickOutside from 'lib/use/clickOutside';
@@ -19,6 +20,7 @@
 	import sectionTypesDictionary from '$lib/helpers/sectionTypesDictionary';
 	import childStreams from 'lib/stores/childStreams';
 	import { dndzone } from 'svelte-dnd-action';
+	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 
 	import striptags from 'striptags';
 
@@ -116,6 +118,7 @@
 	if (section.streamSlug) {
 		section.isUseDb = true;
 	}
+	let isItemsSettingsCollapsed = true;
 </script>
 
 {#if isShort}
@@ -320,6 +323,244 @@
 				</div>
 				<div class="mt-2">This icon is used to show benefits</div>
 			</div>
+			<div class="_section rounded-xl p-4">
+				<div class="flex items-center font-bold ">Pricing tabs</div>
+				{#if section.pricingTabs?.length}
+					{#each section.pricingTabs as pricingTab}
+						<div class="mb-1">
+							{pricingTab.payPer}: <input bind:value={pricingTab.hint} placeholder="Hint" />
+						</div>
+					{/each}
+				{:else}
+					<div class="mt-2">Start adding sections and set pay per</div>
+				{/if}
+			</div>
+		{/if}
+
+		{#if _.includes(['grid', 'pricing', 'scrollingGallery'], section.renderType)}
+			<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
+				<div class="bg-white">
+					<div class="font-bold mb-2">Layout</div>
+
+					<ToggleGroup
+						class="mb-4"
+						tabs={[
+							{
+								key: 'grid',
+								isSelected: section.columns > 1 && !section.isFlexGrid,
+								name: 'Grid'
+							},
+							{
+								key: 'rows',
+								isSelected: section.columns === 1,
+								name: 'Rows'
+							},
+							{
+								key: 'flex',
+								name: 'Fluid',
+								isSelected: section.isFlexGrid
+							}
+						]}
+						onTabSelected={(tab) => {
+							if (tab.key === 'grid') {
+								section.isFlexGrid = false;
+
+								if (!section.columns || section.columns === 1) {
+									section.columns = 2;
+								}
+							} else if (tab.key === 'rows') {
+								section.isFlexGrid = false;
+
+								if (section.columns !== 1) {
+									section.columns = 1;
+								}
+							} else if (tab.key === 'flex') {
+								section.isFlexGrid = true;
+								if (section.columns === 1) {
+									section.columns = 2;
+								}
+							}
+						}}
+					/>
+
+					<div class="relative mt-4">
+						{#if section.columns > 1 && !section.isFlexGrid}
+							<div class="flex gap-x-1 items-center">
+								<div
+									class=" cursor-pointer bg-section flex justify-center items-center rounded-xl text-sm px-2 py-1"
+									on:click={() => (section.columns = 2)}
+									class:px-4={section.columns === 2}
+								>
+									2
+									{#if section.columns === 2}columns{/if}
+								</div>
+
+								<div
+									class=" cursor-pointer bg-section px-2 py-1 text-sm flex justify-center items-center rounded-xl"
+									class:px-4={section.columns === 3}
+									on:click={() => (section.columns = 3)}
+								>
+									3
+									{#if section.columns === 3}columns{/if}
+								</div>
+
+								<div
+									class="cursor-pointer bg-section px-2 text-sm px-2 py-1 flex justify-center items-center rounded-xl "
+									class:px-4={section.columns === 4}
+									on:click={() => (section.columns = 4)}
+								>
+									4
+									{#if section.columns === 4}columns{/if}
+								</div>
+								<div
+									class="cursor-pointer bg-section text-sm px-2 py-1 flex justify-center items-center rounded-xl"
+									class:px-4={section.columns === 12}
+									on:click={() => (section.columns = 12)}
+								>
+									12
+									{#if section.columns === 12}columns{/if}
+								</div>
+							</div>
+
+							{#if section.renderType === 'grid' || section.renderType === 'pricing'}
+								{#if section.columns > 1}
+									<div class="mb-2 mt-4">
+										<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
+										{#if section.isMasonryGrid}
+											<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
+										{/if}
+									</div>
+								{/if}
+							{/if}
+						{/if}
+
+						{#if section.isFlexGrid}
+							<div class="mb-2 mt-4">
+								{#if section.isMasonryGrid}
+									<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
+								{/if}
+
+								<div>
+									<input class="mt-2" type="checkbox" bind:checked={section.isFlexWrap} /> Move items
+									to the next line if not fit
+								</div>
+							</div>
+						{/if}
+					</div>
+				</div>
+
+				<div class="mb-2 font-semibold mt-6 text-sm">Gap between columns</div>
+				<ToggleGroup
+					tabs={[
+						{
+							key: undefined,
+							name: 'Normal'
+						},
+						{
+							key: 'big',
+							name: 'Big'
+						},
+						{
+							key: 'huge',
+							name: 'Huge'
+						}
+					]}
+					bind:value={section.theme.columnsGap}
+				/>
+
+				<div class="mb-2 font-semibold mt-6 text-sm">Section width</div>
+				<ToggleGroup
+					tabs={[
+						{
+							key: undefined,
+							name: 'Container'
+						},
+						{
+							key: '1000px',
+							name: 'M'
+						},
+						{
+							key: '800px',
+							name: 'S'
+						},
+						{
+							key: '600px',
+							name: 'XS'
+						}
+					]}
+					bind:value={section.theme.maxSectionWidth}
+				/>
+
+				{#if section.columns > 1}
+					<div class="flex mt-4">
+						<input type="checkbox" class="mr-2" bind:checked={section.theme.isMobileInline} />
+						<div>Show items horizontally on mobile</div>
+					</div>
+				{/if}
+			</div>
+		{/if}
+
+		{#if _.includes(['grid', 'pricing', 'scrollingGallery'], section.renderType)}
+			<div class="_section my-4 !p-4">
+				<div
+					class="flex items-center justify-between w-full {isItemsSettingsCollapsed
+						? 'opacity-60 hover:opacity-100 py-2 cursor-pointer'
+						: ''}"
+					on:click={() => (isItemsSettingsCollapsed = !isItemsSettingsCollapsed)}
+				>
+					<div class="flex items-start">
+						<FeatherIcon class="mt-1" size={25} name="grid" />
+						<div class="ml-2">
+							<div class="font-bold">Inner items appearance</div>
+							<div class="text-sm">Default styles applied to each inner section item</div>
+						</div>
+					</div>
+
+					<div class="flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100">
+						<div class="flex items-center opacity-50 hover:opacity-100 cursor-pointer">
+							{#if isItemsSettingsCollapsed}
+								<FeatherIcon size="20" name="chevron-down" color="#333" />
+							{:else}
+								<FeatherIcon class="mr-2" size="15" name="eye-off" />
+							{/if}
+						</div>
+					</div>
+				</div>
+
+				{#if !isItemsSettingsCollapsed}
+					<div class="mt-8">
+						<div class="mb-4 mt-4">
+							<div class="mb-2 text-sm font-semibold mb-1">Section Items Type</div>
+
+							<ToggleGroup
+								class="mb-2"
+								bind:value={section.theme.itemsRenderType}
+								tabs={[
+									{
+										name: 'Default'
+									},
+									{
+										key: 'testimonial',
+										name: 'With avatar'
+									},
+									{
+										key: 'tag',
+										name: 'Tag'
+									}
+								]}
+							/>
+						</div>
+						{#if section.theme.itemsRenderType === 'testimonial'}
+							<input
+								type="checkbox"
+								class="mb-2"
+								bind:checked={section.theme.areItemsIncludeStars}
+							/> include stars
+						{/if}
+						<EditSectionItemsSettings bind:page bind:section bind:sectionItem={section} />
+					</div>
+				{/if}
+			</div>
 		{/if}
 
 		{#if !section.isRichText}
@@ -366,7 +607,7 @@
 
 								<EditSectionSettings
 									bind:section
-									bind:sectionItem={item}
+									bind:item
 									isShown
 									isWithButton={false}
 									bind:page

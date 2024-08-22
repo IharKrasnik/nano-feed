@@ -1,9 +1,6 @@
 <script>
 	import _ from 'lodash';
 	import Emoji from 'lib/components/Emoji.svelte';
-	import SvelteMarkdown from 'svelte-markdown';
-	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
-	import { fly, fade, slide } from 'svelte/transition';
 
 	export let section;
 	export let page;
@@ -30,7 +27,7 @@
 			<tr class="w-full">
 				{#each tableRow.columns as column, i}
 					<td
-						class="border-b border-slate/20 p-4 {i === 0
+						class="border-b p-4 {i === 0
 							? 'text-lg font-semibold'
 							: 'text-sm text-center font-medium'} {i === 1
 							? 'bg-[#e7fbf9] border-l-2 border-r-2 border-[#40E1CA]'
@@ -57,7 +54,7 @@
 	}
 
 	td {
-		border-bottom: 1px #e2e8f0 solid;
+		border-bottom: 1px var(--border-color) solid;
 		@apply py-6;
 	}
 </style>

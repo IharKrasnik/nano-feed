@@ -275,6 +275,16 @@
 
 		return pageTheme;
 	};
+
+	let selectedPayPer = section.pricingTabs?.[0]?.payPer;
+
+	const payPerLabels = {
+		week: 'weekly',
+		month: 'monthly',
+		quarter: 'quarterely',
+		'half-year': 'half-yearly',
+		year: 'yearly'
+	};
 </script>
 
 <!-- <div class="section-bg" /> -->
@@ -321,6 +331,9 @@
 			: ''}   {isCloneable
 			? 'group scale-90 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 hover:scale-100 transition'
 			: ''}"
+		style={section.theme?.maxSectionWidth
+			? `max-width: ${section.theme.maxSectionWidth}; margin: 0 auto;`
+			: ''}
 	>
 		{#if isCloneable}
 			<div
@@ -463,15 +476,18 @@
 						>
 							{#if section.title}
 								<h3
-									class="_section-title text-2xl mb-4 sm:mb-6 {page.theme.isTitlesHuge ||
-									section.theme?.isHugeTitle
+									class="_section-title text-2xl  {section.theme?.titleSize === 'small'
+										? 'sm:text-lg text-lg font-semibold'
+										: page.theme.isTitlesHuge || section.theme?.isHugeTitle
 										? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-medium'}`
 										: `${
 												isFooter ? 'sm:text-xl font-semibold' : 'sm:text-4-5xl font-semibold'
 										  }`} {page.theme.isTitlesLeft || section.theme?.isTitleLeft
 										? ''
 										: 'sm:mx-auto'}
-									{section.renderType === 'article' ? 'sm:max-w-[712px]' : 'sm:max-w-[768px]'}"
+									{section.renderType === 'article' ? 'sm:max-w-[712px]' : 'sm:max-w-[768px]'} {section.description
+										? 'mb-4 sm:mb-6'
+										: 'mb-4 sm:mb-12'}"
 								>
 									<ContentEditableIf
 										class="mb-2"
@@ -550,6 +566,37 @@
 									imageUrl={section.imageUrl}
 									imageBackgroundUrl={section.imageBackgroundUrl}
 								/>
+							</div>
+						{/if}
+
+						{#if section.renderType === 'pricing' && section.pricingTabs?.length}
+							<div class="flex justify-center sm:mb-8 mb-6">
+								<div
+									class="rounded-full px-1 py-1 text-sm _bg-section flex gap-x-2 items-center mx-auto"
+								>
+									{#each section.pricingTabs as pricingTab}
+										<div
+											class="px-4 py-1 cursor-pointer font-semibold flex items-center {pricingTab.payPer ===
+											selectedPayPer
+												? 'bg-white rounded-full'
+												: ' opacity-70'}"
+											on:click={() => {
+												selectedPayPer = pricingTab.payPer;
+											}}
+										>
+											Pay {payPerLabels[pricingTab.payPer]}
+											{#if pricingTab.hint}
+												<div
+													class="ml-2 text-xs font-medium  {pricingTab.payPer === selectedPayPer
+														? '_text-accent'
+														: ''}"
+												>
+													{pricingTab.hint}
+												</div>
+											{/if}
+										</div>
+									{/each}
+								</div>
 							</div>
 						{/if}
 					</div>
@@ -833,116 +880,119 @@
 								</div>
 							{/if}
 						{:else if section.columns === 1 && !section.isFlexGrid}
-							{#each section.items as item}
-								<div class="flex justify-between">
-									<svelte:element
-										this={item.interactiveRenderType || !item.url ? 'div' : 'a'}
-										href={item.interactiveRenderType || !item.url ? null : item.url}
-										target={item.url?.startsWith('http') ? '_blank' : null}
-										class="_section-item {item.theme?.maxWidth
-											? item.theme.maxWidth === '75p'
-												? 'sm:w-[75%] sm:mx-auto'
-												: item.theme.maxWidth === '50p'
-												? 'sm:w-[50%] sm:mx-auto'
-												: item.theme.maxWidth === '33p'
-												? 'sm:w-[33%] sm:mx-auto'
-												: 'w-full'
-											: 'w-full'} relative items-center {section.renderType === 'article' ||
-										section.streamSlug?.includes('-blog')
-											? '_article mb-8'
-											: 'mb-8 sm:mb-8'}
+							{#if section.theme?.itemsRenderType === 'testimonial'}
+								<RenderTestimonials {section} {page} />
+							{:else}
+								{#each section.items as item}
+									<div class="flex justify-between">
+										<svelte:element
+											this={item.interactiveRenderType || !item.url ? 'div' : 'a'}
+											href={item.interactiveRenderType || !item.url ? null : item.url}
+											target={item.url?.startsWith('http') ? '_blank' : null}
+											class="_section-item {item.theme?.maxWidth
+												? item.theme.maxWidth === '75p'
+													? 'sm:w-[75%] sm:mx-auto'
+													: item.theme.maxWidth === '50p'
+													? 'sm:w-[50%] sm:mx-auto'
+													: item.theme.maxWidth === '33p'
+													? 'sm:w-[33%] sm:mx-auto'
+													: 'w-full'
+												: 'w-full'} relative items-center {section.renderType === 'article' ||
+											section.streamSlug?.includes('-blog')
+												? '_article mb-8'
+												: 'mb-8 sm:mb-8'}
 							{section.renderType === 'changelog'
-											? '_transparent _no-padding sm:w-[600px] mx-auto'
-											: section.isFlexGrid
-											? `flex justify-start ${section.theme?.isTitleLeft} ${
-													section.theme?.isTitleLeft ? '' : 'sm:justify-center'
-											  } overflow-x-auto`
-											: `grid ${
-													section.theme?.columnsGap === 'big'
-														? 'sm:gap-20'
-														: section.theme?.columnsGap === 'huge'
-														? 'sm:gap-28'
-														: 'sm:gap-12'
-											  } sm:grid-cols-12 `} {item.className || ''} {item.isFeatured
-											? '_highlighted'
-											: ''} {item.theme?.isTransparent || section.theme?.areItemsTransparent
-											? '_transparent'
-											: ''} {item.theme?.isOppositeColors || section.theme?.areItemsOppositeColors
-											? '_bg-opposite'
-											: ''} {item.url && !item.interactiveRenderType
-											? ' hover:opacity-80 hover:!_border-accent'
-											: ''}"
-										style={`background-color: ${
-											section.theme?.areItemsTransparent
-												? 'none'
-												: item.theme?.backgroundColor ||
-												  section.theme?.itemsBackgroundColor ||
-												  page.theme?.sectionItemBackgroundColor ||
-												  page.parentPage?.theme?.sectionItemBackgroundColor ||
-												  'none'
-										};`}
-									>
-										{#if section.renderType === 'changelog'}
-											<div
-												class="sm:absolute sm:top-0 sm:left-0 sm:transform _translate-x-full-reverse overflow-auto"
-											>
-												<div class="sm:sticky sm:top-28 sm:mr-32 text-sm min-w-[200px] mb-2">
-													<time>
-														{moment(item.publishedOn).format('MMM DD YYYY')}
-													</time>
+												? '_transparent _no-padding sm:w-[600px] mx-auto'
+												: section.isFlexGrid
+												? `flex justify-start ${section.theme?.isTitleLeft} ${
+														section.theme?.isTitleLeft ? '' : 'sm:justify-center'
+												  } overflow-x-auto`
+												: `grid ${
+														section.theme?.columnsGap === 'big'
+															? 'sm:gap-x-20'
+															: section.theme?.columnsGap === 'huge'
+															? 'sm:gap-x-24'
+															: 'sm:gap-x-12'
+												  } sm:grid-cols-12 `} {item.className || ''} {item.isFeatured
+												? '_highlighted'
+												: ''} {item.theme?.isTransparent || section.theme?.areItemsTransparent
+												? '_transparent'
+												: ''} {item.theme?.isOppositeColors || section.theme?.areItemsOppositeColors
+												? '_bg-opposite'
+												: ''} {item.url && !item.interactiveRenderType
+												? ' hover:opacity-80 hover:!_border-accent'
+												: ''}"
+											style={`background-color: ${
+												section.theme?.areItemsTransparent
+													? 'none'
+													: item.theme?.backgroundColor ||
+													  section.theme?.itemsBackgroundColor ||
+													  page.theme?.sectionItemBackgroundColor ||
+													  page.parentPage?.theme?.sectionItemBackgroundColor ||
+													  'none'
+											};`}
+										>
+											{#if section.renderType === 'changelog'}
+												<div
+													class="sm:absolute sm:top-0 sm:left-0 sm:transform _translate-x-full-reverse overflow-auto"
+												>
+													<div class="sm:sticky sm:top-28 sm:mr-32 text-sm min-w-[200px] mb-2">
+														<time>
+															{moment(item.publishedOn).format('MMM DD YYYY')}
+														</time>
+													</div>
 												</div>
-											</div>
-										{/if}
-										<div
-											class="{section.renderType === 'changelog'
-												? 'col-span-12'
-												: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
+											{/if}
+											<div
+												class="{section.renderType === 'changelog'
+													? 'col-span-12'
+													: `sm:col-span-${item.innerColSpan || (item.imageUrl ? 6 : 12)}`}
 									
 									{section.theme?.areImagesReversed || item.theme?.isReversedImage ? 'order-last' : ''}
 									{(!item.innerColSpan || item.innerColSpan === 12) && item.imageUrl ? '' : ''}"
-										>
-											<div>
-												<div
-													class="{section.renderType === 'article'
-														? 'sm:px-0'
-														: ` _borderless p-4 ${
-																section.theme?.areItemsTransparent || item.theme?.isTransparent
-																	? `sm:pl-0 sm:pr-8 sm:py-8`
-																	: 'sm:p-8'
-														  }`}
+											>
+												<div>
+													<div
+														class="{section.renderType === 'article'
+															? 'sm:px-0'
+															: ` _borderless p-4 ${
+																	section.theme?.areItemsTransparent || item.theme?.isTransparent
+																		? `sm:pl-0 sm:pr-8 sm:py-8`
+																		: 'sm:p-8'
+															  }`}
 													{section.renderType === 'changelog' ? '_transparent _no-padding' : ''}
 													col-span-1"
-												>
-													<!-- {#if item.emoji !== '✨'}
+													>
+														<!-- {#if item.emoji !== '✨'}
 												<Emoji bind:emoji={item.emoji} />
 												{/if} -->
-													{#if item.emoji}
-														<div class="mr-2 mb-4 ">
-															<Emoji
-																bind:emoji={item.emoji}
-																bind:color={item.iconColor}
-																bind:bgColor={item.emojiBgColor}
-																class="rounded-full text-2xl"
-																width={item.theme?.emojiSizePx || 30}
-																mobileWidth={26}
-																theme={page.parentPage?.theme?.theme ||
-																	page?.theme?.theme ||
-																	'light'}
-															/>
-														</div>
-													{/if}
+														{#if item.emoji}
+															<div class="mr-2 mb-4 ">
+																<Emoji
+																	bind:emoji={item.emoji}
+																	bind:color={item.iconColor}
+																	bind:bgColor={item.emojiBgColor}
+																	class="rounded-full text-2xl"
+																	width={item.theme?.emojiSizePx || 30}
+																	mobileWidth={26}
+																	theme={page.parentPage?.theme?.theme ||
+																		page?.theme?.theme ||
+																		'light'}
+																/>
+															</div>
+														{/if}
 
-													<div
-														class="_item-title {section.theme?.itemsTitleSize === 'large'
-															? '_big'
-															: section.theme?.itemsTitleSize === 'small'
-															? ''
-															: '_large'} 
+														<div
+															class="_item-title {section.theme?.itemsTitleSize === 'large'
+																? '_big'
+																: section.theme?.itemsTitleSize === 'small'
+																? ''
+																: '_large'} 
 															mb-4"
-													>
-														<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
-													</div>
-													<!-- {#if item.url && !item.interactiveRenderType}
+														>
+															<ContentEditableIf bind:innerHTML={item.title} condition={isEdit} />
+														</div>
+														<!-- {#if item.url && !item.interactiveRenderType}
 														<a
 															class="_item-title _large block mb-4"
 															href={item.url || ''}
@@ -956,192 +1006,194 @@
 														</div>
 													{/if} -->
 
-													{#if section.renderType === 'changelog'}
-														<RenderUrlWithBackground
-															isIframeFallback={false}
-															aspectRatio={section.theme?.imageAspectRatio ||
-																item.theme?.imageAspectRatio}
-															class="my-4"
-															urlImgClass="object-cover {item.theme?.isTransparent ||
-															section.theme?.areItemsTransparent
-																? 'rounded-lg'
-																: section.theme?.areImagesReversed || item.theme?.isReversedImage
-																? 'rounded-l-lg'
-																: 'rounded-r-lg'}"
-															imageUrl={item.imageUrl}
-															imageBackgroundUrl={item.imageBackgroundUrl}
-														/>
-													{/if}
-
-													{#if isShowAuthor}
-														<div>
-															<!-- <ArticleAuthorLabel class={`my-2 `} bind:page /> -->
-														</div>
-													{/if}
-
-													{#if section.renderType !== 'pricing'}
-														<ContentEditableIf
-															class="_item-description whitespace-pre-wrap {section.theme
-																?.itemsTitleSize === 'large'
-																? '_large font-medium'
-																: ''}"
-															bind:innerHTML={item.description}
-															condition={isEdit}
-														/>
-													{/if}
-
-													{#if item.tagsStr}
-														<div class="my-4 mt-6 flex flex-wrap gap-2">
-															{#each item.tagsStr.split(',') as tag}
-																<div
-																	class="flex items-center px-3 py-1 text-sm opacity-80 rounded-full inline ring {page
-																		.parentPage?.theme?.theme || page.theme?.theme === 'dark'
-																		? 'ring-zinc-900'
-																		: 'ring-zinc-100'} bg-black"
-																	style={page.parentPage?.theme?.theme ||
-																	page.theme?.theme === 'dark'
-																		? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
-																		: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
-																>
-																	{#if !section.isDatabase}
-																		{#key item.theme}
-																			<Emoji
-																				class="block mr-2"
-																				theme={getEmojiTheme({ item })}
-																				width={14}
-																				emoji={item.emoji || 'feather:check'}
-																			/>
-																		{/key}
-																	{/if}
-																	{tag}
-																</div>
-															{/each}
-														</div>
-													{/if}
-
-													{#if item.pricing?.amount}
-														<div class="flex items-end mt-4 mb-4">
-															<div class="text-5xl font-bold mr-2">
-																{item.pricing.amount
-																	? toDollars(item.pricing.amount * 100)
-																	: 'Free'}
-															</div>
-															{#if item.pricing.amount}
-																<div class="text-lg">
-																	/{item.pricing.per}
-																</div>
-															{/if}
-														</div>
-														<div class="mb-8 opacity-70">
-															{@html item.description}
-														</div>
-													{/if}
-
-													{#if item.pricing?.benefitsStr}
-														<div class="mt-4 mb-8 _section-description">
-															{#each item.pricing.benefitsStr.split('\n') as benefit}
-																<div class="my-2 flex items-center">
-																	<Emoji
-																		theme={page.parentPage?.theme?.theme ||
-																			page?.theme?.theme ||
-																			'light'}
-																		isOppositeColors={item.theme?.isOppositeColors ||
-																			section.theme?.areItemsOppositeColors}
-																		emoji={section.benefitsEmoji || '✅'}
-																		class="mr-2 opacity-80"
-																	/>
-																	{benefit}
-																</div>
-															{/each}
-														</div>
-													{:else if item.pricing?.benefits}
-														<div class="mb-4">
-															{#each item.pricing.benefits as benefit}
-																<div class="my-2">
-																	<span class="inline-block mr-1">✅</span>
-																	{benefit.name}
-																</div>
-															{/each}
-														</div>
-													{/if}
-
-													{#if item.interactiveRenderType}
-														<div class="mt-4 pt-1">
-															<RenderInteractiveOptions
-																bind:sectionItem={item}
-																parentSectionId={section.id}
-																class={`${item.pricing ? 'w-full' : ''}`}
-																bind:page
-																itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
-																bind:isEdit
-																bind:isEmbed
+														{#if section.renderType === 'changelog'}
+															<RenderUrlWithBackground
+																isIframeFallback={false}
+																aspectRatio={section.theme?.imageAspectRatio ||
+																	item.theme?.imageAspectRatio}
+																class="my-4"
+																urlImgClass="object-cover {item.theme?.isTransparent ||
+																section.theme?.areItemsTransparent
+																	? 'rounded-lg'
+																	: section.theme?.areImagesReversed || item.theme?.isReversedImage
+																	? 'rounded-l-lg'
+																	: 'rounded-r-lg'}"
+																imageUrl={item.imageUrl}
+																imageBackgroundUrl={item.imageBackgroundUrl}
 															/>
-														</div>
-													{/if}
+														{/if}
 
-													{#if item.syncPage?.metadata?.fullAmount}
-														<hr class="w-full my-6 opacity-20" />
-
-														<div class="flex items-end mt-6 mb-4 ">
-															<div class="text-base sm:text-xl font-bold mr-2">
-																{item.syncPage?.metadata?.fullAmount
-																	? toDollars(item.syncPage?.metadata?.fullAmount)
-																	: 'Free'}
+														{#if isShowAuthor}
+															<div>
+																<!-- <ArticleAuthorLabel class={`my-2 `} bind:page /> -->
 															</div>
-															{#if item.syncPage?.metadata?.payPer}
-																<div class="opacity-70 text-sm sm:text-lg">
-																	/ {item.syncPage?.metadata?.payPer}
-																</div>
-															{/if}
-														</div>
-													{/if}
+														{/if}
 
-													{#if section.isBlog}
-														<div class="text-sm opacity-70 mt-4">
-															{moment(item.publishedOn).format('MMM DD, YYYY')}
-														</div>
-													{/if}
+														{#if section.renderType !== 'pricing'}
+															<ContentEditableIf
+																class="_item-description whitespace-pre-wrap {section.theme
+																	?.itemsTitleSize === 'large'
+																	? '_large font-medium'
+																	: ''}"
+																bind:innerHTML={item.description}
+																condition={isEdit}
+															/>
+														{/if}
+
+														{#if item.tagsStr}
+															<div class="my-4 mt-6 flex flex-wrap gap-2">
+																{#each item.tagsStr.split(',') as tag}
+																	<div
+																		class="flex items-center px-3 py-1 text-sm opacity-80 rounded-full inline ring {page
+																			.parentPage?.theme?.theme || page.theme?.theme === 'dark'
+																			? 'ring-zinc-900'
+																			: 'ring-zinc-100'} bg-black"
+																		style={page.parentPage?.theme?.theme ||
+																		page.theme?.theme === 'dark'
+																			? 'background: rgba(255,255,255,.1); border: 1px rgba(255, 255,255, .3) solid;'
+																			: 'background: rgba(0,0,0,.1); border: 1px rgba(0, 0, 0, .3) solid;'}
+																	>
+																		{#if !section.isDatabase}
+																			{#key item.theme}
+																				<Emoji
+																					class="block mr-2"
+																					theme={getEmojiTheme({ item })}
+																					width={14}
+																					emoji={item.emoji || 'feather:check'}
+																				/>
+																			{/key}
+																		{/if}
+																		{tag}
+																	</div>
+																{/each}
+															</div>
+														{/if}
+
+														{#if item.pricing?.amount}
+															<div class="flex items-end mt-4 mb-4">
+																<div class="text-5xl font-bold mr-2">
+																	{item.pricing.amount
+																		? toDollars(item.pricing.amount * 100)
+																		: 'Free'}
+																</div>
+																{#if item.pricing.amount}
+																	<div class="text-lg">
+																		/{item.pricing.per}
+																	</div>
+																{/if}
+															</div>
+															<div class="mb-8 opacity-70">
+																{@html item.description}
+															</div>
+														{/if}
+
+														{#if item.pricing?.benefitsStr}
+															<div class="mt-4 mb-8 _section-description">
+																{#each item.pricing.benefitsStr.split('\n') as benefit}
+																	<div class="my-2 flex items-center">
+																		<Emoji
+																			theme={page.parentPage?.theme?.theme ||
+																				page?.theme?.theme ||
+																				'light'}
+																			isOppositeColors={item.theme?.isOppositeColors ||
+																				section.theme?.areItemsOppositeColors}
+																			emoji={section.benefitsEmoji || '✅'}
+																			class="mr-2 opacity-80"
+																		/>
+																		{benefit}
+																	</div>
+																{/each}
+															</div>
+														{:else if item.pricing?.benefits}
+															<div class="mb-4">
+																{#each item.pricing.benefits as benefit}
+																	<div class="my-2">
+																		<span class="inline-block mr-1">✅</span>
+																		{benefit.name}
+																	</div>
+																{/each}
+															</div>
+														{/if}
+
+														{#if item.interactiveRenderType}
+															<div class="mt-4 pt-1">
+																<RenderInteractiveOptions
+																	bind:sectionItem={item}
+																	parentSectionId={section.id}
+																	class={`${item.pricing ? 'w-full' : ''}`}
+																	bind:page
+																	itemClass={`${true ? 'p-2 mr-4' : 'p-4 mr-4'}`}
+																	bind:isEdit
+																	bind:isEmbed
+																/>
+															</div>
+														{/if}
+
+														{#if item.syncPage?.metadata?.fullAmount}
+															<hr class="w-full my-6 opacity-20" />
+
+															<div class="flex items-end mt-6 mb-4 ">
+																<div class="text-base sm:text-xl font-bold mr-2">
+																	{item.syncPage?.metadata?.fullAmount
+																		? toDollars(item.syncPage?.metadata?.fullAmount)
+																		: 'Free'}
+																</div>
+																{#if item.syncPage?.metadata?.payPer}
+																	<div class="opacity-70 text-sm sm:text-lg">
+																		/ {item.syncPage?.metadata?.payPer}
+																	</div>
+																{/if}
+															</div>
+														{/if}
+
+														{#if section.isBlog}
+															<div class="text-sm opacity-70 mt-4">
+																{moment(item.publishedOn).format('MMM DD, YYYY')}
+															</div>
+														{/if}
+													</div>
 												</div>
 											</div>
-										</div>
 
-										{#if section.renderType !== 'changelog'}
-											<div
-												class="
+											{#if section.renderType !== 'changelog'}
+												<div
+													class="
 									{`sm:col-span-${
-													!item.innerColSpan
-														? 6
-														: 12 - (item.title || item.description ? item.innerColSpan || 6 : 0) ||
-														  12
-												}`} 
+														!item.innerColSpan
+															? 6
+															: 12 -
+																	(item.title || item.description ? item.innerColSpan || 6 : 0) ||
+															  12
+													}`} 
 									
 									{section.theme?.areImagesReversed ||
-												item.theme?.isReversedImage ||
-												section.renderType === 'changelog'
-													? 'order-first'
-													: ''}"
-											>
-												<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
+													item.theme?.isReversedImage ||
+													section.renderType === 'changelog'
+														? 'order-first'
+														: ''}"
+												>
+													<!-- <RenderUrl imgClass="object-cover rounded-b-lg" url={item.imageUrl} /> -->
 
-												<RenderUrlWithBackground
-													aspectRatio={section.theme?.imageAspectRatio ||
-														item.theme?.imageAspectRatio}
-													urlImgClass="mx-auto object-cover {item.theme?.isTransparent ||
-													section.theme?.areItemsTransparent
-														? 'rounded-lg'
-														: section.theme?.areImagesReversed ||
-														  item.theme?.isReversedImage ||
-														  section.renderType === 'changelog'
-														? 'rounded-l-lg'
-														: 'rounded-r-lg'}"
-													imageUrl={item.imageUrl}
-													imageBackgroundUrl={item.imageBackgroundUrl}
-												/>
-											</div>
-										{/if}
-									</svelte:element>
-								</div>
-							{/each}
+													<RenderUrlWithBackground
+														aspectRatio={section.theme?.imageAspectRatio ||
+															item.theme?.imageAspectRatio}
+														urlImgClass="mx-auto object-cover {item.theme?.isTransparent ||
+														section.theme?.areItemsTransparent
+															? 'rounded-lg'
+															: section.theme?.areImagesReversed ||
+															  item.theme?.isReversedImage ||
+															  section.renderType === 'changelog'
+															? 'rounded-l-lg'
+															: 'rounded-r-lg'}"
+														imageUrl={item.imageUrl}
+														imageBackgroundUrl={item.imageBackgroundUrl}
+													/>
+												</div>
+											{/if}
+										</svelte:element>
+									</div>
+								{/each}
+							{/if}
 						{:else}
 							<div
 								class=" {section.theme?.columnsGap === 'big'
@@ -1157,14 +1209,16 @@
 									: ''} {section.isMasonryGrid
 									? `sm:columns-${section.columns}`
 									: section.isFlexGrid
-									? `flex justify-start ${section.theme?.isTitleLeft} ${
-											section.theme?.isTitleLeft ? '' : 'sm:justify-center'
-									  } ${section.isFlexWrap ? 'flex-wrap' : ''} overflow-x-auto`
+									? `flex  ${section.theme?.isTitleLeft} ${
+											section.theme?.isTitleLeft
+												? 'justify-start'
+												: 'justify-center sm:justify-center'
+									  } ${section.isFlexWrap ? 'flex-wrap' : ''} items-center overflow-x-auto`
 									: `${section.theme?.isMobileInline ? 'flex sm:grid' : 'grid'} sm:grid-cols-${
 											section.columns
 									  } `} {section.items[0]?.theme?.isTransparent ? 'mt-8' : ''}"
 							>
-								{#each section.items || [] as item, i (item.id)}
+								{#each section.items.filter( (i) => (selectedPayPer ? i.pricing?.per === 'one-time' || i.pricing?.per === selectedPayPer : true) ) || [] as item, i (item.id)}
 									{#key $selectedSectionItem?.id}
 										{#if $selectedSectionItem?.id === item.id}
 											<RenderSectionItem

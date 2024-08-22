@@ -45,6 +45,38 @@
 	};
 
 	let isSelectBackgroundModalShown;
+
+	const updatePricingTabs = () => {
+		let pricingsPer = _.uniqBy(
+			section.items.filter((i) => i.pricing.per !== 'one-time'),
+			(i) => i.pricing.per
+		).map((p) => p.pricing.per);
+
+		if (!section.pricingTabs) {
+			section.pricingTabs = [];
+		}
+
+		_.each(pricingsPer, (pricingPer) => {
+			if (!section.pricingTabs.find((t) => t.payPer === pricingPer)) {
+				section.pricingTabs.push({ payPer: pricingPer, hint: null });
+			}
+		});
+
+		const sortOrder = ['week', 'month', 'quarter', 'half-year', 'year'];
+
+		section.pricingTabs = _.sortBy(
+			section.pricingTabs.filter((tab) => {
+				if (!_.includes(pricingsPer, tab.payPer)) {
+					return false;
+				}
+				return true;
+			}),
+			(a) => {
+				return sortOrder.indexOf(a.payPer);
+			}
+		);
+		debugger;
+	};
 </script>
 
 {#if isSelectBackgroundModalShown}
@@ -164,6 +196,10 @@
 		data-placeholder={section.renderType === 'faq' ? 'Answer' : 'Description'}
 	/>
 
+	{#if section.theme?.itemsRenderType === 'testimonial' && section.id !== item.id}
+		<input class="mb-4 w-full" bind:value={item.label} type="text" placeholder="CEO, Clipwing" />
+	{/if}
+
 	{#if item.id !== section.id && !_.includes(['callout', 'faq'], section.renderType)}
 		<div class="mb-4">
 			{#if isAddingTags || item.tagsStr}
@@ -198,16 +234,28 @@
 
 	{#if section.renderType === 'pricing' && item.pricing}
 		{#if item.pricing.isSlider}
-			<select class="w-full" bind:value={item.pricing.per}>
+			<select class="w-full" bind:value={item.pricing.per} on:change={updatePricingTabs}>
 				<option value="one-time">One-Time</option>
 				<option value="week">Week</option>
 				<option value="month">Month</option>
 				<option value="quarter">Quarter</option>
-				<option value="half-yearly">Half-Yearly</option>
+				<option value="half-year">Half-Yearly</option>
 				<option value="year">Year</option>
 			</select>
 
-			<div class="mt-4 text-sm opacity-70">{`{CreditsCount},{Price},{PaymentUrl}`}</div>
+			<div class="w-full flex justify-between mt-4">
+				<div class="text-xs opacity-70">{`{CreditsCount},{Price},{PaymentUrl}`}</div>
+				<div class="flex justify-end">
+					<div
+						class="text-xs cursor-pointer hover:text-red-800"
+						on:click={() => {
+							item.pricing.isSlider = !item.pricing.isSlider;
+						}}
+					>
+						remove price slider
+					</div>
+				</div>
+			</div>
 
 			<textarea
 				class="w-full"
@@ -215,17 +263,30 @@
 				placeholder="100;$21.58;https://buy.stripe.com/12345&#10;200;$39.78;https://buy.stripe.com/23456"
 				bind:value={item.pricing.pricesStr}
 				on:change={(evt) => {
-					item.pricing.prices = evt.target?.value.split('\n').map((lines) => {
-						let splits = lines.split(';');
-
-						return {
-							creditsAmount: parseInt(splits[0]),
-							amount: parseInt(splits[1].replace('$', '')) * 100,
-							link: splits[2].startsWith('http') ? splits[2] : null
-						};
-					});
+					item.pricing.prices = evt.target?.value
+						.split('\n')
+						.filter((l) => l)
+						.map((lines) => {
+							let splits = lines.split(';');
+							return {
+								creditsAmount: parseInt(splits[0]),
+								amount: parseInt(splits[1].replace('$', '')),
+								link: splits[2].startsWith('http') ? splits[2] : null,
+								benefitsStr: splits[3]
+							};
+						});
 				}}
 			/>
+
+			<div class="w-full flex gap-x-2 items-center mt-4">
+				<div class="text-sm shrink-0 opacity-70">Credits label</div>
+				<input
+					class="w-full"
+					type="text"
+					bind:value={item.pricing.creditsLabel}
+					placeholder="credits"
+				/>
+			</div>
 			<!-- 
 			{#each item.pricing.prices as price}
 				<input class="mr-2" type="number" bind:value={price.creditAmount} placeholder="" />
@@ -256,18 +317,18 @@
 				<div>
 					<input class="mr-2" type="number" bind:value={item.pricing.amount} placeholder="29.99" />
 				</div>
-				<select class="w-full" bind:value={item.pricing.per}>
+				<select class="w-full" bind:value={item.pricing.per} on:change={updatePricingTabs}>
 					<option value="one-time">One-Time</option>
 					<option value="week">Week</option>
 					<option value="month">Month</option>
 					<option value="quarter">Quarter</option>
-					<option value="half-yearly">Half-Yearly</option>
+					<option value="half-year">Half-Yearly</option>
 					<option value="year">Year</option>
 				</select>
 			</div>
 			<div class="flex justify-end">
 				<div
-					class="text-xs cursor-pointer mt-1 mb-[-16px]"
+					class="text-xs cursor-pointer mt-1 mb-[-16px]  hover:text-green-800"
 					on:click={() => {
 						item.pricing.isSlider = !item.pricing.isSlider;
 					}}
@@ -277,7 +338,8 @@
 			</div>
 		{/if}
 
-		<div class="mt-4 text-sm mb-2">Benefits (separate by new line)</div>
+		<div class="mt-4 text-sm">Benefits</div>
+		<div class="text-xs mb-2">Separate by a new line. Start with '-' to exclude</div>
 		<textarea
 			class="w-full"
 			placeholder={`Benefit 1 
@@ -344,7 +406,7 @@ Benefit 3`}
 								}}
 								class:font-bold={!section.imgMaxWidth}
 							>
-								Stretch
+								Auto
 							</div>
 
 							<div

@@ -555,7 +555,7 @@
 							{sectionItem.callToActionText || 'Learn More →'}
 						{:else}
 							<button
-								class="relative overflow-hidden shadow hover:shadow-md  flex justify-center items-center {clazz?.includes(
+								class="relative overflow-hidden flex justify-center items-center {clazz?.includes(
 									'w-full'
 								)
 									? 'w-full'
@@ -677,7 +677,7 @@
 	}
 
 	a._islarge {
-		font-size: 18px;
+		font-size: 17px;
 	}
 
 	._isnormal._link {
@@ -685,7 +685,7 @@
 	}
 
 	a._ishuge {
-		font-size: 20px;
+		font-size: 18px;
 	}
 
 	a._islarge button {

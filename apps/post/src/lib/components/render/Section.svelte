@@ -54,7 +54,10 @@
 
 			{#if section.title}
 				<h2
-					class="_section-title sm:text-5xl text-3xl font-medium mb-4 sm:max-w-[750px] sm:mx-auto"
+					class="_section-title  font-medium mb-4 sm:max-w-[750px] sm:mx-auto {section.theme
+						.titleSize === 'small'
+						? 'sm:text-lg text-lg'
+						: 'sm:text-5xl text-3xl'} "
 				>
 					{@html section.title}
 				</h2>

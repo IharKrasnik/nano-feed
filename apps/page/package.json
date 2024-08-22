@@ -46,7 +46,7 @@
 		"satori-html": "^0.3.2",
 		"svelte-awesome-color-picker": "^2.4.8",
 		"svelte-confetti-explosion": "^0.4.0",
-		"svelte-markdown": "^0.2.3",
+		"toolcool-range-slider": "^4.0.28",
 		"uuid": "^9.0.0"
 	}
 }

@@ -20,7 +20,7 @@
 	import trackClick from 'lib/services/trackClick';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
-	import RangeSlider from 'lib-render/components/RandgeSlider.svelte';
+	import RangeSlider from '../RangeSlider.svelte';
 
 	let clazz = '';
 	export { clazz as class };
@@ -240,8 +240,8 @@
 									section.columns > 3 ? 'sm:px-5' : section.columns > 2 ? 'sm:px-6' : 'sm:px-8'
 							  } ${
 									item.renderType === 'tag' || section.theme?.itemsRenderType === 'tag'
-										? 'sm:py-4'
-										: 'sm:py-6'
+										? 'sm:_py-4'
+										: 'sm:_py-6'
 							  }`} text-left self-center order-none-off {section.columns == 1 && i % 2 === 1
 							? 'sm:order-last-off'
 							: ''} {section.columns === 1 &&
@@ -253,76 +253,154 @@
 							"
 						class:order-last-off={i % 2 === 0}
 					>
-						<div class="max-w-[600px]">
+						{#if section.theme?.areItemsIncludeStars}
+							<div class="flex mb-4">
+								{#each _.range(0, 5) as repeat}
+									<svg
+										width="15"
+										height="15"
+										viewBox="0 0 15 15"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+										><path
+											d="M7.22303 0.665992C7.32551 0.419604 7.67454 0.419604 7.77702 0.665992L9.41343 4.60039C9.45663 4.70426 9.55432 4.77523 9.66645 4.78422L13.914 5.12475C14.18 5.14607 14.2878 5.47802 14.0852 5.65162L10.849 8.42374C10.7636 8.49692 10.7263 8.61176 10.7524 8.72118L11.7411 12.866C11.803 13.1256 11.5206 13.3308 11.2929 13.1917L7.6564 10.9705C7.5604 10.9119 7.43965 10.9119 7.34365 10.9705L3.70718 13.1917C3.47945 13.3308 3.19708 13.1256 3.25899 12.866L4.24769 8.72118C4.2738 8.61176 4.23648 8.49692 4.15105 8.42374L0.914889 5.65162C0.712228 5.47802 0.820086 5.14607 1.08608 5.12475L5.3336 4.78422C5.44573 4.77523 5.54342 4.70426 5.58662 4.60039L7.22303 0.665992Z"
+											fill={page.theme.accentColor}
+										/></svg
+									>
+								{/each}
+							</div>
+						{/if}
+
+						<div
+							class="max-w-[600px] flex flex-col {section.theme?.itemsRenderType === 'tag' ||
+							section.theme?.itemsRenderType === 'testimonial'
+								? ''
+								: 'gap-y-3'} {section.theme?.itemsRenderType === 'testimonial'
+								? '_testimonial'
+								: ''}"
+						>
 							{#if item.title || item.emoji || section.theme?.itemsDefaultEmoji}
-								{#if item.renderType === 'testimonial' || section.theme?.itemsRenderType === 'testimonial'}
-									<div class="flex items-center mb-3">
-										<div class="mr-2">
-											<Emoji
-												emoji={item.emoji || section.theme?.itemsDefaultEmoji}
-												color={item.iconColor || section.theme?.itemsIconColor}
-												bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
-												class="rounded-full text-3xl"
-												width={48}
-												alt={'Testimonial user avatar'}
-												theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-											/>
-										</div>
-										<div>
-											<h3 class="_item-description" style="font-weight: bold;">
-												<ContentEditableIf
-													class=""
-													bind:innerHTML={item.title}
-													condition={isEdit}
-												/>
-											</h3>
-											{#if item.label}
-												<div class="_item-description">
-													<ContentEditableIf
-														class=""
-														bind:innerHTML={item.label}
-														condition={isEdit}
-													/>
-												</div>
-											{/if}
-										</div>
-									</div>
-								{:else}
-									{#if (item.emoji || section.theme?.itemsDefaultEmoji) && !item.theme?.isIconLeft && !section.theme?.areIconsLeft && item.renderType !== 'tag' && section.theme?.itemsRenderType !== 'tag'}
+								<div>
+									{#if item.renderType === 'testimonial' || section.theme?.itemsRenderType === 'testimonial'}
 										<div
-											class="{emojiStyle[section.columns]} _section-img mr-2 mb-4 {item.theme
-												?.align === 'center' || section.theme?.itemsAlign === 'center'
-												? 'text-center'
-												: ''}"
+											class="flex items-center {section.theme.areTitlesReversed
+												? 'order-last mt-3'
+												: 'mb-3'}"
 										>
-											{#key item.theme?.emojiSizePx + section.theme?.itemsEmojiSizePx}
+											<div class="mr-2 flex items-center">
 												<Emoji
 													emoji={item.emoji || section.theme?.itemsDefaultEmoji}
 													color={item.iconColor || section.theme?.itemsIconColor}
 													bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
-													class="text-2xl"
-													width={'auto'}
-													height={item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx || 30}
-													mobileWidth={26}
+													class="rounded-full text-3xl"
+													width={48}
+													alt={'Testimonial user avatar'}
 													theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 												/>
-											{/key}
+											</div>
+											<div>
+												<h3 class="_item-description" style="font-weight: bold;">
+													<ContentEditableIf
+														class=""
+														bind:innerHTML={item.title}
+														condition={isEdit}
+													/>
+												</h3>
+
+												{#if item.label}
+													<div class="_color-item-description text-xs">
+														<ContentEditableIf
+															class=""
+															bind:innerHTML={item.label}
+															condition={isEdit}
+														/>
+													</div>
+												{/if}
+											</div>
 										</div>
+									{:else}
+										{#if (item.emoji || section.theme?.itemsDefaultEmoji) && !item.theme?.isIconLeft && !section.theme?.areIconsLeft && item.renderType !== 'tag' && section.theme?.itemsRenderType !== 'tag'}
+											<div
+												class="{emojiStyle[section.columns]} _section-img mr-2 mb-3 {item.theme
+													?.align === 'center' || section.theme?.itemsAlign === 'center'
+													? 'text-center'
+													: ''}"
+											>
+												{#key item.theme?.emojiSizePx + section.theme?.itemsEmojiSizePx}
+													<Emoji
+														emoji={item.emoji || section.theme?.itemsDefaultEmoji}
+														color={item.iconColor || section.theme?.itemsIconColor}
+														bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
+														class="text-2xl"
+														width={'auto'}
+														height={item.theme?.emojiSizePx ||
+															section.theme?.itemsEmojiSizePx ||
+															30}
+														mobileWidth={26}
+														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+													/>
+												{/key}
+											</div>
+										{/if}
+
+										{#if !item.theme?.isInlineTitle && !section.theme?.areInlineTitles}
+											<div
+												class="flex {item.description
+													? page?.theme?.containerWidth
+														? 'mb-2'
+														: 'mb-2 sm:mb-4'
+													: ''} items-center {item.theme?.align === 'center' ||
+												section.theme?.itemsAlign === 'center'
+													? 'justify-center'
+													: ''}"
+											>
+												{#if (item.emoji || section.theme?.itemsDefaultEmoji) && (item.theme?.isIconLeft || section.theme?.areIconsLeft || item.renderType === 'tag')}
+													<div class="{emojiStyle[section.columns]} flex _section-img mr-2">
+														{#key item.theme?.emojiSizePx + section.theme?.itemsEmojiSizePx}
+															<Emoji
+																emoji={item.emoji || section.theme?.itemsDefaultEmoji}
+																color={item.iconColor || section.theme?.itemsIconColor}
+																bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
+																class="text-xl"
+																width={item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx
+																	? item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx
+																	: item.theme?.titleSize === 'small' ||
+																	  section.theme?.itemsTitleSize === 'small'
+																	? 16
+																	: item.theme?.titleSize === 'large' ||
+																	  section.theme?.itemsTitleSize === 'large'
+																	? 28
+																	: 20}
+																theme={page.parentPage?.theme?.theme ||
+																	page?.theme?.theme ||
+																	'light'}
+															/>
+														{/key}
+													</div>
+												{/if}
+												<h3 class="{headerTextStyle(item)[section.columns]} _item-title ">
+													<ContentEditableIf
+														class={item.theme?.align === 'center' ||
+														section.theme?.itemsAlign === 'center'
+															? 'text-center'
+															: ''}
+														bind:innerHTML={item.title}
+														condition={isEdit}
+													/>
+												</h3>
+											</div>
+										{/if}
 									{/if}
 
-									{#if !item.theme?.isInlineTitle && !section.theme?.areInlineTitles}
+									{#if (item.description || item.title || item.icon) && !item.pricing}
 										<div
-											class="flex {item.description
-												? page?.theme?.containerWidth
-													? 'mb-2'
-													: 'mb-2 sm:mb-4'
-												: ''} items-center {item.theme?.align === 'center' ||
-											section.theme?.itemsAlign === 'center'
-												? 'justify-center'
+											class="{descriptionStyle[section.columns]}  whitespace-pre-wrap  {item.theme
+												?.align === 'center' || section.theme?.itemsAlign === 'center'
+												? 'text-center'
 												: ''}"
 										>
-											{#if (item.emoji || section.theme?.itemsDefaultEmoji) && (item.theme?.isIconLeft || section.theme?.areIconsLeft || item.renderType === 'tag')}
-												<div class="{emojiStyle[section.columns]} flex _section-img mr-2">
+											{#if item.title && (item.theme?.isInlineTitle || section.theme?.areInlineTitles)}
+												{#if (item.emoji || section.theme?.itemsDefaultEmoji) && (item.theme.isIconLeft || section.theme?.areIconsLeft || item.renderType === 'tag')}
 													{#key item.theme?.emojiSizePx + section.theme?.itemsEmojiSizePx}
 														<Emoji
 															emoji={item.emoji || section.theme?.itemsDefaultEmoji}
@@ -339,62 +417,20 @@
 																? 28
 																: 20}
 															theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-														/>
-													{/key}
-												</div>
-											{/if}
-											<h3 class="{headerTextStyle(item)[section.columns]} _item-title ">
-												<ContentEditableIf
-													class={item.theme?.align === 'center' ||
-													section.theme?.itemsAlign === 'center'
-														? 'text-center'
-														: ''}
+														/>{/key}{/if}<ContentEditableIf
+													class="_inline_title _item-title sm:inline-block mb-1 font-medium"
 													bind:innerHTML={item.title}
 													condition={isEdit}
-												/>
-											</h3>
+												/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
+												class="_item-description {section.isDatabase
+													? '_line-clamp-4 hover:line-clamp-5'
+													: `${section.theme?.areInlineTitles ? 'inline' : 'inline-block'}`}"
+												bind:innerHTML={item.description}
+												condition={isEdit}
+											/>
 										</div>
 									{/if}
-								{/if}
-
-								{#if (item.description || item.title || item.icon) && !item.pricing}
-									<div
-										class="{descriptionStyle[section.columns]}  whitespace-pre-wrap  {item.theme
-											?.align === 'center' || section.theme?.itemsAlign === 'center'
-											? 'text-center'
-											: ''}"
-									>
-										{#if item.title && (item.theme?.isInlineTitle || section.theme?.areInlineTitles)}
-											{#if (item.emoji || section.theme?.itemsDefaultEmoji) && (item.theme.isIconLeft || section.theme?.areIconsLeft || item.renderType === 'tag')}
-												{#key item.theme?.emojiSizePx + section.theme?.itemsEmojiSizePx}
-													<Emoji
-														emoji={item.emoji || section.theme?.itemsDefaultEmoji}
-														color={item.iconColor || section.theme?.itemsIconColor}
-														bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
-														class="text-xl"
-														width={item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx
-															? item.theme?.emojiSizePx || section.theme?.itemsEmojiSizePx
-															: item.theme?.titleSize === 'small' ||
-															  section.theme?.itemsTitleSize === 'small'
-															? 16
-															: item.theme?.titleSize === 'large' ||
-															  section.theme?.itemsTitleSize === 'large'
-															? 28
-															: 20}
-														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-													/>{/key}{/if}<ContentEditableIf
-												class="_inline_title _item-title sm:inline mb-1 sm:mb-0 font-medium"
-												bind:innerHTML={item.title}
-												condition={isEdit}
-											/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
-											class="_item-description {section.isDatabase
-												? '_line-clamp-4 hover:line-clamp-5'
-												: `${section.theme?.areInlineTitles ? 'inline' : 'inline-block'}`}"
-											bind:innerHTML={item.description}
-											condition={isEdit}
-										/>
-									</div>
-								{/if}
+								</div>
 
 								<!-- For every section besides pricing render buttons near text -->
 								{#if item.interactiveRenderType && section.renderType !== 'pricing'}
@@ -422,7 +458,7 @@
 
 								{#if item.tagsStr}
 									<div
-										class="my-4 mt-6 flex flex-wrap gap-2 {item?.theme?.align === 'center' ||
+										class="my-4 flex flex-wrap gap-2 {item?.theme?.align === 'center' ||
 										section.theme?.itemsAlign === 'center'
 											? 'justify-center'
 											: ''}"
@@ -455,50 +491,91 @@
 								{/if}
 
 								{#if item.pricing}
-									<div class="flex items-end mt-4 mb-4">
-										<div class="text-3xl sm:text-4xl font-bold mr-2">
-											{item.pricing.amount ? toDollars(item.pricing.amount * 100) : 'Free'}
+									<div>
+										<div class="flex items-end mb-4">
+											<div class="text-3xl sm:text-4xl font-bold mr-2">
+												{item.pricing.amount ? toDollars(item.pricing.amount * 100) : 'Free'}
+											</div>
+											{#if item.pricing.amount}
+												<div class="text-lg opacity-70">
+													/{item.pricing.per}
+												</div>
+											{/if}
 										</div>
-										{#if item.pricing.amount}
-											<div class="text-lg opacity-70">
-												/{item.pricing.per}
+
+										{#if item.description}
+											<div class="mb-8 opacity-70">
+												{@html item.description}
 											</div>
 										{/if}
+
+										{#if item.pricing.benefitsStr}
+											<div class="mb-4 _section-description">
+												{#if item.pricing.creditsAmount}
+													<div class="my-1 sm:my-2 flex items-start">
+														<Emoji
+															theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+															emoji={section.benefitsEmoji || 'feather:check'}
+															class="mr-2"
+															isOppositeColors={item.theme?.isOppositeColors ||
+																section.theme?.areItemsOppositeColors}
+														/>
+														{item.pricing.creditsAmount}
+														{item.pricing.creditsLabel || 'credits'}
+													</div>
+												{/if}
+
+												{#each item.pricing.benefitsStr
+													.concat(item.pricing.additionalBenefitsStr ? `\n${item.pricing.additionalBenefitsStr
+																	.split(',')
+																	.join('\n')}` : '')
+													.split('\n') as benefit}
+													<div
+														class="my-1 sm:my-2 flex items-center {benefit.startsWith('-')
+															? 'opacity-40'
+															: ''}"
+													>
+														<Emoji
+															theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+															emoji={benefit.startsWith('-')
+																? section.negativeBenefitsEmoji || 'feather:x'
+																: section.benefitsEmoji || 'feather:check'}
+															class="mr-2"
+															isOppositeColors={item.theme?.isOppositeColors ||
+																section.theme?.areItemsOppositeColors}
+														/>
+														{benefit.startsWith('-') ? benefit.replace('-', '') : benefit}
+													</div>
+												{/each}
+											</div>
+										{:else if item.pricing.benefits}
+											<div class="mb-4">
+												{#each item.pricing.benefits as benefit}
+													<div class="my-2">
+														<span class="inline-block mr-1">✅</span>
+														{benefit.name}
+													</div>
+												{/each}
+											</div>
+										{/if}
+
+										{#if item.pricing.prices?.length}
+											{(item.pricing.amount = item.pricing.prices[0]?.amount) ? '' : ''}
+											<div class="text-sm mb-2">
+												Number of {item.pricing.creditsLabel || 'credits'}
+											</div>
+											<RangeSlider
+												class="my-4"
+												values={item.pricing.prices.map((p) => p.creditsAmount)}
+												onChange={(value) => {
+													const plan = item.pricing.prices.find((p) => p.creditsAmount === value);
+													item.pricing.additionalBenefitsStr = plan.benefitsStr;
+													item.pricing.amount = plan.amount;
+													item.pricing.creditsAmount = plan.creditsAmount;
+												}}
+											/>
+										{/if}
 									</div>
-
-									{#if item.pricing.prices}
-										<RangeSlider values={item.pricing.prices.map((p) => p.creditsAmount)} />
-									{/if}
-
-									<div class="mb-8 opacity-70">
-										{@html item.description}
-									</div>
-
-									{#if item.pricing.benefitsStr}
-										<div class="mb-4 _section-description">
-											{#each item.pricing.benefitsStr.split('\n') as benefit}
-												<div class="my-1 sm:my-2 flex items-start">
-													<Emoji
-														theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
-														emoji={section.benefitsEmoji || 'feather:check'}
-														class="mr-2"
-														isOppositeColors={item.theme?.isOppositeColors ||
-															section.theme?.areItemsOppositeColors}
-													/>
-													{benefit}
-												</div>
-											{/each}
-										</div>
-									{:else if item.pricing.benefits}
-										<div class="mb-4">
-											{#each item.pricing.benefits as benefit}
-												<div class="my-2">
-													<span class="inline-block mr-1">✅</span>
-													{benefit.name}
-												</div>
-											{/each}
-										</div>
-									{/if}
 								{/if}
 							{/if}
 						</div>

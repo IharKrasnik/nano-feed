@@ -35,7 +35,6 @@
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
 
-	import contenteditable from 'lib/use/contenteditable';
 
 	import SitePreview from 'lib-render/components/SitePreview.svelte';
 

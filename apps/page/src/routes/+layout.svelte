@@ -10,7 +10,6 @@
 	import { page as sveltePage } from '$app/stores';
 	import { onDestroy } from 'svelte';
 	import isUrl from 'lib/helpers/isUrl';
-	import 'toolcool-range-slider';
 
 	import { isLoading as isUserLoading } from 'lib/stores/currentUser';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
@@ -123,7 +122,7 @@
 <div id="popup-portal" />
 {#if !$isUserLoading}
 	<div class="relative" style="	">
-		{#if !$sveltePage.url.href.includes('/emulator') && !$sveltePage.url.href.includes('/repurpose')}
+		{#if !$sveltePage.url.href.includes('/emulator') && !$sveltePage.url.href.includes('/repurpose') && !$sveltePage.url.href.includes('/sandbox')}
 			{#if !$sveltePage.url.href.includes('/page-templates') && !$sveltePage.url.href.includes('/ide') && $sveltePage.data.pageSlug}
 				<Page />
 				{#if browser}

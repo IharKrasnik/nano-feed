@@ -18,27 +18,6 @@
 </script>
 
 <div>
-	<div class="mb-4">
-		<div class="mb-2 text-sm font-semibold mb-1">Inner Items Type</div>
-		<ToggleGroup
-			class="mb-2"
-			bind:value={sectionItem.theme.itemsRenderType}
-			tabs={[
-				{
-					name: 'Default'
-				},
-				{
-					key: 'testimonial',
-					name: 'Testimonial'
-				},
-				{
-					key: 'tag',
-					name: 'Tag'
-				}
-			]}
-		/>
-	</div>
-
 	<div class="_section">
 		<div class="mb-4 font-semibold">Content Alignment</div>
 
@@ -92,6 +71,9 @@
 			}}
 			class="mt-4"
 		/>
+
+		<input type="checkbox" class="mt-4" bind:checked={section.theme.areTitlesReversed} /> move
+		avatar to the bottom
 
 		<div class="_section mt-4">
 			<div class="mb-4 font-bold">Item Size</div>

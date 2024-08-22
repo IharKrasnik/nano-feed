@@ -35,7 +35,7 @@
 		<div
 			class="flex items-center justify-center cursor-pointer rounded {size === 'tiny'
 				? 'px-2 py-0.5 text-xs'
-				: 'px-4 py-1 text-sm'}  w-full text-center {tab.isSelected
+				: 'px-4 py-1 text-xs'}  w-full text-center {tab.isSelected
 				? 'border border-[#8b786d]'
 				: '_border-section transition opacity-50 hover:opacity-100'} bg-white"
 			on:click={() => {
