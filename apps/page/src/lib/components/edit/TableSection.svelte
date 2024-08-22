@@ -38,6 +38,6 @@ Feature 1,feather:check,feather:cross`;
 			<div class="_title" style="margin: 0;">Table</div>
 		</div>
 
-		<textarea class="w-full" bind:value={rowsText} on:change={parseRows} rows="10" />
+		<textarea class="w-full" bind:value={rowsText} on:input={parseRows} rows="10" />
 	</div>
 {/if}

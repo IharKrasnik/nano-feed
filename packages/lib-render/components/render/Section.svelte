@@ -431,7 +431,7 @@
 			{#if section.renderType === 'callout'}
 				<RenderCalloutSection bind:page bind:section bind:isEdit bind:isEmbed />
 			{:else}
-				{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType)}
+				{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType || section.pricingTabs?.length)}
 					{#if section.renderType !== 'article' && section.title && (section.items?.length || section.streamSlug)}
 						<!-- <div
 							class="absolute inset-x-0 top-20 mx-auto h-32 w-full sm:w-[650px] transform-gpu opacity-[15%] blur-[130px] bg-gradient-to-r _from-text-color _to-accent"
