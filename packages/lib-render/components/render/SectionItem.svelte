@@ -280,45 +280,47 @@
 								: ''}"
 						>
 							{#if item.title || item.emoji || section.theme?.itemsDefaultEmoji}
-								<div>
-									{#if item.renderType === 'testimonial' || section.theme?.itemsRenderType === 'testimonial'}
-										<div
-											class="flex items-center {section.theme.areTitlesReversed
-												? 'order-last mt-3'
-												: 'mb-3'}"
-										>
-											<div class="mr-2 flex items-center">
-												<Emoji
-													emoji={item.emoji || section.theme?.itemsDefaultEmoji}
-													color={item.iconColor || section.theme?.itemsIconColor}
-													bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
-													class="rounded-full text-3xl"
-													width={48}
-													alt={'Testimonial user avatar'}
-													theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+								{#if item.renderType === 'testimonial' || section.theme?.itemsRenderType === 'testimonial'}
+									<div
+										class="flex items-center {section.theme.areTitlesReversed
+											? 'order-last mt-3'
+											: 'mb-3'}"
+									>
+										<div class="mr-2 flex items-center">
+											<Emoji
+												emoji={item.emoji || section.theme?.itemsDefaultEmoji}
+												color={item.iconColor || section.theme?.itemsIconColor}
+												bgColor={item.emojiBgColor || section.theme?.itemsEmojiBgColor}
+												class="rounded-full text-3xl"
+												width={48}
+												alt={'Testimonial user avatar'}
+												theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+											/>
+										</div>
+										<div>
+											<h3 class="_item-description" style="font-weight: bold;">
+												<ContentEditableIf
+													class=""
+													bind:innerHTML={item.title}
+													condition={isEdit}
 												/>
-											</div>
-											<div>
-												<h3 class="_item-description" style="font-weight: bold;">
+											</h3>
+
+											{#if item.label}
+												<div class="_color-item-description text-xs">
 													<ContentEditableIf
 														class=""
-														bind:innerHTML={item.title}
+														bind:innerHTML={item.label}
 														condition={isEdit}
 													/>
-												</h3>
-
-												{#if item.label}
-													<div class="_color-item-description text-xs">
-														<ContentEditableIf
-															class=""
-															bind:innerHTML={item.label}
-															condition={isEdit}
-														/>
-													</div>
-												{/if}
-											</div>
+												</div>
+											{/if}
 										</div>
-									{:else}
+									</div>
+								{/if}
+
+								<div>
+									{#if item.renderType === 'testimonial' || section.theme?.itemsRenderType === 'testimonial'}{:else}
 										{#if (item.emoji || section.theme?.itemsDefaultEmoji) && !item.theme?.isIconLeft && !section.theme?.areIconsLeft && item.renderType !== 'tag' && section.theme?.itemsRenderType !== 'tag'}
 											<div
 												class="{emojiStyle[section.columns]} _section-img mr-2 mb-3 {item.theme

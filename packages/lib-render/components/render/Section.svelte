@@ -909,7 +909,7 @@
 												  } overflow-x-auto`
 												: `grid ${
 														section.theme?.columnsGap === 'big'
-															? 'sm:gap-x-20'
+															? 'sm:gap-x-18'
 															: section.theme?.columnsGap === 'huge'
 															? 'sm:gap-x-24'
 															: 'sm:gap-x-12'
@@ -1197,9 +1197,13 @@
 						{:else}
 							<div
 								class=" {section.theme?.columnsGap === 'big'
-									? 'sm:gap-12'
+									? section.isFlexGrid
+										? 'sm:gap-8'
+										: 'sm:gap-12'
 									: section.theme?.columnsGap === 'huge'
-									? 'sm:gap-20'
+									? section.isFlexGrid
+										? 'sm:gap-12'
+										: 'sm:gap-20'
 									: ''} {section.isFlexGrid && section.isFlexWrap
 									? 'gap-2'
 									: 'gap-4'} {section.columns > 1
