@@ -260,6 +260,9 @@
 			isOverride: false
 		};
 	};
+
+	let isEditAsJson = false;
+	let themeJsonStr = '';
 </script>
 
 {#key page._id}
@@ -283,184 +286,200 @@
 				}}
 			>
 				<div class="p-8 _editor">
-					<h2 class="text-lg mb-12 font-bold _title mt-4">Page Appearance</h2>
+					<div class="flex items-center">
+						<h2 class="text-lg font-bold _title mr-12">Page Appearance</h2>
+					</div>
 
-					<div class="flex justify-between gap-4 mb-16">
-						<div>
-							<div class="_section grid grid-cols-2">
-								<div class="shrink-0">
-									<div class="text-sm font-bold">Background Color</div>
-									<div class="text-sm mb-2 opacity-80">Page background color</div>
+					<div class="flex relative justify-between gap-4 mb-16">
+						<div class="relative">
+							<div
+								class="absolute right-0 top-0 text-sm mb-2 cursor-pointer translate-y-[-100%] mt-[-10px] _text-link "
+								on:click={() => {
+									isEditAsJson = !isEditAsJson;
 
-									<input
-										type="color"
-										id="head"
-										name="head"
-										bind:value={page.theme.backgroundColor}
-										on:input={changeBackgroundColor}
-									/>
-								</div>
-								<div class="flex flex-wrap gap-2">
-									{#each colors.background as color}
-										<div
-											class="w-[30px] h-[30px] border border-black/50 rounded-full"
-											on:click={() => {
-												page.theme.backgroundColor = color;
-												changeBackgroundColor();
-											}}
-											style="background-color: {color};"
-										/>
-									{/each}
-								</div>
+									if (isEditAsJson) {
+										themeJsonStr = JSON.stringify(page.theme, null, 2);
+									}
+								}}
+							>
+								{isEditAsJson ? 'Back to UI' : 'Edit as JSON'}
 							</div>
 
-							<div class="_section grid grid-cols-2">
-								<div class="shrink-0">
-									<div class="text-sm font-bold">Accent Color</div>
-									<div class="text-sm mb-2 opacity-80">Buttons and highlight color</div>
+							{#if isEditAsJson}
+								<div class="_section w-full min-w-[400px]">
+									<div class="text-sm font-bold mb-2">Theme JSON</div>
 
-									<input
-										type="color"
-										id="head"
-										name="head"
-										bind:value={page.theme.accentColor}
-										on:input={changeAccentColor}
+									<textarea
+										bind:value={themeJsonStr}
+										rows={20}
+										class="w-full"
+										on:input={() => {
+											try {
+												page.theme = JSON.parse(themeJsonStr);
+											} catch (err) {}
+										}}
 									/>
 								</div>
-								<div class="flex flex-wrap">
-									{#each colors.accent as color}
-										<div
-											class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
-											on:click={() => {
-												page.theme.accentColor = color;
-												changeAccentColor();
-											}}
-											style="background-color: {color};"
+							{:else}
+								<div class="_section grid grid-cols-2">
+									<div class="shrink-0">
+										<div class="text-sm font-bold">Background Color</div>
+										<div class="text-sm mb-2 opacity-80">Page background color</div>
+
+										<input
+											type="color"
+											id="head"
+											name="head"
+											bind:value={page.theme.backgroundColor}
+											on:input={changeBackgroundColor}
 										/>
-									{/each}
+									</div>
+									<div class="flex flex-wrap gap-2">
+										{#each colors.background as color}
+											<div
+												class="w-[30px] h-[30px] border border-black/50 rounded-full"
+												on:click={() => {
+													page.theme.backgroundColor = color;
+													changeBackgroundColor();
+												}}
+												style="background-color: {color};"
+											/>
+										{/each}
+									</div>
 								</div>
-							</div>
 
-							<div class="_section">
-								<div class="font-bold mb-1">Advanced</div>
-								<div class="text-sm opacity-80 mb-4">Know how to work with colors?</div>
-								<div class="grid grid-cols-2 gap-4">
-									<div class="_section">
-										<div class="shrink-0">
-											<div class="text-sm font-bold">Text Color</div>
-											<div class="flex items-center justify-between w-full">
-												<input
-													type="color"
-													id="head"
-													name="head"
-													class="mr-4"
-													bind:value={page.theme.textColor}
-												/>
+								<div class="_section grid grid-cols-2">
+									<div class="shrink-0">
+										<div class="text-sm font-bold">Accent Color</div>
+										<div class="text-sm mb-2 opacity-80">Buttons and highlight color</div>
 
-												<div class="flex flex-wrap mt-4">
-													{#each colors.textColor as color}
+										<input
+											type="color"
+											id="head"
+											name="head"
+											bind:value={page.theme.accentColor}
+											on:input={changeAccentColor}
+										/>
+									</div>
+									<div class="flex flex-wrap">
+										{#each colors.accent as color}
+											<div
+												class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
+												on:click={() => {
+													page.theme.accentColor = color;
+													changeAccentColor();
+												}}
+												style="background-color: {color};"
+											/>
+										{/each}
+									</div>
+								</div>
+
+								<div class="_section">
+									<div class="font-bold mb-1">Advanced</div>
+									<div class="text-sm opacity-80 mb-4">Know how to work with colors?</div>
+									<div class="grid grid-cols-2 gap-4">
+										<div class="_section">
+											<div class="shrink-0">
+												<div class="text-sm font-bold">Text Color</div>
+												<div class="flex items-center justify-between w-full">
+													<input
+														type="color"
+														id="head"
+														name="head"
+														class="mr-4"
+														bind:value={page.theme.textColor}
+													/>
+
+													<div class="flex flex-wrap mt-4">
+														{#each colors.textColor as color}
+															<div
+																class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
+																on:click={() => {
+																	page.theme.textColor = color;
+																}}
+																style="background-color: {color};"
+															/>
+														{/each}
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="_section">
+											<div class="shrink-0">
+												<div class="text-sm font-bold">Button Text Color</div>
+												<div class="flex items-center justify-between w-full">
+													<input
+														type="color"
+														id="head"
+														name="head"
+														class="mr-4"
+														bind:value={page.theme.buttonColor}
+													/>
+
+													<div class="flex flex-wrap mt-4">
+														{#each colors.buttonColor as color}
+															<div
+																class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
+																on:click={() => {
+																	page.theme.buttonColor = color;
+																}}
+																style="background-color: {color};"
+															/>
+														{/each}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="_section">
+											<div class="shrink-0">
+												<div class="text-sm font-bold">Section Items Background Color</div>
+												<div class="flex items-center justify-between w-full">
+													<input
+														type="color"
+														id="head"
+														name="head"
+														class="mr-4"
+														bind:value={page.theme.sectionItemBackgroundColor}
+													/>
+													{#if page.theme.sectionItemBackgroundColor}
 														<div
-															class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
+															class="_text-link text-sm cursor-pointer"
 															on:click={() => {
-																page.theme.textColor = color;
+																page.theme.sectionItemBackgroundColor = null;
 															}}
-															style="background-color: {color};"
-														/>
-													{/each}
+														>
+															Reset
+														</div>
+													{/if}
+												</div>
+											</div>
+										</div>
+										<div class="_section">
+											<div class="shrink-0">
+												<div class="text-sm font-bold">Link Color</div>
+												<div class="flex items-center justify-between w-full">
+													<input type="color" class="mr-4" bind:value={page.theme.linkColor} />
+													{#if page.theme.linkColor}
+														<div
+															class="_text-link text-sm cursor-pointer"
+															on:click={() => {
+																page.theme.linkColor = null;
+															}}
+														>
+															Reset
+														</div>
+													{/if}
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="_section">
-										<div class="shrink-0">
-											<div class="text-sm font-bold">Button Text Color</div>
-											<div class="flex items-center justify-between w-full">
-												<input
-													type="color"
-													id="head"
-													name="head"
-													class="mr-4"
-													bind:value={page.theme.buttonColor}
-												/>
-
-												<div class="flex flex-wrap mt-4">
-													{#each colors.buttonColor as color}
-														<div
-															class="w-[30px] h-[30px] border border-black/50 rounded-full mb-1 mr-1"
-															on:click={() => {
-																page.theme.buttonColor = color;
-															}}
-															style="background-color: {color};"
-														/>
-													{/each}
-												</div>
-											</div>
-										</div>
-									</div>
-
-									<!-- <div class="_section">
-										<div class="shrink-0">
-											<div class="text-sm font-bold">Section Background Color</div>
-											<div class="flex items-center justify-between w-full">
-												<input
-													type="color"
-													id="head"
-													name="head"
-													class="mr-4"
-													bind:value={page.theme.sectionBackgroundColor}
-												/>
-											</div>
-										</div>
-									</div> -->
-
-									<div class="_section">
-										<div class="shrink-0">
-											<div class="text-sm font-bold">Section Items Background Color</div>
-											<div class="flex items-center justify-between w-full">
-												<input
-													type="color"
-													id="head"
-													name="head"
-													class="mr-4"
-													bind:value={page.theme.sectionItemBackgroundColor}
-												/>
-												{#if page.theme.sectionItemBackgroundColor}
-													<div
-														class="_text-link text-sm cursor-pointer"
-														on:click={() => {
-															page.theme.sectionItemBackgroundColor = null;
-														}}
-													>
-														Reset
-													</div>
-												{/if}
-											</div>
-										</div>
-									</div>
-									<div class="_section">
-										<div class="shrink-0">
-											<div class="text-sm font-bold">Link Color</div>
-											<div class="flex items-center justify-between w-full">
-												<input type="color" class="mr-4" bind:value={page.theme.linkColor} />
-												{#if page.theme.linkColor}
-													<div
-														class="_text-link text-sm cursor-pointer"
-														on:click={() => {
-															page.theme.linkColor = null;
-														}}
-													>
-														Reset
-													</div>
-												{/if}
-											</div>
-										</div>
-									</div>
 								</div>
-							</div>
 
-							<div class="flex gap-4 items-center col-span-2 my-4">
-								<!-- <input type="checkbox" bind:checked={page.theme.isInputBorder} /> Transparent Input -->
-								<!-- <div>
+								<div class="flex gap-4 items-center col-span-2 my-4">
+									<!-- <input type="checkbox" bind:checked={page.theme.isInputBorder} /> Transparent Input -->
+									<!-- <div>
 									<input type="checkbox" bind:checked={page.theme.isTitlesLeft} />
 									Are Titles Left
 								</div>
@@ -468,114 +487,115 @@
 									<input type="checkbox" bind:checked={page.theme.isTitlesHuge} />
 									Are Titles Huge
 								</div> -->
-							</div>
+								</div>
 
-							<div class="grid grid-cols-1 gap-4 mb-2">
-								<div class="_section">
-									<div class="font-bold mb-2">Fonts</div>
+								<div class="grid grid-cols-1 gap-4 mb-2">
+									<div class="_section">
+										<div class="font-bold mb-2">Fonts</div>
 
-									<div class="grid grid-cols-2 gap-4">
-										<div class="_section w-full">
-											<div class="font-bold mb-2">Title Font</div>
+										<div class="grid grid-cols-2 gap-4">
+											<div class="_section w-full">
+												<div class="font-bold mb-2">Title Font</div>
 
-											<select class="w-full" bind:value={page.theme.titleFont}>
-												{#each titleFonts as titleFont}
-													<option value={titleFont}>{titleFont}</option>
-												{/each}
-											</select>
-											<div class="mt-4">
-												<input type="checkbox" bind:checked={page.theme.isGradientTitle} />
+												<select class="w-full" bind:value={page.theme.titleFont}>
+													{#each titleFonts as titleFont}
+														<option value={titleFont}>{titleFont}</option>
+													{/each}
+												</select>
+												<div class="mt-4">
+													<input type="checkbox" bind:checked={page.theme.isGradientTitle} />
 
-												Are Titles Gradient
+													Are Titles Gradient
+												</div>
+											</div>
+
+											<div class="_section w-full">
+												<div class="font-bold mb-2">Text Font</div>
+
+												<select class="w-full" bind:value={page.theme.textFont}>
+													{#each textFonts as textFont}
+														<option value={textFont}>{textFont}</option>
+													{/each}
+												</select>
+
+												<div class="font-bold mb-2 mt-4">Label Font</div>
+
+												<select class="w-full" bind:value={page.theme.labelFont}>
+													{#each labelFonts as labelFont}
+														<option value={labelFont}>{labelFont}</option>
+													{/each}
+												</select>
 											</div>
 										</div>
+									</div>
 
-										<div class="_section w-full">
-											<div class="font-bold mb-2">Text Font</div>
+									<div class="_section">
+										<div class="font-semibold mb-4">Buttons Radius</div>
+										<button
+											class="_transparent border rounded-[2px] mr-2 px-6"
+											on:click={() => setButtonRadius('2px')}
+											>{#if page.theme.buttonRadius === '2px'}✅{/if} No
+											<div class="text-xs">2px</div></button
+										>
+										<button
+											class="_transparent border rounded-[8px] mr-2 px-6"
+											on:click={() => setButtonRadius('8px')}
+											>{#if page.theme.buttonRadius === '8px'}✅{/if} SM
+											<div class="text-xs">8px</div></button
+										><button
+											class="_transparent border rounded-[16px] mr-2 px-6"
+											on:click={() => setButtonRadius('16px')}
+											>{#if page.theme.buttonRadius === '16px'}✅{/if} MD
+											<div class="text-xs">16px</div></button
+										><button
+											class="_transparent border rounded-[24px] mr-2 px-6"
+											on:click={() => setButtonRadius('24px')}
+											>{#if !page.theme.buttonRadius || page.theme.buttonRadius === '24px'}✅{/if} LG
+											<div class="text-xs">24px</div></button
+										>
+									</div>
 
-											<select class="w-full" bind:value={page.theme.textFont}>
-												{#each textFonts as textFont}
-													<option value={textFont}>{textFont}</option>
-												{/each}
-											</select>
-
-											<div class="font-bold mb-2 mt-4">Label Font</div>
-
-											<select class="w-full" bind:value={page.theme.labelFont}>
-												{#each labelFonts as labelFont}
-													<option value={labelFont}>{labelFont}</option>
-												{/each}
-											</select>
+									<div class="_section">
+										<div>
+											<div class="font-bold mb-4">Container Size</div>
+											<div class="flex gap-4">
+												<button
+													class="_transparent border rounded-[8px]"
+													on:click={() => setContainerWidth('900px')}
+													>{#if page.theme.containerWidth === '900px'}✅{/if} SM
+													<div class="text-xs">900px</div></button
+												><button
+													class="_transparent border rounded-[8px]"
+													on:click={() => setContainerWidth('1080px')}
+													>{#if page.theme.containerWidth === '1080px'}✅{/if}MD
+													<div class="text-xs">1080px</div></button
+												><button
+													class="_transparent border rounded-[8px]"
+													on:click={() => setContainerWidth('1200px')}
+													>{#if !page.theme.containerWidth || page.theme.containerWidth === '1200px'}✅{/if}
+													LG
+													<div class="text-xs">1200px</div></button
+												>
+												<button
+													class="_transparent border rounded-[8px]"
+													on:click={() => setContainerWidth('1280px')}
+													>{#if page.theme.containerWidth === '1280px'}✅{/if} XL
+													<div class="text-xs">1280px</div></button
+												>
+											</div>
 										</div>
 									</div>
 								</div>
-
-								<div class="_section">
-									<div class="font-semibold mb-4">Buttons Radius</div>
+								<div class="_section flex justify-between mt-12">
 									<button
-										class="_transparent border rounded-[2px] mr-2 px-6"
-										on:click={() => setButtonRadius('2px')}
-										>{#if page.theme.buttonRadius === '2px'}✅{/if} No
-										<div class="text-xs">2px</div></button
+										class="_primary _small"
+										on:click={() => {
+											isColorPickerShown = false;
+										}}>Save and close</button
 									>
-									<button
-										class="_transparent border rounded-[8px] mr-2 px-6"
-										on:click={() => setButtonRadius('8px')}
-										>{#if page.theme.buttonRadius === '8px'}✅{/if} SM
-										<div class="text-xs">8px</div></button
-									><button
-										class="_transparent border rounded-[16px] mr-2 px-6"
-										on:click={() => setButtonRadius('16px')}
-										>{#if page.theme.buttonRadius === '16px'}✅{/if} MD
-										<div class="text-xs">16px</div></button
-									><button
-										class="_transparent border rounded-[24px] mr-2 px-6"
-										on:click={() => setButtonRadius('24px')}
-										>{#if !page.theme.buttonRadius || page.theme.buttonRadius === '24px'}✅{/if} LG
-										<div class="text-xs">24px</div></button
-									>
+									<button class="_orange _small" on:click={resetPageStyles}>Reset Styles</button>
 								</div>
-
-								<div class="_section">
-									<div>
-										<div class="font-bold mb-4">Container Size</div>
-										<div class="flex gap-4">
-											<button
-												class="_transparent border rounded-[8px]"
-												on:click={() => setContainerWidth('900px')}
-												>{#if page.theme.containerWidth === '900px'}✅{/if} SM
-												<div class="text-xs">900px</div></button
-											><button
-												class="_transparent border rounded-[8px]"
-												on:click={() => setContainerWidth('1080px')}
-												>{#if page.theme.containerWidth === '1080px'}✅{/if}MD
-												<div class="text-xs">1080px</div></button
-											><button
-												class="_transparent border rounded-[8px]"
-												on:click={() => setContainerWidth('1200px')}
-												>{#if !page.theme.containerWidth || page.theme.containerWidth === '1200px'}✅{/if}
-												LG
-												<div class="text-xs">1200px</div></button
-											>
-											<button
-												class="_transparent border rounded-[8px]"
-												on:click={() => setContainerWidth('1280px')}
-												>{#if page.theme.containerWidth === '1280px'}✅{/if} XL
-												<div class="text-xs">1280px</div></button
-											>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="_section flex justify-between mt-12">
-								<button
-									class="_primary _small"
-									on:click={() => {
-										isColorPickerShown = false;
-									}}>Save and close</button
-								>
-								<button class="_orange _small" on:click={resetPageStyles}>Reset Styles</button>
-							</div>
+							{/if}
 						</div>
 
 						<div class="overflow-hidden w-full overflow-y-hidden max-w-[1000px] rounded-xl">

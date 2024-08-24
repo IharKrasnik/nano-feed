@@ -733,7 +733,7 @@ a._item-title:hover {
 ._item-description,
 ._section-description,
 ._subtitle {
-	opacity: .7;
+	color: rgba(from var(--text-color) r g b / 0.7);
 }
 
 ._subtitle.opacity-0 {
@@ -1071,6 +1071,11 @@ button._alternative:hover {
 ._section-description {
 	color: var(--section-description-text-color, auto);
 	font-size: 16px;
+}
+
+._section-description b {
+	color: var(--text-color);
+	font-weight: 600;
 }
 
 @media (max-width: 640px) {

@@ -119,6 +119,9 @@
 		section.isUseDb = true;
 	}
 	let isItemsSettingsCollapsed = true;
+
+	let isEditAsJson = false;
+	let themeJsonStr;
 </script>
 
 {#if isShort}
@@ -338,169 +341,209 @@
 		{/if}
 
 		{#if _.includes(['grid', 'pricing', 'scrollingGallery'], section.renderType)}
-			<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
-				<div class="bg-white">
-					<div class="font-bold mb-2">Layout</div>
+			{#if isEditAsJson}{:else}
+				<div class="mt-4 _section p-2 bg-[#fafafa] mb-8" style="margin-bottom:16px;">
+					<div class="bg-white">
+						<div class="flex w-full justify-between">
+							<div class="font-bold mb-2">Layout</div>
+							<div
+								class="text-sm  cursor-pointer  _text-link "
+								on:click={() => {
+									isEditAsJson = !isEditAsJson;
 
-					<ToggleGroup
-						class="mb-4"
-						tabs={[
-							{
-								key: 'grid',
-								isSelected: section.columns > 1 && !section.isFlexGrid,
-								name: 'Grid'
-							},
-							{
-								key: 'rows',
-								isSelected: section.columns === 1,
-								name: 'Rows'
-							},
-							{
-								key: 'flex',
-								name: 'Fluid',
-								isSelected: section.isFlexGrid
-							}
-						]}
-						onTabSelected={(tab) => {
-							if (tab.key === 'grid') {
-								section.isFlexGrid = false;
-
-								if (!section.columns || section.columns === 1) {
-									section.columns = 2;
-								}
-							} else if (tab.key === 'rows') {
-								section.isFlexGrid = false;
-
-								if (section.columns !== 1) {
-									section.columns = 1;
-								}
-							} else if (tab.key === 'flex') {
-								section.isFlexGrid = true;
-								if (section.columns === 1) {
-									section.columns = 2;
-								}
-							}
-						}}
-					/>
-
-					<div class="relative mt-4">
-						{#if section.columns > 1 && !section.isFlexGrid}
-							<div class="flex gap-x-1 items-center">
-								<div
-									class=" cursor-pointer bg-section flex justify-center items-center rounded-xl text-sm px-2 py-1"
-									on:click={() => (section.columns = 2)}
-									class:px-4={section.columns === 2}
-								>
-									2
-									{#if section.columns === 2}columns{/if}
-								</div>
-
-								<div
-									class=" cursor-pointer bg-section px-2 py-1 text-sm flex justify-center items-center rounded-xl"
-									class:px-4={section.columns === 3}
-									on:click={() => (section.columns = 3)}
-								>
-									3
-									{#if section.columns === 3}columns{/if}
-								</div>
-
-								<div
-									class="cursor-pointer bg-section px-2 text-sm px-2 py-1 flex justify-center items-center rounded-xl "
-									class:px-4={section.columns === 4}
-									on:click={() => (section.columns = 4)}
-								>
-									4
-									{#if section.columns === 4}columns{/if}
-								</div>
-								<div
-									class="cursor-pointer bg-section text-sm px-2 py-1 flex justify-center items-center rounded-xl"
-									class:px-4={section.columns === 12}
-									on:click={() => (section.columns = 12)}
-								>
-									12
-									{#if section.columns === 12}columns{/if}
-								</div>
+									if (isEditAsJson) {
+										themeJsonStr = JSON.stringify(section.theme, null, 2);
+									}
+								}}
+							>
+								{isEditAsJson ? 'Back to UI' : 'Edit as JSON'}
 							</div>
+						</div>
 
-							{#if section.renderType === 'grid' || section.renderType === 'pricing'}
-								{#if section.columns > 1}
-									<div class="mb-2 mt-4">
-										<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
-										{#if section.isMasonryGrid}
-											<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
-										{/if}
+						<ToggleGroup
+							class="mb-4"
+							tabs={[
+								{
+									key: 'grid',
+									isSelected: section.columns > 1 && !section.isFlexGrid,
+									name: 'Grid'
+								},
+								{
+									key: 'rows',
+									isSelected: section.columns === 1,
+									name: 'Rows'
+								},
+								{
+									key: 'flex',
+									name: 'Fluid',
+									isSelected: section.isFlexGrid
+								}
+							]}
+							onTabSelected={(tab) => {
+								if (tab.key === 'grid') {
+									section.isFlexGrid = false;
+
+									if (!section.columns || section.columns === 1) {
+										section.columns = 2;
+									}
+								} else if (tab.key === 'rows') {
+									section.isFlexGrid = false;
+
+									if (section.columns !== 1) {
+										section.columns = 1;
+									}
+								} else if (tab.key === 'flex') {
+									section.isFlexGrid = true;
+									if (section.columns === 1) {
+										section.columns = 2;
+									}
+								}
+							}}
+						/>
+
+						<div class="relative mt-4">
+							{#if section.columns > 1 && !section.isFlexGrid}
+								<div class="flex gap-x-1 items-center">
+									<div
+										class=" cursor-pointer bg-section flex justify-center items-center rounded-xl text-sm px-2 py-1"
+										on:click={() => (section.columns = 2)}
+										class:px-4={section.columns === 2}
+									>
+										2
+										{#if section.columns === 2}columns{/if}
 									</div>
+
+									<div
+										class=" cursor-pointer bg-section px-2 py-1 text-sm flex justify-center items-center rounded-xl"
+										class:px-4={section.columns === 3}
+										on:click={() => (section.columns = 3)}
+									>
+										3
+										{#if section.columns === 3}columns{/if}
+									</div>
+
+									<div
+										class="cursor-pointer bg-section px-2 text-sm px-2 py-1 flex justify-center items-center rounded-xl "
+										class:px-4={section.columns === 4}
+										on:click={() => (section.columns = 4)}
+									>
+										4
+										{#if section.columns === 4}columns{/if}
+									</div>
+									<div
+										class="cursor-pointer bg-section text-sm px-2 py-1 flex justify-center items-center rounded-xl"
+										class:px-4={section.columns === 12}
+										on:click={() => (section.columns = 12)}
+									>
+										12
+										{#if section.columns === 12}columns{/if}
+									</div>
+								</div>
+
+								{#if section.renderType === 'grid' || section.renderType === 'pricing'}
+									{#if section.columns > 1}
+										<div class="mb-2 mt-4">
+											<input type="checkbox" bind:checked={section.isMasonryGrid} /> Masonry Grid
+											{#if section.isMasonryGrid}
+												<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
+											{/if}
+										</div>
+									{/if}
 								{/if}
 							{/if}
-						{/if}
 
-						{#if section.isFlexGrid}
-							<div class="mb-2 mt-4">
-								{#if section.isMasonryGrid}
-									<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
-								{/if}
+							{#if section.isFlexGrid}
+								<div class="mb-2 mt-4">
+									{#if section.isMasonryGrid}
+										<input class="ml-2" type="checkbox" bind:checked={section.isFunkyGrid} /> Funky
+									{/if}
 
-								<div>
-									<input class="mt-2" type="checkbox" bind:checked={section.isFlexWrap} /> Move items
-									to the next line if not fit
+									<div>
+										<input class="mt-2" type="checkbox" bind:checked={section.isFlexWrap} /> Move items
+										to the next line if not fit
+									</div>
 								</div>
-							</div>
-						{/if}
+							{/if}
+						</div>
 					</div>
+
+					<div class="mb-2 font-semibold mt-6 text-sm">Gap between columns</div>
+					<ToggleGroup
+						tabs={[
+							{
+								key: undefined,
+								name: 'Normal'
+							},
+							{
+								key: 'big',
+								name: 'Big'
+							},
+							{
+								key: 'huge',
+								name: 'Huge'
+							}
+						]}
+						bind:value={section.theme.columnsGap}
+					/>
+
+					<div class="mb-2 font-semibold mt-6 text-sm">Section width</div>
+					<ToggleGroup
+						tabs={[
+							{
+								key: undefined,
+								name: 'Container'
+							},
+							{
+								key: '1000px',
+								name: 'M'
+							},
+							{
+								key: '800px',
+								name: 'S'
+							},
+							{
+								key: '600px',
+								name: 'XS'
+							}
+						]}
+						bind:value={section.theme.maxSectionWidth}
+					/>
+
+					{#if section.columns > 1}
+						<div class="flex mt-4">
+							<input type="checkbox" class="mr-2" bind:checked={section.theme.isMobileInline} />
+							<div>Show items horizontally on mobile</div>
+						</div>
+					{/if}
 				</div>
-
-				<div class="mb-2 font-semibold mt-6 text-sm">Gap between columns</div>
-				<ToggleGroup
-					tabs={[
-						{
-							key: undefined,
-							name: 'Normal'
-						},
-						{
-							key: 'big',
-							name: 'Big'
-						},
-						{
-							key: 'huge',
-							name: 'Huge'
-						}
-					]}
-					bind:value={section.theme.columnsGap}
-				/>
-
-				<div class="mb-2 font-semibold mt-6 text-sm">Section width</div>
-				<ToggleGroup
-					tabs={[
-						{
-							key: undefined,
-							name: 'Container'
-						},
-						{
-							key: '1000px',
-							name: 'M'
-						},
-						{
-							key: '800px',
-							name: 'S'
-						},
-						{
-							key: '600px',
-							name: 'XS'
-						}
-					]}
-					bind:value={section.theme.maxSectionWidth}
-				/>
-
-				{#if section.columns > 1}
-					<div class="flex mt-4">
-						<input type="checkbox" class="mr-2" bind:checked={section.theme.isMobileInline} />
-						<div>Show items horizontally on mobile</div>
-					</div>
-				{/if}
-			</div>
+			{/if}
 		{/if}
 
-		{#if _.includes(['grid', 'pricing', 'scrollingGallery'], section.renderType)}
+		{#if isEditAsJson}
+			<div class="_section">
+				<div class="flex w-full justify-between">
+					<div class="font-bold text-sm mb-2">Theme JSON</div>
+					<div
+						class="text-sm  cursor-pointer  _text-link "
+						on:click={() => {
+							isEditAsJson = false;
+						}}
+					>
+						Back to UI
+					</div>
+				</div>
+				<textarea
+					bind:value={themeJsonStr}
+					rows={20}
+					class="w-full"
+					on:input={() => {
+						try {
+							section.theme = JSON.parse(themeJsonStr);
+						} catch (err) {}
+					}}
+				/>
+			</div>
+		{:else if _.includes(['grid', 'pricing', 'scrollingGallery'], section.renderType)}
 			<div class="_section my-4 !p-4">
 				<div
 					class="flex items-center justify-between w-full {isItemsSettingsCollapsed
@@ -607,7 +650,7 @@
 
 								<EditSectionSettings
 									bind:section
-									bind:item
+									bind:sectionItem={item}
 									isShown
 									isWithButton={false}
 									bind:page

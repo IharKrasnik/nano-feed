@@ -69,7 +69,8 @@ export default (page) => {
 		// 	: hexToRGBA(lighten(page.theme?.accentColor, 0.9), 0.5)),
 
 		'section-description-text-color':
-			page.theme?.textColor ? page.theme?.textColor : page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
+			page.theme?.textColor ? lighten(page.theme?.textColor, .5) : (page.theme?.theme === 'dark' ? darken('#f6f5f4', .5) : lighten('#111111', .5)),
+
 		'section-description-text-color-opposite':
 			page.theme?.theme === 'dark' ? 'rgba(0,0,0, .7)' : 'rgba(255,255,255, .7)',
 		'title-font-size':
@@ -89,6 +90,10 @@ export default (page) => {
 		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px',
 
 	};
+	debugger;
+
+	console.log('section-description-text-color', styles['section-description-text-color']);
+
 	styles['accent-color-darker'] = darken(styles['accent-color'], 0.6);
 	styles['accent-color-darker-lg'] = darken(styles['accent-color'], 0.8);
 	styles['accent-color-darker-xl'] = darken(styles['accent-color'], 0.9);
@@ -100,5 +105,6 @@ export default (page) => {
 		.map(([key, value]) => `--${key}:${value}`)
 		.join(';');
 
+	debugger;
 	return { cssVarStyles, styles };
 };
