@@ -34,7 +34,7 @@
 </script>
 
 <div>
-	{#if resolver}
+	{#if resolver && content}
 		{#key isMounted}
 			{@html resolver.render(content.json)}
 		{/key}

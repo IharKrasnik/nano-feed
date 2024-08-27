@@ -26,6 +26,7 @@
 	import RenderCalloutSection from 'lib-render/components/render/CalloutSection.svelte';
 	import RenderComments from 'lib-render/components/render/CommentsSection.svelte';
 	import RenderSectionItem from 'lib-render/components/render/SectionItem.svelte';
+	import ImportedComponent from 'lib-render/components/render/ImportedComponent.svelte';
 
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
@@ -40,6 +41,7 @@
 	import trackClick from 'lib/services/trackClick';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
+
 	export let section;
 	let clazz;
 	export { clazz as class };
@@ -431,14 +433,14 @@
 			{#if section.renderType === 'callout'}
 				<RenderCalloutSection bind:page bind:section bind:isEdit bind:isEmbed />
 			{:else}
-				{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType || section.pricingTabs?.length)}
+				{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType || section.pricingTabs?.length) && section.renderType !== 'embedSvelte'}
 					{#if section.renderType !== 'article' && section.title && (section.items?.length || section.streamSlug)}
 						<!-- <div
 							class="absolute inset-x-0 top-20 mx-auto h-32 w-full sm:w-[650px] transform-gpu opacity-[15%] blur-[130px] bg-gradient-to-r _from-text-color _to-accent"
 						/> -->
 					{/if}
 					<div
-						class="_section_titles relative w-full {page.theme.isTitlesLeft ||
+						class="_section_titles mb-16 relative w-full {page.theme.isTitlesLeft ||
 						section.theme?.isTitleLeft ||
 						section.renderType === 'article' ||
 						section.renderType === 'changelog'
@@ -464,29 +466,29 @@
 						{/if}
 
 						{#if section.label}
-							<div class="text-sm mb-4 _section-label" style="font-weight: 500;">
+							<div class="text-sm mb-4 _section-label section-label" style="font-weight: 500;">
 								<ContentEditableIf class="" bind:innerHTML={section.label} condition={isEdit} />
 							</div>
 						{/if}
 
 						<div
 							class="mb-8 {section.description
-								? `${isFooter ? 'sm:mt-[-32px] mt-[-16px] sm:mb-8' : 'sm:mb-12'}`
+								? `${isFooter ? 'sm:mt-[-32px] mt-[-16px] sm:mb-8' : 'sm:mb-8'}`
 								: ''}"
 						>
 							{#if section.title}
 								<h3
-									class="_section-title {section.theme?.titleSize === 'small'
+									class="_section-title section-title {section.theme?.titleSize === 'small'
 										? 'sm:text-lg text-lg font-semibold'
 										: `${isFooter ? 'text-2xl' : 'text-3-4xl'} ${
 												page.theme.isTitlesHuge || section.theme?.isHugeTitle
-													? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-medium'}`
+													? `${isFooter ? 'sm:text-xl font-semibold' : 'sm:text-5xl font-semibold'}`
 													: `${
 															isFooter ? 'sm:text-xl font-semibold' : 'sm:text-4-5xl font-semibold'
 													  }`
 										  }`} 
 										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'sm:mx-auto'}
-									{section.renderType === 'article' ? 'sm:max-w-[712px]' : 'sm:max-w-[768px]'} {section.description
+									{section.renderType === 'article' ? 'sm:max-w-[712px]' : 'sm:max-w-[700px]'} {section.description
 										? 'mb-4 sm:mb-6'
 										: 'mb-4 sm:mb-12'}"
 								>
@@ -499,11 +501,11 @@
 							{/if}
 							{#if section.description}
 								<div
-									class="_section-description  mb-8 {page.theme.isTitlesHuge ||
+									class="_section-description section-description mb-8 {page.theme.isTitlesHuge ||
 									section.theme?.isHugeTitle
 										? '_huge'
 										: '_large'} whitespace-pre-wrap
-										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-80' : `sm:max-w-[768px]`}
+										{section.renderType === 'article' ? 'sm:max-w-[712px] opacity-80' : `sm:max-w-[612px]`}
 										{page.theme.isTitlesLeft || section.theme?.isTitleLeft ? '' : 'max-w-[90%] sm:max-w-[100%] mx-auto'}
 										"
 								>
@@ -613,6 +615,8 @@
 					{#if browser && section.customCodeHTML}
 						{@html section.customCodeHTML}
 					{/if}
+				{:else if section.renderType === 'embedSvelte'}
+					<ImportedComponent url={section.theme.codeMediaUrl} {section} {page} />
 				{:else if section.isRichText}
 					{#if isEdit}
 						<ContentEditor bind:section bind:page />
@@ -828,7 +832,7 @@
 															condition={isEdit}
 														/>
 														<ContentEditableIf
-															class="_item-description whitespace-pre-wrap"
+															class="_item-description section-item-description whitespace-pre-wrap"
 															bind:innerHTML={item.description}
 															condition={isEdit}
 														/>
@@ -1033,8 +1037,8 @@
 
 														{#if section.renderType !== 'pricing'}
 															<ContentEditableIf
-																class="_item-description whitespace-pre-wrap {section.theme
-																	?.itemsTitleSize === 'large'
+																class="_item-description section-item-description whitespace-pre-wrap {section
+																	.theme?.itemsTitleSize === 'large'
 																	? '_large font-medium'
 																	: ''}"
 																bind:innerHTML={item.description}
@@ -1090,7 +1094,7 @@
 														{/if}
 
 														{#if item.pricing?.benefitsStr}
-															<div class="mt-4 mb-8 _section-description">
+															<div class="mt-4 mb-8 _color-item-description">
 																{#each item.pricing.benefitsStr.split('\n') as benefit}
 																	<div class="my-2 flex items-center">
 																		<Emoji

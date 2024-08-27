@@ -39,6 +39,7 @@
 	export let isSectionsCloneable = false;
 	export let onInsert;
 	export let isNoHeaderFooter = false;
+	export let isNoHero = false;
 
 	export let page = {
 		name: 'momentum',
@@ -212,6 +213,10 @@
 	<meta name="og:url" content={getCanonicalUrl()} />
 </svelte:head>
 
+<svelte:element this={'style'}>
+	{page?.theme?.customCss || ''}
+</svelte:element>
+
 <svelte:window bind:scrollY />
 
 <div
@@ -225,7 +230,7 @@
 {#if page.theme?.layoutType === 'portfolio' || page.parentPage?.theme?.layoutType === 'portfolio'}
 	<PortfolioPage bind:page />
 {:else}
-	<div class={page.interactiveAnswers ? 'pb-16' : ''} bind:this={previewEl}>
+	<div class="{page.interactiveAnswers ? 'pb-16' : ''} _page" bind:this={previewEl}>
 		<div
 			class="relative color-site min-h-screen"
 			style="{cssVarStyles}; font-family: var(--text-font);"
@@ -284,13 +289,14 @@
 							style="background-color: {page.theme?.backgroundColor || 'white'};"
 						>
 							{(page.activeHero = page.activeHero || page.heros[0]) && ''}
-							{#if page.activeHero}
+							{#if page.activeHero && !isNoHero}
 								<div
 									class="sticky bg-site {$sectionToEdit &&
+									isEdit &&
 									$sectionToEdit.id !== page.activeHero?.formSection?.id
 										? 'opacity-30 grayscale'
 										: ''}  {page.activeHero?.theme?.isPullBottom
-										? 'mb-[-100px] sm:mb-[-150px]'
+										? 'mb-[-100px] sm:mb-[-192px]'
 										: ''}"
 								>
 									<RenderHero
@@ -318,7 +324,7 @@
 											{#each page.sections || [] as section, i (section.id)}
 												<div
 													class="relative {page.activeHero?.theme?.isPullBottom && i === 0
-														? 'pb-[48px] sm:pb-[96px]'
+														? 'pb-[48px] sm:pb-[96px] pt-[0]'
 														: ''} {section.containerBgImageUrl ? 'py-16 sm:py-32' : ''}"
 													style={section.theme?.backgroundColor
 														? $sectionToEdit?.id === section.id
@@ -415,8 +421,8 @@
 															!section.isFooter
 																? 'cursor-pointer hover:outline-8 hover:outline outline-purple-300 hover:mx-8'
 																: ''} "
-															class:opacity-30={!!$sectionToEdit}
-															class:grayscale={!!$sectionToEdit}
+															class:opacity-30={isEdit && !!$sectionToEdit}
+															class:grayscale={isEdit && !!$sectionToEdit}
 															class:my-16={section.bgImageUrl && i !== 0}
 															on:click={() => {
 																if (isEdit) {

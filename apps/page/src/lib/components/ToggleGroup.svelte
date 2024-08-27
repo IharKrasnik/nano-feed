@@ -48,7 +48,7 @@
 				</div>
 			{/if}
 
-			{tab.name}
+			{tab.name || ''}
 
 			<div class="text-xs opacity-70">
 				{#if tab.description}

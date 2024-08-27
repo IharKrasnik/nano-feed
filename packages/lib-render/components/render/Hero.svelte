@@ -7,6 +7,7 @@
 	import RenderInteractiveOptions from 'lib-render/components/render/InteractiveOptions.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import RenderUrlWithBackground from 'lib/components/RenderUrlWithBackground.svelte';
+	import RenderBackgroundImages from 'lib-render/components/render/BackgroundImages.svelte';
 	import RenderArticleHeader from 'lib-render/components/render/ArticleHeader.svelte';
 	import Emoji from 'lib/components/Emoji.svelte';
 	import aboveTheFoldEl from 'lib-render/stores/aboveTheFoldEl';
@@ -88,6 +89,7 @@
 			: ''} {hero.theme?.isOverrideColors ? `background: ${hero.theme?.backgroundColor};` : ''}
 				"
 	>
+		<RenderBackgroundImages backgroundImages={hero.theme.backgroundImages} relativeTo="container" />
 		{#if hero.bgImageUrl}
 			{#if page.activeHero?.theme?.bgGradient?.type === 'custom'}
 				<div
@@ -181,13 +183,13 @@
 			/>
 		{/if}
 		<div
-			class="relative z-10 container pt-[60px] pb-[60px] _container-width mx-auto {((hero.theme
+			class="relative z-10 container sm:pt-[60px] pb-[60px] _container-width mx-auto {((hero.theme
 				?.isVertical ||
 				(page.sections?.length && !hero.demoUrl && !hero.theme.isFullScreen)) &&
 				hero.theme?.bgPattern !== 'cursors') ||
 			page.renderType === 'service'
 				? ''
-				: `min-h-screen ${isEdit ? '' : 'sm:h-screen'}`} {hero.theme?.bgPattern === 'canvas'
+				: `min-h-screen ${isEdit ? '' : 'tall:h-screen'}`} {hero.theme?.bgPattern === 'canvas'
 				? 'max-w-max'
 				: ''}"
 			style=""
@@ -196,10 +198,9 @@
 				bind:this={$aboveTheFoldEl}
 				class="{hero.theme?.bgImage ? 'light-colors' : ''} {hero.theme?.isVertical
 					? ''
-					: ''} h-full  {page.renderType === 'article' ? 'pt-16 sm:pt-24' : 'py-16 sm:py-24'} {!hero
-					.testimonials?.length
-					? `flex items-center`
-					: ''}"
+					: ''} h-full  {page.renderType === 'article'
+					? 'pt-16 sm:pt-24'
+					: 'tall:py-24 pt-0 pb-12'} {!hero.testimonials?.length ? `flex items-center` : ''}"
 				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 			>
 				<div
@@ -208,7 +209,7 @@
 						: 'text-center items-center'}"
 				>
 					<div
-						class="{hero.demoUrl || hero.theme?.isLeft || page.renderType === 'article'
+						class="relative {hero.demoUrl || hero.theme?.isLeft || page.renderType === 'article'
 							? `w-full text-center ${
 									hero.theme?.isVertical && page.renderType !== 'article'
 										? 'flex flex-col items-center mb-8'
@@ -221,6 +222,11 @@
 							? 'sm:mr-8'
 							: ''} {hero.imgSize ? 'sm:min-w-[60%]' : ''} "
 					>
+						<RenderBackgroundImages
+							backgroundImages={hero.theme.backgroundImages}
+							relativeTo="title_container"
+						/>
+
 						{#if hero.embedAboveHtml}
 							<div class="mb-4" in:fly={{ y: -25, duration: 500 }} class:opacity-0={!isMounted}>
 								{@html hero.embedAboveHtml}
@@ -421,6 +427,11 @@
 								// }
 							}}
 						>
+							<RenderBackgroundImages
+								backgroundImages={hero.theme.backgroundImages}
+								relativeTo="demo"
+							/>
+
 							{#if hero.demoUrl.includes('/emulator-full')}
 								<Emulator />
 							{:else}

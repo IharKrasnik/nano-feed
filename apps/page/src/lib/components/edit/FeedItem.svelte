@@ -3,7 +3,7 @@
 	import _ from 'lodash';
 	import moment from 'moment';
 	import { fly, fade } from 'svelte/transition';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import SourceLogo from 'lib/components/SourceLogo.svelte';
 	import Button from 'lib/components/Button.svelte';

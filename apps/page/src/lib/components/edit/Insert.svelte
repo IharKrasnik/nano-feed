@@ -8,7 +8,7 @@
 	import sectionToPreview from 'lib-render/stores/sectionToPreview';
 	import { fly } from 'svelte/transition';
 	import CrossSvg from 'lib/icons/cross.svelte';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import BackTo from '$lib/components/BackTo.svelte';
 	import { page as sveltePage } from '$app/stores';
 	import sampleSections, { cloneSection } from '$lib/stores/sampleSections';

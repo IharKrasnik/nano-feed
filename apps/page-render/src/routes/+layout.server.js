@@ -15,8 +15,8 @@ export async function load({ url, params, session, cookies }) {
 
 	let pageSlug =
 		currentDomain.includes('localhost') ||
-		currentDomain.includes('192.168') ||
-		currentDomain.includes('ide.momentum.page')
+			currentDomain.includes('192.168') ||
+			currentDomain.includes('ide.momentum.page')
 			? url.searchParams.get('pageSlug')
 			: currentDomain;
 
@@ -116,11 +116,12 @@ export async function load({ url, params, session, cookies }) {
 				renderType: 'article'
 			});
 		} else {
+			console.log('fetching page...', subPageSlug || pageSlug, subPageSlug ? pageSlug : '')
 			page = await get(`pages/${subPageSlug || pageSlug}`, {
 				parentPageSlug: subPageSlug ? pageSlug : '',
 				isServer: true
 			});
-			console.log('page', extend.page);
+			console.log('page', page);
 		}
 		let metatags = getPageMetaTags({ page });
 

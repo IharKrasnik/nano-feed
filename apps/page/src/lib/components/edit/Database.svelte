@@ -2,7 +2,7 @@
 	import _ from 'lodash';
 	import { get, post, put, del } from 'lib/api';
 	import { fade } from 'svelte/transition';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 	import feedCache, { getFeed, updateFeedSortOrder } from 'lib-render/stores/feedCache';

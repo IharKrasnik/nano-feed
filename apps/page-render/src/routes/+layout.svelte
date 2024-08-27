@@ -1,6 +1,7 @@
 <script>
 	import 'lib-render/app.css';
 	import '../app.css';
+	import _ from 'lodash';
 	import Page from 'lib-render/components/Page.svelte';
 	import { API_URL } from 'lib/env';
 	import currentPage from 'lib-render/stores/currentPage';
@@ -68,6 +69,20 @@
 	if (browser) {
 		window.WAVE_API_URL = API_URL;
 	}
+
+	let fontsStr = '';
+
+	$: if ($currentPage) {
+		let theme = ($currentPage.parentPage || $currentPage).theme || {};
+		fontsStr = _.uniq([theme.textFont, theme.titleFont, theme.labelFont])
+			.filter((fontName) => fontName)
+			.map((fontName) => {
+				return `family=${fontName.replaceAll(' ', '+')}:wght@400;500;600;700`;
+			})
+			.join('&');
+
+		console.log('fontsStr', fontsStr);
+	}
 </script>
 
 <svelte:head>
@@ -132,6 +147,10 @@
 		{/if}
 	{:else}
 		<link rel="icon" href="/logo.svg" />
+	{/if}
+
+	{#if fontsStr}
+		<link href="https://fonts.googleapis.com/css2?{fontsStr}" rel="stylesheet" />
 	{/if}
 </svelte:head>
 

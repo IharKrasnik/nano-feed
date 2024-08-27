@@ -11,7 +11,7 @@
 	import Loader from 'lib/components/Loader.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import currentUser from 'lib/stores/currentUser';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	export let page;

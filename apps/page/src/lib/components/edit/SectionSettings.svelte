@@ -2,7 +2,7 @@
 	import _ from 'lodash';
 
 	import clickOutside from 'lib/use/clickOutside';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import sectionClipboard from '$lib/stores/sectionClipboard';

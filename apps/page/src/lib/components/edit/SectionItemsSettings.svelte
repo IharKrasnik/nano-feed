@@ -1,5 +1,5 @@
 <script>
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import SectionColorPicker from '$lib/components/edit/SectionColorPicker.svelte';

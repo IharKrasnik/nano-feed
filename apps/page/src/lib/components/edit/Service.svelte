@@ -7,7 +7,7 @@
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
 	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly, fade } from 'svelte/transition';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import SourceLogo from 'lib/components/SourceLogo.svelte';
 	import Modal from 'lib/components/Modal.svelte';

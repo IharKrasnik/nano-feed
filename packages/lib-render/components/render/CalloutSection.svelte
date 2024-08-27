@@ -70,20 +70,20 @@
         <Emoji bind:emoji={section.emoji} />
         {/if} -->
 					{#if section.label}
-						<div class="text-sm font-medium mb-4 _section-label">
+						<div class="text-sm font-medium mb-4 _section-label section-label">
 							<ContentEditableIf bind:innerHTML={section.label} condition={isEdit} />
 						</div>
 					{/if}
 
 					{#if section.title}
-						<div class="_section-title text-3-4xl sm:text-4-5xl font-semibold mb-4">
+						<div class="_section-title section-title text-3-4xl sm:text-4-5xl font-semibold mb-4">
 							<ContentEditableIf bind:innerHTML={section.title} condition={isEdit} />
 						</div>
 					{/if}
 
 					{#if section.description}
 						<ContentEditableIf
-							class="_section-description _large font-medium whitespace-pre-wrap my-4 sm:pr-24"
+							class="_section-description _large section-description font-medium whitespace-pre-wrap my-4 sm:pr-24"
 							bind:innerHTML={section.description}
 							condition={isEdit}
 						/>
@@ -104,7 +104,9 @@
 									<div class="text-base mt-[1px]">
 										{#if item.title}
 											<span class="font-medium">{@html item.title || ''}</span>
-										{/if}<span class="_item-description">{@html item.description || ''}</span>
+										{/if}<span class="_item-description section-item-description"
+											>{@html item.description || ''}</span
+										>
 									</div>
 								</div>
 							{/each}
@@ -112,7 +114,7 @@
 					{/if}
 
 					{#if section.interactiveRenderType}
-						<div class="mt-4 mb-8 sm:mb-0 sm:mt-12}">
+						<div class="mt-8 mb-8 sm:mb-0 sm:mt-12}">
 							<RenderInteractiveOptions
 								class="justify-start {section.theme?.areItemsGrid ? 'mb-16' : ''}"
 								bind:sectionItem={section}
@@ -146,13 +148,13 @@
 									<div>
 										<div class="mt-2 inline-block">
 											{#if item.title}
-												<span class="text-base font-medium _item-title _small"
+												<span class="text-base font-medium _item-title _small section-item-title"
 													>{@html item.title || ''}</span
 												>
 											{/if}
 										</div>
 									</div>
-									<div class="_item-description text-sm sm:text-base mt-2">
+									<div class="_item-description section-item-description text-sm sm:text-base mt-2">
 										{@html item.description || ''}
 									</div>
 								</div>

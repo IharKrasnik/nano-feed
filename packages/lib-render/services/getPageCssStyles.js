@@ -22,7 +22,9 @@ export default (page) => {
 		page.theme = page.parentPage?.theme;
 	}
 
-	let accentColor = page.theme?.accentColor || '#000';
+	let accentColor = page.theme?.accentColor || '#000000';
+	let textColor = page.theme?.textColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .9) : darken(accentColor, .95));
+	const labelColor = page.theme?.labelColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .7) : darken(accentColor, .7));
 
 	//1
 	let styles = {
@@ -37,6 +39,7 @@ export default (page) => {
 		'button-large-radius': `${parseInt(page.theme?.buttonRadius?.replace('px', '') || '24') + 4}px`,
 		'text-font': page.theme?.textFont || 'Inter',
 		'label-font': page.theme?.labelFont || 'Inter',
+		'label-color': labelColor,
 		'text-font-size': '18px',
 		'text-line-height': 1.55,
 		'background-color': page.theme?.backgroundColor || '#ffffff',
@@ -56,11 +59,12 @@ export default (page) => {
 				? lighten(page.theme?.backgroundColor, 0.1)
 				: darken(page.theme?.backgroundColor, 0.15),
 		'border-color': page.theme.borderColor || (page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : '#00000014'),
-		'text-color': page.theme?.textColor || (page.theme?.theme === 'dark' ? '#fbf5ec' : '#111111'),
+		'text-color': textColor,
+		// '#fbf5ec' : '#111111'),
 		'accent-color': accentColor,
 		'accent-color-darker': darken(accentColor, 0.5),
 		'accent-color-lighter': lighten(accentColor, 0.5),
-		'link-color': page.theme?.linkColor || accentColor,
+		'link-color': page.theme?.linkColor || page.theme.theme === 'dark' ? lighten(accentColor, .5) : darken(accentColor, .5),
 		'section-item-background-color':
 			page.theme?.sectionItemBackgroundColor ||
 			(page.theme?.theme === 'dark' ? hexToRGBA('#161619', 0.85) : hexToRGBA('#f6f5f4', 0.85)),
@@ -69,7 +73,7 @@ export default (page) => {
 		// 	: hexToRGBA(lighten(page.theme?.accentColor, 0.9), 0.5)),
 
 		'section-description-text-color':
-			page.theme?.textColor ? lighten(page.theme?.textColor, .5) : (page.theme?.theme === 'dark' ? darken('#f6f5f4', .5) : lighten('#111111', .5)),
+			(page.theme.theme === 'dark' ? darken(textColor, .6) : lighten(textColor, .2)),
 
 		'section-description-text-color-opposite':
 			page.theme?.theme === 'dark' ? 'rgba(0,0,0, .7)' : 'rgba(255,255,255, .7)',
@@ -85,14 +89,11 @@ export default (page) => {
 
 		'input-background': page.theme?.inputBackground || 'var(--section-item-background-color)',
 		'input-color': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
-		'button-color': page.theme?.buttonColor || '#fff',
+		'button-color': page.theme?.buttonColor || (page.theme?.buttonTheme === page.theme?.theme ? textColor : page.theme.buttonTheme === 'dark' ? lighten(textColor, .9) : darken(textColor, .95)),
 		'input-container-border-width': page.theme?.isInputBorder ? '0px' : '1px 1px 1px 1px',
 		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px',
 
 	};
-	debugger;
-
-	console.log('section-description-text-color', styles['section-description-text-color']);
 
 	styles['accent-color-darker'] = darken(styles['accent-color'], 0.6);
 	styles['accent-color-darker-lg'] = darken(styles['accent-color'], 0.8);
@@ -105,6 +106,5 @@ export default (page) => {
 		.map(([key, value]) => `--${key}:${value}`)
 		.join(';');
 
-	debugger;
 	return { cssVarStyles, styles };
 };

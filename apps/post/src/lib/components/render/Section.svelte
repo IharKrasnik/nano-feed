@@ -54,8 +54,8 @@
 
 			{#if section.title}
 				<h2
-					class="_section-title  font-medium mb-4 sm:max-w-[750px] sm:mx-auto {section.theme
-						.titleSize === 'small'
+					class="_section-title section-title font-medium mb-4 sm:max-w-[750px] sm:mx-auto {section
+						.theme.titleSize === 'small'
 						? 'sm:text-lg text-lg'
 						: 'sm:text-5xl text-3xl'} "
 				>
@@ -120,13 +120,6 @@
 									</div>
 								{/if}
 
-								<!-- {#if item.title}
-									<h2
-										class="{headerTextStyle(item)[section.columns]} _section-title font-bold mb-4"
-									>
-										{@html item.title}
-									</h2>
-								{/if} -->
 								{#if item.description}
 									<h3 class="{descriptionStyle[section.columns]} whitespace-pre-wrap">
 										{@html item.description}

@@ -45,7 +45,7 @@
 					/>
 					{#if step.description}
 						<ContentEditableIf
-							class="_item-description opacity-70 mt-4"
+							class="_item-description section-item-description opacity-70 mt-4"
 							bind:innerHTML={step.description}
 							condition={isEdit}
 						/>

@@ -8,7 +8,7 @@
 	import { GOOGLE_LOGIN_URL, LINKEDIN_LOGIN_URL, TWITTER_LOGIN_URL, PAGE_URL } from 'lib/env';
 
 	import Button from 'lib/components/Button.svelte';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 
 	import TwitterIcon from '$lib/icons/Twitter.svelte';
 	import LinkedInIcon from '$lib/icons/LinkedIn.svelte';

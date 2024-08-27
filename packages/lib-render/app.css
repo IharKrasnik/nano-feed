@@ -239,10 +239,10 @@ body {
 	@apply sm:min-w-0;
 }
 
-._section-item._darker>.flex {
+/* ._section-item._darker>.flex {
 	background: var(--accent-color-darker-xl) !important;
 	color: var(--button-color) !important;
-}
+} */
 
 ._section-item._darker ._item-description {
 	color: var(--button-color) !important;
@@ -256,9 +256,9 @@ body {
 	--tw-translate-x: -100%;
 }
 
-._section-item._transparent>.flex {
+/* ._section-item._transparent>.flex {
 	background: none !important;
-}
+} */
 
 ._section-item._borderlesss {
 	border: none !important;
@@ -268,8 +268,7 @@ body {
 	padding: 0 !important;
 }
 
-._section-container._lighter,
-._section-item._lighter>.flex {
+._section-container._lighter {
 	background: var(--accent-color-darker-lg) !important;
 	@apply rounded-xl;
 }
@@ -286,7 +285,7 @@ body {
 }
 
 ._title {
-	color: var(--text-color-default);
+	color: var(--text-color);
 }
 
 ._subtitle {
@@ -311,16 +310,14 @@ body {
 	aspect-ratio: 1200/900;
 }
 
-._section-item:not(.bg_image):not(._article):not(._transparent),
-._section-item:not(.bg_image):not(._article):not(._transparent)>.flex {
+._section-item:not(.bg_image):not(._article):not(._transparent) {
 	text-align: left;
 	box-shadow: inset 0 1px 0 0 hsla(0, 0%, 100%, .05);
 	border: 1px var(--border-color) solid;
 	@apply rounded-xl;
 }
 
-._item-tag,
-._item-tag>.flex {
+._item-tag {
 	border-radius: 50px !important;
 }
 
@@ -345,8 +342,7 @@ body {
 	background: var(--section-item-background-color);
 }
 
-._section-container._bg-image,
-._section-item._bg-image>.flex {
+._section-container._bg-image {
 	background: none !important;
 	position: relative;
 	z-index: 10;
@@ -667,7 +663,7 @@ a[href] {
 	/* font-weight: 500; */
 	font-weight: 600;
 	line-height: var(--section-title-line-height);
-	color: var(--text-color-default)
+	color: var(--text-color)
 		/* margin-bottom: 16px; */
 }
 
@@ -676,7 +672,7 @@ a[href] {
 }
 
 ._bg-opposite ._section-item:not(._transparent) ._item-title {
-	color: var(--text-color-default);
+	color: var(--text-color);
 }
 
 ._section-item._bg-opposite ._item-title {
@@ -761,7 +757,6 @@ a._item-title:hover {
 ._color-item-description {
 	/* color: var(--section-description-text-color); */
 	color: var(--section-description-text-color);
-	opacity: 0.7;
 }
 
 ._color-item-description-opposite {
@@ -973,7 +968,7 @@ button._alternative:hover {
 ._hero-title {
 	font-family: var(--title-font);
 	font-size: var(--title-font-size);
-	color: var(--text-color-default);
+	color: var(--text-color);
 
 	@apply font-bold;
 	line-height: var(--title-line-height, 1.2);
@@ -1009,7 +1004,7 @@ button._alternative:hover {
 
 ._section-title {
 	font-family: var(--title-font) !important;
-	color: var(--text-color-default);
+	color: var(--text-color);
 }
 
 ._bg-opposite ._section-description {
@@ -1040,8 +1035,8 @@ button._alternative:hover {
 
 ._section-label {
 	font-family: var(--label-font) !important;
+	color: var(--label-color);
 	/* color: var(--accent-color); */
-	opacity: .6;
 }
 
 
@@ -1051,6 +1046,10 @@ button._alternative:hover {
 	background-color: rgba(from var(--accent-color) r g b / 0.4);
 	@apply px-1 rounded;
 	font-weight: normal;
+}
+
+._page ::selection {
+	background-color: rgba(from var(--accent-color) r g b / 0.4);
 }
 
 

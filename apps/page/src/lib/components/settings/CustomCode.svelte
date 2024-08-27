@@ -4,7 +4,7 @@
 
 	import Button from 'lib/components/Button.svelte';
 
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import { PAGE_URL } from 'lib/env';
 
 	export let page;

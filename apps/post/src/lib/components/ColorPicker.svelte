@@ -149,12 +149,6 @@
 				t.inputBackground = '#f5f5f5';
 				t.inputColor = '#222222';
 			}
-
-			if (t.buttonTheme === 'dark') {
-				t.buttonColor = '#ffffff';
-			} else {
-				t.buttonColor = '#222222';
-			}
 		});
 
 		themes = result;

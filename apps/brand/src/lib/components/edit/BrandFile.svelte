@@ -2,15 +2,10 @@
 	import _ from 'lodash';
 
 	import EditPng from '$lib/components/edit/Png.svelte';
-	import fileSizes from '$lib/stores/fileSizes';
 
 	import { put, del } from 'lib/api';
 
-	import FileInput from 'lib/components/FileInput.svelte';
 	import Button from 'lib/components/Button.svelte';
-	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
-	import fileFonts from '$lib/stores/fileFonts';
-	import fileToEdit from '$lib/stores/fileToEdit';
 
 	export let file;
 	export let brand;

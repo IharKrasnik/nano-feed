@@ -7,7 +7,7 @@
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import Loader from 'lib/components/Loader.svelte';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 
 	export let customer;
 	export let saveCustomer;

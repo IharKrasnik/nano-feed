@@ -52,14 +52,15 @@
 			? `min-w-[300px] sm:min-w-0 cursor-pointer`
 			: ''} {$selectedSectionItem?.id === item.id ? 'outline outline-4 outline-purple-300' : ''}"
 		class:pt-16={section.isFunkyGrid && i === 1}
-		{style}
+		style={`${style}; `}
 	>
 		<svelte:element
 			this={item.url && !item.interactiveRenderType ? 'a' : 'div'}
 			href={item.url && !item.interactiveRenderType ? item.url : null}
 			target={item.url?.startsWith('http') ? '_blank' : null}
 			id={item.feedItemId ? `feed-${item.feedItemId}` : ''}
-			class="_section-item group block relative {item.bgImageUrl || section.theme?.itemsBgImageUrl
+			class="_section-item section-item group block relative {item.bgImageUrl ||
+			section.theme?.itemsBgImageUrl
 				? '_bg-image'
 				: ''}  {item.className || ''} {item.isFeatured ? '_highlighted' : ''} {section.theme
 				?.areItemsTransparent || item.theme?.isTransparent
@@ -127,14 +128,14 @@
 						linkId: item.id
 				  })
 				: null}
-			style="-webkit-column-break-inside: avoid; scroll-margin-top: 40px; {`background-color: ${
+			style={`-webkit-column-break-inside: avoid; scroll-margin-top: 40px;  ${`background-color: ${
 				(!item.theme?.isTransparent &&
 					!section.theme?.areItemsTransparent &&
 					(section.theme?.backgroundColor ||
 						page.theme?.sectionItemBackgroundColor ||
 						page.parentPage?.theme?.sectionItemBackgroundColor)) ||
 				'none'
-			};`} "
+			};`}`}
 		>
 			{#if item.interactiveOptions}
 				<div
@@ -193,7 +194,7 @@
 
 			<div
 				class="{item.theme
-					?.backgroundColor} flex flex-col  relative z-10 justify-between {section.columns > 1
+					?.backgroundColor} flex flex-col relative z-10 justify-between {section.columns > 1
 					? 'h-full'
 					: ''} grid-cols-1 {section.columns > 1
 					? 'block'
@@ -219,18 +220,18 @@
 			>
 				{#if item.title || item.description || item.emoji || section.theme?.itemsDefaultEmoji}
 					<div
-						class="flex w-full h-full flex-col  {(item.theme?.isNoPadding ||
+						class="flex section-item-padding w-full h-full flex-col  {(item.theme?.isNoPadding ||
 							section.theme?.areItemsNoPadding) &&
 						(item.theme?.isTransparent || section.theme?.areItemsTransparent)
 							? 'sm:pr-8'
 							: `${
 									item.renderType === 'tag' || section.theme?.itemsRenderType === 'tag'
 										? 'px-2 sm:px-6 py-2 sm:py-4'
-										: 'px-6 py-5'
+										: 'px-6 py-6'
 							  } ${
-									section.columns > 3 ? 'sm:px-5' : section.columns > 2 ? 'sm:px-6' : 'sm:px-8'
-							  }`} text-left self-center order-none-off {section.columns == 1 && i % 2 === 1
-							? 'sm:order-last-off'
+									section.columns > 3 ? 'sm:px-5' : 'sm:px-8'
+							  }`} text-left self-center {section.columns == 1 && i % 2 === 1
+							? ''
 							: ''} {section.columns === 1 &&
 							(!item.imageUrl || section.items.length === 1) &&
 							'mx-auto'}
@@ -238,7 +239,6 @@
 							`justify-${item.theme?.verticalAlign || section.theme?.itemsVerticalAlign}`) ||
 							'justify-between'}
 							"
-						class:order-last-off={i % 2 === 0}
 					>
 						{#if section.theme?.areItemsIncludeStars}
 							<div class="flex mb-4">
@@ -285,7 +285,10 @@
 											/>
 										</div>
 										<div>
-											<h3 class="_item-description" style="font-weight: bold;">
+											<h3
+												class="_item-description section-item-description"
+												style="font-weight: bold;"
+											>
 												<ContentEditableIf
 													class=""
 													bind:innerHTML={item.title}
@@ -294,7 +297,7 @@
 											</h3>
 
 											{#if item.label}
-												<div class="_color-item-description text-xs">
+												<div class="_color-item-description section-item-label text-xs">
 													<ContentEditableIf
 														class=""
 														bind:innerHTML={item.label}
@@ -367,7 +370,13 @@
 														{/key}
 													</div>
 												{/if}
-												<h3 class="{headerTextStyle(item)[section.columns]} _item-title ">
+												<h3
+													class="{headerTextStyle(item)[
+														section.columns
+													]} _item-title section-item-title {section.renderType === 'pricing'
+														? 'mt-2'
+														: ''}"
+												>
 													<ContentEditableIf
 														class={item.theme?.align === 'center' ||
 														section.theme?.itemsAlign === 'center'
@@ -407,11 +416,11 @@
 																: 20}
 															theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
 														/>{/key}{/if}<ContentEditableIf
-													class="_inline_title _item-title sm:inline-block mb-1 font-medium"
+													class="_inline_title _item-title section-item-title sm:inline-block mb-1 font-medium"
 													bind:innerHTML={item.title}
 													condition={isEdit}
 												/><span class="hidden sm:inline">&nbsp;</span>{/if}<ContentEditableIf
-												class="_item-description {section.isDatabase
+												class="_item-description section-item-description {section.isDatabase
 													? '_line-clamp-4 hover:line-clamp-5'
 													: `${section.theme?.areInlineTitles ? 'inline' : 'inline-block'}`}"
 												bind:innerHTML={item.description}
@@ -499,7 +508,7 @@
 										{/if}
 
 										{#if item.pricing.benefitsStr}
-											<div class="mb-4 _section-description">
+											<div class="mb-4 _color-item-description">
 												{#if item.pricing.creditsAmount}
 													<div class="my-1 sm:my-2 flex items-start">
 														<Emoji
@@ -593,7 +602,7 @@
 						<!--End-->
 
 						{#if isShowAuthor}
-							<div class="_item-description mt-4">
+							<div class="_item-description section-item-description mt-4">
 								<ArticleAuthorLabel
 									author={item.creator}
 									publishedOn={item.createdOn}

@@ -7,18 +7,20 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import Loader from 'lib/components/Loader.svelte';
 	import ImageSearch from 'lib/components/ImageSearch.svelte';
-	import EmbedUrl from 'lib/components/EmbedUrl.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import { showErrorMessage } from 'lib/services/toast';
 	import currentUser from 'lib/stores/currentUser';
 	import currentCustomer from 'lib/stores/currentCustomer';
+	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 
 	export let isCanSearch = false;
 	export let isSearching = false;
 	export let isWithIntegrations = false;
+	export let onIntegrationsClick = () => {};
 	export let url;
 	export let theme = 'dark';
 	export let placeholder = 'Insert URL or paste from clipboard';
+	export let onRemoved = () => {};
 
 	let innerUrlValue = url?.startsWith('http') || url?.startsWith('$') ? url : null;
 
@@ -155,14 +157,11 @@
 				? 'opacity-40 hover:opacity-100'
 				: ''}"
 			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
+			on:click={() => {
+				onIntegrationsClick();
+			}}
 		>
-			<EmbedUrl
-				{url}
-				onSelected={(embedUrl) => {
-					url = embedUrl;
-					innerUrlValue = url;
-				}}
-			/>
+			🔌
 		</div>
 	{/if}
 
@@ -186,17 +185,29 @@
 	{/if}
 
 	{#if !isLoading}
-		<label
-			for="fileInput-{componentId}"
-			class="p-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center {url
-				? 'opacity-40 hover:opacity-100'
-				: ''}"
-			style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
-			use:tooltip
-			title="Upload File"
-		>
-			📁
-		</label>
+		{#if url}
+			<div
+				on:click={() => {
+					url = null;
+					innerUrlValue = null;
+					onRemoved();
+				}}
+			>
+				<FeatherIcon name="trash-2" class="cursor-pointer _text-link" color={'#8B786D'} size={16} />
+			</div>
+		{:else}
+			<label
+				for="fileInput-{componentId}"
+				class="p-2 w-[35px] h-[35px] cursor-pointer m-0 rounded-full flex items-center justify-center {url
+					? 'opacity-40 hover:opacity-100'
+					: ''}"
+				style="background-color: {theme === 'light' ? '#eaeaea' : '#222'};"
+				use:tooltip
+				title="Upload File"
+			>
+				📁
+			</label>
+		{/if}
 	{/if}
 
 	<input id="fileInput-{componentId}" type="file" on:change={onFileUpload} hidden />

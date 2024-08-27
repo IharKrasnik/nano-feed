@@ -13,4 +13,5 @@ export default {
   "form": "Form",
   "comments": "Comments",
   "embedCode": "HTML Code Embed",
+  "embedSvelte": "Svelte Code Embed",
 }

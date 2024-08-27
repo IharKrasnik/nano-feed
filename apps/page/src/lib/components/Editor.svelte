@@ -24,9 +24,9 @@
 	import EditNewsletter from '$lib/components/edit/Newsletter.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
 	import EditCTA from '$lib/components/edit/CallToAction.svelte';
+	import EditTheme from '$lib/components/edit/Theme.svelte';
 	import EditSectionSettings from '$lib/components/edit/SectionSettings.svelte';
 	import Insert from '$lib/components/edit/Insert.svelte';
-	import EditSectionItem from '$lib/components/edit/SectionItem.svelte';
 
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Modal from 'lib/components/Modal.svelte';
@@ -52,10 +52,6 @@
 	import NewPage from '$lib/components/NewPage.svelte';
 
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
-	import ColorPicker from '$lib/components/ColorPicker.svelte';
-	import BrowserFrame from 'lib/components/BrowserFrame.svelte';
-	import MomentumWidget from '$lib/components/MomentumWidget.svelte';
-	import Settings from '$lib/components/Settings.svelte';
 	import EditDatabaseTab from '$lib/components/edit/DatabaseTab.svelte';
 	import EditGrowth from '$lib/components/edit/Growth.svelte';
 	import EditBlog from '$lib/components/edit/Blog.svelte';
@@ -67,11 +63,12 @@
 	import EditService from '$lib/components/edit/Service.svelte';
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import EditServices from '$lib/components/edit/Services.svelte';
+	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
+	import currentPage from 'lib-render/stores/currentPage';
 
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';
 
 	import tooltip from 'lib/use/tooltip';
-	import clickOutside from 'lib/use/clickOutside';
 
 	import currentUser from 'lib/stores/currentUser';
 	import allPages from 'lib-render/stores/allPages';
@@ -169,6 +166,8 @@
 	let editorPanelEl;
 	let prevSelectedTab;
 	let prevSelectedSection;
+
+	$: $currentPage = page;
 
 	$: if (editorPanelEl && $selectedTab !== prevSelectedTab) {
 		prevSelectedTab = $selectedTab;
@@ -769,6 +768,8 @@
 	};
 
 	let selectedSubmissionsTab = '';
+
+	let isEditingTheme = false;
 </script>
 
 <svelte:head>
@@ -1121,16 +1122,18 @@
 
 									{#if $sectionToEdit && $selectedTab === 'editor'}
 										<div class="pl-0 z-40 min-h-screen">
-											<div
-												class="flex items-center cursor-pointer text-[#8B786D] mb-4"
-												on:click={() => {
-													updateSectionToEdit();
-													$sectionToEdit = null;
-												}}
-											>
-												<BackArrowSvg />
-												Back
-											</div>
+											{#if !$selectedSectionItem}
+												<div
+													class="flex items-center cursor-pointer text-[#8B786D] mb-4"
+													on:click={() => {
+														updateSectionToEdit();
+														$sectionToEdit = null;
+													}}
+												>
+													<BackArrowSvg />
+													Back
+												</div>
+											{/if}
 
 											<div in:fly={{ y: 50, duration: 150 }}>
 												<EditSection
@@ -1151,7 +1154,7 @@
 									{#if !$sectionToEdit}
 										<div>
 											{#if $selectedTab === 'editor' && page.name}
-												{#if page._id}
+												{#if page._id && !isEditingTheme}
 													<ToggleGroup
 														class="mb-4"
 														tabs={[
@@ -1182,11 +1185,22 @@
 														}}
 													/>
 
-													{#if !isPageResetting}
+													{#if !isPageResetting && !isEditingTheme}
 														<div class="_section mb-8">
 															<div class="flex justify-between items-center ">
-																<ColorPicker bind:page />
-
+																{#if isEditingTheme}{:else}
+																	<div
+																		class="relative flex justify-center items-center cursor-pointer w-[25px] h-[25px] shrink-0 rounded-full"
+																		style="outline: 2px {page.theme
+																			?.accentColor} solid; background-color: {page.theme
+																			?.backgroundColor}; color: {page.theme?.textColor}"
+																		on:click={() => {
+																			isEditingTheme = !isEditingTheme;
+																		}}
+																	>
+																		<div class="text-xs">Aa</div>
+																	</div>
+																{/if}
 																<div
 																	class="relative ml-4 py-2 px-3 text-sm rounded-lg bg-[#f1f1f1] cursor-pointer w-full opacity-90"
 																	on:click={() => (isPageResetting = true)}
@@ -1470,6 +1484,16 @@
 																{#key page._id}
 																	<EditService bind:page bind:setPageAndDraft />
 																{/key}
+															{:else if isEditingTheme}
+																<BackTo
+																	to="Content"
+																	onClick={() => {
+																		isEditingTheme = false;
+																	}}
+																/>
+																<div in:fade={{ duration: 150 }}>
+																	<EditTheme bind:page />
+																</div>
 															{:else}
 																{#if page?._id && !page.renderType}
 																	<div

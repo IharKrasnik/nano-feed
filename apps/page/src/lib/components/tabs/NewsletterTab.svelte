@@ -7,7 +7,7 @@
 	import BackArrowSvg from 'lib/icons/back-arrow.svelte';
 	import Button from 'lib/components/Button.svelte';
 	import Loader from 'lib/components/Loader.svelte';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import BackTo from '$lib/components/BackTo.svelte';
 
 	import tooltip from 'lib/use/tooltip';

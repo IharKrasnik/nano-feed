@@ -1,14 +1,16 @@
 <script>
 	import _ from 'lodash';
 
-	import { post } from 'lib/api';
+	import { get, post } from 'lib/api';
 	import autofocus from 'lib/use/autofocus';
-	import Loader from 'lib/components/Loader.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import RenderUrl from 'lib/components/RenderUrl.svelte';
 	import Button from 'lib/components/Button.svelte';
+	import Loader from 'lib/components/Loader.svelte';
+	import parseQuery from 'lib/helpers/parseQuery';
+	import EditSvelteComponent from '$lib/components/edit/SvelteComponent.svelte';
 
-	let isModalOpen = false;
+	export let isModalOpen = false;
 	let isLoading = false;
 
 	export let url = '';
@@ -27,7 +29,7 @@
 					varName: 'svelteCode',
 					value: '<div>Hello World</div>',
 					placeholder: '<div>Hello World</div>',
-					hint: 'Go to https://svelte.dev/repl and copy results here'
+					hint: 'Use https://svelte.dev/repl as playground'
 				}
 			]
 		},
@@ -131,7 +133,13 @@
 		url = `${selectedService.key}?${field.varName}=${encodeURIComponent(field.value)}`;
 	};
 
-	let detectAndSelectService = () => {
+	let getUrlParam = (param) => {
+		const query = parseQuery(url);
+		return query[param];
+	};
+
+	let detectAndSelectService = async () => {
+		isLoading = true;
 		embedServices.forEach((s) => (s.isSelected = false));
 
 		if (url) {
@@ -143,6 +151,15 @@
 		} else {
 			embedServices.forEach((s) => (s.isSelected = false));
 		}
+		if (selectedService.key === '$svelte' && getUrlParam('id')) {
+			const { content } = await get(
+				`https://hive-668803db944bc2001292526f.paralect.co/svelte/components/${getUrlParam('id')}`
+			);
+
+			selectedService.fields.find((f) => f.type === 'code').value = content;
+		}
+
+		isLoading = false;
 	};
 
 	$: if (!url) {
@@ -159,12 +176,28 @@
 			embedServices.find((s) => s.key === serviceKey).isSelected = true;
 		}
 	};
+
+	let previewEl;
 </script>
 
 <div on:click={openModal}>🔌</div>
 
 {#if isModalOpen}
 	<Modal isShown onClosed={() => close()} maxWidth={1000}>
+		{#if selectedService?.key === '$svelte'}
+			<EditSvelteComponent
+				bind:url
+				onSave={(updatedUrl) => {
+					url = updatedUrl;
+					onSelected(url);
+					close();
+				}}
+				onCancel={() => {
+					close();
+				}}
+			/>
+		{/if}
+
 		<div class="_editor">
 			<div class="p-8">
 				<h2 class="font-bold text-xl mb-4">Embed Services</h2>
@@ -173,30 +206,11 @@
 					<div class="grid grid-cols-1">
 						<div>
 							{#if selectedService.fields?.length}
-								{#each selectedService.fields as field}
-									<div class="text-sm font-bold mb-2">{field.name}</div>
-									{#if field.type === 'code'}
-										<textarea
-											class="w-full"
-											rows="6"
-											bind:value={field.value}
-											placeholder={field.placeholder}
-										/>
-									{:else}
-										<input
-											type="text"
-											class="w-full"
-											bind:value={field.value}
-											placeholder={field.placeholder}
-											on:input={() => {
-												updateUrl({ field });
-											}}
-										/>
-									{/if}
-									{#if field.hint}
-										<div class="text-sm">{field.hint}</div>
-									{/if}
-								{/each}
+								{#if isLoading}
+									<Loader />
+								{:else}
+									{#each selectedService.fields as field}{/each}
+								{/if}
 							{:else}
 								<div class="text-sm font-bold mb-2">URL</div>
 
@@ -209,25 +223,7 @@
 							{/if}
 
 							<div class="my-4 mb-8 flex items-center">
-								{#if selectedService.key === '$svelte'}
-									<Button
-										class="_primary mr-2"
-										onClick={async () => {
-											const { buildUrl, componentName } = await post(
-												'https://hive-668803db944bc2001292526f.paralect.co/svelte/web-component',
-												{
-													name: '',
-													code: selectedService.fields[0].value
-												}
-											);
-											url = `$svelte?buildJsSrc=${encodeURIComponent(
-												buildUrl
-											)}&componentName=${encodeURIComponent(componentName)}`;
-											onSelected(url);
-											close();
-										}}>Build & Save</Button
-									>
-								{:else}
+								{#if selectedService.key === '$svelte'}{:else}
 									<Button
 										class="_primary mr-2"
 										onClick={async () => {
@@ -235,16 +231,19 @@
 											close();
 										}}>💾 Save</Button
 									>
+									<button class="_secondary mr-2" on:click={close}>Cancel</button>
 								{/if}
-								<button class="_secondary mr-2" on:click={close}>Cancel</button>
 							</div>
 						</div>
 
 						{#key url}
-							<div class="bg-gray-300/50 _section col-span-2 mt-8">
-								<div class="text-lg font-bold mb-4">Preview</div>
-								<RenderUrl {url} />
-							</div>
+							{#if selectedService?.key !== '$svelte'}
+								<div class="bg-gray-300/50 _section col-span-2 mt-8">
+									<div class="text-lg font-bold mb-4">Preview</div>
+
+									<RenderUrl bind:this={previewEl} {url} />
+								</div>
+							{/if}
 						{/key}
 					</div>
 				{:else}

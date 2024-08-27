@@ -3,7 +3,7 @@
 	import ToggleGroup from '$lib/components/ToggleGroup.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 	import DollarInput from 'lib/components/DollarInput.svelte';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import toDollars from 'lib/helpers/toDollars';
 
 	export let page;

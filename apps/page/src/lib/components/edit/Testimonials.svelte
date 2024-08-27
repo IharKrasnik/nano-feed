@@ -1,7 +1,7 @@
 <script>
 	export let section;
 
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import contenteditable from 'lib/use/contenteditable';
 
 	let addNewTestimonial = () => {

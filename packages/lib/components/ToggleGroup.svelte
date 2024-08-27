@@ -38,11 +38,11 @@
 		>
 			{tab.name}
 
-			<div class="text-xs opacity-70">
-				{#if tab.description}
+			{#if tab.description}
+				<div class="text-xs opacity-70">
 					{tab.description}
-				{/if}
-			</div>
+				</div>
+			{/if}
 		</div>
 	{/each}
 </div>

@@ -7,7 +7,7 @@
 	import Button from 'lib/components/Button.svelte';
 	import EditChatRoom from '$lib/components/edit/ChatRoom.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import contenteditable from 'lib/use/contenteditable';
 	import currentUser from 'lib/stores/currentUser';
 	import { showSuccessMessage, showErrorMessage } from 'lib/services/toast';

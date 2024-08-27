@@ -33,7 +33,13 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@codemirror/lang-css": "^6.2.1",
+		"@codemirror/lang-html": "^6.4.9",
+		"@codemirror/lang-javascript": "^6.2.2",
+		"@codemirror/lang-json": "^6.0.1",
+		"@replit/codemirror-lang-svelte": "^6.0.0",
 		"@resvg/resvg-js": "^2.2.0",
+		"@uiw/codemirror-theme-duotone": "^4.23.0",
 		"@zerodevx/svelte-toast": "^1.0.0-rc.1",
 		"csvtojson": "^2.0.10",
 		"emoji-picker-element": "^1.15.1",
@@ -45,6 +51,7 @@
 		"satori": "^0.1.1",
 		"satori-html": "^0.3.2",
 		"svelte-awesome-color-picker": "^2.4.8",
+		"svelte-codemirror-editor": "^1.4.0",
 		"svelte-confetti-explosion": "^0.4.0",
 		"toolcool-range-slider": "^4.0.28",
 		"uuid": "^9.0.0"

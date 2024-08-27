@@ -13,7 +13,7 @@
 		<div class="_item-title mb-2">
 			{newsLetter.title}
 		</div>
-		<div class="_item-description">
+		<div class="_item-description section-item-description">
 			{newsLetter.description}
 		</div>
 

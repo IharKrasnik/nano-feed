@@ -10,7 +10,9 @@
 	import TypeformIcon from 'lib/icons/typeform.svelte';
 	import SenjaIcon from 'lib/icons/senja.svelte';
 	import isUrlEmbeddable from 'lib/helpers/isUrlEmbeddable';
+	import ImportedComponent from 'lib-render/components/render/ImportedComponent.svelte';
 	import { v4 as uuidv4 } from 'uuid';
+	import parseQuery from 'lib/helpers/parseQuery';
 
 	import { onMount } from 'svelte';
 
@@ -24,7 +26,10 @@
 	export let url;
 	export let imgClass = '';
 	export let isIframeFallback = true;
-	export let maxWidth;
+	export let maxWidth = undefined;
+
+	export let section;
+	export let page;
 
 	export let isAutoplay = url?.includes('.mp4') || url?.includes('.mov');
 
@@ -89,20 +94,8 @@
 	}
 
 	let getUrlParam = (param) => {
-		if (!url) {
-			return null;
-		}
-		let queryString = `?${url.split('?')[1]}`;
-
-		let query = {};
-		let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
-
-		for (let i = 0; i < pairs.length; i++) {
-			let pair = pairs[i].split('=');
-			query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
-		}
-
-		return query[param];
+		const query = parseQuery(url);
+		return query && query[param];
 	};
 
 	let iframeEl;
@@ -119,6 +112,7 @@
 	}
 
 	if (browser) {
+		debugger;
 		if (getUrlParam('buildJsSrc')) {
 			eval(
 				`var d=document;var s=d.createElement("script"); s.src="${getUrlParam(
@@ -127,13 +121,14 @@
 			);
 		}
 	}
+	let containerEl;
 </script>
 
 <div class="h-[600px] hidden" />
 
 {#if url}
 	{#if isUrl() || isServiceUrl()}
-		<div class="{clazz?.includes('w-') ? '' : 'w-full'} {clazz}" {style}>
+		<div class="{clazz?.includes('w-') ? '' : 'w-full'} {clazz}" {style} bind:this={containerEl}>
 			<div
 				class="h-full w-full transition"
 				style={maxWidth ? `max-width: ${maxWidth}px; margin: 0 auto;` : 'width: 100%;'}
@@ -185,9 +180,15 @@
 						src="https://static.senja.io/dist/platform.js"
 					></script>
 				{:else if url.startsWith('$svelte')}
-					{#if getUrlParam('componentName')}
-						<svelte:element this={getUrlParam('componentName')} />
-					{/if}
+					{#key url}
+						{#if getUrlParam('componentName')}
+							<ImportedComponent
+								name={getUrlParam('componentName')}
+								id={getUrlParam('id')}
+								props={{ query: parseQuery(url), page, section }}
+							/>
+						{/if}
+					{/key}
 				{:else if url.includes('vimeo.com')}
 					{#if !isFilesOnly}
 						<iframe

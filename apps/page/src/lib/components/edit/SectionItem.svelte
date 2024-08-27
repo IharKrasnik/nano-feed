@@ -4,7 +4,7 @@
 	import getRandomEmoji from 'lib/services/getRandomEmoji';
 	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly } from 'svelte/transition';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
 	import Modal from 'lib/components/Modal.svelte';
 	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
@@ -75,7 +75,6 @@
 				return sortOrder.indexOf(a.payPer);
 			}
 		);
-		debugger;
 	};
 </script>
 

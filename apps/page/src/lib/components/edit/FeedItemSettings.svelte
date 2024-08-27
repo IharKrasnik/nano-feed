@@ -2,7 +2,7 @@
 	import { fly } from 'svelte/transition';
 
 	import isUrl from 'lib/helpers/isUrl';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import DateTimeInput from 'lib/components/DateTimeInput.svelte';
 	import FeatherIcon from 'lib/components/FeatherIcon.svelte';
 

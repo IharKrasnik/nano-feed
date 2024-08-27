@@ -1,5 +1,5 @@
 <script>
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import RenderUrlWithBackground from 'lib/components/RenderUrlWithBackground.svelte';
 
 	export let imageUrl;

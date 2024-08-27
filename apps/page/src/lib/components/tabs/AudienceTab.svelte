@@ -11,7 +11,7 @@
 	import Loader from 'lib/components/Loader.svelte';
 	import currentUser from 'lib/stores/currentUser';
 	import submissions from 'lib/stores/submissions';
-	import FileInput from 'lib/components/FileInput.svelte';
+	import FileInput from '$lib/components/FileInput.svelte';
 	import selectedSubmission from 'lib-render/stores/selectedSubmission';
 
 	import formsCache, { getForm } from 'lib-render/stores/formsCache';

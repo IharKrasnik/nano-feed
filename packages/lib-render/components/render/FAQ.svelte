@@ -78,7 +78,7 @@
 					</div>
 					<div
 						class:hidden={!faq.isExpanded}
-						class="mt-2 mb-8 p-2 _item-description"
+						class="mt-2 mb-8 p-2 _item-description section-item-description"
 						in:fade={{ duration: 150 }}
 					>
 						{@html faq.description}
