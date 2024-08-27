@@ -296,7 +296,7 @@
 									$sectionToEdit.id !== page.activeHero?.formSection?.id
 										? 'opacity-30 grayscale'
 										: ''}  {page.activeHero?.theme?.isPullBottom
-										? 'mb-[-100px] sm:mb-[-192px]'
+										? 'mb-[-100px] sm:mb-[-130px]'
 										: ''}"
 								>
 									<RenderHero
@@ -382,6 +382,7 @@
 																	bind:section={$sectionToEdit}
 																	bind:isEdit
 																	{onInsert}
+																	isPulledTop={page.activeHero?.theme?.isPullBottom && i === 0}
 																/>
 
 																{#if $sectionToEdit.footer && ($sectionToEdit.footer.title || $sectionToEdit.footer.description || $sectionToEdit.footer.interactiveRenderType)}
@@ -455,6 +456,7 @@
 																	bind:themeStyles={styles}
 																	bind:isEdit
 																	bind:isCloneable={isSectionsCloneable}
+																	isPulledTop={page.activeHero?.theme?.isPullBottom && i === 0}
 																	{onInsert}
 																	style={false && page.theme?.isZebra && i % 2 === 0
 																		? page.theme?.theme === 'dark'

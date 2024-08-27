@@ -58,6 +58,11 @@
 
 	export let isShowAuthor;
 
+	export let isPulledTop = false;
+
+	if (isPulledTop) {
+	}
+
 	export let style = null;
 
 	const headerTextStyle = (item) => {
@@ -287,6 +292,8 @@
 		'half-year': 'half-yearly',
 		year: 'yearly'
 	};
+
+	let itemEls = {};
 </script>
 
 <!-- <div class="section-bg" /> -->
@@ -415,7 +422,11 @@
 				? clazz
 				: section.renderType === 'article'
 				? 'sm:pb-16'
-				: `${isFooter ? 'pb-8 sm:pb-16 sm:mt-[-32px]' : `py-8 sm:py-16`}`}
+				: `${
+						isFooter
+							? 'pb-8 sm:pb-16 sm:mt-[-32px]'
+							: `${isPulledTop ? 'pb-8 sm:pb-16' : 'py-8 sm:py-16'}`
+				  }`}
 					{section.renderType === 'changelog' ? 'sm:w-[600px] mx-auto' : ''}
 					{section.theme?.isOppositeColors ? '_bg-opposite' : ''}"
 			style="z-index: 10; {section.theme?.isOverrideGlowingColor
@@ -586,6 +597,12 @@
 												: ' opacity-70'}"
 											on:click={() => {
 												selectedPayPer = pricingTab.payPer;
+												let item = section.items.find(
+													(item) => item.pricing.per === selectedPayPer
+												);
+												setTimeout(() => {
+													itemEls[item.id].focus();
+												}, 100);
 											}}
 										>
 											Pay {payPerLabels[pricingTab.payPer]}
@@ -1237,6 +1254,7 @@
 								{#each section.items.filter( (i) => (selectedPayPer ? i.pricing?.per === 'one-time' || i.pricing?.per === selectedPayPer : true) ) || [] as item, i (item.id)}
 									{#key $selectedSectionItem?.id}
 										<RenderSectionItem
+											bind:this={itemEls[item.id]}
 											bind:section
 											bind:page
 											item={selectedSectionItem?.id === item.id ? $selectedSectionItem : item}

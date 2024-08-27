@@ -189,8 +189,7 @@
 				hero.theme?.bgPattern !== 'cursors') ||
 			page.renderType === 'service'
 				? ''
-				: `min-h-screen ${isEdit ? '' : 'mt-24 tall:mt-0 tall:h-screen'}`} {hero.theme
-				?.bgPattern === 'canvas'
+				: `min-h-screen ${isEdit ? '' : ' tall:h-screen'}`} {hero.theme?.bgPattern === 'canvas'
 				? 'max-w-max'
 				: ''}"
 			style=""
@@ -201,7 +200,7 @@
 					? ''
 					: ''} h-full  {page.renderType === 'article'
 					? 'pt-16 sm:pt-24'
-					: 'tall:mt-0 tall:py-24 pt-24 pb-12'} {!hero.testimonials?.length
+					: 'tall:mt-0 sm:py-24 pt-24 pb-12'} {!hero.testimonials?.length
 					? `flex items-center`
 					: ''}"
 				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
@@ -269,9 +268,10 @@
 
 						{#if hero.subtitle && (!isEdit || isMounted)}
 							<h2
-								class="_subtitle {hero.theme?.titleSize === 'huge'
-									? 'sm:text-xl'
-									: 'sm:text-xl'} {hero.theme?.titleSize === 'giant'
+								class="_subtitle {hero.interactiveRenderType || hero.demoUrl || hero.socialProof
+									? 'mb-[40px]'
+									: ''} {hero.theme?.titleSize === 'huge' ? 'sm:text-xl' : 'sm:text-xl'} {hero.theme
+									?.titleSize === 'giant'
 									? 'sm:text-3xl'
 									: ''} whitespace-pre-wrap  {hero.demoUrl || !hero.theme?.isVertical
 									? page.renderType === 'article'
@@ -407,7 +407,7 @@
 										{/each}
 									</div>
 
-									<div class="text-sm mt-2 opacity-80 max-w-[400px]">
+									<div class="text-sm mt-2 opacity-80 max-w-[400px] mb-4 sm:mb-0">
 										{@html hero.socialProof.title || ''}
 									</div>
 								{/if}
@@ -446,7 +446,7 @@
 						<div
 							class="relative  w-full {page.renderType === 'article'
 								? 'mt-0'
-								: 'mt-16'} sm:mt-0 {hero.theme?.isVertical ? '' : 'sm:ml-8 sm:max-w-[600px]'}"
+								: 'mt-0'} sm:mt-0 {hero.theme?.isVertical ? '' : 'sm:ml-8 sm:max-w-[600px]'}"
 							on:click={() => {
 								// if (hero.demoUrl.includes('/emulator-full')) {
 								// 	isDemoPopupShown = true;
@@ -511,7 +511,6 @@
 	}
 
 	._subtitle {
-		margin-bottom: 40px;
 		font-family: var(--subtitle-font);
 	}
 

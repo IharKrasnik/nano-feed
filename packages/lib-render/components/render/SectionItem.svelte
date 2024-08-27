@@ -42,6 +42,14 @@
 
 	export let isShowAuthor;
 
+	let sectionEl;
+
+	export function focus() {
+		if (window.innerWidth < 1000) {
+			sectionEl.scrollIntoView();
+		}
+	}
+
 	const getMonthlyAmount = ({ amount, per }) => {
 		if (per === 'month') {
 			return amount * 100;
@@ -79,14 +87,17 @@
 
 {#if item && (item.isShown || _.isUndefined(item.isShown))}
 	<div
+		bind:this={sectionEl}
 		class="_root {clazz} break-inside-avoid {section.isMasonryGrid
 			? 'mb-6'
 			: 'mb-2'} sm:col-span-{item.colSpan || 1} sm:row-span-{item.rowSpan ||
 			1} {section.renderType === 'carousel'
 			? `min-w-[300px] sm:min-w-0 cursor-pointer`
-			: ''} {$selectedSectionItem?.id === item.id ? 'outline outline-4 outline-purple-300' : ''}"
+			: ''} {$selectedSectionItem?.id === item.id
+			? 'outline outline-4 outline-purple-300'
+			: ''} scroll-mt-24 sm:scroll-mt-32"
 		class:pt-16={section.isFunkyGrid && i === 1}
-		style={`${style}; `}
+		style={`${style};`}
 	>
 		<svelte:element
 			this={item.url && !item.interactiveRenderType ? 'a' : 'div'}
