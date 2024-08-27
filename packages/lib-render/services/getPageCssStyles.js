@@ -26,6 +26,8 @@ export default (page) => {
 	let textColor = page.theme?.textColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .9) : darken(accentColor, .95));
 	const labelColor = page.theme?.labelColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .7) : darken(accentColor, .7));
 
+	page.theme.buttonTheme = page.theme?.buttonColor || 'dark';
+
 	//1
 	let styles = {
 		'container-width': page.theme?.containerWidth || '1200px',
@@ -94,6 +96,8 @@ export default (page) => {
 		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px',
 
 	};
+	debugger;
+	console.log('page.theme?.buttonTheme ', page.theme?.buttonTheme, 'page.theme?.theme', page.theme?.theme)
 
 	styles['accent-color-darker'] = darken(styles['accent-color'], 0.6);
 	styles['accent-color-darker-lg'] = darken(styles['accent-color'], 0.8);

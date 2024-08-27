@@ -16,6 +16,12 @@ body {
 	@apply rounded-lg p-4 mb-4 _border-section;
 }
 
+/* 
+._section-article {
+	max-width: 640px;
+	margin: 0 auto;
+} */
+
 ._editor ._text-link {
 	color: #8B786D;
 }

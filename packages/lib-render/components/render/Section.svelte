@@ -440,7 +440,8 @@
 						/> -->
 					{/if}
 					<div
-						class="_section_titles mb-16 relative w-full {page.theme.isTitlesLeft ||
+						class="_section_titles {section._isCtaFooter ? '' : 'mb-16'} relative w-full {page.theme
+							.isTitlesLeft ||
 						section.theme?.isTitleLeft ||
 						section.renderType === 'article' ||
 						section.renderType === 'changelog'
@@ -540,7 +541,7 @@
 									page.theme?.isTitlesLeft ||
 									section.theme?.isTitleLeft
 										? 'justify-start'
-										: 'justify-center mx-auto'} mb-8"
+										: 'justify-center mx-auto'} {section._isCtaFooter ? '' : 'mb-8'}"
 									bind:sectionItem={section}
 									size={isFooter ? 'normal' : 'large'}
 									bind:page

@@ -1,8 +1,5 @@
 <script>
 	import _ from 'lodash';
-	import tooltip from 'lib/use/tooltip';
-	import getRandomEmoji from 'lib/services/getRandomEmoji';
-	import getRandomProjectEmoji from 'lib/services/getRandomProjectEmoji';
 	import { fly } from 'svelte/transition';
 	import FileInput from '$lib/components/FileInput.svelte';
 	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
@@ -13,6 +10,7 @@
 	import clickOutside from 'lib/use/clickOutside';
 	import contenteditable from 'lib/use/contenteditable';
 	import SelectBackgroundImage from '$lib/components/SelectImageBackground.svelte';
+	import EditTable from '$lib/components/edit/Table.svelte';
 
 	let clazz = 'p-4';
 	export { clazz as class };
@@ -76,7 +74,27 @@
 			}
 		);
 	};
+
+	let isEditPricingSlider = false;
 </script>
+
+{#if isEditPricingSlider}
+	<Modal bind:isShown={isEditPricingSlider} onClosed={() => close()} maxWidth={1000}>
+		<EditTable
+			bind:section
+			headers={['Plan Name', 'Credit Count', 'Price', 'Payment Link', 'Benefits']}
+			csv={item.pricing.pricesStr}
+			onSave={({ csv }) => {
+				csv = csv.split('\n');
+				csv.shift();
+				csv = csv.join('\n');
+				item.pricing.pricesStr = csv;
+				isEditPricingSlider = false;
+			}}
+			onCancel={() => (isEditPricingSlider = false)}
+		/>
+	</Modal>
+{/if}
 
 {#if isSelectBackgroundModalShown}
 	<Modal
@@ -243,7 +261,7 @@
 			</select>
 
 			<div class="w-full flex justify-between mt-4">
-				<div class="text-xs opacity-70">{`{CreditsCount},{Price},{PaymentUrl}`}</div>
+				<div class="text-xs opacity-70" />
 				<div class="flex justify-end">
 					<div
 						class="text-xs cursor-pointer hover:text-red-800"
@@ -257,9 +275,10 @@
 			</div>
 
 			<textarea
-				class="w-full"
-				rows="6"
+				class="cursor-pointer w-full"
+				rows="2"
 				placeholder="100;$21.58;https://buy.stripe.com/12345&#10;200;$39.78;https://buy.stripe.com/23456"
+				on:click={() => (isEditPricingSlider = true)}
 				bind:value={item.pricing.pricesStr}
 				on:change={(evt) => {
 					item.pricing.prices = evt.target?.value
@@ -268,10 +287,11 @@
 						.map((lines) => {
 							let splits = lines.split(';');
 							return {
-								creditsAmount: parseInt(splits[0]),
-								amount: parseInt(splits[1].replace('$', '')),
-								link: splits[2].startsWith('http') ? splits[2] : null,
-								benefitsStr: splits[3]
+								planName: splits[0],
+								creditsAmount: parseInt(splits[1]),
+								amount: parseInt(splits[2].replace('$', '')),
+								link: splits[3].startsWith('http') ? splits[2] : null,
+								benefitsStr: splits[4]
 							};
 						});
 				}}
