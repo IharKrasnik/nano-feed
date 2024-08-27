@@ -295,7 +295,7 @@
 				: 'justify-center sm:[justify-content:normal]'}"
 		>
 			{#if sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice'}
-				{#each sectionItem.interactiveAnswers as answer}
+				{#each sectionItem?.interactiveAnswers || [] as answer}
 					<div
 						on:click={() => submitAnswer(answer)}
 						class="{itemClass} border emoji-button  flex items-center transition shadow-sm border-white/50 cursor-pointer"

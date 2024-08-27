@@ -910,30 +910,72 @@
 
 			{#if page.renderType !== 'article'}
 				<div class="_section">
-					<div class="_title flex justify-between w-full">Social Proof</div>
+					<div class=" flex justify-between w-full">
+						<div class="_title">Social Proof</div>
+
+						<div>
+							<input type="checkbox" bind:checked={hero.theme.isSingle} /> single
+						</div>
+					</div>
 
 					{#if hero.socialProof}
-						<div class="text-sm mb-2">Title</div>
-						<input
-							class="mb-4 w-full"
-							bind:value={hero.socialProof.title}
-							placeholder="Join 100+ creators"
-						/>
+						{#if hero.theme?.isSingle}
+							<div class="text-sm mb-2">Testimonial</div>
+						{:else}
+							<div class="text-sm mb-2">Title</div>
+						{/if}
 
-						<div class="text-sm mb-2">Avatars (or logos)</div>
-						{#each hero.socialProof?.logos || [] as logo}
-							<div class="flex gap-4 justify-between text-sm mb-2">
-								<FileInput class="w-full" theme="light" bind:url={logo.url} />
+						{#if hero.theme?.isSingle}
+							<div
+								class="w-full bg-[#f5f5f5] p-2 rounded-lg block mb-2"
+								contenteditable
+								use:contenteditable
+								placeholder="Join 100+ creators"
+								bind:innerHTML={hero.socialProof.title}
+							/>
 
-								<button
-									on:click={() => {
-										hero.socialProof.logos = hero.socialProof.logos.filter(
-											(l) => l.url !== logo.url
-										);
-									}}>🗑</button
-								>
-							</div>
-						{/each}
+							<div class="text-sm mb-2">Avatar</div>
+
+							<FileInput
+								class="w-full mb-2"
+								theme="light"
+								bind:url={hero.socialProof.testimonialImageUrl}
+							/>
+
+							<div class="text-sm mb-2">From name</div>
+							<input
+								class="mb-4 w-full"
+								bind:value={hero.socialProof.name}
+								placeholder="Lera Merman"
+							/>
+							<div class="text-sm mb-2">Position</div>
+							<input
+								class="mb-4 w-full"
+								bind:value={hero.socialProof.position}
+								placeholder="CEO, Clipwing"
+							/>
+						{:else}
+							<input
+								class="mb-4 w-full"
+								bind:value={hero.socialProof.title}
+								placeholder="Join 100+ creators"
+							/>
+
+							<div class="text-sm mb-2">Avatars (or logos)</div>
+							{#each hero.socialProof?.logos || [] as logo}
+								<div class="flex gap-4 justify-between text-sm mb-2">
+									<FileInput class="w-full" theme="light" bind:url={logo.url} />
+
+									<button
+										on:click={() => {
+											hero.socialProof.logos = hero.socialProof.logos.filter(
+												(l) => l.url !== logo.url
+											);
+										}}>🗑</button
+									>
+								</div>
+							{/each}
+						{/if}
 					{/if}
 					<div class="mt-4 w-full">
 						<button

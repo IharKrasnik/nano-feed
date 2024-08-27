@@ -277,7 +277,7 @@
 		{:else}
 			<div>
 				{#if sectionItem.interactiveAnswers?.length && (!sectionItem.interactiveRenderType || sectionItem.interactiveRenderType === 'single_choice' || sectionItem.interactiveRenderType === 'multiple_choice')}
-					{#each sectionItem.interactiveAnswers as answer}
+					{#each sectionItem?.interactiveAnswers || [] as answer}
 						<div class="flex justify-between">
 							<EmojiPicker
 								class="w-full p-2 bg-[#fafafa] my-2 text-center"

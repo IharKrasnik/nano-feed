@@ -41,6 +41,39 @@
 	export let emojiStyle;
 
 	export let isShowAuthor;
+
+	const getMonthlyAmount = ({ amount, per }) => {
+		if (per === 'month') {
+			return amount * 100;
+		} else if (per === 'quarter') {
+			return (amount / 4) * 100;
+		} else if (per === 'half-year') {
+			return (amount / 6) * 100;
+		} else if (per === 'year') {
+			return (amount / 12) * 100;
+		}
+	};
+
+	const billedLabels = {
+		week: 'Weekly',
+		month: 'Monthly',
+		quarter: 'Quarterely',
+		['half-year']: 'Half-Yearly',
+		['year']: 'Yearly'
+	};
+
+	function singularize(word) {
+		const endings = {
+			ves: 'fe',
+			ies: 'y',
+			i: 'us',
+			zes: 'ze',
+			ses: 's',
+			es: 'e',
+			s: ''
+		};
+		return word.replace(new RegExp(`(${Object.keys(endings).join('|')})$`), (r) => endings[r]);
+	}
 </script>
 
 {#if item && (item.isShown || _.isUndefined(item.isShown))}
@@ -377,14 +410,25 @@
 														? 'mt-2'
 														: ''}"
 												>
-													<ContentEditableIf
-														class={item.theme?.align === 'center' ||
-														section.theme?.itemsAlign === 'center'
-															? 'text-center'
-															: ''}
-														bind:innerHTML={item.title}
-														condition={isEdit}
-													/>
+													{#if item.planName}
+														<ContentEditableIf
+															class={item.theme?.align === 'center' ||
+															section.theme?.itemsAlign === 'center'
+																? 'text-center'
+																: ''}
+															bind:innerHTML={item.planName}
+															condition={isEdit}
+														/>
+													{:else}
+														<ContentEditableIf
+															class={item.theme?.align === 'center' ||
+															section.theme?.itemsAlign === 'center'
+																? 'text-center'
+																: ''}
+															bind:innerHTML={item.title}
+															condition={isEdit}
+														/>
+													{/if}
 												</h3>
 											</div>
 										{/if}
@@ -490,16 +534,30 @@
 
 								{#if item.pricing}
 									<div>
-										<div class="flex items-end mb-4">
-											<div class="text-3xl sm:text-4xl font-bold mr-2">
-												{item.pricing.amount ? toDollars(item.pricing.amount * 100) : 'Free'}
-											</div>
-											{#if item.pricing.amount}
-												<div class="text-lg opacity-70">
-													/{item.pricing.per}
+										<div class="flex items-end {item.pricing.per === 'one-time' ? 'mb-6' : 'mb-2'}">
+											{#if item.pricing.per !== 'one-time'}
+												<div class="text-3xl sm:text-4xl font-bold mr-2">
+													{toDollars(getMonthlyAmount(item.pricing))}
 												</div>
+												{#if item.pricing.amount}
+													<div class="text-lg opacity-70">/month</div>
+												{/if}
+											{:else}
+												<div class="text-3xl sm:text-4xl font-bold mr-2">
+													{item.pricing.amount ? toDollars(item.pricing.amount * 100) : 'Free'}
+												</div>
+												{#if item.pricing.amount}
+													<div class="text-lg opacity-70">
+														/{item.pricing.per}
+													</div>
+												{/if}
 											{/if}
 										</div>
+										{#if item.pricing.per !== 'one-time'}
+											<div class="mb-4 opacity-70 text-sm">
+												billed {billedLabels[item.pricing.per].toLowerCase()}
+											</div>
+										{/if}
 
 										{#if item.description}
 											<div class="mb-8 opacity-70">
@@ -507,7 +565,7 @@
 											</div>
 										{/if}
 
-										{#if item.pricing.benefitsStr}
+										{#if item.pricing.benefitsStr || item.pricing.additionalBenefitsStr}
 											<div class="mb-4 _color-item-description">
 												{#if item.pricing.creditsAmount}
 													<div class="my-1 sm:my-2 flex items-start">
@@ -521,10 +579,21 @@
 														{item.pricing.creditsAmount}
 														{item.pricing.creditsLabel || 'credits'}
 													</div>
+													<div class="my-1 sm:my-2 flex items-start">
+														<Emoji
+															theme={page.parentPage?.theme?.theme || page?.theme?.theme || 'light'}
+															emoji={section.benefitsEmoji || 'feather:check'}
+															class="mr-2"
+															isOppositeColors={item.theme?.isOppositeColors ||
+																section.theme?.areItemsOppositeColors}
+														/>
+														{toDollars((item.pricing.amount / item.pricing.creditsAmount) * 100)}
+														/ {singularize(item.pricing.creditsLabel || 'credits')}
+													</div>
 												{/if}
 
-												{#each item.pricing.benefitsStr
-													.concat(item.pricing.additionalBenefitsStr ? `\n${item.pricing.additionalBenefitsStr
+												{#each (item.pricing.benefitsStr || '')
+													.concat(item.pricing.additionalBenefitsStr ? `${item.pricing.benefitsStr ? '\n' : ''}${item.pricing.additionalBenefitsStr
 																	.split(',')
 																	.join('\n')}` : '')
 													.split('\n') as benefit}
@@ -559,17 +628,23 @@
 
 										{#if item.pricing.prices?.length}
 											{(item.pricing.amount = item.pricing.prices[0]?.amount) ? '' : ''}
-											<div class="text-sm mb-2">
-												Number of {item.pricing.creditsLabel || 'credits'}
+											<div class="w-full flex items-center justify-between text-sm mb-2 mt-8">
+												<div>
+													Number of {item.pricing.creditsLabel || 'credits'}
+												</div>
+												<div>
+													{item.pricing.creditsAmount}
+												</div>
 											</div>
 											<RangeSlider
-												class="my-4"
+												class="my-6"
 												values={item.pricing.prices.map((p) => p.creditsAmount)}
 												onChange={(value) => {
 													const plan = item.pricing.prices.find((p) => p.creditsAmount === value);
 													item.pricing.additionalBenefitsStr = plan.benefitsStr;
 													item.pricing.amount = plan.amount;
 													item.pricing.creditsAmount = plan.creditsAmount;
+													item.planName = plan.planName;
 												}}
 											/>
 										{/if}

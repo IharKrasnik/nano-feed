@@ -112,7 +112,6 @@
 	}
 
 	if (browser) {
-		debugger;
 		if (getUrlParam('buildJsSrc')) {
 			eval(
 				`var d=document;var s=d.createElement("script"); s.src="${getUrlParam(

@@ -189,7 +189,8 @@
 				hero.theme?.bgPattern !== 'cursors') ||
 			page.renderType === 'service'
 				? ''
-				: `min-h-screen ${isEdit ? '' : 'tall:h-screen'}`} {hero.theme?.bgPattern === 'canvas'
+				: `min-h-screen ${isEdit ? '' : 'mt-8 tall:mt-0 tall:h-screen'}`} {hero.theme?.bgPattern ===
+			'canvas'
 				? 'max-w-max'
 				: ''}"
 			style=""
@@ -200,7 +201,9 @@
 					? ''
 					: ''} h-full  {page.renderType === 'article'
 					? 'pt-16 sm:pt-24'
-					: 'tall:py-24 pt-0 pb-12'} {!hero.testimonials?.length ? `flex items-center` : ''}"
+					: 'tall:mt-0 mt-8 tall:py-24 pt-0 pb-12'} {!hero.testimonials?.length
+					? `flex items-center`
+					: ''}"
 				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
 			>
 				<div
@@ -371,20 +374,43 @@
 								class:opacity-0={!isMounted}
 								in:fly={{ y: 25, duration: 500 }}
 							>
-								<div
-									class="_social-proof _dense _small {hero.socialProof.className ||
-										''} flex justify-center  {(hero.demoUrl && !hero.theme?.isVertical) ||
-									(hero.theme?.isLeft && !hero.theme?.isVertical)
-										? 'inline-flex'
-										: 'w-full'}"
-								>
-									{#each (isEdit ? hero.socialProof.logos : hero.theme?.isShuffleSocialProof ? _.shuffle(hero.socialProof.logos) : hero.socialProof.logos).filter((l) => l.url) as logo, i}
-										<img class="rounded-full" src={logo.url} alt="Avatar of user {i + 1}" />
-									{/each}
-								</div>
-								<div class="text-sm mt-2 opacity-80 max-w-[400px]">
-									{@html hero.socialProof.title || ''}
-								</div>
+								{#if hero.theme.isSingle}
+									<div class="flex items-center gap-x-4">
+										<div
+											class="_social-proof {hero.socialProof.className ||
+												''} flex itens-center {(hero.demoUrl && !hero.theme?.isVertical) ||
+											(hero.theme?.isLeft && !hero.theme?.isVertical)
+												? 'inline-flex'
+												: ''}"
+										>
+											<img
+												class="rounded-full"
+												src={hero.socialProof.testimonialImageUrl}
+												alt="Testimonial user"
+											/>
+										</div>
+
+										<div class="text-left opacity-80 max-w-[400px]">
+											{@html hero.socialProof.title || ''}
+										</div>
+									</div>
+								{:else}
+									<div
+										class="_social-proof _dense _small {hero.socialProof.className ||
+											''} flex justify-center  {(hero.demoUrl && !hero.theme?.isVertical) ||
+										(hero.theme?.isLeft && !hero.theme?.isVertical)
+											? 'inline-flex'
+											: 'w-full'}"
+									>
+										{#each (isEdit ? hero.socialProof.logos : hero.theme?.isShuffleSocialProof ? _.shuffle(hero.socialProof.logos) : hero.socialProof.logos).filter((l) => l.url) as logo, i}
+											<img class="rounded-full" src={logo.url} alt="Avatar of user {i + 1}" />
+										{/each}
+									</div>
+
+									<div class="text-sm mt-2 opacity-80 max-w-[400px]">
+										{@html hero.socialProof.title || ''}
+									</div>
+								{/if}
 							</div>
 						{/if}
 
