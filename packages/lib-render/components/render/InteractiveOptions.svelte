@@ -734,7 +734,7 @@
 		a._ishuge button,
 		a._islarge button,
 		a._isnormal button {
-			padding: 8px 16px;
+			padding: 12px 28px;
 			font-size: 16px;
 		}
 	}

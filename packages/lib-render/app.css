@@ -887,7 +887,7 @@ button[type='submit']:not(._transparent) {
 	button,
 	.button,
 	button[type='submit'] {
-		padding: 8px 12px;
+		/* padding: 8px 12px; */
 	}
 }
 

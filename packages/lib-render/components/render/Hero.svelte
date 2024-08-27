@@ -189,8 +189,8 @@
 				hero.theme?.bgPattern !== 'cursors') ||
 			page.renderType === 'service'
 				? ''
-				: `min-h-screen ${isEdit ? '' : 'mt-8 tall:mt-0 tall:h-screen'}`} {hero.theme?.bgPattern ===
-			'canvas'
+				: `min-h-screen ${isEdit ? '' : 'mt-24 tall:mt-0 tall:h-screen'}`} {hero.theme
+				?.bgPattern === 'canvas'
 				? 'max-w-max'
 				: ''}"
 			style=""
@@ -201,7 +201,7 @@
 					? ''
 					: ''} h-full  {page.renderType === 'article'
 					? 'pt-16 sm:pt-24'
-					: 'tall:mt-0 mt-8 tall:py-24 pt-0 pb-12'} {!hero.testimonials?.length
+					: 'tall:mt-0 tall:py-24 pt-24 pb-12'} {!hero.testimonials?.length
 					? `flex items-center`
 					: ''}"
 				style={`${maxHeight ? `max-height: ${maxHeight}` : ''};`}
