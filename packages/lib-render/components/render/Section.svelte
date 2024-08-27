@@ -573,7 +573,7 @@
 							</div>
 						{/if}
 
-						{#if section.renderType === 'pricing' && section.pricingTabs?.length}
+						{#if section.renderType === 'pricing' && section.pricingTabs?.length > 1}
 							<div class="flex justify-center sm:mb-8 mb-6">
 								<div
 									class="rounded-full px-1 py-1 text-sm _bg-section flex gap-x-2 items-center mx-auto"

@@ -59,6 +59,7 @@
 		month: 'Monthly',
 		quarter: 'Quarterely',
 		['half-year']: 'Half-Yearly',
+		['half-yearly']: 'Half-Yearly',
 		['year']: 'Yearly'
 	};
 
@@ -535,7 +536,7 @@
 								{#if item.pricing}
 									<div>
 										<div class="flex items-end {item.pricing.per === 'one-time' ? 'mb-6' : 'mb-2'}">
-											{#if item.pricing.per !== 'one-time'}
+											{#if section.pricingTabs?.length && item.pricing.per !== 'one-time'}
 												<div class="text-3xl sm:text-4xl font-bold mr-2">
 													{toDollars(getMonthlyAmount(item.pricing))}
 												</div>
@@ -553,7 +554,7 @@
 												{/if}
 											{/if}
 										</div>
-										{#if item.pricing.per !== 'one-time'}
+										{#if item.pricing.per !== 'one-time' && billedLabels[item.pricing.per]}
 											<div class="mb-4 opacity-70 text-sm">
 												billed {billedLabels[item.pricing.per].toLowerCase()}
 											</div>
