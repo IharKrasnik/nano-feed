@@ -83,6 +83,20 @@
 		};
 		return word.replace(new RegExp(`(${Object.keys(endings).join('|')})$`), (r) => endings[r]);
 	}
+
+	const selectPlan = (value) => {
+		const plan = item.pricing.prices.find((p) => p.creditsAmount === value);
+		item.pricing.additionalBenefitsStr = plan.benefitsStr;
+		item.pricing.amount = plan.amount;
+		item.pricing.creditsAmount = plan.creditsAmount;
+		item.planName = plan.planName;
+		debugger;
+		item.url = plan.link;
+	};
+
+	if (item.pricing?.prices?.length) {
+		selectPlan(item.pricing.prices[0].creditsAmount);
+	}
 </script>
 
 {#if item && (item.isShown || _.isUndefined(item.isShown))}
@@ -651,13 +665,7 @@
 											<RangeSlider
 												class="my-6"
 												values={item.pricing.prices.map((p) => p.creditsAmount)}
-												onChange={(value) => {
-													const plan = item.pricing.prices.find((p) => p.creditsAmount === value);
-													item.pricing.additionalBenefitsStr = plan.benefitsStr;
-													item.pricing.amount = plan.amount;
-													item.pricing.creditsAmount = plan.creditsAmount;
-													item.planName = plan.planName;
-												}}
+												onChange={selectPlan}
 											/>
 										{/if}
 									</div>

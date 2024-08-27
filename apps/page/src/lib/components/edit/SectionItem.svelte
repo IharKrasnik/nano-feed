@@ -286,11 +286,12 @@
 						.filter((l) => l)
 						.map((lines) => {
 							let splits = lines.split(';');
+
 							return {
 								planName: splits[0],
 								creditsAmount: parseInt(splits[1]),
 								amount: parseInt(splits[2].replace('$', '')),
-								link: splits[3].startsWith('http') ? splits[2] : null,
+								link: splits[3].startsWith('http') ? splits[3] : null,
 								benefitsStr: splits[4]
 							};
 						});
