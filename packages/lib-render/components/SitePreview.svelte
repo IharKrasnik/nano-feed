@@ -296,7 +296,7 @@
 									$sectionToEdit.id !== page.activeHero?.formSection?.id
 										? 'opacity-30 grayscale'
 										: ''}  {page.activeHero?.theme?.isPullBottom
-										? 'mb-[-100px] sm:mb-[-130px]'
+										? 'mb-[-100px] sm:mb-[-70px]'
 										: ''}"
 								>
 									<RenderHero

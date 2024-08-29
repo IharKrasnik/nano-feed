@@ -656,7 +656,7 @@
 			<div
 				class="text-sm opacity-80 mt-4 {clazz?.includes('w-full')
 					? 'w-full text-center'
-					: 'max-w-[400px]'} {clazz?.includes('mx-auto') ? 'mx-auto' : ''}"
+					: 'sm:max-w-[400px]'} {clazz?.includes('mx-auto') ? 'mx-auto' : ''}"
 			>
 				{@html sectionItem.ctaExplainer || ''}
 			</div>

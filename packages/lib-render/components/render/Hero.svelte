@@ -368,7 +368,7 @@
 							/>
 						{/if}
 
-						{#if hero.socialProof}
+						{#if hero.socialProof?.title || hero.socialProof?.logos?.length}
 							<div
 								class="py-4 mt-8 sm:mt-16"
 								class:opacity-0={!isMounted}
@@ -390,7 +390,7 @@
 											/>
 										</div>
 
-										<div class="text-left opacity-80 max-w-[400px]">
+										<div class="text-left opacity-80 sm:max-w-[400px]">
 											{@html hero.socialProof.title || ''}
 										</div>
 									</div>
@@ -407,7 +407,7 @@
 										{/each}
 									</div>
 
-									<div class="text-sm mt-2 opacity-80 max-w-[400px] mb-4 sm:mb-0">
+									<div class="text-sm mt-2 opacity-80 sm:max-w-[400px] mb-4 sm:mb-0">
 										{@html hero.socialProof.title || ''}
 									</div>
 								{/if}
@@ -465,7 +465,7 @@
 									bind:this={demoEl}
 									isLazy={false}
 									imageUrl={hero.demoUrl}
-									class={`${hero.theme?.isVertical ? 'mt-8' : ''} `}
+									class={`${hero.theme?.isVertical ? 'mt-8' : 'mt-16 sm:mt-0'} `}
 									imageBackgroundUrl={hero.demoBackgroundUrl}
 									urlClass="relative w-full flex justify-end"
 									urlImgMaxWidth={page.renderType === 'article' ? 0 : hero.imgMaxWidth || 0}
