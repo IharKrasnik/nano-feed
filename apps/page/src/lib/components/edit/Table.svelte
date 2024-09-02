@@ -150,7 +150,6 @@
 		<button
 			class="_primary"
 			on:click={() => {
-				debugger;
 				onSave({ csv: toCSV() });
 			}}>Save Table</button
 		>

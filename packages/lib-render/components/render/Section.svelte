@@ -27,6 +27,7 @@
 	import RenderComments from 'lib-render/components/render/CommentsSection.svelte';
 	import RenderSectionItem from 'lib-render/components/render/SectionItem.svelte';
 	import ImportedComponent from 'lib-render/components/render/ImportedComponent.svelte';
+	import RenderBackgroundImages from 'lib-render/components/render/BackgroundImages.svelte';
 
 	import ContentEditable from 'lib/components/ContentEditable.svelte';
 	import ContentEditableIf from 'lib/components/ContentEditableIf.svelte';
@@ -41,6 +42,7 @@
 	import trackClick from 'lib/services/trackClick';
 	import sectionToEdit from 'lib-render/stores/sectionToEdit';
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
+	import BackgroundImages from './BackgroundImages.svelte';
 
 	export let section;
 	let clazz;
@@ -386,6 +388,12 @@
 				/>
 			{/if}
 		{/if}
+		<div class="z-index: -1;">
+			<RenderBackgroundImages
+				backgroundImages={section.theme.backgroundImages}
+				relativeTo="container"
+			/>
+		</div>
 
 		{#if section.theme?.bgPattern}
 			<RenderBackgroundPattern
@@ -459,6 +467,12 @@
 							? 'sm:text-left'
 							: 'text-center'} "
 					>
+						<div style="z-index: -1;">
+							<RenderBackgroundImages
+								backgroundImages={section.theme?.backgroundImages}
+								relativeTo="title_container"
+							/>
+						</div>
 						{#if section.emoji}
 							{#key section.theme?.emojiSizePx}
 								<div

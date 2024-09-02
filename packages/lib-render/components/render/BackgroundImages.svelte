@@ -8,7 +8,7 @@
 	<RenderUrl
 		url={backgroundImage.url}
 		class="absolute"
-		style="{backgroundImage.alignX === 'center'
+		style="z-index: -1; {backgroundImage.alignX === 'center'
 			? `left: 50%;`
 			: backgroundImage.alignX ||
 			  'left'}: {backgroundImage.positionX}px; {backgroundImage.alignY === 'middle'
@@ -26,6 +26,6 @@
 			: backgroundImage.alignX === 'center'
 			? 'transform: translateX(-50%);'
 			: ''} {backgroundImage.style || ''}"
-		imgClass="w-full"
+		imgClass="w-full h-full"
 	/>
 {/each}

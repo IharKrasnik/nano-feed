@@ -10,10 +10,9 @@
 	import selectedSectionItem from 'lib-render/stores/selectedSectionItem';
 	import sectionTypesDictionary from '$lib/helpers/sectionTypesDictionary';
 	import hexToRgba from 'lib/helpers/hexToRgba';
-	import EditSectionItemsSettings from '$lib/components/edit/SectionItemsSettings.svelte';
 	import SectionColorPicker from '$lib/components/edit/SectionColorPicker.svelte';
-	import EditInteractiveOptions from '$lib/components/edit/InteractiveOptions.svelte';
-	import EmojiPicker from 'lib/components/EmojiPicker.svelte';
+	import EditBackgroundImages from '$lib/components/edit/BackgroundImages.svelte';
+
 	export let section;
 	export let sectionItem;
 	export let isPopup = false;
@@ -669,6 +668,11 @@
 					</div>
 				{/if}
 			</div>
+
+			<EditBackgroundImages
+				isWithRelativeTo
+				bind:backgroundImages={sectionItem.theme.backgroundImages}
+			/>
 
 			{#if isCtaFooter}
 				<div class="_section">

@@ -90,7 +90,6 @@
 		item.pricing.amount = plan.amount;
 		item.pricing.creditsAmount = plan.creditsAmount;
 		item.planName = plan.planName;
-		debugger;
 		item.url = plan.link;
 	};
 
