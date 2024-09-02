@@ -28,8 +28,8 @@
 							? 1
 							: 2}
 						class="{tableHeader.columns.length > 5
-							? 'px-2 py-3 text-sm'
-							: 'px-4 py-4 text-base'} font-semibold {i === 0
+							? 'px-2 py-3'
+							: 'px-4 py-4'} text-base font-semibold {i === 0
 							? '!pl-4 text-left'
 							: 'text-center'} whitespace-nowrap {highlightedColumns.includes(i)
 							? ' _border-l-2 _border-r-2 _border-t-2 _border-[#a6f0e5] bg-[#e7fbf9]'
@@ -50,7 +50,11 @@
 						<td
 							class="border-b py-1  {i === 0
 								? 'px-4 text-base whitespace-nowrap font-semibold'
-								: `${highlightedColumns.includes(i) ? '' : '_color-item-description'}  ${
+								: `${
+										highlightedColumns.includes(i) || highlightedRows.includes(rowIndex)
+											? ''
+											: '_color-item-description'
+								  }  ${
 										tableRow.columns.length > 5 ? 'px-2 py-2 text-xs' : 'px-4 py-4 text-sm'
 								  } text-center font-medium`} {highlightedColumns.includes(i)
 								? 'bg-[#e7fbf9] border-l-2 border-r-2 border-[#a6f0e5]'

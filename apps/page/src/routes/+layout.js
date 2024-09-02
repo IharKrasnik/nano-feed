@@ -5,6 +5,6 @@ export async function load({ url, params, session, cookies, data }) {
 		...data
 	};
 	let authData = await authClientGuard({ url, params, session }, 'Momentum IDE');
-	//
+
 	return { ...authData, ...extend };
 }
