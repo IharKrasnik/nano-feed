@@ -162,6 +162,15 @@ body {
 	color: var(--accent-color);
 }
 
+._editor-content {
+	max-width: 800px;
+	@apply mx-auto;
+}
+
+._editor-content img {
+	@apply py-4;
+}
+
 ._editor-content ol {
 	padding-left: 1.5555556em;
 	margin-bottom: 1.3333333em;

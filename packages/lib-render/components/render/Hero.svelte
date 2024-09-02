@@ -183,8 +183,9 @@
 			/>
 		{/if}
 		<div
-			class="relative z-10 container sm:pt-[60px] pb-[60px] _container-width mx-auto {((hero.theme
-				?.isVertical ||
+			class="relative z-10 container sm:pt-[60px] {page.renderType === 'article'
+				? 'pb-[30px]'
+				: 'pb-[60px]'} _container-width mx-auto {((hero.theme?.isVertical ||
 				(page.sections?.length && !hero.demoUrl && !hero.theme.isFullScreen)) &&
 				hero.theme?.bgPattern !== 'cursors') ||
 			page.renderType === 'service'
@@ -240,7 +241,7 @@
 								class="{page.theme?.isGradientTitle
 									? `bg-gradient-to-br ${getHeroGradientColor()}
 											 bg-clip-text text-transparent`
-									: ''} _hero-title 
+									: ''} _hero-title {page.renderType === 'article' ? 'text-left' : ''}
 											{!hero.demoUrl || hero.theme?.isVertical
 									? page.renderType === 'article'
 										? 'sm:max-w-[1200px]'
@@ -465,7 +466,13 @@
 									bind:this={demoEl}
 									isLazy={false}
 									imageUrl={hero.demoUrl}
-									class={`${hero.theme?.isVertical ? 'mt-8' : 'mt-16 sm:mt-0'} `}
+									class={` ${
+										page.renderType === 'article'
+											? ''
+											: hero.theme?.isVertical
+											? 'mt-8'
+											: 'mt-16 sm:mt-0'
+									} `}
 									imageBackgroundUrl={hero.demoBackgroundUrl}
 									urlClass="relative w-full flex justify-end"
 									urlImgMaxWidth={page.renderType === 'article' ? 0 : hero.imgMaxWidth || 0}
