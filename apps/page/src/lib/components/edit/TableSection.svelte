@@ -7,7 +7,7 @@
 	section.tableRows = section.tableRows || [];
 
 	let DEFAULT_TEXT = `;${page.parentPage?.name || page.name};Competitor1;Competitor2
-Feature 1;feather:check;feather:cross`;
+Feature 1;yes;no`;
 
 	let rowsText = section.tableRows
 		.map((r) => {
@@ -35,6 +35,12 @@ Feature 1;feather:check;feather:cross`;
 	}
 
 	let parseRows = () => {
+		let firstRow = rowsText.split('\n')[0];
+
+		if (firstRow.includes('\t')) {
+			rowsText = rowsText.replaceAll('\t', ';');
+		}
+
 		section.tableRows = rowsText
 			.split('\n')
 			.filter((r) => r)
@@ -56,14 +62,14 @@ Feature 1;feather:check;feather:cross`;
 </script>
 
 {#if isModalOpen}
-	<Modal isShown onClosed={() => close()} maxWidth={1000}>
+	<Modal bind:isShown={isModalOpen} onClosed={() => close()} maxWidth={1000}>
 		<EditTable
 			bind:section
 			csv={rowsText}
 			onSave={({ csv }) => {
-				csv = csv.split('\n');
-				csv.shift();
-				rowsText = csv.join(';');
+				rowsText = csv;
+				parseRows();
+				isModalOpen = false;
 			}}
 			onCancel={() => (isModalOpen = false)}
 		/>

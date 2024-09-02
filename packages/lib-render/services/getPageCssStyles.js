@@ -23,7 +23,7 @@ export default (page) => {
 	}
 
 	let accentColor = page.theme?.accentColor || '#000000';
-	let textColor = page.theme?.textColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .9) : darken(accentColor, .95));
+	let textColor = page.theme?.textColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .9) : darken(accentColor, .96));
 	const labelColor = page.theme?.labelColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .7) : darken(accentColor, .7));
 
 	page.theme.buttonTheme = page.theme?.buttonColor || 'dark';

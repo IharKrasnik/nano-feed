@@ -12,6 +12,12 @@
 	export let onSave = ({ csv }) => {};
 	export let onCancel = () => {};
 
+	let highlightedColumns;
+	let highlightedRows;
+
+	$: highlightedColumns = section.theme?.highlightedColumns || [];
+	$: highlightedRows = section.theme?.highlightedRows || [];
+
 	export let csv = '';
 
 	if (csv) {
@@ -48,8 +54,12 @@
 	};
 
 	let toCSV = () => {
-		return `${headers.join(';')}
-${rows.map((r) => r.columns.map((c) => c.value).join(';')).join('\n')}`;
+		section.theme.highlightedColumns = highlightedColumns;
+		section.theme.highlightedRows = highlightedRows;
+
+		return (
+			headers.join(';') + '\n' + rows.map((r) => r.columns.map((c) => c.value).join(';')).join('\n')
+		);
 	};
 </script>
 
@@ -58,9 +68,24 @@ ${rows.map((r) => r.columns.map((c) => c.value).join(';')).join('\n')}`;
 		<div>Edit Table</div>
 	</div>
 	<div class="w-full grid grid-cols-{headers.length} gap-y-2 items-start mb-4">
-		{#each headers as header}
-			<div class="font-semibold text-sm">
+		{#each headers as header, i}
+			<div class="relative font-semibold text-sm">
 				{header}
+
+				<div
+					on:click={() => {
+						if (highlightedColumns.includes(i)) {
+							highlightedColumns = highlightedColumns.filter((c) => c !== i);
+						} else {
+							highlightedColumns = [...highlightedColumns, i];
+						}
+					}}
+					class="{highlightedColumns.includes(i)
+						? ''
+						: 'grayscale opacity-50 transition hover:grayscale-0'} cursor-pointer absolute top-0 translate-y-[-100%]"
+				>
+					💡
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -73,11 +98,28 @@ ${rows.map((r) => r.columns.map((c) => c.value).join(';')).join('\n')}`;
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
 	>
-		{#each rows as row (row.id)}
+		{#each rows as row, rowIndex (row.id)}
 			<div class="w-full flex justify-between items-start" animate:flip={{ duration: 300 }}>
 				<div class="w-full grid grid-cols-{headers.length} gap-x-2 items-start mb-2">
 					{#each row.columns as column, i (column.id)}
 						<div class="relative">
+							{#if i === 0}
+								<div
+									on:click={() => {
+										if (highlightedRows.includes(rowIndex + 1)) {
+											highlightedRows = highlightedRows.filter((r) => r !== rowIndex + 1);
+										} else {
+											highlightedRows = [...highlightedRows, rowIndex + 1];
+										}
+									}}
+									class="{highlightedRows.includes(rowIndex + 1)
+										? ''
+										: 'grayscale opacity-50 transition hover:grayscale-0'} cursor-pointer absolute left-0 translate-x-[-100%] pr-1"
+								>
+									💡
+								</div>
+							{/if}
+
 							{#if column.isEditing}
 								<textarea
 									use:clickOutside
@@ -108,6 +150,7 @@ ${rows.map((r) => r.columns.map((c) => c.value).join(';')).join('\n')}`;
 		<button
 			class="_primary"
 			on:click={() => {
+				debugger;
 				onSave({ csv: toCSV() });
 			}}>Save Table</button
 		>

@@ -668,7 +668,7 @@
 				{:else if section.renderType === 'form'}
 					<RenderForm bind:section bind:page bind:isEdit />
 				{:else if section.items?.length}
-					<div class="w-full _container-width mx-auto overflow-x-auto">
+					<div class="w-full _container-width mx-auto overflow-hidden">
 						{#if section.renderType === 'carousel'}
 							{#if !section.carouselType || section.carouselType === 'vertical'}
 								<div
