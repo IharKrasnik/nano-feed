@@ -321,7 +321,7 @@
 											class="relative  z-10 {page.streamSlug ? '' : ''} transition"
 											style="z-index: 40;"
 										>
-											{#each page.sections || [] as section, i (section.id)}
+											{#each (page.sections || []).filter((section) => !section.isHidden) as section, i (section.id)}
 												<div
 													class="relative {page.activeHero?.theme?.isPullBottom && i === 0
 														? 'pb-[48px] sm:pb-[96px] pt-[0]'
