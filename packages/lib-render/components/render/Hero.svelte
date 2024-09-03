@@ -89,7 +89,10 @@
 			: ''} {hero.theme?.isOverrideColors ? `background: ${hero.theme?.backgroundColor};` : ''}
 				"
 	>
-		<RenderBackgroundImages backgroundImages={hero.theme.backgroundImages} relativeTo="container" />
+		<RenderBackgroundImages
+			backgroundImages={hero.theme?.backgroundImages}
+			relativeTo="container"
+		/>
 		{#if hero.bgImageUrl}
 			{#if page.activeHero?.theme?.bgGradient?.type === 'custom'}
 				<div
@@ -226,7 +229,7 @@
 							: ''} {hero.imgSize ? 'sm:min-w-[60%]' : ''} "
 					>
 						<RenderBackgroundImages
-							backgroundImages={hero.theme.backgroundImages}
+							backgroundImages={hero.theme?.backgroundImages}
 							relativeTo="title_container"
 						/>
 
@@ -455,7 +458,7 @@
 							}}
 						>
 							<RenderBackgroundImages
-								backgroundImages={hero.theme.backgroundImages}
+								backgroundImages={hero.theme?.backgroundImages}
 								relativeTo="demo"
 							/>
 

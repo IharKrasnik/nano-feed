@@ -390,7 +390,7 @@
 		{/if}
 		<div class="z-index: -1;">
 			<RenderBackgroundImages
-				backgroundImages={section.theme.backgroundImages}
+				backgroundImages={section.theme?.backgroundImages}
 				relativeTo="container"
 			/>
 		</div>
