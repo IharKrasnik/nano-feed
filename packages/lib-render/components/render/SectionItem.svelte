@@ -197,7 +197,7 @@
 		>
 			{#if item.interactiveOptions}
 				<div
-					class="hidden group-hover:flex absolute left-0 top-0 w-full h-full bg-black/50 items-center justify-center"
+					class="hidden group-hover:flex absolute left-0 top-0 w-full h-full _bg-overlay items-center justify-center"
 					style="z-index: 11"
 				>
 					<RenderInteractiveOptions

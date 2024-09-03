@@ -82,15 +82,28 @@
 						<div class="w-full flex gap-x-2 mb-2">
 							<div class="flex gap-x-1 items-center w-full">
 								w:
-								<input class="w-full" type="number" bind:value={backgroundImage.width} />
+								<input
+									class="w-full !px-2 !py-1"
+									type="number"
+									bind:value={backgroundImage.width}
+								/>
 							</div>
 							<div class="flex gap-x-1 items-center w-full">
 								h:
-								<input class="w-full" type="number" bind:value={backgroundImage.height} />
+								<input
+									class="w-full !px-2 !py-1"
+									type="number"
+									bind:value={backgroundImage.height}
+								/>
 							</div>
 						</div>
-						<div class="mt-1">
-							<div class="flex items-center justify-between w-full">
+						<div class="">
+							<div class="flex gap-x-2 items-center justify-between w-full">
+								<input
+									class="w-[50px] !px-2 !py-1"
+									type="number"
+									bind:value={backgroundImage.positionX}
+								/>
 								<ToggleGroup
 									bind:value={backgroundImage.alignX}
 									tabs={[
@@ -108,9 +121,13 @@
 										}
 									]}
 								/>
-								<input class="ml-2 w-[70px]" type="number" bind:value={backgroundImage.positionX} />
 							</div>
-							<div class="flex items-center justify-between w-full">
+							<div class="flex gap-x-2 items-center justify-between w-full mt-1">
+								<input
+									class="w-[50px] !px-2 !py-1"
+									type="number"
+									bind:value={backgroundImage.positionY}
+								/>
 								<ToggleGroup
 									bind:value={backgroundImage.alignY}
 									tabs={[
@@ -128,15 +145,14 @@
 										}
 									]}
 								/>
-								<input class="ml-2 w-[70px]" type="number" bind:value={backgroundImage.positionY} />
 							</div>
 						</div>
-						<div>
+						<div class="mt-2">
 							<textarea
 								bind:value={backgroundImage.style}
 								class="w-full"
 								rows="1"
-								placeholder="background-color: red;"
+								placeholder="border: 5px red solid;"
 							/>
 						</div>
 					</div>
