@@ -344,7 +344,7 @@
 
 					<EditBackgroundImages
 						isWithRelativeTo
-						bind:backgroundImages={hero.theme?.backgroundImages}
+						bind:backgroundImages={hero.theme.backgroundImages}
 					/>
 
 					<div class="mt-4 mb-2">
