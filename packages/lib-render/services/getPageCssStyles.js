@@ -26,7 +26,7 @@ export default (page) => {
 	let textColor = page.theme?.textColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .9) : darken(accentColor, .96));
 	const labelColor = page.theme?.labelColor || (page.theme?.theme === 'dark' ? lighten(accentColor, .7) : darken(accentColor, .7));
 
-	page.theme.buttonTheme = page.theme?.buttonColor || 'dark';
+	let buttonTheme = page.theme?.buttonColor || 'dark';
 
 	//1
 	let styles = {
@@ -60,13 +60,13 @@ export default (page) => {
 			page.theme?.theme === 'dark'
 				? lighten(page.theme?.backgroundColor, 0.1)
 				: darken(page.theme?.backgroundColor, 0.15),
-		'border-color': page.theme.borderColor || (page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : '#00000014'),
+		'border-color': page.theme?.borderColor || (page.theme?.theme === 'dark' ? 'rgba(255,255,255,.1)' : '#00000014'),
 		'text-color': textColor,
 		// '#fbf5ec' : '#111111'),
 		'accent-color': accentColor,
 		'accent-color-darker': darken(accentColor, 0.5),
 		'accent-color-lighter': lighten(accentColor, 0.5),
-		'link-color': page.theme?.linkColor || page.theme.theme === 'dark' ? lighten(accentColor, .5) : darken(accentColor, .5),
+		'link-color': page.theme?.linkColor || page.theme?.theme === 'dark' ? lighten(accentColor, .5) : darken(accentColor, .5),
 		'section-item-background-color':
 			page.theme?.sectionItemBackgroundColor ||
 			(page.theme?.theme === 'dark' ? hexToRGBA('#161619', 0.85) : hexToRGBA('#f6f5f4', 0.85)),
@@ -75,7 +75,7 @@ export default (page) => {
 		// 	: hexToRGBA(lighten(page.theme?.accentColor, 0.9), 0.5)),
 
 		'section-description-text-color':
-			(page.theme.theme === 'dark' ? darken(textColor, .6) : lighten(textColor, .2)),
+			(page.theme?.theme === 'dark' ? darken(textColor, .6) : lighten(textColor, .2)),
 
 		'section-description-text-color-opposite':
 			page.theme?.theme === 'dark' ? 'rgba(0,0,0, .7)' : 'rgba(255,255,255, .7)',
@@ -91,7 +91,7 @@ export default (page) => {
 
 		'input-background': page.theme?.inputBackground || 'var(--section-item-background-color)',
 		'input-color': page.theme?.theme === 'dark' ? '#f6f5f4' : '#111111',
-		'button-color': page.theme?.buttonColor || (page.theme?.buttonTheme === page.theme?.theme ? textColor : page.theme.buttonTheme === 'dark' ? lighten(textColor, .9) : darken(textColor, .95)),
+		'button-color': page.theme?.buttonColor || (buttonTheme === page.theme?.theme ? textColor : buttonTheme === 'dark' ? lighten(textColor, .9) : darken(textColor, .95)),
 		'input-container-border-width': page.theme?.isInputBorder ? '0px' : '1px 1px 1px 1px',
 		'input-border-width': page.theme?.isInputBorder ? '0px 0px 1px 0px' : '0px',
 

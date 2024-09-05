@@ -1496,7 +1496,7 @@
 																</div>
 															{:else}
 																{#if page?._id && !page.renderType}
-																	<div
+																	<!-- <div
 																		class="_section cursor-pointer"
 																		on:click={() => {
 																			$selectedTab = 'growth';
@@ -1528,7 +1528,7 @@
 																				</div>
 																			</div>
 																		</div>
-																	</div>
+																	</div> -->
 																{/if}
 
 																<div>

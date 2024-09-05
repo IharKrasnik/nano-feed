@@ -123,7 +123,7 @@
 			>
 				{#if parentPage.logo || page?.logo}
 					<Emoji
-						width={parentPage.theme.logoSize === 'auto' ? 'auto' : 32}
+						width={parentPage.theme?.logoSize === 'auto' ? 'auto' : 32}
 						height={32}
 						class="mr-3 rounded"
 						alt="Logo"
