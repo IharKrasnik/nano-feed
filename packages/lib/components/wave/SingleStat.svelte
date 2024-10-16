@@ -42,7 +42,7 @@
 			uniqueCount: stats.uniqueCount,
 			prevUniqueCount: stats.prevUniqueCount
 		};
-
+debugger;
 		if (browser && !chartWidth) {
 			setTimeout(() => {
 				chartWidth = widthEl.offsetWidth;
@@ -88,8 +88,7 @@
 				data={chartData}
 				fill="#8B786D"
 				grow={true}
-				barMinWidth={20}
-				gap={10}
+				barMinWidth={5}
 				height={150}
 				width={chartWidth}
 				transition={500}

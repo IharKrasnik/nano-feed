@@ -56,7 +56,9 @@
 	const timeframeLabels = {
 		'7_days': '7 days',
 		'30_days': '30 days',
-		'24_hours': '24 hours'
+		'24_hours': '24 hours',
+		'3_months': '3 months',
+		'12_months': '12 months'
 	};
 
 	let isFirstTime = true;
@@ -76,10 +78,18 @@
 				...(project.page ? { subProjectId: project.page?._id } : {}),
 				...(project.blog ? { subProjectId: project.blog?._id } : {})
 			}
-		).then((res) => (stats = res));
+		)
+			.then((res) => (stats = res))
+			.then(() => {
+				userChartData = null;
+				viewChartData = null;
+				statsRefreshedOn = new Date();
+			});
 	};
 
 	let userGrowth;
+
+	let statsRefreshedOn = new Date();
 
 	$: if (stats) {
 		isShowAll = false;
@@ -101,7 +111,15 @@
 		let unitToAdd;
 		let dateLabelFormat = 'yyyy-MM-DD';
 
-		if (timeframe === '7_days') {
+		if (timeframe === '3_months') {
+			dateFrom = moment(stats.userStats[0].date);
+			unitToAdd = 'week';
+			dateLabelFormat = 'yyyy-MM-DD';
+		} else if (timeframe === '12_months') {
+			dateFrom = moment(stats.userStats[0].date);
+			unitToAdd = 'week';
+			dateLabelFormat = 'yyyy-MM-DD';
+		} else if (timeframe === '7_days') {
 			dateFrom = moment().subtract(7, 'days');
 			unitToAdd = 'day';
 			dateLabelFormat = 'yyyy-MM-DD';
@@ -121,10 +139,11 @@
 		viewChartData = {};
 
 		while (dateFrom < now) {
-			let dateLabel = dateFrom.format(dateLabelFormat);
+			let dateValue = dateFrom.format(dateLabelFormat);
+			let dateLabel = unitToAdd === 'week' ? 'week ' + dateValue : dateValue;
 
-			userChartData[dateLabel] = stats.userStats.find((s) => s.date === dateLabel)?.count || 0;
-			viewChartData[dateLabel] = stats.viewStats?.find((s) => s.date === dateLabel)?.count || 0;
+			userChartData[dateLabel] = stats.userStats.find((s) => s.date === dateValue)?.count || 0;
+			viewChartData[dateLabel] = stats.viewStats?.find((s) => s.date === dateValue)?.count || 0;
 			dateFrom.add(1, unitToAdd);
 		}
 
@@ -176,11 +195,13 @@
 			<option value="24_hours">24 hours</option>
 			<option value="7_days">7 days</option>
 			<option value="30_days">30 days</option>
+			<option value="3_months">3 months</option>
+			<option value="12_months">12 months</option>
 		</select>
 	</div>
 </div>
 
-{#key stats}
+{#key statsRefreshedOn}
 	{#if stats}
 		<div class="md:grid-cols-1 md:grid-cols-2 md:grid-cols-3" />
 
@@ -242,9 +263,8 @@
 						uid="users"
 						data={{ ...userChartData }}
 						fill="#8B786D"
-						grow={true}
+						grow
 						barMinWidth={5}
-						gap={10}
 						height={150}
 						width={chartWidth}
 						transition={500}

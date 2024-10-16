@@ -17,7 +17,15 @@ export default (stats, timeframe = '7_days') => {
 	let unitToAdd;
 	let dateLabelFormat = 'yyyy-MM-DD';
 
-	if (timeframe === '7_days') {
+	if (timeframe === '3_months') {
+		dateFrom = moment((stats.grouped[0] || {}).date);
+		unitToAdd = 'week';
+		dateLabelFormat = 'yyyy-MM-DD';
+	} else if (timeframe === '12_months') {
+		dateFrom = moment((stats.grouped[0] || {}).date);
+		unitToAdd = 'week';
+		dateLabelFormat = 'yyyy-MM-DD';
+	} else if (timeframe === '7_days') {
 		dateFrom = moment().subtract(7, 'days');
 		unitToAdd = 'day';
 		dateLabelFormat = 'yyyy-MM-DD';
