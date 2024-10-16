@@ -16,7 +16,6 @@
 
 	import 'lazysizes';
 	// import a plugin 2
-g
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 
 	import {
