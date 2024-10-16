@@ -367,7 +367,10 @@
 						style="--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
 							? 'var(--accent-color-lighter)'
 							: 'var(--accent-color-darker)'};"
-						type="submit">{sectionItem.callToActionText || 'Subscribe'}</button
+						type="submit"
+						>{(page.parentPage || page).theme?.ctaButtonText ||
+							sectionItem.callToActionText ||
+							'Subscribe'}</button
 					>
 				{:else if $currentCustomer.email && !isResetEmail}
 					<div class={clazz?.includes('mx-auto') ? 'mx-auto' : ''}>
@@ -427,8 +430,12 @@
 						style="--tw-ring-color: {(page.parentPage?.theme || page.theme)?.theme === 'dark'
 							? 'var(--accent-color-lighter)'
 							: 'var(--accent-color-darker)'};"
-						type="submit">{sectionItem.callToActionText || 'Subscribe'}</a
+						type="submit"
 					>
+						{(page.parentPage || page).theme?.ctaButtonText ||
+							sectionItem.callToActionText ||
+							'Subscribe'}
+					</a>
 				{:else}
 					<div class="flex flex-col sm:flex-row items-center w-full sm:w-auto">
 						<div
@@ -581,7 +588,9 @@
 								{#if sectionItem.interactiveRenderType === 'form'}
 									{sectionItem.formSection?.callToActionText || 'Submit'}
 								{:else}
-									{sectionItem.callToActionText || 'Learn More →'}
+									{(isHeader && (page.parentPage || page).theme?.ctaButtonText) ||
+										sectionItem.callToActionText ||
+										'Subscribe'}
 								{/if}
 							</button>
 						{/if}

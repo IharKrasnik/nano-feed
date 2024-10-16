@@ -1053,7 +1053,7 @@
 
 					{#if page._id}
 						<div
-							class="text-2xl mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded {$selectedTab ===
+							class=" mr-4 cursor-pointer bg-[#f3f3f3] p-2 rounded text-white flex gap-x-1 items-center text-sm {$selectedTab ===
 							'settings'
 								? 'bg-green-800'
 								: 'bg-[#f3f3f3]'}"
@@ -1075,21 +1075,27 @@
 								size="15"
 								name="settings"
 							/>
+							{#if $selectedTab === 'settings'}
+								Settings
+							{/if}
 						</div>
-						<div class:opacity-70={!page?._id || !page?.isDirty}>
-							<Button
-								class="bg-yellow-500 right-0 _primary flex justify-center w-full"
-								onClick={publishPage}
-								style="margin-left: 78px;
+						{#if $selectedTab !== 'settings'}
+							<div class:opacity-70={!page?._id || !page?.isDirty}>
+								<Button
+									class="bg-yellow-500 right-0 _primary flex justify-center w-full"
+									onClick={publishPage}
+									disabled={$selectedTab === 'settings'}
+									style="margin-left: 78px;
 										padding: 4px 12px;
 										right: 3px;
 										width: auto;
 										margin: -4px -10px -4px 0px;
 										"
-							>
-								Publish
-							</Button>
-						</div>
+								>
+									Publish
+								</Button>
+							</div>
+						{/if}
 					{/if}
 				</div>
 			{/if}

@@ -7,6 +7,7 @@
 	export { clazz as class };
 	export let style = '';
 	export let onClick = async () => {};
+	export let disabled=false;
 
 	let isLoading = false;
 	let isJustDone = false;

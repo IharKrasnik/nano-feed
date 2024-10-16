@@ -77,6 +77,8 @@
 		];
 	};
 
+	let saveButtonText = async () => {};
+
 	let updateSettings = async () => {
 		await put(`pages/${parentPage._id}/nav-settings`, {
 			theme: parentPage.theme,
@@ -91,14 +93,14 @@
 
 {#if page && isShown}
 	<div class="_editor">
-		<div class="flex w-full justify-between items-center  mb-8">
+		<div class="flex w-full justify-between items-center mb-8">
 			<div>
 				<div class="text-xl font-bold mb-1">Website Header & Footer</div>
 				<div class="mt-1 text-lg opacity-70">
 					Edit the links and styles of your header and footer
 				</div>
 			</div>
-			<div><Button class="_primary _small" onClick={updateSettings}>Save Changes</Button></div>
+			<div><Button class="_primary" onClick={updateSettings}>Save Changes</Button></div>
 		</div>
 
 		<div class="font-bold mb-2">Logo Styles</div>
@@ -131,27 +133,31 @@
 			</div>
 		</div>
 
-		<div class="w-full flex justify-between mb-2 mt-6">
-			<div class="font-bold mb-2">Links</div>
+		{#if (page.activeHero || parentPage.heros[0]).callToActionText}
+			<div class="w-full  mb-2 mt-6">
+				<div class="font-bold">Button text</div>
+				<div class="opacity-60 text-sm mb-2">
+					Set custom text for call-to-action button shown in header
+				</div>
+			</div>
+
+			<div class="flex gap-x-2">
+				<input
+					bind:value={parentPage.theme.ctaButtonText}
+					placeholder={(page.activeHero || parentPage.heros[0]).callToActionText}
+				/>
+			</div>
+		{/if}
+
+		<div class="w-full flex justify-between mb-2 mt-8">
+			<div class="font-bold mb-1">Links</div>
+
 			<div>
-				<button class="_primary _small" on:click={addLink}>Add New Link</button>
+				<button class="_secondary _small" on:click={addLink}>Add New Link</button>
 			</div>
 		</div>
 
-		<div class="flex items-center _section">
-			<div class="shrink-0 mr-4">Align Links</div>
-
-			<ToggleGroup
-				bind:value={parentPage.theme.headerAlign}
-				tabs={[
-					{ key: 'left', name: 'Left' },
-					{ key: 'center', name: 'Center' },
-					{ key: 'right', name: 'Right' }
-				]}
-			/>
-		</div>
-
-		<div class="mt-8">
+		<div class="mt-4">
 			{#if parentPage.links?.length}
 				<div
 					class="grid"
@@ -231,6 +237,18 @@
 					<button class="_primary _small mt-4 block" on:click={addLink}>Add Link</button>
 				</div>
 			{/if}
+		</div>
+		<div class="flex items-center _section mt-8">
+			<div class="shrink-0 mr-4 font-medium">Align Links</div>
+
+			<ToggleGroup
+				bind:value={parentPage.theme.headerAlign}
+				tabs={[
+					{ key: 'left', name: 'Left' },
+					{ key: 'center', name: 'Center' },
+					{ key: 'right', name: 'Right' }
+				]}
+			/>
 		</div>
 		{#if page}
 			<div class="font-bold mb-2 mt-16">Header & Foooter Preview</div>
