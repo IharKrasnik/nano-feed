@@ -15,7 +15,7 @@
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	import 'lazysizes';
-	// import a plugin 2
+	// import a plugin 3
 	import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 
 	import {
