@@ -195,7 +195,7 @@
 				'none'
 			};`}`}
 		>
-			{#if item.interactiveOptions}
+			{#if item.interactiveOptions?.type === 'buttons'}
 				<div
 					class="hidden group-hover:flex absolute left-0 top-0 w-full h-full _bg-overlay items-center justify-center"
 					style="z-index: 11"
