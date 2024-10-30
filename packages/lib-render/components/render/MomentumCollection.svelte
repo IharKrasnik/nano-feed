@@ -17,6 +17,8 @@
 	export let isUseCache = false;
 	export let cacheId = section.id;
 
+	let parentPage = page.parentPage || page;
+
 	let childStreams = [];
 
 	let isFeedLoading = true;
@@ -199,9 +201,9 @@
 		style="z-index: 1"
 	>
 		<div
-			class="px-4 py-1 opacity-80 t rounded-full cursor-pointer shrink-0 _tag bg-zinc-900 ring-1 ring-zinc-800 {filterTag
-				? ''
-				: 'selected'}"
+			class="px-4 py-1 opacity-80 t rounded-full cursor-pointer shrink-0 _tag 
+{parentPage?.theme?.theme === 'dark' ? 'bg-zinc-900' : 'bg-zinc-100 '}
+			 ring-1 ring-zinc-800 {filterTag ? '' : 'selected'}"
 			class:heatmap={$heatmap}
 			data-heatmap-clicks-count={$heatmap
 				? getHeatmapClicksCount({
@@ -216,10 +218,9 @@
 
 		{#each $feedCache[cacheId]?.tags as tag}
 			<div
-				class="px-4 py-1 opacity-80 rounded-full cursor-pointer shrink-0 _tag bg-zinc-900  ring-1 ring-zinc-800 {filterTag ===
-				tag
-					? 'selected'
-					: ''}"
+				class="px-4 py-1 opacity-80 rounded-full cursor-pointer shrink-0 _tag 
+				{parentPage?.theme?.theme === 'dark' ? 'bg-zinc-900' : 'bg-zinc-100 '}
+				ring-1 ring-zinc-800 {filterTag === tag ? 'selected' : ''}"
 				class:heatmap={$heatmap}
 				data-heatmap-clicks-count={$heatmap
 					? getHeatmapClicksCount({
