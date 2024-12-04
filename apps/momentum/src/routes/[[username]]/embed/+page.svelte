@@ -21,6 +21,8 @@
 	let isHorizontal = $page.url.searchParams.get('isHorizontal') || false;
 	let isViewAll = $page.url.searchParams.get('isViewAll') || false;
 
+	let viewportWidth = $page.url.searchParams.get('viewportWidth');
+
 	let creator;
 
 	let username;
@@ -62,6 +64,10 @@
 		crossorigin="anonymous"
 		referrerpolicy="no-referrer"
 	></script>
+
+	{#if viewportWidth}
+		<meta name="viewport" content="width={viewportWidth}" />
+	{/if}
 </svelte:head>
 
 <div class="hidden lg:columns-1 lg:columns-3 lg:columns-2 lg:columns-4" />
