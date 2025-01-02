@@ -20,6 +20,7 @@
 		connect as connectCustomerSocketIo,
 		disconnect as disconnectCustomerSocketIo
 	} from 'lib-render/customerSocketIoService';
+	import { text } from 'svelte/internal';
 
 	if (browser) {
 		connectCustomerSocketIo();
@@ -74,6 +75,21 @@
 
 	$: if ($currentPage) {
 		let theme = ($currentPage.parentPage || $currentPage).theme || {};
+
+		theme = _.extend(
+			{
+				accentColor: '#000000',
+				backgroundColor: '#ffffff',
+				titleFont: 'Inter',
+				textFont: 'Inter',
+				labelFont: 'Inter',
+				customCss: '',
+				headerAlign: 'left',
+				logoSize: 'auto'
+			},
+			theme
+		);
+
 		fontsStr = _.uniq([theme.textFont, theme.titleFont, theme.labelFont])
 			.filter((fontName) => fontName)
 			.map((fontName) => {
