@@ -14,7 +14,8 @@
 			c = '0x' + c.join('');
 			return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + `,${opacity})`;
 		}
-		throw new Error('Bad Hex');
+		return hex;
+		console.log('bad hex', hex);
 	}
 
 	let types = {
