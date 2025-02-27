@@ -150,11 +150,12 @@
 						<iframe
 							loading="lazy"
 							class="w-full lazyload {imgClass}"
-							style="aspect-ratio: 536/300;"
-							data-src="https://www.youtube.com/embed/{createUrl()?.searchParams.get('v') ||
-								url.replace('https://youtu.be', '')}?rel=0{isAutoplay
-								? '&autoplay=1&mute=1&controls=0'
-								: ''}"
+							style={url.includes('/shorts/') ? 'aspect-ratio: 357/635;' : 'aspect-ratio: 536/300'}
+							data-src={url.includes('/shorts/')
+								? url.replace('/shorts/', '/embed/')
+								: `https://www.youtube.com/embed/${
+										createUrl()?.searchParams.get('v') || url.replace('https://youtu.be', '')
+								  }?rel=0${isAutoplay ? '&autoplay=1&mute=1&controls=0' : ''}`}
 							title="YouTube video player"
 							frameborder="0"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

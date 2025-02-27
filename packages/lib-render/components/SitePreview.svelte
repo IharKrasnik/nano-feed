@@ -121,7 +121,7 @@
 		styles = res.styles;
 	}
 
-	$: if (browser && page._id && page.isUseDatabase) {
+	$: if (browser && page?._id && page?.isUseDatabase) {
 		loadFeedItem();
 	}
 
@@ -442,7 +442,8 @@
 														>
 															<div
 																class="bg-site {section.imgMaxWidth === 'full-screen' ||
-																section.renderType === 'scrollingGallery'
+																section.renderType === 'scrollingGallery' ||
+																section.renderType === 'mediaCarousel'
 																	? isEdit
 																		? 'w-full'
 																		: 'w-full'

@@ -22,6 +22,7 @@
 	import RenderForm from 'lib-render/components/render/Form.svelte';
 	import RenderStepper from 'lib-render/components/render/Stepper.svelte';
 	import RenderScrollingGallery from 'lib-render/components/render/ScrollingGallery.svelte';
+	import RenderMediaCarousel from 'lib-render/components/render/MediaCarousel.svelte';
 	import RenderBackgroundPattern from 'lib-render/components/render/BackgroundPattern.svelte';
 	import RenderCalloutSection from 'lib-render/components/render/CalloutSection.svelte';
 	import RenderComments from 'lib-render/components/render/CommentsSection.svelte';
@@ -452,7 +453,7 @@
 			{#if section.renderType === 'callout'}
 				<RenderCalloutSection bind:page bind:section bind:isEdit bind:isEmbed />
 			{:else}
-				{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType || section.pricingTabs?.length) && section.renderType !== 'embedSvelte'}
+				{#if !isSkipHeader && (section.title || section.description || section.imageUrl || section.emoji || section.interactiveRenderType || section.pricingTabs?.length) && !['embedSvelte'].includes(section.renderType)}
 					{#if section.renderType !== 'article' && section.title && (section.items?.length || section.streamSlug)}
 						<!-- <div
 							class="absolute inset-x-0 top-20 mx-auto h-32 w-full sm:w-[650px] transform-gpu opacity-[15%] blur-[130px] bg-gradient-to-r _from-text-color _to-accent"
@@ -679,6 +680,8 @@
 					<RenderStepper bind:isEdit bind:page bind:section />
 				{:else if section.renderType === 'scrollingGallery'}
 					<RenderScrollingGallery bind:isEdit bind:page bind:section />
+				{:else if section.renderType === 'mediaCarousel'}
+					<RenderMediaCarousel bind:isEdit bind:page bind:section />
 				{:else if section.renderType === 'form'}
 					<RenderForm bind:section bind:page bind:isEdit />
 				{:else if section.items?.length}

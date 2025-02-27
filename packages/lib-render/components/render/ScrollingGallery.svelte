@@ -1,5 +1,6 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
+	import RenderUrlWithBackground from 'lib/components/RenderUrlWithBackground.svelte';
 
 	export let page;
 	export let section;
@@ -31,17 +32,17 @@
 
 <div class="flex overflow-x-hidden w-full" bind:this={carouselEl}>
 	<div class="flex-shrink-0 w-screen flex space-x-4">
-		{#each section.items as item, index (item.id)}
-			<img
-				src={item.imageUrl}
+		{#each section.items || [] as item, index (item.id)}
+			<RenderUrlWithBackground
+				imageUrl={item.imageUrl}
 				alt="Design ${index + 1}"
 				class="rounded-lg shadow-lg aspect-image h-[200px] sm:h-[350px] object-cover"
 			/>
 		{/each}
 
-		{#each section.items as item, index (item.id)}
-			<img
-				src={item.imageUrl}
+		{#each section.items || [] as item, index (item.id)}
+			<RenderUrlWithBackground
+				imageUrl={item.imageUrl}
 				alt="Design ${index + 1}"
 				class="rounded-lg shadow-lg aspect-image h-[200px] sm:h-[350px] object-cover"
 			/>
