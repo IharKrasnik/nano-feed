@@ -38,7 +38,6 @@
 	if ($currentPage) {
 		$currentPage._refreshTimestamp = +new Date();
 	}
-
 	$: if (
 		(!$sveltePage.params.subPageSlug &&
 			$sveltePage.data.pageSlug &&
