@@ -39,7 +39,7 @@
 		</div>
 
 		<button
-			class="{isEdit ? 'absolute' : 'fixed'} left-4 top-1/2 -translate-y-1/2"
+			class="{isEdit ? 'absolute' : 'absolute'} left-4 top-1/2 -translate-y-1/2"
 			on:click={() => emblaApi.scrollPrev()}
 		>
 			<svg
@@ -55,7 +55,7 @@
 			>
 		</button>
 		<button
-			class="{isEdit ? 'absolute' : 'fixed'} right-4 top-1/2 -translate-y-1/2"
+			class="{isEdit ? 'absolute' : 'absolute'} right-4 top-1/2 -translate-y-1/2"
 			on:click={() => {
 				emblaApi.scrollNext();
 			}}
