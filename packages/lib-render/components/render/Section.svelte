@@ -1113,11 +1113,15 @@
 														{#if item.pricing?.amount}
 															<div class="flex items-end mt-4 mb-4">
 																<div class="text-5xl font-bold mr-2">
-																	{item.pricing.amount
-																		? toDollars(item.pricing.amount * 100)
-																		: 'Free'}
+																	{#if item.pricing.per === 'custom'}
+																		{item.pricing.amount}
+																	{:else}
+																		{item.pricing.amount
+																			? toDollars(item.pricing.amount * 100)
+																			: 'Free'}
+																	{/if}
 																</div>
-																{#if item.pricing.amount}
+																{#if item.pricing.per !== 'custom' && item.pricing.amount}
 																	<div class="text-lg">
 																		/{item.pricing.per}
 																	</div>

@@ -335,7 +335,16 @@
 				<div class="mr-2">$</div>
 
 				<div>
-					<input class="mr-2" type="number" bind:value={item.pricing.amount} placeholder="29.99" />
+					{#if item.pricing.per === 'custom'}
+						<input class="mr-2" type="text" bind:value={item.pricing.amount} placeholder="Custom" />
+					{:else}
+						<input
+							class="mr-2"
+							type="number"
+							bind:value={item.pricing.amount}
+							placeholder="29.99"
+						/>
+					{/if}
 				</div>
 				<select class="w-full" bind:value={item.pricing.per} on:change={updatePricingTabs}>
 					<option value="one-time">One-Time</option>
@@ -344,6 +353,7 @@
 					<option value="quarter">Quarter</option>
 					<option value="half-year">Half-Yearly</option>
 					<option value="year">Year</option>
+					<option value="custom">Custom</option>
 				</select>
 			</div>
 			<div class="flex justify-end">

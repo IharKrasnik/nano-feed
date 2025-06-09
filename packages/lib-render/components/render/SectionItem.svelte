@@ -569,9 +569,13 @@
 												{/if}
 											{:else}
 												<div class="text-3xl sm:text-4xl font-bold mr-2">
-													{item.pricing.amount ? toDollars(item.pricing.amount * 100) : 'Free'}
+													{#if item.pricing.per === 'custom'}
+														{item.pricing.amount}
+													{:else}
+														{item.pricing.amount ? toDollars(item.pricing.amount * 100) : 'Free'}
+													{/if}
 												</div>
-												{#if item.pricing.amount}
+												{#if item.pricing.per !== 'custom' && item.pricing.amount}
 													<div class="text-lg opacity-70">
 														/{item.pricing.per}
 													</div>
