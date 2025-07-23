@@ -53,7 +53,7 @@
 					bind:value={page.openGraph.title}
 					class="w-full"
 					type="text"
-					placeholder={page.heros[0]?.title}
+					placeholder={striptags(page.heros[0]?.title)}
 				/>
 			</div>
 
@@ -67,7 +67,7 @@
 		<input
 			class="w-full"
 			type="text"
-			placeholder={page.heros[0]?.subtitle}
+			placeholder={striptags(page.heros[0]?.subtitle)}
 			bind:value={page.openGraph.description}
 		/>
 	</div>

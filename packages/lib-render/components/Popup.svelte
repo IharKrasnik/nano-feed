@@ -76,7 +76,7 @@
 							</div>
 						{:else}
 							<div
-								class="__d absolute w-[25px] top-[20px] left-0 cursor-pointer z-10"
+								class="absolute w-[25px] top-[20px] left-0 cursor-pointer z-10"
 								style="transform: translateX(-100%); {page.theme?.theme === 'light'
 									? 'stroke: #111111;'
 									: 'stroke: #ffffff;'}"

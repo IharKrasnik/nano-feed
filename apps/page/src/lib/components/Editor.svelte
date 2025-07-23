@@ -1,7 +1,7 @@
 <script>
 	import _ from 'lodash';
 	import slug from 'slug';
-	import { isDev } from 'lib/env';
+	import { isDev, PULSE_API_URL } from 'lib/env';
 	import { onDestroy } from 'svelte';
 
 	import { ConfettiExplosion } from 'svelte-confetti-explosion';
@@ -289,7 +289,8 @@
 		'lastPublishedOn',
 		'isDirty',
 		'metadata',
-		'logo'
+		'logo',
+		'source'
 	];
 
 	let isPageResetting = false;
@@ -406,6 +407,7 @@
 		// 	isSignupFormShown = true;
 		// 	return;
 		// }
+		debugger;
 		if (!page.isInDir) {
 			page.dirName = null;
 		}
@@ -460,6 +462,10 @@
 			let wasNewerPageAvailable = isNewerPageAvailable;
 
 			if (!isNewPage && !isContinueEditingPage) {
+				if (page.source?.pulseDocId) {
+					page.isDirty = true;
+				}
+
 				await refreshPage();
 
 				if (isNewerPageAvailable && !wasNewerPageAvailable) {
@@ -1537,140 +1543,177 @@
 																	</div> -->
 																{/if}
 
-																<div>
-																	{#if page._id && page.renderType === 'article'}
-																		<div class="mt-4">
-																			<div class="_section">
-																				<EditInteractiveOptions
-																					class=""
-																					options={[
-																						{ value: '', text: 'No interaction' },
-																						{
-																							value: 'multiple_choice',
-																							text: 'Reactions — multiple choice'
-																						}
-																					]}
-																					section={page}
-																					sectionItem={page}
-																					isWithButton={false}
-																				/>
-																			</div>
-																		</div>
-																	{/if}
+																{#if page.source?.pulseDocId}
+																	<div class="_section">
+																		<div>This page is synced with Pulse</div>
 
-																	{#if page._id}
-																		{#each page.heros as hero}
-																			<EditHero
-																				class="my-4"
-																				bind:hero
-																				bind:page
-																				bind:focuses
-																				isShowTips={page.heros?.length < 2}
-																			/>
-																		{/each}
-
-																		{#if !page.heros?.length}
-																			<button class="_secondary" on:click={addDefaultHero}
-																				>Add Hero Section</button
+																		<div class="flex items-center mt-4 gap-x-4">
+																			<a
+																				href={`https://pulse.paralect.com/docs/id/${page.source?.pulseDocId}`}
+																				target="_blank"
 																			>
-																		{/if}
-																	{/if}
+																				<Button class="_secondary" on:click={() => {}}>
+																					<div class="flex items-center gap-x-2">
+																						Edit in Pulse
 
-																	{#if page._id}
-																		<div
-																			class="rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
-																		>
-																			<div class="flex items-center">
-																				<div class="text-lg font-bold  _editor-title">
-																					{page.renderType === 'article'
-																						? 'Paragraphs'
-																						: 'Sections'}
-																				</div>
-
-																				{#if page.sections?.length}
-																					<div class="ml-4 number-tag">
-																						{page.sections?.length || 0}
-																					</div>
-																				{/if}
-																			</div>
-
-																			{#if !page.sections?.length}
-																				<div />
-
-																				{#if page.sections?.length > 1}
-																					<div
-																						class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
-																						on:click={() => (isOrdering = true)}
-																					>
-																						💫 Reorder Sections
-																					</div>
-																				{/if}
-																			{/if}
-																		</div>
-																	{/if}
-
-																	{#if page.sections?.length}
-																		<div>
-																			<div
-																				use:dndzone={{ items: page.sections, flipDurationMs }}
-																				on:consider={handleDndConsider}
-																				on:finalize={handleDndFinalize}
-																			>
-																				{#each page.sections || [] as section (section.id)}
-																					<div animate:flip={{ duration: flipDurationMs }}>
-																						<EditSection
-																							bind:page
-																							bind:section
-																							onRemove={() => {
-																								page.sections = page.sections.filter(
-																									(s) => s !== section
-																								);
-																							}}
+																						<FeatherIcon
+																							name="external-link"
+																							size="16"
+																							color="#8B786D"
 																						/>
 																					</div>
-																				{/each}
-																			</div>
-																		</div>
-																	{/if}
+																				</Button>
+																			</a>
 
-																	{#if page?._id}
-																		<button
-																			class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
-																			on:click={() => {
-																				if (page.renderType === 'article') {
-																					addNewSection();
-																				} else {
-																					$isInsertPopupShown = true;
-																				}
-																			}}
-																			>Add {page.renderType === 'article'
-																				? 'Paragraph'
-																				: 'Section'}</button
-																		>
-																	{/if}
-
-																	{#if page._id && page.sections?.length}
-																		<div class="relative flex items-center my-4  mt-12">
-																			<div class="font-bold text-lg mr-2 py-4">Call-To-Action</div>
-
-																			<div
-																				class="w-[35px] h-[35px] bg-[#f1f1f1] rounded-xl flex items-center justify-center cursor-pointer"
+																			<Button
+																				class="_secondary !border-none"
+																				onClick={() => {
+																					page.metadata = {
+																						...(page.metadata || {}),
+																						pulseDoc: null
+																					};
+																				}}>Sync Content</Button
 																			>
-																				{#if page.ctaFooter}
-																					<EditSectionSettings
-																						isPopup
-																						isCtaFooter
-																						bind:page
-																						bind:section={page.ctaFooter}
-																						bind:sectionItem={page.ctaFooter}
+																		</div>
+																	</div>
+																{:else}
+																	<div>
+																		{#if page._id && page.renderType === 'article'}
+																			<div class="mt-4">
+																				<div class="_section">
+																					<EditInteractiveOptions
+																						class=""
+																						options={[
+																							{ value: '', text: 'No interaction' },
+																							{
+																								value: 'multiple_choice',
+																								text: 'Reactions — multiple choice'
+																							}
+																						]}
+																						section={page}
+																						sectionItem={page}
+																						isWithButton={false}
 																					/>
+																				</div>
+																			</div>
+																		{/if}
+
+																		{#if page._id}
+																			{#each page.heros as hero}
+																				<EditHero
+																					class="my-4"
+																					bind:hero
+																					bind:page
+																					bind:focuses
+																					isShowTips={page.heros?.length < 2}
+																				/>
+																			{/each}
+
+																			{#if !page.heros?.length}
+																				<button class="_secondary" on:click={addDefaultHero}
+																					>Add Hero Section</button
+																				>
+																			{/if}
+																		{/if}
+
+																		{#if page._id}
+																			<div
+																				class="rounded-xl sm:w-[400px] flex top-[0px] w-full my-8 mt-12 justify-between items-center"
+																			>
+																				<div class="flex items-center">
+																					<div class="text-lg font-bold  _editor-title">
+																						{page.renderType === 'article'
+																							? 'Paragraphs'
+																							: 'Sections'}
+																					</div>
+
+																					{#if page.sections?.length}
+																						<div class="ml-4 number-tag">
+																							{page.sections?.length || 0}
+																						</div>
+																					{/if}
+																				</div>
+
+																				{#if !page.sections?.length}
+																					<div />
+
+																					{#if page.sections?.length > 1}
+																						<div
+																							class="ml-5 font-normal text-sm cursor-pointer opacity-70 text-center my-2 mb-4"
+																							on:click={() => (isOrdering = true)}
+																						>
+																							💫 Reorder Sections
+																						</div>
+																					{/if}
 																				{/if}
 																			</div>
-																		</div>
+																		{/if}
 
-																		<EditCTA class="my-4" bind:page />
-																	{/if}
-																</div>
+																		{#if page.sections?.length}
+																			<div>
+																				<div
+																					use:dndzone={{ items: page.sections, flipDurationMs }}
+																					on:consider={handleDndConsider}
+																					on:finalize={handleDndFinalize}
+																				>
+																					{#each page.sections || [] as section (section.id)}
+																						<div animate:flip={{ duration: flipDurationMs }}>
+																							<EditSection
+																								bind:page
+																								bind:section
+																								onRemove={() => {
+																									page.sections = page.sections.filter(
+																										(s) => s !== section
+																									);
+																								}}
+																							/>
+																						</div>
+																					{/each}
+																				</div>
+																			</div>
+																		{/if}
+
+																		{#if page?._id}
+																			<button
+																				class="_primary _small _inverted w-full my-8 flex justify-center cursor-pointer text-[#8B786D]"
+																				on:click={() => {
+																					if (page.renderType === 'article') {
+																						addNewSection();
+																					} else {
+																						$isInsertPopupShown = true;
+																					}
+																				}}
+																				>Add {page.renderType === 'article'
+																					? 'Paragraph'
+																					: 'Section'}</button
+																			>
+																		{/if}
+
+																		{#if page._id && page.sections?.length}
+																			<div class="relative flex items-center my-4  mt-12">
+																				<div class="font-bold text-lg mr-2 py-4">
+																					Call-To-Action
+																				</div>
+
+																				<div
+																					class="w-[35px] h-[35px] bg-[#f1f1f1] rounded-xl flex items-center justify-center cursor-pointer"
+																				>
+																					{#if page.ctaFooter}
+																						<EditSectionSettings
+																							isPopup
+																							isCtaFooter
+																							bind:page
+																							bind:section={page.ctaFooter}
+																							bind:sectionItem={page.ctaFooter}
+																						/>
+																					{/if}
+																				</div>
+																			</div>
+
+																			<EditCTA class="my-4" bind:page />
+																		{/if}
+																	</div>
+																{/if}
 															{/if}
 														{/if}
 													{/if}

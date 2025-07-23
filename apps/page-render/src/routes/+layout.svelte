@@ -1,4 +1,5 @@
 <script>
+	import '@paralect/pulse-renderer/style.css';
 	import 'lib-render/app.css';
 	import '../app.css';
 	import _ from 'lodash';

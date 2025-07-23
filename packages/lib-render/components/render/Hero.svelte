@@ -189,7 +189,9 @@
 			class="relative z-10 container sm:pt-[60px] {page.renderType === 'article'
 				? 'pb-[30px]'
 				: 'pb-[60px]'} _container-width mx-auto {((hero.theme?.isVertical ||
-				(page.sections?.length && !hero.demoUrl && !hero.theme.isFullScreen)) &&
+				((page.sections?.length || page.source?.pulseDocId) &&
+					!hero.demoUrl &&
+					!hero.theme.isFullScreen)) &&
 				hero.theme?.bgPattern !== 'cursors') ||
 			page.renderType === 'service'
 				? ''

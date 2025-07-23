@@ -6,13 +6,16 @@ import { browser } from '$app/environment';
 
 export let isDev = dev;
 
-// export const API_URL = dev
-// 	? 'https://ship-627ed08f489a970013572f5d.paralect.net'
-// 	: 'https://api.momentum.page';
+export const API_URL = dev
+	? 'https://ship-627ed08f489a970013572f5d.paralect.net'
+	: 'https://api.momentum.page';
 
-// export const API_URL = 'https://ship-627ed08f489a970013572f5d.paralect.net';
 
-export const API_URL = 'https://api.momentum.page';
+// export const PULSE_API_URL = 'https://672a1081227ae00012cfb36f.devhive.cloud';
+export const PULSE_API_URL = 'https://pulse.devhive.cloud';
+
+
+// export const API_URL = 'https://api.momentum.page';
 
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
 
