@@ -189,7 +189,7 @@
 			class="relative z-10 container sm:pt-[60px] {page.renderType === 'article'
 				? 'pb-[30px]'
 				: 'pb-[60px]'} _container-width mx-auto {((hero.theme?.isVertical ||
-				((page.sections?.length || page.source?.pulseDocId) &&
+				((page.sections?.length || page.metadata?.pulseDocId) &&
 					!hero.demoUrl &&
 					!hero.theme.isFullScreen)) &&
 				hero.theme?.bgPattern !== 'cursors') ||

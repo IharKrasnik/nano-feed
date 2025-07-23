@@ -462,7 +462,7 @@
 			let wasNewerPageAvailable = isNewerPageAvailable;
 
 			if (!isNewPage && !isContinueEditingPage) {
-				if (page.source?.pulseDocId) {
+				if (page.metadata?.pulseDocId) {
 					page.isDirty = true;
 				}
 
@@ -1543,13 +1543,13 @@
 																	</div> -->
 																{/if}
 
-																{#if page.source?.pulseDocId}
+																{#if page.metadata?.pulseDocId}
 																	<div class="_section">
 																		<div>This page is synced with Pulse</div>
 
 																		<div class="flex items-center mt-4 gap-x-4">
 																			<a
-																				href={`https://pulse.paralect.com/docs/id/${page.source?.pulseDocId}`}
+																				href={`https://pulse.paralect.com/docs/id/${page.metadata?.pulseDocId}`}
 																				target="_blank"
 																			>
 																				<Button class="_secondary" on:click={() => {}}>

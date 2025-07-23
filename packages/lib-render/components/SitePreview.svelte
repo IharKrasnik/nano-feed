@@ -301,7 +301,7 @@
 										? 'mb-[-100px] sm:mb-[-70px]'
 										: ''}"
 								>
-									{#if !page.source?.pulseDocId || page.metadata?.pulseDoc}
+									{#if !page.metadata?.pulseDocId || page.metadata?.pulseDoc}
 										<RenderHero
 											bind:hero={page.activeHero}
 											bind:page
@@ -312,7 +312,7 @@
 								</div>
 							{/if}
 
-							{#if page.source?.pulseDocId}
+							{#if page.metadata?.pulseDocId}
 								<PulsePage bind:page bind:isEdit />
 							{:else}
 								<div

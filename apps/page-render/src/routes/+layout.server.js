@@ -29,7 +29,9 @@ export async function load({ url, params, session, cookies }) {
 	}
 
 	const { subPageSlug, feedItemSlug, articleSlug } = params;
+
 	//
+
 	let extend = {};
 	if (url.href.includes('/app/')) {
 		let parentPage = await get(`pages/bySlug`, {

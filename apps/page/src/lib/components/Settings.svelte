@@ -12,7 +12,7 @@
 	export let onDeleted;
 
 	let isUpdatingSyncing = false;
-	let pulseDocId = page.source?.pulseDocId;
+	let pulseDocId = page.metadata?.pulseDocId;
 
 	let subscribe = async () => {
 		let { url } = await get('stripe/subscribe', { pageId: page._id });
@@ -35,12 +35,12 @@
 	{#if page.renderType === 'article'}
 		{#if !isUpdatingSyncing}
 			<div>
-				{#if page.source?.pulseDocId}
+				{#if page.metadata?.pulseDocId}
 					<div class="flex items-center gap-x-2">
 						<div>Synced with Pulse</div>
 						<div class="text-sm text-[#8B786D]">
 							<a
-								href={`https://pulse.paralect.com/docs/id/${page.source?.pulseDocId}`}
+								href={`https://pulse.paralect.com/docs/id/${page.metadata?.pulseDocId}`}
 								target="_blank"
 							>
 								<FeatherIcon name="external-link" size="16" color="#8B786D" />
@@ -55,7 +55,7 @@
 						isUpdatingSyncing = true;
 					}}
 				>
-					{page.source?.pulseDocId || 'Sync this page,,,'}
+					{page.metadata?.pulseDocId || 'Sync this page...'}
 				</div>
 			</div>
 		{/if}
@@ -69,7 +69,10 @@
 				<Button
 					class="_primary _small"
 					onClick={() => {
-						page.source.pulseDocId = pulseDocId;
+						if (!page.metadata) {
+							page.metadata = {};
+						}
+						page.metadata.pulseDocId = pulseDocId;
 						page.isDirty = true;
 						isUpdatingSyncing = false;
 					}}>Update Pulse Doc Id</Button

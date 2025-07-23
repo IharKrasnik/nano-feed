@@ -14,10 +14,10 @@
 	let isLoading = false;
 
 	let getPulseDoc = async () => {
-		if (page.source.pulseDocId) {
+		if (page.metadata.pulseDocId) {
 			isLoading = true;
 			pulseDocEl.innerHTML = '';
-			let pulseDoc = await get(`${PULSE_API_URL}/public/docs/${page.source.pulseDocId}`);
+			let pulseDoc = await get(`${PULSE_API_URL}/public/docs/${page.metadata.pulseDocId}`);
 			page.metadata = { ...(page.metadata || {}), pulseDoc };
 			initRenderer(pulseDocEl, { ...page.metadata.pulseDoc, title: undefined });
 
@@ -50,17 +50,23 @@
 	}
 
 	if (browser) {
-		onMount(() => {
-			getPulseDoc();
-			document.addEventListener('visibilitychange', handleVisibilityChange);
-		});
+		if (isEdit) {
+			onMount(() => {
+				getPulseDoc();
+				document.addEventListener('visibilitychange', handleVisibilityChange);
+			});
 
-		onDestroy(() => {
-			document.removeEventListener('visibilitychange', handleVisibilityChange);
-		});
+			onDestroy(() => {
+				document.removeEventListener('visibilitychange', handleVisibilityChange);
+			});
+		} else {
+			setTimeout(() => {
+				initRenderer(pulseDocEl, { ...page.metadata.pulseDoc, title: undefined });
+			}, 0);
+		}
 	}
 </script>
 
-{#if page.source?.pulseDocId}
+{#if page.metadata?.pulseDocId}
 	<div bind:this={pulseDocEl} />
 {/if}
