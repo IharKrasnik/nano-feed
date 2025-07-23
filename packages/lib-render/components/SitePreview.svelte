@@ -507,7 +507,7 @@
 								</div>
 							{/if}
 
-							{#if !isNoHeaderFooter && (page.parentPage || page.activeHero?.title || page.ctaFooter?.title) && page.sections?.filter((s) => s.isShown)?.length}
+							{#if !isNoHeaderFooter && (page.parentPage || page.activeHero?.title || page.ctaFooter?.title) && (page.metadata?.pulseDocId || page.sections?.filter((s) => s.isShown)?.length)}
 								<div
 									class="overflow-hidden"
 									class:hidden={$sveltePage.url.pathname === '/blog'}
