@@ -5,8 +5,6 @@ import { get } from 'lib/api';
 import getPageMetaTags from 'lib/helpers/getPageMetaTags';
 import setPageVars from 'lib-render/helpers/setPageVars';
 
-import { PULSE_API_URL } from 'lib/env';
-
 let getDomain = (href) => {
 	let res = /:\/\/([^\/]+)/.exec(href);
 	return (res && res[1]) || href;

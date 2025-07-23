@@ -21,7 +21,6 @@
 		connect as connectCustomerSocketIo,
 		disconnect as disconnectCustomerSocketIo
 	} from 'lib-render/customerSocketIoService';
-	import { text } from 'svelte/internal';
 
 	if (browser) {
 		connectCustomerSocketIo();

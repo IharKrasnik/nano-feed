@@ -14,8 +14,8 @@ export let isDev = dev;
 // export const PULSE_API_URL = 'https://672a1081227ae00012cfb36f.devhive.cloud';
 export const PULSE_API_URL = 'https://pulse.devhive.cloud';
 
-
 export const API_URL = 'https://api.momentum.page';
+
 
 export const WAVE_URL = dev ? 'https://wave.mmntm.build' : 'https://wave.mmntm.build';
 
