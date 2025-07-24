@@ -33,7 +33,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@paralect/pulse-renderer": "^0.0.3-alpha.4",
 		"@resvg/resvg-js": "^2.2.0",
 		"@zerodevx/svelte-toast": "^1.0.0-rc.1",
 		"csvtojson": "^2.0.10",

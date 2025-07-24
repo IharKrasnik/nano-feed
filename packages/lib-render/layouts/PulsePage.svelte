@@ -68,5 +68,5 @@
 </script>
 
 {#if page.metadata?.pulseDocId}
-	<div bind:this={pulseDocEl} />
+	<div class="px-4 sm:px-0" bind:this={pulseDocEl} />
 {/if}
