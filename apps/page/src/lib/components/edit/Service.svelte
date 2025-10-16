@@ -251,7 +251,6 @@
 
 			<EditInteractiveOptions
 				class="mt-4"
-				isRenderTypeLocked
 				bind:section={hero}
 				bind:sectionItem={hero}
 				isWithButton={false}
