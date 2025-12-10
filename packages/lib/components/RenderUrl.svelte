@@ -147,19 +147,28 @@
 					<div bind:this={embedEl} data-url={url} class="_embed w-full flex justify-center" />
 				{:else if url.includes('youtube.com') || url.includes('youtu.be')}
 					{#if !isFilesOnly}
+						{@const youtubeEmbedUrl = (
+							url.includes('/shorts/')
+								? url.replace('/shorts/', '/embed/')
+								: `https://www.youtube.com/embed/${
+										createUrl()?.searchParams.get('v') || url.replace('https://youtu.be', '')
+								  }?rel=0${isAutoplay ? '&autoplay=1&mute=1&controls=0' : ''}`
+						)
+							.replaceAll('embed//', 'embed/')
+							.replace('www.youtube.com', 'www.youtube-nocookie.com')
+							.replace('?rel=0', '')}
 						<iframe
 							loading="lazy"
 							class="w-full lazyload {imgClass}"
 							style={url.includes('/shorts/') ? 'aspect-ratio: 357/635;' : 'aspect-ratio: 536/300'}
-							data-src={url.includes('/shorts/')
-								? url.replace('/shorts/', '/embed/')
-								: `https://www.youtube.com/embed/${
-										createUrl()?.searchParams.get('v') || url.replace('https://youtu.be', '')
-								  }?rel=0${isAutoplay ? '&autoplay=1&mute=1&controls=0' : ''}`}
+							data-src={youtubeEmbedUrl}
+							src={youtubeEmbedUrl}
+							lazy="true"
 							title="YouTube video player"
 							frameborder="0"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 							allowfullscreen
+							referrerpolicy="strict-origin-when-cross-origin"
 						/>
 					{:else}
 						<YouTubeIcon class="w-[45px] opacity-80" />

@@ -98,8 +98,6 @@
 				return `family=${fontName.replaceAll(' ', '+')}:wght@400;500;600;700`;
 			})
 			.join('&');
-
-		console.log('fontsStr', fontsStr);
 	}
 </script>
 
